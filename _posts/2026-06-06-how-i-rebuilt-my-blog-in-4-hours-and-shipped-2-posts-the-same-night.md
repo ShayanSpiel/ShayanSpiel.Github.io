@@ -12,8 +12,6 @@ tags:
 description: "From a Jekyll demo to a brand-source-of-truth blog with a one-command publish pipeline. 4 files, 1 script, $5/month, 2 posts shipped the same night."
 ---
 
-# How I rebuilt my blog in 4 hours (and shipped 2 posts the same night)
-
 I had a blog. It was a Jekyll site with `riggraz/no-style-please`. It was deployed at https://shayanspiel.github.io. It had demo posts. The demo posts were not about me.
 
 This is the post about how I rebuilt the blog in 4 hours, wrote a publish script that turns a vault draft into a live URL in one command, and shipped 2 posts the same night. The whole thing runs on $5/month. The hard part was not Jekyll. The hard part was figuring out what to say.

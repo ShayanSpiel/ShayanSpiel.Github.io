@@ -12,8 +12,6 @@ tags:
 description: "A 4-file system that turns every dev session into 2-3 post drafts at zero ongoing cost. Obsidian + opencode + /post + the standalone quality test. $5/month. Open-source."
 ---
 
-# How I automated my content with a second brain (and you can too, for $5/month)
-
 I do the work. I never post about the work. That was my problem for two years.
 
 Every Tuesday I would finish a build session, look at the work, think "I should post about this," and not post. The reasons were always the same: I didn't know *what* to post, I didn't know *where* to start, and by Wednesday I had moved on to the next thing.
