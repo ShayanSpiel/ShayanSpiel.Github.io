@@ -1,6 +1,7 @@
 (function () {
   const SHARE_URL = "https://geogent.spiel.workers.dev/?utm_source=twitter&utm_medium=share&utm_campaign=alpha_waitlist";
-  const SHARE_TEXT = "I just locked in my @GeoGent alpha seat. \ud83c\udff0\n\nA browser strategy MMO where your rivals are AIs with memory, grudges, and personality. Real hex wars, real economy, no pay-to-win.\n\n1,000 founders. Limited seats. Grab yours \ud83d\udc47";
+  const COPY_URL = "https://shayanspiel.github.io/GeoGent-Waitlist/";
+  const SHARE_TEXT = "I just locked in my @GeoGent alpha seat. 🏰\n\nA browser strategy MMO where your rivals are AIs with memory, grudges, and personality. Real hex wars, real economy, no pay-to-win.\n\n1,000 founders. Limited seats. Grab yours 👇";
   const SHARE_HASHTAGS = "StrategyGames,IndieGame";
   const SUBMIT_TIMEOUT_MS = 6000;
 
@@ -35,6 +36,7 @@
     const head = wrap.querySelector("[data-success-head]");
     const body = wrap.querySelector("[data-success-body]");
     const share = wrap.querySelector("[data-success-share]");
+    const copy = wrap.querySelector("[data-success-copy]");
 
     if (head) head.innerHTML = "You\u2019re in.";
     if (body) body.textContent = "We\u2019ll email you the moment alpha opens.";
@@ -45,6 +47,35 @@
         hashtags: SHARE_HASHTAGS,
       });
       share.href = "https://twitter.com/intent/tweet?" + params.toString();
+    }
+    if (copy) {
+      copy.addEventListener("click", function () {
+        const label = copy.querySelector("[data-copy-label]");
+        const doCopy = function () {
+          if (label) label.textContent = "Copied \u2713";
+          copy.classList.add("copied");
+          setTimeout(function () {
+            if (label) label.textContent = "Copy link";
+            copy.classList.remove("copied");
+          }, 1800);
+        };
+        const fallback = function () {
+          const ta = document.createElement("textarea");
+          ta.value = COPY_URL;
+          ta.style.position = "fixed";
+          ta.style.opacity = "0";
+          document.body.appendChild(ta);
+          ta.select();
+          try { document.execCommand("copy"); } catch (e) {}
+          document.body.removeChild(ta);
+          doCopy();
+        };
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(COPY_URL).then(doCopy, fallback);
+        } else {
+          fallback();
+        }
+      });
     }
 
     form.hidden = true;

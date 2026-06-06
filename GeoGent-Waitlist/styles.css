@@ -341,6 +341,42 @@ input, button { font-family: inherit; font-size: inherit; }
 }
 .form-success-share svg { width: 14px; height: 14px; }
 
+.form-success-share-msg {
+  font-size: 0.875rem;
+  color: var(--text-2);
+  margin: 0.5rem 0 0;
+  font-weight: 500;
+}
+.form-success-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 0.25rem;
+}
+.form-success-copy {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-size: 0.875rem; font-weight: 700; color: var(--text);
+  padding: 0.5rem 0.875rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-bright);
+  background: var(--surface);
+  cursor: pointer;
+  font-family: inherit;
+  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+.form-success-copy:hover {
+  color: var(--primary);
+  background: rgba(251, 191, 36, 0.06);
+  border-color: var(--primary);
+}
+.form-success-copy.copied {
+  color: #0a0806;
+  background: var(--primary);
+  border-color: var(--primary);
+}
+.form-success-copy svg { width: 14px; height: 14px; }
+
 @keyframes form-success-in {
   from { opacity: 0; transform: translateY(8px) scale(0.98); }
   to   { opacity: 1; transform: translateY(0)   scale(1); }
