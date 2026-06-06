@@ -2,7 +2,7 @@
   <span class="flex-grow">
     <a class="plain" href="{{ '/' | relative_url }}">
       {%- if site.logo -%}
-        <img src="{{ site.logo | relative_url }}" alt="logo" class="ioda nav-logo" />
+        <img src="{{ site.logo | relative_url }}" alt="logo" class="nav-logo" />
       {%- else -%}
         {{ site.title | split: ' — ' | first }}
       {%- endif -%}

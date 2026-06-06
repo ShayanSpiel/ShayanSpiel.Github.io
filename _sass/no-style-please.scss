@@ -217,6 +217,7 @@ th { text-align: left; font-weight: 600; padding-bottom: .5em; }
 
 // ---------------- Layout containers ----------------
 .wrap { max-width: var(--wrap-normal); margin-left: auto; margin-right: auto; }
+main { padding-top: 2em; }
 article, heading {
   display: block;
   max-width: var(--wrap-wide);
@@ -229,6 +230,7 @@ nav {
   margin: 0 auto 3em;
   width: var(--wrap-normal);
   max-width: var(--wrap-wide);
+  padding-top: 1em;
 }
 footer {
   margin: 4em auto 2em;
@@ -452,3 +454,6 @@ input[type=submit]:hover, button:hover {
   display: inline-block;
   vertical-align: middle;
 }
+// Logo is dark in light mode; invert to white in dark mode so it stays visible.
+.theme-dark .nav-logo { filter: invert(1); }
+.theme-light .nav-logo { filter: none; }

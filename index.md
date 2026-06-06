@@ -6,7 +6,6 @@ permalink: /
 ---
 
 <section class="hero">
-  <p class="muted small font-ui">Shayan Tawabi · Tehran, Iran</p>
   <h1>Shayan Spiel</h1>
   <p class="lede">Solo operator. I build the <strong>second brain + content engine</strong> I use myself, and I sell it to founders who want one without building it. Writing in the open.</p>
   <p class="font-ui">
