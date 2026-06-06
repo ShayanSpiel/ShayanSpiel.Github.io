@@ -11,7 +11,7 @@ baseurl: ""
 lang: en
 logo: /logo.png
 
-permalink: /:title:/
+permalink: /:title/
 paginate_path: /page/:num/
 
 favicon: /logo.png
