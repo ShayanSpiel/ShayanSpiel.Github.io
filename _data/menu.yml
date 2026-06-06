@@ -6,6 +6,8 @@ entries:
       show_more: true
       show_more_url: /posts/
       show_more_text: "all posts →"
+  - title: tags
+    url: /tags/
   - title: about
     url: /about/
   - title: GeoGent

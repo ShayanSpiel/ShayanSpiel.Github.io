@@ -2,22 +2,51 @@
 layout: default
 ---
 
+{%- assign post_categories = page.categories | default: 'post' -%}
+{%- if post_categories and post_categories.first -%}
+  {%- assign category_slug = post_categories | first | downcase | slugify -%}
+  {%- assign category_label = post_categories | first -%}
+{%- else -%}
+  {%- assign category_slug = 'post' -%}
+  {%- assign category_label = 'Post' -%}
+{%- endif -%}
+
 <article>
-  <p class="post-meta">
-    <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%B %-d, %Y" }}</time>
-    {%- if page.tags and page.tags.size > 0 -%}
-    · <span class="font-ui small">{{ page.tags | join: " · " }}</span>
-    {%- endif -%}
+  <nav class="breadcrumb font-ui small muted" aria-label="Breadcrumb">
+    <a href="{{ '/' | relative_url }}" class="plain muted">Home</a>
+    <span class="sep">›</span>
+    <a href="/posts/" class="plain muted">Posts</a>
+    <span class="sep">›</span>
+    <span class="current">{{ page.title | truncate: 60 }}</span>
+  </nav>
+
+  <p class="post-meta font-ui small muted">
+    <a href="/categories/#{{ category_slug }}" class="plain tag-chip category-chip">{{ category_label }}</a>
+    <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%b %-d, %Y" }}</time>
   </p>
+
   <h1>{{ page.title }}</h1>
+
   {%- if page.description -%}
   <p class="lede muted">{{ page.description }}</p>
   {%- endif -%}
 
   {{ content }}
 
+  {%- if page.tags and page.tags.size > 0 -%}
+  <div class="post-tags font-ui small">
+    <span class="muted">Tags:</span>
+    {%- for tag in page.tags -%}
+      <a href="/tags/#{{ tag | slugify }}" class="plain tag-chip">#{{ tag }}</a>
+    {%- endfor -%}
+  </div>
+  {%- endif -%}
+
   <hr>
+
   <p class="small muted">
-    Written by <strong>{{ site.author }}</strong> · <a href="/about/" class="plain">about</a> · <a href="/" class="plain">home</a>
+    ← <a href="/posts/" class="plain">All posts</a>
+    · <a href="/about/" class="plain">About</a>
+    · <a href="mailto:{{ site.email }}" class="plain">Email</a>
   </p>
 </article>

@@ -1,9 +1,9 @@
-title: Shayan Spiel — AI-Powered Startup Marketing Agency
-tagline: AI marketing for early-stage startups
+title: Shayan Spiel
+tagline: Second brain + content engine for solo operators
 description: >-
-  AI-powered marketing for early-stage startups. From positioning to growth,
-  Shayan Spiel helps founders build brands and scale revenue with AI.
-keywords: AI marketing, startup marketing, growth marketing, brand strategy, AI agency, Shayan Spiel, Shayan Tawabi
+  Solo operator building second brains, content engines, and AI agents. Writing
+  in the open. Based in Tehran, Iran.
+keywords: second brain, content engine, AI agents, solo operator, building in public, Shayan Spiel, Shayan Tawabi
 author: Shayan Tawabi
 email: 66shayan@gmail.com
 url: https://shayanspiel.github.io
@@ -11,7 +11,7 @@ baseurl: ""
 lang: en
 logo: /logo.png
 
-permalink: /:year/:month/:title/
+permalink: /:title:/
 paginate_path: /page/:num/
 
 favicon: /logo.png
