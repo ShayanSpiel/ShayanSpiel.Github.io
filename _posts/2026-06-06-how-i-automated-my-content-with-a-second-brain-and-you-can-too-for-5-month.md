@@ -31,7 +31,7 @@ If you build in public, this is the system. If you don't post about your work, t
 
 A second brain is a folder of plain-text notes that an LLM can read. That's it. No database. No SaaS. No vendor lock-in. The notes are markdown. The folder is on your computer. The LLM is the only thing that needs to be smart.
 
-The pattern is simple: every idea gets a page. Every page has *frontmatter* (a header at the top with metadata like title, type, tags). Every page links to other pages with double brackets — `[[like-this]]`. The links form a graph. The graph is the brain.
+The pattern is simple: every idea gets a page. Every page has *frontmatter* (a header at the top with metadata like title, type, tags). Every page links to other pages with double brackets — `like-this`. The links form a graph. The graph is the brain.
 
 The reason this matters: when the LLM reads a page, it can also read the pages the page links to. One read becomes ten reads. The LLM gets *context* — not just the page, but the whole web of ideas around the page.
 
@@ -94,7 +94,7 @@ The tree is a 7-node decision procedure. It takes the session log as input and o
 
 If the work was bigger than a session — a system, a turning point, a story — the tree outputs "pillar." A pillar is a different beast. The pillar is a 1500-2500 word blog post that becomes the *source of truth* for 3 LinkedIn posts and 5-10 X posts. The pillar is the deep one. The other platforms are samples.
 
-This is the [[pillar-guide-method|pillar method]] in one sentence: one piece of work becomes many pieces of content, all sampled from one source.
+This is the pillar method in one sentence: one piece of work becomes many pieces of content, all sampled from one source.
 
 ![the spec behind the decision tree — 6 LI archetypes, 8 X types, 3 blog types](../assets/uploads/2026-06-06-how-i-automated-my-content-with-a-second-brain-and-you-can-too-for-5-month/07-content-types.png)
 *the spec behind the decision tree. 6 LinkedIn archetypes (A-F). 8 X types. 3 blog types. one decision tree at the top. the LLM reads this page before drafting a single word.*
@@ -105,7 +105,7 @@ The first version of this system produced 25 X post drafts in one sitting. I was
 
 The reason: the posts assumed context I had, that a stranger did not. A post like *"raw/ files in my second brain are SHA256-stamped"* assumes the reader knows what a second brain is, knows what a raw/ folder is, and cares about hash integrity. The reader knows none of these. The post is an inside joke.
 
-The fix is the [[standalone-quality-test|standalone test]]. Every draft must pass 4 checks:
+The fix is the standalone test. Every draft must pass 4 checks:
 
 1. **5-second test.** A stranger can extract 1 idea in 5 seconds.
 2. **No-prior-episode test.** The post does not require reading earlier posts.
@@ -116,11 +116,11 @@ A draft that fails 1 check is fixable. A draft that fails 2+ checks is a fragmen
 
 The standalone test is the most important piece of the system. It is also the easiest to skip. The temptation to skip it is the temptation to ship a post that is *for you* instead of *for the reader*. The test prevents that.
 
-This is the [[ground-vision|ground vision]] in practice. The reader does not know who you are. The reader does not know what you are building. The reader has 5 seconds. The post must work in those 5 seconds.
+This is the ground vision in practice. The reader does not know who you are. The reader does not know what you are building. The reader has 5 seconds. The post must work in those 5 seconds.
 
 ## The 3-platform model (X, LinkedIn, blog)
 
-The system does not post to one platform. It posts to three: [[x]], [[linkedin]], and the [[blog]]. Each has a role.
+The system does not post to one platform. It posts to three: x, linkedin, and the blog. Each has a role.
 
 - **X** is the *fast surface*. 280 characters. 1-3 posts per session. Tests ideas fast.
 - **LinkedIn** is the *middle surface*. 1300-3000 characters. 1-2 posts per week. Story mode. Reaches builders and founders.
@@ -151,7 +151,7 @@ The "**$5/month**" number is the *all-in* cost including the LLM. It is a brand 
 
 The system is open-source. The 4 files are 4 markdown files. The whole thing is reproducible in an afternoon. Here is the order:
 
-**Hour 1: the vault.** Set up an Obsidian vault. Create the 4 folders: `entities/`, `concepts/`, `summaries/`, `raw/`. Write 5 pages about your work — 2 entities, 3 concepts. Use the frontmatter schema. Link pages to each other with `[[wikilinks]]`. The LLM needs the graph.
+**Hour 1: the vault.** Set up an Obsidian vault. Create the 4 folders: `entities/`, `concepts/`, `summaries/`, `raw/`. Write 5 pages about your work — 2 entities, 3 concepts. Use the frontmatter schema. Link pages to each other with `wikilinks`. The LLM needs the graph.
 
 **Hour 2: the strategy pages.** Write 4 pages in `concepts/`: content strategy, tone of voice, content types, ground vision. These are the pages that define *what* the system posts. The LLM needs the spec. If you cannot write the spec, the LLM cannot draft.
 
@@ -185,13 +185,13 @@ If you have been not posting, build the 4 files. The 4 files are the system. The
 ## Links
 
 **Internal (vault):**
-- [[shayanspiel]] — the brand, the person writing this blog
-- [[geogent]] — the most prominent project ShayanSpiel writes about (one of many subjects)
-- [[ground-vision]] — the educational principle
-- [[standalone-quality-test]] — the 4-check gate
-- [[pillar-guide-method]] — the atomization workflow
-- [[content-strategy]] — goals, audience, cadence
-- [[platform-format-specs]] — the format per surface
+- shayanspiel — the brand, the person writing this blog
+- geogent — the most prominent project ShayanSpiel writes about (one of many subjects)
+- ground-vision — the educational principle
+- standalone-quality-test — the 4-check gate
+- pillar-guide-method — the atomization workflow
+- content-strategy — goals, audience, cadence
+- platform-format-specs — the format per surface
 
 **External (sources):**
 - [Obsidian](https://obsidian.md) — the vault editor
