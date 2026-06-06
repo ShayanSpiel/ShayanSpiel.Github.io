@@ -1,0 +1,14 @@
+<nav class="flex align-center font-ui">
+  <span class="flex-grow">
+    <a class="plain" href="{{ '/' | relative_url }}">{{ site.title | split: ' — ' | first }}</a>
+  </span>
+  <span class="flex-shrink" style="display:inline-flex;gap:1.25rem;align-items:center;margin-right:1rem;">
+    {%- for item in site.data.menu.entries -%}
+      <a href="{{ item.url | relative_url }}" class="muted plain">{{ item.title | capitalize }}</a>
+    {%- endfor -%}
+  </span>
+  <span id="theme-toggle" title="Toggle theme (press d)" aria-label="Toggle dark mode" role="switch" aria-checked="true" type="button">
+    <div class="theme-toggle-slide"></div>
+    <div class="theme-toggle-switch"></div>
+  </span>
+</nav>

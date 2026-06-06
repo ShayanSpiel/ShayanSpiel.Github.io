@@ -2,14 +2,22 @@
 layout: default
 ---
 
-{%-include back_link.html-%}
-
 <article>
   <p class="post-meta">
-    <time datetime="{{ page.date }}">{{ page.date | date: site.theme_config.date_format }}</time>
+    <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%B %-d, %Y" }}</time>
+    {%- if page.tags and page.tags.size > 0 -%}
+    · <span class="font-ui small">{{ page.tags | join: " · " }}</span>
+    {%- endif -%}
   </p>
-  
   <h1>{{ page.title }}</h1>
+  {%- if page.description -%}
+  <p class="lede muted">{{ page.description }}</p>
+  {%- endif -%}
 
   {{ content }}
+
+  <hr>
+  <p class="small muted">
+    Written by <strong>{{ site.author }}</strong> · <a href="/about/" class="plain">about</a> · <a href="/" class="plain">home</a>
+  </p>
 </article>

@@ -1,21 +1,49 @@
 <!DOCTYPE html>
-<html lang="{{ page.lang | default: "en" }}">
+<html lang="{{ site.lang | default: 'en' }}">
   {%- include head.html -%}
-  <body a="{{ site.theme_config.appearance | default: "auto" }}">
-    <main class="page-content" aria-label="Content">
-      <div class="w">
+  <body class="theme-dark">
+    <script>
+      if (localStorage.theme === 'light' || (!('theme' in localStorage) && false)) {
+        document.body.classList.remove('theme-dark');
+        document.body.classList.add('theme-light');
+      }
+    </script>
+
+    {%- include nav.html -%}
+
+    <main>
+      <div class="wrap">
         {{ content }}
       </div>
     </main>
 
+    {%- include footer.html -%}
+
+    <script>
+      var darkModeToggle = document.querySelector("#theme-toggle");
+      function toggleTheme() {
+        document.body.classList.toggle("theme-dark");
+        document.body.classList.toggle("theme-light");
+        updateThemeState();
+      }
+      function updateThemeState() {
+        let isDark = document.body.classList.contains("theme-dark");
+        localStorage.setItem("theme", isDark ? "dark" : "light");
+        if (darkModeToggle) darkModeToggle.setAttribute("aria-checked", isDark.toString());
+      }
+      if (darkModeToggle) {
+        darkModeToggle.addEventListener("click", toggleTheme);
+        darkModeToggle.setAttribute("aria-checked",
+          document.body.classList.contains("theme-dark").toString());
+      }
+      window.addEventListener('keydown', function(e) {
+        if (document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA')) return;
+        if ((e.key === 'd' || e.key === 'D') && !e.ctrlKey && !e.metaKey) toggleTheme();
+      });
+    </script>
+
     {%-if site.goat_counter and jekyll.environment == "production"-%}
       {%-include goat_counter.html-%}
     {%-endif-%}
-
-    {% if page.custom_js %}
-      {% for js_file in page.custom_js %}
-        <script type="text/javascript" src="{{ site.baseurl }}/assets/js/{{ js_file }}.js"></script>
-      {% endfor %}
-    {% endif %}
   </body>
 </html>

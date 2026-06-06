@@ -1,0 +1,71 @@
+<footer>
+  <div class="footer-top">
+    <p><a href="#subscribe" class="muted font-ui">Receive my updates</a></p>
+    <p>Follow via <a href="{{ '/feed.xml' | relative_url }}">RSS</a>, <a href="https://twitter.com/{{ site.twitter.username }}" target="_blank" rel="noopener noreferrer">X</a>, and <a href="https://www.linkedin.com/in/shayayantawabi" target="_blank" rel="noopener noreferrer">LinkedIn</a> — or email <a href="mailto:{{ site.email }}">{{ site.email }}</a></p>
+    <div class="mn2 small font-ui">
+      <form
+        id="subscribe"
+        class="footer-email-form"
+        action="https://docs.google.com/forms/d/e/1FAIpQLScSAISdLXFTAex_cHMmdMCXQdaMGlwLouLRmptFo_5VcdV_GA/formResponse"
+        method="POST"
+        target="hidden_iframe"
+      >
+        <label for="footer-email" style="position:absolute;left:-9999px;">Email</label>
+        <input id="footer-email" type="email" name="entry.754901073" placeholder="Enter your email" required autocomplete="email" />
+        <button type="submit">Sign up</button>
+      </form>
+    </div>
+  </div>
+  <p class="mn2">&copy; {{ site.time | date: "%Y" }} {{ site.author }}</p>
+
+  <iframe name="hidden_iframe" id="hidden_iframe" title="waitlist-submit" hidden></iframe>
+
+  <script>
+    (function () {
+      var SUBMIT_TIMEOUT_MS = 6000;
+      var form = document.getElementById("subscribe");
+      var iframe = document.getElementById("hidden_iframe");
+      if (!form || !iframe) return;
+
+      var btn = form.querySelector("button");
+      var input = form.querySelector('input[type="email"]');
+      var originalLabel = btn ? btn.textContent : "";
+      var pendingTimeout = null;
+
+      function setLabel(text) { if (btn) btn.textContent = text; }
+      function lock() { if (btn) { btn.disabled = true; setLabel("Sending…"); } }
+      function unlock() { if (btn) { btn.disabled = false; setLabel(originalLabel); } }
+      function succeed() {
+        if (pendingTimeout) { clearTimeout(pendingTimeout); pendingTimeout = null; }
+        setLabel("Subscribed ✓");
+        if (input) input.value = "";
+        if (btn) btn.disabled = true;
+      }
+      function fail() {
+        if (pendingTimeout) { clearTimeout(pendingTimeout); pendingTimeout = null; }
+        unlock();
+        if (input) input.focus();
+        alert("Hmm, didn't go through. Check your connection and retry.");
+      }
+
+      iframe.addEventListener("load", function () {
+        if (pendingTimeout) { clearTimeout(pendingTimeout); pendingTimeout = null; }
+        succeed();
+      });
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var email = (input && input.value || "").trim();
+        if (!email) { if (input) input.focus(); return; }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          if (input) input.focus();
+          alert("That email doesn't look right.");
+          return;
+        }
+        lock();
+        pendingTimeout = setTimeout(fail, SUBMIT_TIMEOUT_MS);
+        form.submit();
+      });
+    })();
+  </script>
+</footer>

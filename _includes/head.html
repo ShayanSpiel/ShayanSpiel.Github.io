@@ -1,21 +1,97 @@
+{%- assign canonical_url = page.url | replace: 'index.html', '' | absolute_url -%}
+{%- assign og_title = page.title | default: site.title | escape -%}
+{%- assign og_description = page.description | default: page.excerpt | default: site.description | strip_html | normalize_whitespace | truncate: 200 -%}
+{%- assign og_image = page.image | default: site.logo | absolute_url -%}
+
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#100F0F" />
+  <meta name="color-scheme" content="dark light" />
 
-  <title>
-    {%- if page.title -%}
-      {{ page.title }}
-    {%- else -%}
-      {{ site.title }}
-    {%- endif -%}
-  </title>
+  <title>{% if page.title and page.url != '/' %}{{ page.title }} — {{ site.title | split: ' — ' | first }}{% else %}{{ site.title }}{% endif %}</title>
+
+  <meta name="description" content="{{ og_description }}" />
+  {%- if site.keywords -%}
+  <meta name="keywords" content="{{ site.keywords }}" />
+  {%- endif -%}
+  <meta name="author" content="{{ site.author }}" />
+  <link rel="canonical" href="{{ canonical_url }}" />
+
+  <meta property="og:type" content="{% if page.layout == 'post' %}article{% else %}website{% endif %}" />
+  <meta property="og:site_name" content="{{ site.title | split: ' — ' | first }}" />
+  <meta property="og:title" content="{{ og_title }}" />
+  <meta property="og:description" content="{{ og_description }}" />
+  <meta property="og:url" content="{{ canonical_url }}" />
+  <meta property="og:locale" content="en_US" />
+  {%- if og_image -%}
+  <meta property="og:image" content="{{ og_image }}" />
+  {%- endif -%}
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@{{ site.twitter.username }}" />
+  <meta name="twitter:creator" content="@{{ site.twitter.username }}" />
+  <meta name="twitter:title" content="{{ og_title }}" />
+  <meta name="twitter:description" content="{{ og_description }}" />
+  {%- if og_image -%}
+  <meta name="twitter:image" content="{{ og_image }}" />
+  {%- endif -%}
+
+  {%- if page.layout == 'post' -%}
+  <meta property="article:published_time" content="{{ page.date | date_to_xmlschema }}" />
+  <meta property="article:author" content="{{ site.author }}" />
+  {%- endif -%}
 
   {%-seo title=false-%}
   {%-feed_meta-%}
 
-  <link rel="shortcut icon" type="image/x-icon" href="{{ site.favicon | relative_url }}" />
-  <link rel="stylesheet" href="{{ "/assets/css/main.css" | relative_url }}" />
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.css" integrity="sha384-OH8qNTHoMMVNVcKdKewlipV4SErXqccxxlg6HC9Cwjr5oZu2AdBej1TndeCirael" crossorigin="anonymous">
+  <link rel="icon" type="image/png" href="{{ '/logo.png' | relative_url }}" />
+  <link rel="apple-touch-icon" href="{{ '/logo.png' | relative_url }}" />
+  <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ '/feed.xml' | relative_url }}" />
+  <link rel="sitemap" type="application/xml" title="Sitemap" href="{{ '/sitemap.xml' | relative_url }}" />
 
+  <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.css" integrity="sha384-OH8qNTHoMMVNVcKdKewlipV4SErXqccxxlg6HC9Cwjr5oZu2AdBej1TndeCirael" crossorigin="anonymous">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": "{{ site.url }}/#person",
+        "name": "{{ site.author }}",
+        "url": "{{ site.url }}",
+        "sameAs": [
+          "https://twitter.com/{{ site.twitter.username }}",
+          "https://www.linkedin.com/in/shayayantawabi"
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "{{ site.url }}/#website",
+        "url": "{{ site.url }}",
+        "name": "{{ site.title | split: ' — ' | first }}",
+        "description": "{{ site.description | strip_html | normalize_whitespace | escape }}",
+        "inLanguage": "en",
+        "publisher": { "@id": "{{ site.url }}/#person" }
+      }
+    ]
+  }
+  </script>
+  {%- if page.layout == 'post' -%}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "{{ page.title | escape }}",
+    "url": "{{ canonical_url }}",
+    "datePublished": "{{ page.date | date_to_xmlschema }}",
+    "author": { "@id": "{{ site.url }}/#person" },
+    "publisher": { "@id": "{{ site.url }}/#person" },
+    "description": "{{ og_description }}"
+  }
+  </script>
+  {%- endif -%}
 </head>

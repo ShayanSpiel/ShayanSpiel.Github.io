@@ -1,0 +1,26 @@
+# Jekyll build artifacts
+_site/
+.sass-cache/
+.jekyll-cache/
+.jektex-cache/
+.jekyll-metadata
+
+# Ruby/Bundler
+.bundle/
+vendor/bundle/
+
+# Lockfiles (use Gemfile only for GH Pages remote build)
+Gemfile.lock
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*~
+
+# Logs
+*.log
