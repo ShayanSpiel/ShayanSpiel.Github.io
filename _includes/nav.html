@@ -1,6 +1,12 @@
 <nav class="flex align-center font-ui">
   <span class="flex-grow">
-    <a class="plain" href="{{ '/' | relative_url }}">{{ site.title | split: ' — ' | first }}</a>
+    <a class="plain" href="{{ '/' | relative_url }}">
+      {%- if site.logo -%}
+        <img src="{{ site.logo | relative_url }}" alt="logo" class="ioda nav-logo" />
+      {%- else -%}
+        {{ site.title | split: ' — ' | first }}
+      {%- endif -%}
+    </a>
   </span>
   <span class="flex-shrink" style="display:inline-flex;gap:1.25rem;align-items:center;margin-right:1rem;">
     {%- for item in site.data.menu.entries -%}
