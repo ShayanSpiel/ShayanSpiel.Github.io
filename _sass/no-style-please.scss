@@ -217,7 +217,6 @@ th { text-align: left; font-weight: 600; padding-bottom: .5em; }
 
 // ---------------- Layout containers ----------------
 .wrap { max-width: var(--wrap-normal); margin-left: auto; margin-right: auto; }
-main { padding-top: 2em; }
 article, heading {
   display: block;
   max-width: var(--wrap-wide);
@@ -227,10 +226,9 @@ article, heading {
 }
 article img { margin-bottom: .5em; }
 nav {
-  margin: 0 auto 3em;
+  margin: 0 auto 1.5em;
   width: var(--wrap-normal);
   max-width: var(--wrap-wide);
-  padding-top: 1em;
 }
 footer {
   margin: 4em auto 2em;
