@@ -46,7 +46,7 @@ Each state is one step in the loop.
 - **Update:** write the new page, log the action, bump the state file
 - **Repeat:** next source file or back to IDLE
 
-The same pattern powers the content engine:
+The same pattern powers the content engine (full spec in [AGENTS.md](https://github.com/ShayanSpiel/SpielEngine/blob/main/AGENTS.md)):
 
 ```
 /post → SESSION → STRATEGY → DRAFT → GATES → QUEUE → REVIEW? → PUBLISH → ARCHIVE → ANALYZE → IDLE
@@ -62,7 +62,7 @@ A loop catches failure at every transition.
 
 Each state has a validation gate. Before moving to the next state, the model checks: did the action work? If no, it stays in the current state and retries or reports. There is no "silently wrong" output.
 
-![The skill file — the skill is the trigger, the state machine is the execution](../assets/uploads/2026-06-08-from-declarative-rules-to-agentic-loops/09-skill-file.png)
+![The AGENTS.md file — the state machine that governs the entire system](../assets/uploads/2026-06-08-from-declarative-rules-to-agentic-loops/09-skill-file.png)
 
 This is the difference between a system that looks like it should work and a system that actually works.
 
@@ -100,6 +100,8 @@ A prompt cannot do this. A prompt cannot say "if quality is above 0.85, proceed,
 Prompt engineering is the past. Agentic loops are the future. The industry is figuring this out right now. The people building with state machines and execution gates are shipping. The people still optimizing their 3000-word system prompt are stuck.
 
 Do not build a bigger prompt. Build a loop.
+
+If you want to start from a blank template: the [SpielEngine repo](https://github.com/ShayanSpiel/SpielEngine) has the full state machine, 18 slash commands, and quality gates as a starter kit.
 
 ![The LLM-wiki vault — the memory layer of the loop](../assets/uploads/2026-06-08-from-declarative-rules-to-agentic-loops/LLM-WIKI-SS.png)
 
