@@ -18,8 +18,7 @@ permalink: /
 
 ## Latest
 
-- **[How I rebuilt my blog in 4 hours (and shipped 2 posts the same night)](/how-i-rebuilt-my-blog-in-4-hours-and-shipped-2-posts-the-same-night/)** — From a Jekyll demo to a brand-source-of-truth blog. 1 script. 2 posts. Same night. *(Jun 6)*
-- **[How I automated my content with a second brain (and you can too, for $5/month)](/how-i-automated-my-content-with-a-second-brain-and-you-can-too-for-5-month/)** — The 4-file system that turns dev sessions into 2-3 post drafts. Obsidian + opencode + /post. *(Jun 6)*
+{% include post_list.html limit=30 %}
 
 <p class="small"><a href="/posts/" class="plain">All posts →</a></p>
 
@@ -36,6 +35,6 @@ That's it for now. I'll add a 1:1 audit and a cohort when there's a queue. No up
 
 ## Currently shipping
 
-- **The Spiel engine** — second brain + content engine, productized
+- **[SpielEngine](https://github.com/ShayanSpiel/SpielEngine)** — the agentic wiki template, now open source ([announcement](/spielengine-is-now-open-source/))
 - **GeoGent** — a strategy game I'm building in public ([waitlist](/GeoGent-Waitlist/))
 - **This site** — the source of truth for everything I write
