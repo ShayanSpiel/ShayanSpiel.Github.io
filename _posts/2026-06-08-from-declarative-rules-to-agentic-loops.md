@@ -101,7 +101,7 @@ Prompt engineering is the past. Agentic loops are the future. The industry is fi
 
 Do not build a bigger prompt. Build a loop.
 
-If you want to start from a blank template: the [SpielEngine repo](https://github.com/ShayanSpiel/SpielEngine) has the full state machine, 18 slash commands, and quality gates as a starter kit.
+If you want to start from a blank template: the [SpielEngine repo](https://github.com/ShayanSpiel/SpielEngine) has the full state machine, 18 slash commands, and quality gates as a starter kit. I wrote a [follow-up post with the full installation walkthrough](/spielengine-is-now-open-source/).
 
 ![The LLM-wiki vault — the memory layer of the loop](../assets/uploads/2026-06-08-from-declarative-rules-to-agentic-loops/LLM-WIKI-SS.png)
 
