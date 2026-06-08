@@ -14,7 +14,7 @@ This is not a model problem. It is an architecture problem. You built a constitu
 
 Here is the loop that fixed it, the industry framing everyone in the agentic-AI space is talking about, and why prompt engineering is the past but agentic loops are the future.
 
-![The vault directory — the structure that the state machine manages](/assets/screenshots/01-vault-tree.png)
+![The vault directory — the structure that the state machine manages](../assets/uploads/2026-06-08-from-declarative-rules-to-agentic-loops/01-vault-tree.png)
 
 ---
 
@@ -62,7 +62,7 @@ A loop catches failure at every transition.
 
 Each state has a validation gate. Before moving to the next state, the model checks: did the action work? If no, it stays in the current state and retries or reports. There is no "silently wrong" output.
 
-![The skill file — the skill is the trigger, the state machine is the execution](/assets/screenshots/09-skill-file.png)
+![The skill file — the skill is the trigger, the state machine is the execution](../assets/uploads/2026-06-08-from-declarative-rules-to-agentic-loops/09-skill-file.png)
 
 This is the difference between a system that looks like it should work and a system that actually works.
 
@@ -101,7 +101,7 @@ Prompt engineering is the past. Agentic loops are the future. The industry is fi
 
 Do not build a bigger prompt. Build a loop.
 
-![The LLM-wiki vault — the memory layer of the loop](/assets/screenshots/LLM-WIKI-SS.png)
+![The LLM-wiki vault — the memory layer of the loop](../assets/uploads/2026-06-08-from-declarative-rules-to-agentic-loops/LLM-WIKI-SS.png)
 
 Note: i absolutely wrote the big prompt first. i spent months adding rules to it. The day i replaced it with a 200-line state machine was the day the system started working. The model did not change. The architecture did.
 
