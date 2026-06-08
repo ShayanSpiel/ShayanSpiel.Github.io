@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "SpielEngine is Now Open Source"
-date: 2026-06-08 07:05:01 +0330
+date: 2026-06-08 09:00:00 +0000
 ---
 
 Two days ago i published a post called [From Declarative Rules to Agentic Loops](/from-declarative-rules-to-agentic-loops/). It was about the architecture that finally made my LLM-operated wiki work — state machines, validation gates, and a loop instead of a prompt.
@@ -162,33 +162,3 @@ Note: i absolutely built this for myself first. The repo was extracted from my w
 
 Are you going to try it? Drop a comment or open an issue on the repo.
 
----
-
-## Atomization Plan
-
-### LinkedIn (3 posts)
-
-**LinkedIn 01: The open-source announcement**
-Hook: "Two days ago i published a post about agentic loops. The response was: where is the template. Here it is."
-Focus: Emotion of releasing it + what it contains
-Engagement: "Clone it. Break it. Tell me what is missing."
-
-**LinkedIn 02: The installation story**
-Hook: "The SpielEngine template takes 10 seconds to clone and 10 minutes to customize."
-Focus: How fast setup is + show the `/state` command
-Engagement: "What is the first source you would feed it?"
-
-**LinkedIn 03: opencode vs Claude Code**
-Hook: "Installing SpielEngine in opencode is 3 commands. In Claude Code it is 1 file."
-Focus: Both installation paths, why AGENTS.md works universally
-Engagement: "What tool are you building your agentic wiki in?"
-
-### X (7 posts)
-
-1. "SpielEngine is now open source. Link in bio."
-2. "The template that runs my LLM wiki is now public."
-3. "Clone it in 10 seconds. Customize in 10 minutes."
-4. "Works with opencode, Claude Code, Cursor, any LLM tool."
-5. "Two state machines, 18 commands, 7 templates, 2 health scripts."
-6. "The state machine is 200 lines of markdown. Read it in 10 minutes."
-7. "Prompt engineering is the past. Agentic loops are the future. Here is the repo."
