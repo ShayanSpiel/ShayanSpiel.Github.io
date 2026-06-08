@@ -1,7 +1,7 @@
 (function () {
   const SHARE_URL = "https://geogent.spiel.workers.dev/?utm_source=twitter&utm_medium=share&utm_campaign=alpha_waitlist";
   const COPY_URL = "https://shayanspiel.github.io/GeoGent-Waitlist/";
-  const SHARE_TEXT = "I just locked in my @GeoGent alpha seat. 🏰\n\nA browser strategy MMO where your rivals are AIs with memory, grudges, and personality. Real hex wars, real economy, no pay-to-win.\n\n1,000 founders. Limited seats. Grab yours 👇";
+  const SHARE_TEXT = "I just locked in my @GeoGentX alpha seat. 🏰\n\nA browser strategy MMO where your rivals are AIs with memory, grudges, and personality. Real hex wars, real economy, no pay-to-win.\n\n1,000 founders. Limited seats. Grab yours 👇";
   const SHARE_HASHTAGS = "StrategyGames,IndieGame";
   const SUBMIT_TIMEOUT_MS = 6000;
 
