@@ -51,3 +51,6 @@ jektex:
   macros:
     - ["\\Q", "\\mathbb{Q}"]
     - ["\\C", "\\mathbb{C}"]
+
+# Allow future-dated posts (SpielEngine publishes as generated)
+future: true

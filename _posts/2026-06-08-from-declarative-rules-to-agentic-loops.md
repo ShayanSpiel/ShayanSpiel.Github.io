@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "From Declarative Rules To Agentic Loops"
-date: 2026-06-08 09:00:00 +0000
+date: 2026-06-08 07:05:01 +0330
 ---
 
 A year ago i built a prompt. 2000 words. Every rule i could think of.

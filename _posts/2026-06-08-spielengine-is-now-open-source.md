@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "SpielEngine is Now Open Source"
-date: 2026-06-08 09:00:00 +0000
+date: 2026-06-08 07:05:01 +0330
 ---
 
 Two days ago i published a post called [From Declarative Rules to Agentic Loops](/from-declarative-rules-to-agentic-loops/). It was about the architecture that finally made my LLM-operated wiki work — state machines, validation gates, and a loop instead of a prompt.
