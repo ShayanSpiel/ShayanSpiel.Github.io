@@ -156,7 +156,7 @@ The rebuild shipped 4 deliverables in 4 hours:
 - **2 pillar posts** — this post + the prior post on the second-brain architecture. Both published the same night.
 - **15 screenshots rendered** — 7 for the first pillar, 8 for this pillar, all 1600x1600 PNGs, all in `assets/uploads/`.
 
-The brand hierarchy is now consistent. The blog about-page mirrors the wiki `shayanspiel` page. The wiki `background-and-credibility` page is the proof layer the about-page pulls from. The X handle is `@ShayanSpiel`. The LinkedIn URL is `linkedin.com/in/shayayantawabi`. The blog is at `https://shayanspiel.github.io`. The contact email is `66shayan@gmail.com`. Every surface points to the same person.
+The brand hierarchy is now consistent. The blog about-page mirrors the wiki `shayanspiel` page. The wiki `background-and-credibility` page is the proof layer the about-page pulls from. The X handle is `@ShayanSpiel`. The LinkedIn URL is `linkedin.com/in/shayayantawabi`. The blog is at `https://shayanspiel.github.io`. the contact email is on the [contact page](/contact/). Every surface points to the same person.
 
 The rebuild took 4 hours. The rebuild shipped 2 posts. The rebuild did not need a GUI. The rebuild did not need a local Jekyll build. The rebuild was one command per post.
 

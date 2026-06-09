@@ -1,0 +1,25 @@
+---
+layout: page
+title: Contact
+description: Get in touch with Shayan Spiel.
+permalink: /contact/
+---
+
+## Get in touch
+
+**Fastest response:** DM me on X or LinkedIn.
+
+- **<a href="https://twitter.com/ShayanSpiel" target="_blank" rel="noopener noreferrer">X / DM →</a>**
+- **<a href="https://www.linkedin.com/in/shayayantawabi" target="_blank" rel="noopener noreferrer">LinkedIn / DM →</a>**
+
+## Email
+
+Want to work together? Send me a message and I'll get back to you.
+
+<a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#54;&#54;&#115;&#104;&#97;&#121;&#97;&#110;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" class="plain action">&#54;&#54;&#115;&#104;&#97;&#121;&#97;&#110;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;</a>
+
+## What to say
+
+- **Reply "ENGINE"** — I'll send you the application for The Spiel Engine ($2,900).
+- **Reply "SPIEL"** — I'll send you the offer page.
+- **Anything else** — just say hi. I read every message.

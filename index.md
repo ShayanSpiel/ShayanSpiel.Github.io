@@ -7,12 +7,12 @@ permalink: /
 
 <section class="hero">
   <h1>Shayan Spiel</h1>
-  <p class="lede">Solo operator. I build the <strong>second brain + content engine</strong> I use myself, and I sell it to founders who want one without building it. Writing in the open.</p>
+  <p class="lede">I help <strong>technical founders</strong> turn their deep expertise into consistent inbound leads — using AI systems that run themselves. Writing in the open.</p>
   <p class="font-ui">
     <a href="/about/" class="plain"><strong>About</strong></a> ·
     <a href="https://twitter.com/ShayanSpiel" class="plain" target="_blank" rel="noopener noreferrer"><strong>X</strong></a> ·
     <a href="https://www.linkedin.com/in/shayayantawabi" class="plain" target="_blank" rel="noopener noreferrer"><strong>LinkedIn</strong></a> ·
-    <a href="mailto:66shayan@gmail.com" class="plain"><strong>Email</strong></a>
+    <a href="/contact/" class="plain"><strong>Contact</strong></a>
   </p>
 </section>
 
@@ -24,14 +24,13 @@ permalink: /
 
 ## What I sell
 
-I build the **second brain + content engine** I use myself. Two ways to get it:
+One offer. One price. No upsell.
 
-- **Framework** — $97. The 4 files, the walkthrough, the example vault. You set it up. You own it.
-- **Done for you** — $2,500. I set it up. You show up on day 15 with a system that works.
+**The Spiel Engine — $2,900.** A complete inbound lead system that runs itself. I build it for you in 14 days.
 
-That's it for now. I'll add a 1:1 audit and a cohort when there's a queue. No upsell.
+Includes: positioning strategy, offer design, bio rewrite, full Obsidian vault + AI agent installation, workflow design (session → queue → publish), template library, 3 sample pillars in your voice, and 30 days of post-publish review.
 
-[About page →](/about/) · [Email me →](mailto:66shayan@gmail.com)
+<a href="/contact/">Apply now →</a>
 
 ## Currently shipping
 

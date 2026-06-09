@@ -7,22 +7,37 @@ permalink: /about/
 
 Hi. I'm Shayan.
 
-Solo operator. I build the **second brain + content engine** I use myself, and I sell it to founders who want one without building it. Writing in the open. Shipping in the open.
+Solo operator. I help **technical founders** turn their deep expertise into consistent inbound leads — using AI systems that run themselves.
 
 ## What I sell
 
-Two ways to get the system:
+One offer. One price.
 
-- **Framework — $97.** The 4 files, the walkthrough, the example vault. You set it up. You own it. Spend a weekend with the walkthrough and a month using it. Money-back if it doesn't click.
-- **Done for you — $2,500.** I set up the vault, the queue, the slash command, the voice spec, the template library. I also write **3 sample pillars** in your voice. You show up on day 15 with a system that works.
+**The Spiel Engine — $2,900.** A complete inbound lead system that runs itself. I build it for you in 14 days, and you own it.
 
-That's it. No agency retainers. No 40-slide strategy decks. No "personal branding as a service." The blog is the source of truth — every offer post on X or LinkedIn points back to a pillar here. Read the pillar first; the offer post is the trailer.
+Here's what's inside:
 
-Want one? Email [66shayan@gmail.com](mailto:66shayan@gmail.com) with the word **FRAMEWORK** or **BRAIN** in the subject. I'll send the link.
+| Component | Value |
+|---|---|
+| Positioning strategy (ICP, category, differentiation) | $2,000 |
+| Offer design (value equation, Schwartz mapping, guarantee) | $2,000 |
+| Bio rewrite (X, LinkedIn, website) | $500 |
+| The Spiel Engine installation (Obsidian vault, AI agents, templates, quality gates, voice spec) | $3,000 |
+| Workflow design (session capture → /post → queue → review → publish) | $1,000 |
+| Execution structure (templates, queues, archive + 3 sample pillars in your voice) | $1,500 |
+| 30 days of post-publish review | $1,200 |
+| **Total value** | **$11,200** |
+| **Your investment** | **$2,900** |
+
+**The guarantee:** If after 30 days you've run 5 sessions through the engine and you don't have 5 standalone-tested drafts in your queue, I'll refund 100% — and you keep the system.
+
+**3 slots per month.** Hard cap. Next slot starts in 7 days.
+
+[Apply now →](/contact/)
 
 ## What I'm building right now
 
-- **The Spiel engine** — second brain + content engine. The 4 files I use. [Pillar post →](/how-i-automated-my-content-with-a-second-brain-and-you-can-too-for-5-month/)
+- **The Spiel Engine** — second brain + content engine. My single offer. [Pillar post →](/how-i-automated-my-content-with-a-second-brain-and-you-can-too-for-5-month/)
 - **GeoGent** — a browser-based strategy MMO. Build cities, run economies, win wars. In test phase. [Waitlist →](/GeoGent-Waitlist/)
 - **This site** — the front door. The blog. The source of truth.
 
@@ -30,7 +45,7 @@ Want one? Email [66shayan@gmail.com](mailto:66shayan@gmail.com) with the word **
 
 - **[X](https://twitter.com/ShayanSpiel)** — fast surface. Casual updates. Building-in-public.
 - **[LinkedIn](https://www.linkedin.com/in/shayayantawabi)** — middle surface. 1 post per work session.
-- **[Email](mailto:66shayan@gmail.com)** — for offers, partnerships, press.
+- **[Contact](/contact/)** — for offers, partnerships, press.
 - **[Blog](/)** — the source of truth.
 
 ## Receipts

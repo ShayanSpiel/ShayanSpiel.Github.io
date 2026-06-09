@@ -1,5 +1,7 @@
 entries:
   - title: about
     url: /about/
+  - title: contact
+    url: /contact/
   - title: GeoGent
     url: /GeoGent-Waitlist/
