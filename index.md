@@ -22,6 +22,12 @@ permalink: /
 
 <p class="small"><a href="/posts/" class="plain">All posts →</a></p>
 
+## Work with me
+
+I help technical founders turn deep expertise into consistent inbound leads — using AI systems that run themselves. Strategy + The Spiel Engine.
+
+<p class="font-ui"><a href="/contact/" class="plain action"><strong>Contact me →</strong></a></p>
+
 ## Currently shipping
 
 - **[SpielEngine](https://github.com/ShayanSpiel/SpielEngine)** — the agentic wiki template, now open source ([announcement](/spielengine-is-now-open-source/))

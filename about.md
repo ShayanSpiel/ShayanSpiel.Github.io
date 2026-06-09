@@ -11,27 +11,13 @@ Solo operator. I help **technical founders** turn their deep expertise into cons
 
 ## What I sell
 
-One offer. One price.
-
 **The Spiel Engine — $2,900.** A complete inbound lead system that runs itself. I build it for you in 14 days, and you own it.
 
-Here's what's inside:
-
-| Component | Value |
-|---|---|
-| Positioning strategy (ICP, category, differentiation) | $2,000 |
-| Offer design (value equation, Schwartz mapping, guarantee) | $2,000 |
-| Bio rewrite (X, LinkedIn, website) | $500 |
-| The Spiel Engine installation (Obsidian vault, AI agents, templates, quality gates, voice spec) | $3,000 |
-| Workflow design (session capture → /post → queue → review → publish) | $1,000 |
-| Execution structure (templates, queues, archive + 3 sample pillars in your voice) | $1,500 |
-| 30 days of post-publish review | $1,200 |
-| **Total value** | **$11,200** |
-| **Your investment** | **$2,900** |
+Includes: ICP template file, offer design, The Spiel Engine installation, workflow design, execution structure, tone of voice, and branding assets for banner design.
 
 **The guarantee:** If after 30 days you've run 5 sessions through the engine and you don't have 5 standalone-tested drafts in your queue, I'll refund 100% — and you keep the system.
 
-**3 slots per month.** Hard cap. Next slot starts in 7 days.
+**3 slots per month.** Hard cap.
 
 [Apply now →](/contact/)
 
