@@ -3,13 +3,15 @@ layout: post
 title: "Session as Content: Building IS the Content"
 permalink: /session-as-content/
 date: 2026-06-10 09:00:00 +0000
+categories: [Lead Systems]
+seo_keyword: "session as content methodology"
+image: /assets/uploads/2026-06-08-session-as-content-building-is-the-content/banner.png
 description: "Your work sessions are the only content engine you need. Stop planning content. Start logging reality."
 tags:
   - session-as-content
-  - content-strategy
   - methodology
-  - shayanspiel
-  - content-funnel
+  - content-engine
+  - building-in-public
 ---
 
 

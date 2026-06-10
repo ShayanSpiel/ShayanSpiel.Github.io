@@ -2,6 +2,13 @@
 layout: post
 title: "From Declarative Rules To Agentic Loops"
 date: 2026-06-08 07:05:01 +0330
+categories: ["AI & Agents"]
+seo_keyword: "agentic loops vs prompts"
+image: /assets/uploads/2026-06-08-from-declarative-rules-to-agentic-loops/01-vault-tree.png
+tags:
+  - ai-agents
+  - content-engine
+  - automation
 ---
 
 A year ago i built a prompt. 2000 words. Every rule i could think of.

@@ -1,7 +1,7 @@
 ---
 layout: home
 title: Shayan Spiel
-description: Senior marketing strategist and agentic solutions architect. Building and testing agentic workflows in public.
+description: Solo operator building second brains, content engines, and AI agents. I help technical founders turn deep expertise into consistent inbound leads. Writing in the open.
 permalink: /
 ---
 

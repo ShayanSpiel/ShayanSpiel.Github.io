@@ -2,12 +2,14 @@
 layout: post
 title: "How I automated my content with a second brain (and you can too, for $5/month)"
 date: 2026-06-06 09:00:00 +0000
+categories: [Lead Systems]
+seo_keyword: "content engine for developers"
+image: /assets/uploads/2026-06-06-how-i-automated-my-content-with-a-second-brain-and-you-can-too-for-5-month/01-vault-tree.png
 tags:
-  - second-brain
-  - obsidian
-  - opencode
   - content-engine
   - automation
+  - second-brain
+  - opencode
   - building-in-public
 description: "A 4-file system that turns every dev session into 2-3 post drafts at zero ongoing cost. Obsidian + opencode + /post + the standalone quality test. $5/month. Open-source."
 ---

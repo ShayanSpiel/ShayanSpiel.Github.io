@@ -2,13 +2,14 @@
 layout: post
 title: "How I rebuilt my blog in 4 hours (and shipped 2 posts the same night)"
 date: 2026-06-06 09:00:00 +0000
+categories: [Building in Public]
+seo_keyword: "developer blog publishing pipeline"
+image: /assets/uploads/2026-06-06-how-i-rebuilt-my-blog-in-4-hours-and-shipped-2-posts-the-same-night/16-blog-home.png
 tags:
-  - github-pages
-  - jekyll
-  - publishing-pipeline
-  - content-engine
   - building-in-public
-  - second-brain
+  - jekyll
+  - github-pages
+  - content-engine
 description: "From a Jekyll demo to a brand-source-of-truth blog with a one-command publish pipeline. 4 files, 1 script, $5/month, 2 posts shipped the same night."
 ---
 

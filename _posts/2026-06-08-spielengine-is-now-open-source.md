@@ -2,6 +2,14 @@
 layout: post
 title: "SpielEngine is Now Open Source"
 date: 2026-06-08 09:00:00 +0000
+categories: ["AI & Agents"]
+seo_keyword: "open source AI content engine"
+image: /assets/uploads/2026-06-08-spielengine-is-now-open-source/spielengine-github.png
+tags:
+  - open-source
+  - ai-agents
+  - content-engine
+  - automation
 ---
 
 Two days ago i published a post called [From Declarative Rules to Agentic Loops](/from-declarative-rules-to-agentic-loops/). It was about the architecture that finally made my LLM-operated wiki work — state machines, validation gates, and a loop instead of a prompt.
