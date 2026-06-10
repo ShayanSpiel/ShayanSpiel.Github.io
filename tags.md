@@ -30,7 +30,7 @@ permalink: /tags/
           {%- if post.tags contains tag_strip -%}
             <li style="margin-bottom: 0.75rem;">
               <a href="{{ post.url | relative_url }}" class="plain">
-                <span class="muted small font-ui" style="display: inline-block; min-width: 7em;">{{ post.date | date: "%b %-d, %Y" }}</span>
+                <span class="muted small font-ui" style="display: inline-block; margin-right: 0.5em;">{{ post.date | date: "%b %-d, %Y" }}</span>
                 <u>{{ post.title }}</u>
               </a>
             </li>

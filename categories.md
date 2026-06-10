@@ -32,7 +32,7 @@ permalink: /categories/
           {%- if post.categories contains cat_strip -%}
             <li style="margin-bottom: 0.75rem;">
               <a href="{{ post.url | relative_url }}" class="plain">
-                <span class="muted small font-ui" style="display: inline-block; min-width: 7em;">{{ post.date | date: "%b %-d, %Y" }}</span>
+                <span class="muted small font-ui" style="display: inline-block; margin-right: 0.5em;">{{ post.date | date: "%b %-d, %Y" }}</span>
                 <u>{{ post.title }}</u>
               </a>
               {%- if post.description -%}
