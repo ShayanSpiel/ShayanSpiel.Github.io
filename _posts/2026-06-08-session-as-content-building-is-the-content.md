@@ -12,7 +12,7 @@ tags:
 
 # Session as Content: Building IS the Content
 
-I ran content calendars for 8 years.
+I ran [content calendars](/how-i-automated-my-content-with-a-second-brain-and-you-can-too-for-5-month/) for 8 years.
 
 They all had the same arc.
 
@@ -186,7 +186,7 @@ Without strategy, session output is noise. With an ICP, a funnel, and a classifi
 
 ## Proof (real usage)
 
-This system runs on the Spiel Engine. Every session produces a log. Logs feed the classifier. The classifier assigns a strategic purpose. Output becomes drafts. A human gates final publishing.
+This system runs on [the Spiel Engine](/spielengine-is-now-open-source/). Every session produces a log. Logs feed the classifier. The classifier assigns a strategic purpose. Output becomes drafts. A human gates final publishing.
 
 Result: 30 posts from 12 sessions, each classified into a funnel stage. Zero content calendar. Zero planning meetings. Zero "what should I post" loops.
 
