@@ -1,7 +1,8 @@
 {%- assign canonical_url = page.url | replace: 'index.html', '' | absolute_url -%}
-{%- assign meta_title = page.title | default: site.title | escape -%}
+{%- assign page_title = page.title | default: site.title | escape -%}
+{%- assign site_name = site.title | split: ' — ' | first -%}
 {%- assign meta_desc = page.description | default: page.excerpt | default: site.description | strip_html | normalize_whitespace | truncate: 160 -%}
-{%- assign meta_image = page.image | default: site.logo | absolute_url -%}
+{%- assign meta_image = page.image | default: '/logo.png' | absolute_url -%}
 
 <head>
   <meta charset="utf-8" />
@@ -19,8 +20,10 @@
   })(window,document,'script','dataLayer','GTM-NT7HQ9DC');</script>
   <!-- End Google Tag Manager -->
 
-  <title>{% if page.title and page.url != '/' %}{{ page.title }} — {{ site.title | split: ' — ' | first }}{% else %}{{ site.title }}{% endif %}</title>
+  <!-- Title -->
+  <title>{% if page.url == '/' %}{{ site.title }}{% else %}{{ page_title }} — {{ site_name }}{% endif %}</title>
 
+  <!-- Meta -->
   <meta name="description" content="{{ meta_desc }}" />
   {%- if page.seo_keyword -%}
   <meta name="keywords" content="{{ page.seo_keyword }}{% if page.tags %}, {{ page.tags | join: ', ' }}{% endif %}" />
@@ -30,18 +33,44 @@
   <meta name="author" content="{{ site.author }}" />
   <link rel="canonical" href="{{ canonical_url }}" />
 
-  <!-- jekyll-seo-tag handles og: + twitter: + article:tag -->
-  {%-seo title=false-%}
-  {%-feed_meta-%}
+  <!-- Open Graph -->
+  <meta property="og:type" content="{% if page.layout == 'post' %}article{% else %}website{% endif %}" />
+  <meta property="og:site_name" content="{{ site_name }}" />
+  <meta property="og:title" content="{{ page_title }}" />
+  <meta property="og:description" content="{{ meta_desc }}" />
+  <meta property="og:url" content="{{ canonical_url }}" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:image" content="{{ meta_image }}" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
 
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@{{ site.twitter.username }}" />
+  <meta name="twitter:creator" content="@{{ site.twitter.username }}" />
+  <meta name="twitter:title" content="{{ page_title }}" />
+  <meta name="twitter:description" content="{{ meta_desc }}" />
+  <meta name="twitter:image" content="{{ meta_image }}" />
+
+  {%- if page.layout == 'post' -%}
+  <!-- Article tags -->
+  <meta property="article:published_time" content="{{ page.date | date_to_xmlschema }}" />
+  <meta property="article:author" content="{{ site.author }}" />
+  {%- if page.tags -%}{% for tag in page.tags %}
+  <meta property="article:tag" content="{{ tag }}" />
+  {%- endfor %}{% endif -%}
+  {%- endif -%}
+
+  <!-- RSS + Sitemap -->
   <link rel="icon" type="image/png" href="{{ '/logo.png' | relative_url }}" />
   <link rel="apple-touch-icon" href="{{ '/logo.png' | relative_url }}" />
-  <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ '/feed.xml' | relative_url }}" />
+  <link rel="alternate" type="application/rss+xml" title="{{ site_name }}" href="{{ '/feed.xml' | relative_url }}" />
   <link rel="sitemap" type="application/xml" title="Sitemap" href="{{ '/sitemap.xml' | relative_url }}" />
 
   <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.css" integrity="sha384-OH8qNTHoMMVNVcKdKewlipV4SErXqccxxlg6HC9Cwjr5oZu2AdBej1TndeCirael" crossorigin="anonymous">
 
+  <!-- Schema.org JSON-LD -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -55,13 +84,14 @@
         "sameAs": [
           "https://twitter.com/{{ site.twitter.username }}",
           "https://www.linkedin.com/in/shayantawabi"
-        ]
+        ],
+        "jobTitle": "Solo operator, marketing strategist, agentic solutions architect"
       },
       {
         "@type": "WebSite",
         "@id": "{{ site.url }}/#website",
         "url": "{{ site.url }}",
-        "name": "{{ site.title | split: ' — ' | first }}",
+        "name": "{{ site_name }}",
         "description": "{{ site.description | strip_html | normalize_whitespace | escape }}",
         "inLanguage": "en",
         "publisher": { "@id": "{{ site.url }}/#person" },

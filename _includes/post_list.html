@@ -9,10 +9,8 @@
     {%- for post in posts limit: include.limit -%}
       <li>
         <a href="{{ post.url | relative_url }}" class="plain">
-          <flex class="align-baseline">
-            <span class="muted sr flex-shrink small mh nowrap font-ui">{{ post.date | date: "%Y · %m" }}</span>
-            <u>{{ post.title }}</u>
-          </flex>
+          <span class="muted small font-ui" style="display: inline-block; min-width: 5.5em;">{{ post.date | date: "%b %-d, %Y" }}</span>
+          <u>{{ post.title }}</u>
         </a>
       </li>
     {%- endfor -%}

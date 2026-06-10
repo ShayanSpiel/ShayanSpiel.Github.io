@@ -21,7 +21,8 @@ layout: default
   </nav>
 
   <p class="post-meta font-ui small muted">
-    <a href="/categories/#{{ category_slug }}" class="plain tag-chip category-chip">{{ category_label }}</a>
+    <a href="/categories/#{{ category_slug }}" class="plain" style="font-weight: 600;">{{ category_label }}</a>
+    <span style="margin: 0 0.4rem;">·</span>
     <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%b %-d, %Y" }}</time>
   </p>
 
