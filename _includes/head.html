@@ -21,7 +21,7 @@
   <!-- End Google Tag Manager -->
 
   <!-- Title -->
-  <title>{% if page.url == '/' %}{{ site.title }}{% else %}{{ page_title }} — {{ site_name }}{% endif %}</title>
+  <title>{% if page.url == '/' %}{{ site.title }}{% if site.tagline %} — {{ site.tagline }}{% endif %}{% else %}{{ page_title }} — {{ site_name }}{% endif %}</title>
 
   <!-- Meta -->
   <meta name="description" content="{{ meta_desc }}" />
