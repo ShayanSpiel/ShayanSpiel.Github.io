@@ -1,7 +1,8 @@
 ---
 layout: post
 title: "Session as Content: Building IS the Content"
-date: 2026-06-08 09:00:00 +0000
+date: 2026-06-10 09:00:00 +0000
+description: "Your work sessions are the only content engine you need. Stop planning content. Start logging reality."
 tags:
   - session-as-content
   - content-strategy
@@ -10,7 +11,9 @@ tags:
   - content-funnel
 ---
 
-# Session as Content: Building IS the Content
+
+![Session as Content banner](../assets/uploads/2026-06-08-session-as-content-building-is-the-content/banner.png)
+*Stop planning content. Start logging reality.*
 
 I ran [content calendars](/how-i-automated-my-content-with-a-second-brain-and-you-can-too-for-5-month/) for 8 years.
 
@@ -180,7 +183,7 @@ The bottleneck is no longer writing. It is capturing reality.
 
 ### 4. The funnel turns output into a pipeline
 
-Without strategy, session output is noise. With an ICP, a funnel, and a classifier, that same output becomes a lead generation system.
+Without strategy, session output is noise. With an ICP, a [content funnel](/from-declarative-rules-to-agentic-loops/), and a classifier, that same output becomes a lead generation system.
 
 ---
 
