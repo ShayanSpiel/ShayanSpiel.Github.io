@@ -19,12 +19,12 @@ I ran [content calendars](/how-i-automated-my-content-with-a-second-brain-and-yo
 
 They all had the same arc.
 
-Monday: plan.
-Tuesday: outline.
-Wednesday: draft.
-Thursday: revise.
-Friday: publish.
-Saturday: 0 comments.
+- Monday: plan.
+- Tuesday: outline.
+- Wednesday: draft.
+- Thursday: revise.
+- Friday: publish.
+- Saturday: 0 comments.
 
 And the entire time, I was building real things - shipping features, making decisions, learning lessons that changed how I think.
 
