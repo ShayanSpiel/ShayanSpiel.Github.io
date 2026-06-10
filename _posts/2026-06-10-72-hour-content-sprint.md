@@ -2,7 +2,7 @@
 layout: post
 title: "23 Things in 72 Hours — The Session as Content Sprint"
 permalink: /72-hour-content-sprint/
-date: 2026-06-10 09:00:00 +0000
+date: 2026-06-10 08:00:00 +0000
 categories: [Lead Systems]
 seo_keyword: "content system for developers"
 image: /assets/uploads/2026-06-10-72-hour-content-sprint/banner.png
