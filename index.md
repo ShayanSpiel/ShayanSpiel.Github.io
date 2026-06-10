@@ -1,13 +1,13 @@
 ---
 layout: home
 title: Shayan Spiel
-description: Solo operator building second brains, content engines, and AI agents. I help technical founders turn deep expertise into consistent inbound leads. Writing in the open.
+description: Shayan Spiel — Building & testing agentic AI workflows in public. Helping founders turn expertise into leads. Marketing strategist → systems builder.
 permalink: /
 ---
 
 <section class="hero">
   <h1>Shayan Spiel</h1>
-  <p class="lede">Senior marketing strategist and agentic solutions architect. Building and testing agentic workflows in public.</p>
+  <p class="lede">Building & testing agentic AI workflows in public. Helping founders turn expertise into leads. Marketing strategist → systems builder.</p>
   <p class="font-ui">
     <a href="/about/" class="plain"><strong>About</strong></a> ·
     <a href="https://twitter.com/ShayanSpiel" class="plain" target="_blank" rel="noopener noreferrer"><strong>X</strong></a> ·
