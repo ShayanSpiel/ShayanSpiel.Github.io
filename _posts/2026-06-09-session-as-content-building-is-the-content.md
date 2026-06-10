@@ -2,7 +2,7 @@
 layout: post
 title: "Session as Content: Building IS the Content"
 permalink: /session-as-content/
-date: 2026-06-10 09:00:00 +0000
+date: 2026-06-09 09:00:00 +0000
 categories: [Lead Systems]
 seo_keyword: "session as content methodology"
 image: /assets/uploads/2026-06-08-session-as-content-building-is-the-content/banner.png

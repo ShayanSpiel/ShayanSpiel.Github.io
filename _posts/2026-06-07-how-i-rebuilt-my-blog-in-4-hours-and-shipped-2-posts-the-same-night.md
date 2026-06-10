@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "How I rebuilt my blog in 4 hours (and shipped 2 posts the same night)"
-date: 2026-06-06 09:00:00 +0000
+date: 2026-06-07 09:00:00 +0000
 categories: [Building in Public]
 seo_keyword: "developer blog publishing pipeline"
 image: /assets/uploads/2026-06-06-how-i-rebuilt-my-blog-in-4-hours-and-shipped-2-posts-the-same-night/16-blog-home.png
