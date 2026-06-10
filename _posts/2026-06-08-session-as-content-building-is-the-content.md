@@ -68,7 +68,7 @@ If none of these exist, it was not a content-worthy session. It was just activit
 
 ## The methodology: Session as Content
 
-Session as Content is a simple reversal:
+[Session as Content](/session-as-content/) is a simple reversal:
 
 Your work session is the content source. Not inspiration. Not raw material for repurposing. Source of truth.
 
