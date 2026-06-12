@@ -12,6 +12,10 @@ tags:
   - automation
 ---
 
+<div class="notice-banner">
+  <strong>⚠️ TheSpielEngine is undergoing change.</strong> Use the repository only as an overall structure. Changes will be announced shortly.
+</div>
+
 Two days ago i published a post called [From Declarative Rules to Agentic Loops](/from-declarative-rules-to-agentic-loops/). It was about the architecture that finally made my LLM-operated wiki work — state machines, validation gates, and a loop instead of a prompt.
 
 The response was: "where is the template?"
