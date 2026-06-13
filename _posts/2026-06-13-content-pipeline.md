@@ -3,6 +3,7 @@ layout: post
 title: "You Don't Need to Learn Marketing. You Need to Stop Treating Content as a Job."
 date: 2026-06-13 09:00:00 +0000
 tags:
+  - 
   - identity
   - technical-founder
   - content-system
@@ -14,12 +15,14 @@ tags:
   - operational-pattern
   - psychological-trap
 description: "The identity tension that keeps technical founders from posting is the real bottleneck  -  not time, not skill. Here is what removes the creator identity entirely."
-categories: ["Lead Systems"]
+categories: ["", "Lead Systems"]
 seo_keyword: "content pipeline for technical founders"
 permalink: /content-pipeline/
 ---
 
 Every writing tool I tried asked me to be someone else.
+
+![Banner](/assets/banners/2026-06-13-pillar-blog-spiel-engine-identity.png)
 
 Not explicitly. But the implication was always the same:
 
@@ -171,6 +174,6 @@ I install this for a small number of technical founders. Not because of scarcity
 
 14-day install. You own the system. No subscription. No "we changed the pricing" email two years from now.
 
-If you are a technical founder who wants inbound without becoming a creator, this is the setup. Read the full methodology on the [homepage](/).
+If you are a technical founder who wants inbound without becoming a creator, this is the setup. Read the full methodology on the [homepage](/), or DM me on [X @ShayanSpiel](https://x.com/ShayanSpiel) for a done-for-you install.
 
 Curious what you think.
