@@ -14,15 +14,15 @@ tags:
   - execution
   - operational-pattern
   - psychological-trap
-description: "Session-as-Content Infrastructure — the identity tension that keeps founders from posting is the real bottleneck. Here is what removes the creator identity entirely."
+description: "The identity tension that keeps technical founders from posting is the real bottleneck  -  not time, not skill. Here is what removes the creator identity entirely."
 categories: ["", "Lead Systems"]
-seo_keyword: "session as content infrastructure"
+seo_keyword: "content pipeline for technical founders"
 permalink: /content-pipeline/
 ---
 
-Every writing tool I tried asked me to be someone else.
-
 ![Banner](/assets/banners/2026-06-13-pillar-blog-spiel-engine-identity.png)
+
+Every writing tool I tried asked me to be someone else.
 
 Not explicitly. But the implication was always the same:
 
@@ -168,10 +168,12 @@ Every alternative puts you in a role you did not choose. This one puts you in th
 
 I could not find a tool that let me stay a builder. Every tool asked me to become something else. So I built the [Spiel Engine](/spielengine-is-now-open-source/)  -  the thing that would let me stay who I am.
 
-The whole methodology is public. The [repo is open source](https://github.com/ShayanSpiel/SpielEngine). The templates are free.
+The whole methodology is public. The concepts are free. The templates are open.
 
-I install this for a small number of technical founders — full Session-as-Content Infrastructure, positioned and set up for your workflow. $2,900, one-time, 14-day install.
+I install this for a small number of technical founders. Not because of scarcity marketing  -  because it requires deep alignment with your workflow. The templates need to match how you build. The gates need to match your standards.
 
-If you want inbound without becoming a creator, [DM me on X](https://x.com/ShayanSpiel) for the DFY Install.
+14-day install. You own the system. No subscription. No "we changed the pricing" email two years from now.
+
+If you are a technical founder who wants inbound without becoming a creator, this is the setup. Read the full methodology on the [homepage](/), or DM me on [X @ShayanSpiel](https://x.com/ShayanSpiel) for a done-for-you install.
 
 Curious what you think.
