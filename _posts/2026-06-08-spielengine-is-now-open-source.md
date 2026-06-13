@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "SpielEngine is Now Open Source"
-date: 2026-06-10 09:00:00 +0000
+date: 2026-06-08 10:00:00 +0000
 categories: ["AI & Agents"]
 seo_keyword: "open source AI content engine"
 image: /assets/uploads/2026-06-08-spielengine-is-now-open-source/spielengine-github.png
