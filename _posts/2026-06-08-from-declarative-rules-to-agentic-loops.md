@@ -3,7 +3,7 @@ layout: post
 title: "From Declarative Rules To Agentic Loops"
 date: 2026-06-08 07:05:01 +0330
 categories: ["AI & Agents"]
-seo_keyword: "agentic loops vs prompts"
+seo_keyword: "session as content infrastructure"
 image: /assets/uploads/2026-06-08-from-declarative-rules-to-agentic-loops/01-vault-tree.png
 tags:
   - ai-agents
@@ -108,7 +108,7 @@ Prompt engineering is the past. Agentic loops are the future. The industry is fi
 
 Do not build a bigger prompt. Build a loop.
 
-If you want to start from a blank template: the [SpielEngine repo](https://github.com/ShayanSpiel/SpielEngine) has the full state machine, 18 slash commands, and quality gates as a starter kit. I wrote a [follow-up post with the full installation walkthrough](/spielengine-is-now-open-source/).
+If you want the full system: the [SpielEngine repo](https://github.com/ShayanSpiel/SpielEngine) is the open-source entry layer of Session-as-Content Infrastructure. I wrote a [follow-up post with the full installation walkthrough](/spielengine-is-now-open-source/).
 
 ![The LLM-wiki vault — the memory layer of the loop](../assets/uploads/2026-06-08-from-declarative-rules-to-agentic-loops/LLM-WIKI-SS.png)
 

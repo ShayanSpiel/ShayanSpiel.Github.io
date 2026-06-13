@@ -20,6 +20,6 @@ Want to work together? Send me a message and I'll get back to you.
 
 ## What to say
 
-- **Reply "ENGINE"** — I'll send you the application for The Spiel Engine ($2,900).
-- **Reply "SPIEL"** — I'll send you the offer page.
+- **Reply "ENGINE"** — I'll send you the DFY Install application ($2,900).
+- **Reply "GITHUB"** — I'll send you the open-source repo link.
 - **Anything else** — just say hi. I read every message.

@@ -4,9 +4,9 @@ title: "Session as Content: Building IS the Content"
 permalink: /session-as-content/
 date: 2026-06-09 09:00:00 +0000
 categories: [Lead Systems]
-seo_keyword: "session as content methodology"
+seo_keyword: "session as content infrastructure"
 image: /assets/uploads/2026-06-08-session-as-content-building-is-the-content/banner.png
-description: "Your work sessions are the only content engine you need. Stop planning content. Start logging reality."
+description: "Session-as-Content Infrastructure — your work sessions are the only content engine you need. Stop planning content. Start logging reality."
 tags:
   - session-as-content
   - methodology
@@ -192,7 +192,7 @@ Without strategy, session output is noise. With an ICP, a [content funnel](/from
 
 ## Proof (real usage)
 
-This system runs on [the Spiel Engine](/spielengine-is-now-open-source/). Every session produces a log. Logs feed the classifier. The classifier assigns a strategic purpose. Output becomes drafts. A human gates final publishing.
+This system runs on the [Spiel Engine](/spielengine-is-now-open-source/) — Session-as-Content Infrastructure. Every session produces a log. Logs feed the classifier. Output becomes drafts. A human gates final publishing.
 
 Result: 30 posts from 12 sessions, each classified into a funnel stage. Zero content calendar. Zero planning meetings. Zero "what should I post" loops.
 

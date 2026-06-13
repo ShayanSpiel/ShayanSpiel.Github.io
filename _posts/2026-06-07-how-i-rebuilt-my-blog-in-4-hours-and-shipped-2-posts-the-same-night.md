@@ -3,14 +3,14 @@ layout: post
 title: "How I rebuilt my blog in 4 hours (and shipped 2 posts the same night)"
 date: 2026-06-07 09:00:00 +0000
 categories: [Building in Public]
-seo_keyword: "developer blog publishing pipeline"
+seo_keyword: "session as content infrastructure"
 image: /assets/uploads/2026-06-06-how-i-rebuilt-my-blog-in-4-hours-and-shipped-2-posts-the-same-night/16-blog-home.png
 tags:
   - building-in-public
   - jekyll
   - github-pages
   - content-engine
-description: "From a Jekyll demo to a brand-source-of-truth blog with a one-command publish pipeline. 4 files, 1 script, $5/month, 2 posts shipped the same night."
+description: "Session-as-Content Infrastructure. From Jekyll demo to a brand blog with a one-command publish pipeline. 4 files, 1 script, 2 posts shipped."
 ---
 
 I had a blog. It was a Jekyll site with `riggraz/no-style-please`. It was deployed at https://shayanspiel.github.io. It had demo posts. The demo posts were not about me.
@@ -172,7 +172,7 @@ The fix is a script. The script takes a file path. The script does the rest. The
 
 The lesson is: you can't post if you can't publish. You can't publish if the publish step is 10 minutes of clicking. The 10 minutes is the friction. The friction is the reason you don't post. The script is the friction-killer.
 
-If you have a vault, build the script. The script is 4 hours. The script is the part no one teaches. The script is the part that compounds.
+If you have a vault, build the script. The script is 4 hours. The script is the publish layer of Session-as-Content Infrastructure. [Open-source entry →](https://github.com/ShayanSpiel/SpielEngine)
 
 ![the post landing in `_posts/` — proof the pipeline works end-to-end](../assets/uploads/2026-06-06-how-i-rebuilt-my-blog-in-4-hours-and-shipped-2-posts-the-same-night/23-published-post.png)
 *the post landing in `_posts/`. the title slug is right. the frontmatter is transformed. the screenshots are in `assets/uploads/`. the git diff is clean. the post is one `git push` away from being live. proof the pipeline works end-to-end.*

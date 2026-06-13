@@ -4,9 +4,9 @@ title: "23 Things in 72 Hours — The Session as Content Sprint"
 permalink: /72-hour-content-sprint/
 date: 2026-06-10 08:00:00 +0000
 categories: [Lead Systems]
-seo_keyword: "content system for developers"
+seo_keyword: "session as content infrastructure"
 image: /assets/uploads/2026-06-10-72-hour-content-sprint/banner.png
-description: "A 3-day sprint produced 4 blog posts, 3 LinkedIn posts, 2 state machines, 18 commands, and ~85 queue drafts. Then we classified every post into a funnel stage. This is the system that made it possible."
+description: "Session-as-Content Infrastructure. A 3-day sprint: 4 blog posts, 3 LinkedIn posts, 2 state machines, ~85 queue drafts. The system that made it possible."
 tags:
   - content-system
   - session-as-content

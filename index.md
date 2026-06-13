@@ -1,13 +1,13 @@
 ---
 layout: home
 title: Shayan Spiel
-description: Shayan Spiel — Building & testing agentic AI workflows in public. Helping founders turn expertise into leads. Marketing strategist → systems builder.
+description: Shayan Spiel — Session-as-Content Infrastructure. Content is not created. It is extracted from work.
 permalink: /
 ---
 
 <section class="hero">
   <h1>Shayan Spiel</h1>
-  <p class="lede">Building & testing agentic AI workflows in public. Helping founders turn expertise into leads. Marketing strategist → systems builder.</p>
+  <p class="lede">Session-as-Content Infrastructure. Turning build sessions into publishable content — so you never stop working to post.</p>
   <p class="font-ui">
     <a href="/about/" class="plain"><strong>About</strong></a> ·
     <a href="https://twitter.com/ShayanSpiel" class="plain" target="_blank" rel="noopener noreferrer"><strong>X</strong></a> ·
@@ -24,12 +24,12 @@ permalink: /
 
 ## Work with me
 
-I help technical founders turn deep expertise into consistent inbound leads — using AI systems that run themselves. Strategy + The Spiel Engine.
+I build Session-as-Content Infrastructure for technical founders. Your build sessions become publishable content. You stay a builder. Open-source entry, DFY Install at $2,900.
 
 <p class="font-ui"><a href="/contact/" class="plain action"><strong>Contact me →</strong></a></p>
 
 ## Currently shipping
 
-- **[SpielEngine](https://github.com/ShayanSpiel/SpielEngine)** — the agentic wiki template, now open source ([announcement](/spielengine-is-now-open-source/))
+- **[SpielEngine](https://github.com/ShayanSpiel/SpielEngine)** — Session-as-Content Infrastructure, open source ([announcement](/spielengine-is-now-open-source/))
 - **GeoGent** — a strategy game I'm building in public ([waitlist](/GeoGent-Waitlist/))
 - **This site** — the source of truth for everything I write

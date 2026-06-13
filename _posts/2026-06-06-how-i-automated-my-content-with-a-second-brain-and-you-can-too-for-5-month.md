@@ -3,7 +3,7 @@ layout: post
 title: "How I automated my content with a second brain (and you can too, for $5/month)"
 date: 2026-06-06 09:00:00 +0000
 categories: [Lead Systems]
-seo_keyword: "content engine for developers"
+seo_keyword: "session as content infrastructure"
 image: /assets/uploads/2026-06-06-how-i-automated-my-content-with-a-second-brain-and-you-can-too-for-5-month/01-vault-tree.png
 tags:
   - content-engine
@@ -11,7 +11,7 @@ tags:
   - second-brain
   - opencode
   - building-in-public
-description: "A 4-file system that turns every dev session into 2-3 post drafts at zero ongoing cost. Obsidian + opencode + /post + the standalone quality test. $5/month. Open-source."
+description: "Session-as-Content Infrastructure. A 4-file system that turns build sessions into post drafts at zero ongoing cost. Open-source."
 ---
 
 I do the work. I never post about the work. That was my problem for two years.
@@ -180,7 +180,7 @@ The reason I built it: I do the work. Now I post about the work. The post is the
 
 If you have been not posting, build the 4 files. The 4 files are the system. The system is the post. The post is the audience. The audience is the leverage.
 
-*monthly infra: $5. not a flex. the strategy.*
+*The Spiel Engine. Session-as-Content Infrastructure. Open-source entry, DFY Install at $2,900. [github.com/ShayanSpiel/SpielEngine](https://github.com/ShayanSpiel/SpielEngine)*
 
 ## Links
 

@@ -1,19 +1,20 @@
 ---
 layout: page
 title: About
-description: Solo operator. Building second brains + content engines. Based in Tehran.
+description: Session-as-Content Infrastructure. Building-in-public systems for technical founders. Based in Tehran.
 permalink: /about/
 ---
 
 Hi. I'm Shayan.
 
-Solo operator. I help **technical founders** turn their deep expertise into consistent inbound leads — using AI systems that run themselves.
+Solo operator. I build **Session-as-Content Infrastructure** for technical founders — systems that turn build sessions into publishable content, so you never stop working to post.
 
 ## What I sell
 
-**The Spiel Engine — $2,900.** A complete inbound lead system that runs itself. I build it for you in 14 days, and you own it.
+**The Spiel Engine — two layers.**
 
-Includes: ICP template file, offer design, The Spiel Engine installation, workflow design, execution structure, tone of voice, and branding assets for banner design.
+- **Layer 1: Open Source** — the repo, the methodology, free. Clone and customize. [github.com/ShayanSpiel/SpielEngine](https://github.com/ShayanSpiel/SpielEngine)
+- **Layer 2: DFY Install — $2,900.** Full pipeline installed in your workflow. Positioning, offer design, agents, templates, 30 days review. You own it.
 
 **The guarantee:** If after 30 days you've run 5 sessions through the engine and you don't have 5 standalone-tested drafts in your queue, I'll refund 100% — and you keep the system.
 
@@ -23,7 +24,7 @@ Includes: ICP template file, offer design, The Spiel Engine installation, workfl
 
 ## What I'm building right now
 
-- **The Spiel Engine** — second brain + content engine. My single offer. [Pillar post →](/how-i-automated-my-content-with-a-second-brain-and-you-can-too-for-5-month/)
+- **The Spiel Engine** — Session-as-Content Infrastructure. Two-layer offer. [Pillar post →](/how-i-automated-my-content-with-a-second-brain-and-you-can-too-for-5-month/)
 - **GeoGent** — a browser-based strategy MMO. Build cities, run economies, win wars. In test phase. [Waitlist →](/GeoGent-Waitlist/)
 - **This site** — the front door. The blog. The source of truth.
 
