@@ -7,7 +7,8 @@ permalink: /
 
 <section class="hero">
   <h1>Shayan Spiel</h1>
-  <p class="lede">Session-as-Content Infrastructure. Turning build sessions into publishable content — so you never stop working to post.</p>
+  <p class="lede">I build Session-as-Content Infrastructure. Your build sessions become publishable content — so you never stop working to post.</p>
+  <p>The Spiel Engine — <a href="https://github.com/ShayanSpiel/SpielEngine" target="_blank" rel="noopener noreferrer">open source</a> + <a href="/contact/">DFY Install at $2,900</a>.</p>
   <p class="font-ui">
     <a href="/about/" class="plain"><strong>About</strong></a> ·
     <a href="https://twitter.com/ShayanSpiel" class="plain" target="_blank" rel="noopener noreferrer"><strong>X</strong></a> ·

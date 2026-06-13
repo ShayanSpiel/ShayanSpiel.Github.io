@@ -8,9 +8,9 @@
   <ul class="list-plain tabular-nums">
     {%- for post in posts limit: include.limit -%}
       <li>
-        <a href="{{ post.url | relative_url }}" class="plain">
-          <span class="muted small font-ui" style="display: inline-block; margin-right: 0.5em;">{{ post.date | date: "%b %-d, %Y" }}</span>
-          <u>{{ post.title }}</u>
+        <a href="{{ post.url | relative_url }}" class="plain" style="display: flex; align-items: baseline; gap: 0.5em;">
+          <span class="muted small font-ui" style="flex-shrink: 0;">{{ post.date | date: "%b %-d, %Y" }}</span>
+          <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><u>{{ post.title }}</u></span>
         </a>
       </li>
     {%- endfor -%}
