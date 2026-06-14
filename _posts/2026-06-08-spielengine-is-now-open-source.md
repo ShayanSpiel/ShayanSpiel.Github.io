@@ -13,21 +13,21 @@ tags:
   - positioning
 ---
 
-**Updated Jun 14, 2026.** Repositioned to match the public offer. The open-source engine is now the entry layer of a two-layer system — free to clone, with a DFY Install for founders who want the full pipeline without building it.
+I ship consistently. Before the engine, I did not.
 
----
+Every Tuesday I would finish a build session, look at the work, think "I should post about this," and not post. Not because I could not write. Because writing meant switching from builder to creator. That switch never happened.
 
-The previous post was about the architecture. The response was: "where is the template?"
-
-Here it is.
+Here is the system that removed the switch.
 
 **[SpielEngine](https://github.com/ShayanSpiel/SpielEngine) turns your build sessions into publishable content, so you never need to stop working to create posts.**
 
+---
+
 ## Here is what that looks like
 
-A two-hour debugging session becomes a post. The founder never opens a writing tool.
+A two-hour debugging session becomes a post. You never open a writing tool.
 
-**Session log (2 minutes of notes):**
+**Session log (2 minutes of notes after building):**
 
 ```
 Spent 2 hours fixing context drift in a LangGraph workflow.
@@ -48,117 +48,116 @@ Make the state explicit.
 The agent will thank you.
 ```
 
-Same session, different frame — extracted, not written. That is the mechanism.
+Same session. Different frame. Extracted, not written.
+
+That is the mechanism. **Your work session is the content. The engine extracts what is already there.**
+
+---
+
+## How it works
+
+Two state machines run independently — one for compound knowledge, one for publishing.
+
+**Wiki loop** — ingests raw notes, extracts entities, reconciles into wiki pages, links them. A knowledge base that grows with every session.
+
+```
+IDLE → INGEST → ANALYZE → RECONCILE → INDEX → VALIDATE → COMPLETE
+```
+
+**Content loop** — takes a session or topic, classifies it by archetype and funnel stage, runs the 8-step Compiler (core insight → 6 meanings → selected angle), drafts to blog/LinkedIn/X, gates every draft, and queues for your review.
+
+```
+IDLE → SESSION → STRATEGY → COMPILE → DRAFT → GATE → QUEUE → PUBLISH
+```
+
+LLM handles the creative steps (analyzing, drafting, gate-judging). Scripts handle the mechanical steps (transitions, file ops, API calls). The two never overlap.
+
+Every draft passes 16 mechanical gates (char count, hook, audience, frontmatter, word repetition...) plus an LLM-judged 14-gate creative test. Composite score must hit 0.85. Failing drafts do not enter the queue.
 
 ---
 
 ## What you get
 
-Clone the repo and you get a pipeline that turns every work session into drafts — blog, LinkedIn, X — each in the right format, each passing quality checks before it reaches you.
+Clone the repo and you get the engine I run daily:
 
-Session → session log → compiler → platform drafts → automated gates → you review and publish.
+- **19 slash commands** — `/extract`, `/post`, `/publish`, `/state`, `/health`, `/config`, `/optimize`, `/prune`, and 11 more. Each is a markdown file your agent reads at invocation.
+- **SETUP.md** — a self-contained setup prompt. Paste it into any LLM agent. The agent auto-detects your platform (opencode, Cursor, Claude Code, Continue), installs all commands and skills, and runs a 14-question ICP/voice/brand setup. No manual file copying.
+- **AGENTS.md** — the state machine that governs both loops. Read it in 10 minutes, customize in 30.
+- **8 templates** — blog, LinkedIn, X, concept, entity, summary, comparison, session-log. Each with the right frontmatter.
+- **Content Engine Compiler** — an 8-step pipeline that extracts core insight, 6 meanings, and a selected angle from every session.
+- **Strategy classifier** — maps every session to 1 of 10 archetypes (S1-S10), each with a vertical, funnel stage, and ICP layer.
+- **16 mechanical gates + 14 creative gates** — automated quality checks at every transition.
+- **Platform API clients** — `post_x.py` and `post_linkedin.py` for direct publishing.
+- **Banner generator** — `banner.py` auto-generates post banners with your branding.
+- **Health scripts** — detect orphans, broken links, stale pages, redundancy.
+- **Full directory scaffold** — `concepts/`, `templates/`, `scripts/`, `content/sessions/`, `content/queue/`, `content/posted/`, `raw/`, `notes/`, `assets/`, `.opencode/commands/`, `.opencode/skill/`, `logs/`.
 
-Everything that runs my daily output, packaged so you can clone it in 10 seconds and make it yours.
+Requirements: Python 3, bash, git. Everything else is optional. No npm. No Docker.
 
 ![The SpielEngine GitHub repo — the open-source home](../assets/uploads/2026-06-08-spielengine-is-now-open-source/spielengine-github.png)
 
 ---
 
-## Step 1: Clone
+## Setup: clone + paste
+
+**Step 1.** Clone the repo:
 
 ```bash
-git clone https://github.com/ShayanSpiel/SpielEngine my-wiki
-cd my-wiki
+git clone https://github.com/ShayanSpiel/SpielEngine my-engine
+cd my-engine
 ```
 
-Replace placeholder content with your own. You are live.
+**Step 2.** Open `SETUP.md` in any LLM-powered agent (Cursor, Claude Code, opencode, Continue, ChatGPT). Copy the prompt block and paste it.
 
----
+**Step 3.** The agent reads every file, detects your platform, installs all commands and skills, creates the directory structure, and runs a 14-question setup — your brand name, ICP, offer, voice, content verticals, CTAs. It writes every config file: `concepts/icp-offer.md`, `voice-corpus.md`, `funnel-and-matrix.md`, `rules.yaml`, `brand-config.json`.
 
-## Step 2: Install
-
-Works in opencode, Cursor, Claude Code, Windsurf, Cline, Continue. Setup is copying files:
+**Step 4.** Run your first command:
 
 ```bash
-cp -r .config/opencode/skill/* ~/.config/opencode/skill/
-cp .config/opencode/command/* ~/.config/opencode/command/
-cp .config/opencode/opencode.jsonc ~/.config/opencode/opencode.jsonc
-```
+# Check the system is alive
+/state
 
-Restart and run `/state`. You should see IDLE.
-
-![Terminal showing /state output — IDLE, 18 commands, ready to go](../assets/uploads/2026-06-08-spielengine-is-now-open-source/spielengine-terminal-state.png)
-
----
-
-## Step 3: Run your first command
-
-```bash
 # Ingest raw material
 /extract my-notes.md
 
 # Generate posts from your session
-/post
+/post "my first session"
 
 # Check health
 /health
 ```
 
-Each command follows a state machine. The model never guesses what to do next — the state machine tells it.
+The whole setup takes one paste and ~15 minutes of answering questions. After that, the engine is wired to your workflow.
 
 ---
 
-## The Two-Layer System
-
-This repo is Layer 1.
+## The two-layer system
 
 | Layer | What | Price |
 |-------|------|-------|
-| **1. Open Source** | The repo, methodology, pipeline — clone and customize | Free |
-| **2. DFY Install** | Full system installed in your workflow, positioned to your voice, with 30 days of review | $2,900 one-time |
+| **1. Open Source** | The repo, methodology, pipeline — clone, paste, customize | Free |
+| **2. DFY Install** | Full pipeline installed inside your workflow, positioned to your voice, with 30 days of review | $2,900 one-time |
 
-**Layer 1** is the engine I run daily. Clone it today, swap the templates, and have a working pipeline in an afternoon.
+**Layer 1** is what you get from this repo. It is the engine I run daily. Clone it, paste the setup prompt into your agent, answer 14 questions, and you have a working content pipeline in an afternoon.
 
-**Layer 2** is for founders who want to skip the setup. I install the full pipeline — positioning, offer design, agents, templates in your voice, bio rewrite, post-publish review — inside your workflow. One install. One price. You own everything.
+**Layer 2** is for founders who want the full system without touching a config file. I install the complete pipeline inside your workflow — positioning strategy, offer design, bio rewrite, agents and templates in your voice, workflow design, 3 sample pillars ready to publish, and 30 days of post-publish review where I read every draft and refine the engine.
 
-**The stack (what a DFY Install includes):**
+The guarantee: if after 30 days you have run 5 sessions and do not have 5 gated drafts in your queue, I refund 100% — and you keep the system.
 
-```
-✓ Positioning Strategy — ICP, category, differentiation
-✓ Offer Design — value equation, awareness mapping, stack + guarantee + scarcity
-✓ Bio Rewrite — X bio, LinkedIn headline, website tagline
-✓ Pipeline Installation — agents, commands, templates, gates
-✓ Workflow Design — session capture → /post → queue → review → publish
-✓ 3 Sample Pillars in your voice, ready to publish
-✓ 30 Days of Post-Publish Review — I read every draft, give feedback, refine the engine
+3 slots per month. Hard cap.
 
-Total value: $11,200 — Your investment: $2,900
-```
-
-The guarantee: if after 30 days you've run 5 sessions and don't have 5 gated drafts in your queue, I refund 100% — and you keep the system.
-
-**3 slots per month.** Hard cap.
-
-[Apply for DFY Install →](/contact/)
+[Apply for the DFY Install →](/contact/)
 
 ---
 
-## What you are actually getting
-
-- **AGENTS.md** — the state machine that governs two loops (wiki + content). Modify it in 30 minutes.
-- **8 templates** — blog, LinkedIn, X, concept, entity, summary, comparison, session-log.
-- **`/post` command** — reads your session log, runs the compiler, outputs platform drafts to a queue.
-- **Automated gates** — length, repetition, hook strength, audience triggers, frontmatter completeness. Failing drafts don't enter the queue.
-- **Health scripts** — detect orphans, broken links, stale pages, content redundancy.
-
-This is not a product. It is a starting point — extracted from the system I use daily.
-
-![The AGENTS.md state machine — the government that replaces the giant prompt](../assets/uploads/2026-06-08-spielengine-is-now-open-source/spielengine-agents-md.png)
-
----
-
-## Note
+## Why this exists
 
 I built this for myself first. The repo was extracted from my working vault after months of iteration. The templates are the ones I use every day. The commands are the ones I ship with. There is no theory here — every file has been tested in production.
 
-Are you going to try it? Star the repo, open an issue, or [DM me on X](https://x.com/ShayanSpiel) if you want the full system without building it yourself.
+The insight is simple: you should never "go create content." Your work should already contain it. The engine extracts what is already there.
+
+If you ship and do not post, this is the system that fixes it.
+
+Clone the repo: **[github.com/ShayanSpiel/SpielEngine](https://github.com/ShayanSpiel/SpielEngine)**
+
+Star it, open an issue, or [DM me on X](https://x.com/ShayanSpiel) if you want the DFY Install.
