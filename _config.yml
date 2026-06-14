@@ -51,19 +51,19 @@ plugins:
   - jektex
 
 # Per-page SEO defaults (consumed by jekyll-seo-tag)
+# Note: do NOT set `author:` here as a string — it overrides the hash above
+# and breaks twitter:creator. Author is inherited from the top-level author hash.
 defaults:
   - scope:
       path: ""
     values:
       image: /assets/og-default.png
-      author: Shayan Spiel
       seo:
         type: "WebSite"
   - scope:
       type: posts
     values:
       image: /assets/og-default.png
-      author: Shayan Spiel
       seo:
         type: "BlogPosting"
 
