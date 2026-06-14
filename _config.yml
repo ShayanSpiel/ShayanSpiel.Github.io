@@ -77,3 +77,7 @@ jektex:
 
 # Allow future-dated posts (SpielEngine publishes as generated)
 future: true
+
+# Don't let Jekyll exclude files/dirs starting with a dot (.well-known, .htaccess, etc.)
+include:
+  - .well-known
