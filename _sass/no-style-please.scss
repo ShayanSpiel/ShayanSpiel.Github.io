@@ -18,8 +18,8 @@
   --line-height: 1.5;
 
   // Flexoki palette
-  --flexoki-black: #100F0F;
-  --flexoki-paper: #FFFCF0;
+  --flexoki-black: #353532;
+  --flexoki-paper: #f9f9f5;
   --flexoki-50:  #F2F0E5;
   --flexoki-100: #E6E4D9;
   --flexoki-150: #DAD8CE;
@@ -30,7 +30,7 @@
   --flexoki-600: #6F6E69;
   --flexoki-700: #575653;
   --flexoki-800: #403E3C;
-  --flexoki-850: #343331;
+  --flexoki-850: #2A2A27;
   --flexoki-900: #282726;
   --flexoki-950: #1C1B1A;
 
@@ -115,23 +115,24 @@ h1, h2, h3, h4, h5, h6 {
   padding-bottom: 0;
 }
 h1 {
-  font-weight: 500;
-  font-size: 2em;
-  font-size: calc(1.35em + .55vw);
+  font-weight: 550;
+  font-size: 2.2em;
+  font-size: calc(1.55em + .6vw);
   letter-spacing: -0.02em;
   line-height: 1.25;
   margin-top: 1.5em;
-  margin-bottom: .25em;
+  margin-bottom: .3em;
 }
 h2 {
-  font-weight: var(--heading-weight);
-  font-size: 1.4em;
-  font-size: calc(1em + .2vw);
+  font-weight: 530;
+  font-size: 1.6em;
+  font-size: calc(1.25em + .35vw);
   letter-spacing: -0.015em;
-  margin-top: 1em;
-  margin-bottom: .5em;
+  line-height: 1.3;
+  margin-top: 1.5em;
+  margin-bottom: .4em;
 }
-h3 { font-weight: var(--heading-weight); font-size: 1.2em; line-height: 1.3; margin-top: 1em; margin-bottom: .5em; }
+h3 { font-weight: 520; font-size: 1.3em; font-size: calc(1.05em + .2vw); line-height: 1.35; margin-top: 1.2em; margin-bottom: .4em; }
 h4 { font-size: 1em; font-weight: 600; line-height: 1.3; margin-top: 1em; }
 h5 { font-weight: 700; line-height: 1.25; text-transform: uppercase; margin-bottom: 1em; letter-spacing: .05em; font-size: 1.4rem; }
 h1 a, h1 a:visited, h1 a:link { color: var(--color-tx-normal); }

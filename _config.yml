@@ -10,7 +10,7 @@ url: https://shayanspiel.github.io
 baseurl: ""
 lang: en
 locale: en_US
-logo: /logo.png
+logo: /logo.png   # cleaned Spiel logo (200x200, transparent bg)
 favicon: /assets/favicons/favicon.svg
 permalink: /:title/
 paginate_path: /page/:num/
