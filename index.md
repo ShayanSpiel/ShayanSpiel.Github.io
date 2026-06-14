@@ -7,8 +7,8 @@ permalink: /
 
 <section class="hero">
   <h1>Shayan Spiel</h1>
-  <p class="lede">I build Session-as-Content Infrastructure. Your build sessions become publishable content — so you never stop working to post.</p>
-  <p>The Spiel Engine — <a href="https://github.com/ShayanSpiel/SpielEngine" target="_blank" rel="noopener noreferrer">open source</a> + <a href="/contact/">DFY Install at $2,900</a>.</p>
+  <p class="lede">Building & testing agentic AI workflows in public. Currently building Session-as-Content Infrastructure — turning build sessions into publishable content so you never stop working to post.</p>
+  <p>The Spiel Engine — <a href="https://github.com/ShayanSpiel/SpielEngine" target="_blank" rel="noopener noreferrer">open source</a> + <a href="/contact/">DFY Install</a>.</p>
   <p class="font-ui">
     <a href="/about/" class="plain"><strong>About</strong></a> ·
     <a href="https://twitter.com/ShayanSpiel" class="plain" target="_blank" rel="noopener noreferrer"><strong>X</strong></a> ·
@@ -25,7 +25,7 @@ permalink: /
 
 ## Work with me
 
-I build Session-as-Content Infrastructure for technical founders. Your build sessions become publishable content. You stay a builder. Open-source entry, DFY Install at $2,900.
+I build Session-as-Content Infrastructure for technical founders. Your build sessions become publishable content. You stay a builder.
 
 <p class="font-ui"><a href="/contact/" class="plain action"><strong>Contact me →</strong></a></p>
 
