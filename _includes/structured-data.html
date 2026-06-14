@@ -1,0 +1,64 @@
+{%- comment -%}
+  Extra structured data beyond what jekyll-seo-tag emits.
+  - Person/Organization on every page (site identity)
+  - BreadcrumbList on post pages
+  - WebSite + SearchAction on the homepage only (with disabled client search)
+{%- endcomment -%}
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": "{{ site.url }}/#person",
+  "name": "{{ site.author.name }}",
+  "alternateName": "Shayan Tawabi",
+  "url": "{{ site.url }}",
+  "image": "{{ site.url }}/assets/og-default.png",
+  "logo": "{{ site.url }}/logo.png",
+  "email": "mailto:{{ site.author.email }}",
+  "jobTitle": "Solo operator, marketing strategist, agentic solutions architect",
+  "worksFor": { "@type": "Organization", "name": "Shayan Spiel" },
+  "knowsAbout": [
+    "Agentic AI workflows",
+    "Content systems",
+    "Session-as-Content methodology",
+    "Building in public",
+    "Technical founder marketing"
+  ],
+  "sameAs": [
+    "https://twitter.com/{{ site.twitter.username }}",
+    "https://www.linkedin.com/in/shayantawabi",
+    "https://github.com/ShayanSpiel"
+  ]
+}
+</script>
+
+{%- if page.url == '/' -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": "{{ site.url }}/#website",
+  "url": "{{ site.url }}",
+  "name": "{{ site.title }}",
+  "description": "{{ site.description | strip_html | normalize_whitespace | escape }}",
+  "inLanguage": "{{ site.lang }}",
+  "publisher": { "@id": "{{ site.url }}/#person" }
+}
+</script>
+{%- endif -%}
+
+{%- if page.layout == 'post' -%}
+{%- assign crumbs = site.url | append: '/' -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site.url }}/" },
+    { "@type": "ListItem", "position": 2, "name": "Posts", "item": "{{ site.url }}/posts/" },
+    { "@type": "ListItem", "position": 3, "name": "{{ page.title | escape }}", "item": "{{ canonical_url }}" }
+  ]
+}
+</script>
+{%- endif -%}

@@ -1,7 +1,9 @@
 ---
 layout: home
-title: Shayan Spiel
-description: Shayan Spiel — Session-as-Content Infrastructure. Content is not created. It is extracted from work.
+title: Shayan Spiel — Session-as-Content Infrastructure
+description: Solo operator building Session-as-Content Infrastructure for technical founders. Open-source Spiel Engine + done-for-you installs. Build in public. Based in Tehran, Iran.
+keywords: Shayan Spiel, Shayan Tawabi, session-as-content, content engine, agentic AI, building in public, technical founder, Spiel Engine
+image: /assets/og-default.png
 permalink: /
 ---
 

@@ -3,7 +3,6 @@ layout: post
 title: "You Don't Need to Learn Marketing. You Need to Stop Treating Content as a Job."
 date: 2026-06-13 09:00:00 +0000
 tags:
-  - 
   - identity
   - technical-founder
   - content-system
@@ -14,9 +13,10 @@ tags:
   - execution
   - operational-pattern
   - psychological-trap
-description: "The identity tension that keeps technical founders from posting is the real bottleneck  -  not time, not skill. Here is what removes the creator identity entirely."
-categories: ["", "Lead Systems"]
+description: "The identity tension that keeps technical founders from posting is the real bottleneck — not time, not skill. Here is what removes the creator identity entirely."
+categories: ["Lead Systems"]
 seo_keyword: "content pipeline for technical founders"
+image: /assets/banners/2026-06-13-pillar-blog-spiel-engine-identity.png
 permalink: /content-pipeline/
 ---
 

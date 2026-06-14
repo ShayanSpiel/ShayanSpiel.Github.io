@@ -4,5 +4,22 @@ layout: default
 
 <article>
   <h1>{{ page.title }}</h1>
-  {%- include post_list.html category=page.which_category -%}
+
+  <p class="lede muted">{{ page.description }}</p>
+
+  <ul class="list-plain tabular-nums post-archive">
+    {%- assign sorted = site.posts | sort: 'date' | reverse -%}
+    {%- for post in sorted -%}
+      <li class="post-archive-item">
+        <a href="{{ post.url | relative_url }}" class="plain">
+          <span class="post-archive-date font-ui small muted">{{ post.date | date: "%b %-d, %Y" }}</span>
+          <span class="post-archive-title"><u>{{ post.title }}</u></span>
+          <span class="post-archive-cat font-ui small muted">· {{ post.categories | first | default: 'Post' }}</span>
+        </a>
+        {%- if post.description -%}
+        <div class="post-archive-desc small muted">{{ post.description | strip_html | truncatewords: 32 }}</div>
+        {%- endif -%}
+      </li>
+    {%- endfor -%}
+  </ul>
 </article>

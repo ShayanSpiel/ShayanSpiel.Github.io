@@ -1,7 +1,9 @@
 ---
 layout: page
 title: About
-description: Session-as-Content Infrastructure. Building-in-public systems for technical founders. Based in Tehran.
+description: Shayan Spiel — solo operator, marketing strategist, agentic solutions architect. 8+ years scaling Iran's largest digital platforms. Now building Session-as-Content Infrastructure for technical founders.
+keywords: about Shayan Spiel, Shayan Tawabi, session-as-content, agentic AI, technical founder marketing, building in public
+image: /assets/og-default.png
 permalink: /about/
 ---
 

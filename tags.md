@@ -1,7 +1,9 @@
 ---
 layout: page
 title: Tags
-description: Browse all posts by tag.
+description: Browse Shayan Spiel's blog posts by tag. Every pillar post tagged by topic — content engine, automation, jekyll, agentic AI, methodology.
+keywords: blog tags, all tags, content engine, automation, jekyll, agentic AI
+image: /assets/og-default.png
 permalink: /tags/
 ---
 

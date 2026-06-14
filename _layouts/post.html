@@ -57,6 +57,8 @@ layout: default
 
   {{ content }}
 
+  {%- include related_posts.html -%}
+
   {%- if page.tags and page.tags.size > 0 -%}
   <div class="post-tags font-ui small">
     <span class="muted">Tags:</span>

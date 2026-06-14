@@ -1,7 +1,9 @@
 ---
 layout: page
 title: Contact
-description: Get in touch with Shayan Spiel.
+description: Get in touch with Shayan Spiel. DM on X / LinkedIn, or email for Spiel Engine DFY Install applications and partnerships.
+keywords: contact Shayan Spiel, DFY install, Spiel Engine, content engine consulting
+image: /assets/og-default.png
 permalink: /contact/
 ---
 

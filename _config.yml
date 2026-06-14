@@ -1,30 +1,36 @@
 title: Shayan Spiel
 tagline: Building & testing agentic AI workflows in public
 description: >-
-  Solo operator building second brains, content engines, and AI agents. Writing
-  in the open. Based in Tehran, Iran.
-keywords: second brain, content engine, AI agents, solo operator, building in public, Shayan Spiel, Shayan Tawabi
-author: Shayan Spiel
-email: 66shayan@gmail.com
+  Solo operator building Session-as-Content Infrastructure for technical
+  founders. Open-source Spiel Engine + done-for-you installs. Writing in the
+  open. Based in Tehran, Iran.
+keywords: second brain, content engine, AI agents, solo operator, building in public, Shayan Spiel, Shayan Tawabi, Session-as-Content, content pipeline, technical founder
+
+author:
+  name: Shayan Spiel
+  email: 66shayan@gmail.com
+  twitter: ShayanSpiel
+
 url: https://shayanspiel.github.io
 baseurl: ""
 lang: en
+locale: en_US
 logo: /logo.png
+favicon: /assets/favicons/favicon.svg
 
 permalink: /:title/
 paginate_path: /page/:num/
-
-favicon: /logo.png
 
 twitter:
   username: ShayanSpiel
   card: summary_large_image
 
 social:
-  name: Shayan Tawabi
+  name: Shayan Spiel (Shayan Tawabi)
   links:
     - https://twitter.com/ShayanSpiel
     - https://www.linkedin.com/in/shayantawabi
+    - https://github.com/ShayanSpiel
 
 remote_theme: riggraz/no-style-please
 
@@ -41,7 +47,25 @@ sass:
 plugins:
   - jekyll-feed
   - jekyll-sitemap
+  - jekyll-seo-tag
   - jektex
+
+# Per-page SEO defaults (consumed by jekyll-seo-tag)
+defaults:
+  - scope:
+      path: ""
+    values:
+      image: /assets/og-default.png
+      author: Shayan Spiel
+      seo:
+        type: "WebSite"
+  - scope:
+      type: posts
+    values:
+      image: /assets/og-default.png
+      author: Shayan Spiel
+      seo:
+        type: "BlogPosting"
 
 jektex:
   cache_dir: ".jektex-cache"

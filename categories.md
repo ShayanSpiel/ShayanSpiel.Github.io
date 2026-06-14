@@ -1,7 +1,9 @@
 ---
 layout: page
 title: Topics
-description: Browse all posts by topic category.
+description: Browse Shayan Spiel's blog posts by topic. Categories cover AI agents, building in public, lead systems, and Session-as-Content methodology.
+keywords: blog topics, categories, AI agents, building in public, lead systems, session-as-content
+image: /assets/og-default.png
 permalink: /categories/
 ---
 

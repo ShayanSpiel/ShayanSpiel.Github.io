@@ -1,0 +1,29 @@
+---
+layout: default
+title: "404 — Page not found"
+description: "The page you are looking for does not exist. Explore Shayan Spiel's pillar posts on Session-as-Content Infrastructure, agentic AI workflows, and building in public."
+permalink: /404.html
+sitemap: false
+---
+
+<article class="four-oh-four">
+  <p class="lede muted font-ui">Error 404</p>
+  <h1>That page does not exist.</h1>
+  <p>But three things do, and they are the point of this site.</p>
+
+  <ul class="list-plain mt-2">
+    <li><a href="/" class="plain"><strong>Home</strong></a> — who I am and what I ship.</li>
+    <li><a href="/posts/" class="plain"><strong>Posts</strong></a> — every pillar post, newest first.</li>
+    <li><a href="/categories/" class="plain"><strong>Topics</strong></a> — posts grouped by category.</li>
+  </ul>
+
+  <h2 class="mt-3">Most-read this month</h2>
+  <ul class="list-plain">
+    {%- assign top = site.posts | sort: 'date' | reverse | slice: 0, 5 -%}
+    {%- for post in top -%}
+      <li><a href="{{ post.url | relative_url }}" class="plain"><u>{{ post.title }}</u></a></li>
+    {%- endfor -%}
+  </ul>
+
+  <p class="mt-3"><a href="/contact/" class="plain action"><strong>Tell me what broke →</strong></a></p>
+</article>

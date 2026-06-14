@@ -2,7 +2,13 @@
 {%- assign page_title = page.title | default: site.title | escape -%}
 {%- assign site_name = site.title | split: ' — ' | first -%}
 {%- assign meta_desc = page.description | default: page.excerpt | default: site.description | strip_html | normalize_whitespace | truncate: 160 -%}
-{%- assign meta_image = page.image | default: '/logo.png' | absolute_url -%}
+{%- assign meta_image = page.image | default: '/assets/og-default.png' | absolute_url -%}
+{%- assign og_image_alt = page.title | append: ' — Shayan Spiel' -%}
+{%- if page.layout == 'post' -%}
+  {%- assign og_type = 'article' -%}
+{%- else -%}
+  {%- assign og_type = 'website' -%}
+{%- endif -%}
 
 <head>
   <meta charset="utf-8" />
@@ -11,6 +17,14 @@
   <meta name="theme-color" content="#100F0F" />
   <meta name="color-scheme" content="dark light" />
   <meta name="google-site-verification" content="LvKy8YQ0XGZPYu4bQ9JIhaFmdX3W9Ag7eSPYGTE-ORU" />
+  <meta name="format-detection" content="telephone=no" />
+
+  <!-- Preconnect / DNS prefetch for third-party origins -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+  <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
+  <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+  <link rel="preconnect" href="https://gc.zgo.at" crossorigin />
 
   <!-- Google Tag Manager -->
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -20,105 +34,36 @@
   })(window,document,'script','dataLayer','GTM-NT7HQ9DC');</script>
   <!-- End Google Tag Manager -->
 
-  <!-- Title -->
+  <!-- jekyll-seo-tag emits title, description, canonical, og:*, twitter:*, JSON-LD -->
+  {%- seo -%}
+
+  <!-- Title override: prefer <Page Title> — Site Name format for non-home pages -->
   <title>{% if page.url == '/' %}{{ site.title }}{% if site.tagline %} — {{ site.tagline }}{% endif %}{% else %}{{ page_title }} — {{ site_name }}{% endif %}</title>
 
-  <!-- Meta -->
-  <meta name="description" content="{{ meta_desc }}" />
-  {%- if page.seo_keyword -%}
-  <meta name="keywords" content="{{ page.seo_keyword }}{% if page.tags %}, {{ page.tags | join: ', ' }}{% endif %}" />
-  {%- elsif site.keywords -%}
-  <meta name="keywords" content="{{ site.keywords }}" />
-  {%- endif -%}
-  <meta name="author" content="{{ site.author }}" />
-  <link rel="canonical" href="{{ canonical_url }}" />
-
-  <!-- Open Graph -->
-  <meta property="og:type" content="{% if page.layout == 'post' %}article{% else %}website{% endif %}" />
-  <meta property="og:site_name" content="{{ site_name }}" />
-  <meta property="og:title" content="{{ page_title }}" />
-  <meta property="og:description" content="{{ meta_desc }}" />
-  <meta property="og:url" content="{{ canonical_url }}" />
-  <meta property="og:locale" content="en_US" />
-  <meta property="og:image" content="{{ meta_image }}" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:site" content="@{{ site.twitter.username }}" />
-  <meta name="twitter:creator" content="@{{ site.twitter.username }}" />
-  <meta name="twitter:title" content="{{ page_title }}" />
-  <meta name="twitter:description" content="{{ meta_desc }}" />
-  <meta name="twitter:image" content="{{ meta_image }}" />
-
+  <!-- Article-only meta (jekyll-seo-tag emits most of this, but explicit article:* helps Bing) -->
   {%- if page.layout == 'post' -%}
-  <!-- Article tags -->
   <meta property="article:published_time" content="{{ page.date | date_to_xmlschema }}" />
-  <meta property="article:author" content="{{ site.author }}" />
-  {%- if page.tags -%}{% for tag in page.tags %}
+  <meta property="article:modified_time" content="{{ page.last_modified_at | default: page.date | date_to_xmlschema }}" />
+  <meta property="article:author" content="{{ site.author.name }}" />
+  <meta property="article:section" content="{{ page.categories | first | default: 'Building in Public' }}" />
+  {%- if page.tags -%}{% for tag in page.tags %}{% if tag and tag != '' %}
   <meta property="article:tag" content="{{ tag }}" />
-  {%- endfor %}{% endif -%}
+  {%- endif %}{% endfor %}{% endif -%}
   {%- endif -%}
 
-  <!-- RSS + Sitemap -->
-  <link rel="icon" type="image/png" href="{{ '/logo.png' | relative_url }}" />
-  <link rel="apple-touch-icon" href="{{ '/logo.png' | relative_url }}" />
-  <link rel="alternate" type="application/rss+xml" title="{{ site_name }}" href="{{ '/feed.xml' | relative_url }}" />
+  <!-- Favicons -->
+  <link rel="icon" type="image/svg+xml" href="{{ '/assets/favicons/favicon.svg' | relative_url }}" />
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ '/assets/favicons/favicon-32.png' | relative_url }}" />
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ '/assets/favicons/favicon-16.png' | relative_url }}" />
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ '/assets/favicons/apple-touch-icon.png' | relative_url }}" />
+  <link rel="mask-icon" href="{{ '/assets/favicons/favicon.svg' | relative_url }}" color="#100F0F" />
+  <link rel="manifest" href="{{ '/site.webmanifest' | relative_url }}" />
+
+  <!-- Feeds -->
+  <link rel="alternate" type="application/rss+xml" title="{{ site_name }} — RSS" href="{{ '/feed.xml' | relative_url }}" />
+  <link rel="alternate" type="application/atom+xml" title="{{ site_name }} — Atom" href="{{ '/feed.atom' | relative_url }}" />
   <link rel="sitemap" type="application/xml" title="Sitemap" href="{{ '/sitemap.xml' | relative_url }}" />
 
   <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.css" integrity="sha384-OH8qNTHoMMVNVcKdKewlipV4SErXqccxxlg6HC9Cwjr5oZu2AdBej1TndeCirael" crossorigin="anonymous">
-
-  <!-- Schema.org JSON-LD -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Person",
-        "@id": "{{ site.url }}/#person",
-        "name": "{{ site.author }}",
-        "url": "{{ site.url }}",
-        "image": "{{ site.url }}/logo.png",
-        "sameAs": [
-          "https://twitter.com/{{ site.twitter.username }}",
-          "https://www.linkedin.com/in/shayantawabi"
-        ],
-        "jobTitle": "Solo operator, marketing strategist, agentic solutions architect"
-      },
-      {
-        "@type": "WebSite",
-        "@id": "{{ site.url }}/#website",
-        "url": "{{ site.url }}",
-        "name": "{{ site_name }}",
-        "description": "{{ site.description | strip_html | normalize_whitespace | escape }}",
-        "inLanguage": "en",
-        "publisher": { "@id": "{{ site.url }}/#person" },
-        "potentialAction": {
-          "@type": "SearchAction",
-          "target": { "@type": "EntryPoint", "urlTemplate": "{{ site.url }}/?q={search_term_string}" },
-          "query-input": "required name=search_term_string"
-        }
-      }
-    ]
-  }
-  </script>
-  {%- if page.layout == 'post' -%}
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    "headline": "{{ page.title | escape }}",
-    "url": "{{ canonical_url }}",
-    "image": "{{ meta_image }}",
-    "datePublished": "{{ page.date | date_to_xmlschema }}",
-    "author": { "@id": "{{ site.url }}/#person" },
-    "publisher": { "@id": "{{ site.url }}/#person" },
-    "description": "{{ meta_desc }}",
-    "mainEntityOfPage": { "@type": "WebPage", "@id": "{{ canonical_url }}" },
-    "keywords": "{% if page.tags %}{{ page.tags | join: ', ' }}{% endif %}"
-  }
-  </script>
-  {%- endif -%}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-OH8qNTHoMMVNVcKdKewlipV4SErXqccxxlg6HC9Cwjr5oZu2AdBej1TndeCirael" crossorigin="anonymous">
 </head>

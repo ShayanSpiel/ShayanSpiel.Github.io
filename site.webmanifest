@@ -1,0 +1,17 @@
+{
+  "name": "Shayan Spiel",
+  "short_name": "ShayanSpiel",
+  "description": "Session-as-Content Infrastructure. Building in public.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#100F0F",
+  "theme_color": "#100F0F",
+  "lang": "en",
+  "icons": [
+    { "src": "/assets/favicons/favicon.svg", "type": "image/svg+xml", "sizes": "any", "purpose": "any" },
+    { "src": "/assets/favicons/favicon-192.png", "type": "image/png", "sizes": "192x192", "purpose": "any maskable" },
+    { "src": "/assets/favicons/favicon-512.png", "type": "image/png", "sizes": "512x512", "purpose": "any maskable" },
+    { "src": "/assets/favicons/apple-touch-icon.png", "type": "image/png", "sizes": "180x180", "purpose": "any" }
+  ]
+}
