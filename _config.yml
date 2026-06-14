@@ -6,20 +6,20 @@ description: >-
   open. Based in Tehran, Iran.
 keywords: second brain, content engine, AI agents, solo operator, building in public, Shayan Spiel, Shayan Tawabi, Session-as-Content, content pipeline, technical founder
 
-author:
-  name: Shayan Spiel
-  email: 66shayan@gmail.com
-  twitter: ShayanSpiel
-
 url: https://shayanspiel.github.io
 baseurl: ""
 lang: en
 locale: en_US
 logo: /logo.png
 favicon: /assets/favicons/favicon.svg
-
 permalink: /:title/
 paginate_path: /page/:num/
+
+# Author — jekyll-seo-tag reads `author.name` and (in 2.8.0+) `author.twitter`
+author:
+  name: Shayan Spiel
+  email: 66shayan@gmail.com
+  twitter: ShayanSpiel
 
 twitter:
   username: ShayanSpiel
@@ -78,6 +78,6 @@ jektex:
 # Allow future-dated posts (SpielEngine publishes as generated)
 future: true
 
-# Don't let Jekyll exclude files/dirs starting with a dot (.well-known, .htaccess, etc.)
+# Don't let Jekyll exclude files/dirs starting with a dot (.well-known, etc.)
 include:
   - .well-known
