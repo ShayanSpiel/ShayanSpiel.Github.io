@@ -5,7 +5,7 @@ date: 2026-06-08 10:00:00 +0000
 categories: ["AI & Agents"]
 seo_keyword: "open source content engine for founders"
 description: "The Spiel Engine is now open source. Session-as-Content Infrastructure, 4 files, 2 loops, 19 commands, MIT licensed. Clone it, run it, own it."
-image: /assets/uploads/2026-06-08-spielengine-is-now-open-source/spielengine-github.png
+image: /assets/uploads/2026-06-08-spielengine-is-now-open-source/banner.png
 tags:
   - open-source
   - ai-agents
@@ -21,6 +21,8 @@ Every Tuesday I would finish a build session, look at the work, think "I should 
 Here is the system that removed the switch.
 
 **[SpielEngine](https://github.com/ShayanSpiel/SpielEngine) turns your build sessions into publishable content, so you never need to stop working to create posts.**
+
+![SpielEngine is Now Open Source — banner](/assets/uploads/2026-06-08-spielengine-is-now-open-source/banner.png)
 
 ---
 
