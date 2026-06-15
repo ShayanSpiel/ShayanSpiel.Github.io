@@ -72,4 +72,4 @@ The bio is the first checkpoint. Not the finish line.
 
 ---
 
-Hit reply and tell me: when did you last check if your files still match your bio?
+When did you last check if your files still match your bio? [Tell me on X →](https://x.com/ShayanSpiel)
