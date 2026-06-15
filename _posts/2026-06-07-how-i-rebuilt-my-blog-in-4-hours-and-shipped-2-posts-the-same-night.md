@@ -4,7 +4,10 @@ title: "How I rebuilt my blog in 4 hours (and shipped 2 posts the same night)"
 date: 2026-06-07 09:00:00 +0000
 categories: [Building in Public]
 seo_keyword: "session as content infrastructure"
-image: /assets/uploads/2026-06-06-how-i-rebuilt-my-blog-in-4-hours-and-shipped-2-posts-the-same-night/16-blog-home.png
+image:
+  path: /assets/uploads/2026-06-06-how-i-rebuilt-my-blog-in-4-hours-and-shipped-2-posts-the-same-night/16-blog-home.png
+  width: 1200
+  height: 630
 tags:
   - building-in-public
   - jekyll

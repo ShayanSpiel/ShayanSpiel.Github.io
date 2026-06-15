@@ -5,7 +5,10 @@ permalink: /72-hour-content-sprint/
 date: 2026-06-10 08:00:00 +0000
 categories: [Lead Systems]
 seo_keyword: "session as content infrastructure"
-image: /assets/uploads/2026-06-10-72-hour-content-sprint/banner.png
+image:
+  path: /assets/uploads/2026-06-10-72-hour-content-sprint/banner.png
+  width: 1200
+  height: 630
 description: "Session-as-Content Infrastructure. A 3-day sprint: 4 blog posts, 3 LinkedIn posts, 2 state machines, ~85 queue drafts. The system that made it possible."
 tags:
   - content-system

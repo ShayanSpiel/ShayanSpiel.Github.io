@@ -4,7 +4,10 @@ title: "Positioning Is Not a Copy Change. It Is a System State."
 date: 2026-06-14 09:00:00 +0000
 categories: ["Lead Systems"]
 seo_keyword: "positioning audit for technical founders"
-image: /assets/banners/2026-06-14-pillar-blog-positioning-is-system-level.png
+image:
+  path: /assets/banners/2026-06-14-pillar-blog-positioning-is-system-level.png
+  width: 1200
+  height: 630
 permalink: /positioning-is-system-level/
 description: "You updated your bio. Your system didn't. Here is why your old positioning is still running in files you forgot existed — and how to fix it in an afternoon."
 tags:

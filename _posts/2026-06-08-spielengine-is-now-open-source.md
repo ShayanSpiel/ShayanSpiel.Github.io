@@ -5,7 +5,10 @@ date: 2026-06-08 10:00:00 +0000
 categories: ["AI & Agents"]
 seo_keyword: "open source content engine for founders"
 description: "The Spiel Engine is now open source. Session-as-Content Infrastructure, 4 files, 2 loops, 19 commands, MIT licensed. Clone it, run it, own it."
-image: /assets/uploads/2026-06-08-spielengine-is-now-open-source/banner.png
+image:
+  path: /assets/uploads/2026-06-08-spielengine-is-now-open-source/banner.png
+  width: 1200
+  height: 630
 tags:
   - open-source
   - ai-agents

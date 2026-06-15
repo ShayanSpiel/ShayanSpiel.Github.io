@@ -4,7 +4,10 @@ title: "How I automated my content with a second brain (and you can too, for $5/
 date: 2026-06-06 09:00:00 +0000
 categories: [Lead Systems]
 seo_keyword: "session as content infrastructure"
-image: /assets/uploads/2026-06-06-how-i-automated-my-content-with-a-second-brain-and-you-can-too-for-5-month/01-vault-tree.png
+image:
+  path: /assets/uploads/2026-06-06-how-i-automated-my-content-with-a-second-brain-and-you-can-too-for-5-month/01-vault-tree.png
+  width: 1200
+  height: 630
 tags:
   - content-engine
   - automation

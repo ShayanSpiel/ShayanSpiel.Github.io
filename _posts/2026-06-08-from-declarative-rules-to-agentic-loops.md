@@ -5,7 +5,10 @@ date: 2026-06-08 03:35:01 +0000
 categories: ["AI & Agents"]
 seo_keyword: "agentic AI workflow architecture"
 description: "A 2000-word prompt is a constitution, not a government. Why your LLM agents ignore half your rules, and the state-machine architecture that fixes it."
-image: /assets/uploads/2026-06-08-from-declarative-rules-to-agentic-loops/01-vault-tree.png
+image:
+  path: /assets/uploads/2026-06-08-from-declarative-rules-to-agentic-loops/01-vault-tree.png
+  width: 1200
+  height: 630
 tags:
   - ai-agents
   - content-engine

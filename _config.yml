@@ -55,13 +55,19 @@ defaults:
   - scope:
       path: ""
     values:
-      image: /assets/og-default.png
+      image:
+        path: /assets/og-default.png
+        width: 1200
+        height: 630
       seo:
         type: "WebSite"
   - scope:
       type: posts
     values:
-      image: /assets/og-default.png
+      image:
+        path: /assets/og-default.png
+        width: 1200
+        height: 630
       seo:
         type: "BlogPosting"
 

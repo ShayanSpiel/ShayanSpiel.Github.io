@@ -16,7 +16,10 @@ tags:
 description: "The identity tension that keeps technical founders from posting is the real bottleneck — not time, not skill. Here is what removes the creator identity entirely."
 categories: ["Lead Systems"]
 seo_keyword: "content pipeline for technical founders"
-image: /assets/banners/2026-06-13-pillar-blog-spiel-engine-identity.png
+image:
+  path: /assets/banners/2026-06-13-pillar-blog-spiel-engine-identity.png
+  width: 1200
+  height: 630
 permalink: /content-pipeline/
 ---
 

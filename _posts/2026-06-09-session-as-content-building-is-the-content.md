@@ -5,7 +5,10 @@ permalink: /session-as-content/
 date: 2026-06-09 09:00:00 +0000
 categories: [Lead Systems]
 seo_keyword: "session as content, content engine for technical founders, build in public automation, content pipeline"
-image: /assets/uploads/2026-06-08-session-as-content-building-is-the-content/banner.png
+image:
+  path: /assets/uploads/2026-06-08-session-as-content-building-is-the-content/banner.png
+  width: 1200
+  height: 630
 description: "Session-as-Content Infrastructure — your work sessions are the only content engine you need. Stop planning content. Start logging reality. The Spiel Engine turns build logs into published content."
 tags:
   - session-as-content
