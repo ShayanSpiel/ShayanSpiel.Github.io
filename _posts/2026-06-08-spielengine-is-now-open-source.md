@@ -13,6 +13,7 @@ tags:
   - automation
   - positioning
 ---
+![SpielEngine is Now Open Source — banner](/assets/uploads/2026-06-08-spielengine-is-now-open-source/banner.png)
 
 I ship consistently. Before the engine, I did not.
 
@@ -21,8 +22,6 @@ Every Tuesday I would finish a build session, look at the work, think "I should 
 Here is the system that removed the switch.
 
 **[SpielEngine](https://github.com/ShayanSpiel/SpielEngine) turns your build sessions into publishable content, so you never need to stop working to create posts.**
-
-![SpielEngine is Now Open Source — banner](/assets/uploads/2026-06-08-spielengine-is-now-open-source/banner.png)
 
 ---
 
