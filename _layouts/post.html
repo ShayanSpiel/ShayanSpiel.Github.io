@@ -11,29 +11,6 @@ layout: default
   {%- assign category_label = 'Post' -%}
 {%- endif -%}
 
-<style>
-.notice-banner {
-  background: #fef9c3;
-  border: 1px solid #eab308;
-  border-left: 4px solid #eab308;
-  color: #422006;
-  padding: 0.75rem 1rem;
-  margin: 1rem 0;
-  border-radius: 4px;
-  font-size: 0.925rem;
-  line-height: 1.5;
-}
-.theme-light .notice-banner {
-  background: #fef9c3;
-  border-color: #eab308;
-  color: #422006;
-}
-.theme-dark .notice-banner {
-  background: #3f2e00;
-  border-color: #eab308;
-  color: #fef9c3;
-}
-</style>
 <article>
   <nav class="breadcrumb font-ui small muted" aria-label="Breadcrumb">
     <a href="{{ '/' | relative_url }}" class="plain muted">Home</a>
@@ -44,8 +21,8 @@ layout: default
   </nav>
 
   <p class="post-meta font-ui small muted">
-    <a href="/categories/#{{ category_slug }}" class="plain" style="font-weight: 600;">{{ category_label }}</a>
-    <span style="margin: 0 0.4rem;">·</span>
+    <a href="/categories/#{{ category_slug }}" class="plain post-category-label">{{ category_label }}</a>
+    <span class="post-meta-sep">·</span>
     <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%b %-d, %Y" }}</time>
   </p>
 

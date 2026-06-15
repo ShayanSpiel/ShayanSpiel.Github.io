@@ -1,9 +1,5 @@
 entries:
   - title: about
     url: /about/
-  - title: topics
-    url: /categories/
   - title: contact
     url: /contact/
-  - title: GeoGent
-    url: /GeoGent-Waitlist/

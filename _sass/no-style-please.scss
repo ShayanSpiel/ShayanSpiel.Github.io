@@ -4,7 +4,7 @@
 // =====================================================================
 
 :root {
-  --font-content: -apple-system, BlinkMacSystemFont, "Inter", "IBM Plex Sans", Segoe UI, Helvetica, Arial, sans-serif;
+  --font-content: "Geist", -apple-system, BlinkMacSystemFont, "Inter", "IBM Plex Sans", Segoe UI, Helvetica, Arial, sans-serif;
   --font-ui: var(--font-content);
   --font-mono: ui-monospace, SFMono-Regular, "Cascadia Code", "IBM Plex Mono", "Roboto Mono", "DejaVu Sans Mono", "Liberation Mono", Menlo, Monaco, "Consolas", "Source Code Pro", monospace;
   --border-radius: 4px;
@@ -15,7 +15,7 @@
   --heading-weight: 500;
   --input-width: 20em;
   --image-radius: 6px;
-  --line-height: 1.5;
+  --line-height: 1.6;
 
   // Flexoki palette
   --flexoki-black: #1C1B1A;
@@ -120,7 +120,7 @@ h1 {
   font-size: calc(1.55em + .6vw);
   letter-spacing: -0.02em;
   line-height: 1.25;
-  margin-top: 1.5em;
+  margin-top: 1.25em;
   margin-bottom: .3em;
 }
 h2 {
@@ -129,10 +129,10 @@ h2 {
   font-size: calc(1.25em + .35vw);
   letter-spacing: -0.015em;
   line-height: 1.3;
-  margin-top: 1.5em;
+  margin-top: 1.25em;
   margin-bottom: .4em;
 }
-h3 { font-weight: 520; font-size: 1.3em; font-size: calc(1.05em + .2vw); line-height: 1.35; margin-top: 1.2em; margin-bottom: .4em; }
+h3 { font-weight: 520; font-size: 1.3em; font-size: calc(1.05em + .2vw); line-height: 1.35; margin-top: 1.1em; margin-bottom: .4em; }
 h4 { font-size: 1em; font-weight: 600; line-height: 1.3; margin-top: 1em; }
 h5 { font-weight: 700; line-height: 1.25; text-transform: uppercase; margin-bottom: 1em; letter-spacing: .05em; font-size: 1.4rem; }
 h1 a, h1 a:visited, h1 a:link { color: var(--color-tx-normal); }
@@ -140,7 +140,7 @@ h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover { color: 
 h1, h2, h3, h4, h5, h6 { position: relative; }
 h1 a, h2 a, h3 a, h4 a, h5 a, h6 a { color: var(--color-tx-normal); text-decoration: none; }
 
-p { max-width: var(--wrap-normal); margin: 1em 0; }
+p { max-width: var(--wrap-normal); margin: 1.25em 0; }
 p:first-child { margin-top: 0; }
 
 a { color: var(--color-tx-normal); text-decoration: underline; }
@@ -168,7 +168,7 @@ ul > li::marker { font-size: 85%; }
 blockquote {
   padding-left: 1.5em;
   margin: 1.5em 0;
-  border-left: 2px solid var(--color-tx-normal);
+  border-left: 3px solid var(--color-tx-normal);
   p { margin: 0; }
 }
 
@@ -182,12 +182,12 @@ code, kbd {
 kbd { font-weight: 600; border: 1px solid var(--color-ui-hover); }
 pre {
   font-family: var(--font-mono);
-  border-radius: 4px;
-  padding: 1em;
+  border-radius: 6px;
+  padding: 1.25em;
   font-size: 90%;
   border: 1px solid var(--color-ui-normal);
   white-space: pre-wrap;
-  margin: 1em 0;
+  margin: 1.25em 0;
   max-width: var(--wrap-normal);
   code { background: transparent; padding: 0; }
 }
@@ -375,11 +375,17 @@ input[type=submit]:hover, button:hover {
   color: var(--color-tx-muted);
   font-size: var(--font-small);
   font-family: var(--font-ui);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
 }
+.post-meta { text-align: left; }
+.post-category-label { font-weight: 600; }
+.post-meta-sep { opacity: 0.5; user-select: none; }
 .reading-time::before { content: " · "; }
 
 // ---------------- Override Jekyll leftovers ----------------
-.post-meta { text-align: left; }
 *:target { background: transparent; }
 
 // ---------------- Breadcrumbs ----------------
@@ -410,16 +416,17 @@ input[type=submit]:hover, button:hover {
 // ---------------- Tag chips ----------------
 .tag-chip {
   display: inline-block;
-  padding: 0.1rem 0.5rem;
+  padding: 0.2rem 0.65rem;
   border: 1px solid var(--color-ui-normal);
-  border-radius: 0.25rem;
+  border-radius: 6px;
   font-size: var(--font-small);
   font-family: var(--font-ui);
   color: var(--color-tx-muted);
   text-decoration: none;
-  margin-right: 0.25rem;
-  margin-bottom: 0.25rem;
+  margin-right: 0.3rem;
+  margin-bottom: 0.3rem;
   transition: border-color 0.15s, color 0.15s;
+  line-height: 1.5;
 }
 .tag-chip:hover {
   border-color: var(--color-action);
@@ -435,16 +442,156 @@ input[type=submit]:hover, button:hover {
 }
 .post-tags {
   margin-top: 2rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--color-ui-soft);
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-ui-normal);
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.5rem;
 }
 .post-tags .muted {
-  margin-right: 0.25rem;
+  margin-right: 0.3rem;
 }
+
+// ---------------- Notice banner (post) ----------------
+.notice-banner {
+  background: #fef9c3;
+  border: 1px solid #eab308;
+  border-left: 4px solid #eab308;
+  color: #422006;
+  padding: 0.75rem 1rem;
+  margin: 1.25rem 0;
+  border-radius: 6px;
+  font-size: 0.925rem;
+  line-height: 1.6;
+}
+.theme-light .notice-banner {
+  background: #fef9c3;
+  border-color: #eab308;
+  color: #422006;
+}
+.theme-dark .notice-banner {
+  background: #3f2e00;
+  border-color: #eab308;
+  color: #fef9c3;
+}
+
+// ---------------- Related posts ----------------
+.related-posts {
+  margin-top: 3rem;
+}
+.related-heading {
+  font-size: 1.1em;
+  font-weight: 530;
+  margin-bottom: 0.75rem;
+}
+.related-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+.related-item {
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+.related-item:hover {
+  background: var(--color-bg-hover);
+}
+.related-item a {
+  display: block;
+  padding: 0.6rem 0.75rem;
+  text-decoration: none;
+}
+.related-meta {
+  display: block;
+  margin-bottom: 0.15rem;
+}
+.related-title {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 0.1rem;
+}
+.related-title u {
+  text-decoration: none;
+}
+.related-item:hover .related-title u {
+  text-decoration: underline;
+}
+.related-desc {
+  display: block;
+  margin-top: 0.15rem;
+}
+
+// ---------------- Post archive ----------------
+.post-archive {
+  list-style: none;
+  padding: 0;
+  margin: 2rem 0 0;
+}
+.post-archive-item {
+  margin-bottom: 1.25rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--color-ui-normal);
+}
+.post-archive-item:last-child {
+  border-bottom: none;
+}
+.post-archive-item a {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.post-archive-date {
+  flex-shrink: 0;
+}
+.post-archive-title u {
+  text-decoration: none;
+}
+.post-archive-item:hover .post-archive-title u {
+  text-decoration: underline;
+}
+.post-archive-cat {
+  flex-shrink: 0;
+}
+.post-archive-desc {
+  margin-top: 0.25rem;
+  line-height: 1.5;
+}
+
+// ---------------- Post list (home) ----------------
+.post-list-link {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6em;
+  padding: 0.35rem 0;
+  border-radius: 4px;
+  transition: background 0.15s;
+}
+.post-list-link:hover {
+  background: var(--color-bg-hover);
+}
+.post-list-date {
+  flex-shrink: 0;
+}
+.post-list-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.post-list-title u {
+  text-decoration: none;
+}
+.post-list-link:hover .post-list-title u {
+  text-decoration: underline;
+}
+
+// ---------------- Utility extras ----------------
+.mt-3 { margin-top: 3rem; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
 
 // ---------------- Nav logo (tiny, theme-aware) ----------------
 .nav-logo {

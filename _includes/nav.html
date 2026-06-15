@@ -8,7 +8,7 @@
       {%- endif -%}
     </a>
   </span>
-  <span class="flex-shrink" style="display:inline-flex;gap:1.25rem;align-items:center;margin-right:1rem;">
+  <span class="flex-shrink" style="display:inline-flex;gap:1rem;align-items:center;margin-right:1rem;">
     {%- for item in site.data.menu.entries -%}
       <a href="{{ item.url | relative_url }}" class="muted plain">{{ item.title | capitalize }}</a>
     {%- endfor -%}
