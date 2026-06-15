@@ -46,7 +46,6 @@ sass:
 
 plugins:
   - jekyll-feed
-  - jekyll-sitemap
   - jekyll-seo-tag
 
 # Per-page SEO defaults (consumed by jekyll-seo-tag)
@@ -65,8 +64,6 @@ defaults:
       image: /assets/og-default.png
       seo:
         type: "BlogPosting"
-
-# jektex removed — not supported on GitHub Pages
 
 # Allow future-dated posts (SpielEngine publishes as generated)
 future: true
