@@ -48,7 +48,6 @@ plugins:
   - jekyll-feed
   - jekyll-sitemap
   - jekyll-seo-tag
-  - jektex
 
 # Per-page SEO defaults (consumed by jekyll-seo-tag)
 # Note: do NOT set `author:` here as a string — it overrides the hash above
@@ -67,13 +66,7 @@ defaults:
       seo:
         type: "BlogPosting"
 
-jektex:
-  cache_dir: ".jektex-cache"
-  ignore: ["*.xml", "*.json"]
-  silent: false
-  macros:
-    - ["\\Q", "\\mathbb{Q}"]
-    - ["\\C", "\\mathbb{C}"]
+# jektex removed — not supported on GitHub Pages
 
 # Allow future-dated posts (SpielEngine publishes as generated)
 future: true
