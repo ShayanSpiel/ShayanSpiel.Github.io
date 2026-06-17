@@ -59,30 +59,32 @@
   background: var(--color-bg-secondary);
   border: 1px solid var(--color-ui-normal);
   border-radius: var(--radius-md, 8px);
-  padding: 1em 1.25em;
-  margin: 1em 0;
+  padding: 1.5em 1.5em;
+  margin: 1.25em 0;
   position: relative;
   scroll-margin-top: 1em;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
 }
 
 /* Progress bar */
 .wizard-progress {
   display: flex;
   align-items: center;
-  gap: 0.35em;
-  margin-bottom: 1.25em;
+  gap: 0.4em;
+  margin-bottom: 1.5em;
 }
 
 .wizard-step-dot {
   flex: 1;
   height: 4px;
-  border-radius: var(--radius-full, 999px);
+  border-radius: 4px;
   background: var(--color-ui-normal);
-  transition: background 0.3s ease;
+  transition: background 0.4s ease;
 }
 
 .wizard-step-dot.active {
   background: var(--color-action);
+  box-shadow: 0 0 0 2px rgba(255, 106, 0, 0.15);
 }
 
 .wizard-step-dot.done {
@@ -91,30 +93,12 @@
 
 .wizard-step-counter {
   font-family: "Inter", sans-serif;
-  font-size: 0.7em;
+  font-size: 0.75em;
+  font-weight: 500;
   color: var(--color-tx-muted);
   text-align: center;
-  margin-bottom: 1.25em;
-}
-
-/* Back link — borderless, below main button */
-.wizard-back-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3em;
-  background: none;
-  border: none;
-  color: var(--color-tx-muted);
-  font-family: "Inter", sans-serif;
-  font-size: 0.8em;
-  cursor: pointer;
-  padding: 0.4em;
-  transition: color 0.2s;
-  align-self: flex-start;
-}
-
-.wizard-back-link:hover {
-  color: var(--color-tx-normal);
+  margin-bottom: 1.5em;
+  letter-spacing: 0.02em;
 }
 
 /* Step container — flex column so buttons stay at bottom */
@@ -126,6 +110,18 @@
 
 .wizard-step.active {
   display: flex;
+  animation: wizardFadeIn 0.35s ease;
+}
+
+@keyframes wizardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .wizard-step h2 {
@@ -158,20 +154,21 @@
 .wizard input[type="email"],
 .wizard textarea {
   width: 100%;
-  padding: 0.7em 0.8em;
+  padding: 0.75em 0.9em;
   border-radius: var(--radius-md, 8px);
   background: var(--color-bg-primary);
   border: 1px solid var(--color-ui-normal);
   color: var(--color-tx-normal);
   font-family: "Inter", sans-serif;
   font-size: 1em;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s;
   -webkit-appearance: none;
 }
 
 .wizard input:focus,
 .wizard textarea:focus {
   border-color: var(--color-action);
+  box-shadow: 0 0 0 3px rgba(255, 106, 0, 0.1);
   outline: none;
 }
 
@@ -218,27 +215,27 @@
   flex-shrink: 0;
 }
 
-/* Wizard nav buttons — mobile: stacked, desktop: side-by-side */
+/* Wizard nav buttons — mobile: Next on top, Back below */
 .wizard-actions {
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-  gap: 0.5em;
+  gap: 0.625em;
   margin-top: auto;
-  padding-top: 1.25em;
+  padding-top: 1.5em;
 }
 
 .wizard-actions .btn {
   width: 100%;
   justify-content: center;
-  padding: 0.7em 1em;
-  font-size: 0.9em;
+  padding: 0.75em 1em;
+  font-size: 0.925em;
 }
 
-/* Back link — borderless */
+/* Back link — borderless, centered below on mobile */
 .wizard-back-link {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.3em;
   background: none;
   border: none;
@@ -246,9 +243,9 @@
   font-family: "Inter", sans-serif;
   font-size: 0.8em;
   cursor: pointer;
-  padding: 0.4em 0;
+  padding: 0.5em 0;
   transition: color 0.2s;
-  align-self: flex-start;
+  width: 100%;
 }
 
 .wizard-back-link:hover {
@@ -257,7 +254,8 @@
 
 /* Initial button states (JS overrides after load) */
 #wizardPrev { display: none; }
-#wizardSubmit { visibility: hidden; }
+#wizardNext { display: none; }
+#wizardSubmit { display: none; }
 
 /* Hidden by default, shown via JS */
 #wizardResult { display: none; }
@@ -419,13 +417,14 @@
   }
 
   .wizard {
-    padding: 2em 2.5em;
+    padding: 2.5em 3em;
     margin: 2em 0;
     border-radius: var(--radius-lg, 12px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   }
 
   .wizard-step {
-    min-height: 18em;
+    min-height: 16em;
   }
 
   .wizard-step h2 {
@@ -440,18 +439,20 @@
     flex-direction: row;
     justify-content: flex-end;
     align-items: center;
-    gap: 1em;
+    gap: 0.75em;
   }
 
   .wizard-actions .btn {
     width: auto;
     min-width: 10em;
-    font-size: 0.85em;
+    font-size: 0.875em;
   }
 
   .wizard-back-link {
+    width: auto;
+    justify-content: flex-start;
     margin-right: auto;
-    align-self: auto;
+    order: -1;
   }
 
   .lp-trust {

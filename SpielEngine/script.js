@@ -47,10 +47,9 @@
     if (els.counter) {
       els.counter.textContent = n + ' of ' + totalSteps;
     }
-    // Show/hide buttons (visibility to keep layout stable)
     if (els.prevBtn) els.prevBtn.style.display = n === 1 ? 'none' : 'flex';
-    if (els.nextBtn) els.nextBtn.style.visibility = n === totalSteps ? 'hidden' : 'visible';
-    if (els.submitBtn) els.submitBtn.style.visibility = n === totalSteps ? 'visible' : 'hidden';
+    if (els.nextBtn) els.nextBtn.style.display = n === totalSteps ? 'none' : 'flex';
+    if (els.submitBtn) els.submitBtn.style.display = n === totalSteps ? 'flex' : 'none';
 
     currentStep = n;
     if (!skipScroll) {
