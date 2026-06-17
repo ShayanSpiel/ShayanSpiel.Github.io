@@ -20,7 +20,7 @@ layout: default
     <span class="current">{{ page.title | truncate: 60 }}</span>
   </nav>
 
-  <p class="post-meta font-ui small muted">
+  <p class="post-meta small muted">
     <a href="/categories/#{{ category_slug }}" class="plain post-category-label">{{ category_label }}</a>
     <span class="post-meta-sep">·</span>
     <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%b %-d, %Y" }}</time>
@@ -34,24 +34,18 @@ layout: default
 
   {{ content }}
 
-  {%- include related_posts.html -%}
-
   {%- if page.tags and page.tags.size > 0 -%}
-  <div class="post-tags font-ui small">
-    <span class="muted">Tags:</span>
+  <div class="post-tags">
     {%- for tag in page.tags -%}
-      <a href="/tags/#{{ tag | slugify }}" class="plain tag-chip">#{{ tag }}</a>
+      <a href="/tags/#{{ tag | slugify }}" class="plain tag-chip">{{ tag }}</a>
     {%- endfor -%}
   </div>
   {%- endif -%}
 
-  <hr class="post-footer-hr">
+  {%- include post_cta.html -%}
 
-  <nav class="post-footer-nav small muted">
+  <nav class="post-footer">
     <a href="/posts/" class="plain">← All posts</a>
-    <span class="post-footer-sep">·</span>
-    <a href="/about/" class="plain">About</a>
-    <span class="post-footer-sep">·</span>
-    <a href="/contact/" class="plain">Contact</a>
+    <a href="/" class="plain">Home</a>
   </nav>
 </article>

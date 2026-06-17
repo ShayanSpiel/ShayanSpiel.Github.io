@@ -5,9 +5,16 @@
 (function () {
   'use strict';
 
-  var SUCCESS_MSG = 'Subscribed ✓';
   var GOOGLE_FORM_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLScSAISdLXFTAex_cHMmdMCXQdaMGlwLouLRmptFo_5VcdV_GA/formResponse';
-  var EMAIL_FIELD = 'entry.754901073';
+  var FORM_FIELDS = {
+    name: 'entry.1115130739',
+    email: 'entry.754901073',
+    build: 'entry.1797830417',
+    content_status: 'entry.2013515666',
+    traffic: 'entry.2051252507',
+    budget: 'entry.1908783944',
+    source: 'entry.2021940811'
+  };
 
   var currentStep = 1;
   var totalSteps = 7;
@@ -205,26 +212,33 @@
       if (!validateStep(currentStep)) return;
       collectStepData(currentStep);
 
-      // Submit to Google Forms
-      var email = formData['email'] || '';
-      if (email) {
-        var iframe = document.getElementById('hidden_iframe');
-        var form = document.createElement('form');
-        form.method = 'POST';
-        form.action = GOOGLE_FORM_ACTION;
-        form.target = 'hidden_iframe';
-        form.style.display = 'none';
+      // Submit all data to Google Forms
+      var iframe = document.getElementById('hidden_iframe');
+      var form = document.createElement('form');
+      form.method = 'POST';
+      form.action = GOOGLE_FORM_ACTION;
+      form.target = 'hidden_iframe';
+      form.style.display = 'none';
 
-        var input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = EMAIL_FIELD;
-        input.value = email;
-        form.appendChild(input);
-
-        document.body.appendChild(form);
-        form.submit();
-        document.body.removeChild(form);
+      function addField(name, value) {
+        var el = document.createElement('input');
+        el.type = 'hidden';
+        el.name = name;
+        el.value = value || '';
+        form.appendChild(el);
       }
+
+      addField(FORM_FIELDS.name, formData['name']);
+      addField(FORM_FIELDS.email, formData['email']);
+      addField(FORM_FIELDS.build, formData['build']);
+      addField(FORM_FIELDS.content_status, formData['content_status']);
+      addField(FORM_FIELDS.traffic, formData['traffic']);
+      addField(FORM_FIELDS.budget, formData['budget']);
+      addField(FORM_FIELDS.source, 'Landing');
+
+      document.body.appendChild(form);
+      form.submit();
+      document.body.removeChild(form);
 
       showResult(formData);
     });
