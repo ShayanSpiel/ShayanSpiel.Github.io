@@ -30,12 +30,7 @@
 /* ---- Hero section ---- */
 .lp-hero {
   text-align: center;
-  padding: 3em 0 2em;
-  min-height: 70vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  padding: 1.5em 0 1em;
 }
 
 .lp-hero h1 {
@@ -63,23 +58,6 @@
   letter-spacing: 0.02em;
 }
 
-.lp-hero-cta {
-  margin-top: 1.5em;
-}
-
-.lp-scroll-hint {
-  margin-top: 2.5em;
-  font-family: "Inter", sans-serif;
-  font-size: 0.8em;
-  color: var(--color-tx-faint);
-  animation: lp-bounce 2s ease-in-out infinite;
-}
-
-@keyframes lp-bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(6px); }
-}
-
 /* ---- Wizard ---- */
 .wizard {
   background: var(--color-bg-secondary);
@@ -89,20 +67,6 @@
   margin: 2em 0;
   position: relative;
   scroll-margin-top: 2em;
-}
-
-#wizard {
-  animation: lp-fadeIn 0.6s ease both;
-  animation-play-state: paused;
-}
-
-#wizard.wizard-visible {
-  animation-play-state: running;
-}
-
-@keyframes lp-fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
 }
 
 /* Progress bar */

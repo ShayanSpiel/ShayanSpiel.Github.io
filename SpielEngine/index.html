@@ -75,10 +75,6 @@
           The Spiel Engine DFY Install — a complete Session-as-Content pipeline dropped into your workflow.
           Never stop working to post again.
         </p>
-        <div class="lp-hero-cta">
-          <a href="#wizard" class="btn btn-primary btn-arrow">Check if you qualify</a>
-        </div>
-        <div class="lp-scroll-hint">↓ See if you qualify</div>
       </section>
 
       <!-- Wizard -->
@@ -90,105 +86,94 @@
           <span class="wizard-step-dot" data-step="3"></span>
           <span class="wizard-step-dot" data-step="4"></span>
           <span class="wizard-step-dot" data-step="5"></span>
-          <span class="wizard-step-dot" data-step="6"></span>
-          <span class="wizard-step-dot" data-step="7"></span>
         </div>
-        <div class="wizard-step-counter" id="stepCounter">Step 1 of 7</div>
+        <div class="wizard-step-counter" id="stepCounter">Quick questions</div>
 
-        <!-- Step 1: Name -->
+        <!-- Step 1: Name + Email -->
         <div class="wizard-step" data-step="1">
-          <h2>Let's start. What's your name?</h2>
-          <p class="step-desc">I'll personalize your recommendation.</p>
+          <h2>What's your name and email?</h2>
+          <p class="step-desc">I'll send your personalized recommendation.</p>
           <div class="field">
             <label for="field_name">Your name</label>
             <input type="text" id="field_name" name="name" placeholder="e.g. Alex" required autocomplete="name" />
           </div>
-        </div>
-
-        <!-- Step 2: Email -->
-        <div class="wizard-step" data-step="2">
-          <h2>What's your email?</h2>
-          <p class="step-desc">Where should I send your recommendation?</p>
           <div class="field">
             <label for="field_email">Email address</label>
             <input type="email" id="field_email" name="email" placeholder="alex@company.com" required autocomplete="email" />
           </div>
         </div>
 
-        <!-- Step 3: What do you build -->
-        <div class="wizard-step" data-step="3">
+        <!-- Step 2: What do you build -->
+        <div class="wizard-step" data-step="2">
           <h2>What do you build?</h2>
-          <p class="step-desc">Tell me about your product, startup, or project.</p>
+          <p class="step-desc">Quick summary — a sentence is fine.</p>
           <div class="field">
             <label for="field_build">I'm building...</label>
-            <textarea id="field_build" name="build" placeholder="e.g. A developer tool for CI/CD pipelines. B2B, early stage, 2 founders." required></textarea>
+            <textarea id="field_build" name="build" placeholder="e.g. A dev tool for CI/CD. B2B, 2 founders." required></textarea>
           </div>
         </div>
 
-        <!-- Step 4: Content status -->
-        <div class="wizard-step" data-step="4">
-          <h2>Are you currently publishing content?</h2>
-          <p class="step-desc">Be honest — it helps me match the right recommendation.</p>
+        <!-- Step 3: Content status -->
+        <div class="wizard-step" data-step="3">
+          <h2>Are you publishing content currently?</h2>
+          <p class="step-desc">Helps me match the right setup.</p>
           <div class="field">
             <div class="radio-group">
               <label class="radio-option">
                 <input type="radio" name="content_status" value="yes" required />
-                <span>Yes, consistently — I publish on a schedule</span>
+                <span>Yes, on a schedule</span>
               </label>
               <label class="radio-option">
                 <input type="radio" name="content_status" value="irregular" />
-                <span>Irregularly — I post when I have time</span>
+                <span>Irregular — when I have time</span>
               </label>
               <label class="radio-option">
                 <input type="radio" name="content_status" value="no" />
-                <span>Not yet — I want to start</span>
+                <span>Not yet — want to start</span>
               </label>
             </div>
           </div>
         </div>
 
-        <!-- Step 5: Traffic -->
+        <!-- Step 4: Budget -->
+        <div class="wizard-step" data-step="4">
+          <h2>What's your budget for a content system?</h2>
+          <p class="step-desc">The DFY Install is $2,900. Open-source is free.</p>
+          <div class="field">
+            <div class="radio-group">
+              <label class="radio-option">
+                <input type="radio" name="budget" value="under1k" required />
+                <span>Under $1,000</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="budget" value="1to3k" />
+                <span>$1,000 – $3,000</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="budget" value="3to5k" />
+                <span>$3,000 – $5,000</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="budget" value="5kplus" />
+                <span>$5,000+</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="budget" value="notsure" />
+                <span>Not sure yet</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 5: Result / CTA -->
         <div class="wizard-step" data-step="5">
-          <h2>What's your monthly traffic?</h2>
-          <p class="step-desc">This helps me understand your reach.</p>
-          <div class="field">
-            <label for="field_traffic">Monthly visitors (estimate is fine)</label>
-            <select id="field_traffic" name="traffic" required>
-              <option value="" disabled selected>Select one...</option>
-              <option value="under1k">&lt; 1,000</option>
-              <option value="1to10k">1,000 – 10,000</option>
-              <option value="10to100k">10,000 – 100,000</option>
-              <option value="100kplus">100,000+</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Step 6: Budget -->
-        <div class="wizard-step" data-step="6">
-          <h2>What's your budget range?</h2>
-          <p class="step-desc">The DFY Install is $2,900. If that's not a fit, the open-source version is free.</p>
-          <div class="field">
-            <label for="field_budget">Budget for a content system</label>
-            <select id="field_budget" name="budget" required>
-              <option value="" disabled selected>Select one...</option>
-              <option value="under1k">Under $1,000</option>
-              <option value="1to3k">$1,000 – $3,000</option>
-              <option value="3to5k">$3,000 – $5,000</option>
-              <option value="5kplus">$5,000+</option>
-              <option value="notsure">Not sure yet</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Step 7: Result / CTA -->
-        <div class="wizard-step" data-step="7">
-          <h2>One sec — let me calculate your recommendation...</h2>
-          <p class="step-desc" style="text-align:center;">Press "See my recommendation" below.</p>
+          <h2>One sec — calculating your recommendation...</h2>
+          <p class="step-desc" style="text-align:center;">Hit the button below.</p>
         </div>
 
         <!-- Wizard nav -->
         <div class="wizard-actions">
-          <button class="btn btn-ghost" id="wizardPrev" style="display:none;">← Back</button>
+          <button class="btn btn-ghost" id="wizardPrev" style="display:none;">Back</button>
           <button class="btn btn-primary" id="wizardNext">Next →</button>
           <button class="btn btn-primary" id="wizardSubmit" style="display:none;">See my recommendation</button>
         </div>
@@ -205,7 +190,7 @@
           <h2>Here's my recommendation</h2>
           <div class="result-body" id="resultBody"></div>
           <div class="result-actions">
-            <a class="btn btn-primary btn-arrow" id="resultCta" href="/contact/">Have questions? Let's talk</a>
+            <a class="btn btn-primary btn-arrow" id="resultCta" href="https://x.com/i/chat/3477724042-3477724042">Have questions? Let's talk</a>
             <a class="small-link" id="resultAlt" href="https://github.com/ShayanSpiel/SpielEngine">or check the open-source Spiel Engine</a>
           </div>
         </div>
@@ -266,22 +251,6 @@
       </footer>
     </div>
 
-    <script>
-      // Fade in wizard when it scrolls into view
-      document.addEventListener('DOMContentLoaded', function () {
-        const el = document.getElementById('wizard');
-        if (!el) return;
-        const io = new IntersectionObserver(function (entries) {
-          entries.forEach(function (e) {
-            if (e.isIntersecting) {
-              e.target.classList.add('wizard-visible');
-              io.unobserve(e.target);
-            }
-          });
-        }, { threshold: 0.15 });
-        io.observe(el);
-      });
-    </script>
     <script src="./script.js" defer></script>
   </body>
 </html>

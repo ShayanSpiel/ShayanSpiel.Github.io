@@ -11,13 +11,12 @@
     email: 'entry.754901073',
     build: 'entry.1797830417',
     content_status: 'entry.2013515666',
-    traffic: 'entry.2051252507',
     budget: 'entry.1908783944',
     source: 'entry.2021940811'
   };
 
   var currentStep = 1;
-  var totalSteps = 7;
+  var totalSteps = 5;
   var formData = {};
 
   var els = {
@@ -46,7 +45,7 @@
       d.classList.toggle('done', i + 1 < n);
     });
     if (els.counter) {
-      els.counter.textContent = 'Step ' + n + ' of ' + totalSteps;
+      els.counter.textContent = n + ' of ' + totalSteps;
     }
     // Show/hide buttons
     if (els.prevBtn) els.prevBtn.style.display = n === 1 ? 'none' : 'inline-flex';
@@ -129,31 +128,23 @@
 
     var detail = '';
     if (contentStatus === 'no') {
-      detail = 'You\u2019re not publishing yet \u2014 that\u2019s the best starting point. The Spiel Engine DFY Install builds your pipeline from scratch. You get positioning, agent config, templates, and 30 days of iteration. ';
+      detail = 'You\u2019re not publishing yet \u2014 that\u2019s the best starting point. The Spiel Engine DFY Install builds your pipeline from scratch. You get positioning, agent config, templates, and 30 days of iteration.';
     } else if (contentStatus === 'irregular') {
-      detail = 'Your bottleneck is consistency, not quality. The Spiel Engine automates capture-to-draft so every session produces something publishable. No more starting from zero. ';
+      detail = 'Your bottleneck is consistency, not quality. The Spiel Engine automates capture-to-draft so every session produces something publishable. No more starting from zero.';
     } else {
-      detail = 'You\u2019re already publishing. The Spiel Engine turns every build session into a publishable asset automatically \u2014 so you 10x output without working more. ';
+      detail = 'You\u2019re already publishing. The Spiel Engine turns every build session into a publishable asset automatically \u2014 so you 10x output without working more.';
     }
 
-    if (budget === 'under1k' || budget === 'notsure') {
-      detail += 'The open-source version is free. Clone it, customize it, and upgrade to DFY later.';
-    } else {
-      detail += 'The DFY Install ($2,900) comes with a 30-day full refund guarantee. You own the system at the end.';
-    }
-
-    detail += ' Either way, if you have questions, just ask.';
-
-    var ctaText = 'Have questions? Let\u2019s talk';
-    var ctaHref = '/contact/';
+    var ctaText = '\u{1F4AC} DM me on X for questions';
+    var ctaHref = 'https://x.com/i/chat/3477724042-3477724042';
     var altText = 'or get the open-source Spiel Engine';
     var altHref = 'https://github.com/ShayanSpiel/SpielEngine';
 
     if (budget === 'under1k' || budget === 'notsure') {
-      ctaText = 'Get the open-source Spiel Engine';
+      ctaText = '\u{1F680} Get the open-source Spiel Engine';
       ctaHref = 'https://github.com/ShayanSpiel/SpielEngine';
-      altText = 'or ask me a question first';
-      altHref = '/contact/';
+      altText = '\u{1F4AC} Or DM me on X with questions';
+      altHref = 'https://x.com/i/chat/3477724042-3477724042';
     }
 
     return { rec: name, detail: detail, ctaText: ctaText, ctaHref: ctaHref, altText: altText, altHref: altHref };
@@ -228,7 +219,6 @@
       addField(FORM_FIELDS.email, formData['email']);
       addField(FORM_FIELDS.build, formData['build']);
       addField(FORM_FIELDS.content_status, formData['content_status']);
-      addField(FORM_FIELDS.traffic, formData['traffic']);
       addField(FORM_FIELDS.budget, formData['budget']);
       addField(FORM_FIELDS.source, 'Landing');
 
