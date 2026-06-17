@@ -794,14 +794,11 @@ input[type=submit], button {
 }
 
 .post-archive-item a {
-  display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
-  flex-wrap: wrap;
+  display: block;
   color: var(--color-tx-normal);
   text-decoration: none;
-  transition: color 0.15s;
-  padding: 0.35em 0.5em;
+  transition: background 0.15s;
+  padding: 0.5em 0.5em;
   margin: 0 -0.5em;
   border-radius: var(--radius-sm);
   &:hover {
@@ -809,28 +806,27 @@ input[type=submit], button {
   }
 }
 
-.post-archive-date {
-  flex-shrink: 0;
-  font-size: var(--font-smaller);
-  font-family: var(--font-ui);
-  color: var(--color-tx-faint);
-  min-width: 5em;
-}
-
 .post-archive-title {
+  display: block;
   font-weight: 500;
   color: var(--color-tx-normal);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
-.post-archive-cat {
-  flex-shrink: 0;
+.post-archive-meta {
+  display: block;
   font-size: var(--font-smaller);
   font-family: var(--font-ui);
   color: var(--color-tx-faint);
+  margin-top: 0.1em;
 }
 
 .post-archive-desc {
-  margin-top: 0.15em;
+  display: block;
+  margin-top: 0.2em;
   line-height: 1.5;
   font-size: var(--font-small);
   color: var(--color-tx-muted);

@@ -14,13 +14,12 @@ layout: default
     {%- for post in sorted -%}
       <li class="post-archive-item">
         <a href="{{ post.url | relative_url }}" class="plain">
-          <span class="post-archive-date">{{ post.date | date: "%b %-d, %Y" }}</span>
           <span class="post-archive-title">{{ post.title }}</span>
-          <span class="post-archive-cat">· {{ post.categories | first | default: 'Post' }}</span>
+          <span class="post-archive-meta">{{ post.date | date: "%b %-d, %Y" }} · {{ post.categories | first | default: 'Post' }}</span>
+          {%- if post.description -%}
+          <span class="post-archive-desc">{{ post.description | strip_html | truncatewords: 28 }}</span>
+          {%- endif -%}
         </a>
-        {%- if post.description -%}
-        <div class="post-archive-desc">{{ post.description | strip_html | truncatewords: 28 }}</div>
-        {%- endif -%}
       </li>
     {%- endfor -%}
   </ul>
