@@ -1,5 +1,9 @@
 entries:
   - title: about
     url: /about/
+  - title: posts
+    url: /posts/
+  - title: topics
+    url: /categories/
   - title: contact
     url: /contact/

@@ -1,7 +1,7 @@
 ---
 layout: archive
 title: All posts
-description: Every pillar post on the ShayanSpiel blog. Newest first. Pillar posts on Session-as-Content Infrastructure, agentic AI workflows, and building in public.
+description: Browse all blog posts on the ShayanSpiel blog — AI content pipelines, Jekyll automation, build in public, agentic AI workflows, and developer content systems.
 keywords: all posts, blog archive, Shayan Spiel, session-as-content, content engine, building in public
 image: /assets/og-default.png
 permalink: /posts/

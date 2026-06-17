@@ -1,0 +1,34 @@
+{%- if page.tags and page.tags.size > 0 -%}
+  {%- assign related = "" | split: "" -%}
+  {%- for post in site.posts -%}
+    {%- if post.url != page.url -%}
+      {%- assign match_count = 0 -%}
+      {%- for tag in page.tags -%}
+        {%- if post.tags contains tag -%}
+          {%- assign match_count = match_count | plus: 1 -%}
+        {%- endif -%}
+      {%- endfor -%}
+      {%- if match_count > 1 -%}
+        {%- assign related = related | push: post -%}
+      {%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- if related.size > 0 -%}
+    {%- assign sorted_related = related | sort: 'date' | reverse | slice: 0, 3 -%}
+    <aside class="related-posts">
+      <h2>Related posts</h2>
+      <ul class="list-plain">
+        {%- for post in sorted_related -%}
+        <li style="margin-bottom: 0.75rem;">
+          <a href="{{ post.url | relative_url }}" class="plain">
+            <u>{{ post.title }}</u>
+          </a>
+          {%- if post.description -%}
+          <div class="small muted" style="margin-top: 0.15rem;">{{ post.description | strip_html | truncatewords: 20 }}</div>
+          {%- endif -%}
+        </li>
+        {%- endfor -%}
+      </ul>
+    </aside>
+  {%- endif -%}
+{%- endif -%}

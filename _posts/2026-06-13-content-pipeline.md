@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "You Don't Need to Learn Marketing. You Need to Stop Treating Content as a Job."
+title: "You Don't Need to Learn Marketing. You Need a Content Pipeline for Developers."
 date: 2026-06-13 09:00:00 +0000
 tags:
   - identity
@@ -13,9 +13,9 @@ tags:
   - execution
   - operational-pattern
   - psychological-trap
-description: "The identity tension that keeps technical founders from posting is the real bottleneck — not time, not skill. Here is what removes the creator identity entirely."
+description: "Stop treating content as a separate job. Learn how a content pipeline for developers removes the identity switch between building and publishing."
 categories: ["Lead Systems"]
-seo_keyword: "content pipeline for technical founders"
+seo_keyword: "content pipeline for developers"
 image:
   path: /assets/banners/2026-06-13-pillar-blog-spiel-engine-identity.png
   width: 1200
@@ -23,9 +23,9 @@ image:
 permalink: /content-pipeline/
 ---
 
-![Banner](/assets/banners/2026-06-13-pillar-blog-spiel-engine-identity.png)
+![Content pipeline for developers — stop treating content as a separate job](/assets/banners/2026-06-13-pillar-blog-spiel-engine-identity.png)
 
-Every writing tool I tried asked me to be someone else.
+Every content tool I tried asked me to be someone else. What I needed was a content pipeline for developers — one that works from the terminal, doesn't require identity switching, and treats posts as a byproduct of building.
 
 Not explicitly. But the implication was always the same:
 

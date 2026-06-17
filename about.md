@@ -1,7 +1,7 @@
 ---
 layout: page
 title: About
-description: Shayan Spiel — solo operator, marketing strategist, agentic solutions architect. 8+ years scaling Iran's largest digital platforms. Now building Session-as-Content Infrastructure for technical founders.
+description: Shayan Spiel — building AI content pipelines and developer content systems for technical founders. 8+ years scaling Iran's largest digital platforms.
 keywords: about Shayan Spiel, Shayan Tawabi, session-as-content, agentic AI, technical founder marketing, building in public
 image: /assets/og-default.png
 permalink: /about/
@@ -33,7 +33,7 @@ Solo operator. I build **Session-as-Content Infrastructure** for technical found
 ## Where to find me
 
 - **[X](https://twitter.com/ShayanSpiel)** — fast surface. Casual updates. Building-in-public.
-- **[LinkedIn](https://www.linkedin.com/in/shayayantawabi)** — middle surface. 1 post per work session.
+- **[LinkedIn](https://www.linkedin.com/in/shayantawabi)** — middle surface. 1 post per work session.
 - **[Contact](/contact/)** — for offers, partnerships, press.
 - **[Blog](/)** — the source of truth.
 
@@ -42,7 +42,7 @@ Solo operator. I build **Session-as-Content Infrastructure** for technical found
 If you want the long version:
 
 - **8+ years** scaling Iran's biggest digital platforms. Digikala (Iran's Amazon) — 3M visitors in a single Black Friday paid campaign. Takhfifan (Iran's Groupon) — +50% revenue YoY as Marketing Director. Farakav / Varzesh3 (Iran's biggest sports site) — 250k → 560k app installs in 2 seasons, +80% YoY traffic.
-- **[LinkedIn](https://www.linkedin.com/in/shayayantawabi)** has the full arc. The companies are real, the numbers are real, the team sizes are real.
+- **[LinkedIn](https://www.linkedin.com/in/shayantawabi)** has the full arc. The companies are real, the numbers are real, the team sizes are real.
 - **2024-25** — pivot to agentic AI. Langchain, Langgraph, Claude Code, full-stack dev. Solo operator.
 - **Based in Tehran, Iran.** MBA Strategy, Tehran University (2017). Associate in CS, Azad Karoon University (2013).
 

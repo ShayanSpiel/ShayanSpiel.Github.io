@@ -1,9 +1,9 @@
 ---
 layout: post
-title: "How I rebuilt my blog in 4 hours (and shipped 2 posts the same night)"
+title: "How I Rebuilt My Blog in 4 Hours With a Jekyll Automation Pipeline"
 date: 2026-06-07 09:00:00 +0000
 categories: [Building in Public]
-seo_keyword: "session as content infrastructure"
+seo_keyword: "jekyll blog automation"
 image:
   path: /assets/uploads/2026-06-06-how-i-rebuilt-my-blog-in-4-hours-and-shipped-2-posts-the-same-night/16-blog-home.png
   width: 1200
@@ -13,12 +13,12 @@ tags:
   - jekyll
   - github-pages
   - content-engine
-description: "Session-as-Content Infrastructure. From Jekyll demo to a brand blog with a one-command publish pipeline. 4 files, 1 script, 2 posts shipped."
+description: "A Jekyll blog automation pipeline that turns vault drafts into live posts with one command. From empty demo to brand blog with 2 posts shipped the same night."
 ---
 
 I had a blog. It was a Jekyll site with `riggraz/no-style-please`. It was deployed at https://shayanspiel.github.io. It had demo posts. The demo posts were not about me.
 
-This is the post about how I rebuilt the blog in 4 hours, wrote a publish script that turns a vault draft into a live URL in one command, and shipped 2 posts the same night. The whole thing runs on $5/month. The hard part was not Jekyll. The hard part was figuring out what to say.
+This is the post about how I rebuilt the blog in 4 hours and built a Jekyll blog automation pipeline that turns a vault draft into a live URL in one command. Two posts shipped the same night. The hard part was not Jekyll. The hard part was figuring out what to say.
 
 If you have a blog, this is the part you skip. If you have a vault, this is the missing layer.
 
@@ -55,7 +55,7 @@ The script is at `scripts/publish-blog.sh`. It is 416 lines. It is executable. I
 
 ## The 4-file pipeline (vault → queue → script → live URL)
 
-The publish pipeline is 4 files. That is the whole thing.
+The Jekyll blog automation pipeline is 4 files. That is the whole thing.
 
 ```
 content/queue/<draft>.md     (vault side, status: ready-to-publish)
@@ -160,7 +160,7 @@ The rebuild shipped 4 deliverables in 4 hours:
 - **2 pillar posts** — this post + the prior post on the second-brain architecture. Both published the same night.
 - **15 screenshots rendered** — 7 for the first pillar, 8 for this pillar, all 1600x1600 PNGs, all in `assets/uploads/`.
 
-The brand hierarchy is now consistent. The blog about-page mirrors the wiki `shayanspiel` page. The wiki `background-and-credibility` page is the proof layer the about-page pulls from. The X handle is `@ShayanSpiel`. The LinkedIn URL is `linkedin.com/in/shayayantawabi`. The blog is at `https://shayanspiel.github.io`. the contact email is on the [contact page](/contact/). Every surface points to the same person.
+The brand hierarchy is now consistent. The blog about-page mirrors the wiki `shayanspiel` page. The wiki `background-and-credibility` page is the proof layer the about-page pulls from. The X handle is `@ShayanSpiel`. The LinkedIn URL is `linkedin.com/in/shayantawabi`. The blog is at `https://shayanspiel.github.io`. the contact email is on the [contact page](/contact/). Every surface points to the same person.
 
 The rebuild took 4 hours. The rebuild shipped 2 posts. The rebuild did not need a GUI. The rebuild did not need a local Jekyll build. The rebuild was one command per post.
 

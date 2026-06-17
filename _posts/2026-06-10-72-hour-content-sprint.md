@@ -1,15 +1,15 @@
 ---
 layout: post
-title: "23 Things in 72 Hours — The Session as Content Sprint"
+title: "How I Built a Developer Content Pipeline in 72 Hours"
 permalink: /72-hour-content-sprint/
 date: 2026-06-10 08:00:00 +0000
 categories: [Lead Systems]
-seo_keyword: "session as content infrastructure"
+seo_keyword: "developer content pipeline workflow"
 image:
   path: /assets/uploads/2026-06-10-72-hour-content-sprint/banner.png
   width: 1200
   height: 630
-description: "Session-as-Content Infrastructure. A 3-day sprint: 4 blog posts, 3 LinkedIn posts, 2 state machines, ~85 queue drafts. The system that made it possible."
+description: "A developer content pipeline workflow built in 72 hours. 4 blog posts, 3 LinkedIn posts, 2 state machines, ~85 queue drafts. One system that makes output compound."
 tags:
   - content-system
   - session-as-content
@@ -25,15 +25,15 @@ For a long time, I kept running into the same problem:
 
 I would finish building something, close the session, and the output would basically disappear.
 
-Not literally - the code was there, the ideas were there - but nothing _carried forward_ into content, writing, or distribution.
+Not literally — the code was there, the ideas were there — but nothing _carried forward_ into content, writing, or distribution.
 
-So the next day, I’d start again from zero.
+So the next day, I'd start again from zero.
 
-That disconnect became the real bottleneck. Not writing. Not ideas. Just capture.
+That disconnect became the real bottleneck. Not writing. Not ideas. Just capture. What I needed was a developer content pipeline — a repeatable workflow that preserves every session's output and turns it into durable content.
 
-So I ran a 72-hour experiment to fix it.
+So I ran a 72-hour experiment to build it.
 
-I didn’t try to “be more productive.”
+I didn't try to "be more productive."
 
 I rebuilt the system that turns work into output.
 

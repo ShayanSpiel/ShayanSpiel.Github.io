@@ -18,7 +18,7 @@ permalink: /
       <span class="post-meta-sep">·</span>
       <a href="https://twitter.com/ShayanSpiel" class="plain muted" target="_blank" rel="noopener noreferrer">X</a>
       <span class="post-meta-sep">·</span>
-      <a href="https://www.linkedin.com/in/shayayantawabi" class="plain muted" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a href="https://www.linkedin.com/in/shayantawabi" class="plain muted" target="_blank" rel="noopener noreferrer">LinkedIn</a>
     </span>
   </div>
 </section>

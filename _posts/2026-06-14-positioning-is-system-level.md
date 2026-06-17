@@ -19,7 +19,7 @@ tags:
   - operational-pattern
 ---
 
-![The Old Version of Your Positioning Is Still Running](/assets/banners/2026-06-14-pillar-blog-positioning-is-system-level.png)
+![Positioning drift — the old version of your messaging still running in files you forgot](/assets/banners/2026-06-14-pillar-blog-positioning-is-system-level.png)
 
 I updated my positioning two weeks ago. The UI changed. The system did not.
 
@@ -35,7 +35,7 @@ That is when it clicked:
 
 ---
 
-### The Mismatch
+## The Mismatch
 
 Most founders treat positioning like a [copy change](/content-pipeline/). You rewrite the tagline. You update your LinkedIn headline. You change your website hero. You feel like you have done the work.
 
@@ -43,7 +43,7 @@ But your message lives in more places than you think. Templates. Email drafts. P
 
 Five templates referenced the old offer. Three documents used outdated pain points. My homepage said one thing. My proposal said another. The market doesn't see just your homepage. It sees the whole system.
 
-### The Hidden Surfaces
+## The Hidden Surfaces
 
 The surfaces that break first are the ones you forget exist: proposals, onboarding docs, email sequences, case studies, sales scripts, prompts, and internal frameworks.
 
@@ -51,7 +51,7 @@ Each one is a surface your market touches. As long as any of those surfaces stil
 
 This is what I call **positioning drift** — the old version keeps running in places you forgot existed. I [caught this myself](/72-hour-content-sprint/) and found 8 files that still spoke the older version.
 
-### The Trust Fracture
+## The Trust Fracture
 
 A prospect reads your bio → new story. Then they open an old proposal → old story. Two different messages. Two different versions of you. Neither fully true.
 
@@ -61,7 +61,7 @@ Here is what most founders miss: each mismatch forces a lead to reconcile two ve
 
 ---
 
-### The System-Level Fix
+## The System-Level Fix
 
 Do not think "go through each file." Think: map every surface that outputs positioning. Then check which version each surface still runs.
 

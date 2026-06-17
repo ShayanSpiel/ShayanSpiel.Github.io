@@ -1,10 +1,10 @@
 ---
 layout: post
-title: "SpielEngine is Now Open Source"
+title: "SpielEngine is Now Open Source: An AI Writing Pipeline for Builders"
 date: 2026-06-08 10:00:00 +0000
 categories: ["AI & Agents"]
-seo_keyword: "open source content engine for founders"
-description: "The Spiel Engine is now open source. Session-as-Content Infrastructure, 4 files, 2 loops, 19 commands, MIT licensed. Clone it, run it, own it."
+seo_keyword: "open source ai writing pipeline"
+description: "An open-source AI writing pipeline that turns build sessions into publishable content. 4 files, 2 loops, 19 commands, MIT licensed. Clone it, run it, own it."
 image:
   path: /assets/uploads/2026-06-08-spielengine-is-now-open-source/banner.png
   width: 1200
@@ -22,7 +22,7 @@ I ship consistently. Before the engine, I did not.
 
 Every Tuesday I would finish a build session, look at the work, think "I should post about this," and not post. Not because I could not write. Because writing meant switching from builder to creator. That switch never happened.
 
-Here is the system that removed the switch.
+Here is the open-source AI writing pipeline that removed the switch.
 
 **[SpielEngine](https://github.com/ShayanSpiel/SpielEngine) turns your build sessions into publishable content, so you never need to stop working to create posts.**
 

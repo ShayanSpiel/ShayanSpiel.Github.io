@@ -1,15 +1,15 @@
 ---
 layout: post
-title: "Session as Content: Building IS the Content"
+title: "Session as Content: Automate Building in Public"
 permalink: /session-as-content/
 date: 2026-06-09 09:00:00 +0000
 categories: [Lead Systems]
-seo_keyword: "session as content, content engine for technical founders, build in public automation, content pipeline"
+seo_keyword: "build in public automation"
 image:
   path: /assets/uploads/2026-06-08-session-as-content-building-is-the-content/banner.png
   width: 1200
   height: 630
-description: "Session-as-Content Infrastructure — your work sessions are the only content engine you need. Stop planning content. Start logging reality. The Spiel Engine turns build logs into published content."
+description: "Learn build in public automation with the Session-as-Content methodology. Turn work sessions into published content without switching from builder to creator."
 tags:
   - session-as-content
   - methodology
@@ -23,9 +23,7 @@ tags:
 ![Session as Content banner](../assets/uploads/2026-06-08-session-as-content-building-is-the-content/banner.png)
 *Stop planning content. Start logging reality.*
 
-I ran [content calendars](/how-i-automated-my-content-with-a-second-brain-and-you-can-too-for-5-month/) for 8 years.
-
-They all had the same arc.
+I tried to automate building in public for years. Every content calendar failed.
 
 - Monday: plan.
 - Tuesday: outline.
@@ -34,13 +32,13 @@ They all had the same arc.
 - Friday: publish.
 - Saturday: 0 comments.
 
-And the entire time, I was building real things - shipping features, making decisions, learning lessons that changed how I think.
+And the entire time, I was building real things — shipping features, making decisions, learning lessons that changed how I think.
 
 None of that became content.
 
 Because I treated content as a separate job. A parallel universe. Building was real. Content was scheduled.
 
-That separation is the problem.
+That separation is the problem. Build in public automation means content is a byproduct of building — not a separate calendar.
 
 ---
 

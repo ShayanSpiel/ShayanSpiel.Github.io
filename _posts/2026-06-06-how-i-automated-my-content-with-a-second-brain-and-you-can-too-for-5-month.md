@@ -1,9 +1,9 @@
 ---
 layout: post
-title: "How I automated my content with a second brain (and you can too, for $5/month)"
+title: "How I Automated My Content Pipeline With an AI Second Brain"
 date: 2026-06-06 09:00:00 +0000
 categories: [Lead Systems]
-seo_keyword: "session as content infrastructure"
+seo_keyword: "ai content pipeline for developers"
 image:
   path: /assets/uploads/2026-06-06-how-i-automated-my-content-with-a-second-brain-and-you-can-too-for-5-month/01-vault-tree.png
   width: 1200
@@ -14,19 +14,19 @@ tags:
   - second-brain
   - opencode
   - building-in-public
-description: "Session-as-Content Infrastructure. A 4-file system that turns build sessions into post drafts at zero ongoing cost. Open-source."
+description: "Build an AI content pipeline for developers that turns build sessions into publishable drafts. Open-source, 4 files, runs from your terminal."
 ---
 
 I do the work. I never post about the work. That was my problem for two years.
 
 Every Tuesday I would finish a build session, look at the work, think "I should post about this," and not post. The reasons were always the same: I didn't know *what* to post, I didn't know *where* to start, and by Wednesday I had moved on to the next thing.
 
-I have a second brain. It is 30 markdown files in an Obsidian vault. It is the LLM's working memory. It is also — as of last week — my content engine.
+What I needed was an AI content pipeline — a system that turns build sessions into publishable drafts without switching contexts. Here is exactly how I built it.
 
 ![the vault — 126 markdown files, 4 folders, no database](../assets/uploads/2026-06-06-how-i-automated-my-content-with-a-second-brain-and-you-can-too-for-5-month/01-vault-tree.png)
 *the vault rendered as a tree. 126 markdown files. 4 folders. no database. this is the brain — and the engine.*
 
-This post is the architecture. Four files. One slash command. A 280-character discipline. $5/month. The whole thing is open-source, runs on infra I already had, and turns every dev session into 2-3 post drafts at zero ongoing cost.
+This post is the architecture. Four files. One slash command. Open-source, runs on infra I already had, and turns every dev session into 2-3 post drafts at zero ongoing cost.
 
 If you build in public, this is the system. If you don't post about your work, this is the fix.
 
@@ -133,7 +133,7 @@ The blog is the source of truth. X and LinkedIn are *samples* of the blog. This 
 
 The 3-platform model solves a real problem. If you only post on X, the longest post you can write is a thread. If you only post on LinkedIn, you reach a specific audience. If you only blog, no one sees it. The three platforms cover each other's gaps. The blog gives depth. X gives speed. LinkedIn gives reach. The pillar gives coherence.
 
-## The $5 stack (what runs it)
+## The stack (what runs it)
 
 The whole engine runs on infra I already had. No new SaaS. No new subscription. No new credit card.
 
@@ -143,12 +143,10 @@ The whole engine runs on infra I already had. No new SaaS. No new subscription. 
 - **Cloudflare Pages** — free tier. Where the blog is hosted. Static site. No server.
 - **X API** — $100/month for the basic tier. The X integration is optional; if you don't have it, drafts sit in the queue and you copy-paste manually. The system works without the API.
 
-If you use the manual path (no X API, no LinkedIn API), the cost is **$0/month**. If you use the X API, the cost is **$100/month**. If you use a cheaper LLM (Mistral, local models) the cost is **$5-10/month**.
+If you use the manual path (no X API, no LinkedIn API), the cost is **$0/month**. The LLM cost is minimal — a few dollars in API credits per month. The point is: the cost is negligible compared to what an agency charges for a single LinkedIn post. The asymmetry is the strategy.
 
-The "**$5/month**" number is the *all-in* cost including the LLM. It is a brand asset, not a literal price. The point is: the cost is one coffee. The cost is also what an agency charges for a single LinkedIn post. The asymmetry is the strategy.
-
-![the $5 stack rendered as text — proof the system has no SaaS dependency](../assets/uploads/2026-06-06-how-i-automated-my-content-with-a-second-brain-and-you-can-too-for-5-month/15-stack-brag.png)
-*the $5 stack rendered as text. obsidian (free) + opencode (free) + filesystem (free) + cloudflare pages (free tier) + LLM ($5). no SaaS dependency. no new credit card. no new subscription. the proof that the system has no monthly burn.*
+![the stack — no SaaS dependency](../assets/uploads/2026-06-06-how-i-automated-my-content-with-a-second-brain-and-you-can-too-for-5-month/15-stack-brag.png)
+*the stack rendered as text. obsidian (free) + opencode (free) + filesystem (free) + cloudflare pages (free tier) + LLM. no SaaS dependency. no new credit card. no new subscription. the proof that the system has no monthly burn.*
 
 ## Try it yourself (the 24-hour CTA)
 
@@ -175,7 +173,7 @@ The first post will not be perfect. The second will be better. The tenth will be
 
 ## Conclusion (the landing)
 
-The whole content engine is **4 markdown files**. The whole cost is **$5/month**. The whole workflow is **a slash command**. The whole output is **a queue of drafts you approve**.
+The whole content engine is **4 markdown files**. The whole workflow is **a slash command**. The whole output is **a queue of drafts you approve**.
 
 The reason it works: the LLM is the writer. The LLM is good at writing. The LLM is bad at *deciding what to write*. The deciding is yours. The system takes the deciding off your plate. The writing is on autopilot.
 
@@ -183,7 +181,7 @@ The reason I built it: I do the work. Now I post about the work. The post is the
 
 If you have been not posting, build the 4 files. The 4 files are the system. The system is the post. The post is the audience. The audience is the leverage.
 
-*The Spiel Engine. Session-as-Content Infrastructure. Open-source entry, DFY Install at $2,900. [github.com/ShayanSpiel/SpielEngine](https://github.com/ShayanSpiel/SpielEngine)*
+*The Spiel Engine — an AI content pipeline for developers. Open-source entry, DFY Install at $2,900. [github.com/ShayanSpiel/SpielEngine](https://github.com/ShayanSpiel/SpielEngine)*
 
 ## Links
 
