@@ -36,7 +36,7 @@
 
   if (!els.wizard) return;
 
-  function showStep(n) {
+  function showStep(n, skipScroll) {
     els.steps.forEach(function (s, i) {
       s.classList.toggle('active', i + 1 === n);
     });
@@ -53,7 +53,9 @@
     if (els.submitBtn) els.submitBtn.style.visibility = n === totalSteps ? 'visible' : 'hidden';
 
     currentStep = n;
-    window.scrollTo({ top: els.wizard.offsetTop - 20, behavior: 'smooth' });
+    if (!skipScroll) {
+      window.scrollTo({ top: els.wizard.offsetTop - 20, behavior: 'smooth' });
+    }
   }
 
   function collectStepData(n) {
@@ -247,6 +249,6 @@
 
   // Init
   handleRadioSelection();
-  showStep(1);
+  showStep(1, true);
 
 })();

@@ -198,20 +198,20 @@
   flex-shrink: 0;
 }
 
-/* Wizard nav buttons — fixed layout, no shifting */
+/* Wizard nav buttons — no overflow on mobile */
 .wizard-actions {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 0.75em;
+  gap: 0.6em;
   margin-top: auto;
   padding-top: 1.25em;
 }
 
 .wizard-actions .btn {
-  min-width: 12em;
+  width: 100%;
   justify-content: center;
-  padding: 0.65em 1em;
+  padding: 0.7em 1em;
   font-size: 0.9em;
 }
 
@@ -397,10 +397,13 @@
   }
 
   .wizard-actions {
+    flex-direction: row;
+    justify-content: center;
     gap: 1em;
   }
 
   .wizard-actions .btn {
+    width: auto;
     min-width: 10em;
     font-size: 0.85em;
   }
