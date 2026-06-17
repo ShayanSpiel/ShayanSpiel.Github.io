@@ -4,8 +4,6 @@ title: "The Most Automated System Knows When to Stop"
 date: 2026-06-17 09:00:00 +0000
 ---
 
-# The Most Automated System Knows When to Stop
-
 ## The wrong direction
 
 Every week there's a new AI writing tool. Better models. Smarter agents. More automation.
