@@ -215,6 +215,10 @@
   font-size: 0.9em;
 }
 
+/* Initial button states (JS overrides after load) */
+#wizardPrev { visibility: hidden; }
+#wizardSubmit { visibility: hidden; }
+
 /* Hidden by default, shown via JS */
 #wizardResult { display: none; }
 
