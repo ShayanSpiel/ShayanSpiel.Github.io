@@ -218,12 +218,12 @@
   flex-shrink: 0;
 }
 
-/* Wizard nav buttons — no overflow on mobile */
+/* Wizard nav buttons — mobile: stacked, desktop: side-by-side */
 .wizard-actions {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 0.6em;
+  align-items: stretch;
+  gap: 0.5em;
   margin-top: auto;
   padding-top: 1.25em;
 }
@@ -233,6 +233,26 @@
   justify-content: center;
   padding: 0.7em 1em;
   font-size: 0.9em;
+}
+
+/* Back link — borderless */
+.wizard-back-link {
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+  background: none;
+  border: none;
+  color: var(--color-tx-muted);
+  font-family: "Inter", sans-serif;
+  font-size: 0.8em;
+  cursor: pointer;
+  padding: 0.4em 0;
+  transition: color 0.2s;
+  align-self: flex-start;
+}
+
+.wizard-back-link:hover {
+  color: var(--color-tx-normal);
 }
 
 /* Initial button states (JS overrides after load) */
@@ -418,7 +438,8 @@
 
   .wizard-actions {
     flex-direction: row;
-    justify-content: center;
+    justify-content: flex-end;
+    align-items: center;
     gap: 1em;
   }
 
@@ -426,6 +447,11 @@
     width: auto;
     min-width: 10em;
     font-size: 0.85em;
+  }
+
+  .wizard-back-link {
+    margin-right: auto;
+    align-self: auto;
   }
 
   .lp-trust {

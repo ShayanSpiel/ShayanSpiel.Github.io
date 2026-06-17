@@ -449,6 +449,12 @@ main {
   flex: 1;
 }
 
+// Mobile nav: hide links, keep logo + CTA
+@media (max-width: 600px) {
+  .nav-links { display: none; }
+  .nav-bar .btn { font-size: 0.8em; padding: 0.4em 0.9em; }
+}
+
 // ---------------- Button ----------------
 .btn {
   display: inline-flex;
