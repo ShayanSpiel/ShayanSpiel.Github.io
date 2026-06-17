@@ -235,6 +235,9 @@
   justify-content: center;
 }
 
+/* Hidden by default, shown via JS */
+#wizardResult { display: none; }
+
 /* ---- Results step ---- */
 .wizard-result {
   text-align: center;

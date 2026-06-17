@@ -12,7 +12,7 @@ permalink: /
   <p class="lede">Building & testing agentic AI workflows in public. Currently building Session-as-Content Infrastructure — turning build sessions into publishable content so you never stop working to post.</p>
   <p>The Spiel Engine — <a href="https://github.com/ShayanSpiel/SpielEngine" target="_blank" rel="noopener noreferrer">open source</a> + <a href="/contact/">DFY Install</a>.</p>
   <div class="hero-actions">
-    <a href="/contact/" class="btn btn-primary btn-arrow">Get Spiel</a>
+    <a href="/SpielEngine/" class="btn btn-primary btn-arrow">Get Spiel</a>
     <span class="font-ui small muted" style="margin-left:0.5rem;">
       <a href="/about/" class="plain muted">About</a>
       <span class="post-meta-sep">·</span>
@@ -33,7 +33,7 @@ permalink: /
 
 I build Session-as-Content Infrastructure for technical founders. Your build sessions become publishable content. You stay a builder.
 
-<p><a href="/contact/" class="btn btn-primary btn-arrow">Contact me</a></p>
+<p><a href="/SpielEngine/" class="btn btn-primary btn-arrow">Get Spiel</a></p>
 
 ## Currently shipping
 

@@ -166,9 +166,9 @@
 
   function showResult(data) {
     var result = buildResult(data);
+    if (els.wizard) els.wizard.style.display = 'none';
     if (els.resultStep) {
-      els.steps.forEach(function (s) { s.classList.remove('active'); });
-      els.resultStep.classList.add('active');
+      els.resultStep.style.display = 'block';
     }
     if (els.resultBody) {
       els.resultBody.innerHTML = '<p>' + result.rec + '</p><p>' + result.detail + '</p>';

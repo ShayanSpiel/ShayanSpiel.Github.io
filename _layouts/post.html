@@ -34,6 +34,8 @@ layout: default
 
   {{ content }}
 
+  <div class="post-end-sep" aria-hidden="true">···</div>
+
   {%- if page.tags and page.tags.size > 0 -%}
   <div class="post-tags">
     {%- for tag in page.tags -%}
@@ -43,9 +45,4 @@ layout: default
   {%- endif -%}
 
   {%- include post_cta.html -%}
-
-  <nav class="post-footer">
-    <a href="/posts/" class="plain">← All posts</a>
-    <a href="/" class="plain">Home</a>
-  </nav>
 </article>

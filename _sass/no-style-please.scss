@@ -384,15 +384,35 @@ footer {
   margin: var(--space-2xl) auto var(--space-lg);
   max-width: var(--wrap-wide);
   width: var(--wrap-normal);
-  padding-top: var(--space-md);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--color-ui-normal);
   font-size: var(--font-small);
   color: var(--color-tx-muted);
   text-align: center;
 }
 
 footer a { color: var(--color-tx-muted); text-decoration: none; }
-footer a:hover { color: var(--color-action); }
-footer .footer-top { padding-top: var(--space-lg); border-top: 1px solid var(--color-ui-normal); }
+footer a:hover { color: var(--color-tx-normal); }
+
+.footer-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+.footer-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.footer-copy {
+  font-size: var(--font-smaller);
+  color: var(--color-tx-faint);
+}
 
 // ---------------- Navigation ----------------
 .nav-bar {
@@ -687,8 +707,19 @@ input[type=submit], button {
   margin-right: 0.5rem;
 }
 
+// ---------------- Post end separator (···) ----------------
+.post-end-sep {
+  text-align: center;
+  margin: var(--space-2xl) 0 var(--space-lg);
+  font-size: 1.4em;
+  letter-spacing: 0.3em;
+  color: var(--color-tx-faint);
+  user-select: none;
+}
+
 .post-tags {
   margin-top: var(--space-md);
+  margin-bottom: var(--space-lg);
   display: flex;
   flex-wrap: wrap;
   gap: 0;
@@ -750,18 +781,16 @@ input[type=submit], button {
   margin-top: var(--space-md);
 }
 
-// ---------------- Post archive ----------------
+// ---------------- Post archive (/posts/) ----------------
 .post-archive {
   list-style: none;
   padding: 0;
-  margin: var(--space-lg) 0 0;
+  margin: var(--space-lg) 0;
 }
 
 .post-archive-item {
-  margin-bottom: 1.25rem;
-  padding-bottom: 1.25rem;
-  border-bottom: 1px solid var(--color-ui-normal);
-  &:last-child { border-bottom: none; }
+  margin-bottom: 0.15em;
+  padding: 0.35em 0;
 }
 
 .post-archive-item a {
@@ -769,38 +798,40 @@ input[type=submit], button {
   align-items: baseline;
   gap: 0.5rem;
   flex-wrap: wrap;
-}
-
-.post-archive-date { flex-shrink: 0; }
-.post-archive-title u { text-decoration: none; }
-.post-archive-item:hover .post-archive-title u { text-decoration: underline; }
-.post-archive-cat { flex-shrink: 0; }
-.post-archive-desc {
-  margin-top: 0.25rem;
-  line-height: 1.5;
-}
-
-// ---------------- Post footer ----------------
-.post-footer {
-  margin-top: var(--space-lg);
-  padding-top: var(--space-lg);
-  border-top: 1px solid var(--color-ui-normal);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: var(--space-sm);
-  font-family: var(--font-ui);
-  font-size: var(--font-small);
-}
-
-.post-footer a {
-  color: var(--color-tx-muted);
+  color: var(--color-tx-normal);
   text-decoration: none;
+  transition: color 0.15s;
   &:hover {
-    color: var(--color-tx-normal);
+    color: var(--color-tx-muted);
   }
 }
+
+.post-archive-date {
+  flex-shrink: 0;
+  font-size: var(--font-small);
+  font-family: var(--font-ui);
+  color: var(--color-tx-faint);
+}
+
+.post-archive-title {
+  font-weight: 500;
+}
+
+.post-archive-cat {
+  flex-shrink: 0;
+  font-size: var(--font-small);
+  font-family: var(--font-ui);
+  color: var(--color-tx-faint);
+}
+
+.post-archive-desc {
+  margin-top: 0.15em;
+  line-height: 1.5;
+  font-size: var(--font-small);
+  color: var(--color-tx-muted);
+}
+
+
 
 // ---------------- Hero (homepage) ----------------
 .hero {
@@ -826,28 +857,42 @@ input[type=submit], button {
 }
 
 // ---------------- Post list (home) ----------------
+.post-list {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-lg) 0;
+}
+
+.post-list li {
+  margin-bottom: 0.15em;
+}
+
 .post-list-link {
   display: flex;
   align-items: baseline;
-  gap: 0.6em;
-  padding: 0.4rem 0;
+  gap: 0.75em;
+  padding: 0.35em 0;
   border-radius: var(--radius-sm);
-  transition: background 0.15s;
+  transition: color 0.15s;
+  color: var(--color-tx-muted);
+  text-decoration: none;
   &:hover {
-    background: var(--color-bg-hover);
+    color: var(--color-tx-normal);
   }
 }
 
-.post-list-date { flex-shrink: 0; }
+.post-list-date {
+  flex-shrink: 0;
+  font-size: var(--font-small);
+  font-family: var(--font-ui);
+  color: var(--color-tx-faint);
+}
+
 .post-list-title {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  u { text-decoration: none; }
-}
-
-.post-list-link:hover .post-list-title u {
-  text-decoration: underline;
+  color: var(--color-tx-normal);
 }
 
 // ---------------- Nav logo ----------------

@@ -1,8 +1,18 @@
 <footer>
-  <div class="footer-top">
-    <p><a href="#subscribe" class="muted">Receive my updates</a></p>
-    <p>Follow via <a href="{{ '/feed.xml' | relative_url }}">RSS</a>, <a href="https://twitter.com/{{ site.twitter.username }}" target="_blank" rel="noopener noreferrer">X</a>, and <a href="https://www.linkedin.com/in/shayayantawabi" target="_blank" rel="noopener noreferrer">LinkedIn</a> — or <a href="/contact/">get in touch</a></p>
-    <div class="mn2 small">
+  <div class="footer-inner">
+    <div class="footer-row">
+      <a href="#subscribe">Receive my updates</a>
+      <span class="post-meta-sep">·</span>
+      <a href="{{ '/feed.xml' | relative_url }}">RSS</a>
+      <span class="post-meta-sep">·</span>
+      <a href="https://twitter.com/{{ site.twitter.username }}" target="_blank" rel="noopener noreferrer">X</a>
+      <span class="post-meta-sep">·</span>
+      <a href="https://www.linkedin.com/in/shayayantawabi" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <span class="post-meta-sep">·</span>
+      <a href="/contact/">Contact</a>
+    </div>
+
+    <div class="footer-row">
       <form
         id="subscribe"
         class="footer-email-form"
@@ -16,8 +26,23 @@
         <button type="submit">Sign up</button>
       </form>
     </div>
+
+    <div class="footer-row">
+      <button id="theme-toggle" class="theme-toggle" title="Toggle theme (press d)" aria-label="Toggle dark mode" role="switch" aria-checked="true">
+        <span class="theme-toggle-track"></span>
+        <span class="theme-toggle-knob">
+          <svg class="theme-toggle-icon theme-toggle-sun" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"/>
+          </svg>
+          <svg class="theme-toggle-icon theme-toggle-moon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" style="display:none;">
+            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
+          </svg>
+        </span>
+      </button>
+    </div>
+
+    <div class="footer-copy">&copy; 2026 Shayan Spiel</div>
   </div>
-  <p class="mn2">&copy; 2026 Shayan Spiel</p>
 
   <iframe name="hidden_iframe" id="hidden_iframe" title="waitlist-submit" hidden></iframe>
 
