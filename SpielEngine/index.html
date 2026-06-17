@@ -75,6 +75,10 @@
           The Spiel Engine DFY Install — a complete Session-as-Content pipeline dropped into your workflow.
           Never stop working to post again.
         </p>
+        <div class="lp-hero-cta">
+          <a href="#wizard" class="btn btn-primary btn-arrow">Check if you qualify</a>
+        </div>
+        <div class="lp-scroll-hint">↓ See if you qualify</div>
       </section>
 
       <!-- Wizard -->
@@ -262,6 +266,22 @@
       </footer>
     </div>
 
+    <script>
+      // Fade in wizard when it scrolls into view
+      document.addEventListener('DOMContentLoaded', function () {
+        const el = document.getElementById('wizard');
+        if (!el) return;
+        const io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) {
+              e.target.classList.add('wizard-visible');
+              io.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.15 });
+        io.observe(el);
+      });
+    </script>
     <script src="./script.js" defer></script>
   </body>
 </html>
