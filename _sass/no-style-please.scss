@@ -801,25 +801,30 @@ input[type=submit], button {
   color: var(--color-tx-normal);
   text-decoration: none;
   transition: color 0.15s;
+  padding: 0.35em 0.5em;
+  margin: 0 -0.5em;
+  border-radius: var(--radius-sm);
   &:hover {
-    color: var(--color-tx-muted);
+    background: var(--color-bg-hover);
   }
 }
 
 .post-archive-date {
   flex-shrink: 0;
-  font-size: var(--font-small);
+  font-size: var(--font-smaller);
   font-family: var(--font-ui);
   color: var(--color-tx-faint);
+  min-width: 5em;
 }
 
 .post-archive-title {
   font-weight: 500;
+  color: var(--color-tx-normal);
 }
 
 .post-archive-cat {
   flex-shrink: 0;
-  font-size: var(--font-small);
+  font-size: var(--font-smaller);
   font-family: var(--font-ui);
   color: var(--color-tx-faint);
 }
@@ -871,12 +876,14 @@ input[type=submit], button {
   display: flex;
   align-items: baseline;
   gap: 0.75em;
-  padding: 0.35em 0;
+  padding: 0.45em 0.5em;
+  margin: 0 -0.5em;
   border-radius: var(--radius-sm);
-  transition: color 0.15s;
+  transition: background 0.15s, color 0.15s;
   color: var(--color-tx-muted);
   text-decoration: none;
   &:hover {
+    background: var(--color-bg-hover);
     color: var(--color-tx-normal);
   }
 }

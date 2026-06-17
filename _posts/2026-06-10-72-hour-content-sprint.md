@@ -21,8 +21,6 @@ tags:
 ![72-hour content sprint banner](../assets/uploads/2026-06-10-72-hour-content-sprint/banner.png)
 *3 days, 23 outputs, one system.*
 
-# I Spent 72 Hours Rebuilding How I Ship Content → I Ended Up With 23 Outputs
-
 For a long time, I kept running into the same problem:
 
 I would finish building something, close the session, and the output would basically disappear.
