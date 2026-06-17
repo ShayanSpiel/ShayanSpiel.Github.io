@@ -97,28 +97,24 @@
   margin-bottom: 1.25em;
 }
 
-/* Back button — small icon next to title */
-.wizard-back {
+/* Back link — borderless, below main button */
+.wizard-back-link {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  border: 1px solid var(--color-ui-normal);
-  background: transparent;
+  gap: 0.3em;
+  background: none;
+  border: none;
   color: var(--color-tx-muted);
-  font-size: 1em;
+  font-family: "Inter", sans-serif;
+  font-size: 0.8em;
   cursor: pointer;
-  transition: border-color 0.2s, color 0.2s, background 0.2s;
-  flex-shrink: 0;
-  line-height: 1;
+  padding: 0.4em;
+  transition: color 0.2s;
+  align-self: flex-start;
 }
 
-.wizard-back:hover {
-  border-color: var(--color-ui-hover);
+.wizard-back-link:hover {
   color: var(--color-tx-normal);
-  background: var(--color-bg-hover);
 }
 
 /* Step container — flex column so buttons stay at bottom */
@@ -130,18 +126,6 @@
 
 .wizard-step.active {
   display: flex;
-}
-
-.step-head {
-  display: flex;
-  align-items: center;
-  gap: 0.5em;
-  margin-bottom: 0.25em;
-}
-
-.step-head h2 {
-  font-size: 1.2em;
-  margin: 0;
 }
 
 .wizard-step h2 {
@@ -252,6 +236,7 @@
 }
 
 /* Initial button states (JS overrides after load) */
+#wizardPrev { display: none; }
 #wizardSubmit { visibility: hidden; }
 
 /* Hidden by default, shown via JS */
@@ -421,10 +406,6 @@
 
   .wizard-step {
     min-height: 18em;
-  }
-
-  .step-head h2 {
-    font-size: 1.4em;
   }
 
   .wizard-step h2 {

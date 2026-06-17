@@ -25,6 +25,7 @@
     dots: document.querySelectorAll('.wizard-step-dot'),
     counter: document.getElementById('stepCounter'),
     nextBtn: document.getElementById('wizardNext'),
+    prevBtn: document.getElementById('wizardPrev'),
     submitBtn: document.getElementById('wizardSubmit'),
     form: document.getElementById('wizardForm'),
     resultStep: document.getElementById('wizardResult'),
@@ -47,6 +48,7 @@
       els.counter.textContent = n + ' of ' + totalSteps;
     }
     // Show/hide buttons (visibility to keep layout stable)
+    if (els.prevBtn) els.prevBtn.style.display = n === 1 ? 'none' : 'flex';
     if (els.nextBtn) els.nextBtn.style.visibility = n === totalSteps ? 'hidden' : 'visible';
     if (els.submitBtn) els.submitBtn.style.visibility = n === totalSteps ? 'visible' : 'hidden';
 
@@ -185,14 +187,13 @@
     });
   }
 
-  // Back button (delegated — each step has one)
-  document.addEventListener('click', function (e) {
-    var btn = e.target.closest('[data-prev]');
-    if (btn) {
+  // Back button
+  if (els.prevBtn) {
+    els.prevBtn.addEventListener('click', function () {
       collectStepData(currentStep);
       showStep(currentStep - 1);
-    }
-  });
+    });
+  }
 
   // Submit button
   if (els.submitBtn) {
