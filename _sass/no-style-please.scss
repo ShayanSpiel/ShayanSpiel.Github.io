@@ -129,6 +129,7 @@ body {
   background-color: var(--color-bg-primary);
   color: var(--color-tx-normal);
   font-family: var(--font-body);
+  font-display: block;
   margin: 0 auto;
   line-height: var(--line-height);
   padding: var(--space-lg) 0 var(--space-3xl);
@@ -153,6 +154,7 @@ mark { background-color: var(--color-highlight); color: var(--color-tx-normal); 
 // ---------------- Typography ----------------
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
+  font-display: block;
   font-weight: 800;
   line-height: 1.2;
   margin-bottom: 0;
@@ -278,6 +280,7 @@ blockquote {
 
 code, kbd {
   font-family: var(--font-mono);
+  font-display: block;
   background: var(--color-bg-secondary);
   padding: 0.15em 0.35em;
   border-radius: var(--radius-sm);
