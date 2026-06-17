@@ -104,6 +104,7 @@
 .wizard-step {
   display: none;
   animation: fadeSlideIn 0.35s ease;
+  min-height: 18em;
 }
 
 .wizard-step.active {

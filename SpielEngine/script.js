@@ -123,45 +123,40 @@
   }
 
   function buildResult(data) {
-    var traffic = data['traffic'] || '';
     var budget = data['budget'] || '';
     var contentStatus = data['content_status'] || '';
-
-    var rec = 'Based on what you shared, here\'s my recommendation for you:';
+    var name = data['name'] || 'there';
 
     var detail = '';
     if (contentStatus === 'no') {
-      detail = 'You\'re not publishing yet — that\'s actually the best starting point. ';
-      detail += 'The Spiel Engine DFY Install will set up your entire pipeline from scratch. ';
+      detail = 'You\u2019re not publishing yet \u2014 that\u2019s the best starting point. The Spiel Engine DFY Install builds your pipeline from scratch. You get positioning, agent config, templates, and 30 days of iteration. ';
     } else if (contentStatus === 'irregular') {
-      detail = 'You\'re publishing irregularly, which means the bottleneck is consistency, not quality. ';
-      detail += 'The Spiel Engine automates the capture-to-draft pipeline so you never miss a session. ';
+      detail = 'Your bottleneck is consistency, not quality. The Spiel Engine automates capture-to-draft so every session produces something publishable. No more starting from zero. ';
     } else {
-      detail = 'You\'re already publishing consistently. The Spiel Engine will 10x your output ';
-      detail += 'by turning every build session into a publishable asset automatically. ';
+      detail = 'You\u2019re already publishing. The Spiel Engine turns every build session into a publishable asset automatically \u2014 so you 10x output without working more. ';
     }
 
-    if (budget === 'under1k' || budget === '1to3k') {
-      detail += 'The DFY Install at $2,900 fits your range and includes a 30-day review with a full refund guarantee.';
-    } else if (budget === 'notsure') {
-      detail += 'If budget is a concern, the open-source version is free. Clone it, customize it, and upgrade later.';
+    if (budget === 'under1k' || budget === 'notsure') {
+      detail += 'The open-source version is free. Clone it, customize it, and upgrade to DFY later.';
     } else {
-      detail += 'At your budget level, I recommend the full DFY Install with priority support and custom agent configuration.';
+      detail += 'The DFY Install ($2,900) comes with a 30-day full refund guarantee. You own the system at the end.';
     }
 
-    var ctaText = 'Apply for DFY Install →';
+    detail += ' Either way, if you have questions, just ask.';
+
+    var ctaText = 'Have questions? Let\u2019s talk';
     var ctaHref = '/contact/';
-    var altText = 'or grab the open-source repo instead';
+    var altText = 'or get the open-source Spiel Engine';
     var altHref = 'https://github.com/ShayanSpiel/SpielEngine';
 
     if (budget === 'under1k' || budget === 'notsure') {
-      ctaText = 'Get the Open Source Repo →';
+      ctaText = 'Get the open-source Spiel Engine';
       ctaHref = 'https://github.com/ShayanSpiel/SpielEngine';
-      altText = 'or learn about the DFY Install ($2,900)';
+      altText = 'or ask me a question first';
       altHref = '/contact/';
     }
 
-    return { rec: rec, detail: detail, ctaText: ctaText, ctaHref: ctaHref, altText: altText, altHref: altHref };
+    return { rec: name, detail: detail, ctaText: ctaText, ctaHref: ctaHref, altText: altText, altHref: altHref };
   }
 
   function showResult(data) {
@@ -171,7 +166,7 @@
       els.resultStep.style.display = 'block';
     }
     if (els.resultBody) {
-      els.resultBody.innerHTML = '<p>' + result.rec + '</p><p>' + result.detail + '</p>';
+      els.resultBody.innerHTML = '<p><strong>' + result.rec + '</strong>, here\u2019s what I recommend:</p><p>' + result.detail + '</p>';
     }
     if (els.resultCta) {
       els.resultCta.href = result.ctaHref;
@@ -186,7 +181,8 @@
     if (els.dots) {
       els.dots.forEach(function (d) { d.style.display = 'none'; });
     }
-    window.scrollTo({ top: els.wizard.offsetTop - 20, behavior: 'smooth' });
+    var scrollTarget = els.resultStep || els.wizard;
+    window.scrollTo({ top: scrollTarget.offsetTop - 40, behavior: 'smooth' });
   }
 
   // Next button
