@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#141413" />
+    <meta name="color-scheme" content="dark light" />
+    <title>Spiel Engine — DFY Install | Shayan Spiel</title>
+    <meta name="description" content="Get the Spiel Engine DFY Install — a complete Session-as-Content pipeline installed in your workflow. 30-day guarantee. 3 slots/month." />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Spiel Engine — DFY Install" />
+    <meta property="og:description" content="Turn build sessions into publishable content. DFY Install, 30-day guarantee." />
+    <meta property="og:image" content="https://shayanspiel.github.io/assets/og-default.png" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Spiel Engine — DFY Install" />
+    <meta name="twitter:description" content="Turn build sessions into publishable content." />
+
+    <link rel="icon" href="/assets/favicons/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:ital,wght@0,400;0,700;1,400&family=Iosevka+Term:wght@400;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/assets/css/main.css" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body class="theme-dark">
+    <div class="lp-wrap">
+      <!-- Header -->
+      <header class="lp-header">
+        <a href="/" class="brand">Shayan Spiel</a>
+      </header>
+
+      <!-- Hero -->
+      <section class="lp-hero">
+        <span class="badge">3 slots / month</span>
+        <h1>Turn build sessions into publishable content.</h1>
+        <p class="lede" style="max-width:34em;margin-left:auto;margin-right:auto;">
+          The Spiel Engine DFY Install — a complete Session-as-Content pipeline dropped into your workflow.
+          Never stop working to post again.
+        </p>
+      </section>
+
+      <!-- Wizard -->
+      <div class="wizard" id="wizard">
+        <!-- Progress bar -->
+        <div class="wizard-progress" id="wizardProgress">
+          <span class="wizard-step-dot" data-step="1"></span>
+          <span class="wizard-step-dot" data-step="2"></span>
+          <span class="wizard-step-dot" data-step="3"></span>
+          <span class="wizard-step-dot" data-step="4"></span>
+          <span class="wizard-step-dot" data-step="5"></span>
+          <span class="wizard-step-dot" data-step="6"></span>
+          <span class="wizard-step-dot" data-step="7"></span>
+        </div>
+        <div class="wizard-step-counter" id="stepCounter">Step 1 of 7</div>
+
+        <!-- Step 1: Name -->
+        <div class="wizard-step" data-step="1">
+          <h2>Let's start. What's your name?</h2>
+          <p class="step-desc">I'll personalize your recommendation.</p>
+          <div class="field">
+            <label for="field_name">Your name</label>
+            <input type="text" id="field_name" name="name" placeholder="e.g. Alex" required autocomplete="name" />
+          </div>
+        </div>
+
+        <!-- Step 2: Email -->
+        <div class="wizard-step" data-step="2">
+          <h2>What's your email?</h2>
+          <p class="step-desc">Where should I send your recommendation?</p>
+          <div class="field">
+            <label for="field_email">Email address</label>
+            <input type="email" id="field_email" name="email" placeholder="alex@company.com" required autocomplete="email" />
+          </div>
+        </div>
+
+        <!-- Step 3: What do you build -->
+        <div class="wizard-step" data-step="3">
+          <h2>What do you build?</h2>
+          <p class="step-desc">Tell me about your product, startup, or project.</p>
+          <div class="field">
+            <label for="field_build">I'm building...</label>
+            <textarea id="field_build" name="build" placeholder="e.g. A developer tool for CI/CD pipelines. B2B, early stage, 2 founders." required></textarea>
+          </div>
+        </div>
+
+        <!-- Step 4: Content status -->
+        <div class="wizard-step" data-step="4">
+          <h2>Are you currently publishing content?</h2>
+          <p class="step-desc">Be honest — it helps me match the right recommendation.</p>
+          <div class="field">
+            <div class="radio-group">
+              <label class="radio-option">
+                <input type="radio" name="content_status" value="yes" required />
+                <span>Yes, consistently — I publish on a schedule</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="content_status" value="irregular" />
+                <span>Irregularly — I post when I have time</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="content_status" value="no" />
+                <span>Not yet — I want to start</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 5: Traffic -->
+        <div class="wizard-step" data-step="5">
+          <h2>What's your monthly traffic?</h2>
+          <p class="step-desc">This helps me understand your reach.</p>
+          <div class="field">
+            <label for="field_traffic">Monthly visitors (estimate is fine)</label>
+            <select id="field_traffic" name="traffic" required>
+              <option value="" disabled selected>Select one...</option>
+              <option value="under1k">&lt; 1,000</option>
+              <option value="1to10k">1,000 – 10,000</option>
+              <option value="10to100k">10,000 – 100,000</option>
+              <option value="100kplus">100,000+</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Step 6: Budget -->
+        <div class="wizard-step" data-step="6">
+          <h2>What's your budget range?</h2>
+          <p class="step-desc">The DFY Install is $2,900. If that's not a fit, the open-source version is free.</p>
+          <div class="field">
+            <label for="field_budget">Budget for a content system</label>
+            <select id="field_budget" name="budget" required>
+              <option value="" disabled selected>Select one...</option>
+              <option value="under1k">Under $1,000</option>
+              <option value="1to3k">$1,000 – $3,000</option>
+              <option value="3to5k">$3,000 – $5,000</option>
+              <option value="5kplus">$5,000+</option>
+              <option value="notsure">Not sure yet</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Step 7: Result / CTA -->
+        <div class="wizard-step" data-step="7">
+          <h2>One sec — let me calculate your recommendation...</h2>
+          <p class="step-desc" style="text-align:center;">Press "See my recommendation" below.</p>
+        </div>
+
+        <!-- Wizard nav -->
+        <div class="wizard-actions">
+          <button class="btn btn-ghost" id="wizardPrev" style="display:none;">← Back</button>
+          <button class="btn btn-primary" id="wizardNext">Next →</button>
+          <button class="btn btn-primary" id="wizardSubmit" style="display:none;">See my recommendation</button>
+        </div>
+      </div>
+
+      <!-- Result (hidden until submit) -->
+      <div class="wizard" id="wizardResult" style="display:none;">
+        <div class="wizard-result">
+          <div class="result-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12.5l4.5 4.5L19 7"/>
+            </svg>
+          </div>
+          <h2>Here's my recommendation</h2>
+          <div class="result-body" id="resultBody"></div>
+          <div class="result-actions">
+            <a class="btn btn-primary btn-arrow" id="resultCta" href="/contact/">Apply for DFY Install →</a>
+            <a class="small-link" id="resultAlt" href="https://github.com/ShayanSpiel/SpielEngine">or grab the open-source repo instead</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hidden iframe for form submission -->
+      <iframe name="hidden_iframe" id="hidden_iframe" title="form-submit" hidden></iframe>
+
+      <!-- Trust bar -->
+      <div class="lp-trust">
+        <div class="lp-trust-item">
+          <span class="lp-trust-value">$2,900</span>
+          <span class="lp-trust-label">One-time DFY Install</span>
+        </div>
+        <div class="lp-trust-item">
+          <span class="lp-trust-value">30 days</span>
+          <span class="lp-trust-label">Full refund guarantee</span>
+        </div>
+        <div class="lp-trust-item">
+          <span class="lp-trust-value">3</span>
+          <span class="lp-trust-label">Slots per month (hard cap)</span>
+        </div>
+        <div class="lp-trust-item">
+          <span class="lp-trust-value">100%</span>
+          <span class="lp-trust-label">You own the system</span>
+        </div>
+      </div>
+
+      <!-- FAQ -->
+      <div class="lp-faq">
+        <h2>Frequently asked</h2>
+
+        <div class="faq-item">
+          <div class="faq-q">What exactly do I get?</div>
+          <div class="faq-a">A complete Session-as-Content pipeline installed in your workflow. This includes: positioning & offer design, agent configuration (capture → draft → publish), custom templates, and 30 days of review + iteration. You own the entire system at the end.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q">What if it doesn't work for me?</div>
+          <div class="faq-a">After 30 days, if you've run 5 sessions through the engine and don't have 5 standalone-tested drafts in your queue, I'll refund 100% — and you keep the system. No questions asked.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q">Is there a cheaper option?</div>
+          <div class="faq-a">Yes — the <a href="https://github.com/ShayanSpiel/SpielEngine" target="_blank" rel="noopener">Spiel Engine is open source</a>. Clone it, customize it, and run it yourself. The DFY Install is for people who want it set up perfectly without touching the code.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q">How long does installation take?</div>
+          <div class="faq-a">Full setup takes 3-5 days. You get a working pipeline with sample content within 48 hours, then we iterate on positioning, voice, and templates over the next 30 days.</div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="lp-footer">
+        <p><a href="/">Shayan Spiel</a> — Building Session-as-Content Infrastructure for technical founders.</p>
+        <p>&copy; 2026 Shayan Spiel</p>
+      </footer>
+    </div>
+
+    <script src="./script.js" defer></script>
+  </body>
+</html>

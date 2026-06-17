@@ -24,3 +24,7 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Pre-compiled CSS (Jekyll compiles from SCSS on build)
+assets/css/main.css
+assets/css/main.css.map

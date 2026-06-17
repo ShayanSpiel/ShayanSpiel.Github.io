@@ -8,10 +8,13 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     <script>
-      if (localStorage.theme === 'light' || (!('theme' in localStorage) && false)) {
-        document.body.classList.remove('theme-dark');
-        document.body.classList.add('theme-light');
-      }
+      (function() {
+        var theme = localStorage.getItem('theme');
+        if (theme === 'light') {
+          document.body.classList.remove('theme-dark');
+          document.body.classList.add('theme-light');
+        }
+      })();
     </script>
 
     {%- include nav.html -%}
@@ -25,21 +28,24 @@
     {%- include footer.html -%}
 
     <script>
-      var darkModeToggle = document.querySelector("#theme-toggle");
+      var toggle = document.querySelector("#theme-toggle");
       function toggleTheme() {
         document.body.classList.toggle("theme-dark");
         document.body.classList.toggle("theme-light");
-        updateThemeState();
-      }
-      function updateThemeState() {
-        let isDark = document.body.classList.contains("theme-dark");
+        var isDark = document.body.classList.contains("theme-dark");
         localStorage.setItem("theme", isDark ? "dark" : "light");
-        if (darkModeToggle) darkModeToggle.setAttribute("aria-checked", isDark.toString());
+        if (toggle) toggle.setAttribute("aria-checked", isDark.toString());
+        updateThemeColor(isDark);
       }
-      if (darkModeToggle) {
-        darkModeToggle.addEventListener("click", toggleTheme);
-        darkModeToggle.setAttribute("aria-checked",
-          document.body.classList.contains("theme-dark").toString());
+      function updateThemeColor(isDark) {
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.content = isDark ? '#141413' : '#f9f9f5';
+        var mask = document.querySelector('link[rel="mask-icon"]');
+        if (mask) mask.color = isDark ? '#141413' : '#f9f9f5';
+      }
+      if (toggle) {
+        toggle.addEventListener("click", toggleTheme);
+        toggle.setAttribute("aria-checked", document.body.classList.contains("theme-dark").toString());
       }
       window.addEventListener('keydown', function(e) {
         if (document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA')) return;

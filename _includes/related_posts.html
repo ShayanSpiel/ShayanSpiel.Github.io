@@ -26,7 +26,7 @@
     {%- for post in related limit: 3 -%}
     <li class="related-item">
       <a href="{{ post.url | relative_url }}" class="plain">
-        <span class="related-meta font-ui small muted">{{ post.date | date: "%b %-d, %Y" }} · {{ post.categories | first | default: 'Post' }}</span>
+        <span class="related-meta small muted">{{ post.date | date: "%b %-d, %Y" }} · {{ post.categories | first | default: 'Post' }}</span>
         <span class="related-title"><u>{{ post.title }}</u></span>
         {%- if post.description -%}
         <span class="related-desc small muted">{{ post.description | strip_html | truncatewords: 22 }}</span>
