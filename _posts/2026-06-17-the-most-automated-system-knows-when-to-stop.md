@@ -2,7 +2,13 @@
 layout: post
 title: "The Most Automated System Knows When to Stop"
 date: 2026-06-17 09:00:00 +0000
+image:
+  path: /assets/banners/2026-06-17-ai-wont-fix-blog.png
+  width: 1200
+  height: 630
 ---
+
+![Banner: The Most Automated System Knows When to Stop](/assets/banners/2026-06-17-ai-wont-fix-blog.png)
 
 ## The wrong direction
 
