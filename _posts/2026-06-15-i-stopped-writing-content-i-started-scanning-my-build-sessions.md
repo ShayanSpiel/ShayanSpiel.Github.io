@@ -3,6 +3,10 @@ layout: post
 title: "I Stopped Writing Content. I Started Scanning My Build Sessions."
 date: 2026-06-15 09:00:00 +0000
 description: "5-document content pipeline for technical founders. Turn build sessions"
+image:
+  path: /assets/banners/2026-06-15-pillar-blog-five-strategy-pages.png
+  width: 1200
+  height: 630
 ---
 ![Banner: Stop Writing. Start Scanning. 5-document content pipeline for technical founders.](/assets/banners/2026-06-15-pillar-blog-five-strategy-pages.png)
 
