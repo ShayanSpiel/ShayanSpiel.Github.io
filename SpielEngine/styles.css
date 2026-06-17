@@ -1,48 +1,44 @@
 /* =====================================================================
-   Landing Page — Spiel Engine DFY Qualification
-   Extends the main site design system
+   Landing Page — Spiel Engine DFY Qualification (mobile-first)
    ===================================================================== */
 
 /* ---- Layout ---- */
 .lp-wrap {
   max-width: 46em;
   margin: 0 auto;
-  padding: 0 1.5em;
+  padding: 0 1em;
 }
 
 .lp-header {
   text-align: center;
-  padding: 2em 0 1em;
+  padding: 1.25em 0 0.5em;
 }
 
 .lp-header .brand {
   font-family: "Inter", sans-serif;
   font-weight: 700;
-  font-size: 1.1em;
+  font-size: 1em;
   color: var(--color-tx-normal);
   text-decoration: none;
-}
-
-.lp-header .brand:hover {
-  color: var(--color-action);
 }
 
 /* ---- Hero section ---- */
 .lp-hero {
   text-align: center;
-  padding: 1.5em 0 1em;
+  padding: 1em 0 0.75em;
 }
 
 .lp-hero h1 {
-  font-size: calc(1.8em + 0.8vw);
+  font-size: calc(1.4em + 1vw);
   margin-top: 0;
-  margin-bottom: 0.4em;
+  margin-bottom: 0.35em;
 }
 
 .lp-hero p {
   max-width: 36em;
   margin-left: auto;
   margin-right: auto;
+  font-size: 0.9em;
 }
 
 .lp-hero .badge {
@@ -50,11 +46,11 @@
   background: var(--color-action);
   color: #fff;
   font-family: "Inter", sans-serif;
-  font-size: 0.75em;
+  font-size: 0.7em;
   font-weight: 600;
-  padding: 0.25em 0.75em;
+  padding: 0.2em 0.7em;
   border-radius: var(--radius-full, 999px);
-  margin-bottom: 1em;
+  margin-bottom: 0.75em;
   letter-spacing: 0.02em;
 }
 
@@ -62,19 +58,19 @@
 .wizard {
   background: var(--color-bg-secondary);
   border: 1px solid var(--color-ui-normal);
-  border-radius: var(--radius-lg, 12px);
-  padding: 2em 2.5em;
-  margin: 2em 0;
+  border-radius: var(--radius-md, 8px);
+  padding: 1em 1.25em;
+  margin: 1em 0;
   position: relative;
-  scroll-margin-top: 2em;
+  scroll-margin-top: 1em;
 }
 
 /* Progress bar */
 .wizard-progress {
   display: flex;
   align-items: center;
-  gap: 0.4em;
-  margin-bottom: 2em;
+  gap: 0.35em;
+  margin-bottom: 1.25em;
 }
 
 .wizard-step-dot {
@@ -95,88 +91,76 @@
 
 .wizard-step-counter {
   font-family: "Inter", sans-serif;
-  font-size: 0.75em;
+  font-size: 0.7em;
   color: var(--color-tx-muted);
   text-align: center;
-  margin-bottom: 1.5em;
+  margin-bottom: 1em;
 }
 
-/* Step container */
+/* Step container — flex column so buttons stay at bottom */
 .wizard-step {
   display: none;
-  animation: fadeSlideIn 0.35s ease;
-  min-height: 18em;
+  flex-direction: column;
+  min-height: 45vh;
 }
 
 .wizard-step.active {
-  display: block;
-}
-
-@keyframes fadeSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  display: flex;
 }
 
 .wizard-step h2 {
-  font-size: 1.4em;
+  font-size: 1.2em;
   margin-top: 0;
-  margin-bottom: 0.3em;
+  margin-bottom: 0.25em;
 }
 
 .wizard-step .step-desc {
   color: var(--color-tx-muted);
-  font-size: 0.95em;
-  margin-bottom: 1.5em;
+  font-size: 0.85em;
+  margin-bottom: 1em;
 }
 
 /* Form elements */
 .wizard .field {
-  margin-bottom: 1.25em;
+  margin-bottom: 1em;
 }
 
 .wizard label {
   font-family: "Inter", sans-serif;
   font-weight: 500;
-  font-size: 0.85em;
-  margin-bottom: 0.35em;
+  font-size: 0.8em;
+  margin-bottom: 0.3em;
   display: block;
   color: var(--color-tx-muted);
 }
 
 .wizard input[type="text"],
 .wizard input[type="email"],
-.wizard textarea,
-.wizard select {
+.wizard textarea {
   width: 100%;
-  padding: 0.7em 0.9em;
+  padding: 0.7em 0.8em;
   border-radius: var(--radius-md, 8px);
   background: var(--color-bg-primary);
   border: 1px solid var(--color-ui-normal);
   color: var(--color-tx-normal);
   font-family: "Inter", sans-serif;
-  font-size: 0.95em;
+  font-size: 1em;
   transition: border-color 0.2s;
+  -webkit-appearance: none;
 }
 
 .wizard input:focus,
-.wizard textarea:focus,
-.wizard select:focus {
+.wizard textarea:focus {
   border-color: var(--color-action);
   outline: none;
 }
 
 .wizard textarea {
-  min-height: 5em;
+  min-height: 4.5em;
   resize: vertical;
 }
 
-/* Radio group */
+/* Radio group — touch-friendly */
 .radio-group {
   display: flex;
   flex-direction: column;
@@ -187,13 +171,14 @@
   display: flex;
   align-items: center;
   gap: 0.6em;
-  padding: 0.6em 0.8em;
+  padding: 0.7em 0.8em;
   border: 1px solid var(--color-ui-normal);
   border-radius: var(--radius-md, 8px);
   cursor: pointer;
   transition: border-color 0.2s, background 0.2s;
   font-family: "Inter", sans-serif;
   font-size: 0.9em;
+  min-height: 44px;
 }
 
 .radio-option:hover {
@@ -207,34 +192,27 @@
 
 .radio-option input[type="radio"] {
   accent-color: var(--color-action);
-  width: 1em;
-  height: 1em;
+  width: 1.1em;
+  height: 1.1em;
   margin: 0;
   flex-shrink: 0;
 }
 
-/* Select */
-.wizard select {
-  cursor: pointer;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23878580' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 0.8em center;
-  padding-right: 2.5em;
-}
-
-/* Wizard nav buttons */
+/* Wizard nav buttons — fixed layout, no shifting */
 .wizard-actions {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-top: 2em;
-  gap: 1em;
+  justify-content: center;
+  gap: 0.75em;
+  margin-top: auto;
+  padding-top: 1.25em;
 }
 
 .wizard-actions .btn {
-  min-width: 8em;
+  min-width: 12em;
   justify-content: center;
+  padding: 0.65em 1em;
+  font-size: 0.9em;
 }
 
 /* Hidden by default, shown via JS */
@@ -247,9 +225,9 @@
 }
 
 .wizard-result .result-icon {
-  width: 48px;
-  height: 48px;
-  margin: 0 auto 1em;
+  width: 44px;
+  height: 44px;
+  margin: 0 auto 0.75em;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -258,20 +236,22 @@
 }
 
 .wizard-result .result-icon svg {
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   stroke: #fff;
   fill: none;
 }
 
 .wizard-result h2 {
   margin-top: 0;
+  font-size: 1.2em;
 }
 
 .wizard-result .result-body {
   max-width: 32em;
-  margin: 0 auto 1.5em;
+  margin: 0 auto 1.25em;
   color: var(--color-tx-muted);
+  font-size: 0.9em;
 }
 
 .result-actions {
@@ -292,17 +272,13 @@
   color: var(--color-tx-muted);
 }
 
-.result-actions .small-link:hover {
-  color: var(--color-action);
-}
-
 /* ---- Trust bar ---- */
 .lp-trust {
   display: flex;
   justify-content: center;
-  gap: 2em;
+  gap: 1.5em;
   flex-wrap: wrap;
-  margin: 2.5em 0;
+  margin: 2em 0;
   text-align: center;
 }
 
@@ -310,33 +286,34 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.3em;
+  gap: 0.2em;
 }
 
 .lp-trust-value {
   font-family: "Inter", sans-serif;
   font-weight: 700;
-  font-size: 1.6em;
+  font-size: 1.3em;
   color: var(--color-tx-normal);
 }
 
 .lp-trust-label {
-  font-size: 0.8em;
+  font-size: 0.75em;
   color: var(--color-tx-muted);
 }
 
-/* ---- FAQ / Fine print ---- */
+/* ---- FAQ ---- */
 .lp-faq {
-  margin: 3em 0;
+  margin: 2.5em 0;
 }
 
 .lp-faq h2 {
   text-align: center;
-  margin-bottom: 1em;
+  margin-bottom: 0.75em;
+  font-size: 1.2em;
 }
 
 .faq-item {
-  padding: 1em 0;
+  padding: 0.75em 0;
   border-bottom: 1px solid var(--color-ui-normal);
 }
 
@@ -347,12 +324,12 @@
 .faq-q {
   font-family: "Inter", sans-serif;
   font-weight: 600;
-  font-size: 0.95em;
-  margin-bottom: 0.3em;
+  font-size: 0.9em;
+  margin-bottom: 0.25em;
 }
 
 .faq-a {
-  font-size: 0.9em;
+  font-size: 0.85em;
   color: var(--color-tx-muted);
   line-height: 1.6;
 }
@@ -360,38 +337,84 @@
 /* ---- Footer ---- */
 .lp-footer {
   text-align: center;
-  padding: 2em 0;
-  font-size: 0.8em;
+  padding: 1.5em 0;
+  font-size: 0.75em;
   color: var(--color-tx-muted);
   border-top: 1px solid var(--color-ui-normal);
-  margin-top: 3em;
+  margin-top: 2.5em;
 }
 
 .lp-footer a {
   color: var(--color-tx-muted);
 }
 
-/* ---- Responsive ---- */
-@media (max-width: 600px) {
-  .wizard {
-    padding: 1.5em 1.25em;
-    margin: 1em -0.5em;
-    border-radius: var(--radius-md, 8px);
+/* ---- Desktop (600px+) ---- */
+@media (min-width: 601px) {
+  .lp-wrap {
+    padding: 0 1.5em;
   }
 
-  .wizard-actions {
-    flex-direction: column;
+  .lp-header {
+    padding: 2em 0 1em;
   }
 
-  .wizard-actions .btn {
-    width: 100%;
+  .lp-header .brand {
+    font-size: 1.1em;
   }
 
-  .lp-trust {
-    gap: 1.5em;
+  .lp-hero {
+    padding: 2em 0 1.5em;
   }
 
   .lp-hero h1 {
-    font-size: calc(1.4em + 1vw);
+    font-size: calc(1.8em + 0.8vw);
+  }
+
+  .lp-hero p {
+    font-size: 1em;
+  }
+
+  .wizard {
+    padding: 2em 2.5em;
+    margin: 2em 0;
+    border-radius: var(--radius-lg, 12px);
+  }
+
+  .wizard-step {
+    min-height: 18em;
+  }
+
+  .wizard-step h2 {
+    font-size: 1.4em;
+  }
+
+  .wizard-step .step-desc {
+    font-size: 0.95em;
+  }
+
+  .wizard-actions {
+    gap: 1em;
+  }
+
+  .wizard-actions .btn {
+    min-width: 10em;
+    font-size: 0.85em;
+  }
+
+  .lp-trust {
+    gap: 2em;
+    margin: 2.5em 0;
+  }
+
+  .lp-trust-value {
+    font-size: 1.6em;
+  }
+
+  .lp-faq h2 {
+    font-size: 1.4em;
+  }
+
+  .wizard-result h2 {
+    font-size: 1.4em;
   }
 }

@@ -47,10 +47,10 @@
     if (els.counter) {
       els.counter.textContent = n + ' of ' + totalSteps;
     }
-    // Show/hide buttons
-    if (els.prevBtn) els.prevBtn.style.display = n === 1 ? 'none' : 'inline-flex';
-    if (els.nextBtn) els.nextBtn.style.display = n === totalSteps ? 'none' : 'inline-flex';
-    if (els.submitBtn) els.submitBtn.style.display = n === totalSteps ? 'inline-flex' : 'none';
+    // Show/hide buttons (visibility to keep layout stable)
+    if (els.prevBtn) els.prevBtn.style.visibility = n === 1 ? 'hidden' : 'visible';
+    if (els.nextBtn) els.nextBtn.style.visibility = n === totalSteps ? 'hidden' : 'visible';
+    if (els.submitBtn) els.submitBtn.style.visibility = n === totalSteps ? 'visible' : 'hidden';
 
     currentStep = n;
     window.scrollTo({ top: els.wizard.offsetTop - 20, behavior: 'smooth' });
