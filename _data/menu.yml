@@ -5,5 +5,7 @@ entries:
     url: /posts/
   - title: topics
     url: /categories/
+  - title: sitemap
+    url: /sitemap/
   - title: contact
     url: /contact/
