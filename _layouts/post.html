@@ -32,6 +32,12 @@ layout: default
   <p class="lede muted">{{ page.description }}</p>
   {%- endif -%}
 
+  {%- if page.image and page.image.path -%}
+  <figure class="post-banner">
+    <img src="{{ page.image.path | relative_url }}" alt="{{ page.title }}" loading="lazy" width="{{ page.image.width | default: 1200 }}" height="{{ page.image.height | default: 630 }}" />
+  </figure>
+  {%- endif -%}
+
   {{ content }}
 
   <div class="post-end-sep" aria-hidden="true">···</div>
