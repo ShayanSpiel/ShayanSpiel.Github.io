@@ -1,5 +1,4 @@
 {%- assign canonical_url = page.url | replace: 'index.html', '' | absolute_url -%}
-{%- assign page_title = page.title | default: site.title | escape -%}
 {%- assign site_name = site.title | split: ' — ' | first -%}
 {%- assign meta_desc = page.description | default: page.excerpt | default: site.description | strip_html | normalize_whitespace | truncate: 160 -%}
 {%- assign meta_image = page.image | default: '/assets/og-default.png' | absolute_url -%}
@@ -36,9 +35,6 @@
 
   <!-- jekyll-seo-tag emits title, description, canonical, og:*, twitter:*, JSON-LD -->
   {%- seo -%}
-
-  <!-- Title override: prefer <Page Title> — Site Name format for non-home pages -->
-  <title>{% if page.url == '/' %}{{ site.title }}{% if site.tagline %} — {{ site.tagline }}{% endif %}{% else %}{{ page_title }} — {{ site_name }}{% endif %}</title>
 
   <!-- Article-only meta (jekyll-seo-tag emits most of this, but explicit article:* helps Bing) -->
   {%- if page.layout == 'post' -%}

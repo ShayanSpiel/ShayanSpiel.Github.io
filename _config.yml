@@ -47,6 +47,7 @@ sass:
 plugins:
   - jekyll-feed
   - jekyll-seo-tag
+  - jekyll-sitemap
 
 # Per-page SEO defaults (consumed by jekyll-seo-tag)
 # Note: do NOT set `author:` here as a string — it overrides the hash above
