@@ -7,8 +7,10 @@ image:
   width: 1200
   height: 630
 ---
-## Intro
 
+![Your Engineering Decisions Are Already Content](/assets/banners/2026-06-18-pillar-blog.png)
+
+## Intro
 There is a belief that kills more builder-led content than any lack of writing skill.
 
 It sounds like this: "My work is too technical. Nobody would care about a refactor, a decision log, or a bug fix. Content is what you write *after* you build."
