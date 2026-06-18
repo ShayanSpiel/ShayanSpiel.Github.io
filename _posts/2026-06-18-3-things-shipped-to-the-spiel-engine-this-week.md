@@ -2,12 +2,14 @@
 layout: post
 title: "3 things shipped to the Spiel Engine this week"
 date: 2026-06-18 09:00:00 +0000
+description: "The Spiel Engine is a pipeline that turns a build session into a publishable post. The gap that kept showing up was not the writing. It was the publishing — the last 20% that takes 80% of the energy."
 image:
   path: /assets/banners/2026-06-18-x-3-features.png
   width: 1200
   height: 630
 ---
-The Spiel Engine is a pipeline that turns a build session into a publishable post. The gap that kept showing up was not the writing. It was the publishing → the last 20% that takes 80% of the energy.
+
+![](/assets/banners/2026-06-18-x-3-features.png)
 
 This week I shipped 3 things that close that gap.
 
