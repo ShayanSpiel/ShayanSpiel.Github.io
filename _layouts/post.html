@@ -33,6 +33,10 @@ layout: default
   {%- endif -%}
 
   {%- if page.image and page.image.path -%}
+  <style>
+    .post-banner { margin: var(--space-lg) 0; border-radius: 8px; overflow: hidden; }
+    .post-banner img { display: block; width: 100%; height: auto; border-radius: 8px; }
+  </style>
   <figure class="post-banner">
     <img src="{{ page.image.path | relative_url }}" alt="{{ page.title }}" loading="lazy" width="{{ page.image.width | default: 1200 }}" height="{{ page.image.height | default: 630 }}" />
   </figure>
