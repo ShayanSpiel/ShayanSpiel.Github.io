@@ -1,30 +1,31 @@
 ---
 layout: post
-title: "I Stopped Writing Content. I Started Scanning My Build Sessions."
+title: "How a Developer Content Pipeline Maps Build Sessions to Blog Posts"
 date: 2026-06-15 09:00:00 +0000
-description: "5-document content pipeline for technical founders. Turn build sessions"
+seo_keyword: "build session to blog post workflow"
+description: "5-document developer content pipeline that converts build sessions to LinkedIn, X, and blog drafts in 2 minutes of capture. No blank pages, no editorial calendar."
 image:
   path: /assets/banners/2026-06-15-pillar-blog-five-strategy-pages.png
   width: 1200
   height: 630
 ---
-![Banner: Stop Writing. Start Scanning. 5-document content pipeline for technical founders.](/assets/banners/2026-06-15-pillar-blog-five-strategy-pages.png)
+
+![Banner: Developer content pipeline — 5 documents that turn build sessions into platform-native drafts in 2 minutes of capture.](/assets/banners/2026-06-15-pillar-blog-five-strategy-pages.png)
 
 I spent 8 years shipping real things. Almost nobody knew.
 
 Not because the work was bad. Because I never connected the build to the post.
 
-So I built a 5-document content pipeline that does the connection for me. 2 minutes of capture per build session. The rest runs itself.
+So I built a developer content pipeline that does the connection for me. 2 minutes of capture per build session. The rest runs itself.
 
 I stopped writing posts. I started scanning my build sessions instead.
-
 ---
 
-## The 8-year silence of a technical founder
+## Why technical founders struggle with content
 
 You ship real things. You solve hard problems. Your DMs are empty.
 
-The issue was never writing skill. The issue was that the work happened, the lessons surfaced, and none of it ever connected to a post.
+The issue was never writing skill. The issue was that the work happened, the lessons surfaced, and none of it ever connected to a post. A build-session pipeline solves this by making the build the source of every draft.
 
 The build is the post. The build is just not connected to the output.
 
@@ -34,7 +35,7 @@ The build is the post. The build is just not connected to the output.
 
 ## The session log: 2 minutes of capture
 
-I dropped this into a markdown file at the end of a build. 2 minutes. No thinking.
+I dropped this into a markdown file at the end of a build. 2 minutes. No thinking. This is the raw input that feeds the entire content pipeline for developers.
 
 ```
 session: 2026-06-13
@@ -107,7 +108,7 @@ The reader gets a post. You did not switch identities. You did not stare at a bl
 
 ---
 
-## The 5 documents behind a working content pipeline
+## The 5 strategy documents behind a build-to-blog workflow
 
 I will not explain the full architecture. Just the point of each.
 
@@ -121,7 +122,7 @@ I will not explain the full architecture. Just the point of each.
 
 **voice-corpus** says: 8 of your best posts, fed in as training data. The drafts read 2-3 of them before writing. This is what makes the output sound like you instead of a press release.
 
-That is the entire configuration layer. Nothing else. The rest is execution.
+That is the entire configuration layer for a build-to-blog pipeline. Nothing else. The rest is execution.
 
 ---
 
@@ -155,11 +156,11 @@ The 5 are not independent. They are a compiled configuration. The pipeline makes
 
 ---
 
-## Try the content pipeline yourself
+## Try the build-to-blog pipeline yourself
 
 If you post 2 times a week to a personal account, 5 documents is overkill. Ignore this.
 
-If you generate 20-30 pieces per month from your actual shipped work, and each one must sound like you, serve your buyer, and pass a quality bar, then 5 is the minimum viable architecture.
+If you generate 20-30 pieces per month from your actual shipped work, and each one must sound like you, serve your buyer, and pass a quality bar, then 5 strategy documents is the minimum viable architecture for a build-to-blog workflow.
 
 ```
 git clone https://github.com/ShayanSpiel/SpielEngine.git
