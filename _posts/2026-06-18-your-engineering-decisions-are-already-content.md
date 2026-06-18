@@ -10,12 +10,13 @@ image:
 
 ![Your Engineering Decisions Are Already Content](/assets/banners/2026-06-18-pillar-blog.png)
 
-There is a belief that kills more builder-led content than any lack of writing skill.
-It sounds like this: "My work is too technical. Nobody would care about a refactor, a decision log, or a bug fix. Content is what you write *after* you build."
+For years I believed my work was not content.
 
-I held this belief for years. It cost me thousands of potential connections, leads that never happened, and a reputation that stayed invisible despite years of shipping real work.
+I built things. Shipped features. Refactored systems. Content was what you wrote *after* you built, in a separate mode called "marketing" — one I never felt qualified for.
 
-→ It was wrong.
+This belief sounds rational, but it is a trap. It cost me thousands of potential connections, deals that never started, and a reputation that stayed invisible despite years of shipping real work.
+
+I was wrong.
 
 The most valuable content you will ever produce is not the post you sit down to write. It is the engineering decision you made today that you never thought to publish.
 
