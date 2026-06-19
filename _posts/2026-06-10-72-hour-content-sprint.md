@@ -18,7 +18,6 @@ tags:
   - building-in-public
 ---
 
-![72-hour content sprint banner](../assets/uploads/2026-06-10-72-hour-content-sprint/banner.png)
 *3 days, 23 outputs, one system.*
 
 For a long time, I kept running into the same problem:

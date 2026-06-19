@@ -32,6 +32,12 @@ layout: default
   <p class="lede">{{ page.description }}</p>
   {%- endif -%}
 
+  {%- if page.image and page.image.path -%}
+  <figure class="post-hero">
+    <img src="{{ page.image.path | relative_url }}" alt="{{ page.title }}" width="{{ page.image.width | default: 1200 }}" height="{{ page.image.height | default: 630 }}" loading="eager" fetchpriority="high" />
+  </figure>
+  {%- endif -%}
+
   <div class="post-content">
     {{ content }}
 

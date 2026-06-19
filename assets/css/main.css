@@ -117,7 +117,7 @@ button:focus-visible {
 }
 .page {
   min-height: calc(100vh - var(--nav-h));
-  padding-top: var(--s-7);
+  padding-top: calc(var(--nav-h) + var(--s-5));
   padding-bottom: var(--s-9);
 }
 main { display: block; }
@@ -562,26 +562,36 @@ figure img { margin: 0; }
 
 /* ── Post article ── */
 .post-article {
-  max-width: var(--w-read);
+  max-width: var(--w);
   margin: 0 auto;
   padding: 0 var(--s-5);
 }
 .post-article .post-content {
-  /* Fills .post-article — no separate width constraint */
+  max-width: var(--w-read);
+  margin: 0 auto;
 }
 .post-article h1 {
   font-size: clamp(var(--fs-2xl), 4vw, var(--fs-4xl));
   margin: 0 0 var(--s-4);
   text-wrap: balance;
+  max-width: var(--w-read);
+  margin-left: auto;
+  margin-right: auto;
 }
 .post-article .lede {
   font-size: var(--fs-lg);
   color: var(--tx-2);
-  margin: 0 0 var(--s-7);
+  margin: 0 auto var(--s-7);
   line-height: var(--lh-normal);
+  max-width: var(--w-read);
 }
 .post-article .post-meta {
-  /* Fills .post-article — no separate width constraint */
+  max-width: var(--w-read);
+  margin: 0 auto;
+}
+.post-article .breadcrumb {
+  max-width: var(--w-read);
+  margin: 0 auto;
 }
 .post-article p {
   font-size: var(--fs-md);
@@ -618,6 +628,17 @@ figure img { margin: 0; }
 .post-article img {
   max-width: 100%;
   margin: 1.8em auto;
+}
+.post-hero {
+  margin: var(--s-6) 0 var(--s-7);
+  margin-left: calc(var(--s-5) * -1);
+  margin-right: calc(var(--s-5) * -1);
+}
+.post-hero img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: var(--r-xl);
 }
 
 /* ── Post meta ── */
@@ -986,6 +1007,8 @@ footer {
   .footer-social svg { width: 16px; height: 16px; }
   .breadcrumb { padding-top: var(--s-3); }
   .post-article h1 { font-size: clamp(24px, 6vw, 36px); }
+  .post-hero { margin-left: 0; margin-right: 0; }
+  .post-hero img { border-radius: var(--r-md); }
   .blog-filters { gap: var(--s-1); }
   .blog-filters .filter-btn { padding: var(--s-1) var(--s-3); font-size: var(--fs-xs); }
   .blog-row { grid-template-columns: 1fr; gap: var(--s-2); padding: var(--s-4) var(--s-3); }

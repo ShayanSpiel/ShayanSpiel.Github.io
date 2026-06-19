@@ -4,13 +4,13 @@ title: "How a Developer Content Pipeline Maps Build Sessions to Blog Posts"
 date: 2026-06-15 09:00:00 +0000
 seo_keyword: "build session to blog post workflow"
 description: "5-document developer content pipeline that converts build sessions to LinkedIn, X, and blog drafts in 2 minutes of capture. No blank pages, no editorial calendar."
+categories:
+  - Lead Systems
 image:
   path: /assets/banners/2026-06-15-pillar-blog-five-strategy-pages.png
   width: 1200
   height: 630
 ---
-
-![Banner: Developer content pipeline — 5 documents that turn build sessions into platform-native drafts in 2 minutes of capture.](/assets/banners/2026-06-15-pillar-blog-five-strategy-pages.png)
 
 I spent 8 years shipping real things. Almost nobody knew.
 

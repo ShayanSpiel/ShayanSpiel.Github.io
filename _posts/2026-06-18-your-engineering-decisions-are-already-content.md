@@ -2,13 +2,13 @@
 layout: post
 title: "Your Engineering Decisions Are Already Content"
 date: 2026-06-18 09:00:00 +0000
+categories:
+  - Building in Public
 image:
   path: /assets/banners/2026-06-18-pillar-blog.png
   width: 1200
   height: 630
 ---
-
-![Your Engineering Decisions Are Already Content](/assets/banners/2026-06-18-pillar-blog.png)
 
 For years I believed my work was not content.
 

@@ -4,13 +4,13 @@ title: "AI Content Pipelines Need Quality Gates, Not Just Better Models"
 date: 2026-06-17 09:00:00 +0000
 seo_keyword: "AI content quality gates"
 description: "Why AI content automation fails without quality gates — and the handoff pattern that keeps automated content pipelines producing work that sounds human."
+categories:
+  - AI Pipelines
 image:
   path: /assets/banners/2026-06-17-ai-wont-fix-blog.png
   width: 1200
   height: 630
 ---
-
-![Banner: AI content automation needs quality gates — three layers that keep pipeline output human.](/assets/banners/2026-06-17-ai-wont-fix-blog.png)
 
 ## The wrong direction
 

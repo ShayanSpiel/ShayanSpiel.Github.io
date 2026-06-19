@@ -19,8 +19,6 @@ tags:
   - content-automation
 ---
 
-
-![Session as Content banner](../assets/uploads/2026-06-08-session-as-content-building-is-the-content/banner.png)
 *Stop planning content. Start logging reality.*
 
 I tried to automate building in public for years. Every content calendar failed.

@@ -19,8 +19,6 @@ tags:
   - operational-pattern
 ---
 
-![Positioning drift — the old version of your messaging still running in files you forgot](/assets/banners/2026-06-14-pillar-blog-positioning-is-system-level.png)
-
 I updated my positioning two weeks ago. The UI changed. The system did not.
 
 New tagline. New bio. New homepage. All live.
