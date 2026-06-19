@@ -47,21 +47,30 @@
   /* ================================================================
      A/B TEST: Landing Page Copy Variants
      ================================================================
-     Control: Current copy
-     Variant A: "Work → Content" angle
-     Variant B: "Developer Marketing" angle
+     Cycles through variants on each page load for testing.
+     In production, swap to sticky assignment (see commented code).
      ================================================================ */
 
   var AB_KEY = 'ab_variant';
-  var VARIANTS = ['control', 'variant_a', 'variant_b'];
+  var VARIANTS = ['control', 'variant_a', 'variant_b', 'variant_c'];
 
   function assignVariant() {
     try {
+      /* CYCLE MODE: advances each page load so refresh shows next variant */
+      var idx = parseInt(localStorage.getItem(AB_KEY + '_idx'), 10);
+      if (isNaN(idx) || idx >= VARIANTS.length) idx = 0;
+      var v = VARIANTS[idx];
+      localStorage.setItem(AB_KEY, v);
+      localStorage.setItem(AB_KEY + '_idx', String((idx + 1) % VARIANTS.length));
+      return v;
+
+      /* STICKY MODE: uncomment below, comment above, for production
       var existing = localStorage.getItem(AB_KEY);
       if (existing && VARIANTS.indexOf(existing) !== -1) return existing;
-      var variant = VARIANTS[Math.floor(Math.random() * VARIANTS.length)];
-      localStorage.setItem(AB_KEY, variant);
-      return variant;
+      var v = VARIANTS[Math.floor(Math.random() * VARIANTS.length)];
+      localStorage.setItem(AB_KEY, v);
+      return v;
+      */
     } catch (e) {
       return 'control';
     }
@@ -69,22 +78,27 @@
 
   var variant = assignVariant();
 
-  /* Variant copy definitions */
+  /* Variant copy — bite-sized, positioning-aligned */
   var COPY = {
     control: {
-      headline: 'Capture. Simulate.<br><span class="hl">Publish.</span>',
-      subheadline: 'Your coding sessions are already content. Spiel Engine extracts it, in your voice, for your audience, and publish instantly across every platform.',
-      supporting: 'Turn your build sessions into content, <span class="hl">without being a marketer.</span>'
+      headline: 'Work Is Content.',
+      subheadline: 'Spiel Engine turns your coding sessions into publishable content. No extra effort.',
+      supporting: 'Capture. Simulate. <span class="hl">Publish.</span>'
     },
     variant_a: {
-      headline: 'You already create content.<br><span class="hl">You just don\'t publish it.</span>',
-      subheadline: 'Most creators stop working to create content. Spiel removes that tradeoff. Your sessions, commits, and decisions become publishable content — automatically.',
-      supporting: 'Stop choosing between building <span class="hl">and publishing.</span>'
+      headline: 'You\'re Already Creating Content.',
+      subheadline: 'Every session, commit, and decision is content. Spiel just publishes it for you.',
+      supporting: 'Stop choosing between building <span class="hl">and posting.</span>'
     },
     variant_b: {
-      headline: 'Every commit is marketing.<br><span class="hl">Every build is marketing.</span>',
-      subheadline: 'The fastest-growing builders don\'t create content. They capture it. Spiel Engine turns your development activity into content that ships with your code.',
-      supporting: 'The best builders <span class="hl">don\'t create content. They capture it.</span>'
+      headline: 'Every Commit Is Marketing.',
+      subheadline: 'Your build sessions are your best marketing material. Spiel captures and publishes them.',
+      supporting: 'Develop. Ship. <span class="hl">It publishes.</span>'
+    },
+    variant_c: {
+      headline: 'Builders Don\'t Write Content.',
+      subheadline: 'They ship code. Spiel turns what you already do into content that reaches people.',
+      supporting: 'Build. <span class="hl">Spiel handles the rest.</span>'
     }
   };
 
