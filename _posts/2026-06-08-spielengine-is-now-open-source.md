@@ -141,7 +141,7 @@ The whole setup takes one paste and ~15 minutes of answering questions. After th
 | Layer | What | Price |
 |-------|------|-------|
 | **1. Open Source** | The repo, methodology, pipeline — clone, paste, customize | Free |
-| **2. DFY Install** | Full pipeline installed inside your workflow, positioned to your voice, with 30 days of review | $2,900 one-time |
+| **2. DFY Install** | Full pipeline installed inside your workflow, positioned to your voice, with 30 days of review | $990 one-time |
 
 **Layer 1** is what you get from this repo. It is the engine I run daily. Clone it, paste the setup prompt into your agent, answer 14 questions, and you have a working content pipeline in an afternoon.
 

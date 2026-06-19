@@ -181,7 +181,7 @@ The reason I built it: I do the work. Now I post about the work. The post is the
 
 If you have been not posting, build the 4 files. The 4 files are the system. The system is the post. The post is the audience. The audience is the leverage.
 
-*The Spiel Engine — an AI content pipeline for developers. Open-source entry, DFY Install at $2,900. [github.com/ShayanSpiel/SpielEngine](https://github.com/ShayanSpiel/SpielEngine)*
+*The Spiel Engine — an AI content pipeline for developers. Open-source entry, DFY Install at $990. [github.com/ShayanSpiel/SpielEngine](https://github.com/ShayanSpiel/SpielEngine)*
 
 ## Links
 

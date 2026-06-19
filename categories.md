@@ -3,13 +3,16 @@ layout: page
 title: Topics
 description: Browse blog posts by topic — AI agents, building in public, lead systems, content automation, and developer content pipeline methodology.
 keywords: blog topics, categories, AI agents, building in public, lead systems, session-as-content
-image: /assets/og-default.png
+image:
+  path: /assets/og-default.png
+  width: 1200
+  height: 630
 permalink: /categories/
 ---
 
 <p class="lede muted">Browse by topic. Each category groups posts around a core vertical.</p>
 
-<div class="tag-cloud font-ui">
+<div class="tag-cloud">
   {%- assign all_cats = site.posts | map: 'categories' | join: ',' | split: ',' | uniq | sort -%}
   {%- for cat in all_cats -%}
     {%- assign cat_strip = cat | strip -%}
@@ -34,7 +37,7 @@ permalink: /categories/
           {%- if post.categories contains cat_strip -%}
             <li style="margin-bottom: 0.75rem;">
               <a href="{{ post.url | relative_url }}" class="plain">
-                <span class="muted small font-ui" style="display: inline-block; margin-right: 0.5em;">{{ post.date | date: "%b %-d, %Y" }}</span>
+                <span class="muted small" style="display: inline-block; margin-right: 0.5em;">{{ post.date | date: "%b %-d, %Y" }}</span>
                 <u>{{ post.title }}</u>
               </a>
               {%- if post.description -%}

@@ -3,7 +3,10 @@ layout: page
 title: Contact
 description: Get in touch with Shayan Spiel for the Spiel Engine DFY Install, open-source content pipeline questions, or partnerships. DM on X or LinkedIn.
 keywords: contact Shayan Spiel, DFY install, Spiel Engine, content engine consulting
-image: /assets/og-default.png
+image:
+  path: /assets/og-default.png
+  width: 1200
+  height: 630
 permalink: /contact/
 ---
 
@@ -11,14 +14,14 @@ permalink: /contact/
 
 **Fastest response:** DM me on X or LinkedIn.
 
-- **<a href="https://twitter.com/ShayanSpiel" target="_blank" rel="noopener noreferrer">X / DM →</a>**
-- **<a href="https://www.linkedin.com/in/shayantawabi" target="_blank" rel="noopener noreferrer">LinkedIn / DM →</a>**
+- **[X / DM →](https://twitter.com/ShayanSpiel)**
+- **[LinkedIn / DM →](https://www.linkedin.com/in/shayantawabi)**
 
 ## Email
 
 Want to work together? Send me a message and I'll get back to you.
 
-<a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#54;&#54;&#115;&#104;&#97;&#121;&#97;&#110;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" class="plain action">&#54;&#54;&#115;&#104;&#97;&#121;&#97;&#110;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;</a>
+[66shayan@gmail.com](mailto:66shayan@gmail.com)
 
 ## What to say
 

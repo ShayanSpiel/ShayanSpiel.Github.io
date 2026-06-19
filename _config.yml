@@ -1,5 +1,5 @@
 title: Shayan Spiel
-tagline: Building & testing agentic AI workflows in public
+tagline: Session-as-Content Infrastructure for Technical Founders
 description: >-
   Solo operator building Session-as-Content Infrastructure for technical
   founders. Open-source Spiel Engine + done-for-you installs. Writing in the
@@ -10,12 +10,12 @@ url: https://shayanspiel.github.io
 baseurl: ""
 lang: en
 locale: en_US
-logo: /logo.png   # cleaned Spiel logo (200x200, transparent bg)
+logo: /assets/logo.svg
 favicon: /assets/favicons/favicon.svg
 permalink: /:title/
 paginate_path: /page/:num/
 
-# Author — jekyll-seo-tag reads `author.name` and (in 2.8.0+) `author.twitter`
+# Author — jekyll-seo-tag reads author.name and author.twitter
 author:
   name: Shayan Spiel
   email: 66shayan@gmail.com
@@ -32,25 +32,12 @@ social:
     - https://www.linkedin.com/in/shayantawabi
     - https://github.com/ShayanSpiel
 
-remote_theme: riggraz/no-style-please
-
-theme_config:
-  appearance: "dark"
-  back_home_text: ".."
-  date_format: "%b %-d, %Y"
-  show_description: true
-  lowercase_titles: false
-
-sass:
-  style: compressed
-
 plugins:
   - jekyll-feed
   - jekyll-seo-tag
+  - jekyll-sitemap
 
 # Per-page SEO defaults (consumed by jekyll-seo-tag)
-# Note: do NOT set `author:` here as a string — it overrides the hash above
-# and breaks twitter:creator. Author is inherited from the top-level author hash.
 defaults:
   - scope:
       path: ""
@@ -71,9 +58,20 @@ defaults:
       seo:
         type: "BlogPosting"
 
-# Allow future-dated posts (SpielEngine publishes as generated)
+# Allow future-dated posts
 future: true
 
-# Don't let Jekyll exclude files/dirs starting with a dot (.well-known, etc.)
+# Don't let Jekyll exclude files/dirs starting with a dot
 include:
   - .well-known
+
+# Exclude from build
+exclude:
+  - spiel-engine.html
+  - home-landing.html
+  - variant-5-ultra-minimal.html
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - assets/js/mouse_coords.js
+  - assets/css/main.css.map

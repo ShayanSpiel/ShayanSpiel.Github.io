@@ -1,8 +1,7 @@
-{%- assign canonical_url = page.url | replace: 'index.html', '' | absolute_url -%}
-{%- assign site_name = site.title | split: ' — ' | first -%}
+{%- assign site_name = site.title -%}
 {%- assign meta_desc = page.description | default: page.excerpt | default: site.description | strip_html | normalize_whitespace | truncate: 160 -%}
-{%- assign meta_image = page.image | default: '/assets/og-default.png' | absolute_url -%}
-{%- assign og_image_alt = page.title | append: ' — Shayan Spiel' -%}
+{%- assign meta_image = page.image.path | default: '/assets/og-default.png' -%}
+{%- assign canonical_url = page.url | replace: 'index.html', '' | absolute_url -%}
 {%- if page.layout == 'post' -%}
   {%- assign og_type = 'article' -%}
 {%- else -%}
@@ -13,30 +12,29 @@
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#141413" />
-  <meta name="color-scheme" content="dark light" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="color-scheme" content="dark" />
   <meta name="google-site-verification" content="LvKy8YQ0XGZPYu4bQ9JIhaFmdX3W9Ag7eSPYGTE-ORU" />
   <meta name="format-detection" content="telephone=no" />
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+  <meta name="googlebot" content="index, follow" />
 
-  <!-- Preconnect / DNS prefetch for third-party origins -->
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
-  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
-  <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
+  <!-- Canonical URL -->
+  <link rel="canonical" href="{{ canonical_url }}" />
+
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://platform.twitter.com" />
   <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-  <link rel="preconnect" href="https://gc.zgo.at" crossorigin />
 
-  <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-NT7HQ9DC');</script>
-  <!-- End Google Tag Manager -->
+  <!-- Fonts: preloaded for zero-FOUT -->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 
-  <!-- jekyll-seo-tag emits title, description, canonical, og:*, twitter:*, JSON-LD -->
+  <!-- jekyll-seo-tag emits: title, description, canonical, og:*, twitter:*, JSON-LD -->
   {%- seo -%}
 
-  <!-- Article-only meta (jekyll-seo-tag emits most of this, but explicit article:* helps Bing) -->
   {%- if page.layout == 'post' -%}
   <meta property="article:published_time" content="{{ page.date | date_to_xmlschema }}" />
   <meta property="article:modified_time" content="{{ page.last_modified_at | default: page.date | date_to_xmlschema }}" />
@@ -52,7 +50,6 @@
   <link rel="icon" type="image/png" sizes="32x32" href="{{ '/assets/favicons/favicon-32.png' | relative_url }}" />
   <link rel="icon" type="image/png" sizes="16x16" href="{{ '/assets/favicons/favicon-16.png' | relative_url }}" />
   <link rel="apple-touch-icon" sizes="180x180" href="{{ '/assets/favicons/apple-touch-icon.png' | relative_url }}" />
-  <link rel="mask-icon" href="{{ '/assets/favicons/favicon.svg' | relative_url }}" color="#353532" />
   <link rel="manifest" href="{{ '/site.webmanifest' | relative_url }}" />
 
   <!-- Feeds -->
@@ -60,12 +57,6 @@
   <link rel="alternate" type="application/atom+xml" title="{{ site_name }} — Atom" href="{{ '/feed.atom' | relative_url }}" />
   <link rel="sitemap" type="application/xml" title="Sitemap" href="{{ '/sitemap.xml' | relative_url }}" />
 
-  <!-- Fonts: Inter + Merriweather + Iosevka (display=block eliminates FOUT) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:ital,wght@0,400;0,700;1,400&family=Iosevka+Term:wght@400;600&display=block" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:ital,wght@0,400;0,700;1,400&family=Iosevka+Term:wght@400;600&display=block" rel="stylesheet" />
-
+  <!-- Stylesheet -->
   <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-OH8qNTHoMMVNVcKdKewlipV4SErXqccxxlg6HC9Cwjr5oZu2AdBej1TndeCirael" crossorigin="anonymous">
 </head>

@@ -2,59 +2,11 @@
 <html lang="{{ site.lang | default: 'en' }}">
   {%- include head.html -%}
   {%- include structured-data.html -%}
-  <body class="theme-dark">
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NT7HQ9DC"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
-    <script>
-      (function() {
-        var theme = localStorage.getItem('theme');
-        if (theme === 'light') {
-          document.body.classList.remove('theme-dark');
-          document.body.classList.add('theme-light');
-        }
-      })();
-    </script>
-
+  <body>
     {%- include nav.html -%}
-
     <main>
-      <div class="wrap">
-        {{ content }}
-      </div>
+      {{ content }}
     </main>
-
     {%- include footer.html -%}
-
-    <script>
-      var toggle = document.querySelector("#theme-toggle");
-      function toggleTheme() {
-        document.body.classList.toggle("theme-dark");
-        document.body.classList.toggle("theme-light");
-        var isDark = document.body.classList.contains("theme-dark");
-        localStorage.setItem("theme", isDark ? "dark" : "light");
-        if (toggle) toggle.setAttribute("aria-checked", isDark.toString());
-        updateThemeColor(isDark);
-      }
-      function updateThemeColor(isDark) {
-        var meta = document.querySelector('meta[name="theme-color"]');
-        if (meta) meta.content = isDark ? '#141413' : '#f9f9f5';
-        var mask = document.querySelector('link[rel="mask-icon"]');
-        if (mask) mask.color = isDark ? '#141413' : '#f9f9f5';
-      }
-      if (toggle) {
-        toggle.addEventListener("click", toggleTheme);
-        toggle.setAttribute("aria-checked", document.body.classList.contains("theme-dark").toString());
-      }
-      window.addEventListener('keydown', function(e) {
-        if (document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA')) return;
-        if ((e.key === 'd' || e.key === 'D') && !e.ctrlKey && !e.metaKey) toggleTheme();
-      });
-    </script>
-
-    {%-if site.goat_counter and jekyll.environment == "production"-%}
-      {%-include goat_counter.html-%}
-    {%-endif-%}
   </body>
 </html>

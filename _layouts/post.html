@@ -13,16 +13,16 @@ layout: default
 
 <article>
   <nav class="breadcrumb" aria-label="Breadcrumb">
-    <a href="{{ '/' | relative_url }}" class="plain muted">Home</a>
-    <span class="sep">›</span>
-    <a href="/posts/" class="plain muted">Posts</a>
-    <span class="sep">›</span>
+    <a href="{{ '/' | relative_url }}">Home</a>
+    <span class="sep" aria-hidden="true">&rsaquo;</span>
+    <a href="/posts/">Posts</a>
+    <span class="sep" aria-hidden="true">&rsaquo;</span>
     <span class="current">{{ page.title | truncate: 60 }}</span>
   </nav>
 
-  <p class="post-meta small muted">
+  <p class="post-meta small">
     <a href="/categories/#{{ category_slug }}" class="plain post-category-label">{{ category_label }}</a>
-    <span class="post-meta-sep">·</span>
+    <span class="post-meta-sep">&middot;</span>
     <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%b %-d, %Y" }}</time>
   </p>
 
@@ -32,14 +32,16 @@ layout: default
   <p class="lede muted">{{ page.description }}</p>
   {%- endif -%}
 
-  {{ content }}
+  <div class="prose">
+    {{ content }}
+  </div>
 
-  <div class="post-end-sep" aria-hidden="true">···</div>
+  <div class="post-end-sep" aria-hidden="true">&middot;&middot;&middot;</div>
 
   {%- if page.tags and page.tags.size > 0 -%}
   <div class="post-tags">
     {%- for tag in page.tags -%}
-      <a href="/tags/#{{ tag | slugify }}" class="plain tag-chip">{{ tag }}</a>
+      <a href="/tags/#{{ tag | slugify }}" class="plain tag-chip">#{{ tag }}</a>
     {%- endfor -%}
   </div>
   {%- endif -%}

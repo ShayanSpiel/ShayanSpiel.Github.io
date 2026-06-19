@@ -3,13 +3,22 @@ layout: page
 title: About
 description: Shayan Spiel — building AI content pipelines and developer content systems for technical founders. 8+ years scaling Iran's largest digital platforms.
 keywords: about Shayan Spiel, Shayan Tawabi, session-as-content, agentic AI, technical founder marketing, building in public
-image: /assets/og-default.png
+image:
+  path: /assets/og-default.png
+  width: 1200
+  height: 630
 permalink: /about/
 ---
 
-Hi. I'm Shayan.
+<div style="display:flex;align-items:center;gap:1em;margin-bottom:2em">
+  <img src="https://pbs.twimg.com/profile_images/2060556306096734210/wcCphjMi_400x400.jpg" alt="Shayan Spiel" style="width:72px;height:72px;border-radius:50%;border:1px solid var(--bd);flex-shrink:0" width="72" height="72" loading="eager"/>
+  <div>
+    <h1 style="margin:0;font-size:2rem">Shayan Spiel</h1>
+    <p class="muted" style="margin:0;font-size:0.9em">Solo operator. Based in Tehran, Iran.</p>
+  </div>
+</div>
 
-Solo operator. I build **Session-as-Content Infrastructure** for technical founders — systems that turn build sessions into publishable content, so you never stop working to post.
+I build **Session-as-Content Infrastructure** for technical founders — systems that turn build sessions into publishable content, so you never stop working to post.
 
 ## What I sell
 

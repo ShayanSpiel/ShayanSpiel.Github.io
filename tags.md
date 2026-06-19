@@ -3,11 +3,14 @@ layout: page
 title: Tags
 description: Browse blog posts by tag — content pipeline, Jekyll automation, AI agents, building in public, open-source writing tools, and developer content systems.
 keywords: blog tags, all tags, content engine, automation, jekyll, agentic AI
-image: /assets/og-default.png
+image:
+  path: /assets/og-default.png
+  width: 1200
+  height: 630
 permalink: /tags/
 ---
 
-<div class="tag-cloud font-ui">
+<div class="tag-cloud">
   {%- assign all_tags = site.posts | map: 'tags' | join: ',' | split: ',' | uniq | sort -%}
   {%- for tag in all_tags -%}
     {%- assign tag_strip = tag | strip -%}
@@ -32,7 +35,7 @@ permalink: /tags/
           {%- if post.tags contains tag_strip -%}
             <li style="margin-bottom: 0.75rem;">
               <a href="{{ post.url | relative_url }}" class="plain">
-                <span class="muted small font-ui" style="display: inline-block; margin-right: 0.5em;">{{ post.date | date: "%b %-d, %Y" }}</span>
+                <span class="muted small" style="display: inline-block; margin-right: 0.5em;">{{ post.date | date: "%b %-d, %Y" }}</span>
                 <u>{{ post.title }}</u>
               </a>
               {%- if post.description -%}
