@@ -30,7 +30,7 @@ permalink: /posts/
 <div id="post-list" class="blog-list">
   {%- assign sorted = site.posts | sort: 'date' | reverse -%}
   {%- for post in sorted -%}
-    <a href="{{ post.url | relative_url }}" class="blog-row" data-categories="{%- for c in post.categories -%}{{ c | slugify }}{% unless forloop.last %} {% endunless %}{%- endfor -%}">
+    <a href="{{ post.url | relative_url }}" class="blog-row" data-categories="{%- for c in post.categories -%}{{ c | slugify }}{% unless forloop.last %} {% endunless %}{%- endfor -%}" data-tags="{%- for t in post.tags -%}{{ t | slugify }}{% unless forloop.last %} {% endunless %}{%- endfor -%}">
       <span class="blog-row-date">{{ post.date | date: "%b %-d, %Y" }}</span>
       <span class="blog-row-body">
         <span class="blog-row-title">{{ post.title }}</span>
@@ -55,6 +55,7 @@ permalink: /posts/
 
   var params = new URLSearchParams(window.location.search);
   var cat = params.get('cat');
+  var tag = params.get('tag');
 
   var allRows = document.querySelectorAll('.blog-row');
   var btns = document.querySelectorAll('.filter-btn');
@@ -62,21 +63,30 @@ permalink: /posts/
   var loadMoreBtn = document.getElementById('load-more-btn');
 
   function applyFilter() {
-    if (!cat) return;
-    btns.forEach(function(b){
-      if (b.getAttribute('data-filter') === cat) {
-        b.classList.add('active');
-        b.setAttribute('aria-pressed', 'true');
-      } else {
-        b.classList.remove('active');
-        b.setAttribute('aria-pressed', 'false');
-      }
-    });
-    allRows.forEach(function(r){
-      var cats = (r.getAttribute('data-categories') || '').split(' ');
-      if (cats.indexOf(cat) >= 0) r.style.display = '';
-      else r.style.display = 'none';
-    });
+    if (!cat && !tag) return;
+    if (cat) {
+      btns.forEach(function(b){
+        if (b.getAttribute('data-filter') === cat) {
+          b.classList.add('active');
+          b.setAttribute('aria-pressed', 'true');
+        } else {
+          b.classList.remove('active');
+          b.setAttribute('aria-pressed', 'false');
+        }
+      });
+      allRows.forEach(function(r){
+        var cats = (r.getAttribute('data-categories') || '').split(' ');
+        if (cats.indexOf(cat) >= 0) r.style.display = '';
+        else r.style.display = 'none';
+      });
+    }
+    if (tag) {
+      allRows.forEach(function(r){
+        var tags = (r.getAttribute('data-tags') || '').split(' ');
+        if (tags.indexOf(tag) >= 0) r.style.display = '';
+        else r.style.display = 'none';
+      });
+    }
   }
 
   function getVisibleRows() {

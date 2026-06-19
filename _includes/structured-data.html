@@ -1,8 +1,9 @@
 {%- comment -%}
   Extra structured data beyond what jekyll-seo-tag emits.
-  - Person/Organization on every page (site identity)
-  - BreadcrumbList on post pages
-  - WebSite + SearchAction on the homepage only
+  - Person on every page (site identity)
+  - WebSite on the homepage
+  - BlogPosting + BreadcrumbList on post pages
+  - BreadcrumbList on other pages
 {%- endcomment -%}
 
 <script type="application/ld+json">
@@ -43,20 +44,42 @@
   "name": "{{ site.title }}",
   "description": "{{ site.description | strip_html | normalize_whitespace | escape }}",
   "inLanguage": "{{ site.lang }}",
-  "publisher": { "@id": "{{ site.url }}/#person" },
-  "potentialAction": {
-    "@type": "SearchAction",
-    "target": {
-      "@type": "EntryPoint",
-      "urlTemplate": "{{ site.url }}/search/?q={search_term_string}"
-    },
-    "query-input": "required name=search_term_string"
-  }
+  "publisher": { "@id": "{{ site.url }}/#person" }
 }
 </script>
 {%- endif -%}
 
 {%- if page.layout == 'post' -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": {{ page.title | jsonify }},
+  "description": {{ page.description | default: page.excerpt | strip_html | normalize_whitespace | truncate: 200 | jsonify }},
+  "datePublished": "{{ page.date | date_to_xmlschema }}",
+  "dateModified": "{{ page.last_modified_at | default: page.date | date_to_xmlschema }}",
+  "url": "{{ canonical_url }}",
+  "author": {
+    "@type": "Person",
+    "name": "{{ site.author.name }}",
+    "url": "{{ site.url }}"
+  },
+  "publisher": { "@id": "{{ site.url }}/#person" },
+  "image": {
+    "@type": "ImageObject",
+    "url": "{{ site.url }}{{ page.image.path | default: '/assets/og-default.png' }}",
+    "width": {{ page.image.width | default: 1200 }},
+    "height": {{ page.image.height | default: 630 }}
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ canonical_url }}"
+  }
+  {%- if page.tags and page.tags.size > 0 -%},
+  "keywords": {{ page.tags | join: ', ' | jsonify }}
+  {%- endif -%}
+}
+</script>
 {%- assign crumbs = site.url | append: '/' -%}
 <script type="application/ld+json">
 {

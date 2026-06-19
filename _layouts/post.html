@@ -27,6 +27,10 @@ layout: default
       <a href="/posts/?cat={{ category_slug }}" class="post-category-label">{{ category_label }}</a>
       <span class="post-meta-sep" aria-hidden="true">&middot;</span>
       <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%b %-d, %Y" }}</time>
+      <span class="post-meta-sep" aria-hidden="true">&middot;</span>
+      <span class="post-author" itemprop="author" itemscope itemtype="https://schema.org/Person">
+        <a href="{{ '/about/' | relative_url }}" class="plain" itemprop="url"><span itemprop="name">{{ site.author.name }}</span></a>
+      </span>
     </div>
 
     <h1>{{ page.title }}</h1>

@@ -1,6 +1,6 @@
 # robots.txt — Shayan Spiel — https://shayanspiel.github.io/
-# Let all well-behaved crawlers index everything; block nothing on purpose.
-# Generated 2026-06-14.
+# AI crawlers: ALLOW indexing (so AI search can cite us), block training only.
+# Updated 2026-06-19.
 
 User-agent: *
 Allow: /
@@ -10,46 +10,35 @@ Disallow: /assets/banners/$
 # Sitemaps
 Sitemap: https://shayanspiel.github.io/sitemap.xml
 
-# Common crawlers (explicit, in case of future per-bot rules)
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: Slurp
-Allow: /
-
-User-agent: DuckDuckBot
-Allow: /
-
-User-agent: Baiduspider
-Allow: /
-
-User-agent: YandexBot
-Allow: /
-
-# AI crawlers — block from training (not from indexing)
+# ── AI crawlers — allow indexing, block training ──
+# GPTBot (OpenAI training) — block training, allow ChatGPT-User indexing
 User-agent: GPTBot
 Disallow: /
 
+# ChatGPT-User (ChatGPT browsing/indexing) — ALLOW so ChatGPT can cite us
 User-agent: ChatGPT-User
-Disallow: /
+Allow: /
 
-User-agent: CCBot
-Disallow: /
-
-User-agent: anthropic-ai
-Disallow: /
-
+# ClaudeBot (Anthropic indexing) — ALLOW so Claude can cite us
 User-agent: ClaudeBot
-Disallow: /
+Allow: /
 
+# PerplexityBot — ALLOW so Perplexity can cite us
 User-agent: PerplexityBot
-Disallow: /
+Allow: /
 
+# Google-Extended (Gemini training) — block training
 User-agent: Google-Extended
 Disallow: /
 
+# anthropic-ai (Anthropic training) — block training
+User-agent: anthropic-ai
+Disallow: /
+
+# CCBot (Common Crawl) — block training
+User-agent: CCBot
+Disallow: /
+
+# Bytespider (ByteDance/TikTok) — block training
 User-agent: Bytespider
 Disallow: /
