@@ -17,23 +17,11 @@
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
 
   <link rel="canonical" href="{{ canonical_url }}" />
+  <link rel="author" href="{{ '/humans.txt' | relative_url }}" />
 
-  <!-- Critical: inline font-display override to prevent FOUT -->
-  <style>
-    @font-face {
-      font-family: 'Inter';
-      font-style: normal;
-      font-weight: 400 900;
-      font-display: swap;
-      src: local('Inter');
-    }
-  </style>
-
-  <!-- Preconnect for performance -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-  <!-- Fonts with display=swap, preloaded -->
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Merriweather:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Merriweather:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 
@@ -49,21 +37,17 @@
   {%- endif %}{% endfor %}{% endif -%}
   {%- endif -%}
 
-  <!-- Favicons -->
   <link rel="icon" type="image/svg+xml" href="{{ '/assets/favicons/favicon.svg' | relative_url }}" />
   <link rel="icon" type="image/png" sizes="32x32" href="{{ '/assets/favicons/favicon-32.png' | relative_url }}" />
   <link rel="icon" type="image/png" sizes="16x16" href="{{ '/assets/favicons/favicon-16.png' | relative_url }}" />
   <link rel="apple-touch-icon" sizes="180x180" href="{{ '/assets/favicons/apple-touch-icon.png' | relative_url }}" />
   <link rel="manifest" href="{{ '/site.webmanifest' | relative_url }}" />
 
-  <!-- Feeds -->
   <link rel="alternate" type="application/rss+xml" title="{{ site_name }} — RSS" href="{{ '/feed.xml' | relative_url }}" />
   <link rel="sitemap" type="application/xml" title="Sitemap" href="{{ '/sitemap.xml' | relative_url }}" />
 
-  <!-- Stylesheet -->
   <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}" />
 
-  <!-- Analytics -->
   {%- include ga4.html -%}
   {%- include posthog.html -%}
   <script src="{{ '/assets/js/analytics.js' | relative_url }}" defer></script>

@@ -24,7 +24,7 @@
             <u>{{ post.title }}</u>
           </a>
           {%- if post.description -%}
-          <div class="small muted" style="margin-top: 2px;">{{ post.description | strip_html | truncatewords: 20 }}</div>
+          <div class="small muted">{{ post.description | strip_html | truncatewords: 20 }}</div>
           {%- endif -%}
         </li>
         {%- endfor -%}

@@ -35,11 +35,11 @@ Browse by topic. Each category groups posts around a core vertical.
           {%- if post.categories contains cat_strip -%}
             <li>
               <a href="{{ post.url | relative_url }}" class="plain">
-                <span class="muted small" style="display: inline-block; margin-right: var(--s-3); font-family: var(--f-h);">{{ post.date | date: "%b %-d, %Y" }}</span>
+                <span class="muted small post-list-date">{{ post.date | date: "%b %-d, %Y" }}</span>
                 <u>{{ post.title }}</u>
               </a>
               {%- if post.description -%}
-              <div class="small muted" style="margin-top: 4px;">{{ post.description | strip_html | truncatewords: 28 }}</div>
+              <div class="small muted post-list-desc">{{ post.description | strip_html | truncatewords: 28 }}</div>
               {%- endif -%}
             </li>
           {%- endif -%}

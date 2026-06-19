@@ -198,12 +198,31 @@ var revealObs = new IntersectionObserver(function(entries) {
 }, { threshold: 0.1 });
 document.querySelectorAll('.reveal').forEach(function(el){ revealObs.observe(el); });
 
+/* ---- Mobile nav toggle ---- */
+(function(){
+  var toggle = document.querySelector('.se-nav-toggle');
+  var mobile = document.getElementById('se-nav-mobile');
+  if (!toggle || !mobile) return;
+  toggle.addEventListener('click', function(){
+    var open = mobile.hidden;
+    mobile.hidden = !open;
+    toggle.setAttribute('aria-expanded', open);
+    toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  });
+})();
+
 /* ---- FAQ accordion ---- */
 document.querySelectorAll('.faq-q').forEach(function(btn) {
   btn.addEventListener('click', function() {
     var card = this.closest('.faq-card');
     var wasOpen = card.classList.contains('open');
-    document.querySelectorAll('.faq-card.open').forEach(function(el){ el.classList.remove('open'); });
-    if (!wasOpen) card.classList.add('open');
+    document.querySelectorAll('.faq-card.open').forEach(function(el){
+      el.classList.remove('open');
+      el.querySelector('.faq-q').setAttribute('aria-expanded', 'false');
+    });
+    if (!wasOpen) {
+      card.classList.add('open');
+      this.setAttribute('aria-expanded', 'true');
+    }
   });
 });

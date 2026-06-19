@@ -1,4 +1,4 @@
-<a href="#main-content" class="sr-only" style="position:absolute;top:0;left:0;z-index:200;padding:8px 16px;background:var(--tx);color:var(--bg);font-family:var(--f-h);font-size:14px;font-weight:600;text-decoration:none;border-radius:0 0 var(--r-md) 0;">Skip to content</a>
+<a href="#main-content" class="sr-only skip-link">Skip to content</a>
 <nav class="nav" aria-label="Main navigation">
   <div class="nav-inner">
     <a class="nav-brand" href="{{ '/' | relative_url }}" aria-label="Shayan Spiel — Home">
@@ -13,5 +13,32 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M13 5l7 7-7 7M5 12h15"/></svg>
       Get Spiel
     </a>
+    <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="nav-mobile">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path class="bar-top" d="M4 7h16"/>
+        <path class="bar-mid" d="M4 12h16"/>
+        <path class="bar-bot" d="M4 17h16"/>
+      </svg>
+    </button>
+  </div>
+  <div class="nav-mobile" id="nav-mobile" hidden>
+    <a href="/about/">About</a>
+    <a href="/posts/">Blog</a>
+    <a href="/categories/">Topics</a>
+    <a href="/contact/">Contact</a>
+    <a href="/SpielEngine/" class="nav-mobile-cta">Get Spiel</a>
   </div>
 </nav>
+<script>
+(function(){
+  var toggle = document.querySelector('.nav-toggle');
+  var mobile = document.getElementById('nav-mobile');
+  if (!toggle || !mobile) return;
+  toggle.addEventListener('click', function(){
+    var open = mobile.hidden;
+    mobile.hidden = !open;
+    toggle.setAttribute('aria-expanded', open);
+    toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  });
+})();
+</script>

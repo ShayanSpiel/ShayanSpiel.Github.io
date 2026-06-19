@@ -67,8 +67,6 @@ include:
 
 # Exclude from build
 exclude:
-  - home-landing.html
-  - variant-5-ultra-minimal.html
   - Gemfile
   - Gemfile.lock
   - README.md

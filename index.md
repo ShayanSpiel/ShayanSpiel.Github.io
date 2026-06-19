@@ -12,9 +12,9 @@ permalink: /
 
 <div class="wrap">
 
-<section class="hero">
+<section class="hero" aria-label="Introduction">
   <div class="hero-avatar-wrap">
-    <img src="https://pbs.twimg.com/profile_images/2060556306096734210/wcCphjMi_400x400.jpg" alt="Shayan Spiel" class="hero-avatar" width="64" height="64" loading="eager" decoding="async"/>
+    <img src="https://pbs.twimg.com/profile_images/2060556306096734210/wcCphjMi_400x400.jpg" alt="Shayan Spiel" class="hero-avatar" width="64" height="64" loading="eager" fetchpriority="high" decoding="async"/>
     <h1>Shayan Spiel</h1>
   </div>
   <p class="lede">Solo operator. I build Session-as-Content Infrastructure for technical founders. Systems that turn build sessions into publishable content, so you never stop working to post.</p>
@@ -44,7 +44,7 @@ permalink: /
 
 <hr class="divider">
 
-<section class="section">
+<section class="section" aria-label="Projects">
   <div class="section-head">
     <div class="section-tag">What I'm shipping</div>
     <h2 class="section-title">Building systems, not just products</h2>
@@ -74,7 +74,7 @@ permalink: /
 
 <hr class="divider">
 
-<section class="section">
+<section class="section" aria-label="Latest posts">
   <div class="section-head">
     <div class="section-tag">The Blog</div>
     <h2 class="section-title">Latest posts</h2>
@@ -125,7 +125,7 @@ permalink: /
 
 <hr class="divider">
 
-<section class="section c">
+<section class="section c" aria-label="Call to action">
   <div class="section-head">
     <h2 class="section-title">Work with me</h2>
     <p class="section-sub">I build Session-as-Content Infrastructure for technical founders. Your build sessions become publishable content. You stay a builder.</p>

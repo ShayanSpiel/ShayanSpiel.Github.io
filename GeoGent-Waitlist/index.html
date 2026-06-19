@@ -4,13 +4,6 @@ sitemap: true
 <!doctype html>
 <html lang="en">
   <head>
-    <!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-P8T6NV92');</script>
-<!-- End Google Tag Manager -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#0a0806" />
@@ -33,14 +26,23 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <link rel="preload" href="./assets/fonts/Oxanium-Variable.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="./assets/fonts.css" />
     <link rel="stylesheet" href="./styles.css" />
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P43CBK4EEX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-P43CBK4EEX');
+    </script>
+    <script>
+      !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("head")[0]).appendChild(p);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+      posthog.init('phc_1osIFVXYDFr7Z00RN5gRaF4kRfZ1safm9c7NswRfKpm', {api_host: 'https://eu.posthog.com', person_profiles: 'always'})
+    </script>
   </head>
   <body>
-    <!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P8T6NV92"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
+    <a href="#main-content" class="skip">Skip to content</a>
     <!-- ===================== HERO ===================== -->
-    <header class="hero">
+    <header class="hero" id="main-content">
       <div class="bg-orb bg-orb-a" aria-hidden="true"></div>
       <div class="bg-orb bg-orb-b" aria-hidden="true"></div>
       <div class="bg-grid" aria-hidden="true"></div>
@@ -525,7 +527,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div class="foot-links">
           <a href="#how">How it works</a>
           <a href="#cta">Join waitlist</a>
-          <a href="#" rel="noopener">X / Twitter</a>
+          <a href="https://x.com/ShayanSpiel" target="_blank" rel="noopener" aria-label="X / Twitter">X / Twitter</a>
         </div>
         <p class="foot-legal">© 2026 GeoGent. All rights reserved.</p>
       </div>
@@ -533,5 +535,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <iframe name="hidden_iframe" id="hidden_iframe" title="waitlist-submit" hidden></iframe>
     <script src="./script.js" defer></script>
+    <script src="../assets/js/analytics.js" defer></script>
   </body>
 </html>

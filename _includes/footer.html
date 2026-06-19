@@ -31,6 +31,7 @@
       <input type="hidden" name="entry.2021940811" value="Newsletter" />
       <button type="submit">Subscribe</button>
     </form>
+    <div class="footer-newsletter-status" id="newsletter-status" role="status" aria-live="polite"></div>
 
     <div class="footer-copy">
       &copy; 2026 Shayan Spiel &middot; <a href="{{ '/branding/' | relative_url }}">Branding</a>
@@ -42,18 +43,30 @@
     (function () {
       var form = document.getElementById("subscribe");
       var iframe = document.getElementById("hidden_iframe");
+      var status = document.getElementById("newsletter-status");
       if (!form || !iframe) return;
       var btn = form.querySelector("button");
       var input = form.querySelector('input[type="email"]');
+      var original = btn ? btn.textContent : "";
       form.addEventListener("submit", function (e) {
         e.preventDefault();
         var email = (input && input.value || "").trim();
         if (!email) { if (input) input.focus(); return; }
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { if (input) input.focus(); return; }
-        btn.textContent = "Subscribed \u2713";
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          if (status) status.textContent = "Please enter a valid email.";
+          if (status) status.className = "footer-newsletter-status err";
+          if (input) input.focus();
+          return;
+        }
+        btn.textContent = "Sending...";
         btn.disabled = true;
-        if (input) input.value = "";
+        if (status) { status.textContent = ""; status.className = "footer-newsletter-status"; }
         form.submit();
+        setTimeout(function () {
+          btn.textContent = "Subscribed \u2713";
+          if (input) input.value = "";
+          if (status) { status.textContent = "You're in. Check your inbox."; status.className = "footer-newsletter-status ok"; }
+        }, 1500);
       });
     })();
   </script>
