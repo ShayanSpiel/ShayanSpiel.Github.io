@@ -150,7 +150,7 @@ code,.mono{font-family:'JetBrains Mono',monospace}
 }
 
 /* ---- X Embed ---- */
-.x-embed-wrap{max-width:560px;margin:0 auto 80px;opacity:0;transition:opacity .6s .3s}
+.x-embed-wrap{max-width:560px;margin:0 auto 80px;opacity:0;transition:opacity .4s ease;overflow:hidden}
 .x-embed-wrap.show{opacity:1}
 .x-embed-wrap iframe{border:none !important;max-width:100% !important;background:#000 !important}
 .x-embed-wrap .twitter-tweet{margin:0 !important;padding:0 !important;background:#000 !important;border:none !important}

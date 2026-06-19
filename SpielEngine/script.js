@@ -8,8 +8,8 @@ function setupCopy(boxId, btnId) {
   var btn = document.getElementById(btnId);
   if (!box || !btn) return;
   function cp() {
-    try { navigator.clipboard.writeText('brew install spielengine'); }
-    catch(e) { var t=document.createElement('textarea'); t.value='brew install spielengine'; document.body.appendChild(t); t.select(); document.execCommand('copy'); document.body.removeChild(t); }
+    try { navigator.clipboard.writeText('brew install ShayanSpiel/spiel/spiel'); }
+    catch(e) { var t=document.createElement('textarea'); t.value='brew install ShayanSpiel/spiel/spiel'; document.body.appendChild(t); t.select(); document.execCommand('copy'); document.body.removeChild(t); }
     box.classList.add('copied');
     setTimeout(function(){ box.classList.remove('copied'); }, 2200);
   }
@@ -143,9 +143,35 @@ if (termSection) termObs.observe(termSection);
 var pubTrans = document.getElementById('pub-transition');
 var xPost = document.getElementById('x-post');
 var pubObs = new IntersectionObserver(function(entries) {
-  entries.forEach(function(e){ if (e.isIntersecting) { pubTrans.classList.add('show'); xPost.classList.add('show'); pubObs.disconnect(); } });
+  entries.forEach(function(e){
+    if (e.isIntersecting) {
+      pubTrans.classList.add('show');
+      pubObs.disconnect();
+      watchTweetLoad();
+    }
+  });
 }, { threshold: 0.2 });
 if (pubTrans) pubObs.observe(pubTrans);
+
+/* ---- X Tweet embed: reveal only after rendered ---- */
+function watchTweetLoad() {
+  if (!xPost) return;
+  var tweet = xPost.querySelector('.twitter-tweet');
+  if (!tweet) return;
+
+  var checkInterval = setInterval(function() {
+    var iframe = tweet.querySelector('iframe');
+    if (iframe) {
+      clearInterval(checkInterval);
+      xPost.classList.add('show');
+    }
+  }, 100);
+
+  setTimeout(function() {
+    clearInterval(checkInterval);
+    xPost.classList.add('show');
+  }, 4000);
+}
 
 /* ---- Cycle words animation ---- */
 var cycleWords = ['[Topic]', '[Bug Fix]', '[Feature]', '[Architecture]', '[Lesson]'];

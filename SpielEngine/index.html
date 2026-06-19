@@ -26,25 +26,50 @@ sitemap: true
   <meta name="twitter:description" content="Turn your coding sessions into publishable content. Extract, draft, and publish across 6+ platforms." />
   <meta name="twitter:image" content="https://shayanspiel.github.io/assets/og-default.png" />
 
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
+  <meta name="author" content="Shayan Spiel" />
   <link rel="icon" href="/assets/favicons/favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://platform.x.com" />
+  <link rel="preconnect" href="https://syndication.twitter.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./styles.css" />
+  <script src="https://platform.x.com/widgets.js" async defer></script>
 
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "Product",
+    "@type": "SoftwareApplication",
     "name": "Spiel Engine",
-    "description": "Turn your coding sessions into publishable content. Extract, draft, and publish across 6+ platforms in under 5 minutes.",
-    "offers": {
-      "@type": "AggregateOffer",
-      "lowPrice": "0",
-      "highPrice": "990",
-      "priceCurrency": "USD",
-      "offerCount": "2"
-    }
+    "description": "Turn your coding sessions into publishable content. Extract, draft, and publish across 6+ platforms in under 5 minutes. Open-source CLI tool for developers.",
+    "url": "https://shayanspiel.github.io/SpielEngine/",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "macOS, Linux",
+    "offers": [
+      {
+        "@type": "Offer",
+        "name": "Self-Serve (Open Source)",
+        "price": "0",
+        "priceCurrency": "USD",
+        "description": "Free forever. Clone, customize and run."
+      },
+      {
+        "@type": "Offer",
+        "name": "DFY White-Glove Install",
+        "price": "990",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/LimitedAvailability",
+        "description": "One-time DFY install, tailored to your audience. 3 slots per month."
+      }
+    ],
+    "author": {
+      "@type": "Person",
+      "name": "Shayan Spiel",
+      "url": "https://x.com/ShayanSpiel"
+    },
+    "softwareVersion": "1.0",
+    "fileFormat": "CLI"
   }
   </script>
 </head>
@@ -64,7 +89,7 @@ sitemap: true
       <div class="cli-box" id="hero-cli">
         <code>
           <span class="prompt">$</span>
-          <span class="cmd-wrap"><span class="cmd">brew install spielengine</span></span>
+          <span class="cmd-wrap"><span class="cmd">brew install ShayanSpiel/spiel/spiel</span></span>
           <span class="cpy-txt">Copied &#10004;</span>
         </code>
         <button class="copy-btn" id="hero-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9.75a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184"/></svg></button>
@@ -97,7 +122,7 @@ sitemap: true
       <div class="publish-transition" id="pub-transition">
         <h2>Your Work, <span class="hl">Published!</span></h2>
       </div>
-      <div class="x-embed-wrap" id="x-post">
+      <div class="x-embed-wrap" id="x-post" style="min-height:0">
         <blockquote class="twitter-tweet" data-theme="dark" data-media-max-width="560"><p lang="en" dir="ltr">Just shipped 3 things. Each removes a step.<br><br>1 API call. X + LinkedIn + Threads. Via Buffer.<br>Banner tool. Config + template. No Node.<br>5 docs polished.<br><br>Lesson: when publishing costs zero, the question is what&#39;s worth saying.<br><br>Clone for builders. Reply with what you ship. <a href="https://t.co/yU2w4PLTk2">pic.twitter.com/yU2w4PLTk2</a></p>&mdash; Shayan (@ShayanSpiel) <a href="https://x.com/ShayanSpiel/status/2067446487005466949?ref_src=twsrc%5Etfw">June 18, 2026</a></blockquote>
       </div>
     </section>
@@ -126,7 +151,7 @@ sitemap: true
       <div class="cli-box" id="cli2">
         <code>
           <span class="prompt">$</span>
-          <span class="cmd-wrap"><span class="cmd">brew install spielengine</span></span>
+          <span class="cmd-wrap"><span class="cmd">brew install ShayanSpiel/spiel/spiel</span></span>
           <span class="cpy-txt">Copied &#10004;</span>
         </code>
         <button class="copy-btn" id="btn2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9.75a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184"/></svg></button>
@@ -262,6 +287,5 @@ sitemap: true
   </footer>
 
   <script src="./script.js"></script>
-  <script async src="https://platform.x.com/widgets.js" charset="utf-8"></script>
 </body>
 </html>
