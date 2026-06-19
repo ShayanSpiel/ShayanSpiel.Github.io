@@ -19,11 +19,24 @@
   <link rel="canonical" href="{{ canonical_url }}" />
   <link rel="author" href="{{ '/humans.txt' | relative_url }}" />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Merriweather:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Merriweather:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-latin.woff2" crossorigin />
+  <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/merriweather-latin-400.woff2" crossorigin />
+  <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/jetbrains-latin.woff2" crossorigin />
+  <link rel="stylesheet" href="/assets/css/fonts.css" />
+  <script>
+    /* FOUT prevention: hide body until fonts load */
+    document.documentElement.classList.add('fonts-loading');
+    Promise.all([
+      document.fonts.load('1em Inter'),
+      document.fonts.load('1em Merriweather'),
+      document.fonts.load('1em "JetBrains Mono"')
+    ]).then(function() {
+      document.documentElement.classList.remove('fonts-loading');
+      document.documentElement.classList.add('fonts-loaded');
+    }).catch(function() {
+      document.documentElement.classList.remove('fonts-loading');
+    });
+  </script>
 
   {%- seo -%}
 
