@@ -117,10 +117,9 @@ button:focus-visible {
 }
 .page {
   min-height: calc(100vh - var(--nav-h));
-  padding-top: var(--nav-h);
   padding-bottom: var(--s-9);
 }
-main { display: block; }
+main { display: block; padding-top: var(--nav-h); }
 
 /* ═══════════════════════════════════════════════════════
    TYPOGRAPHY
