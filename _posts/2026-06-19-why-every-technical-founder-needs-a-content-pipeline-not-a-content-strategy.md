@@ -3,6 +3,7 @@ layout: post
 title: "Why Every Technical Founder Needs a Content Pipeline, Not a Content Strategy"
 date: 2026-06-19 09:00:00 +0000
 description: "Content strategy is the wrong abstraction for builders. You don't need a plan. You need a system that turns building into publishing."
+seo_keyword: "content pipeline versus content strategy"
 image:
   path: /assets/banners/2026-06-19-pillar-blog.png
   width: 1200

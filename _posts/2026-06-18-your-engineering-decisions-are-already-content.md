@@ -2,8 +2,15 @@
 layout: post
 title: "Your Engineering Decisions Are Already Content"
 date: 2026-06-18 09:00:00 +0000
+description: "The things you build, the decisions you make, the tradeoffs you navigate — that is not just work. That is content waiting to be published."
+seo_keyword: "engineering decisions as content"
 categories:
   - Building in Public
+tags:
+  - engineering
+  - content
+  - building in public
+  - technical founder
 image:
   path: /assets/banners/2026-06-18-pillar-blog.png
   width: 1200

@@ -6,6 +6,11 @@ seo_keyword: "build session to blog post workflow"
 description: "5-document developer content pipeline that converts build sessions to LinkedIn, X, and blog drafts in 2 minutes of capture. No blank pages, no editorial calendar."
 categories:
   - Lead Systems
+tags:
+  - content pipeline
+  - build sessions
+  - developer workflow
+  - building in public
 image:
   path: /assets/banners/2026-06-15-pillar-blog-five-strategy-pages.png
   width: 1200

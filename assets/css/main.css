@@ -552,11 +552,17 @@ figure img { margin: 0; }
   color: var(--tx-3);
   font-family: var(--f-h);
   margin-bottom: var(--s-5);
-  padding-top: var(--s-4);
+  padding-top: var(--s-2);
 }
-.breadcrumb a { color: var(--tx-3); text-decoration: none; }
+.breadcrumb a {
+  color: var(--tx-3);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+}
 .breadcrumb a:hover { color: var(--tx); text-decoration: underline; }
-.breadcrumb .sep { color: var(--tx-4); }
+.breadcrumb .sep { color: var(--tx-4); user-select: none; }
 .breadcrumb .current { color: var(--tx-1); font-weight: 500; }
 
 /* ── Post article ── */
@@ -579,7 +585,7 @@ figure img { margin: 0; }
 /* Title — full width, no constraints, matches /posts/ */
 .post-article h1 {
   font-size: clamp(var(--fs-2xl), 4vw, var(--fs-4xl));
-  margin: 0;
+  margin: 0 0 var(--s-4);
   text-wrap: balance;
 }
 .post-article .lede {

@@ -6,6 +6,11 @@ seo_keyword: "AI content quality gates"
 description: "Why AI content automation fails without quality gates — and the handoff pattern that keeps automated content pipelines producing work that sounds human."
 categories:
   - AI Pipelines
+tags:
+  - AI
+  - content pipeline
+  - quality gates
+  - automation
 image:
   path: /assets/banners/2026-06-17-ai-wont-fix-blog.png
   width: 1200
