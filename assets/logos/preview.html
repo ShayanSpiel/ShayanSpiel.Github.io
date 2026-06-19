@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spiel Engine — Logo Kit / Brand Guidelines</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Micro+5&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  @font-face {
+    font-family: 'Micro 5 Local';
+    src: url('../../GeoGent-Waitlist/assets/fonts/Micro5-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#0a0a0a;--bg2:#0e0e0e;--bg3:#141414;--border:#1a1a1a;--border-h:#2a2a2a;
+    --tx:#ffffff;--tx2:#c8c8c8;--tx3:#666666;--tx4:#444444;
+    --gold:#c8a84e;--phi:1.618;
+    --u:8px;
+  }
+  body{
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+    background:var(--bg);color:var(--tx2);
+    padding:60px 48px 120px;
+    -webkit-font-smoothing:antialiased;
+    max-width:1280px;margin:0 auto;
+  }
+  .mono{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--tx3)}
+  .pixel{font-family:'Micro 5','Micro 5 Local','Courier New',monospace}
+  .sans{font-family:'Inter',sans-serif}
+
+  /* Header */
+  .brand-header{margin-bottom:64px}
+  .brand-header .tag{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--tx4);margin-bottom:8px;letter-spacing:.1em;text-transform:uppercase}
+  .brand-header h1{font-family:'Micro 5','Micro 5 Local','Courier New',monospace;font-size:52px;color:var(--tx);letter-spacing:5px;margin-bottom:4px}
+  .brand-header .sub{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--tx3);letter-spacing:.03em}
+  .brand-header .ver{font-size:11px;color:var(--tx4);margin-top:16px}
+
+  /* Sections */
+  .section{margin-bottom:64px}
+  .section-title{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--tx4);letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+  .section-desc{font-size:13px;color:var(--tx3);margin-bottom:32px;line-height:1.7;max-width:640px}
+
+  /* Grids */
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+  @media(max-width:960px){.grid-3{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:640px){.grid-3,.grid-2{grid-template-columns:1fr}}
+
+  /* Cards */
+  .card{border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .2s}
+  .card:hover{border-color:var(--border-h)}
+  .card-preview{display:flex;align-items:center;justify-content:center;padding:40px 32px;min-height:120px;position:relative}
+  .card-preview.dark{background:#000}
+  .card-preview.light{background:#fff}
+  .card-preview.checker{
+    background-image:linear-gradient(45deg,#1a1a1a 25%,transparent 25%),linear-gradient(-45deg,#1a1a1a 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#1a1a1a 75%),linear-gradient(-45deg,transparent 75%,#1a1a1a 75%);
+    background-size:16px 16px;background-position:0 0,0 8px,8px -8px,-8px 0;
+    background-color:#111;
+    min-height:120px;
+  }
+  .card-meta{padding:12px 16px;background:var(--bg2);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+  .card-meta .name{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--tx3)}
+  .card-meta .badge{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--tx4);background:var(--bg3);padding:3px 8px;border-radius:4px;border:1px solid var(--border)}
+
+  /* Golden ratio overlay */
+  .gr-overlay{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;opacity:.08}
+  .gr-overlay .phi-rect{stroke:var(--gold);stroke-width:1;fill:none}
+  .gr-overlay .phi-line{stroke:var(--gold);stroke-width:.5;stroke-dasharray:2 2;fill:none}
+  .gr-overlay .phi-circle{stroke:var(--gold);stroke-width:.5;fill:none}
+
+  /* Specs */
+  .specs{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:32px}
+  .spec{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px}
+  .spec .label{font-size:10px;color:var(--tx4);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+  .spec .val{font-size:13px;color:var(--tx2);font-weight:600}
+
+  /* Table */
+  .usage-table{width:100%;border-collapse:collapse;font-size:12px}
+  .usage-table th{text-align:left;padding:10px 12px;color:var(--tx4);font-weight:500;border-bottom:1px solid var(--border);letter-spacing:.06em;text-transform:uppercase;font-size:10px}
+  .usage-table td{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--tx2)}
+  .usage-table td:first-child{font-weight:600}
+  .usage-table .mono{font-size:11px}
+
+  /* Do/Don't */
+  .dodont{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:24px}
+  .do-col,.dont-col{padding:16px 20px;border-radius:8px;font-size:13px;line-height:1.7}
+  .do-col{background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.15)}
+  .dont-col{background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.15)}
+  .do-col .h{font-weight:700;color:#22c55e;margin-bottom:6px}
+  .dont-col .h{font-weight:700;color:#ef4444;margin-bottom:6px}
+
+  /* Logo demo classes */
+  .demo-h{display:flex;align-items:center;gap:14px}
+  .demo-h .i{width:32px;height:32px;flex-shrink:0}
+  .demo-h .t{font-size:34px;letter-spacing:2px}
+  .demo-v{display:flex;flex-direction:column;align-items:center;gap:6px}
+  .demo-v .i{width:40px;height:40px}
+  .demo-v .t1{font-size:24px;letter-spacing:3px;text-align:center;line-height:1.3}
+  .demo-v .t2{font-size:11px;letter-spacing:.05em;font-family:'JetBrains Mono',monospace;color:#666;text-align:center}
+  .demo-full{display:flex;align-items:center;gap:14px}
+  .demo-full .i{width:40px;height:40px;flex-shrink:0}
+  .demo-full .tg{}
+  .demo-full .tg .title{font-size:28px;letter-spacing:2px}
+  .demo-full .tg .sub{font-family:'JetBrains Mono',monospace;font-size:12px;color:#666;margin-top:2px;letter-spacing:.03em}
+  .white{fill:#fff;color:#fff}
+  .black{fill:#000;color:#000}
+  .gray{fill:#666;color:#666}
+</style>
+</head>
+<body>
+
+<div class="brand-header">
+  <div class="tag">Brand Identity v1.0</div>
+  <h1>SPIEL ENGINE</h1>
+  <div class="sub">// Work IS Content</div>
+  <div class="ver">Logo Kit &middot; 12 SVGs &middot; Golden Ratio Design &middot; Micro 5 + JetBrains Mono</div>
+</div>
+
+<!-- ============ 1. LOGO LOCKUPS ============ -->
+<div class="section">
+  <div class="section-title">Primary Lockup &mdash; Horizontal (No Slogan)</div>
+  <div class="section-desc">
+    Icon and wordmark side by side. Golden ratio: icon-to-cap-height &asymp; &phi;.
+    Clear space built into canvas. Use for headers, nav bars, social banners.
+  </div>
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-preview dark">
+        <div class="demo-h">
+          <svg class="i white" viewBox="0 0 32 32"><path d="M16 7l-12 12 6 6 3-3 3 3 3-3 3 3 6-6-12-12zM16 19l-3-3 3-3 3 3-3 3z"/></svg>
+          <span class="pixel t white" style="letter-spacing:2px">SPIEL ENGINE</span>
+        </div>
+      </div>
+      <div class="card-meta"><span class="name">primary-dark.svg</span><span class="badge">Dark</span></div>
+    </div>
+    <div class="card">
+      <div class="card-preview light">
+        <div class="demo-h">
+          <svg class="i black" viewBox="0 0 32 32"><path d="M16 7l-12 12 6 6 3-3 3 3 3-3 3 3 6-6-12-12zM16 19l-3-3 3-3 3 3-3 3z"/></svg>
+          <span class="pixel t black" style="letter-spacing:2px">SPIEL ENGINE</span>
+        </div>
+      </div>
+      <div class="card-meta"><span class="name">primary-light.svg</span><span class="badge">Light</span></div>
+    </div>
+    <div class="card">
+      <div class="card-preview checker">
+        <div class="demo-h">
+          <svg class="i white" viewBox="0 0 32 32"><path d="M16 7l-12 12 6 6 3-3 3 3 3-3 3 3 6-6-12-12zM16 19l-3-3 3-3 3 3-3 3z"/></svg>
+          <span class="pixel t white" style="letter-spacing:2px">SPIEL ENGINE</span>
+        </div>
+      </div>
+      <div class="card-meta"><span class="name">primary-transparent.svg</span><span class="badge">Transparent</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Slogan Lockup &mdash; Horizontal + Tagline</div>
+  <div class="section-desc">
+    Icon spans both text lines vertically. Tagline width-aligned to "SPIEL ENGINE"
+    via <span class="mono">textLength</span> justification. Use for hero sections, splash pages, docs.
+  </div>
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-preview dark">
+        <div class="demo-full">
+          <svg class="i white" viewBox="0 0 32 32"><path d="M16 7l-12 12 6 6 3-3 3 3 3-3 3 3 6-6-12-12zM16 19l-3-3 3-3 3 3-3 3z"/></svg>
+          <div class="tg">
+            <div class="pixel title white" style="letter-spacing:2px">SPIEL ENGINE</div>
+            <div class="mono sub">Work IS Content</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-meta"><span class="name">slogan-dark.svg</span><span class="badge">Dark</span></div>
+    </div>
+    <div class="card">
+      <div class="card-preview light">
+        <div class="demo-full">
+          <svg class="i black" viewBox="0 0 32 32"><path d="M16 7l-12 12 6 6 3-3 3 3 3-3 3 3 6-6-12-12zM16 19l-3-3 3-3 3 3-3 3z"/></svg>
+          <div class="tg">
+            <div class="pixel title black" style="letter-spacing:2px">SPIEL ENGINE</div>
+            <div class="mono sub">Work IS Content</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-meta"><span class="name">slogan-light.svg</span><span class="badge">Light</span></div>
+    </div>
+    <div class="card">
+      <div class="card-preview checker">
+        <div class="demo-full">
+          <svg class="i white" viewBox="0 0 32 32"><path d="M16 7l-12 12 6 6 3-3 3 3 3-3 3 3 6-6-12-12zM16 19l-3-3 3-3 3 3-3 3z"/></svg>
+          <div class="tg">
+            <div class="pixel title white" style="letter-spacing:2px">SPIEL ENGINE</div>
+            <div class="mono sub">Work IS Content</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-meta"><span class="name">slogan-transparent.svg</span><span class="badge">Transparent</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Stacked Lockup &mdash; Vertical + Tagline</div>
+  <div class="section-desc">
+    Icon centered above two-line lockup. First line "SPIEL ENGINE", second line
+    "Work IS Content" width-aligned. Use for avatars, app icons, mobile.
+  </div>
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-preview dark" style="min-height:152px">
+        <div class="demo-v">
+          <svg class="i white" viewBox="0 0 32 32"><path d="M16 7l-12 12 6 6 3-3 3 3 3-3 3 3 6-6-12-12zM16 19l-3-3 3-3 3 3-3 3z"/></svg>
+          <div class="pixel t1 white" style="letter-spacing:3px">SPIEL ENGINE</div>
+          <div class="mono t2">Work IS Content</div>
+        </div>
+      </div>
+      <div class="card-meta"><span class="name">stacked-dark.svg</span><span class="badge">Dark</span></div>
+    </div>
+    <div class="card">
+      <div class="card-preview light" style="min-height:152px">
+        <div class="demo-v">
+          <svg class="i black" viewBox="0 0 32 32"><path d="M16 7l-12 12 6 6 3-3 3 3 3-3 3 3 6-6-12-12zM16 19l-3-3 3-3 3 3-3 3z"/></svg>
+          <div class="pixel t1 black" style="letter-spacing:3px">SPIEL ENGINE</div>
+          <div class="mono t2">Work IS Content</div>
+        </div>
+      </div>
+      <div class="card-meta"><span class="name">stacked-light.svg</span><span class="badge">Light</span></div>
+    </div>
+    <div class="card">
+      <div class="card-preview checker" style="min-height:152px">
+        <div class="demo-v">
+          <svg class="i white" viewBox="0 0 32 32"><path d="M16 7l-12 12 6 6 3-3 3 3 3-3 3 3 6-6-12-12zM16 19l-3-3 3-3 3 3-3 3z"/></svg>
+          <div class="pixel t1 white" style="letter-spacing:3px">SPIEL ENGINE</div>
+          <div class="mono t2">Work IS Content</div>
+        </div>
+      </div>
+      <div class="card-meta"><span class="name">stacked-transparent.svg</span><span class="badge">Transparent</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Icon Only</div>
+  <div class="section-desc">
+    Standalone skull icon. Favicon, social avatar, browser tab.
+  </div>
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-preview dark" style="padding:24px">
+        <svg width="48" height="48" viewBox="0 0 32 32" fill="#fff"><path d="M16 7l-12 12 6 6 3-3 3 3 3-3 3 3 6-6-12-12zM16 19l-3-3 3-3 3 3-3 3z"/></svg>
+      </div>
+      <div class="card-meta"><span class="name">icon-dark.svg</span><span class="badge">Dark</span></div>
+    </div>
+    <div class="card">
+      <div class="card-preview light" style="padding:24px">
+        <svg width="48" height="48" viewBox="0 0 32 32" fill="#000"><path d="M16 7l-12 12 6 6 3-3 3 3 3-3 3 3 6-6-12-12zM16 19l-3-3 3-3 3 3-3 3z"/></svg>
+      </div>
+      <div class="card-meta"><span class="name">icon-light.svg</span><span class="badge">Light</span></div>
+    </div>
+    <div class="card">
+      <div class="card-preview checker" style="padding:24px">
+        <svg width="48" height="48" viewBox="0 0 32 32" fill="#fff"><path d="M16 7l-12 12 6 6 3-3 3 3 3-3 3 3 6-6-12-12zM16 19l-3-3 3-3 3 3-3 3z"/></svg>
+      </div>
+      <div class="card-meta"><span class="name">icon-transparent.svg</span><span class="badge">Transparent</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 2. GOLDEN RATIO CONSTRUCTION ============ -->
+<div class="section">
+  <div class="section-title">Golden Ratio &mdash; Construction Grid</div>
+  <div class="section-desc">
+    Overlay shows &phi; circles, golden rectangles, and baseline alignment.
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-preview dark">
+        <div class="demo-full" style="position:relative">
+          <svg class="i white" viewBox="0 0 32 32"><path d="M16 7l-12 12 6 6 3-3 3 3 3-3 3 3 6-6-12-12zM16 19l-3-3 3-3 3 3-3 3z"/></svg>
+          <div class="tg">
+            <div class="pixel title white" style="letter-spacing:2px; font-size:28px">SPIEL ENGINE</div>
+            <div class="mono" style="font-size:12px;color:#666">Work IS Content</div>
+          </div>
+          <div class="gr-overlay">
+            <svg width="100%" height="100%" viewBox="0 0 600 112">
+              <rect class="phi-rect" x="0" y="0" width="600" height="112"/>
+              <rect class="phi-rect" x="16" y="16" width="568" height="80"/>
+              <rect class="phi-rect" x="28" y="51" width="40" height="40" rx="4"/>
+              <line class="phi-line" x1="0" y1="66" x2="600" y2="66"/>
+              <line class="phi-line" x1="0" y1="90" x2="600" y2="90"/>
+              <line class="phi-line" x1="68" y1="0" x2="68" y2="112"/>
+              <circle class="phi-circle" cx="48" cy="71" r="24"/>
+              <circle class="phi-circle" cx="48" cy="71" r="38"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div class="card-meta"><span class="name">Slogan &phi; = 1.618</span><span class="badge">Grid</span></div>
+    </div>
+    <div class="card">
+      <div class="card-preview dark">
+        <div class="demo-v" style="position:relative">
+          <svg class="i white" viewBox="0 0 32 32"><path d="M16 7l-12 12 6 6 3-3 3 3 3-3 3 3 6-6-12-12zM16 19l-3-3 3-3 3 3-3 3z"/></svg>
+          <div class="pixel t1 white" style="letter-spacing:3px">SPIEL ENGINE</div>
+          <div class="mono t2">Work IS Content</div>
+          <div class="gr-overlay">
+            <svg width="100%" height="100%" viewBox="0 0 200 180">
+              <rect class="phi-rect" x="0" y="0" width="200" height="180"/>
+              <rect class="phi-rect" x="14" y="14" width="172" height="152"/>
+              <circle class="phi-circle" cx="100" cy="42" r="28"/>
+              <circle class="phi-circle" cx="100" cy="42" r="18"/>
+              <line class="phi-line" x1="0" y1="88" x2="200" y2="88"/>
+              <line class="phi-line" x1="100" y1="0" x2="100" y2="180"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div class="card-meta"><span class="name">Stacked &phi; Construction</span><span class="badge">Grid</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 3. GOLDEN RATIO SPECS ============ -->
+<div class="section">
+  <div class="section-title">Specifications</div>
+  <div class="specs">
+    <div class="spec"><div class="label">Base Unit (U)</div><div class="val">8 px</div></div>
+    <div class="spec"><div class="label">Golden Ratio (&phi;)</div><div class="val">1.618</div></div>
+    <div class="spec"><div class="label">Primary Canvas</div><div class="val">600 &times; 88 px</div></div>
+    <div class="spec"><div class="label">Slogan Canvas</div><div class="val">600 &times; 112 px</div></div>
+    <div class="spec"><div class="label">Stacked Canvas</div><div class="val">200 &times; 180 px</div></div>
+    <div class="spec"><div class="label">Primary Icon</div><div class="val">32 &times; 32 px</div></div>
+    <div class="spec"><div class="label">Slogan Icon</div><div class="val">40 &times; 40 px (spans 2 lines)</div></div>
+    <div class="spec"><div class="label">Icon &rarr; Text Gap</div><div class="val">16 px (2U)</div></div>
+    <div class="spec"><div class="label">Clear Space</div><div class="val">24 px (3U)</div></div>
+    <div class="spec"><div class="label">Micro 5 Sizes</div><div class="val">34 / 28 / 24 px</div></div>
+    <div class="spec"><div class="label">JetBrains Mono</div><div class="val">12 / 11 px (tagline)</div></div>
+    <div class="spec"><div class="label">Tagline Alignment</div><div class="val">textLength matching</div></div>
+  </div>
+</div>
+
+<!-- ============ 4. TYPOGRAPHY ============ -->
+<div class="section">
+  <div class="section-title">Typography</div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-preview dark" style="flex-direction:column;align-items:flex-start;gap:12px;padding:32px">
+        <div style="font-size:10px;color:#555;letter-spacing:.08em;text-transform:uppercase;font-family:'JetBrains Mono',monospace">Wordmark</div>
+        <div class="pixel" style="font-size:42px;color:#fff;letter-spacing:3px">SPIEL ENGINE</div>
+        <div class="pixel" style="font-size:34px;color:#fff;letter-spacing:2px">SPIEL ENGINE</div>
+        <div class="pixel" style="font-size:24px;color:#fff;letter-spacing:2px">SPIEL ENGINE</div>
+        <div style="margin-top:8px;font-size:11px;color:#555;font-family:'JetBrains Mono',monospace">Micro 5 &middot; Pixel font &middot; Google Fonts / OFL</div>
+      </div>
+      <div class="card-meta"><span class="name">Micro 5 &mdash; David Jonathan Ross</span><span class="badge">Pixel</span></div>
+    </div>
+    <div class="card">
+      <div class="card-preview dark" style="flex-direction:column;align-items:flex-start;gap:12px;padding:32px">
+        <div style="font-size:10px;color:#555;letter-spacing:.08em;text-transform:uppercase;font-family:'JetBrains Mono',monospace">Tagline</div>
+        <div class="mono" style="font-size:16px;color:#fff">Work IS Content</div>
+        <div class="mono" style="font-size:14px;color:#ccc">Work IS Content</div>
+        <div class="mono" style="font-size:12px;color:#888">Work IS Content</div>
+        <div style="margin-top:8px;font-size:11px;color:#555;font-family:'JetBrains Mono',monospace">JetBrains Mono &middot; Code font &middot; Google Fonts / OFL</div>
+      </div>
+      <div class="card-meta"><span class="name">JetBrains Mono &mdash; JetBrains</span><span class="badge">Mono</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 5. USAGE TABLE ============ -->
+<div class="section">
+  <div class="section-title">When to Use Which Logo</div>
+  <table class="usage-table">
+    <tr><th>Variant</th><th>File</th><th>Use Case</th></tr>
+    <tr><td>Primary</td><td class="mono">primary-{bg}.svg</td><td>Headers, nav bars, social banners, docs, slides</td></tr>
+    <tr><td>Slogan</td><td class="mono">slogan-{bg}.svg</td><td>Hero sections, landing pages, splash screens, README</td></tr>
+    <tr><td>Stacked</td><td class="mono">stacked-{bg}.svg</td><td>Avatars, app icons, mobile, constrained spaces</td></tr>
+    <tr><td>Icon</td><td class="mono">icon-{bg}.svg</td><td>Favicon, social avatar, OS app icon, browser tab</td></tr>
+    <tr><td>Dark</td><td class="mono">*-dark.svg</td><td>Black (#000) background</td></tr>
+    <tr><td>Light</td><td class="mono">*-light.svg</td><td>White (#fff) background</td></tr>
+    <tr><td>Transparent</td><td class="mono">*-transparent.svg</td><td>Any bg. White icon + text. For dark surfaces.</td></tr>
+  </table>
+</div>
+
+<!-- ============ 6. DO / DON'T ============ -->
+<div class="section">
+  <div class="section-title">Usage Rules</div>
+  <div class="dodont">
+    <div class="do-col">
+      <div class="h">&#10004; Do</div>
+      Maintain 24px clear space around the logo<br>
+      Use the provided SVG files directly, never recreated<br>
+      Keep icon-to-text proportions intact<br>
+      Use dark variant on dark backgrounds, light on light<br>
+      Link Google Fonts Micro 5 + JetBrains Mono for rendering<br>
+      Scale proportionally (lock aspect ratio)
+    </div>
+    <div class="dont-col">
+      <div class="h">&#10008; Don't</div>
+      Rearrange or restack elements<br>
+      Change colors from white/black/gray<br>
+      Stretch or distort proportions<br>
+      Add shadows, strokes, or effects<br>
+      Replace fonts with system alternatives<br>
+      Use on busy photographic backgrounds without sufficient contrast
+    </div>
+  </div>
+</div>
+
+<!-- ============ 7. LIVE SVG EXPORTS ============ -->
+<div class="section">
+  <div class="section-title">Standalone SVG Previews</div>
+  <div class="section-desc">
+    SVGs load fonts via Google Fonts @import. Render correctly in any modern browser.
+    Offline: install Micro 5 and JetBrains Mono locally.
+  </div>
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-preview dark" style="padding:16px">
+        <object data="primary-dark.svg" type="image/svg+xml" width="560" height="80" style="max-width:100%"></object>
+      </div>
+      <div class="card-meta"><span class="name">primary-dark.svg</span><span class="badge">SVG</span></div>
+    </div>
+    <div class="card">
+      <div class="card-preview dark" style="padding:16px">
+        <object data="slogan-dark.svg" type="image/svg+xml" width="560" height="105" style="max-width:100%"></object>
+      </div>
+      <div class="card-meta"><span class="name">slogan-dark.svg</span><span class="badge">SVG</span></div>
+    </div>
+    <div class="card">
+      <div class="card-preview dark" style="padding:16px">
+        <object data="stacked-dark.svg" type="image/svg+xml" width="180" height="165" style="max-width:100%"></object>
+      </div>
+      <div class="card-meta"><span class="name">stacked-dark.svg</span><span class="badge">SVG</span></div>
+    </div>
+  </div>
+</div>
+
+<div style="margin-top:80px;padding-top:32px;border-top:1px solid var(--border)">
+  <div style="font-size:11px;color:#444;font-family:'JetBrains Mono',monospace">
+    Spiel Engine &mdash; Logo Kit v1.0 &mdash; Golden Ratio Design System &mdash; 12 SVG files + preview.html<br>
+    Fonts: Micro 5 (Google Fonts) &middot; JetBrains Mono (Google Fonts) &middot; Icon: skull (svgrepo.com)<br>
+    Open this preview in a browser with internet to see correct font rendering.
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="152" viewBox="0 0 200 152">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Micro+5&family=JetBrains+Mono:wght@400;500&display=swap');
+      .pixel { font-family: 'Micro 5', 'Courier New', monospace; }
+      .mono { font-family: 'JetBrains Mono', 'Courier New', monospace; }
+    </style>
+  </defs>
+  <g transform="translate(80, 42)">
+    <path d="M16 7l-12 12 6 6 3-3 3 3 3-3 3 3 6-6-12-12zM16 19l-3-3 3-3 3 3-3 3z" fill="#ffffff"/>
+  </g>
+  <text x="100" y="90" class="pixel" fill="#ffffff" font-size="24" letter-spacing="3" text-anchor="middle">SPIEL ENGINE</text>
+  <text x="100" y="104" class="mono" fill="#666666" font-size="11" text-anchor="middle" textLength="160" lengthAdjust="spacing">Work IS Content</text>
+</svg>

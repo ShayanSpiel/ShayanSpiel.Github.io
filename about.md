@@ -17,7 +17,7 @@ I build **Session-as-Content Infrastructure** for technical founders — systems
 **The Spiel Engine — two layers.**
 
 - **Layer 1: Open Source** — the repo, the methodology, free. Clone and customize. [github.com/ShayanSpiel/SpielEngine](https://github.com/ShayanSpiel/SpielEngine)
-- **Layer 2: DFY Install — $2,900.** Full pipeline installed in your workflow. Positioning, offer design, agents, templates, 30 days review. You own it.
+- **Layer 2: DFY Install — $990.** Full pipeline installed in your workflow. Positioning, offer design, agents, templates, 30 days review. You own it.
 
 **The guarantee:** If after 30 days you've run 5 sessions through the engine and you don't have 5 standalone-tested drafts in your queue, I'll refund 100% — and you keep the system.
 
