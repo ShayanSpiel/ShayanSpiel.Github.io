@@ -21,12 +21,9 @@ code,.mono{font-family:'JetBrains Mono',monospace}
 .ctn{max-width:960px;margin:0 auto;padding:0 24px}
 
 /* ---- Top Logo ---- */
-.top-logo{text-align:center;padding:24px 0}
-.top-logo .logo-inner{
-  max-width:960px;margin:0 auto;padding:0 24px;
-  display:flex;align-items:center;justify-content:center
-}
-.top-logo img{display:block;height:auto;max-width:100%;margin:0 auto}
+.top-logo{padding:24px 0}
+.top-logo .ctn{text-align:center}
+.top-logo img{display:inline-block;height:auto;max-width:100%}
 
 /* ---- Hero ---- */
 .hero{padding:80px 0 40px;text-align:center}
