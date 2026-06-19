@@ -798,12 +798,20 @@ figure img { margin: 0; }
 }
 .related-posts ul { list-style: none; padding: 0; margin: 0; }
 .related-posts li {
-  padding: var(--s-3) 0;
+  padding: var(--s-4) 0;
   border-bottom: 1px solid var(--bd);
+  transition: background 0.15s var(--ease);
 }
 .related-posts li:last-child { border-bottom: none; }
-.related-posts a.plain { text-decoration: none; transition: color 0.15s var(--ease); }
-.related-posts a.plain:hover { color: var(--tx); }
+.related-posts li:hover { background: var(--bg-1); }
+.related-posts a.plain {
+  font-size: var(--fs-base);
+  font-weight: 600;
+  color: var(--tx);
+  text-decoration: none;
+  transition: color 0.15s var(--ease);
+}
+.related-posts li:hover a.plain { color: var(--tx-1); }
 .related-posts .small.muted { margin-top: var(--s-1); }
 
 /* ═══════════════════════════════════════════════════════
