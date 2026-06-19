@@ -10,6 +10,11 @@ image:
 permalink: /categories/
 ---
 
+<div class="ctn">
+<article style="max-width:640px;margin:60px auto 0;padding:0">
+
+<h1 style="margin-top:0">Topics</h1>
+
 <p class="lede muted">Browse by topic. Each category groups posts around a core vertical.</p>
 
 <div class="tag-cloud">
@@ -22,7 +27,7 @@ permalink: /categories/
   {%- endfor -%}
 </div>
 
-<hr>
+<hr style="margin:32px 0">
 
 {%- assign all_cats_sorted = site.posts | map: 'categories' | join: ',' | split: ',' | uniq | sort -%}
 {%- for cat in all_cats_sorted -%}
@@ -35,13 +40,13 @@ permalink: /categories/
       <ul class="list-plain">
         {%- for post in site.posts -%}
           {%- if post.categories contains cat_strip -%}
-            <li style="margin-bottom: 0.75rem;">
+            <li style="margin-bottom: 12px;">
               <a href="{{ post.url | relative_url }}" class="plain">
-                <span class="muted small" style="display: inline-block; margin-right: 0.5em;">{{ post.date | date: "%b %-d, %Y" }}</span>
+                <span class="muted small" style="display: inline-block; margin-right: 8px; font-family:var(--font-h);">{{ post.date | date: "%b %-d, %Y" }}</span>
                 <u>{{ post.title }}</u>
               </a>
               {%- if post.description -%}
-              <div class="small muted" style="margin-top: 0.15rem;">{{ post.description | strip_html | truncatewords: 28 }}</div>
+              <div class="small muted" style="margin-top: 4px;">{{ post.description | strip_html | truncatewords: 28 }}</div>
               {%- endif -%}
             </li>
           {%- endif -%}
@@ -50,3 +55,6 @@ permalink: /categories/
     </section>
   {%- endif -%}
 {%- endfor -%}
+
+</article>
+</div>

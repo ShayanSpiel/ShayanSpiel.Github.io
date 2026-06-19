@@ -10,13 +10,19 @@ image:
 permalink: /about/
 ---
 
-<div style="display:flex;align-items:center;gap:1em;margin-bottom:2em">
-  <img src="https://pbs.twimg.com/profile_images/2060556306096734210/wcCphjMi_400x400.jpg" alt="Shayan Spiel" style="width:72px;height:72px;border-radius:50%;border:1px solid var(--bd);flex-shrink:0" width="72" height="72" loading="eager"/>
-  <div>
-    <h1 style="margin:0;font-size:2rem">Shayan Spiel</h1>
-    <p class="muted" style="margin:0;font-size:0.9em">Solo operator. Based in Tehran, Iran.</p>
+<div class="ctn">
+
+<div class="hero" style="text-align:left;padding:60px 0 0">
+  <div class="hero-title-row" style="justify-content:flex-start;gap:16px">
+    <img src="https://pbs.twimg.com/profile_images/2060556306096734210/wcCphjMi_400x400.jpg" alt="Shayan Spiel" class="hero-avatar" width="64" height="64" loading="eager"/>
+    <h1 style="font-size:clamp(32px,4vw,48px)">Shayan Spiel</h1>
   </div>
+  <p class="lede" style="margin:0 0 20px;text-align:left;max-width:none">Solo operator. Based in Tehran, Iran.</p>
 </div>
+
+<hr style="margin: 40px 0;">
+
+<article style="max-width:640px;margin:0">
 
 I build **Session-as-Content Infrastructure** for technical founders — systems that turn build sessions into publishable content, so you never stop working to post.
 
@@ -56,3 +62,7 @@ If you want the long version:
 - **Based in Tehran, Iran.** MBA Strategy, Tehran University (2017). Associate in CS, Azad Karoon University (2013).
 
 I don't claim "early-stage startup experience" because what I have is **scale** experience. I shipped at traffic levels that are hard to fake and at team sizes that require process, not just hustle. If that's the kind of operator you want to learn from, the [pillar posts](/posts/) are a good place to start.
+
+</article>
+
+</div>
