@@ -153,24 +153,30 @@ var pubObs = new IntersectionObserver(function(entries) {
 }, { threshold: 0.2 });
 if (pubTrans) pubObs.observe(pubTrans);
 
-/* ---- X Tweet embed: reveal only after rendered ---- */
+/* ---- X Tweet embed: fetch oembed with dark theme ---- */
 function watchTweetLoad() {
   if (!xPost) return;
-  var tweet = xPost.querySelector('.twitter-tweet');
-  if (!tweet) return;
+  var container = document.getElementById('x-embed-container');
+  if (!container) return;
 
-  var checkInterval = setInterval(function() {
-    var iframe = tweet.querySelector('iframe');
-    if (iframe) {
-      clearInterval(checkInterval);
+  var tweetUrl = 'https://x.com/ShayanSpiel/status/2067446487005466949';
+  var oembedUrl = 'https://publish.twitter.com/oembed?url=' + encodeURIComponent(tweetUrl) + '&theme=dark&omit_script=true';
+
+  fetch(oembedUrl)
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      container.innerHTML = data.html;
+      var script = document.createElement('script');
+      script.src = 'https://platform.x.com/widgets.js';
+      script.charset = 'utf-8';
+      script.async = true;
+      script.onload = function() { xPost.classList.add('show'); };
+      document.body.appendChild(script);
+      setTimeout(function() { xPost.classList.add('show'); }, 4000);
+    })
+    .catch(function() {
       xPost.classList.add('show');
-    }
-  }, 100);
-
-  setTimeout(function() {
-    clearInterval(checkInterval);
-    xPost.classList.add('show');
-  }, 4000);
+    });
 }
 
 /* ---- Cycle words animation ---- */
