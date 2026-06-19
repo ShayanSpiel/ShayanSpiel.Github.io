@@ -198,6 +198,19 @@ var revealObs = new IntersectionObserver(function(entries) {
 }, { threshold: 0.1 });
 document.querySelectorAll('.reveal').forEach(function(el){ revealObs.observe(el); });
 
+/* ---- Nav hide on scroll down ---- */
+(function(){
+  var nav = document.querySelector('.se-nav');
+  if (!nav) return;
+  var lastY = 0;
+  window.addEventListener('scroll', function(){
+    var y = window.scrollY;
+    if (y > 80 && y > lastY) { nav.classList.add('nav-hidden'); }
+    else { nav.classList.remove('nav-hidden'); }
+    lastY = y;
+  }, {passive: true});
+})();
+
 /* ---- FAQ accordion ---- */
 document.querySelectorAll('.faq-q').forEach(function(btn) {
   btn.addEventListener('click', function() {

@@ -36,8 +36,10 @@ code,.mono{font-family:'JetBrains Mono',monospace}
   background:rgba(0,0,0,.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
   border-bottom:1px solid var(--border);
   display:flex;align-items:center;justify-content:center;
-  height:var(--nav-h);padding:0 24px
+  height:var(--nav-h);padding:0 24px;
+  transition:transform .3s ease
 }
+.se-nav.nav-hidden{transform:translateY(-100%)}
 .se-nav-brand{display:flex;align-items:center;text-decoration:none}
 .se-nav-brand img{height:24px;width:auto}
 
