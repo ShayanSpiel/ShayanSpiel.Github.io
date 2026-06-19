@@ -573,19 +573,20 @@ figure img { margin: 0; }
 }
 .post-article h1 {
   font-size: clamp(var(--fs-2xl), 4vw, var(--fs-4xl));
-  margin: 0 0 var(--s-4);
+  margin: 0 auto var(--s-4);
   text-wrap: balance;
   max-width: var(--w-read);
 }
 .post-article .lede {
   font-size: 18px;
   color: var(--tx-2);
-  margin: 0 0 var(--s-7);
+  margin: 0 auto var(--s-7);
   line-height: var(--lh-normal);
   max-width: var(--w-read);
 }
 .post-article .post-meta {
   max-width: var(--w-read);
+  margin: 0 auto;
 }
 .post-article p {
   font-size: var(--fs-md);
