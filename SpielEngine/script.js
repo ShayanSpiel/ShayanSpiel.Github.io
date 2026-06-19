@@ -198,19 +198,6 @@ var revealObs = new IntersectionObserver(function(entries) {
 }, { threshold: 0.1 });
 document.querySelectorAll('.reveal').forEach(function(el){ revealObs.observe(el); });
 
-/* ---- Mobile nav toggle ---- */
-(function(){
-  var toggle = document.querySelector('.se-nav-toggle');
-  var mobile = document.getElementById('se-nav-mobile');
-  if (!toggle || !mobile) return;
-  toggle.addEventListener('click', function(){
-    var open = mobile.hidden;
-    mobile.hidden = !open;
-    toggle.setAttribute('aria-expanded', open);
-    toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-  });
-})();
-
 /* ---- FAQ accordion ---- */
 document.querySelectorAll('.faq-q').forEach(function(btn) {
   btn.addEventListener('click', function() {
