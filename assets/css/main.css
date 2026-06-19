@@ -567,31 +567,30 @@ figure img { margin: 0; }
   padding: 0 var(--s-5);
 }
 
-/* Header elements span full container width — aligned with navbar content */
-.post-article .breadcrumb {
-  padding-top: var(--s-4);
-  margin-bottom: var(--s-4);
-}
-.post-article .post-meta {
-  margin-bottom: var(--s-4);
+/* Post header — wraps breadcrumb, meta, title, lede */
+.post-header {
+  margin-bottom: var(--s-7);
 }
 
-/* Title at reading width for readability */
+/* Header element spacing */
+.post-article .post-meta {
+  margin-bottom: var(--s-3);
+}
+
+/* Title — full width, no constraints, matches /posts/ */
 .post-article h1 {
   font-size: clamp(var(--fs-2xl), 4vw, var(--fs-4xl));
-  margin: 0 auto var(--s-4);
+  margin: 0;
   text-wrap: balance;
-  max-width: var(--w-read);
 }
 .post-article .lede {
   font-size: var(--fs-lg);
   color: var(--tx-2);
-  margin: 0 auto var(--s-6);
+  margin: 0;
   line-height: var(--lh-normal);
-  max-width: var(--w-read);
 }
 
-/* Hero image — spans full container width */
+/* Hero image — matches container width */
 .post-hero {
   margin: 0 0 var(--s-7);
 }
@@ -603,10 +602,9 @@ figure img { margin: 0; }
   border-radius: var(--r-xl);
 }
 
-/* Body content at reading width */
+/* Body content — fills container, matches /posts/ */
 .post-article .post-content {
-  max-width: var(--w-read);
-  margin: 0 auto;
+  /* No width constraint — matches .post-article */
 }
 
 /* Body content styles */
