@@ -207,12 +207,8 @@ code,.mono{font-family:'JetBrains Mono',monospace}
 }
 
 /* ---- X Embed ---- */
-.x-embed-wrap{max-width:560px;margin:0 auto 80px;opacity:0;transition:opacity .4s ease;overflow:hidden}
+.x-embed-wrap{max-width:560px;margin:0 auto 80px;opacity:0;transition:opacity .4s ease}
 .x-embed-wrap.show{opacity:1}
-.x-embed-wrap .twitter-tweet{margin:0 !important;padding:16px !important;background:var(--bg) !important;border:1px solid var(--border) !important;border-radius:12px !important;color:var(--tx2) !important}
-.x-embed-wrap .twitter-tweet p{color:var(--tx2) !important}
-.x-embed-wrap .twitter-tweet a{color:var(--tx3) !important}
-.x-embed-wrap .twitter-tweet .twitter-tweet-video{border:none !important}
 .x-embed-wrap iframe{border:none !important;max-width:100% !important}
 
 /* ---- Buffer / Platform Logos ---- */
@@ -380,6 +376,37 @@ code,.mono{font-family:'JetBrains Mono',monospace}
 }
 .dfy .cta-btn:hover{opacity:.85;transform:translateY(-2px);box-shadow:0 12px 32px rgba(255,255,255,.08)}
 .dfy .cta-btn svg{width:18px;height:18px}
+
+/* ---- Blog Links ---- */
+.se-blog-links{padding:80px 0;border-top:1px solid var(--border);margin-top:80px;text-align:center}
+.se-blog-links h2{
+  font-family:'Inter',sans-serif;font-size:clamp(24px,3vw,32px);font-weight:800;
+  letter-spacing:-.03em;color:var(--tx);margin-bottom:8px
+}
+.se-blog-sub{font-size:14px;color:var(--tx3);margin-bottom:32px}
+.se-blog-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;max-width:720px;margin:0 auto}
+.se-blog-card{
+  display:flex;flex-direction:column;gap:8px;padding:20px 24px;
+  background:var(--bg2);border:1px solid var(--border);border-radius:12px;
+  text-decoration:none;text-align:left;transition:all .2s
+}
+.se-blog-card:hover{border-color:var(--border-h);background:var(--bg3)}
+.se-blog-card-cat{
+  font-family:'Inter',sans-serif;font-size:11px;font-weight:600;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--tx4)
+}
+.se-blog-card h3{
+  font-family:'Inter',sans-serif;font-size:14px;font-weight:600;
+  color:var(--tx);line-height:1.4
+}
+.se-blog-card:hover h3{color:var(--tx2)}
+@media(max-width:640px){.se-blog-grid{grid-template-columns:1fr}}
+.se-blog-viewall{margin-top:24px}
+.se-blog-viewall-link{
+  font-family:'Inter',sans-serif;font-size:14px;font-weight:600;color:var(--tx3);
+  text-decoration:none;transition:color .15s
+}
+.se-blog-viewall-link:hover{color:var(--tx)}
 
 /* ---- Footer ---- */
 .se-footer{padding:32px 0;border-top:1px solid var(--border);text-align:center;margin-top:80px}
