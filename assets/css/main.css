@@ -42,8 +42,8 @@
   /* Line Heights */
   --lh-tight: 1.05;
   --lh-snug: 1.15;
-  --lh-normal: 1.6;
-  --lh-body: 1.8;
+  --lh-normal: 1.5;
+  --lh-body: 1.7;
 
   /* Spacing Scale */
   --s-1: 4px;
@@ -71,7 +71,7 @@
 
   /* Layout */
   --w: 960px;
-  --w-read: 640px;
+  --w-read: 720px;
   --nav-h: 56px;
 
   /* Transitions */
@@ -89,7 +89,6 @@ body {
   line-height: var(--lh-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
   overflow-x: hidden;
 }
 img, svg, video { max-width: 100%; height: auto; display: block; }
@@ -563,30 +562,26 @@ figure img { margin: 0; }
 
 /* ── Post article ── */
 .post-article {
-  max-width: var(--w);
+  max-width: var(--w-read);
   margin: 0 auto;
   padding: 0 var(--s-5);
 }
 .post-article .post-content {
-  max-width: var(--w-read);
-  margin: 0 auto;
+  /* Fills .post-article — no separate width constraint */
 }
 .post-article h1 {
   font-size: clamp(var(--fs-2xl), 4vw, var(--fs-4xl));
-  margin: 0 auto var(--s-4);
+  margin: 0 0 var(--s-4);
   text-wrap: balance;
-  max-width: var(--w-read);
 }
 .post-article .lede {
-  font-size: 18px;
+  font-size: var(--fs-lg);
   color: var(--tx-2);
-  margin: 0 auto var(--s-7);
+  margin: 0 0 var(--s-7);
   line-height: var(--lh-normal);
-  max-width: var(--w-read);
 }
 .post-article .post-meta {
-  max-width: var(--w-read);
-  margin: 0 auto;
+  /* Fills .post-article — no separate width constraint */
 }
 .post-article p {
   font-size: var(--fs-md);
@@ -618,8 +613,7 @@ figure img { margin: 0; }
   font-size: 0.9em;
 }
 .post-article pre {
-  font-size: 14px;
-  max-width: var(--w-read);
+  font-size: var(--fs-sm);
 }
 .post-article img {
   max-width: 100%;
@@ -642,7 +636,7 @@ figure img { margin: 0; }
   color: var(--tx);
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  font-size: 12px;
+  font-size: var(--fs-xs);
 }
 .post-meta-sep { color: var(--tx-4); }
 .post-meta a { color: var(--tx-2); text-decoration: none; }
@@ -659,15 +653,15 @@ figure img { margin: 0; }
 }
 
 /* ── Tags ── */
-.post-tags { margin: var(--s-6) 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.post-tags { margin: var(--s-6) 0; display: flex; flex-wrap: wrap; gap: var(--s-2); }
 .tag-chip {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 4px 10px;
+  gap: var(--s-1);
+  padding: var(--s-1) var(--s-3);
   border: 1px solid var(--bd);
   border-radius: var(--r-sm);
-  font-size: 12px;
+  font-size: var(--fs-xs);
   font-family: var(--f-h);
   color: var(--tx-2);
   text-decoration: none;
@@ -675,12 +669,11 @@ figure img { margin: 0; }
   font-weight: 500;
 }
 .tag-chip:hover { color: var(--tx); border-color: var(--bd-1); text-decoration: none; }
-.tag-cloud { display: flex; flex-wrap: wrap; gap: 6px; margin: var(--s-4) 0; }
+.tag-cloud { display: flex; flex-wrap: wrap; gap: var(--s-2); margin: var(--s-4) 0; }
 
 
 /* ── Post CTA ── */
 .post-cta {
-  max-width: var(--w-read);
   margin: var(--s-8) auto 0;
   padding: var(--s-7) var(--s-6);
   background: var(--bg-1);
@@ -694,7 +687,6 @@ figure img { margin: 0; }
 
 /* ── Related posts ── */
 .related-posts {
-  max-width: var(--w-read);
   margin: var(--s-7) auto 0;
   padding-top: var(--s-6);
   border-top: 1px solid var(--bd);
@@ -994,24 +986,24 @@ footer {
   .footer-social svg { width: 16px; height: 16px; }
   .breadcrumb { padding-top: var(--s-3); }
   .post-article h1 { font-size: clamp(24px, 6vw, 36px); }
-  .blog-filters { gap: 4px; }
-  .blog-filters .filter-btn { padding: 5px 10px; font-size: 12px; }
+  .blog-filters { gap: var(--s-1); }
+  .blog-filters .filter-btn { padding: var(--s-1) var(--s-3); font-size: var(--fs-xs); }
   .blog-row { grid-template-columns: 1fr; gap: var(--s-2); padding: var(--s-4) var(--s-3); }
-  .blog-row-date { font-size: 12px; }
+  .blog-row-date { font-size: var(--fs-xs); }
   .blog-row-cat { display: none; }
   .blog-row-arrow { display: none; }
   .blog-row-desc { white-space: normal; }
 }
 @media (max-width: 480px) {
-  .wrap, .post-article { padding: 0 16px; }
-  .nav-inner { padding: 0 16px; }
-  h1 { font-size: 28px; }
-  h2 { font-size: 22px; }
+  .wrap, .post-article { padding: 0 var(--s-4); }
+  .nav-inner { padding: 0 var(--s-4); }
+  h1 { font-size: var(--fs-2xl); }
+  h2 { font-size: var(--fs-xl); }
   .hero { padding: var(--s-5) 0; }
   .section { padding: var(--s-5) 0; }
-  .card { padding: var(--s-4) 20px; }
-  .post-card { padding: 20px; }
-  .post-card-title { font-size: 15px; }
+  .card { padding: var(--s-4) var(--s-5); }
+  .post-card { padding: var(--s-5); }
+  .post-card-title { font-size: var(--fs-base); }
 }
 
 /* ── Reduced Motion ── */
