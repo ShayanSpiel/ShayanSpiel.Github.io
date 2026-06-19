@@ -14,15 +14,15 @@ Every pillar post on the ShayanSpiel blog. Newest first.
 
 {%- assign all_cats = site.posts | map: 'categories' | join: ',' | split: ',' | uniq | sort -%}
 
-<div class="filters" id="post-filters">
-  <a href="/posts/" class="filter-btn active" data-filter="all">
+<div class="filters" id="post-filters" role="group" aria-label="Filter posts by category">
+  <a href="/posts/" class="filter-btn active" data-filter="all" role="button" aria-pressed="true">
     All <span class="count">{{ site.posts | size }}</span>
   </a>
   {%- for cat in all_cats -%}
     {%- assign cat_strip = cat | strip -%}
     {%- if cat_strip != '' -%}
       {%- assign cat_count = site.posts | where_exp: "p", "p.categories contains cat_strip" | size -%}
-      <a href="?cat={{ cat_strip | slugify }}" class="filter-btn" data-filter="{{ cat_strip | slugify }}">
+      <a href="?cat={{ cat_strip | slugify }}" class="filter-btn" data-filter="{{ cat_strip | slugify }}" role="button" aria-pressed="false">
         {{ cat_strip }} <span class="count">{{ cat_count }}</span>
       </a>
     {%- endif -%}
@@ -51,8 +51,13 @@ Every pillar post on the ShayanSpiel blog. Newest first.
   var btns = document.querySelectorAll('.filter-btn');
   var cards = document.querySelectorAll('.post-card');
   btns.forEach(function(b){
-    if(b.getAttribute('data-filter') === cat) b.classList.add('active');
-    else b.classList.remove('active');
+    if(b.getAttribute('data-filter') === cat) {
+      b.classList.add('active');
+      b.setAttribute('aria-pressed', 'true');
+    } else {
+      b.classList.remove('active');
+      b.setAttribute('aria-pressed', 'false');
+    }
   });
   cards.forEach(function(c){
     var cats = (c.getAttribute('data-categories') || '').split(' ');

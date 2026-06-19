@@ -33,7 +33,7 @@ Browse by topic. Each category groups posts around a core vertical.
       <ul class="list-plain">
         {%- for post in site.posts -%}
           {%- if post.categories contains cat_strip -%}
-            <li style="margin-bottom: var(--s-3)">
+            <li>
               <a href="{{ post.url | relative_url }}" class="plain">
                 <span class="muted small" style="display: inline-block; margin-right: var(--s-3); font-family: var(--f-h);">{{ post.date | date: "%b %-d, %Y" }}</span>
                 <u>{{ post.title }}</u>

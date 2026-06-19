@@ -13,7 +13,7 @@
           <span class="post-list-title">{{ post.title }}</span>
         </a>
         {%- if include.show_description and post.description -%}
-        <div class="small muted" style="margin-top: 0.15rem; margin-left: 6.5rem;">{{ post.description | strip_html | truncatewords: 20 }}</div>
+        <div class="small muted" style="margin-top: 2px; padding-left: 96px;">{{ post.description | strip_html | truncatewords: 20 }}</div>
         {%- endif -%}
       </li>
     {%- endfor -%}

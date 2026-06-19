@@ -17,12 +17,12 @@ layout: default
     <span class="sep" aria-hidden="true">/</span>
     <a href="/posts/">Blog</a>
     <span class="sep" aria-hidden="true">/</span>
-    <span class="current">{{ page.title | truncate: 50 }}</span>
+    <span class="current" aria-current="page">{{ page.title | truncate: 50 }}</span>
   </nav>
 
   <div class="post-meta">
     <a href="/posts/?cat={{ category_slug }}" class="post-category-label">{{ category_label }}</a>
-    <span class="post-meta-sep">·</span>
+    <span class="post-meta-sep" aria-hidden="true">&middot;</span>
     <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%b %-d, %Y" }}</time>
   </div>
 
@@ -35,12 +35,12 @@ layout: default
   <div class="post-content">
     {{ content }}
 
-    <div class="post-end-sep" aria-hidden="true">· · ·</div>
+    <div class="post-end-sep" aria-hidden="true">&middot; &middot; &middot;</div>
 
     {%- if page.tags and page.tags.size > 0 -%}
-    <div class="post-tags">
+    <div class="post-tags" role="list" aria-label="Post tags">
       {%- for tag in page.tags -%}
-        <a href="/posts/?tag={{ tag | slugify }}" class="tag-chip">#{{ tag }}</a>
+        <a href="/posts/?tag={{ tag | slugify }}" class="tag-chip" role="listitem">#{{ tag }}</a>
       {%- endfor -%}
     </div>
     {%- endif -%}
