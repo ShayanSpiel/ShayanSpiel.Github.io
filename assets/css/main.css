@@ -663,6 +663,7 @@ figure img { margin: 0; }
   margin: 0 0 var(--s-4);
 }
 .post-article .lede {
+  font-family: var(--f-h);
   font-size: var(--fs-lg);
   color: var(--tx-2);
   margin: 0;
