@@ -209,9 +209,11 @@ code,.mono{font-family:'JetBrains Mono',monospace}
 /* ---- X Embed ---- */
 .x-embed-wrap{max-width:560px;margin:0 auto 80px;opacity:0;transition:opacity .4s ease;overflow:hidden}
 .x-embed-wrap.show{opacity:1}
-.x-embed-wrap iframe{border:none !important;max-width:100% !important;background:#000 !important}
-.x-embed-wrap .twitter-tweet{margin:0 !important;padding:0 !important;background:#000 !important;border:none !important}
-.x-embed-wrap .twitter-tweet a{color:#888 !important}
+.x-embed-wrap .twitter-tweet{margin:0 !important;padding:16px !important;background:var(--bg) !important;border:1px solid var(--border) !important;border-radius:12px !important;color:var(--tx2) !important}
+.x-embed-wrap .twitter-tweet p{color:var(--tx2) !important}
+.x-embed-wrap .twitter-tweet a{color:var(--tx3) !important}
+.x-embed-wrap .twitter-tweet .twitter-tweet-video{border:none !important}
+.x-embed-wrap iframe{border:none !important;max-width:100% !important}
 
 /* ---- Buffer / Platform Logos ---- */
 .buffer-section{margin-bottom:80px;text-align:center}

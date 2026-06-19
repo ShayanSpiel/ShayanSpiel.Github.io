@@ -790,6 +790,7 @@ figure img { margin: 0; }
   border-top: 1px solid var(--bd);
 }
 .related-posts h2 {
+  font-family: var(--f-h);
   font-size: var(--fs-xs);
   margin-bottom: var(--s-4);
   color: var(--tx-3);
@@ -797,23 +798,6 @@ figure img { margin: 0; }
   letter-spacing: 0.08em;
   font-weight: 600;
 }
-.related-posts ul { list-style: none; padding: 0; margin: 0; }
-.related-posts li {
-  padding: var(--s-4) 0;
-  border-bottom: 1px solid var(--bd);
-  transition: background 0.15s var(--ease);
-}
-.related-posts li:last-child { border-bottom: none; }
-.related-posts li:hover { background: var(--bg-1); }
-.related-posts a.plain {
-  font-size: var(--fs-base);
-  font-weight: 600;
-  color: var(--tx);
-  text-decoration: none;
-  transition: color 0.15s var(--ease);
-}
-.related-posts li:hover a.plain { color: var(--tx-1); }
-.related-posts .small.muted { margin-top: var(--s-1); }
 
 /* ═══════════════════════════════════════════════════════
    POST LIST (compact)
