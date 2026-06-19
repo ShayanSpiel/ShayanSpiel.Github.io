@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="600" height="88" viewBox="0 0 600 88">
   <defs>
     <style>
-      @import url('https://fonts.googleapis.com/css2?family=Micro+5&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Micro+5&amp;display=swap');
       .pixel { font-family: 'Micro 5', 'Courier New', monospace; }
     </style>
   </defs>

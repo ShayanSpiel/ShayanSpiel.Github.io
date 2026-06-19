@@ -30,9 +30,9 @@ code,.mono{font-family:'JetBrains Mono',monospace}
 /* ---- Hero ---- */
 .hero{padding:120px 0 40px;text-align:center}
 .hero h1{
-  font-size:clamp(38px,5.5vw,68px);font-weight:900;
-  letter-spacing:-.05em;line-height:1.1;margin:0 auto 18px;
-  max-width:520px;
+  font-size:clamp(32px,4.5vw,58px);font-weight:900;
+  letter-spacing:-.04em;line-height:1.1;margin:0 auto 18px;
+  max-width:480px;
   background:linear-gradient(180deg,#fff 0%,#888 100%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;
   background-clip:text
