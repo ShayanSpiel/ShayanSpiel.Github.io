@@ -1,253 +1,183 @@
 /* =====================================================================
-   Spiel Engine — DFY Qualification Wizard
+   Spiel Engine — Landing Page Interactions
    ===================================================================== */
 
-(function () {
-  'use strict';
-
-  var GOOGLE_FORM_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLScSAISdLXFTAex_cHMmdMCXQdaMGlwLouLRmptFo_5VcdV_GA/formResponse';
-  var FORM_FIELDS = {
-    name: 'entry.1115130739',
-    email: 'entry.754901073',
-    build: 'entry.1797830417',
-    content_status: 'entry.2013515666',
-    budget: 'entry.1908783944',
-    source: 'entry.2021940811'
-  };
-
-  var currentStep = 1;
-  var totalSteps = 5;
-  var formData = {};
-
-  var els = {
-    wizard: document.getElementById('wizard'),
-    steps: document.querySelectorAll('.wizard-step'),
-    dots: document.querySelectorAll('.wizard-step-dot'),
-    counter: document.getElementById('stepCounter'),
-    nextBtn: document.getElementById('wizardNext'),
-    prevBtn: document.getElementById('wizardPrev'),
-    submitBtn: document.getElementById('wizardSubmit'),
-    form: document.getElementById('wizardForm'),
-    resultStep: document.getElementById('wizardResult'),
-    resultBody: document.getElementById('resultBody'),
-    resultCta: document.getElementById('resultCta'),
-    resultAlt: document.getElementById('resultAlt'),
-  };
-
-  if (!els.wizard) return;
-
-  function showStep(n, skipScroll) {
-    els.steps.forEach(function (s, i) {
-      s.classList.toggle('active', i + 1 === n);
-    });
-    els.dots.forEach(function (d, i) {
-      d.classList.toggle('active', i + 1 === n);
-      d.classList.toggle('done', i + 1 < n);
-    });
-    if (els.counter) {
-      els.counter.textContent = n + ' of ' + totalSteps;
-    }
-    if (els.prevBtn) els.prevBtn.style.display = n === 1 ? 'none' : 'flex';
-    if (els.nextBtn) els.nextBtn.style.display = n === totalSteps ? 'none' : 'flex';
-    if (els.submitBtn) els.submitBtn.style.display = n === totalSteps ? 'flex' : 'none';
-
-    currentStep = n;
-    if (!skipScroll) {
-      window.scrollTo({ top: els.wizard.offsetTop - 20, behavior: 'smooth' });
-    }
+/* ---- Copy to clipboard ---- */
+function setupCopy(boxId, btnId) {
+  var box = document.getElementById(boxId);
+  var btn = document.getElementById(btnId);
+  if (!box || !btn) return;
+  function cp() {
+    try { navigator.clipboard.writeText('brew install spielengine'); }
+    catch(e) { var t=document.createElement('textarea'); t.value='brew install spielengine'; document.body.appendChild(t); t.select(); document.execCommand('copy'); document.body.removeChild(t); }
+    box.classList.add('copied');
+    setTimeout(function(){ box.classList.remove('copied'); }, 2200);
   }
+  box.addEventListener('click', cp);
+}
+setupCopy('hero-cli','hero-btn');
+setupCopy('cli2','btn2');
 
-  function collectStepData(n) {
-    var step = els.steps[n - 1];
-    if (!step) return;
-    var inputs = step.querySelectorAll('input, textarea, select');
-    inputs.forEach(function (inp) {
-      if (inp.type === 'radio') {
-        if (inp.checked) formData[inp.name] = inp.value;
-      } else if (inp.type === 'checkbox') {
-        formData[inp.name] = inp.checked;
-      } else {
-        var val = inp.value.trim();
-        if (val) formData[inp.name] = val;
-      }
-    });
-  }
+/* ---- Terminal animation ---- */
+var termBody = document.getElementById('term-body');
+var termStarted = false;
 
-  function validateStep(n) {
-    var step = els.steps[n - 1];
-    if (!step) return true;
-    var inputs = step.querySelectorAll('input[required], textarea[required], select[required]');
-    for (var i = 0; i < inputs.length; i++) {
-      var inp = inputs[i];
-      if (inp.type === 'radio') {
-        var name = inp.name;
-        var checked = step.querySelector('input[name="' + name + '"]:checked');
-        if (!checked) {
-          highlightError(inp);
-          return false;
-        }
-      } else if (inp.type === 'email') {
-        var val = inp.value.trim();
-        if (!val || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
-          highlightError(inp);
-          return false;
-        }
-      } else if (!inp.value.trim()) {
-        highlightError(inp);
-        return false;
-      }
-    }
-    return true;
-  }
+function runTerminal() {
+  if (termStarted) return;
+  termStarted = true;
 
-  function highlightError(inp) {
-    inp.style.borderColor = '#FF6A00';
-    inp.focus();
-    setTimeout(function () { inp.style.borderColor = ''; }, 2000);
-  }
+  var promptLine = document.createElement('div');
+  promptLine.className = 't-line show';
+  promptLine.innerHTML = '<span class="prompt">$</span> <span class="cmd-text" id="typed-cmd"></span><span class="cursor-blink"></span>';
+  termBody.appendChild(promptLine);
 
-  function handleRadioSelection() {
-    document.querySelectorAll('.radio-group').forEach(function (group) {
-      group.addEventListener('click', function (e) {
-        var option = e.target.closest('.radio-option');
-        if (!option) return;
-        var radio = option.querySelector('input[type="radio"]');
-        if (radio) {
-          radio.checked = true;
-          group.querySelectorAll('.radio-option').forEach(function (o) {
-            o.classList.toggle('selected', o === option);
-          });
-        }
-      });
-    });
-  }
-
-  function buildResult(data) {
-    var budget = data['budget'] || '';
-    var contentStatus = data['content_status'] || '';
-    var name = data['name'] || 'there';
-
-    var detail = '';
-    if (contentStatus === 'no') {
-      detail = 'You\u2019re not publishing yet \u2014 that\u2019s the best starting point. The Spiel Engine DFY Install builds your pipeline from scratch. You get positioning, agent config, templates, and 30 days of iteration.';
-    } else if (contentStatus === 'irregular') {
-      detail = 'Your bottleneck is consistency, not quality. The Spiel Engine automates capture-to-draft so every session produces something publishable. No more starting from zero.';
+  var cmdText = '/post';
+  var charIdx = 0;
+  function typeChar() {
+    if (charIdx < cmdText.length) {
+      document.getElementById('typed-cmd').textContent += cmdText[charIdx];
+      charIdx++;
+      setTimeout(typeChar, 80 + Math.random() * 40);
     } else {
-      detail = 'You\u2019re already publishing. The Spiel Engine turns every build session into a publishable asset automatically \u2014 so you 10x output without working more.';
+      setTimeout(function() {
+        var cursor = promptLine.querySelector('.cursor-blink');
+        if (cursor) cursor.remove();
+        document.getElementById('typed-cmd').textContent = cmdText;
+        runSteps();
+      }, 400);
     }
-
-    var ctaText = '\u{1F4AC} DM me on X for questions';
-    var ctaHref = 'https://x.com/i/chat/3477724042-3477724042';
-    var altText = 'or get the open-source Spiel Engine';
-    var altHref = 'https://github.com/ShayanSpiel/SpielEngine';
-
-    if (budget === 'under1k' || budget === 'notsure') {
-      ctaText = '\u{1F680} Get the open-source Spiel Engine';
-      ctaHref = 'https://github.com/ShayanSpiel/SpielEngine';
-      altText = '\u{1F4AC} Or DM me on X with questions';
-      altHref = 'https://x.com/i/chat/3477724042-3477724042';
-    }
-
-    return { rec: name, detail: detail, ctaText: ctaText, ctaHref: ctaHref, altText: altText, altHref: altHref };
   }
+  setTimeout(typeChar, 500);
+}
 
-  function showResult(data) {
-    var result = buildResult(data);
-    if (els.wizard) els.wizard.style.display = 'none';
-    if (els.resultStep) {
-      els.resultStep.style.display = 'block';
+function runSteps() {
+  var steps = [
+    { type: 'loading', msg: '> Loading skills from .spiel/skills' },
+    { type: 'check', msg: 'LOADING SKILL/SCRIPTS' },
+    { type: 'loading', msg: '> Scanning session context' },
+    { type: 'check', msg: 'SESSION_CAPTURE' },
+    { type: 'loading', msg: '> Running ICP simulation' },
+    { type: 'check', msg: 'COMPILE (ICP World)' },
+    { type: 'loading', msg: '> Selecting format wizard' },
+    { type: 'check', msg: 'SELECT FORMAT_WIZARD' },
+    { type: 'loading', msg: '> Drafting content in your voice' },
+    { type: 'check', msg: 'DRAFTING' },
+    { type: 'loading', msg: '> Generating banner' },
+    { type: 'check', msg: 'BANNER_GENERATING' },
+    { type: 'sep' },
+    { type: 'text', msg: 'Publishing to:', cls: 'highlight' },
+    { type: 'text', msg: '  \u2713 X / Twitter', cls: 'white' },
+    { type: 'text', msg: '  \u2713 LinkedIn', cls: 'white' },
+    { type: 'text', msg: '  \u2713 Threads', cls: 'white' },
+    { type: 'text', msg: '  \u2713 Mastodon', cls: 'white' },
+    { type: 'text', msg: '  \u2713 Bluesky', cls: 'white' },
+    { type: 'text', msg: '  \u2713 Blog', cls: 'white' },
+    { type: 'sep' },
+    { type: 'check', msg: 'DONE \u2014 6 platforms published' },
+    { type: 'text', msg: '> Banner saved \u2192 ./banners/session-01.png', cls: 'dim' },
+    { type: 'text', msg: '> Draft saved \u2192 ./drafts/session-01.md', cls: 'dim' },
+    { type: 'text', msg: 'Session captured. Content created. Published.', cls: 'highlight' }
+  ];
+
+  var i = 0;
+  function nextStep() {
+    if (i >= steps.length) return;
+    var item = steps[i];
+    i++;
+
+    if (item.type === 'sep') {
+      var sep = document.createElement('div');
+      sep.className = 't-sep';
+      termBody.appendChild(sep);
+      requestAnimationFrame(function(){ sep.classList.add('show'); });
+      termBody.scrollTop = termBody.scrollHeight;
+      setTimeout(nextStep, 200);
+      return;
     }
-    if (els.resultBody) {
-      els.resultBody.innerHTML = '<p><strong>' + result.rec + '</strong>, here\u2019s what I recommend:</p><p>' + result.detail + '</p>';
-    }
-    if (els.resultCta) {
-      els.resultCta.href = result.ctaHref;
-      els.resultCta.textContent = result.ctaText;
-    }
-    if (els.resultAlt) {
-      els.resultAlt.href = result.altHref;
-      els.resultAlt.textContent = result.altText;
-      els.resultAlt.style.display = 'inline';
-    }
-    if (els.counter) els.counter.style.display = 'none';
-    if (els.dots) {
-      els.dots.forEach(function (d) { d.style.display = 'none'; });
-    }
-    var scrollTarget = els.resultStep || els.wizard;
-    window.scrollTo({ top: scrollTarget.offsetTop - 40, behavior: 'smooth' });
-  }
 
-  // Next button
-  if (els.nextBtn) {
-    els.nextBtn.addEventListener('click', function () {
-      if (!validateStep(currentStep)) return;
-      collectStepData(currentStep);
-      showStep(currentStep + 1);
-    });
-  }
+    if (item.type === 'loading') {
+      var el = document.createElement('div');
+      el.className = 't-line';
+      el.innerHTML = '<span class="msg dim">' + item.msg + '</span><span class="msg dim" id="dot-anim"></span>';
+      termBody.appendChild(el);
+      requestAnimationFrame(function(){ el.classList.add('show'); });
+      termBody.scrollTop = termBody.scrollHeight;
 
-  // Back button
-  if (els.prevBtn) {
-    els.prevBtn.addEventListener('click', function () {
-      collectStepData(currentStep);
-      showStep(currentStep - 1);
-    });
-  }
-
-  // Submit button
-  if (els.submitBtn) {
-    els.submitBtn.addEventListener('click', function () {
-      if (!validateStep(currentStep)) return;
-      collectStepData(currentStep);
-
-      // Submit all data to Google Forms
-      var iframe = document.getElementById('hidden_iframe');
-      var form = document.createElement('form');
-      form.method = 'POST';
-      form.action = GOOGLE_FORM_ACTION;
-      form.target = 'hidden_iframe';
-      form.style.display = 'none';
-
-      function addField(name, value) {
-        var el = document.createElement('input');
-        el.type = 'hidden';
-        el.name = name;
-        el.value = value || '';
-        form.appendChild(el);
-      }
-
-      addField(FORM_FIELDS.name, formData['name']);
-      addField(FORM_FIELDS.email, formData['email']);
-      addField(FORM_FIELDS.build, formData['build']);
-      addField(FORM_FIELDS.content_status, formData['content_status']);
-      addField(FORM_FIELDS.budget, formData['budget']);
-      addField(FORM_FIELDS.source, 'Landing');
-
-      document.body.appendChild(form);
-      form.submit();
-      document.body.removeChild(form);
-
-      showResult(formData);
-    });
-  }
-
-  // Keyboard support
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') {
-      var active = document.activeElement;
-      if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.tagName === 'SELECT')) {
-        e.preventDefault();
-        if (currentStep === totalSteps) {
-          if (els.submitBtn) els.submitBtn.click();
-        } else {
-          if (els.nextBtn) els.nextBtn.click();
+      var dotEl = el.querySelector('#dot-anim');
+      var dots = 0;
+      var dotTimer = setInterval(function() {
+        dots++;
+        dotEl.textContent = '.'.repeat(dots);
+        if (dots >= 3) {
+          clearInterval(dotTimer);
+          setTimeout(nextStep, 300);
         }
-      }
+      }, 150);
+      return;
     }
+
+    var el = document.createElement('div');
+    el.className = 't-line';
+    if (item.type === 'check') {
+      el.innerHTML = '<span class="check">\u2713</span> <span class="msg highlight">' + item.msg + '</span>';
+    } else {
+      el.innerHTML = '<span class="msg ' + item.cls + '">' + item.msg + '</span>';
+    }
+    termBody.appendChild(el);
+    requestAnimationFrame(function(){ el.classList.add('show'); });
+    termBody.scrollTop = termBody.scrollHeight;
+    setTimeout(nextStep, item.type === 'check' ? 150 : 200);
+  }
+
+  nextStep();
+}
+
+/* ---- Intersection Observer: Terminal ---- */
+var termObs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e){ if (e.isIntersecting) { runTerminal(); termObs.disconnect(); } });
+}, { threshold: 0.3 });
+var termSection = document.querySelector('.terminal-section');
+if (termSection) termObs.observe(termSection);
+
+/* ---- Intersection Observer: Publish transition ---- */
+var pubTrans = document.getElementById('pub-transition');
+var xPost = document.getElementById('x-post');
+var pubObs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e){ if (e.isIntersecting) { pubTrans.classList.add('show'); xPost.classList.add('show'); pubObs.disconnect(); } });
+}, { threshold: 0.2 });
+if (pubTrans) pubObs.observe(pubTrans);
+
+/* ---- Cycle words animation ---- */
+var cycleWords = ['[Topic]', '[Bug Fix]', '[Feature]', '[Architecture]', '[Lesson]'];
+var cycleIdx = 0;
+var cycleEl = document.getElementById('cycle-word');
+setInterval(function() {
+  cycleEl.style.opacity = '0';
+  cycleEl.style.transform = 'translateY(-6px)';
+  setTimeout(function() {
+    cycleIdx = (cycleIdx + 1) % cycleWords.length;
+    cycleEl.textContent = cycleWords[cycleIdx];
+    cycleEl.style.transform = 'translateY(6px)';
+    requestAnimationFrame(function() {
+      cycleEl.style.transition = 'all .3s ease';
+      cycleEl.style.opacity = '1';
+      cycleEl.style.transform = 'translateY(0)';
+    });
+  }, 250);
+}, 2200);
+
+/* ---- Scroll reveal ---- */
+var revealObs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e){ if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(function(el){ revealObs.observe(el); });
+
+/* ---- FAQ accordion ---- */
+document.querySelectorAll('.faq-q').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var card = this.closest('.faq-card');
+    var wasOpen = card.classList.contains('open');
+    document.querySelectorAll('.faq-card.open').forEach(function(el){ el.classList.remove('open'); });
+    if (!wasOpen) card.classList.add('open');
   });
-
-  // Init
-  handleRadioSelection();
-  showStep(1, true);
-
-})();
+});
