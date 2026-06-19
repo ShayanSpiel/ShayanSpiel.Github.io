@@ -777,59 +777,34 @@ figure img { margin: 0; }
   border-radius: var(--r-2xl);
   text-align: center;
 }
-.post-cta h2 { font-size: var(--fs-xl); font-weight: 700; margin: 0 0 var(--s-3); }
-.post-cta p { max-width: 32em; margin: 0 auto; font-size: var(--fs-sm); color: var(--tx-2); }
-.post-cta-actions { display: flex; justify-content: center; gap: var(--s-3); flex-wrap: wrap; margin-bottom: var(--s-6); }
-.post-cta-divider { width: 40px; height: 1px; background: var(--bd-1); margin: 0 auto var(--s-5); }
-.post-cta-meta { color: var(--tx-3); font-size: var(--fs-xs) !important; }
-.post-cta-meta a { color: var(--tx-2); text-decoration: underline; text-decoration-color: var(--bd-1); text-underline-offset: 2px; transition: color 0.15s var(--ease), text-decoration-color 0.15s var(--ease); }
-.post-cta-meta a:hover { color: var(--tx); text-decoration-color: var(--tx-3); }
+.post-cta h2 { margin: 0 0 var(--s-3); }
+.post-cta p { max-width: 32em; margin: 0 auto; }
+.post-cta-actions { display: flex; justify-content: center; gap: var(--s-3); flex-wrap: wrap; margin-top: var(--s-5); }
+.post-cta .small.muted { margin-top: var(--s-5); }
 
 /* ── Related posts ── */
 .related-posts {
   margin: var(--s-8) auto 0;
-  padding: var(--s-7) var(--s-6);
-  background: var(--bg-1);
-  border: 1px solid var(--bd);
-  border-radius: var(--r-2xl);
+  padding-top: var(--s-6);
+  border-top: 1px solid var(--bd);
 }
 .related-posts h2 {
   font-size: var(--fs-xs);
-  margin-bottom: var(--s-5);
+  margin-bottom: var(--s-4);
   color: var(--tx-3);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-weight: 600;
-  font-family: var(--f-h);
 }
 .related-posts ul { list-style: none; padding: 0; margin: 0; }
 .related-posts li {
-  margin-bottom: 0;
-  padding: var(--s-4) var(--s-4);
-  border-radius: var(--r-lg);
-  transition: background 0.15s var(--ease);
+  padding: var(--s-3) 0;
+  border-bottom: 1px solid var(--bd);
 }
-.related-posts li:hover { background: var(--bg-2); }
-.related-posts li + li { margin-top: var(--s-1); border-top: 1px solid var(--bd); }
-.related-posts li + li:hover { border-top-color: transparent; }
-.related-posts a.plain {
-  font-family: var(--f-h);
-  font-size: var(--fs-base);
-  font-weight: 500;
-  color: var(--tx-1);
-  text-decoration: none;
-  transition: color 0.15s var(--ease);
-}
+.related-posts li:last-child { border-bottom: none; }
+.related-posts a.plain { text-decoration: none; transition: color 0.15s var(--ease); }
 .related-posts a.plain:hover { color: var(--tx); }
-.related-posts a.plain u { text-decoration: underline; text-decoration-color: var(--bd-1); text-underline-offset: 3px; transition: text-decoration-color 0.15s var(--ease); }
-.related-posts a.plain:hover u { text-decoration-color: var(--tx-3); }
-.related-posts .small.muted {
-  font-family: var(--f-h);
-  font-size: var(--fs-sm);
-  color: var(--tx-3);
-  margin-top: var(--s-1);
-  line-height: var(--lh-normal);
-}
+.related-posts .small.muted { margin-top: var(--s-1); }
 
 /* ═══════════════════════════════════════════════════════
    POST LIST (compact)
@@ -1140,9 +1115,7 @@ footer {
   .post-cta { padding: var(--s-5) var(--s-4); }
   .post-cta-actions { flex-direction: column; }
   .post-cta .btn { width: 100%; }
-  .post-cta-actions { margin-bottom: var(--s-5); }
-  .related-posts { padding: var(--s-5) var(--s-4); }
-  .related-posts li { padding: var(--s-3) var(--s-3); }
+  .post-cta-actions { margin-top: var(--s-4); }
   .section { padding: var(--s-6) 0; }
   .hero { padding: var(--s-6) 0; }
   .hero-avatar-wrap { flex-direction: column; gap: var(--s-3); }
