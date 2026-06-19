@@ -26,6 +26,9 @@
     if (typeof gtag === 'function') {
       gtag('event', eventName, params || {});
     }
+    if (typeof posthog === 'object' && typeof posthog.capture === 'function') {
+      posthog.capture(eventName, params || {});
+    }
   }
 
   function getPage() {
