@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spiel Engine — Content from code. Automatically.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#000000;--bg2:#0a0a0a;--bg3:#111111;--border:#1a1a1a;--border-h:#2a2a2a;--tx:#ededed;--tx2:#888888;--tx3:#555555;--tx4:#333333}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--tx);-webkit-font-smoothing:antialiased;line-height:1.6}
+.ctn{max-width:900px;margin:0 auto;padding:0 24px}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 0;backdrop-filter:blur(16px);background:rgba(0,0,0,.7)}
+.nav-in{max-width:900px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-weight:700;font-size:15px;display:flex;align-items:center;gap:8px;letter-spacing:-.01em}
+.logo svg{width:20px;height:20px}
+.nav-r{display:flex;gap:24px;align-items:center}
+.nav-r a{font-size:13px;color:var(--tx3);text-decoration:none;transition:color .2s}
+.nav-r a:hover{color:var(--tx)}
+@media(max-width:640px){.nav-r{display:none}}
+
+/* HERO — Ultra minimal */
+.hero{padding:160px 0 80px;text-align:center}
+.hero h1{font-size:clamp(40px,6vw,72px);font-weight:800;letter-spacing:-.045em;line-height:1;margin-bottom:20px}
+.hero p{font-size:18px;color:var(--tx2);max-width:440px;margin:0 auto 40px;line-height:1.5}
+.cli-row{max-width:440px;margin:0 auto;display:flex;align-items:center;gap:10px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;cursor:pointer;transition:all .25s}
+.cli-row:hover{border-color:var(--border-h)}
+.cli-row.copied{border-color:#22c55e;box-shadow:0 0 24px rgba(34,197,94,.1)}
+.cli-row code{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:500;flex:1;display:flex;align-items:center;gap:10px}
+.cli-row code span{color:var(--tx4)}
+.cli-row .cpy{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.05);border:none;cursor:pointer;transition:all .2s;flex-shrink:0}
+.cli-row .cpy:hover{background:rgba(255,255,255,.1)}
+.cli-row .cpy svg{width:16px;height:16px;color:var(--tx3);transition:color .2s}
+.cli-row .cpy:hover svg{color:var(--tx)}
+.cli-row .cpy.ok svg{color:#22c55e}
+.cli-row .fb{font-size:12px;color:#22c55e;font-weight:600;opacity:0;transition:opacity .2s;white-space:nowrap}
+.cli-row .fb.show{opacity:1}
+
+/* DIVIDER */
+.divider{height:1px;background:var(--border);margin:0 0 80px}
+
+/* STATS */
+.stats{display:flex;justify-content:center;gap:48px;margin-bottom:80px;flex-wrap:wrap}
+.stat{text-align:center}
+.stat-num{font-size:36px;font-weight:800;letter-spacing:-.04em}
+.stat-label{font-size:13px;color:var(--tx3);margin-top:4px}
+
+/* X POST */
+.post-section{margin-bottom:80px}
+.x-preview{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:24px;max-width:560px;margin:0 auto}
+.xp-h{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.xp-av{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#ededed,#888);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#000}
+.xp-n{font-size:15px;font-weight:600}
+.xp-hk{font-size:13px;color:var(--tx3)}
+.xp-badge{font-size:10px;padding:3px 8px;background:rgba(255,255,255,.06);color:var(--tx2);border-radius:100px;font-weight:500;margin-left:auto;border:1px solid var(--border)}
+.xp-body{font-size:15px;line-height:1.6;color:var(--tx2);margin-bottom:14px}
+.xp-body strong{color:var(--tx)}
+.xp-tags{display:flex;gap:6px;margin-bottom:16px}
+.xp-tag{font-size:12px;color:var(--tx3);background:rgba(255,255,255,.04);padding:4px 10px;border-radius:4px;border:1px solid var(--border)}
+.xp-foot{display:flex;gap:20px;padding-top:14px;border-top:1px solid var(--border)}
+.xp-stat{font-size:13px;color:var(--tx3);display:flex;align-items:center;gap:5px}
+.xp-stat svg{width:14px;height:14px}
+
+/* FEATURES — minimal list */
+.features{margin-bottom:80px}
+.feat-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border-radius:14px;overflow:hidden}
+.feat{background:var(--bg2);padding:24px;display:flex;align-items:flex-start;gap:16px;transition:background .2s}
+.feat:hover{background:var(--bg3)}
+.feat-ic{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(255,255,255,.04)}
+.feat-ic svg{width:18px;height:18px;color:var(--tx2)}
+.feat h3{font-size:15px;font-weight:600;margin-bottom:3px}
+.feat p{font-size:13px;color:var(--tx3);line-height:1.5}
+
+/* CHANNELS */
+.channels{margin-bottom:80px;text-align:center}
+.channels h3{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--tx4);margin-bottom:16px}
+.ch-row{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.ch{padding:8px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:6px;font-size:13px;color:var(--tx2)}
+
+/* LIVE FEED */
+.feed{margin-bottom:80px}
+.feed-h{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:28px}
+.feed-dot{width:8px;height:8px;background:#ef4444;border-radius:50%;animation:lp 1.5s ease infinite}
+@keyframes lp{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(239,68,68,.4)}50%{opacity:.7;box-shadow:0 0 0 8px rgba(239,68,68,0)}}
+.feed-h span{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--tx3)}
+.feed-list{max-width:480px;margin:0 auto;display:flex;flex-direction:column;gap:1px;background:var(--border);border-radius:12px;overflow:hidden}
+.fi{background:var(--bg2);padding:14px 18px;display:flex;align-items:center;gap:12px;opacity:0;transform:translateY(6px);animation:fi .4s ease forwards}
+.fi:nth-child(1){animation-delay:.1s}.fi:nth-child(2){animation-delay:.25s}.fi:nth-child(3){animation-delay:.4s}.fi:nth-child(4){animation-delay:.55s}
+@keyframes fi{to{opacity:1;transform:translateY(0)}}
+.fi-ic{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(255,255,255,.04)}
+.fi-ic svg{width:14px;height:14px;color:var(--tx2)}
+.fi-c{flex:1;min-width:0}
+.fi-t{font-size:13px;font-weight:500}
+.fi-d{font-size:11px;color:var(--tx4);font-family:'JetBrains Mono',monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fi-tm{font-size:11px;color:var(--tx4);white-space:nowrap;flex-shrink:0}
+
+/* AHA */
+.aha{text-align:center;margin-bottom:80px}
+.aha h2{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-.04em;line-height:1.05;max-width:520px;margin:0 auto}
+.aha h2 em{font-style:normal;color:var(--tx)}
+
+/* CTA */
+.cta{text-align:center;margin-bottom:100px}
+.cta p{font-size:16px;color:var(--tx3);margin-bottom:24px}
+.cta-btn{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:var(--tx);color:var(--bg);font-weight:600;font-size:15px;border-radius:10px;text-decoration:none;transition:all .2s}
+.cta-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(237,237,237,.1)}
+.cta-note{margin-top:14px;font-size:13px;color:var(--tx4)}
+
+footer{padding:24px 0;border-top:1px solid var(--border);text-align:center}
+footer p{font-size:12px;color:var(--tx4)}
+</style>
+</head>
+<body>
+
+<nav>
+<div class="nav-in">
+<div class="logo">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+Spiel Engine
+</div>
+<div class="nav-r"><a href="#features">Features</a><a href="#output">Output</a><a href="#cta">Get Started</a></div>
+</div>
+</nav>
+
+<section class="hero">
+<div class="ctn">
+<h1>Content from code.<br>Automatically.</h1>
+<p>Stop writing marketing. Start shipping code. Spiel Engine turns your sessions into posts.</p>
+<div class="cli-row" id="cli5">
+<code><span>$</span> brew install spielengine</code>
+<span class="fb" id="fb5">Copied ✓</span>
+<button class="cpy" id="btn5"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="ci"><path d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9.75a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="ck" style="display:none"><path d="m4.5 12.75 6 6 9-13.5"/></svg></button>
+</div>
+</div>
+</section>
+
+<div class="ctn">
+
+<div class="stats">
+<div class="stat"><div class="stat-num">30s</div><div class="stat-label">Terminal to timeline</div></div>
+<div class="stat"><div class="stat-num">6+</div><div class="stat-label">Platforms</div></div>
+<div class="stat"><div class="stat-num">0</div><div class="stat-label">Writing required</div></div>
+</div>
+
+<div class="divider"></div>
+
+<section class="post-section" id="output">
+<div class="x-preview">
+<div class="xp-h">
+<div class="xp-av">S</div>
+<div><div class="xp-n">Shayan <span class="xp-hk">@ShayanSpiel</span></div></div>
+<div class="xp-badge">Auto-generated</div>
+</div>
+<div class="xp-body">
+<strong>Just shipped rate limiting to our API gateway.</strong><br><br>
+200 lines of code. 3 hours of debugging. Here's what most devs get wrong about rate limiting — it's not about blocking users. It's about protecting the experience for everyone.
+</div>
+<div class="xp-tags">
+<span class="xp-tag">#buildinpublic</span>
+<span class="xp-tag">#webdev</span>
+<span class="xp-tag">#api</span>
+</div>
+<div class="xp-foot">
+<span class="xp-stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/></svg> 72</span>
+<span class="xp-stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 0 0-3.7-3.7 48.678 48.678 0 0 0-7.324 0 4.006 4.006 0 0 0-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 0 0 3.7 3.7 48.656 48.656 0 0 0 7.324 0 4.006 4.006 0 0 0 3.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3-3 3"/></svg> 18</span>
+<span class="xp-stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z"/></svg> 4.2K</span>
+</div>
+</div>
+</section>
+
+<section class="features" id="features">
+<div class="feat-list">
+<div class="feat">
+<div class="feat-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5"/></svg></div>
+<div><h3>Session as Content</h3><p>Your coding session IS the source material. No separate content process. Every commit becomes a narrative.</p></div>
+</div>
+<div class="feat">
+<div class="feat-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z"/></svg></div>
+<div><h3>Banner Generator</h3><p>Auto-generate OG images and social banners from session highlights. No design tools needed.</p></div>
+</div>
+<div class="feat">
+<div class="feat-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13.5 16.875h3.375m0 0h3.375m-3.375 0V13.5m0 3.375v3.375M6 10.5h2.25a2.25 2.25 0 0 0 2.25-2.25V6a2.25 2.25 0 0 0-2.25-2.25H6A2.25 2.25 0 0 0 3.75 6v2.25A2.25 2.25 0 0 0 6 10.5Zm0 9.75h2.25A2.25 2.25 0 0 0 10.5 18v-2.25a2.25 2.25 0 0 0-2.25-2.25H6a2.25 2.25 0 0 0-2.25 2.25V18A2.25 2.25 0 0 0 6 20.25Zm9.75-9.75H18a2.25 2.25 0 0 0 2.25-2.25V6A2.25 2.25 0 0 0 18 3.75h-2.25A2.25 2.25 0 0 0 13.5 6v2.25a2.25 2.25 0 0 0 2.25 2.25Z"/></svg></div>
+<div><h3>Buffer Publish MCP</h3><p>6+ platform instant publish. X, LinkedIn, Threads, Mastodon, Bluesky, and your blog.</p></div>
+</div>
+<div class="feat">
+<div class="feat-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"/><path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg></div>
+<div><h3>ICP World Simulator</h3><p>Simulates how your ideal audience engages with content before you publish.</p></div>
+</div>
+<div class="feat">
+<div class="feat-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3"/></svg></div>
+<div><h3>Blog Publish Engine</h3><p>Long-form SEO content from session depth. Publishes to your blog automatically.</p></div>
+</div>
+<div class="feat">
+<div class="feat-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg></div>
+<div><h3>Instant Distribution</h3><p>Terminal to timeline in under 30 seconds. No scheduling tools needed.</p></div>
+</div>
+</div>
+</section>
+
+<section class="channels">
+<h3>Publishes to</h3>
+<div class="ch-row">
+<div class="ch">X / Twitter</div>
+<div class="ch">LinkedIn</div>
+<div class="ch">Threads</div>
+<div class="ch">Mastodon</div>
+<div class="ch">Bluesky</div>
+<div class="ch">WordPress</div>
+<div class="ch">Ghost</div>
+<div class="ch">Dev.to</div>
+<div class="ch">Hashnode</div>
+<div class="ch">Custom API</div>
+</div>
+</section>
+
+<section class="feed">
+<div class="feed-h"><span class="feed-dot"></span><span>Live Session</span></div>
+<div class="feed-list">
+<div class="fi"><div class="fi-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5"/></svg></div><div class="fi-c"><div class="fi-t">Commit captured</div><div class="fi-d">feat: add rate limiter to API gateway</div></div><span class="fi-tm">3s ago</span></div>
+<div class="fi"><div class="fi-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z"/></svg></div><div class="fi-c"><div class="fi-t">Narrative generated</div><div class="fi-d">"Why Rate Limiting Matters More Than You Think"</div></div><span class="fi-tm">11s ago</span></div>
+<div class="fi"><div class="fi-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3"/></svg></div><div class="fi-c"><div class="fi-t">Published to 6 platforms</div><div class="fi-d">X • LinkedIn • Threads • Mastodon • Bluesky • Blog</div></div><span class="fi-tm">18s ago</span></div>
+<div class="fi"><div class="fi-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15.362 5.214A8.252 8.252 0 0 1 12 21 8.25 8.25 0 0 1 6.038 7.047 8.287 8.287 0 0 0 9 9.601a8.983 8.983 0 0 1 3.361-6.867 8.21 8.21 0 0 0 3 2.48Z"/></svg></div><div class="fi-c"><div class="fi-t">Engagement spike</div><div class="fi-d">+31 likes • +9 retweets in the last hour</div></div><span class="fi-tm">2m ago</span></div>
+</div>
+</section>
+
+<section class="aha">
+<h2>You were <em>already doing marketing.</em> You just didn't see it.</h2>
+</section>
+
+<section class="cta" id="cta">
+<p>Want Spiel Engine set up for your workflow?</p>
+<a href="https://x.com/ShayanSpiel" target="_blank" class="cta-btn">
+DM @ShayanSpiel
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
+</a>
+<div class="cta-note">DFY setup — we handle everything</div>
+</section>
+</div>
+
+<footer><p>Spiel Engine — Ship code. Ship content.</p></footer>
+
+<script>
+const box=document.getElementById('cli5'),btn=document.getElementById('btn5'),fb=document.getElementById('fb5');
+const ci=btn.querySelector('.ci'),ck=btn.querySelector('.ck');
+async function cp(){try{await navigator.clipboard.writeText('brew install spielengine')}catch(e){const t=document.createElement('textarea');t.value='brew install spielengine';document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t)}box.classList.add('copied');btn.classList.add('ok');fb.classList.add('show');ci.style.display='none';ck.style.display='block';setTimeout(()=>{box.classList.remove('copied');btn.classList.remove('ok');fb.classList.remove('show');ci.style.display='block';ck.style.display='none'},2000)}
+box.addEventListener('click',cp);
+</script>
+</body>
+</html>
