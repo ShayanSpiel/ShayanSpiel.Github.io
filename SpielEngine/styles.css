@@ -23,11 +23,9 @@ code,.mono{font-family:'JetBrains Mono',monospace}
 /* ---- Top Logo ---- */
 .top-logo{text-align:center;padding:20px 0}
 .top-logo .logo-inner{
-  display:inline-flex;align-items:center;gap:8px;
-  font-family:'Inter',sans-serif;font-weight:700;font-size:15px;
-  color:var(--tx);letter-spacing:-.01em
+  display:inline-flex;align-items:center;justify-content:center
 }
-.top-logo svg{width:20px;height:20px}
+.top-logo object{display:block}
 
 /* ---- Hero ---- */
 .hero{padding:120px 0 40px;text-align:center}
