@@ -78,27 +78,27 @@
 
   var variant = assignVariant();
 
-  /* Variant copy — bite-sized, positioning-aligned */
+  /* Variant copy — user-approved, conversion-optimized */
   var COPY = {
     control: {
-      headline: 'Work Is Content.',
-      subheadline: 'Spiel Engine turns your coding sessions into publishable content. No extra effort.',
+      headline: 'Capture. Simulate. Publish.',
+      subheadline: 'Your coding sessions are already content. Spiel Engine extracts it, in your voice, for your audience, and publish instantly across every platform.',
       supporting: 'Capture. Simulate. <span class="hl">Publish.</span>'
     },
     variant_a: {
-      headline: 'You\'re Already Creating Content.',
-      subheadline: 'Every session, commit, and decision is content. Spiel just publishes it for you.',
-      supporting: 'Stop choosing between building <span class="hl">and posting.</span>'
+      headline: 'Turn Build Sessions Into Distribution',
+      subheadline: 'Every coding session automatically becomes ready to publish content including tweets, threads, and blog posts based on your real development work.',
+      supporting: 'Your sessions. <span class="hl">Your voice. Published.</span>'
     },
     variant_b: {
-      headline: 'Every Commit Is Marketing.',
-      subheadline: 'Your build sessions are your best marketing material. Spiel captures and publishes them.',
-      supporting: 'Develop. Ship. <span class="hl">It publishes.</span>'
+      headline: 'Build. Ship. Post. Automatically.',
+      subheadline: 'Generate and publish content directly from Cursor, Claude Code, and AI agent sessions without switching tools or writing posts manually.',
+      supporting: 'From terminal <span class="hl">to timeline.</span>'
     },
     variant_c: {
-      headline: 'Builders Don\'t Write Content.',
-      subheadline: 'They ship code. Spiel turns what you already do into content that reaches people.',
-      supporting: 'Build. <span class="hl">Spiel handles the rest.</span>'
+      headline: 'Never Start From A Blank Tweet Again',
+      subheadline: 'Spiel turns real product development into authentic, context-aware content so you always have something meaningful to publish in seconds.',
+      supporting: 'Real work. <span class="hl">Real content. Every time.</span>'
     }
   };
 
