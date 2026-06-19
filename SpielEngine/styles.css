@@ -23,26 +23,26 @@ code,.mono{font-family:'JetBrains Mono',monospace}
 /* ---- Top Logo ---- */
 .top-logo{text-align:center;padding:24px 0}
 .top-logo .logo-inner{
-  display:flex;align-items:center;justify-content:center;
-  width:100%
+  max-width:960px;margin:0 auto;padding:0 24px;
+  display:flex;align-items:center;justify-content:center
 }
-.top-logo img{display:block;margin:0 auto;height:auto}
+.top-logo img{display:block;height:auto;max-width:100%;margin:0 auto}
 
 /* ---- Hero ---- */
-.hero{padding:120px 0 40px;text-align:center}
+.hero{padding:80px 0 40px;text-align:center}
 .hero h1{
   font-size:clamp(38px,5.5vw,68px);font-weight:900;
-  letter-spacing:-.05em;line-height:1.02;margin-bottom:18px;
+  letter-spacing:-.05em;line-height:1.02;margin-bottom:18px;max-width:620px;margin-left:auto;margin-right:auto;
   background:linear-gradient(180deg,#fff 0%,#888 100%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;
   background-clip:text
 }
 .hero h1 .hl{color:var(--tx3)}
-.hero p{font-size:17px;color:var(--tx3);max-width:520px;margin:0 auto 36px;line-height:1.6}
+.hero p{font-size:17px;color:var(--tx3);max-width:540px;margin:0 auto 36px;line-height:1.6}
 
 /* ---- CLI Copy Box ---- */
 .cli-box{
-  max-width:520px;margin:0 auto;display:flex;align-items:center;gap:12px;
+  max-width:540px;margin:0 auto;display:flex;align-items:center;gap:12px;
   background:var(--bg2);border:1px solid var(--border);border-radius:12px;
   padding:14px 16px;cursor:pointer;transition:all .3s
 }
@@ -69,7 +69,7 @@ code,.mono{font-family:'JetBrains Mono',monospace}
 .cli-box .copy-btn:hover{background:rgba(255,255,255,.08)}
 .cli-box .copy-btn svg{width:16px;height:16px;color:var(--tx4);transition:color .2s}
 .cli-box .copy-btn:hover svg{color:var(--tx2)}
-.hero-note{margin-top:14px;font-size:13px;color:var(--tx4);text-align:center}
+.hero-note{margin-top:14px;font-size:14px;color:var(--tx4);text-align:center}
 
 /* ---- Stats ---- */
 .stats{display:flex;justify-content:center;gap:56px;margin:60px 0;flex-wrap:wrap}
@@ -85,7 +85,7 @@ code,.mono{font-family:'JetBrains Mono',monospace}
 .divider{height:1px;background:var(--border);margin:0 0 80px}
 
 /* ---- Terminal Section ---- */
-.terminal-section{margin-bottom:16px;text-align:center}
+.terminal-section{margin-bottom:48px;text-align:center}
 .terminal-section .section-tag{
   font-family:'Inter',sans-serif;font-size:12px;font-weight:600;
   letter-spacing:.08em;text-transform:uppercase;color:var(--tx4);margin-bottom:20px
@@ -195,7 +195,7 @@ code,.mono{font-family:'JetBrains Mono',monospace}
 }
 
 /* ---- Features / Pricing Section ---- */
-.features-section{margin-bottom:0}
+.features-section{margin-bottom:60px}
 .section-intro{text-align:center;margin-bottom:40px}
 .section-intro h2{
   font-family:'Inter',sans-serif;font-size:clamp(22px,3vw,32px);font-weight:800;
@@ -246,7 +246,7 @@ code,.mono{font-family:'JetBrains Mono',monospace}
 .card-btn svg{width:16px;height:16px}
 
 /* ---- FAQ ---- */
-.faq{margin-top:20px}
+.faq{margin-top:0}
 .faq-title{
   font-family:'Inter',sans-serif;font-size:12px;font-weight:600;
   letter-spacing:.08em;text-transform:uppercase;color:var(--tx4);
