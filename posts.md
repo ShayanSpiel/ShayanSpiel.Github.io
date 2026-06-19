@@ -54,7 +54,7 @@ permalink: /posts/
   var visibleCount = PAGE_SIZE;
 
   var params = new URLSearchParams(window.location.search);
-  var cat = params.get('tag') || params.get('cat');
+  var cat = params.get('cat');
 
   var allRows = document.querySelectorAll('.blog-row');
   var btns = document.querySelectorAll('.filter-btn');

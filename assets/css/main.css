@@ -544,12 +544,6 @@ figure img { margin: 0; }
 /* ═══════════════════════════════════════════════════════
    POST LAYOUT
    ═══════════════════════════════════════════════════════ */
-.page-header {
-  margin-bottom: var(--s-7);
-}
-.page-header h1 { margin-bottom: var(--s-3); }
-.page-header .lede { margin: 0; }
-
 /* Breadcrumb — separated from navbar */
 .breadcrumb {
   display: flex;
@@ -588,6 +582,9 @@ figure img { margin: 0; }
   color: var(--tx-2);
   margin: 0 0 var(--s-7);
   line-height: var(--lh-normal);
+  max-width: var(--w-read);
+}
+.post-article .post-meta {
   max-width: var(--w-read);
 }
 .post-article p {
@@ -678,7 +675,7 @@ figure img { margin: 0; }
 }
 .tag-chip:hover { color: var(--tx); border-color: var(--bd-1); text-decoration: none; }
 .tag-cloud { display: flex; flex-wrap: wrap; gap: 6px; margin: var(--s-4) 0; }
-.category-chip { font-weight: 600; }
+
 
 /* ── Post CTA ── */
 .post-cta {
@@ -722,7 +719,7 @@ figure img { margin: 0; }
    POST LIST (compact)
    ═══════════════════════════════════════════════════════ */
 .post-list { list-style: none; padding: 0; margin: 0; }
-.post-list-item { margin-bottom: 4px; }
+
 .post-list-link {
   display: flex;
   align-items: baseline;
