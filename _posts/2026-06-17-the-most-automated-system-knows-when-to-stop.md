@@ -7,9 +7,9 @@ description: "Why AI content automation fails without quality gates, and the han
 categories:
   - AI Systems
 tags:
-  - AI
-  - content pipeline
-  - quality gates
+  - ai
+  - content-pipeline
+  - quality-gates
   - automation
 image:
   path: /assets/banners/2026-06-17-ai-wont-fix-blog.png

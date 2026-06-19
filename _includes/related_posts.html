@@ -8,7 +8,7 @@
           {%- assign match_count = match_count | plus: 1 -%}
         {%- endif -%}
       {%- endfor -%}
-      {%- if match_count > 1 -%}
+      {%- if match_count >= 1 -%}
         {%- assign related = related | push: post -%}
       {%- endif -%}
     {%- endif -%}

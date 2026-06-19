@@ -5,12 +5,12 @@ date: 2026-06-19 09:00:00 +0000
 description: "Content strategy is the wrong abstraction for builders. You don't need a plan. You need a system that turns building into publishing."
 seo_keyword: "content pipeline versus content strategy"
 tags:
-  - content pipeline
-  - technical founders
-  - building in public
+  - content-pipeline
+  - technical-founder
+  - building-in-public
   - session-as-content
 categories:
-  - Building in Public
+  - building-in-public
 ---
 
 There is a word that kills more builder content pipelines than any other.

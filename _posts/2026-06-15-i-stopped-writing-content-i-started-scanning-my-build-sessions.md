@@ -7,10 +7,10 @@ description: "5-document developer content pipeline that converts build sessions
 categories:
   - Content Pipeline
 tags:
-  - content pipeline
-  - build sessions
-  - developer workflow
-  - building in public
+  - content-pipeline
+  - build-sessions
+  - developer-workflow
+  - building-in-public
 image:
   path: /assets/banners/2026-06-15-pillar-blog-five-strategy-pages.png
   width: 1200
