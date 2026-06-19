@@ -2,27 +2,20 @@
 layout: default
 ---
 
-<article>
+<article class="post-article">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="{{ '/' | relative_url }}">Home</a>
+    <span class="sep" aria-hidden="true">/</span>
+    <span class="current">{{ page.title }}</span>
+  </nav>
+
   <h1>{{ page.title }}</h1>
 
   {%- if page.description -%}
-  <p class="lede muted">{{ page.description }}</p>
+  <p class="lede">{{ page.description }}</p>
   {%- endif -%}
 
-  {{ content }}
-
-  <ul class="post-archive">
-    {%- assign sorted = site.posts | sort: 'date' | reverse -%}
-    {%- for post in sorted -%}
-      <li class="post-archive-item">
-        <a href="{{ post.url | relative_url }}" class="plain">
-          <span class="post-archive-title">{{ post.title }}</span>
-          <span class="post-archive-meta">{{ post.date | date: "%b %-d, %Y" }} &middot; {{ post.categories | first | default: 'Post' }}</span>
-          {%- if post.description -%}
-          <span class="post-archive-desc">{{ post.description | strip_html | truncatewords: 28 }}</span>
-          {%- endif -%}
-        </a>
-      </li>
-    {%- endfor -%}
-  </ul>
+  <div class="post-content">
+    {{ content }}
+  </div>
 </article>

@@ -6,28 +6,21 @@ permalink: /404.html
 sitemap: false
 ---
 
-<div class="ctn">
-<article style="max-width:640px;margin:60px auto 0;padding:0">
+That page does not exist.
 
-<p class="lede muted">Error 404</p>
-<h1>That page does not exist.</h1>
-<p>But three things do, and they are the point of this site.</p>
+But three things do, and they are the point of this site:
 
-<ul class="list-plain">
-  <li><a href="/" class="plain"><strong>Home</strong></a> — who I am and what I ship.</li>
-  <li><a href="/posts/" class="plain"><strong>Posts</strong></a> — every pillar post, newest first.</li>
-  <li><a href="/categories/" class="plain"><strong>Categories</strong></a> — posts grouped by category.</li>
-</ul>
+- [Home](/) — who I am and what I ship.
+- [Blog](/posts/) — every pillar post, newest first.
+- [Topics](/categories/) — posts grouped by category.
 
-<h2>Most-read this month</h2>
+## Most-recent posts
+
 <ul class="list-plain">
   {%- assign top = site.posts | sort: 'date' | reverse | slice: 0, 5 -%}
   {%- for post in top -%}
-    <li><a href="{{ post.url | relative_url }}" class="plain"><u>{{ post.title }}</u></a></li>
+    <li style="margin-bottom: var(--s-3)"><a href="{{ post.url | relative_url }}" class="plain"><u>{{ post.title }}</u></a></li>
   {%- endfor -%}
 </ul>
 
-<p><a href="/contact/" class="plain"><strong>Tell me what broke →</strong></a></p>
-
-</article>
-</div>
+[Tell me what broke →](/contact/)

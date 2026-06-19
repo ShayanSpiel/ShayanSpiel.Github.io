@@ -1,11 +1,7 @@
 entries:
   - title: about
     url: /about/
-  - title: posts
+  - title: blog
     url: /posts/
-  - title: topics
-    url: /categories/
-  - title: sitemap
-    url: /sitemap/
   - title: contact
     url: /contact/

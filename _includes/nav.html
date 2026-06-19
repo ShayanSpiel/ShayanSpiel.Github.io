@@ -1,13 +1,16 @@
-<nav class="nav-bar">
+<nav class="nav">
   <div class="nav-inner">
-    <a class="nav-brand" href="{{ '/' | relative_url }}">
-      <svg viewBox="0 0 32 32" fill="white" xmlns="http://www.w3.org/2000/svg" style="width:22px;height:22px"><path d="M16 7l-12 12 6 6 3-3 3 3 3-3 3 3 6-6-12-12zM16 19l-3-3 3-3 3 3-3 3z"/></svg>
+    <a class="nav-brand" href="{{ '/' | relative_url }}" aria-label="Shayan Spiel — Home">
+      <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M16 7l-12 12 6 6 3-3 3 3 3-3 3 3 6-6-12-12zM16 19l-3-3 3-3 3 3-3 3z"/></svg>
     </a>
     <span class="nav-links">
-      {%- for item in site.data.menu.entries -%}
-        <a href="{{ item.url | relative_url }}">{{ item.title | capitalize }}</a>
-      {%- endfor -%}
+      <a href="/about/">About</a>
+      <a href="/posts/">Blog</a>
+      <a href="/contact/">Contact</a>
     </span>
-    <a href="/SpielEngine/" class="nav-cta">Get Spiel</a>
+    <a href="/SpielEngine/" class="nav-cta">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M13 5l7 7-7 7M5 12h15"/></svg>
+      Get Spiel
+    </a>
   </div>
 </nav>

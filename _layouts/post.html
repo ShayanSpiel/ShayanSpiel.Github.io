@@ -11,42 +11,42 @@ layout: default
   {%- assign category_label = 'Post' -%}
 {%- endif -%}
 
-<article>
+<article class="post-article">
   <nav class="breadcrumb" aria-label="Breadcrumb">
     <a href="{{ '/' | relative_url }}">Home</a>
-    <span class="sep" aria-hidden="true">&rsaquo;</span>
-    <a href="/posts/">Posts</a>
-    <span class="sep" aria-hidden="true">&rsaquo;</span>
-    <span class="current">{{ page.title | truncate: 60 }}</span>
+    <span class="sep" aria-hidden="true">/</span>
+    <a href="/posts/">Blog</a>
+    <span class="sep" aria-hidden="true">/</span>
+    <span class="current">{{ page.title | truncate: 50 }}</span>
   </nav>
 
-  <p class="post-meta small">
-    <a href="/categories/#{{ category_slug }}" class="plain post-category-label">{{ category_label }}</a>
-    <span class="post-meta-sep">&middot;</span>
+  <div class="post-meta">
+    <a href="/posts/?cat={{ category_slug }}" class="post-category-label">{{ category_label }}</a>
+    <span class="post-meta-sep">·</span>
     <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%b %-d, %Y" }}</time>
-  </p>
+  </div>
 
   <h1>{{ page.title }}</h1>
 
   {%- if page.description -%}
-  <p class="lede muted">{{ page.description }}</p>
+  <p class="lede">{{ page.description }}</p>
   {%- endif -%}
 
-  <div class="prose">
+  <div class="post-content">
     {{ content }}
+
+    <div class="post-end-sep" aria-hidden="true">· · ·</div>
+
+    {%- if page.tags and page.tags.size > 0 -%}
+    <div class="post-tags">
+      {%- for tag in page.tags -%}
+        <a href="/posts/?tag={{ tag | slugify }}" class="tag-chip">#{{ tag }}</a>
+      {%- endfor -%}
+    </div>
+    {%- endif -%}
+
+    {%- include related_posts.html -%}
+
+    {%- include post_cta.html -%}
   </div>
-
-  <div class="post-end-sep" aria-hidden="true">&middot;&middot;&middot;</div>
-
-  {%- if page.tags and page.tags.size > 0 -%}
-  <div class="post-tags">
-    {%- for tag in page.tags -%}
-      <a href="/tags/#{{ tag | slugify }}" class="plain tag-chip">#{{ tag }}</a>
-    {%- endfor -%}
-  </div>
-  {%- endif -%}
-
-  {%- include related_posts.html -%}
-
-  {%- include post_cta.html -%}
 </article>

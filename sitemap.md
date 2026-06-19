@@ -8,29 +8,27 @@ sitemap: false
 
 All blog posts, newest first:
 
-<ul class="post-list">
-{%- assign sorted = site.posts | sort: 'date' | reverse -%}
-{%- for post in sorted -%}
-  <li>
-    <a href="{{ post.url | relative_url }}" class="plain post-list-link">
+<div class="grid" style="grid-template-columns: 1fr; gap: 0; margin-top: var(--s-5);">
+  {%- assign sorted = site.posts | sort: 'date' | reverse -%}
+  {%- for post in sorted -%}
+    <a href="{{ post.url | relative_url }}" class="post-list-link">
       <span class="post-list-date">{{ post.date | date: "%b %-d, %Y" }}</span>
       <span class="post-list-title">{{ post.title }}</span>
     </a>
-  </li>
-{%- endfor -%}
-</ul>
+  {%- endfor -%}
+</div>
 
-Pages:
+<hr class="divider">
 
-<ul>
-  <li><a href="/">Home</a></li>
-  <li><a href="/about/">About</a></li>
-  <li><a href="/contact/">Contact</a></li>
-  <li><a href="/posts/">All posts</a></li>
-  <li><a href="/categories/">Topics</a></li>
-  <li><a href="/tags/">Tags</a></li>
-  <li><a href="/SpielEngine/">Spiel Engine — DFY Install</a></li>
-  <li><a href="/GeoGent-Waitlist/">GeoGent — Alpha waitlist</a></li>
-</ul>
+## Pages
 
-Also available as <a href="/sitemap.xml">XML sitemap</a>.
+- [Home](/)
+- [About](/about/)
+- [Contact](/contact/)
+- [All posts](/posts/)
+- [Topics](/categories/)
+- [Tags](/tags/)
+- [Spiel Engine — DFY Install](/SpielEngine/)
+- [GeoGent — Alpha waitlist](/GeoGent-Waitlist/)
+
+Also available as [XML sitemap](/sitemap.xml).

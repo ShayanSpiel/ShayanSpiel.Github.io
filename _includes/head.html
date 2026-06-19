@@ -10,29 +10,33 @@
 
 <head>
   <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#000000" />
   <meta name="color-scheme" content="dark" />
   <meta name="google-site-verification" content="LvKy8YQ0XGZPYu4bQ9JIhaFmdX3W9Ag7eSPYGTE-ORU" />
-  <meta name="format-detection" content="telephone=no" />
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
-  <meta name="googlebot" content="index, follow" />
 
-  <!-- Canonical URL -->
   <link rel="canonical" href="{{ canonical_url }}" />
+
+  <!-- Critical: inline font-display override to prevent FOUT -->
+  <style>
+    @font-face {
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 400 900;
+      font-display: swap;
+      src: local('Inter');
+    }
+  </style>
 
   <!-- Preconnect for performance -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preconnect" href="https://platform.twitter.com" />
-  <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
 
-  <!-- Fonts: preloaded for zero-FOUT -->
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <!-- Fonts with display=swap, preloaded -->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Merriweather:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Merriweather:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 
-  <!-- jekyll-seo-tag emits: title, description, canonical, og:*, twitter:*, JSON-LD -->
   {%- seo -%}
 
   {%- if page.layout == 'post' -%}
@@ -54,7 +58,6 @@
 
   <!-- Feeds -->
   <link rel="alternate" type="application/rss+xml" title="{{ site_name }} — RSS" href="{{ '/feed.xml' | relative_url }}" />
-  <link rel="alternate" type="application/atom+xml" title="{{ site_name }} — Atom" href="{{ '/feed.atom' | relative_url }}" />
   <link rel="sitemap" type="application/xml" title="Sitemap" href="{{ '/sitemap.xml' | relative_url }}" />
 
   <!-- Stylesheet -->
