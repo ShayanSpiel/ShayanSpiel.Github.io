@@ -119,7 +119,7 @@ Stop planning content. Start building with a pipeline.
 
 Your build sessions are already content. They always were. You just needed a way to extract them without switching identities.
 
-The Spiel Engine is that pipeline. Open source. Free. Clone it. Run it. See what comes out.
+The Spiel Engine is that pipeline. Open source. Free. Clone it. Run it. See what comes out. The full [content pipeline for developers](/content-pipeline/) removes the identity switch between building and publishing.
 
 The question is not "what should I post about?" The question is "what did I build today?"
 

@@ -2,7 +2,7 @@
 layout: post
 title: "3 things shipped to the Spiel Engine this week"
 date: 2026-06-18 09:00:00 +0000
-description: "The Spiel Engine is a pipeline that turns a build session into a publishable post. The gap that kept showing up was not the writing. It was the publishing — the last 20% that takes 80% of the energy."
+description: "The Spiel Engine is a pipeline that turns a build session into a publishable post. The gap that kept showing up was not the writing. It was the publishing, the last 20% that takes 80% of the energy."
 seo_keyword: "Spiel Engine product update"
 categories:
   - Spiel Engine
@@ -61,4 +61,4 @@ No editorial calendar. No "what should I post" loops. No blank pages.
 
 → You build. The pipeline posts. You stay a builder.
 
-Clone the repo. Run the setup. Reply with what you'd ship.
+Clone the repo. Run the setup. Reply with what you'd ship. The full [open source announcement](/spielengine-is-now-open-source/) has the architecture details.

@@ -3,7 +3,7 @@ layout: post
 title: "How I Built a Developer Content Pipeline in 72 Hours"
 permalink: /72-hour-content-sprint/
 date: 2026-06-10 08:00:00 +0000
-categories: [Lead Systems]
+categories: ["Content Pipeline"]
 seo_keyword: "developer content pipeline workflow"
 image:
   path: /assets/uploads/2026-06-10-72-hour-content-sprint/banner.png
@@ -24,11 +24,11 @@ For a long time, I kept running into the same problem:
 
 I would finish building something, close the session, and the output would basically disappear.
 
-Not literally — the code was there, the ideas were there — but nothing _carried forward_ into content, writing, or distribution.
+Not literally, the code was there, the ideas were there, but nothing _carried forward_ into content, writing, or distribution.
 
 So the next day, I'd start again from zero.
 
-That disconnect became the real bottleneck. Not writing. Not ideas. Just capture. What I needed was a developer content pipeline — a repeatable workflow that preserves every session's output and turns it into durable content.
+That disconnect became the real bottleneck. Not writing. Not ideas. Just capture. What I needed was a developer content pipeline, a repeatable workflow that preserves every session's output and turns it into durable content.
 
 So I ran a 72-hour experiment to build it.
 
@@ -88,7 +88,7 @@ Instead of scattered notes, everything now becomes a structured file:
 The goal is simple:  
 my system should understand what I already know.
 
-This is the same principle behind the [session-as-content methodology](/session-as-content/) — every build session produces durable knowledge.
+This is the same principle behind the [session-as-content methodology](/session-as-content/), every build session produces durable knowledge. The [content pipeline for developers](/content-pipeline/) makes this repeatable.
 
 ---
 
@@ -126,7 +126,7 @@ I stopped trying to make every post do everything.
 
 Each piece now has a single responsibility.
 
-I wrote about how this pipeline evolved from [declarative rules to agentic loops](/from-declarative-rules-to-agentic-loops/) — the same system that runs this classification.
+I wrote about how this pipeline evolved from [declarative rules to agentic loops](/from-declarative-rules-to-agentic-loops/), the same system that runs this classification.
 
 ---
 
@@ -152,7 +152,7 @@ That fixed most of the noise.
 
 ## What I learned
 
-### 1. Output is not the hard part — retention is
+### 1. Output is not the hard part, retention is
 
 Most people don’t lack ideas.
 

@@ -3,7 +3,7 @@ layout: post
 title: "Session as Content: Automate Building in Public"
 permalink: /session-as-content/
 date: 2026-06-09 09:00:00 +0000
-categories: [Lead Systems]
+categories: ["Content Pipeline"]
 seo_keyword: "build in public automation"
 image:
   path: /assets/uploads/2026-06-08-session-as-content-building-is-the-content/banner.png
@@ -30,19 +30,19 @@ I tried to automate building in public for years. Every content calendar failed.
 - Friday: publish.
 - Saturday: 0 comments.
 
-And the entire time, I was building real things — shipping features, making decisions, learning lessons that changed how I think.
+And the entire time, I was building real things, shipping features, making decisions, learning lessons that changed how I think.
 
 None of that became content.
 
 Because I treated content as a separate job. A parallel universe. Building was real. Content was scheduled.
 
-That separation is the problem. Build in public automation means content is a byproduct of building — not a separate calendar.
+That separation is the problem. Build in public automation means content is a byproduct of building, not a separate calendar.
 
 ---
 
 ## The real issue: two jobs, one of them fake
 
-Every builder knows this pattern. You spend the week doing real work — decisions under pressure, features shipping or breaking, patterns emerging in real time — and then Sunday comes.
+Every builder knows this pattern. You spend the week doing real work, decisions under pressure, features shipping or breaking, patterns emerging in real time, and then Sunday comes.
 
 And suddenly you are asking: "What should I post?"
 
@@ -84,7 +84,7 @@ Work → Session Log → Strategy → Compiler (8 steps) → Draft → Gate (30 
 
 No separate "content creation phase." Content is extracted from reality, not invented in parallel to it.
 
-This system is the open-source [Spiel Engine](https://github.com/ShayanSpiel/SpielEngine). But extraction alone is not enough. Every post needs a job.
+This system is the open-source [Spiel Engine](https://github.com/ShayanSpiel/SpielEngine). The full [content pipeline for developers](/content-pipeline/) removes the identity switch. But extraction alone is not enough. Every post needs a job.
 
 ---
 
@@ -120,7 +120,7 @@ That is it. Not a diary. A structured capture.
 
 ### 3. Strategy
 
-The LLM loads 5 strategy pages first — ICP profile, funnel matrix, voice guidelines, voice examples, and the session-as-content methodology itself. Then it classifies the session: 1 of 10 archetypes (S1-S10), a content vertical, a funnel stage, and an ICP problem layer.
+The LLM loads 5 strategy pages first, ICP profile, funnel matrix, voice guidelines, voice examples, and the session-as-content methodology itself. Then it classifies the session: 1 of 10 archetypes (S1-S10), a content vertical, a funnel stage, and an ICP problem layer.
 
 S1 (System Build) → Builder-to-Lead vertical → MOFU → L3 problem.
 S2 (Ship) → Automation vertical → TOFU → L1 problem.
@@ -132,13 +132,13 @@ The session stays organic. Strategy loads around it.
 
 ### 4. Compile
 
-The Content Engine Compiler runs — 8 steps that invert the orientation.
+The Content Engine Compiler runs, 8 steps that invert the orientation.
 
 First, reconstruct the ICP's mental world: their beliefs, frustrations, identity tension, and confusion state. The session is not the subject. The ICP world is.
 
 Then load the session as pure evidence (never the story itself) and map it to that world: what ICP belief does the session contradict? What frustration does it expose? What mental model breaks?
 
-Extract 6 meanings — systemic, behavioral, philosophical, contrarian, leverage, human — and select the one with the most tension for the ICP. Compress everything into a single core insight: one sentence about an ICP world shift.
+Extract 6 meanings, systemic, behavioral, philosophical, contrarian, leverage, human, and select the one with the most tension for the ICP. Compress everything into a single core insight: one sentence about an ICP world shift.
 
 This core insight becomes the lens for every post.
 
@@ -207,7 +207,7 @@ Without strategy, session output is noise. With an ICP, a [content funnel](/from
 
 ## Proof (real usage)
 
-This system runs on the open-source [Spiel Engine](/spielengine-is-now-open-source/) — Session-as-Content Infrastructure. Every session produces a log. The Compiler inverts it into an ICP-world insight. That insight becomes drafts. 30 checks gate them. A human publishes.
+This system runs on the open-source [Spiel Engine](/spielengine-is-now-open-source/), Session-as-Content Infrastructure. Every session produces a log. The Compiler inverts it into an ICP-world insight. That insight becomes drafts. 30 checks gate them. A human publishes.
 
 Clone it: **[github.com/ShayanSpiel/SpielEngine](https://github.com/ShayanSpiel/SpielEngine)**
 

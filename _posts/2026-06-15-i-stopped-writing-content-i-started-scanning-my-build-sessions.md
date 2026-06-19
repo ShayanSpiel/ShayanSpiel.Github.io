@@ -5,7 +5,7 @@ date: 2026-06-15 09:00:00 +0000
 seo_keyword: "build session to blog post workflow"
 description: "5-document developer content pipeline that converts build sessions to LinkedIn, X, and blog drafts in 2 minutes of capture. No blank pages, no editorial calendar."
 categories:
-  - Lead Systems
+  - Content Pipeline
 tags:
   - content pipeline
   - build sessions
@@ -165,7 +165,7 @@ The 5 are not independent. They are a compiled configuration. The pipeline makes
 
 If you post 2 times a week to a personal account, 5 documents is overkill. Ignore this.
 
-If you generate 20-30 pieces per month from your actual shipped work, and each one must sound like you, serve your buyer, and pass a quality bar, then 5 strategy documents is the minimum viable architecture for a build-to-blog workflow.
+If you generate 20-30 pieces per month from your actual shipped work, and each one must sound like you, serve your buyer, and pass a quality bar, then 5 strategy documents is the minimum viable architecture for a [content pipeline for developers](/content-pipeline/).
 
 ```
 git clone https://github.com/ShayanSpiel/SpielEngine.git

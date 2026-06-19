@@ -2,7 +2,7 @@
 layout: post
 title: "Your Engineering Decisions Are Already Content"
 date: 2026-06-18 09:00:00 +0000
-description: "The things you build, the decisions you make, the tradeoffs you navigate — that is not just work. That is content waiting to be published."
+description: "The things you build, the decisions you make, the tradeoffs you navigate, that is not just work. That is content waiting to be published."
 seo_keyword: "engineering decisions as content"
 categories:
   - Building in Public
@@ -19,7 +19,7 @@ image:
 
 For years I believed my work was not content.
 
-I built things. Shipped features. Refactored systems. Content was what you wrote *after* you built, in a separate mode called "marketing" — one I never felt qualified for.
+I built things. Shipped features. Refactored systems. Content was what you wrote *after* you built, in a separate mode called "marketing", one I never felt qualified for.
 
 This belief sounds rational, but it is a trap. It cost me thousands of potential connections, deals that never started, and a reputation that stayed invisible despite years of shipping real work.
 
@@ -110,7 +110,7 @@ The quality of the output is bounded by the quality of the work. Good work, good
 
 ## What This Means for You
 
-If you are a technical founder reading this and feeling the tension — the pull between building and posting, the guilt of invisible expertise, the quiet shame of empty DMs despite shipping real things — here is the takeaway:
+If you are a technical founder reading this and feeling the tension, the pull between building and posting, the guilt of invisible expertise, the quiet shame of empty DMs despite shipping real things, here is the takeaway:
 
 You do not need to become a content creator.
 
@@ -118,6 +118,6 @@ You need to stop throwing away the content you already create every time you bui
 
 Your engineering decisions are content. They always were. You just needed a way to extract them without switching identities.
 
-Build the work. Capture the decisions. Let the system do the rest.
+Build the work. Capture the decisions. Let the system do the rest. The [session-as-content methodology](/session-as-content/) turns every build session into publishable drafts. The [Spiel Engine](/SpielEngine/) automates the extraction.
 
 The output is a byproduct. The input is the thing that matters.

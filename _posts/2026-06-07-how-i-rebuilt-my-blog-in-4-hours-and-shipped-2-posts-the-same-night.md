@@ -28,11 +28,11 @@ The blog existed for 6 months. The home page rendered fine. The about page said 
 
 The reason: I built the blog as a *demo*, not as a *brand*. The theme was elegant. The content was empty. I never wired the blog to the vault. I never wired the blog to the resume. I never wrote a publish script. The blog was a folder on a server. The vault was a folder on my laptop. The two folders did not know about each other.
 
-The asymmetry was embarrassing. The vault had 126 markdown files — 10 strategy pages, 30 concept pages, 8 entity pages, 1 corpus analysis. The blog had 1 page that said "demo." The brain was full. The mouth was empty.
+The asymmetry was embarrassing. The vault had 126 markdown files, 10 strategy pages, 30 concept pages, 8 entity pages, 1 corpus analysis. The blog had 1 page that said "demo." The brain was full. The mouth was empty.
 
 The fix is the publish layer. The publish layer is a script that takes a vault draft, transforms it for Jekyll, commits it, and pushes to GitHub Pages. One command. One URL. One published post.
 
-![the new blog home — hero, latest, currently shipping](../assets/uploads/2026-06-06-how-i-rebuilt-my-blog-in-4-hours-and-shipped-2-posts-the-same-night/16-blog-home.png)
+![the new blog home, hero, latest, currently shipping](../assets/uploads/2026-06-06-how-i-rebuilt-my-blog-in-4-hours-and-shipped-2-posts-the-same-night/16-blog-home.png)
 *the new blog home. hero at the top, latest 5 posts in the middle, "currently shipping" at the bottom, what-this-site-is at the very bottom. no demo content. no "this is a Jekyll theme demo." the home page is the brand.*
 
 ## The constraint (CLI mode, broken Ruby, one terminal)
@@ -50,7 +50,7 @@ The constraint was the design. If the publish step needs a GUI, it does not work
 
 The script is at `scripts/publish-blog.sh`. It is 416 lines. It is executable. It does 5 things: read the source, transform the frontmatter, copy the screenshots, stage in git, push to GitHub Pages. The script is the publish layer.
 
-![the about page — personal brand, credibility-first](../assets/uploads/2026-06-06-how-i-rebuilt-my-blog-in-4-hours-and-shipped-2-posts-the-same-night/17-blog-about.png)
+![the about page, personal brand, credibility-first](../assets/uploads/2026-06-06-how-i-rebuilt-my-blog-in-4-hours-and-shipped-2-posts-the-same-night/17-blog-about.png)
 *the about page. personal brand, credibility-first. the 8-year story arc. 5 offers with detail. contact at the bottom. no "this is a Jekyll theme demo." the about page is the proof layer.*
 
 ## The 4-file pipeline (vault → queue → script → live URL)
@@ -76,7 +76,7 @@ The flow is:
 
 The whole flow is one command. The user runs the command, walks away, and the post is live. The script is the publish layer.
 
-![the script that does the work — 416 lines, 5 flags](../assets/uploads/2026-06-06-how-i-rebuilt-my-blog-in-4-hours-and-shipped-2-posts-the-same-night/20-publish-blog-script.png)
+![the script that does the work, 416 lines, 5 flags](../assets/uploads/2026-06-06-how-i-rebuilt-my-blog-in-4-hours-and-shipped-2-posts-the-same-night/20-publish-blog-script.png)
 *the script. 416 lines, 5 flags (`--list`, `--dry-run`, `--yes`, `--force`, `--no-build`). 2 hard gates (`status: ready-to-publish` + `standalone_test: passed|skipped`). one failure mode that matters: a missing screenshot. the script flags the missing path and refuses to commit.*
 
 ## The transformation layer (vault frontmatter → Jekyll frontmatter)
@@ -155,10 +155,10 @@ The git push layer is the trust boundary. The user does not need to verify the b
 
 The rebuild shipped 4 deliverables in 4 hours:
 
-- **1 home page rewrite** — `index.md` now has a hero, latest 5 posts, "currently shipping," and a "what this site is" section. No more demo content.
-- **1 about page rewrite** — `about.md` now has a personal-brand story arc, the 5 offers with detail, and contact info. No more "this is a Jekyll theme demo."
-- **2 pillar posts** — this post + the prior post on the second-brain architecture. Both published the same night.
-- **15 screenshots rendered** — 7 for the first pillar, 8 for this pillar, all 1600x1600 PNGs, all in `assets/uploads/`.
+- **1 home page rewrite**, `index.md` now has a hero, latest 5 posts, "currently shipping," and a "what this site is" section. No more demo content.
+- **1 about page rewrite**, `about.md` now has a personal-brand story arc, the 5 offers with detail, and contact info. No more "this is a Jekyll theme demo."
+- **2 pillar posts**, this post + the prior post on the second-brain architecture. Both published the same night.
+- **15 screenshots rendered**, 7 for the first pillar, 8 for this pillar, all 1600x1600 PNGs, all in `assets/uploads/`.
 
 The brand hierarchy is now consistent. The blog about-page mirrors the wiki `shayanspiel` page. The wiki `background-and-credibility` page is the proof layer the about-page pulls from. The X handle is `@ShayanSpiel`. The LinkedIn URL is `linkedin.com/in/shayantawabi`. The blog is at `https://shayanspiel.github.io`. the contact email is on the [contact page](/contact/). Every surface points to the same person.
 
@@ -175,23 +175,23 @@ The fix is a script. The script takes a file path. The script does the rest. The
 
 The lesson is: you can't post if you can't publish. You can't publish if the publish step is 10 minutes of clicking. The 10 minutes is the friction. The friction is the reason you don't post. The script is the friction-killer.
 
-If you have a vault, build the script. The script is 4 hours. The script is the publish layer of Session-as-Content Infrastructure. [Open-source entry →](https://github.com/ShayanSpiel/SpielEngine)
+If you have a vault, build the script. The script is 4 hours. The script is the publish layer of Session-as-Content Infrastructure. [Open-source entry →](https://github.com/ShayanSpiel/SpielEngine) The full story of why [your engineering decisions are already content](/your-engineering-decisions-are-already-content/) starts here.
 
-![the post landing in `_posts/` — proof the pipeline works end-to-end](../assets/uploads/2026-06-06-how-i-rebuilt-my-blog-in-4-hours-and-shipped-2-posts-the-same-night/23-published-post.png)
+![the post landing in `_posts/`, proof the pipeline works end-to-end](../assets/uploads/2026-06-06-how-i-rebuilt-my-blog-in-4-hours-and-shipped-2-posts-the-same-night/23-published-post.png)
 *the post landing in `_posts/`. the title slug is right. the frontmatter is transformed. the screenshots are in `assets/uploads/`. the git diff is clean. the post is one `git push` away from being live. proof the pipeline works end-to-end.*
 
 ## Links
 
 **Internal (vault):**
-- shayanspiel — the brand, the person writing this blog
-- blog — the GH Pages platform entity
-- background-and-credibility — the proof-points layer
-- pillar-guide-method — the atomization workflow
-- shayanspiel-content-system — the META page for the content engine
+- shayanspiel, the brand, the person writing this blog
+- blog, the GH Pages platform entity
+- background-and-credibility, the proof-points layer
+- pillar-guide-method, the atomization workflow
+- shayanspiel-content-system, the META page for the content engine
 
 **External (sources):**
-- [Jekyll](https://jekyllrb.com) — the static site generator
-- [riggraz/no-style-please](https://github.com/riggraz/no-style-please) — the Jekyll theme
-- [GitHub Pages](https://pages.github.com) — the hosting platform
-- [qlmanage](https://ss64.com/mac/qlmanage.html) — the macOS Quick Look CLI
+- [Jekyll](https://jekyllrb.com), the static site generator
+- [riggraz/no-style-please](https://github.com/riggraz/no-style-please), the Jekyll theme
+- [GitHub Pages](https://pages.github.com), the hosting platform
+- [qlmanage](https://ss64.com/mac/qlmanage.html), the macOS Quick Look CLI
 

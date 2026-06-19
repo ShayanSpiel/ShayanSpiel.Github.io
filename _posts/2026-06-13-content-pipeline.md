@@ -14,7 +14,7 @@ tags:
   - operational-pattern
   - psychological-trap
 description: "Stop treating content as a separate job. Learn how a content pipeline for developers removes the identity switch between building and publishing."
-categories: ["Lead Systems"]
+categories: ["Content Pipeline"]
 seo_keyword: "content pipeline for developers"
 image:
   path: /assets/banners/2026-06-13-pillar-blog-spiel-engine-identity.png
@@ -23,9 +23,9 @@ image:
 permalink: /content-pipeline/
 ---
 
-![Content pipeline for developers — stop treating content as a separate job](/assets/banners/2026-06-13-pillar-blog-spiel-engine-identity.png)
+![Content pipeline for developers, stop treating content as a separate job](/assets/banners/2026-06-13-pillar-blog-spiel-engine-identity.png)
 
-Every content tool I tried asked me to be someone else. What I needed was a content pipeline for developers — one that works from the terminal, doesn't require identity switching, and treats posts as a byproduct of building.
+Every content tool I tried asked me to be someone else. What I needed was a content pipeline for developers, one that works from the terminal, doesn't require identity switching, and treats posts as a byproduct of building.
 
 Not explicitly. But the implication was always the same:
 
@@ -169,7 +169,7 @@ Every alternative puts you in a role you did not choose. This one puts you in th
 
 ## Why I built it
 
-I could not find a tool that let me stay a builder. Every tool asked me to become something else. So I built the [Spiel Engine](/spielengine-is-now-open-source/)  -  the thing that would let me stay who I am.
+I could not find a tool that let me stay a builder. Every tool asked me to become something else. So I built the [Spiel Engine](/spielengine-is-now-open-source/), the thing that would let me stay who I am. The full [session-as-content methodology](/session-as-content/) is public.
 
 The whole methodology is public. The concepts are free. The templates are open.
 

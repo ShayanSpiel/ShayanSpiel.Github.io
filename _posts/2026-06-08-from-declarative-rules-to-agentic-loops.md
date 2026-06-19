@@ -2,7 +2,7 @@
 layout: post
 title: "From Declarative Rules To Agentic Loops"
 date: 2026-06-08 03:35:01 +0000
-categories: ["AI & Agents"]
+categories: ["AI Systems"]
 seo_keyword: "agentic AI workflow architecture"
 description: "Why your LLM agents ignore half your rules. Learn the agentic AI workflow architecture that replaces fragile prompts with state-machine loops that actually work."
 image:
@@ -25,7 +25,7 @@ This is not a model problem. It is an architecture problem. You built a constitu
 
 Here is the loop that fixed it, the industry framing everyone in the agentic-AI space is talking about, and why prompt engineering is the past but agentic loops are the future.
 
-![The vault directory — the structure that the state machine manages](../assets/uploads/2026-06-08-from-declarative-rules-to-agentic-loops/01-vault-tree.png)
+![The vault directory, the structure that the state machine manages](../assets/uploads/2026-06-08-from-declarative-rules-to-agentic-loops/01-vault-tree.png)
 
 ---
 
@@ -52,7 +52,7 @@ The system i built runs two loops that feed each other. Here is the first one:
 Each state is one step in the loop.
 
 - **Act:** INGEST a raw source file, ANALYZE its entities, RECONCILE against existing pages
-- **Observe:** check the validation gates — does the page have frontmatter? do the links work?
+- **Observe:** check the validation gates, does the page have frontmatter? do the links work?
 - **Evaluate:** score the output. Pass or fail.
 - **Update:** write the new page, log the action, bump the state file
 - **Repeat:** next source file or back to IDLE
@@ -73,7 +73,7 @@ A loop catches failure at every transition.
 
 Each state has a validation gate. Before moving to the next state, the model checks: did the action work? If no, it stays in the current state and retries or reports. There is no "silently wrong" output.
 
-![The AGENTS.md file — the state machine that governs the entire system](../assets/uploads/2026-06-08-from-declarative-rules-to-agentic-loops/09-skill-file.png)
+![The AGENTS.md file, the state machine that governs the entire system](../assets/uploads/2026-06-08-from-declarative-rules-to-agentic-loops/09-skill-file.png)
 
 This is the difference between a system that looks like it should work and a system that actually works.
 
@@ -114,7 +114,7 @@ Do not build a bigger prompt. Build a loop.
 
 If you want the full system: the [SpielEngine repo](https://github.com/ShayanSpiel/SpielEngine) is the open-source entry layer of Session-as-Content Infrastructure. I wrote a [follow-up post with the full installation walkthrough](/spielengine-is-now-open-source/).
 
-![The LLM-wiki vault — the memory layer of the loop](../assets/uploads/2026-06-08-from-declarative-rules-to-agentic-loops/LLM-WIKI-SS.png)
+![The LLM-wiki vault, the memory layer of the loop](../assets/uploads/2026-06-08-from-declarative-rules-to-agentic-loops/LLM-WIKI-SS.png)
 
 Note: i absolutely wrote the big prompt first. i spent months adding rules to it. The day i replaced it with a 200-line state machine was the day the system started working. The model did not change. The architecture did.
 

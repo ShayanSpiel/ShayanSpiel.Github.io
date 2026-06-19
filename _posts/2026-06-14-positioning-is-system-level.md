@@ -2,14 +2,14 @@
 layout: post
 title: "Positioning Is Not a Copy Change. It Is a System State."
 date: 2026-06-14 09:00:00 +0000
-categories: ["Lead Systems"]
+categories: ["Building in Public"]
 seo_keyword: "positioning audit for technical founders"
 image:
   path: /assets/banners/2026-06-14-pillar-blog-positioning-is-system-level.png
   width: 1200
   height: 630
 permalink: /positioning-is-system-level/
-description: "You updated your bio. Your system didn't. Here is why your old positioning is still running in files you forgot existed — and how to fix it in an afternoon."
+description: "You updated your bio. Your system didn't. Here is why your old positioning is still running in files you forgot existed, and how to fix it in an afternoon."
 tags:
   - positioning
   - technical-founder
@@ -47,7 +47,7 @@ The surfaces that break first are the ones you forget exist: proposals, onboardi
 
 Each one is a surface your market touches. As long as any of those surfaces still communicate the old story, the market can still encounter the old version of you.
 
-This is what I call **positioning drift** — the old version keeps running in places you forgot existed. I [caught this myself](/72-hour-content-sprint/) and found 8 files that still spoke the older version.
+This is what I call **positioning drift**, the old version keeps running in places you forgot existed. I [caught this myself](/72-hour-content-sprint/) and found 8 files that still spoke the older version.
 
 ## The Trust Fracture
 
@@ -69,7 +69,7 @@ Update each one until the entire system emits the same state.
 
 It takes an afternoon. It is not glamorous. But it is the only thing that actually changes your story.
 
-The bio is the first checkpoint. Not the finish line.
+The bio is the first checkpoint. Not the finish line. Positioning is infrastructure, not decoration. [Your engineering decisions are already content](/your-engineering-decisions-are-already-content/), and so is your positioning.
 
 ---
 

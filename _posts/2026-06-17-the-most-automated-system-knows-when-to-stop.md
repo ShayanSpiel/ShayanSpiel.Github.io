@@ -3,9 +3,9 @@ layout: post
 title: "AI Content Pipelines Need Quality Gates, Not Just Better Models"
 date: 2026-06-17 09:00:00 +0000
 seo_keyword: "AI content quality gates"
-description: "Why AI content automation fails without quality gates — and the handoff pattern that keeps automated content pipelines producing work that sounds human."
+description: "Why AI content automation fails without quality gates, and the handoff pattern that keeps automated content pipelines producing work that sounds human."
 categories:
-  - AI Pipelines
+  - AI Systems
 tags:
   - AI
   - content pipeline
@@ -35,7 +35,7 @@ We published almost all of them. Engagement collapsed.
 
 Not because the writing was bad. Because there was no selection mechanism. Volume without a gate is just noise at scale.
 
-The most reliable pipeline I built after that is called the Spiel Engine. It produces fewer drafts but better ones — because it runs on state machines, not agents.
+The most reliable pipeline I built after that is called the Spiel Engine. It produces fewer drafts but better ones, because it runs on state machines, not agents. The [agentic loop architecture](/from-declarative-rules-to-agentic-loops/) is what makes it work.
 
 Its architecture is built around exactly two LLM handoffs and two human checkpoints. The AI does the creative work; the human does the selection. The two never swap roles.
 
@@ -83,7 +83,7 @@ Before you write a single prompt, answer:
 
 1. Where does the machine hand off to a human?
 2. What artifacts must exist before the pipeline advances?
-3. What happens if the machine generates garbage — how is it caught?
+3. What happens if the machine generates garbage, how is it caught?
 
 Build those gates first. Then add the AI.
 
