@@ -35,6 +35,19 @@ sitemap: true
   <link rel="preconnect" href="https://syndication.twitter.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./styles.css" />
+
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX', {
+      send_page_view: true,
+      debug_mode: window.location.search.indexOf('debug') !== -1
+    });
+  </script>
+
   <script src="https://platform.x.com/widgets.js" async defer></script>
 
   <script type="application/ld+json">
@@ -84,8 +97,8 @@ sitemap: true
 
   <section class="hero">
     <div class="ctn">
-      <h1>Capture. Simulate.<br><span class="hl">Publish.</span></h1>
-      <p>Your coding sessions are already content. Spiel Engine extracts it, in your voice, for your audience, and publish instantly across every platform.</p>
+      <h1 data-ab="hero-headline">Capture. Simulate.<br><span class="hl">Publish.</span></h1>
+      <p data-ab="hero-sub">Your coding sessions are already content. Spiel Engine extracts it, in your voice, for your audience, and publish instantly across every platform.</p>
       <div class="cli-box" id="hero-cli">
         <code>
           <span class="prompt">$</span>
@@ -147,7 +160,7 @@ sitemap: true
     </section>
 
     <section class="title-copy reveal">
-      <h2>Turn your build sessions into content, <span class="hl">without being a marketer.</span></h2>
+      <h2 data-ab="support-headline">Turn your build sessions into content, <span class="hl">without being a marketer.</span></h2>
       <div class="cli-box" id="cli2">
         <code>
           <span class="prompt">$</span>
@@ -287,5 +300,6 @@ sitemap: true
   </footer>
 
   <script src="./script.js"></script>
+  <script src="../assets/js/analytics.js" defer></script>
 </body>
 </html>
