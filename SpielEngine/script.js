@@ -156,9 +156,11 @@ if (pubTrans) pubObs.observe(pubTrans);
 /* ---- X Tweet embed: reveal only after rendered ---- */
 function watchTweetLoad() {
   if (!xPost) return;
+  var tweet = xPost.querySelector('.twitter-tweet');
+  if (!tweet) return;
 
   var checkInterval = setInterval(function() {
-    var iframe = xPost.querySelector('iframe');
+    var iframe = tweet.querySelector('iframe');
     if (iframe) {
       clearInterval(checkInterval);
       xPost.classList.add('show');
