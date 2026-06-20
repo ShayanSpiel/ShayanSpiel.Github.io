@@ -72,3 +72,4 @@ exclude:
   - README.md
   - assets/js/mouse_coords.js
   - assets/css/main.css.map
+  - assets/logos/preview.html
