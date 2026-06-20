@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
-"""Generate OG image, favicon set, and apple-touch-icon from logo.png."""
+"""Generate OG image, favicon set, and apple-touch-icon from logo assets."""
 import os
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-LOGO = os.path.join(ROOT, "logo.png")
+ICON_LOGO = os.path.join(ROOT, "assets", "logos", "icon-transparent.png")
+PRIMARY_LOGO = os.path.join(ROOT, "assets", "logos", "primary-transparent.png")
 FAV_DIR = os.path.join(ROOT, "assets", "favicons")
 os.makedirs(FAV_DIR, exist_ok=True)
 
 # ---------- 1. Square favicons ----------
-logo = Image.open(LOGO).convert("RGBA")
+logo = Image.open(ICON_LOGO).convert("RGBA")
 for size, name in [(16, "favicon-16.png"), (32, "favicon-32.png"),
                    (192, "favicon-192.png"), (512, "favicon-512.png"),
                    (180, "apple-touch-icon.png")]:
@@ -47,12 +48,12 @@ for r in range(700, 0, -20):
 overlay = Image.composite(Image.new("RGB", (W, H), (38, 30, 30)), overlay, mask)
 og = Image.blend(og, overlay, 0.5)
 
-# Logo hex
-hex_img = logo.copy()
+# Logo — use icon for OG image
+og_logo = Image.open(ICON_LOGO).convert("RGBA")
 target_h = 280
-ratio = target_h / hex_img.height
-hex_img = hex_img.resize((int(hex_img.width * ratio), target_h), Image.LANCZOS)
-og.paste(hex_img, (90, (H - target_h) // 2), hex_img)
+ratio = target_h / og_logo.height
+og_logo = og_logo.resize((int(og_logo.width * ratio), target_h), Image.LANCZOS)
+og.paste(og_logo, (90, (H - target_h) // 2), og_logo)
 
 # Text block
 draw = ImageDraw.Draw(og)
@@ -74,22 +75,25 @@ def load_font(size, bold=False):
 
 f_brand = load_font(40, bold=True)
 f_title = load_font(58, bold=True)
-f_sub = load_font(30, bold=False)
+f_sub_title = load_font(34, bold=False)
+f_sub = load_font(28, bold=False)
 f_meta = load_font(22, bold=False)
 
-text_x = 90 + hex_img.width + 50
+text_x = 90 + og_logo.width + 50
 
 # Eyebrow
-draw.text((text_x, 160), "SHAYAN SPIEL", font=f_brand, fill=(229, 229, 229))
-# Title (two lines, manual wrap)
+draw.text((text_x, 150), "SHAYAN SPIEL", font=f_brand, fill=(229, 229, 229))
+# Title (two lines)
 draw.text((text_x, 210), "Session-as-Content", font=f_title, fill=(245, 245, 245))
 draw.text((text_x, 280), "Infrastructure", font=f_title, fill=(245, 245, 245))
+# Sub-line
+draw.text((text_x, 350), "for Technical Founders", font=f_sub_title, fill=(180, 180, 180))
 # Subtitle
-draw.text((text_x, 380), "Building & testing agentic AI workflows in public.", font=f_sub, fill=(180, 180, 180))
+draw.text((text_x, 420), "Open-source content pipeline for builders.", font=f_sub, fill=(140, 140, 140))
 # URL
 draw.text((text_x, 510), "shayanspiel.github.io", font=f_meta, fill=(140, 140, 140))
 
-# Bottom rule + tagline
+# Bottom rule
 draw.line([(90, 580), (W - 90, 580)], fill=(60, 60, 60), width=1)
 
 og.save(os.path.join(ROOT, "assets", "og-default.png"), "PNG", optimize=True)

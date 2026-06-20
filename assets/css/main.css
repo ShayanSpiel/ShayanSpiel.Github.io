@@ -798,6 +798,17 @@ figure img { margin: 0; }
   letter-spacing: 0.08em;
   font-weight: 600;
 }
+.related-posts .blog-row {
+  grid-template-columns: 1fr auto auto;
+}
+.related-posts .blog-row-date { display: none; }
+.related-posts .blog-row-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
 
 /* ═══════════════════════════════════════════════════════
    POST LIST (compact)

@@ -1,7 +1,9 @@
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<!-- Uploaded to: SVG Repo, www.svgrepo.com, Transformed by: SVG Repo Mixer Tools -->
-<svg fill="#000000" width="800px" height="800px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
-<g id="SVGRepo_bgCarrier" stroke-width="0"/>
-<g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
-<g id="SVGRepo_iconCarrier"> <title>spook</title> <path d="M16 7l-12 12 6 6 3-3 3 3 3-3 3 3 6-6-12-12zM16 19l-3-3 3-3 3 3-3 3z"/> </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <rect width="256" height="256" rx="56" fill="#100F0F"/>
+  <g transform="translate(128,128)">
+    <path d="M0,-72 L62,-36 L62,36 L0,72 L-62,36 L-62,-36 Z"
+          fill="none" stroke="#E5E5E5" stroke-width="10" stroke-linejoin="round"/>
+    <path d="M0,-30 L26,-15 L26,15 L0,30 L-26,15 L-26,-15 Z"
+          fill="#E5E5E5"/>
+  </g>
+</svg>

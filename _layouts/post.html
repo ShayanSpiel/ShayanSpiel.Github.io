@@ -40,7 +40,7 @@ layout: default
     {%- endif -%}
   </header>
 
-  {%- if page.image and page.image.path -%}
+  {%- if page.image and page.image.path and page.image.path != '/assets/og-default.png' -%}
   <figure class="post-hero">
     <img src="{{ page.image.path | relative_url }}" alt="{{ page.title }}" width="{{ page.image.width | default: 1200 }}" height="{{ page.image.height | default: 630 }}" loading="eager" fetchpriority="high" />
   </figure>
