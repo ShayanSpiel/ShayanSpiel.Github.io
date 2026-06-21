@@ -30,6 +30,21 @@ code,.mono{font-family:'JetBrains Mono',monospace}
 }
 .se-skip-link:focus{top:0}
 
+/* ---- Maintenance Banner ---- */
+.se-maintenance{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:6px 16px;
+  background:#f5c518;color:#1a1a00;
+  font-family:'Inter',sans-serif;font-size:12px;font-weight:500;line-height:1.4;
+  text-align:center;border-bottom:1px solid rgba(0,0,0,.15)
+}
+.se-maintenance-icon{font-size:13px;line-height:1}
+.se-maintenance-text a{color:#1a1a00;font-weight:700;text-decoration:underline;text-underline-offset:2px}
+.se-maintenance-text a:hover{color:#000}
+@media (max-width:600px){
+  .se-maintenance{font-size:11px;padding:6px 12px;gap:6px}
+}
+
 /* ---- Nav ---- */
 .se-nav{
   position:sticky;top:0;z-index:100;
