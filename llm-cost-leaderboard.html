@@ -2,13 +2,37 @@
 layout: default
 title: "Is GLM-5.2 cheaper than the frontier?"
 description: "A working breakdown of LLM API pricing across Anthropic, OpenAI, Google, and Z.ai, at every reasoning effort. Where the popular claim breaks down, where it could technically be true, and what the data says about intelligence."
-keywords: GLM-5.2, Claude Opus 4.8, GPT-5.5, LLM cost leaderboard, LLM pricing, Artificial Analysis, Z.ai, Theo t3.gg
+keywords: GLM-5.2, Claude Opus 4.8, GPT-5.5, LLM cost leaderboard, LLM pricing, Artificial Analysis, Z.ai, Theo t3.gg, open weights, reasoning effort, prompt caching, LLM API
+author:
+  name: Shayan Spiel
+  twitter: ShayanSpiel
+date: 2026-06-21
+last_modified_at: 2026-06-21
 image:
   path: /assets/uploads/glm52-pricing.png
+  alt: "Is GLM-5.2 cheaper than the frontier? LLM API pricing breakdown by Shayan Spiel — AI Operator & Builder."
   width: 1200
   height: 630
 permalink: /GLM5.2-Cost-Breakdown/
+canonical: "https://shayanspiel.github.io/GLM5.2-Cost-Breakdown/"
 sitemap: true
+seo:
+  type: "BlogPosting"
+  name: "Is GLM-5.2 cheaper than the frontier?"
+  description: "A working breakdown of LLM API pricing across Anthropic, OpenAI, Google, and Z.ai, at every reasoning effort. Where the popular claim breaks down, where it could technically be true, and what the data says about intelligence."
+  date_published: "2026-06-21"
+  date_modified: "2026-06-21"
+  author:
+    name: "Shayan Spiel"
+    twitter: "ShayanSpiel"
+  publisher:
+    name: "Shayan Spiel"
+    logo: "/assets/logos/primary-transparent.svg"
+  image: "/assets/uploads/glm52-pricing.png"
+  links:
+    - "https://twitter.com/ShayanSpiel"
+    - "https://www.linkedin.com/in/shayantawabi"
+    - "https://github.com/ShayanSpiel"
 ---
 
 <style>
@@ -57,55 +81,41 @@ sitemap: true
   font-size: var(--fs-sm);
 }
 
-/* Tweet card — custom rendered via oEmbed API, no iframe, no widgets.js dependency */
+/* Real Twitter embed — kill every possible edge artifact */
 .tweet-frame {
   max-width: 560px;
   margin: var(--s-4) auto;
-}
-.lb-tweet {
-  background: var(--bg-1);
-  border: 1px solid var(--bd);
+  background: var(--bg);
   border-radius: var(--r-lg);
-  padding: var(--s-4) var(--s-5);
-  text-align: left;
-  font-family: var(--f-b);
-  color: var(--tx-1);
-  line-height: var(--lh-body);
+  overflow: hidden;
+  line-height: 0;
 }
-.lb-tweet-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--s-3);
-  margin-bottom: var(--s-3);
-  flex-wrap: wrap;
+.tweet-frame blockquote.twitter-tweet {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  background: var(--bg) !important;
+  color: var(--tx) !important;
+  font-style: normal !important;
 }
-.lb-tweet-author {
-  font-family: var(--f-h);
-  font-weight: 700;
-  color: var(--tx);
-  font-size: var(--fs-md);
+.tweet-frame iframe {
+  background: var(--bg) !important;
+  border: 0 !important;
+  outline: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: block !important;
+  border-radius: var(--r-lg) !important;
+  overflow: hidden !important;
+  width: 100% !important;
+  clip-path: inset(0 round var(--r-lg));
+  -webkit-clip-path: inset(0 round var(--r-lg));
 }
-.lb-tweet-handle {
-  font-family: var(--f-h);
-  color: var(--tx-3);
-  font-size: var(--fs-sm);
+.tweet-frame .twitter-tweet-rendered {
+  margin: 0 !important;
+  padding: 0 !important;
+  background: var(--bg) !important;
 }
-.lb-tweet-text {
-  font-size: var(--fs-md);
-  color: var(--tx-1);
-  margin: 0 0 var(--s-3);
-}
-.lb-tweet-text a { color: var(--tx); }
-.lb-tweet-foot {
-  font-family: var(--f-h);
-  font-size: var(--fs-xs);
-  color: var(--tx-3);
-  border-top: 1px solid var(--bd);
-  padding-top: var(--s-2);
-}
-.lb-tweet-foot a { color: var(--tx-3); text-decoration: none; }
-.lb-tweet-foot a:hover { color: var(--tx); }
 
 /* Chart canvas needs explicit height to render */
 .chart-box { position: relative; width: 100%; height: 380px; }
@@ -205,7 +215,9 @@ body > footer {
       <p class="section-sub">A widely-shared take from a respected voice in the space argues GLM-5.2 is more expensive than the proprietary frontier at medium reasoning effort. Worth examining.</p>
     </div>
 
-    <div class="tweet-frame" data-tweet-url="https://x.com/theo/status/2068533586131841072"></div>
+    <div class="tweet-frame">
+      <blockquote class="twitter-tweet" data-theme="dark" data-dnt="true" data-conversation="none"><p lang="en" dir="ltr">I see a lot of people hyped about GLM-5.2. Rightfully so! Having an open weight model surpass GPT-5.4 and every Gemini model is dope.<br><br>That said - it&#39;s not cheap. Both Opus 4.8 and GPT-5.5 set to &quot;medium&quot; are cheaper and smarter than GLM-5.2 <a href="https://t.co/SPovI1LKnZ">pic.twitter.com/SPovI1LKnZ</a></p>&mdash; Theo - t3.gg (@theo) <a href="https://x.com/theo/status/2068533586131841072?ref_src=twsrc%5Etfw">June 21, 2026</a></blockquote>
+    </div>
 
     <p class="lb-prose">Theo is right about the first half. GLM-5.2 does surpass GPT-5.4 and every Gemini model on the Intelligence Index. The second half, the cheaper and smarter part, breaks when you run the math.</p>
   </section>
@@ -328,7 +340,9 @@ body > footer {
       <p class="section-sub">Theo followed up with a fair point. Cheaper per token does not mean cheaper in time.</p>
     </div>
 
-    <div class="tweet-frame" data-tweet-url="https://x.com/theo/status/2068533867955560593"></div>
+    <div class="tweet-frame">
+      <blockquote class="twitter-tweet" data-theme="dark" data-dnt="true" data-conversation="none"><p lang="en" dir="ltr">It also uses way more output tokens. The tokens are cheaper, but the volume of them means you&#39;ll spend much more time waiting for results.<br><br>Still dope! Just trying to make sure people set their expectations properly <a href="https://t.co/hy6NO0CtEq">pic.twitter.com/hy6NO0CtEq</a></p>&mdash; Theo - t3.gg (@theo) <a href="https://x.com/theo/status/2068533867955560593?ref_src=twsrc%5Etfw">June 21, 2026</a></blockquote>
+    </div>
 
     <p class="lb-prose">In his follow-up, Theo added: <em>&ldquo;the volume of them means you&rsquo;ll spend much more time waiting for results.&rdquo;</em> That&rsquo;s true, and worth being upfront about.</p>
 
@@ -414,48 +428,6 @@ body > footer {
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
-<script>
-/* Render tweets via official Twitter oEmbed API — no iframe, no widgets.js, no white edges */
-(function() {
-  function renderTweet(container) {
-    var url = container.getAttribute('data-tweet-url');
-    if (!url) return;
-    var handleMatch = url.match(/x\.com\/([^/]+)\//);
-    var handle = handleMatch ? '@' + handleMatch[1] : '';
-    var apiUrl = 'https://publish.twitter.com/oembed?url=' + encodeURIComponent(url) + '&omit_script=true&dnt=true';
-    fetch(apiUrl)
-      .then(function(r) { return r.json(); })
-      .then(function(data) {
-        if (!data || !data.html) throw new Error('no data');
-        var doc = new DOMParser().parseFromString(data.html, 'text/html');
-        var bq = doc.querySelector('blockquote');
-        if (!bq) throw new Error('no blockquote');
-        var p = bq.querySelector('p');
-        var allLinks = bq.querySelectorAll('a');
-        var lastLink = allLinks[allLinks.length - 1];
-        var authorName = (data.author_name || '').replace(/\s*\(@[^)]+\)\s*$/, '').trim();
-        var dateText = lastLink ? lastLink.textContent.trim() : '';
-        var cleanText = p ? p.innerHTML : '';
-        cleanText = cleanText.replace(/<a[^>]*href="https?:\/\/t\.co\/[^"]+"[^>]*>pic\.twitter\.com[^<]*<\/a>/gi, '');
-        cleanText = cleanText.replace(/<br\s*\/?>/gi, '<br>');
-        var dateHtml = '<a href="' + url + '" target="_blank" rel="noopener">' + (dateText || 'View on X') + '</a>';
-        container.innerHTML =
-          '<article class="lb-tweet">' +
-            '<header class="lb-tweet-head">' +
-              '<span class="lb-tweet-author">' + authorName + '</span>' +
-              '<span class="lb-tweet-handle">' + handle + '</span>' +
-            '</header>' +
-            '<p class="lb-tweet-text">' + cleanText + '</p>' +
-            '<footer class="lb-tweet-foot">' + dateHtml + '</footer>' +
-          '</article>';
-      })
-      .catch(function() {
-        container.innerHTML = '<article class="lb-tweet"><p class="lb-tweet-text"><a href="' + url + '" target="_blank" rel="noopener">View tweet on X</a></p></article>';
-      });
-  }
-  document.querySelectorAll('.tweet-frame[data-tweet-url]').forEach(renderTweet);
-})();
-</script>
 <script>
 (function() {
   function v(name, fallback) {
