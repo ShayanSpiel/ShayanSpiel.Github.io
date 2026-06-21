@@ -553,4 +553,34 @@ body > footer {
   });
 })();
 </script>
-<script async src="https://platform.x.com/widgets.js" charset="utf-8"></script>
+<script async src="https://platform.x.com/widgets.js" charset="utf-8" defer></script>
+<script>
+/* Lazy-load Twitter widget only when a tweet scrolls into view */
+(function() {
+  var WIDGET_URL = 'https://platform.x.com/widgets.js';
+  var loaded = false;
+  function loadWidget() {
+    if (loaded || window.twttr) return;
+    loaded = true;
+    var s = document.createElement('script');
+    s.src = WIDGET_URL;
+    s.async = true;
+    s.charset = 'utf-8';
+    s.onload = function() {
+      if (window.twttr && window.twttr.widgets) window.twttr.widgets.load();
+    };
+    document.body.appendChild(s);
+  }
+  var tweets = document.querySelectorAll('.tweet-frame');
+  if (!tweets.length || !('IntersectionObserver' in window)) {
+    loadWidget();
+  } else {
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) { loadWidget(); io.disconnect(); }
+      });
+    }, { rootMargin: '600px' });
+    tweets.forEach(function(t) { io.observe(t); });
+  }
+})();
+</script>
