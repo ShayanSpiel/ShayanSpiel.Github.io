@@ -219,6 +219,13 @@ footer {
 }
 .c { text-align: center; }
 .r { text-align: right; }
+.c > .card,
+.c > .btn { display: inline-flex; }
+
+/* single-card centering for hero CTAs and email card */
+.single-card { max-width: 480px; margin: 0 auto; }
+.single-card a.card,
+.single-card .card { text-align: left; }
 .nowrap { white-space: nowrap; }
 .mt-4 { margin-top: var(--s-4); }
 .mt-6 { margin-top: var(--s-6); }

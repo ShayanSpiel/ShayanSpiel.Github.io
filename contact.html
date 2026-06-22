@@ -14,20 +14,37 @@ permalink: /contact/
   {% include components/section-head.html tag='The fast way' title='Get in touch' sub='Fastest response: DM me on X or LinkedIn.' %}
 
   <div class='grid grid-2'>
-    {% include components/card.html tag='X / Twitter' icon='send' title='Direct message' desc='Fastest response. Casual, building-in-public, open to anything. @ShayanSpiel' %}
-    {% include components/card.html tag='LinkedIn' icon='users' title='Direct message' desc='Professional layer. Partnership inquiries, press, agentic AI collaborations. /in/shayantawabi' %}
+    {% include components/card.html href='https://twitter.com/ShayanSpiel' tag='X / Twitter' icon='send' title='Direct message' desc='Fastest response. Casual, building-in-public, open to anything. @ShayanSpiel' %}
+    {% include components/card.html href='https://www.linkedin.com/in/shayantawabi' tag='LinkedIn' icon='users' title='Direct message' desc='Professional layer. Partnership inquiries, press, agentic AI collaborations. /in/shayantawabi' %}
   </div>
 </section>
 
 <hr class='divider'>
 
 <section class='section'>
-  {% include components/section-head.html tag='Email' title='For offers and partnerships' sub='Send me a message and I&rsquo;ll get back to you.' %}
+  {% include components/section-head.html tag='Email' title='For offers and partnerships' sub='Click below to open your mail client.' %}
 
-  <div class='grid grid-2'>
-    {% include components/card.html icon='mail' title='66shayan@gmail.com' desc='For offers, partnerships, and longer-form inquiries. Replies typically within 24&ndash;48 hours.' %}
+  <div class='single-card'>
+    <a class='card mail-card' id='email-link' href='mailto:&#54;&#54;&#115;&#104;&#97;&#121;&#97;&#110;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;?subject=Spiel%20Engine%20%E2%80%94%20'>
+      <div class='card-icon'>{% include components/icon.html name='mail' size=18 %}</div>
+      <h3 class='card-title'>Click to compose</h3>
+      <p class='card-desc'>For offers, partnerships, and longer-form inquiries. Replies typically within 24&ndash;48 hours.</p>
+      <span class='card-link'>Open mail client {% include components/icon.html name='arrow-up-right' size=12 %}</span>
+    </a>
   </div>
 </section>
+
+<script>
+  (function () {
+    var link = document.getElementById('email-link');
+    if (!link) return;
+    var u = ['6', '6', 's', 'h', 'a', 'y', 'a', 'n'].join('');
+    var d = ['g', 'm', 'a', 'i', 'l', '.', 'c', 'o', 'm'].join('');
+    var addr = u + String.fromCharCode(64) + d;
+    var subject = '?subject=Spiel%20Engine%20%E2%80%94%20';
+    link.setAttribute('href', 'mailto:' + addr + subject);
+  })();
+</script>
 
 <hr class='divider'>
 
@@ -35,8 +52,8 @@ permalink: /contact/
   {% include components/section-head.html tag='What to say' title='Make it easy' sub='Three lines that get you what you need fastest.' %}
 
   <div class='grid grid-3'>
-    {% include components/card.html tag='For the DFY' icon='rocket' title='Reply &ldquo;ENGINE&rdquo;' desc='I&rsquo;ll send you the DFY Install application ($990). 3 slots per month. Hard cap.' %}
-    {% include components/card.html tag='For the repo' icon='code' title='Reply &ldquo;GITHUB&rdquo;' desc='I&rsquo;ll send you the open-source repo link with the setup walkthrough.' %}
-    {% include components/card.html tag='For anything else' icon='mail' title='Just say hi' desc='I read every message. If you have a question, a thought, or just want to connect, send it.' %}
+    {% include components/card.html href='/contact/' tag='For the DFY' icon='rocket' title='Reply &ldquo;ENGINE&rdquo;' desc='I&rsquo;ll send you the DFY Install application ($990). 3 slots per month. Hard cap.' %}
+    {% include components/card.html href='/SpielEngine/' tag='For the repo' icon='code' title='Reply &ldquo;GITHUB&rdquo;' desc='Setup walkthrough, repo link, and customization guide on the Spiel Engine page.' %}
+    {% include components/card.html href='/posts/' tag='For anything else' icon='mail' title='Just say hi' desc='I read every message. If you have a question, a thought, or just want to connect, send it.' %}
   </div>
 </section>

@@ -164,6 +164,9 @@ icons:
   - name: gauge
     d: "M12 14 17 9M3.34 19a10 10 0 1 1 17.32 0"
     label: Gauge / speed
+  - name: globe
+    d: "M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20M2 12h20"
+    label: Globe / world
   - name: user-check
     d: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9.5 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM17 11l2 2 4-4"
     label: User approved
