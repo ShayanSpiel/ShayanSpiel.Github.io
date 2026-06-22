@@ -6,7 +6,7 @@ Build a self-contained standalone HTML preview of the LLM Cost Leaderboard page.
   deployed site when opened directly via file:// (no server needed).
 - Includes the real site nav and footer (footer.html content inlined).
 - Loads tweets via the Twitter oEmbed API with theme=dark for seamless dark-mode
-  integration (same approach as /SpielEngine).
+  integration (same approach as /SpielOS).
 
 Usage:
     python3 _tools/preview-leaderboard.py

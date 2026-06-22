@@ -34,9 +34,9 @@ clusters:
       - /pipeline-not-strategy/
 
   - name: "Spiel OS"
-    slug: spiel-engine
+    slug: spielos
     description: "Product updates, feature ships, and architecture details. The open-source Session-as-Content Infrastructure for technical founders."
-    pillar: /spielengine-open-source/
+    pillar: /spielos-open-source/
     members:
-      - /spiel-engine-update/
+      - /spielos-update/
       - /session-as-content/
