@@ -55,12 +55,12 @@ echo "    zone_id=${zone_id}"
 
 # ---- 2 + 3. DNS records ----
 upsert_record() {
-  local type=$1 name=$2 content=$3 proxied=${4:-true}
+  local type=$1 name=$2 content=$3 proxied=${4:-false}
   local existing
   existing=$(api "${CF_API}/zones/${zone_id}/dns_records?type=${type}&name=${name}" \
              | jq -r '.result[0].id // empty')
   if [ -n "$existing" ]; then
-    echo "    (exists) ${type} ${name} → ${content}"
+    echo "    (exists) ${type} ${name} → ${content} (proxied=${proxied})"
     return
   fi
   echo "==> Add ${type} ${name} → ${content} (proxied=${proxied})"
@@ -71,10 +71,13 @@ upsert_record() {
     | jq -r '"    -> " + (.success|tostring) + " " + (.errors[0].message // "ok")'
 }
 
+# GitHub Pages requires the apex A records to be DNS-only (grey cloud) so
+# its domain check can see GitHub's IPs. The Worker subdomain is still
+# on Cloudflare via the custom-domain binding in wrangler.toml.
 for ip in "${GH_PAGES_IPS[@]}"; do
-  upsert_record A "@" "$ip" true
+  upsert_record A "@" "$ip" false
 done
-upsert_record CNAME "www" "${GH_PAGES_TARGET}" true
+upsert_record CNAME "www" "${GH_PAGES_TARGET}" false
 
 # ---- 4. Worker deploy ----
 echo "==> Deploying posthog-proxy worker"
