@@ -35,7 +35,7 @@
           "optional": true
         }
       ],
-      "example": "{% include components/btn.html label=\"Get Spiel\" href=\"/SpielEngine/\" variant=\"primary\" arrow=true %}\n"
+      "example": "{% include components/btn.html label=\"Get Spiel\" href=\"/SpielOS/\" variant=\"primary\" arrow=true %}\n"
     },
     {
       "name": "section-head",

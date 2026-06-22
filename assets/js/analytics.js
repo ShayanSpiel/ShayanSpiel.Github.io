@@ -156,7 +156,7 @@
     });
   }
 
-  /* Install buttons, hero and mid-page install CTAs on SpielEngine */
+  /* Install buttons, hero and mid-page install CTAs on SpielOS */
   trackClick('.hero .btn-primary, .title-copy .btn-primary', 'click_install');
 
   /* GitHub links */
@@ -244,9 +244,9 @@
      INIT
      ================================================================ */
 
-  /* Apply A/B variant on SpielEngine page */
-  var isSpielEngine = window.location.pathname.indexOf('SpielEngine') !== -1;
-  if (isSpielEngine) {
+  /* Apply A/B variant on SpielOS page */
+  var isSpielOS = window.location.pathname.indexOf('SpielOS') !== -1;
+  if (isSpielOS) {
     applyVariant();
   }
 

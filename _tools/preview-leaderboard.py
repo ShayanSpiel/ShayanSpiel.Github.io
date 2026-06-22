@@ -152,7 +152,7 @@ html = f"""<!DOCTYPE html>
       <a href="/posts/">Blog</a>
       <a href="/contact/">Contact</a>
     </span>
-    <a href="/SpielEngine/" class="nav-cta">
+    <a href="/SpielOS/" class="nav-cta">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M13 5l7 7-7 7M5 12h15"/></svg>
       Get Spiel
     </a>

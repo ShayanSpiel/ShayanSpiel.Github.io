@@ -83,7 +83,7 @@ This directly enables the future state: each redesigned post (GLM-style, bite-si
 
 ## What this gets us
 
-- Every page on the site composes the same design-system components. No drift between `/SpielEngine`, the GLM post, and any future post.
+- Every page on the site composes the same design-system components. No drift between `/SpielOS`, the GLM post, and any future post.
 - Markdown is fully gone — the styling conflict is structurally impossible because there is no markdown processor in the post pipeline.
 - A new interactive component (e.g. `comparison-slider`, `data-viz-card`) is added once as a partial + CSS block, then every post that needs it can use it.
 - The `/design-system/` page is the living catalog (what ui.shadcn.com does, but in-repo, served from the site).

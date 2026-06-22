@@ -19,7 +19,7 @@ components:
       - { name: icon, type: "svg-path", optional: true }
       - { name: attrs, type: string, optional: true }
     example: |
-      {% include components/btn.html label="Get Spiel" href="/SpielEngine/" variant="primary" arrow=true %}
+      {% include components/btn.html label="Get Spiel" href="/SpielOS/" variant="primary" arrow=true %}
 
   - name: section-head
     partial: section-head

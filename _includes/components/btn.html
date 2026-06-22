@@ -9,7 +9,7 @@
     icon  , icon name to prepend an icon (default: none)
     attrs , extra HTML attributes (e.g. "target=_blank rel=noopener")
   Example:
-    {% include components/btn.html label="Get Spiel" href="/SpielEngine/" variant="primary" arrow=true %}
+    {% include components/btn.html label="Get Spiel" href="/SpielOS/" variant="primary" arrow=true %}
     {% include components/btn.html label="Open source" href="https://github.com/..." variant="ghost" icon="rss" attrs="target=_blank rel=noopener" %}
 {%- endcomment -%}
 <a class="btn btn-{{ include.variant | default: 'primary' }}{% if include.arrow %} btn-arrow{% endif %}" href="{{ include.href }}"{% if include.attrs %} {{ include.attrs }}{% endif %}>
