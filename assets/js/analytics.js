@@ -1,21 +1,21 @@
 /* =====================================================================
-   Analytics & Event Tracking — Production-grade GA4 integration
+   Analytics & Event Tracking, Production-grade GA4 integration
    =====================================================================
    Event taxonomy:
-     page_view            — automatic via gtag
-     copy_homebrew_command — user copies brew install command
-     copy_cli_command      — user copies any CLI command
-     click_install        — user clicks install/get button
-     click_docs           — user clicks documentation link
-     click_github         — user clicks GitHub link
-     click_contact        — user clicks contact link
-     click_demo           — user clicks demo link
-     cta_primary_clicked  — primary CTA clicked
-     cta_secondary_clicked — secondary CTA clicked
-     newsletter_subscribe — newsletter form submitted
-     scroll_depth         — 25/50/75/100% scroll reached
-     ab_test_assigned     — user assigned to A/B variant
-     FAQ opened           — FAQ accordion opened
+     page_view           , automatic via gtag
+     copy_homebrew_command, user copies brew install command
+     copy_cli_command     , user copies any CLI command
+     click_install       , user clicks install/get button
+     click_docs          , user clicks documentation link
+     click_github        , user clicks GitHub link
+     click_contact       , user clicks contact link
+     click_demo          , user clicks demo link
+     cta_primary_clicked , primary CTA clicked
+     cta_secondary_clicked, secondary CTA clicked
+     newsletter_subscribe, newsletter form submitted
+     scroll_depth        , 25/50/75/100% scroll reached
+     ab_test_assigned    , user assigned to A/B variant
+     FAQ opened          , FAQ accordion opened
    ===================================================================== */
 
 (function () {
@@ -81,7 +81,7 @@
 
   var variant = assignVariant();
 
-  /* Variant copy — user-approved, conversion-optimized */
+  /* Variant copy, user-approved, conversion-optimized */
   var COPY = {
     control: {
       headline: 'Capture. Simulate. Publish.',
@@ -156,7 +156,7 @@
     });
   }
 
-  /* Install buttons — hero and mid-page install CTAs on SpielEngine */
+  /* Install buttons, hero and mid-page install CTAs on SpielEngine */
   trackClick('.hero .btn-primary, .title-copy .btn-primary', 'click_install');
 
   /* GitHub links */
@@ -168,7 +168,7 @@
   /* Documentation links */
   trackClick('a[href*="docs"], a[href*="readme"]', 'click_docs');
 
-  /* CTA primary — all primary action buttons (includes install) */
+  /* CTA primary, all primary action buttons (includes install) */
   document.querySelectorAll('.btn-primary, .card-btn, .cta-btn').forEach(function (el) {
     el.addEventListener('click', function () {
       var section = el.closest('section');

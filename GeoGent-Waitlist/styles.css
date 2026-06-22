@@ -1,5 +1,5 @@
 /* ============================================
-   GeoGent — Alpha Waitlist Landing
+   GeoGent, Alpha Waitlist Landing
    Mobile-first. Dark "erepublik modern" theme.
    Uses the game's own Oxanium font + tokens.
    ============================================ */
@@ -11,7 +11,7 @@ html, body { height: 100%; }
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
 :root {
-  /* Brand palette — derived from the app's --primary #facc15 / --secondary #f59e0b */
+  /* Brand palette, derived from the app's --primary #facc15 / --secondary #f59e0b */
   --bg: #0a0806;
   --bg-2: #0d0a07;
   --surface: #14110d;

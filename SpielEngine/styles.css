@@ -1,5 +1,5 @@
 /* =====================================================================
-   Spiel Engine — Product Landing Page
+   Spiel Engine, Product Landing Page
    ===================================================================== */
 
 /* ---- Reset & Tokens ---- */
@@ -58,7 +58,7 @@ code,.mono{font-family:'JetBrains Mono',monospace}
 .se-nav-brand{display:flex;align-items:center;text-decoration:none}
 .se-nav-brand img{height:24px;width:auto}
 
-/* ---- Top Logo (legacy, hidden — nav replaces it) ---- */
+/* ---- Top Logo (legacy, hidden, nav replaces it) ---- */
 .top-logo{display:none}
 
 /* ---- Hero ---- */

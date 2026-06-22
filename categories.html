@@ -10,7 +10,11 @@ image:
 permalink: /categories/
 ---
 
-<p>Every post belongs to a topic and a cluster. Clusters group topics that share an underlying thesis. Each cluster has a <em>pillar</em> post &mdash; the long, comprehensive entry that anchors the rest.</p>
+<p>Every post belongs to a topic and a cluster. Clusters group topics that share an underlying thesis. Each cluster has a <em>pillar</em> post, the long, comprehensive entry that anchors the rest.</p>
+
+<p class="muted small" style="margin-top: var(--s-3);">
+  New here? Start with the <a href="/glossary/">glossary</a> for canonical definitions, or jump into the <a href="/clusters/content-pipeline/">Content Pipeline cluster</a>.
+</p>
 
 <nav class="tag-cloud" aria-label="All topics">
   {%- assign all_cats = site.posts | map: 'categories' | join: ',' | split: ',' | uniq | sort -%}

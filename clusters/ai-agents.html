@@ -1,6 +1,6 @@
 ---
 layout: page-shell
-title: AI & Agents — Agentic Loops, Quality Gates, and Content Pipelines
+title: AI & Agents, Agentic Loops, Quality Gates, and Content Pipelines
 description: >-
   The complete cluster on agentic AI workflows, state-machine loops, and
   quality gates for AI content pipelines. Why prompts fail and loops survive.
@@ -14,7 +14,7 @@ sitemap: true
 ---
 
 <section class='section'>
-  {% include components/section-head.html tag='Cluster' title='AI &amp; Agents' sub='State-machine loops, validation gates, and the architecture behind AI systems that actually produce work — not just impressive demos.' %}
+  {% include components/section-head.html tag='Cluster' title='AI &amp; Agents' sub='State-machine loops, validation gates, and the architecture behind AI systems that actually produce work, not just impressive demos.' %}
 
   {% include components/prose-center.html text='Prompts are static documents. Models ignore them under context pressure. Loops are dynamic processes. They validate at every transition and recover from failure in seconds rather than hours. This cluster is the architecture behind the Spiel Engine and every serious AI content pipeline I have built.' %}
 
@@ -50,6 +50,18 @@ sitemap: true
   {% include components/section-head.html tag='Apply it' title='Get the tooling' sub='Two loops. One architecture. Open source.' %}
 
   <div class='c'>
-    {% include components/btn.html label='Spiel Engine — Open Source' href='/SpielEngine/' variant='primary' arrow=true %}
+    {% include components/btn.html label='Spiel Engine, Open Source' href='/SpielEngine/' variant='primary' arrow=true %}
+  </div>
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='Explore' title='Related clusters' sub='Other clusters on the site.' %}
+
+  <div class='grid grid-3'>
+    {% include components/card.html href='/clusters/content-pipeline/' tag='Cluster' icon='book' title='Content Pipeline' desc='Session-as-Content methodology, the AI second brain, and the developer content pipeline.' %}
+    {% include components/card.html href='/clusters/building-in-public/' tag='Cluster' icon='lightbulb' title='Building in Public' desc='Engineering decisions as content. Positioning as infrastructure.' %}
+    {% include components/card.html href='/clusters/spiel-engine/' tag='Cluster' icon='code' title='Spiel Engine' desc='The codebase that implements the agentic loop pattern.' %}
   </div>
 </section>

@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════
-   SHAYAN SPIEL — COMPONENTS
+   SHAYAN SPIEL, COMPONENTS
    Every reusable visual primitive in the design system.
    Each section below corresponds to a partial in
    _includes/components/ and an entry in _data/components.yml.
@@ -131,8 +131,9 @@
   font-size: 15px;
   color: var(--tx-2);
   line-height: 1.7;
-  max-width: 480px;
+  max-width: 640px;
   margin: 0 auto;
+  text-align: center;
 }
 
 /* ── grid ──
@@ -336,7 +337,7 @@
 */
 .post-shell { max-width: var(--w); margin: 0 auto; padding: 0 var(--s-5); }
 
-/* H1 inside the post body — silver gradient like landing pages */
+/* H1 inside the post body, silver gradient like landing pages */
 .post-shell h1 {
   font-family: var(--f-h);
   font-size: clamp(38px, 5.5vw, 68px);
@@ -433,7 +434,7 @@
 .post-cta-actions { display: flex; justify-content: center; gap: var(--s-3); flex-wrap: wrap; margin-top: var(--s-5); }
 .post-cta .small.muted { margin-top: var(--s-5); }
 
-/* post-cta minimal — single line + one button. Used in every post. */
+/* post-cta minimal, single line + one button. Used in every post. */
 .post-cta-minimal {
   padding: var(--s-5) var(--s-6);
   background: transparent;

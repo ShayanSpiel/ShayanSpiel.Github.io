@@ -1,4 +1,4 @@
-# Shayan Spiel — Component manifest
+# Shayan Spiel, Component manifest
 # Canonical source of truth for every design-system component.
 # Each entry maps to:
 #   - A partial at _includes/components/{partial}.html

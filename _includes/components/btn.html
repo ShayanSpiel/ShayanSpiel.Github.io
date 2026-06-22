@@ -2,12 +2,12 @@
   Component: btn
   Variants: primary (default) | ghost
   Slots:
-    label  — button text (required)
-    href   — link target (required)
-    variant — primary | ghost (default: primary)
-    arrow  — true to append arrow icon (default: false)
-    icon   — icon name to prepend an icon (default: none)
-    attrs  — extra HTML attributes (e.g. "target=_blank rel=noopener")
+    label , button text (required)
+    href  , link target (required)
+    variant, primary | ghost (default: primary)
+    arrow , true to append arrow icon (default: false)
+    icon  , icon name to prepend an icon (default: none)
+    attrs , extra HTML attributes (e.g. "target=_blank rel=noopener")
   Example:
     {% include components/btn.html label="Get Spiel" href="/SpielEngine/" variant="primary" arrow=true %}
     {% include components/btn.html label="Open source" href="https://github.com/..." variant="ghost" icon="rss" attrs="target=_blank rel=noopener" %}

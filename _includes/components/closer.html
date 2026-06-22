@@ -5,10 +5,10 @@
   echo line, and optional minimal actions. Use exactly once per post,
   as the last content block before post-shell appends tags + related + cta.
   Slots:
-    icon   — icon name (required, e.g. "lightbulb", "sparkles", "rocket")
-    takeaway — the key line. Silver gradient, large, balanced. (required)
-    echo   — a smaller line below the takeaway (optional)
-    actions — list of { label, href, variant, arrow, icon } (optional)
+    icon  , icon name (required, e.g. "lightbulb", "sparkles", "rocket")
+    takeaway, the key line. Silver gradient, large, balanced. (required)
+    echo  , a smaller line below the takeaway (optional)
+    actions, list of { label, href, variant, arrow, icon } (optional)
   Example:
     {% include components/closer.html
        icon="lightbulb"

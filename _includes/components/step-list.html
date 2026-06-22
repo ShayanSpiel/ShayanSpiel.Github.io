@@ -3,7 +3,7 @@
   Numbered workflow. Pass steps as a YAML-like array via the `steps` param.
   Each step is an object with `title` and `body`. Numbering is automatic (01, 02, ...).
   Slots:
-    steps — list of { title, body } hashes (required)
+    steps, list of { title, body } hashes (required)
   Example:
     {% include components/step-list.html steps=site.data.example_steps %}
   (or pass inline if Jekyll version supports; for now use a data file)

@@ -1,4 +1,4 @@
-# robots.txt — Shayan Spiel — https://spielos.xyz/
+# robots.txt, Shayan Spiel, https://spielos.xyz/
 # AI crawlers: ALLOW indexing (so AI search can cite us), block training only.
 # Updated 2026-06-19.
 
@@ -10,35 +10,35 @@ Disallow: /assets/banners/$
 # Sitemaps
 Sitemap: https://spielos.xyz/sitemap.xml
 
-# ── AI crawlers — allow indexing, block training ──
-# GPTBot (OpenAI training) — block training, allow ChatGPT-User indexing
+# ── AI crawlers, allow indexing, block training ──
+# GPTBot (OpenAI training), block training, allow ChatGPT-User indexing
 User-agent: GPTBot
 Disallow: /
 
-# ChatGPT-User (ChatGPT browsing/indexing) — ALLOW so ChatGPT can cite us
+# ChatGPT-User (ChatGPT browsing/indexing), ALLOW so ChatGPT can cite us
 User-agent: ChatGPT-User
 Allow: /
 
-# ClaudeBot (Anthropic indexing) — ALLOW so Claude can cite us
+# ClaudeBot (Anthropic indexing), ALLOW so Claude can cite us
 User-agent: ClaudeBot
 Allow: /
 
-# PerplexityBot — ALLOW so Perplexity can cite us
+# PerplexityBot, ALLOW so Perplexity can cite us
 User-agent: PerplexityBot
 Allow: /
 
-# Google-Extended (Gemini training) — block training
+# Google-Extended (Gemini training), block training
 User-agent: Google-Extended
 Disallow: /
 
-# anthropic-ai (Anthropic training) — block training
+# anthropic-ai (Anthropic training), block training
 User-agent: anthropic-ai
 Disallow: /
 
-# CCBot (Common Crawl) — block training
+# CCBot (Common Crawl), block training
 User-agent: CCBot
 Disallow: /
 
-# Bytespider (ByteDance/TikTok) — block training
+# Bytespider (ByteDance/TikTok), block training
 User-agent: Bytespider
 Disallow: /

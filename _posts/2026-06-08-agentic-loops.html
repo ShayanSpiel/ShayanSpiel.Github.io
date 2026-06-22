@@ -25,7 +25,7 @@ faq:
   - q: "What is an agentic loop?"
     a: "An agentic loop is a state-machine pattern that runs AI work as a continuous cycle of **Act → Observe → Evaluate → Update → Repeat**. Each transition has a validation gate, so failures get caught immediately rather than hours later. It replaces static prompts that models ignore under context pressure."
   - q: "Why do agentic loops beat prompts?"
-    a: "Prompts are static documents. Models are bad at holding prohibitions across time, like *NEVER create a page for passing mentions*. Loops are dynamic processes. They execute decisions right now: *check if concept appears in 2+ sources → if yes, create → if no, skip*. Models are good at this. The loop also enables conditional human involvement — pause at REVIEW? when quality score is below threshold."
+    a: "Prompts are static documents. Models are bad at holding prohibitions across time, like *NEVER create a page for passing mentions*. Loops are dynamic processes. They execute decisions right now: *check if concept appears in 2+ sources → if yes, create → if no, skip*. Models are good at this. The loop also enables conditional human involvement, pause at REVIEW? when quality score is below threshold."
   - q: "What's the difference between a loop and a prompt?"
     a: "A prompt is a static document that does not recover from failure. If the model ignores line 47, nothing catches it. A loop is a dynamic process that validates at every state transition. The first breaks under context pressure. The second survives it."
   - q: "What is a validation gate?"
@@ -42,7 +42,7 @@ howto:
     - "A model API (Claude, GPT, GLM, etc.)"
   steps:
     - name: "Map the work as 5 states"
-      text: "Define Act, Observe, Evaluate, Update, Repeat. Each state has exactly one job and one output schema. Resist the urge to add a sixth state — five is enough."
+      text: "Define Act, Observe, Evaluate, Update, Repeat. Each state has exactly one job and one output schema. Resist the urge to add a sixth state, five is enough."
     - name: "Write the validation gate for the Act→Observe transition"
       text: "Before observing, check the input is structurally valid (file exists, JSON parses, required fields present). Failures return to IDLE with a log entry."
     - name: "Write the validation gate for the Observe→Evaluate transition"

@@ -1,7 +1,7 @@
 title: Shayan Spiel
 tagline: Session-as-Content for Technical Founders
 description: >-
-  Shayan Spiel — solo operator building Session-as-Content, the methodology
+  Shayan Spiel, solo operator building Session-as-Content, the methodology
   and open-source tooling that turns technical founders' build sessions into
   publishable content. 8+ years scaling Iran's largest digital platforms.
   Writing in the open from Tehran.
@@ -16,7 +16,7 @@ favicon: /assets/favicons/favicon.svg
 permalink: /:title/
 paginate_path: /page/:num/
 
-# Author — jekyll-seo-tag reads author.name and author.twitter
+# Author, jekyll-seo-tag reads author.name and author.twitter
 author:
   name: Shayan Spiel
   email: 66shayan@gmail.com

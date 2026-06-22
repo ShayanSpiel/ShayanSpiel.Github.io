@@ -15,9 +15,9 @@ Built with:
   - GitHub Pages (hosting + CI)
 
 Components:
-  - /_layouts — page templates (default, post, page, archive, home)
-  - /_includes — partials (head, footer, nav, structured-data, post_list, ...)
-  - /_posts    — pillar blog posts (date-prefixed markdown)
-  - /_data     — site data (menu)
-  - /assets    — images, banners, favicons, css, js
-  - /GeoGent-Waitlist — static HTML island for the GeoGent alpha waitlist
+  - /_layouts, page templates (default, post, page, archive, home)
+  - /_includes, partials (head, footer, nav, structured-data, post_list, ...)
+  - /_posts   , pillar blog posts (date-prefixed markdown)
+  - /_data    , site data (menu)
+  - /assets   , images, banners, favicons, css, js
+  - /GeoGent-Waitlist, static HTML island for the GeoGent alpha waitlist

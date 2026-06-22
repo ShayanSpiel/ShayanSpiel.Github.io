@@ -2,13 +2,13 @@
   Component: card
   Variants: default | stat-shift (centered number on top)
   Slots:
-    tag     — small uppercase tag above title (use for stat numbers in default cards)
-    title   — card title (required)
-    desc    — card description (required)
-    href    — link target (optional; if set, card becomes <a>)
-    num     — large number for stat-shift variant (optional)
-    icon    — icon name; for stat-shift it sits BESIDE the num on the same row (optional)
-    variant — default | stat-shift (default: default)
+    tag    , small uppercase tag above title (use for stat numbers in default cards)
+    title  , card title (required)
+    desc   , card description (required)
+    href   , link target (optional; if set, card becomes <a>)
+    num    , large number for stat-shift variant (optional)
+    icon   , icon name; for stat-shift it sits BESIDE the num on the same row (optional)
+    variant, default | stat-shift (default: default)
   Example:
     {% include components/card.html tag="Refactor" title="Evidence, not code" desc="When you refactor a state machine..." %}
     {% include components/card.html variant="stat-shift" num="1" icon="circle-check" title="Content improves" desc="..." %}

@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════
-   SHAYAN SPIEL — LAYOUT
+   SHAYAN SPIEL, LAYOUT
    Page-level chrome: .wrap, .page, main, nav, footer, utilities.
    No design tokens. No component primitives. Just page chrome.
    ═══════════════════════════════════════════════════════ */
@@ -147,8 +147,8 @@ main { display: block; padding-top: var(--nav-h); }
 /* ── FOOTER ── */
 footer {
   border-top: 1px solid var(--bd);
-  padding: var(--s-7) 0 var(--s-6);
-  margin-top: var(--s-9);
+  padding: var(--s-6) 0 var(--s-4);
+  margin-top: var(--s-7);
 }
 .footer-inner {
   max-width: var(--w);
@@ -161,7 +161,7 @@ footer {
   align-items: center;
   justify-content: center;
   gap: var(--s-3);
-  margin-bottom: var(--s-5);
+  margin-bottom: var(--s-4);
 }
 .footer-social a {
   display: flex;
@@ -178,6 +178,22 @@ footer {
 }
 .footer-social a:hover { color: var(--tx); border-color: var(--bd-1); background: var(--bg-2); }
 .footer-social svg { width: 18px; height: 18px; }
+.footer-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-4);
+  margin-bottom: var(--s-4);
+  font-family: var(--f-h);
+  font-size: var(--fs-sm);
+}
+.footer-links a {
+  color: var(--tx-2);
+  text-decoration: none;
+  transition: color 0.15s var(--ease);
+}
+.footer-links a:hover { color: var(--tx); }
 .footer-newsletter { display: flex; gap: 8px; max-width: 400px; margin: 0 auto var(--s-2); }
 .footer-newsletter input { flex: 1; }
 .footer-newsletter button {
@@ -223,7 +239,7 @@ footer {
 .c > .btn { display: inline-flex; }
 
 /* single-card centering for hero CTAs and email card */
-.single-card { max-width: 480px; margin: 0 auto; }
+.single-card { max-width: 560px; margin: 0 auto; }
 .single-card a.card,
 .single-card .card { text-align: left; }
 .nowrap { white-space: nowrap; }

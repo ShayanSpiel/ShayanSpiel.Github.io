@@ -1,7 +1,7 @@
 ---
 layout: page-shell
 title: Tags
-description: Browse blog posts by tag — content pipeline, Jekyll automation, AI agents, building in public, open-source writing tools, and developer content systems.
+description: Browse blog posts by tag, content pipeline, Jekyll automation, AI agents, building in public, open-source writing tools, and developer content systems.
 keywords: blog tags, all tags, content engine, automation, jekyll, agentic AI
 image:
   path: /assets/og/tags.png
@@ -11,6 +11,10 @@ permalink: /tags/
 ---
 
 <p>Tags are finer-grained than categories. Every post has a few. Click any tag to see related posts on the blog index.</p>
+
+<p class="muted small" style="margin-top: var(--s-3);">
+  For canonical definitions of every methodology, see the <a href="/glossary/">glossary</a>. For topic clusters, see the <a href="/categories/">topics index</a>.
+</p>
 
 <div class="tag-cloud">
   {%- assign all_tags = site.posts | map: 'tags' | join: ',' | split: ',' | uniq | sort -%}

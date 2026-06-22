@@ -1,6 +1,6 @@
 ---
 layout: page-shell
-title: Content Pipeline for Developers — How to Turn Build Sessions into Posts
+title: Content Pipeline for Developers, How to Turn Build Sessions into Posts
 description: >-
   The complete cluster on building a content pipeline for developers.
   Session-as-Content methodology, the Spiel Engine, and the AI second brain
@@ -53,6 +53,18 @@ sitemap: true
   {% include components/section-head.html tag='Apply it' title='Get the tooling' sub='The open-source engine that runs this entire cluster as code.' %}
 
   <div class='c'>
-    {% include components/btn.html label='Spiel Engine — Open Source' href='/SpielEngine/' variant='primary' arrow=true %}
+    {% include components/btn.html label='Spiel Engine, Open Source' href='/SpielEngine/' variant='primary' arrow=true %}
+  </div>
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='Explore' title='Related clusters' sub='Other clusters on the site.' %}
+
+  <div class='grid grid-3'>
+    {% include components/card.html href='/clusters/ai-agents/' tag='Cluster' icon='refresh' title='AI &amp; Agents' desc='State-machine loops, validation gates, and the architecture behind AI systems that actually produce work.' %}
+    {% include components/card.html href='/clusters/building-in-public/' tag='Cluster' icon='lightbulb' title='Building in Public' desc='Engineering decisions as content. Positioning as infrastructure. Shipping as the marketing channel.' %}
+    {% include components/card.html href='/clusters/spiel-engine/' tag='Cluster' icon='code' title='Spiel Engine' desc='Open-source Session-as-Content Infrastructure. CLI-first, 4 files, MIT licensed.' %}
   </div>
 </section>
