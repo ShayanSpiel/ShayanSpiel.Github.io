@@ -4,6 +4,7 @@ compatibility_date = "2024-09-23"
 
 # custom_domain = true tells Cloudflare to provision a CNAME from
 # t.spielos.xyz → the worker's edge automatically. No manual DNS record needed.
+# For custom domains, the pattern must be a bare hostname (no /*, no paths).
 routes = [
-  { pattern = "t.spielos.xyz/*", zone_name = "spielos.xyz", custom_domain = true }
+  { pattern = "t.spielos.xyz", zone_name = "spielos.xyz", custom_domain = true }
 ]
