@@ -1,5 +1,5 @@
 /* =====================================================================
-   Spiel Engine, Landing Page Interactions
+   Spiel OS, Landing Page Interactions
    ===================================================================== */
 
 /* ---- Copy to clipboard ---- */

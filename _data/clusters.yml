@@ -18,7 +18,7 @@ clusters:
 
   - name: "AI & Agents"
     slug: ai-agents
-    description: "State machines, agentic loops, and quality gates for AI content. Why prompts fail and loops survive. The architecture behind the Spiel Engine."
+    description: "State machines, agentic loops, and quality gates for AI content. Why prompts fail and loops survive. The architecture behind Spiel OS."
     pillar: /agentic-loops/
     members:
       - /gates-not-models/
@@ -33,7 +33,7 @@ clusters:
       - /positioning-state/
       - /pipeline-not-strategy/
 
-  - name: "Spiel Engine"
+  - name: "Spiel OS"
     slug: spiel-engine
     description: "Product updates, feature ships, and architecture details. The open-source Session-as-Content Infrastructure for technical founders."
     pillar: /spielengine-open-source/

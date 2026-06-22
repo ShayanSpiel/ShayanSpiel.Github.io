@@ -85,7 +85,7 @@
   var COPY = {
     control: {
       headline: 'Capture. Simulate. Publish.',
-      subheadline: 'Your coding sessions are already content. Spiel Engine extracts it, in your voice, for your audience, and publish instantly across every platform.',
+      subheadline: 'Your coding sessions are already content. Spiel OS extracts it, in your voice, for your audience, and publish instantly across every platform.',
       supporting: 'Capture. Simulate. <span class="hl">Publish.</span>'
     },
     variant_a: {

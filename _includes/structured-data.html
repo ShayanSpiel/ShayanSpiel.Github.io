@@ -6,7 +6,7 @@
     - WebSite + SearchAction (homepage only)
     - SpeakableSpecification (homepage only)
     - DefinedTerm entities (global, knowledge-graph anchors)
-    - SoftwareApplication (Spiel Engine, stable @id)
+    - SoftwareApplication (Spiel OS, stable @id)
   Emits on post pages:
     - BlogPosting (existing)
     - BreadcrumbList (existing)
@@ -44,7 +44,7 @@
     {"@type": "DefinedTerm", "name": "Building in public", "@id": "{{ site.url }}/glossary/#building-in-public"},
     {"@type": "DefinedTerm", "name": "Quality gates", "@id": "{{ site.url }}/glossary/#quality-gates"},
     {"@type": "DefinedTerm", "name": "Agentic loops", "@id": "{{ site.url }}/glossary/#agentic-loops"},
-    {"@type": "SoftwareApplication", "name": "Spiel Engine", "@id": "{{ site.url }}/SpielOS/#software"},
+    {"@type": "SoftwareApplication", "name": "Spiel OS", "@id": "{{ site.url }}/SpielOS/#software"},
     "Technical founder marketing",
     "Jekyll automation",
     "Open-source content systems"
@@ -102,13 +102,13 @@
 }
 </script>
 
-<!-- SoftwareApplication, Spiel Engine (stable @id) -->
+<!-- SoftwareApplication, Spiel OS (stable @id) -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
   "@id": "{{ site.url }}/SpielOS/#software",
-  "name": "Spiel Engine",
+  "name": "Spiel OS",
   "alternateName": ["SpielEngine", "SpielOS"],
   "description": "Session-as-Content Infrastructure. CLI-first tool that turns technical founders' build sessions into publishable content across 6+ platforms.",
   "url": "{{ site.url }}/SpielOS/",

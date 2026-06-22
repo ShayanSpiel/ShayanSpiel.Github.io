@@ -31,7 +31,7 @@ faq:
   - q: "What is a validation gate?"
     a: "A validation gate is a checkpoint at a loop transition that scores the output against criteria (frontmatter present, links work, semantic completeness) before the loop advances. Gates are what make AI content pipelines produce work that sounds human, because they catch drift the model would otherwise permit."
   - q: "How do I implement an agentic loop in my own pipeline?"
-    a: "Map your work as discrete states. For each state, write a single decision: *what's the test for moving forward?* Then wire those decisions in order, with a halt-and-return-to-IDLE on failure. The Spiel Engine implements two such loops (`/extract` and `/post`) using exactly this pattern, in 4 files and 19 commands."
+    a: "Map your work as discrete states. For each state, write a single decision: *what's the test for moving forward?* Then wire those decisions in order, with a halt-and-return-to-IDLE on failure. Spiel OS implements two such loops (`/extract` and `/post`) using exactly this pattern, in 4 files and 19 commands."
 howto:
   name: "Build a 5-state agentic loop for an AI content pipeline"
   description: "Replace a 2000-word prompt with a state machine that actually survives context pressure."
@@ -169,5 +169,5 @@ howto:
 {% include components/closer.html
    icon='zap'
    takeaway='Do not build a bigger prompt. Build a loop.'
-   echo='Two loops. 200 lines. 30 gates. The model did not change. The architecture did. Clone the Spiel Engine repo and see for yourself.'
+   echo='Two loops. 200 lines. 30 gates. The model did not change. The architecture did. Clone the Spiel OS repo and see for yourself.'
 %}
