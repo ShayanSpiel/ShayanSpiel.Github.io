@@ -1012,9 +1012,31 @@
 
 /* ── page shell (used by /about / /contact / etc) ── */
 .page-shell { max-width: var(--w); margin: 0 auto; padding: 0 var(--s-5); }
-.page-shell-header { margin-bottom: var(--s-7); }
-.page-shell-header h1 { margin: 0 0 var(--s-4); }
-.page-shell-header .lede { font-family: var(--f-h); font-size: var(--fs-lg); color: var(--tx-2); margin: 0; line-height: var(--lh-normal); }
+.page-shell-header { text-align: center; margin-bottom: var(--s-7); padding-top: var(--s-2); }
+.page-shell-header h1 {
+  font-family: var(--f-h);
+  font-size: clamp(38px, 5.5vw, 68px);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 1.05;
+  margin: 0 0 var(--s-4);
+  text-align: center;
+  background: linear-gradient(180deg, #fff 0%, #888 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-wrap: balance;
+}
+.page-shell-header .lede {
+  font-family: var(--f-h);
+  font-size: var(--fs-lg);
+  color: var(--tx-2);
+  margin: 0 auto;
+  line-height: 1.5;
+  max-width: 60ch;
+  text-align: center;
+  text-wrap: pretty;
+}
 .page-shell-body p { font-size: var(--fs-md); line-height: var(--lh-body); margin: 0 0 1.4em; color: var(--tx-1); }
 .page-shell-body h2 { font-size: clamp(var(--fs-xl), 3vw, var(--fs-2xl)); margin: 2.2em 0 0.6em; letter-spacing: -0.03em; }
 .page-shell-body h3 { font-size: clamp(var(--fs-lg), 2.5vw, var(--fs-xl)); margin: 1.8em 0 0.5em; }
