@@ -1,4 +1,4 @@
-# robots.txt — Shayan Spiel — https://shayanspiel.github.io/
+# robots.txt — Shayan Spiel — https://spielos.xyz/
 # AI crawlers: ALLOW indexing (so AI search can cite us), block training only.
 # Updated 2026-06-19.
 
@@ -8,7 +8,7 @@ Disallow: /GeoGent-Waitlist/hidden_iframe
 Disallow: /assets/banners/$
 
 # Sitemaps
-Sitemap: https://shayanspiel.github.io/sitemap.xml
+Sitemap: https://spielos.xyz/sitemap.xml
 
 # ── AI crawlers — allow indexing, block training ──
 # GPTBot (OpenAI training) — block training, allow ChatGPT-User indexing

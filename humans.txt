@@ -1,6 +1,6 @@
 /* humanstxt.org */
 Author: Shayan Spiel (Shayan Tawabi)
-Site: https://shayanspiel.github.io
+Site: https://spielos.xyz
 Twitter: @ShayanSpiel
 LinkedIn: https://www.linkedin.com/in/shayantawabi
 GitHub: https://github.com/ShayanSpiel

@@ -4,4 +4,4 @@ Contact: https://twitter.com/ShayanSpiel
 Contact: https://www.linkedin.com/in/shayantawabi
 Expires: 2027-12-31T23:59:59z
 Preferred-Languages: en, fa
-Canonical: https://shayanspiel.github.io/.well-known/security.txt
+Canonical: https://spielos.xyz/.well-known/security.txt

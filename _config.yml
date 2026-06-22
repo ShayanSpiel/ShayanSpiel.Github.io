@@ -1,16 +1,17 @@
 title: Shayan Spiel
-tagline: Session-as-Content Infrastructure for Technical Founders
+tagline: Session-as-Content for Technical Founders
 description: >-
-  Solo operator building Session-as-Content Infrastructure for technical
-  founders. Open-source Spiel Engine + done-for-you installs. Writing in the
-  open. Based in Tehran, Iran.
-keywords: ai content pipeline, content automation for developers, jekyll blog automation, build in public automation, agentic AI workflow, open source writing pipeline, technical founder marketing, session as content
+  Shayan Spiel — solo operator building Session-as-Content, the methodology
+  and open-source tooling that turns technical founders' build sessions into
+  publishable content. 8+ years scaling Iran's largest digital platforms.
+  Writing in the open from Tehran.
+keywords: Shayan Spiel, Shayan Tawabi, Session-as-Content, session as content methodology, build in public, technical founder content system, agentic AI content pipeline, open source content engine, Spiel Engine
 
-url: https://shayanspiel.github.io
+url: https://spielos.xyz
 baseurl: ""
 lang: en
 locale: en_US
-logo: /assets/logos/primary-transparent.svg
+logo: /assets/logos/personal/primary-transparent.svg
 favicon: /assets/favicons/favicon.svg
 permalink: /:title/
 paginate_path: /page/:num/
@@ -43,7 +44,7 @@ defaults:
       path: ""
     values:
       image:
-        path: /assets/og-default.png
+        path: /assets/og-default.png?v=2
         width: 1200
         height: 630
       seo:
@@ -52,7 +53,7 @@ defaults:
       type: posts
     values:
       image:
-        path: /assets/og-default.png
+        path: /assets/og-default.png?v=2
         width: 1200
         height: 630
       seo:
@@ -73,3 +74,10 @@ exclude:
   - assets/js/mouse_coords.js
   - assets/css/main.css.map
   - assets/logos/preview.html
+  - infra/
+  - _tools
+  - _tools/DESIGN-SYSTEM-PLAN.md
+  - scripts
+  - design-system/components.json
+  - _drafts
+  - _tools/preview
