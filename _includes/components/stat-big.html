@@ -1,0 +1,10 @@
+{%- comment -%}
+  Component: stat-big
+  Large gradient number with optional small unit.
+  Slots:
+    value — the number (required)
+    unit  — small unit suffix rendered smaller (optional)
+  Example:
+    {% include components/stat-big.html value="5.6" unit="×" %}
+{%- endcomment -%}
+<div class="stat-big">{{ include.value }}{%- if include.unit %} <span class="x">{{ include.unit }}</span>{%- endif %}</div>

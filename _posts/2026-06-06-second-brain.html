@@ -1,0 +1,180 @@
+---
+layout: post-shell
+title: "How I Automated My Content Pipeline With an AI Second Brain"
+date: 2026-06-06 09:00:00 +0000
+description: "Build an AI content pipeline for developers that turns build sessions into publishable drafts. Open-source, 4 files, runs from your terminal."
+tags:
+  - content-engine
+  - automation
+  - second-brain
+  - opencode
+  - building-in-public
+categories:
+  - Content Pipeline
+related:
+  - /sessions-to-posts/
+  - /content-pipeline/
+  - /72-hour-sprint/
+permalink: /second-brain/
+---
+
+<section class='hero'>
+  <h1>4 Files. 1 Slash Command. 0 Burn.</h1>
+  <p class='lede'>Build an AI content pipeline for developers that turns build sessions into publishable drafts. Open-source, 4 files, runs from your terminal.</p>
+</section>
+
+{% include components/post-meta.html %}
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The trap' title='What a Second Brain Actually Is' sub='No jargon. No SaaS. No vendor lock-in. A second brain is a folder of plain-text notes that an LLM can read.' %}
+
+  {% include components/prose-center.html text='I do the work. I never post about the work. That was my problem for two years. Every Tuesday I would finish a build session, look at the work, think &lsquo;I should post about this,&rsquo; and not post. The reasons were always the same: I didn&rsquo;t know what to post, I didn&rsquo;t know where to start, and by Wednesday I had moved on.' %}
+
+  <div class='grid grid-2'>
+    {% include components/card.html tag='The pattern' icon='lightbulb' title='Every idea gets a page' desc='Every page has frontmatter. Every page links to other pages with wikilinks. The links form a graph. The graph is the brain. The LLM gets context &mdash; not just the page, but the whole web of ideas around it.' %}
+    {% include components/card.html tag='The result' icon='check' title='Posts that sound like you' desc='When the LLM has context it writes a post that knows the rest of your brain. The post is not a generic tweet. The post is a sample of your thinking &mdash; with your terminology in your voice.' %}
+  </div>
+
+  {% include components/takeaway.html text='A second brain is a folder of linked markdown files. The tool is not the point. The folder is the point.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The architecture' title='The 4-File Architecture' sub='The content engine is 4 files. That is the whole system. If your system is 40 files, you have a system, not a tool.' %}
+
+  <pre><code>~/.config/opencode/
+&acirc;&uml;-- opencode.jsonc          (registers the skill + command)
+&acirc;&uml;-- .env                    (X / LinkedIn API keys, chmod 600)
+&acirc;&uml;-- skill/geogent-content/
+&icirc;--&icirc;-- SKILL.md            (the system spec, auto-injected into every session)
+&acirc;&uml;-- command/
+    &acirc;&uml;-- post.md             (the /post slash command)</code></pre>
+
+  {% include components/prose-center.html text='The rest lives in the vault. At the end of a session, I run /post. The slash command reads the most recent session log, reads the 10 strategy pages, and drafts 2-3 posts. The drafts land in content/queue/. I open the folder, pick one, post it.' %}
+
+  {% include components/prose-center.html text='The system drafts. I decide. The LLM is the writer. I am the editor. The boundary is the queue.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The mechanism' title='The Decision Tree' sub='The hardest part of &lsquo;should I post this&rsquo; is not the writing. It is the type. Is this a ship post? A lesson post? A decision post?' %}
+
+  <pre><code>Did something ship?
+  YES &rarr; Ship Announcement
+  NO  &rarr; Was there a decision?
+          YES &rarr; Decision Post
+          NO  &rarr; Was there a lesson?
+                  YES &rarr; Today I Learned
+                  NO  &rarr; Milestone?
+                          YES &rarr; Vision / Big Picture
+                          NO  &rarr; Dev Log</code></pre>
+
+  {% include components/prose-center.html text='The tree is a 7-node decision procedure. It takes the session log as input and outputs a single type. The type determines the structure. The structure determines the voice. The voice determines the post.' %}
+
+  {% include components/prose-center.html text='This is the pillar method in one sentence: one piece of work becomes many pieces of content, all sampled from one source.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='By the numbers' title='The Standalone Quality Test' sub='The first version produced 25 X drafts in one sitting. Half made no sense. The fix is 4 checks every draft must pass.' %}
+
+  <div class='grid grid-2'>
+    {% include components/card.html variant='stat-shift' icon='clock' num='5s' title='The 5-second test' desc='A stranger can extract 1 idea in 5 seconds. If they cannot, the post fails. The reader does not know who you are.' %}
+    {% include components/card.html variant='stat-shift' icon='book-open' num='0' title='No-prior-episode test' desc='The post does not require reading earlier posts. No &lsquo;as I mentioned last time&rsquo;. The post is the only context the reader has.' %}
+    {% include components/card.html variant='stat-shift' icon='user-check' num='1' title='Value-without-me test' desc='Replace &lsquo;I&rsquo; with a stranger&rsquo;s name. The post still works. The insight is universal, not personal.' %}
+    {% include components/card.html variant='stat-shift' icon='users' num='4' title='Explain-to-a-friend test' desc='The post can be retold in a bar without &lsquo;you had to be there.&rsquo; The retelling is the test of clarity.' %}
+  </div>
+
+  {% include components/prose-center.html text='A draft that fails 1 check is fixable. A draft that fails 2+ checks is a fragment, scrap it. The system runs the test on every draft before it enters the queue. Posts that fail do not enter the queue. The queue stays clean.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The model' title='The 3-Platform Model' sub='X, LinkedIn, and the blog. Each has a role. The blog is the source of truth.' %}
+
+  <div class='grid grid-3'>
+    {% include components/card.html icon='zap' tag='Fast surface' title='X' desc='280 characters. 1-3 posts per session. Tests ideas fast. The speed layer.' %}
+    {% include components/card.html icon='users' tag='Middle surface' title='LinkedIn' desc='1300-3000 characters. 1-2 posts per week. Story mode. Reaches builders and founders. The reach layer.' %}
+    {% include components/card.html icon='book' tag='Deep surface' title='The blog' desc='1000-2500 words. 1 post per 1-2 weeks. The pillar. The source of truth. The depth layer.' %}
+  </div>
+
+  {% include components/prose-center.html text='The blog is the source of truth. X and LinkedIn are samples of the blog. When I write a pillar blog post, the system samples 3 angles for LinkedIn and 5-10 atomic insights for X. The samples are not new content. The samples are extracts.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The cost' title='The Stack' sub='The whole engine runs on infra I already had. No new SaaS. No new subscription. No new credit card.' %}
+
+  <div class='grid grid-2'>
+    {% include components/card.html tag='Free' icon='check' title='The base stack' desc='Obsidian. opencode. The file system. Cloudflare Pages. All free. All on infra you already have. The only thing that costs is the LLM.' %}
+    {% include components/card.html tag='$0/mo' icon='dollar-sign' title='The manual path' desc='No X API, no LinkedIn API. The drafts sit in the queue. You copy-paste manually. The system works without the API. The cost is zero.' %}
+    {% include components/card.html tag='$100/mo' icon='zap' title='The API path' desc='X API basic tier + optional LinkedIn API. Drafts auto-publish. The same cost as a single agency LinkedIn post per month. The asymmetry is the strategy.' %}
+  </div>
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='Try it' title='The 24-Hour Build' sub='The system is open-source. The 4 files are 4 markdown files. The whole thing is reproducible in an afternoon.' %}
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>01</div>
+      <div class='step-body'>
+        <strong>Hour 1: the vault</strong>
+        Set up an Obsidian vault. 4 folders: entities/, concepts/, summaries/, raw/. Write 5 pages about your work. Link with wikilinks. The LLM needs the graph.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>02</div>
+      <div class='step-body'>
+        <strong>Hour 2: the strategy pages</strong>
+        Write 4 pages: content strategy, tone of voice, content types, ground vision. These are the pages that define what the system posts. If you cannot write the spec, the LLM cannot draft.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>03</div>
+      <div class='step-body'>
+        <strong>Hour 3: the slash command</strong>
+        Install opencode. Create a SKILL.md. Create a /post command. Wire it to read the vault, read the strategy pages, run the decision tree, output drafts to a queue folder. Test on a fake session.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>04</div>
+      <div class='step-body'>
+        <strong>Hour 4: the first real post</strong>
+        Do a real work session. At the end, run /post. Read the drafts. Run the standalone quality test. Pick the best. Post it. The system has now produced its first post.
+      </div>
+    </div>
+  </div>
+
+  {% include components/prose-center.html text='The first post will not be perfect. The second will be better. The tenth will be on-brand. The fiftieth will be a library. The system compounds.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The result' title='The Landing' sub='The whole content engine is 4 markdown files. The whole workflow is a slash command. The whole output is a queue of drafts you approve.' %}
+
+  <div class='grid grid-2'>
+    {% include components/card.html tag='The LLM' icon='lightbulb' title='The writer' desc='Good at writing. Bad at deciding what to write. The deciding is yours. The system takes the deciding off your plate. The writing is on autopilot.' %}
+    {% include components/card.html tag='You' icon='user' title='The editor' desc='Decide what gets published. The system queues the drafts. You approve. The boundary is the queue. The decision is yours.' %}
+  </div>
+
+  {% include components/prose-center.html text='If you have been not posting, build the 4 files. The 4 files are the system. The system is the post. The post is the audience. The audience is the leverage.' %}
+</section>
+
+<hr class='divider'>
+
+{% include components/closer.html
+   icon='lightbulb'
+   takeaway='The 4 files are the system. The system is the post. The post is the audience.'
+   echo='Open-source on GitHub. DFY install at $990. The first post will not be perfect. The fiftieth will be a library. Build the 4 files today.'
+%}

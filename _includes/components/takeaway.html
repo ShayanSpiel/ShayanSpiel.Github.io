@@ -1,0 +1,13 @@
+{%- comment -%}
+  Component: takeaway
+  Inline end-of-section insight. Lightbulb icon + text on one line,
+  regular weight (not bold), centered as a single line.
+  Use to mark the single insight a reader should leave the section with.
+  Slots:
+    text — the takeaway line (required)
+  Example:
+    {% include components/takeaway.html text="The building never stops. The content never starts. Not laziness. Wrong abstraction." %}
+{%- endcomment -%}
+<p class="takeaway">
+  {% include components/icon.html name="lightbulb" size=14 class="takeaway-icon" %}<span class="takeaway-text">{{ include.text }}</span>
+</p>

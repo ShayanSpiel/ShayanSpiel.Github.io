@@ -1,0 +1,88 @@
+---
+layout: page-shell
+title: Topics
+description: Browse blog posts by topic. Content pipeline for developers, AI & agents, building in public, and the Spiel Engine.
+keywords: blog topics, categories, content pipeline, AI agents, agentic AI, building in public, session-as-content
+image:
+  path: /assets/og-default.png?v=2
+  width: 1200
+  height: 630
+permalink: /categories/
+---
+
+<p>Every post belongs to a topic and a cluster. Clusters group topics that share an underlying thesis. Each cluster has a <em>pillar</em> post &mdash; the long, comprehensive entry that anchors the rest.</p>
+
+<nav class="tag-cloud" aria-label="All topics">
+  {%- assign all_cats = site.posts | map: 'categories' | join: ',' | split: ',' | uniq | sort -%}
+  {%- for cat in all_cats -%}
+    {%- assign cat_strip = cat | strip -%}
+    {%- if cat_strip != '' -%}
+      <a href="/posts/?cat={{ cat_strip | slugify }}" class="tag-chip">{{ cat_strip }}</a>
+    {%- endif -%}
+  {%- endfor %}
+</nav>
+
+<hr class="divider">
+
+<h2>Clusters</h2>
+
+{%- for cluster in site.data.clusters.clusters -%}
+<section class="cluster" id="{{ cluster.slug }}">
+  <header class="cluster-head">
+    <h2>{{ cluster.name }}</h2>
+    <span class="cluster-count">{{ cluster.members.size }} posts</span>
+  </header>
+
+  <p class="category-desc">{{ cluster.description }}</p>
+
+  {%- if cluster.pillar -%}
+  <p class="category-desc" style="font-size: var(--fs-sm); color: var(--tx-3); margin-top: -8px;">
+    <strong style="color: var(--tx-1);">Pillar:</strong>
+    <a href="{{ cluster.pillar }}">{{ cluster.pillar | replace: "/", "" | replace: "-", " " | capitalize }}</a>
+  </p>
+  {%- endif -%}
+
+  <ul class="list-plain">
+    {%- for member_path in cluster.members -%}
+      {%- assign post = site.posts | where: "url", member_path | first -%}
+      {%- if post %}
+      <li style="margin-bottom: var(--s-3);">
+        <a href="{{ post.url | relative_url }}" class="plain">
+          <span class="muted small post-list-date">{{ post.date | date: "%b %-d, %Y" }}</span>
+          <u>{{ post.title }}</u>
+        </a>
+        {%- if post.description %}
+        <div class="small muted post-list-desc">{{ post.description | strip_html | truncatewords: 28 }}</div>
+        {%- endif %}
+      </li>
+      {%- endif %}
+    {%- endfor %}
+  </ul>
+</section>
+{%- endfor %}
+
+<hr class="divider">
+
+<h2>All categories</h2>
+
+{%- assign all_cats_sorted = site.posts | map: 'categories' | join: ',' | split: ',' | uniq | sort -%}
+{%- for cat in all_cats_sorted -%}
+  {%- assign cat_strip = cat | strip -%}
+  {%- if cat_strip != '' -%}
+    <section id="{{ cat_strip | slugify }}" style="margin-top: var(--s-5);">
+      <h3 style="font-size: var(--fs-lg);"><a href="/posts/?cat={{ cat_strip | slugify }}" class="plain">{{ cat_strip }}</a></h3>
+      <ul class="list-plain">
+        {%- for post in site.posts -%}
+          {%- if post.categories contains cat_strip -%}
+            <li>
+              <a href="{{ post.url | relative_url }}" class="plain">
+                <span class="muted small post-list-date">{{ post.date | date: "%b %-d, %Y" }}</span>
+                <u>{{ post.title }}</u>
+              </a>
+            </li>
+          {%- endif -%}
+        {%- endfor %}
+      </ul>
+    </section>
+  {%- endif -%}
+{%- endfor %}

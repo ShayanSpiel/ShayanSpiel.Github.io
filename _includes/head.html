@@ -1,6 +1,6 @@
 {%- assign site_name = site.title -%}
 {%- assign meta_desc = page.description | default: page.excerpt | default: site.description | strip_html | normalize_whitespace | truncate: 160 -%}
-{%- assign meta_image = page.image.path | default: '/assets/og-default.png' -%}
+{%- assign meta_image = page.image.path | default: '/assets/og-default.png?v=2' -%}
 {%- assign canonical_url = page.url | replace: 'index.html', '' | absolute_url -%}
 {%- if page.layout == 'post' -%}
   {%- assign og_type = 'article' -%}
@@ -58,7 +58,7 @@
   <link rel="alternate" type="application/rss+xml" title="{{ site_name }} — RSS" href="{{ '/feed.xml' | relative_url }}" />
   <link rel="sitemap" type="application/xml" title="Sitemap" href="{{ '/sitemap.xml' | relative_url }}" />
 
-  <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}" />
+  <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}?v={{ site.time | date: '%s' }}" />
 
   {%- include ga4.html -%}
   {%- include posthog.html -%}

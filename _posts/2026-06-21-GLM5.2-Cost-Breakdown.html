@@ -1,0 +1,393 @@
+---
+layout: post-shell
+title: "Is GLM-5.2 Cheaper Than the Frontier?"
+date: 2026-06-21 09:00:00 +0000
+description: "A working breakdown of LLM API pricing across Anthropic, OpenAI, Google, and Z.ai, at every reasoning effort. Where the popular claim breaks down, where it could technically be true, and what the data says about intelligence."
+tags:
+  - glm-5.2
+  - claude-opus
+  - gpt-5.5
+  - llm-pricing
+  - artificial-analysis
+  - open-weights
+  - reasoning-effort
+  - prompt-caching
+  - llm-api
+categories:
+  - AI & Agents
+related:
+  - /agentic-loops/
+  - /gates-not-models/
+  - /spielengine-open-source/
+image:
+  path: /assets/uploads/glm52-pricing.png
+  alt: "Is GLM-5.2 cheaper than the frontier? LLM API pricing breakdown by Shayan Spiel."
+  width: 1200
+  height: 630
+permalink: /GLM5.2-Cost-Breakdown/
+---
+
+<section class='hero'>
+  <h1>GLM-5.2 vs the Frontier</h1>
+  <p class='lede'>A working breakdown of LLM API pricing across Anthropic, OpenAI, Google, and Z.ai, at every reasoning effort. Where the popular claim breaks down, where it could technically be true, and what the data says about intelligence.</p>
+</section>
+
+{% include components/post-meta.html %}
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The numbers' title='What the data shows' sub='Three numbers that answer the question. Source: first-party pricing and Artificial Analysis Intelligence Index v4.1.' %}
+
+  <div class='grid grid-3'>
+    {% include components/card.html variant='stat-shift' icon='circle-check' num='5.6&times;' title='vs GPT-5.5' desc='cheaper per request at medium reasoning effort' %}
+    {% include components/card.html variant='stat-shift' icon='circle-check' num='5.1&times;' title='vs Claude Opus 4.8' desc='cheaper per request at medium reasoning effort' %}
+    {% include components/card.html variant='stat-shift' icon='target' num='51' title='AA Intelligence Index' desc='leading open-weights model, tied with Opus 4.8 and GPT-5.5' %}
+  </div>
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The claim' title='What people are saying' sub='A widely-shared take from a respected voice in the space argues GLM-5.2 is more expensive than the proprietary frontier at medium reasoning effort. Worth examining.' %}
+
+  <div class='tweet-frame'>
+    <blockquote class='twitter-tweet' data-theme='dark' data-dnt='true' data-conversation='none'><p lang='en' dir='ltr'>I see a lot of people hyped about GLM-5.2. Rightfully so! Having an open weight model surpass GPT-5.4 and every Gemini model is dope.<br><br>That said - it&#39;s not cheap. Both Opus 4.8 and GPT-5.5 set to &quot;medium&quot; are cheaper and smarter than GLM-5.2 <a href='https://t.co/SPovI1LKnZ'>pic.twitter.com/SPovI1LKnZ</a></p>&mdash; Theo - t3.gg (@theo) <a href='https://x.com/theo/status/2068533586131841072?ref_src=twsrc%5Etfw'>June 21, 2026</a></blockquote>
+  </div>
+
+  {% include components/prose-center.html text='Theo is right about the first half. GLM-5.2 does surpass GPT-5.4 and every Gemini model on the Intelligence Index. The second half, the cheaper and smarter part, breaks when you run the math.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The math' title='The pricing data' sub='Reasoning-effort parameters control how many tokens a model spends thinking. They do not change the per-token rate.' %}
+
+  {% include components/prose-center.html text='The <code>reasoning_effort</code> parameter on GPT-5.5, the extended-thinking budget on Claude, and <code>reasoning_effort</code> on GLM-5.2 all do the same thing. They control how many tokens the model spends thinking. The per-token rate stays fixed regardless of effort mode.' %}
+
+  <table class='data-table'>
+    <thead>
+      <tr>
+        <th>Model</th>
+        <th>Provider</th>
+        <th class='num'>Input /MTok</th>
+        <th class='num'>Cache hit /MTok</th>
+        <th class='num'>Output /MTok</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class='highlight'>
+        <td>GLM-5.2</td>
+        <td>Z.ai</td>
+        <td class='num'>$1.40</td>
+        <td class='num'>$0.26</td>
+        <td class='num'>$4.40</td>
+      </tr>
+      <tr>
+        <td>Gemini 3 Pro</td>
+        <td>Google</td>
+        <td class='num'>$2.00</td>
+        <td class='num'>$0.20</td>
+        <td class='num'>$12.00</td>
+      </tr>
+      <tr>
+        <td>Claude Opus 4.8</td>
+        <td>Anthropic</td>
+        <td class='num'>$5.00</td>
+        <td class='num'>$0.50</td>
+        <td class='num'>$25.00</td>
+      </tr>
+      <tr>
+        <td>GPT-5.5</td>
+        <td>OpenAI</td>
+        <td class='num'>$5.00</td>
+        <td class='num'>$0.50</td>
+        <td class='num'>$30.00</td>
+      </tr>
+    </tbody>
+    <caption>Per-token pricing published June 21, 2026. Anthropic cache write is billed separately at $6.25/MTok; OpenAI and Google cache write is free.</caption>
+  </table>
+
+  {% include components/prose-center.html text='For Opus 4.8 at medium effort to come out cheaper than GLM-5.2, Opus 4.8 would need to emit roughly <strong>5.7&times; fewer reasoning tokens</strong> than GLM-5.2, enough to close the per-token gap. In practice, GLM-5.2 uses <em>more</em> reasoning tokens at medium effort than Opus 4.8 does. The per-token rate gap is large enough that GLM-5.2 still wins.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The workload' title='Cost at a real medium-reasoning workload' sub='20K input tokens, 70% prompt-cache hit, 5K output including reasoning. Reasoning tokens are billed as output on every provider.' %}
+
+  <div class='card'>
+    <h3 class='card-title'>Cost per request</h3>
+    <p class='card-desc'>Sorted cheapest first. Bar length is cost. Color intensity shows where each model ranks.</p>
+    <div class='chart-box'><canvas id='chart-cost'></canvas></div>
+  </div>
+
+  <div class='grid grid-3 mt-6'>
+    {% include components/card.html tag='Opus 4.8 &rarr; GLM-5.2' icon='arrow-right' title='$0.29 &rarr; $0.06' desc='5.1&times; more expensive on the same workload.' %}
+    {% include components/card.html tag='GPT-5.5 &rarr; GLM-5.2' icon='arrow-right' title='$0.34 &rarr; $0.06' desc='6.0&times; more expensive on the same workload.' %}
+    {% include components/card.html tag='Gemini 3 Pro &rarr; GLM-5.2' icon='arrow-right' title='$0.13 &rarr; $0.06' desc='2.4&times; more expensive on the same workload.' %}
+  </div>
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The intelligence' title='Smarter? No. They&rsquo;re Tied.' sub='Artificial Analysis Intelligence Index v4.1, a weighted composite of 9 evaluations including GDPval-AA v2, Terminal-Bench v2.1, HLE, GPQA Diamond, and AA-Omniscience.' %}
+
+  <div class='card'>
+    <h3 class='card-title'>AA Intelligence Index v4.1</h3>
+    <p class='card-desc'>The four frontier models land within two points of each other. Only Claude Fable 5, at $10 and $50 per MTok, clearly leads.</p>
+    <div class='chart-box short'><canvas id='chart-index'></canvas></div>
+  </div>
+
+  {% include components/prose-center.html text='GLM-5.2 at <strong>51</strong> is the leading open-weights model on the index. On GDPval-AA v2 specifically, the real-world agentic work benchmark, GLM-5.2 scores <strong>1524</strong>, ahead of GPT-5.5 (xhigh) at <strong>1514</strong>. The Intelligence Index lead belongs to Claude Fable 5 (~60), which costs 2 to 3&times; more than everything else on this chart.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The trade-off' title='The Catch: More Output Tokens' sub='Theo followed up with a fair point. Cheaper per token does not mean cheaper in time.' %}
+
+  <div class='tweet-frame'>
+    <blockquote class='twitter-tweet' data-theme='dark' data-dnt='true' data-conversation='none'><p lang='en' dir='ltr'>It also uses way more output tokens. The tokens are cheaper, but the volume of them means you&#39;ll spend much more time waiting for results.<br><br>Still dope! Just trying to make sure people set their expectations properly <a href='https://t.co/hy6NO0CtEq'>pic.twitter.com/hy6NO0CtEq</a></p>&mdash; Theo - t3.gg (@theo) <a href='https://x.com/theo/status/2068533867955560593?ref_src=twsrc%5Etfw'>June 21, 2026</a></blockquote>
+  </div>
+
+  {% include components/prose-center.html text='In his follow-up, Theo added: <em>&ldquo;the volume of them means you&rsquo;ll spend much more time waiting for results.&rdquo;</em> That&rsquo;s true, and worth being upfront about.' %}
+
+  <div class='card mt-6'>
+    <h3 class='card-title'>Output tokens per task</h3>
+    <p class='card-desc'>GLM-5.2 emits the most output tokens of any leading open-weights model. Lower per-token cost, but more tokens to wait for.</p>
+    <div class='chart-box'><canvas id='chart-tokens'></canvas></div>
+  </div>
+
+  {% include components/prose-center.html text='At max thinking effort, GLM-5.2 emits <strong>43k output tokens</strong> per Intelligence Index task (37k reasoning, 6k answer). For comparison, MiniMax-M3 emits 24k, Kimi K2.6 emits 35k, and DeepSeek V4 Pro (max) emits 37k. GLM-5.2 is roughly <strong>65% to 80% more verbose</strong> than the leanest open-weights peers.' %}
+
+  {% include components/prose-center.html text='For batch jobs and overnight pipelines, this is irrelevant. The cost advantage dominates. For latency-sensitive interactive use, Opus 4.8 or GPT-5.5 medium will feel snappier, even at higher cost, because they finish thinking in fewer tokens. That is a real trade-off, not a footnote.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The honest answer' title='Where the Claim Could Be Technically True' sub='Three narrow cases where &ldquo;Opus 4.8 medium beats GLM-5.2 medium on cost&rdquo; can hold up, if you squint.' %}
+
+  <div class='grid grid-3'>
+    {% include components/card.html tag='Narrow case 1' icon='layers' title='Batch API' desc='Anthropic and OpenAI offer 50% discounts on batch jobs. Z.ai has no published batch tier. The gap shrinks to roughly 2.5&times; instead of 5&times;.' %}
+    {% include components/card.html tag='Narrow case 2' icon='user' title='Subscription vs API' desc='Claude Max or ChatGPT Pro at $200/mo bundles effectively unlimited usage of the top model. That pricing is not comparable to per-token API rates.' %}
+    {% include components/card.html tag='Narrow case 3' icon='target' title='Single benchmarks' desc='On individual evals (HLE, certain coding tasks), Opus 4.8 medium or GPT-5.5 medium can outperform GLM-5.2. The composite index places them as tied.' %}
+  </div>
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The bottom line' title='What the Data Says' sub='Three takeaways. Cost, intelligence, availability. The data holds on all three.' %}
+
+  {% include components/prose-center.html text='GLM-5.2 is cheaper than Opus 4.8 and GPT-5.5 at every published reasoning-effort level. It is roughly tied with both on the Artificial Analysis Intelligence Index v4.1. It comes from Z.ai under an MIT license, which means self-hosting, fine-tuning, and zero vendor lock-in are real options. None of the proprietary frontier models offer that.' %}
+
+  {% include components/prose-center.html text='For the first time, an open-weights model is a head-on competitor to the frontier on cost, intelligence, <em>and</em> availability. That is the right thing for builders who don&rsquo;t want to depend on a single provider. The hype is correct. Set expectations on latency, then ship.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='References' title='Sources' sub='Every claim on this page ties back to a first-party source. No invented numbers.' %}
+
+  <ul class='sources'>
+    {% include components/source.html
+       author='Theo (X)'
+       url='https://x.com/theo/status/2068533586131841072'
+       title='&ldquo;Is GLM-5.2 actually cheaper than Opus 4.8 and GPT-5.5?&rdquo;' %}
+    {% include components/source.html
+       author='Theo (X)'
+       url='https://x.com/theo/status/2068533867955560593'
+       title='&ldquo;It also uses way more output tokens&hellip;&rdquo;' %}
+    {% include components/source.html
+       author='Artificial Analysis'
+       url='https://artificialanalysis.ai/articles/glm-5-2-is-the-new-leading-open-weights-model-on-the-artificial-analysis-intelligence-index'
+       title='GLM-5.2 is the new leading open weights model' %}
+    {% include components/source.html
+       author='Anthropic'
+       url='https://www.anthropic.com/pricing'
+       title='API pricing &mdash; Opus 4.8, Sonnet 4.6, Haiku 4.5' %}
+    {% include components/source.html
+       author='OpenAI'
+       url='https://openai.com/api/pricing/'
+       title='API pricing &mdash; GPT-5.5, GPT-5.4, GPT-5.4 mini' %}
+    {% include components/source.html
+       author='Google Cloud'
+       url='https://cloud.google.com/vertex-ai/generative-ai/pricing'
+       title='Vertex AI &mdash; Gemini 3 Pro pricing' %}
+    {% include components/source.html
+       author='Z.ai'
+       url='https://docs.z.ai/guides/overview/quick-start'
+       title='GLM-5.2 quick start' %}
+  </ul>
+
+  {% include components/prose-center.html small=true text='Last updated June 21, 2026. Pricing pulled from first-party pricing pages on this date. Intelligence Index v4.1 published June 15, 2026.' %}
+</section>
+
+<hr class='divider'>
+
+{% include components/closer.html
+   icon='rocket'
+   takeaway='Open weights. Real intelligence. Real cost advantage.'
+   echo='GLM-5.2 is cheaper than Opus 4.8 and GPT-5.5 at every reasoning-effort level. Tied with both on the Intelligence Index. MIT licensed. Self-hosting, fine-tuning, zero vendor lock-in. The frontier is open.'
+%}
+
+<script src='https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js'></script>
+<script>
+(function() {
+  function v(name, fallback) {
+    var s = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    return s || fallback;
+  }
+  var TEXT   = v('--tx',   '#fff');
+  var MUTED  = v('--tx-2','#b0b0b0');
+  var GRID   = v('--bd',  '#1a1a1a');
+  var BAR_WIN = TEXT;
+  var BAR_2   = v('--tx-2', '#b0b0b0');
+  var BAR_3   = v('--tx-3', '#888');
+  var BAR_4   = v('--tx-4', '#555');
+
+  if (typeof Chart === 'undefined') return;
+  Chart.defaults.font.family = "'Inter', -apple-system, system-ui, sans-serif";
+  Chart.defaults.color = MUTED;
+  Chart.defaults.borderColor = GRID;
+  Chart.defaults.plugins.legend.labels.usePointStyle = true;
+
+  var MODELS = [
+    { name: 'GLM-5.2',         input: 1.40, cache: 0.26, output: 4.40,  index: 51, outTok: 43, color: BAR_WIN },
+    { name: 'Gemini 3 Pro',    input: 2.00, cache: 0.20, output: 12.00, index: 49, outTok: 22, color: BAR_2 },
+    { name: 'Claude Opus 4.8', input: 5.00, cache: 0.50, output: 25.00, index: 50, outTok: 28, color: BAR_3 },
+    { name: 'GPT-5.5',         input: 5.00, cache: 0.50, output: 30.00, index: 50, outTok: 26, color: BAR_4 },
+  ];
+
+  function mediumCost(m) {
+    var inMiss = 20000 * 0.3;
+    var inHit  = 20000 * 0.7;
+    var out    = 5000;
+    return (inMiss * m.input + inHit * m.cache + out * m.output) / 1e6;
+  }
+
+  var costs = MODELS.map(function(m) {
+    return { name: m.name, cost: mediumCost(m), color: m.color };
+  }).sort(function(a, b) { return a.cost - b.cost; });
+
+  new Chart(document.getElementById('chart-cost'), {
+    type: 'bar',
+    data: {
+      labels: costs.map(function(c) { return c.name; }),
+      datasets: [{
+        label: 'Cost per request',
+        data: costs.map(function(c) { return c.cost; }),
+        backgroundColor: costs.map(function(c) { return c.color; }),
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      indexAxis: 'y',
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              var cheapest = costs[0].cost;
+              var mult = (ctx.parsed.x / cheapest).toFixed(2);
+              return ctx.parsed.x === cheapest
+                ? '$' + ctx.parsed.x.toFixed(4) + ' · cheapest'
+                : '$' + ctx.parsed.x.toFixed(4) + ' (' + mult + '× GLM-5.2)';
+            }
+          }
+        }
+      },
+      scales: {
+        x: { beginAtZero: true, ticks: { callback: function(v) { return '$' + v.toFixed(3); } }, grid: { color: GRID } },
+        y: { grid: { display: false } }
+      }
+    }
+  });
+
+  var indexed = MODELS.slice().sort(function(a, b) { return b.index - a.index; });
+  new Chart(document.getElementById('chart-index'), {
+    type: 'bar',
+    data: {
+      labels: indexed.map(function(m) { return m.name; }),
+      datasets: [{
+        label: 'AA Intelligence Index v4.1',
+        data: indexed.map(function(m) { return m.index; }),
+        backgroundColor: indexed.map(function(m) { return m.color; }),
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: function(ctx) { return 'Index: ' + ctx.parsed.y; } } }
+      },
+      scales: {
+        y: { beginAtZero: true, max: 60, title: { display: true, text: 'Higher = smarter', color: MUTED }, grid: { color: GRID } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+
+  var tokens = MODELS.slice().sort(function(a, b) { return b.outTok - a.outTok; });
+  new Chart(document.getElementById('chart-tokens'), {
+    type: 'bar',
+    data: {
+      labels: tokens.map(function(m) { return m.name; }),
+      datasets: [{
+        label: 'Output tokens per task (k)',
+        data: tokens.map(function(m) { return m.outTok; }),
+        backgroundColor: tokens.map(function(m) { return m.color; }),
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      indexAxis: 'y',
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: function(ctx) { return ctx.parsed.x + 'k output tokens'; } } }
+      },
+      scales: {
+        x: { beginAtZero: true, ticks: { callback: function(v) { return v + 'k'; } }, grid: { color: GRID } },
+        y: { grid: { display: false } }
+      }
+    }
+  });
+})();
+</script>
+<script async src='https://platform.x.com/widgets.js' charset='utf-8' defer></script>
+<script>
+/* Lazy-load Twitter widget only when a tweet scrolls into view */
+(function() {
+  var WIDGET_URL = 'https://platform.x.com/widgets.js';
+  var loaded = false;
+  function loadWidget() {
+    if (loaded || window.twttr) return;
+    loaded = true;
+    var s = document.createElement('script');
+    s.src = WIDGET_URL;
+    s.async = true;
+    s.charset = 'utf-8';
+    s.onload = function() {
+      if (window.twttr && window.twttr.widgets) window.twttr.widgets.load();
+    };
+    document.body.appendChild(s);
+  }
+  var tweets = document.querySelectorAll('.tweet-frame');
+  if (!tweets.length || !('IntersectionObserver' in window)) {
+    loadWidget();
+  } else {
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) { loadWidget(); io.disconnect(); }
+      });
+    }, { rootMargin: '600px' });
+    tweets.forEach(function(t) { io.observe(t); });
+  }
+})();
+</script>

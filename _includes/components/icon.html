@@ -1,0 +1,20 @@
+{%- comment -%}
+  Component: icon
+  Renders a monochromatic line icon from _data/icons.yml.
+  Usage:
+    {% include components/icon.html name="arrow-right" size=16 %}
+    {% include components/icon.html name="lightbulb" size=14 label="Idea" %}
+  Slots:
+    name  — icon name (required, must exist in _data/icons.yml)
+    size  — pixel size, default 16
+    label — screen-reader label; default is the icon's label from icons.yml
+    class — extra CSS class for the SVG
+{%- endcomment -%}
+{%- assign icon = site.data.icons.icons | where: "name", include.name | first -%}
+{%- if icon -%}
+{%- assign size = include.size | default: 16 -%}
+{%- assign label = include.label | default: icon.label -%}
+<svg class="icon{% if include.class %} {{ include.class }}{% endif %}" width="{{ size }}" height="{{ size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="{{ label }}">
+  <path d="{{ icon.d }}"/>
+</svg>
+{%- endif -%}

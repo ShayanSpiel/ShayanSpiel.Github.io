@@ -1,0 +1,37 @@
+---
+layout: page-shell
+title: Sitemap
+description: Every page and post on Shayan Spiel's site, listed for easy navigation and search engine discovery.
+permalink: /sitemap/
+sitemap: false
+---
+
+<p>All blog posts, newest first.</p>
+
+<div class="grid" style="grid-template-columns: 1fr; gap: 0; margin-top: var(--s-5);">
+  {%- assign sorted = site.posts | sort: 'date' | reverse -%}
+  {%- for post in sorted -%}
+    <a href="{{ post.url | relative_url }}" class="post-list-link">
+      <span class="post-list-date">{{ post.date | date: "%b %-d, %Y" }}</span>
+      <span class="post-list-title">{{ post.title }}</span>
+    </a>
+  {%- endfor %}
+</div>
+
+<hr class="divider">
+
+<h2>Pages</h2>
+
+<ul>
+  <li><a href="/">Home</a></li>
+  <li><a href="/about/">About</a></li>
+  <li><a href="/contact/">Contact</a></li>
+  <li><a href="/posts/">All posts</a></li>
+  <li><a href="/categories/">Topics</a></li>
+  <li><a href="/tags/">Tags</a></li>
+  <li><a href="/design-system/">Design system</a></li>
+  <li><a href="/SpielEngine/">Spiel Engine &mdash; DFY Install</a></li>
+  <li><a href="/GeoGent-Waitlist/">GeoGent &mdash; Alpha waitlist</a></li>
+</ul>
+
+<p>Also available as <a href="/sitemap.xml">XML sitemap</a>.</p>

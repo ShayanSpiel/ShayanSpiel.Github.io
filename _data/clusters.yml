@@ -1,0 +1,42 @@
+# Shayan Spiel — Clusters
+# A cluster is a curated group of related posts (and optionally categories).
+# Used by:
+#   - /categories/  : the cluster index page
+#   - related_posts.html : to find related content within the same cluster
+#   - individual posts : for explicit cluster attribution
+
+clusters:
+  - name: "Content Pipeline"
+    slug: content-pipeline
+    description: "How to turn build sessions into publishable content. The content pipeline for developers removes the identity switch between building and publishing. No blank pages. No editorial calendar. Just extraction."
+    pillar: /second-brain/
+    members:
+      - /content-pipeline/
+      - /sessions-to-posts/
+      - /72-hour-sprint/
+      - /decisions-are-content/
+
+  - name: "AI & Agents"
+    slug: ai-agents
+    description: "State machines, agentic loops, and quality gates for AI content. Why prompts fail and loops survive. The architecture behind the Spiel Engine."
+    pillar: /agentic-loops/
+    members:
+      - /gates-not-models/
+      - /blog-rebuild-4h/
+      - /GLM5.2-Cost-Breakdown/
+
+  - name: "Building in Public"
+    slug: building-in-public
+    description: "Your engineering decisions are already content. Positioning as infrastructure. The blog rebuild. Shipping in public without switching identities."
+    pillar: /decisions-are-content/
+    members:
+      - /positioning-state/
+      - /pipeline-not-strategy/
+
+  - name: "Spiel Engine"
+    slug: spiel-engine
+    description: "Product updates, feature ships, and architecture details. The open-source Session-as-Content Infrastructure for technical founders."
+    pillar: /spielengine-open-source/
+    members:
+      - /spiel-engine-update/
+      - /session-as-content/

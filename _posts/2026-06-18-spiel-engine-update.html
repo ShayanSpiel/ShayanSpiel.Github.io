@@ -1,0 +1,151 @@
+---
+layout: post-shell
+title: "3 Things Shipped to the Spiel Engine This Week"
+date: 2026-06-18 09:00:00 +0000
+description: "The Spiel Engine is a pipeline that turns a build session into a publishable post. The gap that kept showing up was not the writing. It was the publishing, the last 20% that takes 80% of the energy."
+tags:
+  - spiel-engine
+  - product-update
+  - building-in-public
+categories:
+  - spiel-engine
+related:
+  - /spielengine-open-source/
+  - /pipeline-not-strategy/
+  - /from-declarative-rules-to-agentic-loops/
+permalink: /spiel-engine-update/
+---
+
+<section class='hero'>
+  <h1>3 Ships, Zero Excuses</h1>
+  <p class='lede'>The gap that kept showing up was not the writing. It was the publishing — the last 20% that takes 80% of the energy. This week I shipped 3 things that close that gap.</p>
+</section>
+
+{% include components/post-meta.html %}
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The trap' title='The Last 20%' sub='Every pipeline that turns building into publishing eventually breaks at the same point. The writing is solved. The dispatch is not.' %}
+
+  {% include components/prose-center.html text='You build something. The session gets captured. The transformer drafts the post. The draft lands in your queue. You approve. Then you open three browser tabs and start copy-pasting.' %}
+
+  {% include components/takeaway.html text='The friction was never the writing. It was everything after the writing.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The ships' title='What Shipped This Week' sub='Three things that remove steps instead of adding power.' %}
+
+  <div class='grid grid-3'>
+    {% include components/card.html variant='stat-shift' icon='send' num='1' title='One API call' desc='Buffer integration. X, LinkedIn, Threads in a single call. Free tier: 3 channels, 10 queued posts, 3,000 API calls a month.' %}
+    {% include components/card.html variant='stat-shift' icon='image' num='2' title='Custom banners' desc='Config + HTML template, opens in your browser. No Node, no Puppeteer. Edit a CSS variable, hit refresh, ship.' %}
+    {% include components/card.html variant='stat-shift' icon='file-text' num='3' title='5 strategy docs' desc='Frontmatter, version history, status markers, supersedes lineage. Voice-matched output starts from a clean input contract.' %}
+  </div>
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='Ship 1' title='One API Call, Three Platforms' sub='Buffer integration that falls back to direct APIs when you outgrow the free tier.' %}
+
+  {% include components/prose-center.html text='The Buffer integration posts to X, LinkedIn, and Threads in a single call. No copy-paste between tabs. No three separate logins. No scheduling tool with its own auth flow.' %}
+
+  {% include components/prose-center.html text='It is built on Buffer&rsquo;s multi-platform API. The free tier is genuinely generous: 3 channels, 10 posts in queue, 3,000 API calls a month. One post a day across three platforms with headroom.' %}
+
+  <div class='grid grid-2'>
+    {% include components/card.html tag='Free tier' icon='check' title='3 channels &middot; 10 queued &middot; 3,000 calls/mo' desc='One post a day, three platforms, with headroom. No credit card to start.' %}
+    {% include components/card.html tag='Outgrow path' icon='zap' title='Direct X and LinkedIn APIs' desc='When you outgrow the free tier, the tool falls back automatically. No config change, no tool switch.' %}
+  </div>
+
+  {% include components/takeaway.html text='The marginal cost from &lsquo;shipped a build&rsquo; to &lsquo;published across three platforms&rsquo; is now near zero.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='Ship 2' title='Banners Without the Node Tax' sub='Open one command. Edit a CSS variable. Hit refresh. The visual renders.' %}
+
+  {% include components/prose-center.html text='The banner tool generates post visuals from a config file and an HTML template. Open one command. A real HTML file opens in your browser. Edit a CSS variable. Hit refresh. See the new banner.' %}
+
+  {% include components/prose-center.html text='No Node setup. No Puppeteer. No Chrome path fixes. No shell-out dance. The engine is Playwright + system Chrome. The templates use CSS variables in a :root block. Change a color, save, render.' %}
+
+  <div class='grid grid-2'>
+    {% include components/card.html tag='Test coverage' icon='check' title='14 unit tests + 1 snapshot' desc='If a banner drifts more than 2% pixel-wise, the test fails. Drift is caught before it ships.' %}
+    {% include components/card.html tag='Excuse remover' icon='lightbulb' title='No more &lsquo;no banner&rsquo; excuse' desc='A post without a banner looks half-finished. The lack of a visual is the most common reason builders skip posting.' %}
+  </div>
+
+  {% include components/takeaway.html text='The tool removes the most common excuse for not posting.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='Ship 3' title='Five Strategy Docs, Voice Matched' sub='The pipeline reads these to write in your voice. Drift in, drift out.' %}
+
+  {% include components/prose-center.html text='The docs the pipeline reads to write in your voice got a structural rewrite. Clean frontmatter. Version history. Status markers. Supersedes lineage. A clear source-of-truth declaration for every concept.' %}
+
+  {% include components/pullquote.html quote='When the docs are clean, the output is clean. When they drift, the output drifts. The polish is not cosmetic. It is the input contract for the entire pipeline.' %}
+
+  {% include components/prose-center.html text='The five docs are the difference between an AI that sounds like you and an AI that sounds like an AI. They are not optional. They are the moat.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The lesson' title='Removing Friction Beats Adding Features' sub='These 3 ships do not add power. They remove steps. That is the whole point.' %}
+
+  {% include components/prose-center.html text='The week&rsquo;s lesson: removing friction from publishing is worth more than adding another feature. When the marginal cost of publish is near zero, the only question left is what is worth saying.' %}
+
+  {% include components/prose-center.html text='The constraint shifts from effort to taste. The pipeline handles the dispatch. You stay the editor. The builder never stops being the builder.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='How to try' title='Clone, Setup, Ship' sub='The repo is open source. The setup is a 14-question prompt.' %}
+
+  {% include components/prose-center.html text='Clone the repo. Drop the setup prompt into any LLM agent. Walk through the 14-question setup. The five strategy documents get filled with your strategy. Then every build session becomes:' %}
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>01</div>
+      <div class='step-body'>
+        <strong>Session log &rarr; 2 minutes of capture</strong>
+        What was decided, what was traded off, what was learned. Structured, searchable.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>02</div>
+      <div class='step-body'>
+        <strong>Pipeline compiles, drafts, gates</strong>
+        The 8-step compiler runs. The 16 mechanical gates fire. The 14-gate creative test runs. Composite score must hit 0.85.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>03</div>
+      <div class='step-body'>
+        <strong>Drafts land in queue</strong>
+        X, LinkedIn, blog. Each drafted in your voice from the strategy docs. Banner rendered. All queued for review.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>04</div>
+      <div class='step-body'>
+        <strong>You review, publish, keep building</strong>
+        One command dispatches to all three platforms. The marginal cost is near zero. You stay a builder.
+      </div>
+    </div>
+  </div>
+
+  {% include components/prose-center.html text='No editorial calendar. No &lsquo;what should I post&rsquo; loops. No blank pages. You build. The pipeline posts.' %}
+</section>
+
+<hr class='divider'>
+
+{% include components/closer.html
+   icon='rocket'
+   takeaway='You build. The pipeline posts. You stay a builder.'
+   echo='Three ships this week. One repo. Zero excuses. Run the setup and reply with what you ship.'
+%}

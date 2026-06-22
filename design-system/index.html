@@ -1,0 +1,246 @@
+---
+layout: null
+permalink: /design-system/
+title: Design System
+description: Every component, token, and pattern in the Shayan Spiel design system. The single source of truth.
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Design System — Shayan Spiel</title>
+  <link rel="stylesheet" href="/assets/css/main.css" />
+  <style>
+    .ds-page { max-width: var(--w); margin: 0 auto; padding: var(--s-7) var(--s-5); }
+    .ds-intro { margin-bottom: var(--s-7); padding-bottom: var(--s-5); border-bottom: 1px solid var(--bd); }
+    .ds-intro h1 { margin-bottom: var(--s-3); }
+    .ds-intro p { color: var(--tx-2); max-width: 60ch; }
+    .ds-tokens { margin-bottom: var(--s-7); padding-bottom: var(--s-5); border-bottom: 1px solid var(--bd); }
+    .ds-tokens h2 { margin-bottom: var(--s-3); }
+    .ds-token-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: var(--s-3); }
+    .ds-token { background: var(--bg-1); border: 1px solid var(--bd); border-radius: var(--r-md); padding: var(--s-3); font-family: var(--f-m); font-size: var(--fs-xs); }
+    .ds-token-swatch { width: 100%; height: 32px; border-radius: var(--r-sm); margin-bottom: var(--s-2); border: 1px solid var(--bd); }
+    .ds-token-name { color: var(--tx); font-weight: 600; }
+    .ds-component { background: var(--bg-1); border: 1px solid var(--bd); border-radius: var(--r-xl); padding: var(--s-6); margin-bottom: var(--s-5); }
+    .ds-component header { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-4); flex-wrap: wrap; margin-bottom: var(--s-3); }
+    .ds-component h2 { margin: 0; }
+    .ds-component h2 code { font-size: var(--fs-xl); }
+    .ds-partial { font-family: var(--f-m); font-size: var(--fs-xs); color: var(--tx-3); }
+    .ds-component > p { color: var(--tx-2); margin: 0 0 var(--s-4); }
+    .ds-component h3 { font-size: var(--fs-sm); text-transform: uppercase; letter-spacing: 0.08em; color: var(--tx-3); margin: var(--s-4) 0 var(--s-2); font-weight: 600; }
+    .ds-slots { list-style: none; padding: 0; margin: 0; font-family: var(--f-m); font-size: var(--fs-sm); }
+    .ds-slots li { padding: var(--s-2) 0; border-bottom: 1px solid var(--bd); }
+    .ds-slots li:last-child { border-bottom: none; }
+    .ds-slots code { background: transparent; padding: 0; color: var(--tx); }
+    .slot-req { color: #f87171; font-size: var(--fs-xs); margin-left: var(--s-2); }
+    .slot-opt { color: var(--tx-3); font-size: var(--fs-xs); margin-left: var(--s-2); }
+    .ds-example { background: var(--bg); border: 1px solid var(--bd); border-radius: var(--r-md); padding: var(--s-3) var(--s-4); font-size: var(--fs-xs); line-height: 1.55; overflow-x: auto; margin: 0; }
+    .ds-example code { background: transparent; padding: 0; font-size: inherit; }
+  </style>
+</head>
+<body>
+<div class="ds-page">
+  <header class="ds-intro">
+    <h1>Design System</h1>
+    <p>Every component, token, and pattern in the Shayan Spiel design system. The single source of truth. <a href="/_data/components.yml">View manifest</a> · <a href="/_data/design-tokens.yml">View tokens</a></p>
+  </header>
+
+  <section class="ds-tokens">
+    <h2>Tokens</h2>
+    <div class="ds-token-grid">
+      <div class="ds-token"><div class="ds-token-swatch" style="background: var(--bg)"></div><div class="ds-token-name">--bg</div></div>
+      <div class="ds-token"><div class="ds-token-swatch" style="background: var(--bg-1)"></div><div class="ds-token-name">--bg-1</div></div>
+      <div class="ds-token"><div class="ds-token-swatch" style="background: var(--tx)"></div><div class="ds-token-name">--tx</div></div>
+      <div class="ds-token"><div class="ds-token-swatch" style="background: var(--tx-2)"></div><div class="ds-token-name">--tx-2</div></div>
+      <div class="ds-token"><div class="ds-token-swatch" style="background: var(--tx-3)"></div><div class="ds-token-name">--tx-3</div></div>
+      <div class="ds-token"><div class="ds-token-swatch" style="background: var(--bd)"></div><div class="ds-token-name">--bd</div></div>
+      <div class="ds-token"><div class="ds-token-swatch" style="background: var(--bd-1)"></div><div class="ds-token-name">--bd-1</div></div>
+      <div class="ds-token"><div class="ds-token-swatch" style="background: var(--bd-2)"></div><div class="ds-token-name">--bd-2</div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2 style="margin-bottom: var(--s-5)">Components (12)</h2>
+        <article class="ds-component" id="btn">
+          <header>
+            <h2><code>btn</code></h2>
+            <span class="ds-partial">_includes/components/btn.html</span>
+          </header>
+          <p>A button. Two variants: primary, ghost. Optional arrow and leading icon.</p>
+          <h3>Slots</h3>
+          <ul class="ds-slots">          <li><code>label</code> <span class="slot-req">required</span></li>
+          <li><code>href</code> <span class="slot-req">required</span></li>
+          <li><code>variant</code> <span class="slot-opt">optional</span> &mdash; primary | ghost</li>
+          <li><code>arrow</code> <span class="slot-opt">optional</span> &mdash; boolean</li>
+          <li><code>icon</code> <span class="slot-opt">optional</span> &mdash; svg-path</li>
+          <li><code>attrs</code> <span class="slot-opt">optional</span> &mdash; string</li>
+          </ul>
+          <h3>Example</h3>
+          <pre class="ds-example"><code>{% include components/btn.html label="Get Spiel" href="/SpielEngine/" variant="primary" arrow=true %}</code></pre>
+        </article>
+        <article class="ds-component" id="section-head">
+          <header>
+            <h2><code>section-head</code></h2>
+            <span class="ds-partial">_includes/components/section-head.html</span>
+          </header>
+          <p>Centered section header with optional tag, title, and subtitle.</p>
+          <h3>Slots</h3>
+          <ul class="ds-slots">          <li><code>tag</code> <span class="slot-opt">optional</span></li>
+          <li><code>title</code> <span class="slot-req">required</span></li>
+          <li><code>sub</code> <span class="slot-opt">optional</span></li>
+          </ul>
+          <h3>Example</h3>
+          <pre class="ds-example"><code>{% include components/section-head.html tag="The premise" title="The Hidden Asset" sub="..." %}</code></pre>
+        </article>
+        <article class="ds-component" id="card">
+          <header>
+            <h2><code>card</code></h2>
+            <span class="ds-partial">_includes/components/card.html</span>
+          </header>
+          <p>A card. Variants: default, stat-shift. Optional href makes it a link. Optional icon adds visual variety.</p>
+          <h3>Slots</h3>
+          <ul class="ds-slots">          <li><code>tag</code> <span class="slot-opt">optional</span> &mdash; <em>use for stat numbers in default cards</em></li>
+          <li><code>title</code> <span class="slot-req">required</span></li>
+          <li><code>desc</code> <span class="slot-req">required</span></li>
+          <li><code>href</code> <span class="slot-opt">optional</span></li>
+          <li><code>num</code> <span class="slot-opt">optional</span> &mdash; <em>used with variant=stat-shift</em></li>
+          <li><code>icon</code> <span class="slot-opt">optional</span> &mdash; <em>decorative; above num for stat-shift</em></li>
+          <li><code>variant</code> <span class="slot-opt">optional</span> &mdash; default | stat-shift</li>
+          </ul>
+          <h3>Example</h3>
+          <pre class="ds-example"><code>{% include components/card.html tag="Refactor" title="Evidence, not code" desc="..." %}</code></pre>
+        </article>
+        <article class="ds-component" id="prose-center">
+          <header>
+            <h2><code>prose-center</code></h2>
+            <span class="ds-partial">_includes/components/prose-center.html</span>
+          </header>
+          <p>Centered single-column reading prose.</p>
+          <h3>Slots</h3>
+          <ul class="ds-slots">          <li><code>text</code> <span class="slot-req">required</span></li>
+          <li><code>small</code> <span class="slot-opt">optional</span> &mdash; boolean</li>
+          </ul>
+          <h3>Example</h3>
+          <pre class="ds-example"><code>{% include components/prose-center.html text="For years I believed..." %}</code></pre>
+        </article>
+        <article class="ds-component" id="takeaway">
+          <header>
+            <h2><code>takeaway</code></h2>
+            <span class="ds-partial">_includes/components/takeaway.html</span>
+          </header>
+          <p>End-of-section insight. Lightbulb icon + text on one line, regular weight. Marks the single line a reader should leave the section with.</p>
+          <h3>Slots</h3>
+          <ul class="ds-slots">          <li><code>text</code> <span class="slot-req">required</span></li>
+          </ul>
+          <h3>Example</h3>
+          <pre class="ds-example"><code>{% include components/takeaway.html text="The building never stops. The content never starts. Not laziness. Wrong abstraction." %}</code></pre>
+        </article>
+        <article class="ds-component" id="closer">
+          <header>
+            <h2><code>closer</code></h2>
+            <span class="ds-partial">_includes/components/closer.html</span>
+          </header>
+          <p>The closing block of a post. Distinct from sections: large relevant icon, silver-gradient key line, smaller echo, optional minimal actions. Use once per post, as the last content block.</p>
+          <h3>Slots</h3>
+          <ul class="ds-slots">          <li><code>icon</code> <span class="slot-req">required</span></li>
+          <li><code>takeaway</code> <span class="slot-req">required</span></li>
+          <li><code>echo</code> <span class="slot-opt">optional</span></li>
+          <li><code>actions</code> <span class="slot-opt">optional</span> &mdash; list</li>
+          </ul>
+          <h3>Example</h3>
+          <pre class="ds-example"><code>{% include components/closer.html
+   icon="lightbulb"
+   takeaway="Everything else is a byproduct."
+   echo="Build today. Capture in two minutes. The rest compounds."
+   actions=site.data.example_closer_actions %}</code></pre>
+        </article>
+        <article class="ds-component" id="pullquote">
+          <header>
+            <h2><code>pullquote</code></h2>
+            <span class="ds-partial">_includes/components/pullquote.html</span>
+          </header>
+          <p>Large left-bordered quote with optional attribution.</p>
+          <h3>Slots</h3>
+          <ul class="ds-slots">          <li><code>quote</code> <span class="slot-req">required</span></li>
+          <li><code>attribution</code> <span class="slot-opt">optional</span></li>
+          </ul>
+          <h3>Example</h3>
+          <pre class="ds-example"><code>{% include components/pullquote.html quote="..." attribution="..." %}</code></pre>
+        </article>
+        <article class="ds-component" id="step-list">
+          <header>
+            <h2><code>step-list</code></h2>
+            <span class="ds-partial">_includes/components/step-list.html</span>
+          </header>
+          <p>Numbered workflow. Pass steps as a list of title + body items.</p>
+          <h3>Slots</h3>
+          <ul class="ds-slots">          <li><code>steps</code> <span class="slot-req">required</span> &mdash; list</li>
+          </ul>
+          <h3>Example</h3>
+          <pre class="ds-example"><code>{% include components/step-list.html steps=page.steps %}</code></pre>
+        </article>
+        <article class="ds-component" id="definition">
+          <header>
+            <h2><code>definition</code></h2>
+            <span class="ds-partial">_includes/components/definition.html</span>
+          </header>
+          <p>Term card with optional phonetic mark and definition.</p>
+          <h3>Slots</h3>
+          <ul class="ds-slots">          <li><code>term</code> <span class="slot-req">required</span></li>
+          <li><code>mark</code> <span class="slot-opt">optional</span></li>
+          <li><code>def</code> <span class="slot-req">required</span></li>
+          </ul>
+          <h3>Example</h3>
+          <pre class="ds-example"><code>{% include components/definition.html term="Session-as-Content" mark="/sesh/" def="..." %}</code></pre>
+        </article>
+        <article class="ds-component" id="cta-card">
+          <header>
+            <h2><code>cta-card</code></h2>
+            <span class="ds-partial">_includes/components/cta-card.html</span>
+          </header>
+          <p>End-of-post CTA with title, body, and action buttons.</p>
+          <h3>Slots</h3>
+          <ul class="ds-slots">          <li><code>title</code> <span class="slot-req">required</span></li>
+          <li><code>body</code> <span class="slot-opt">optional</span></li>
+          <li><code>actions</code> <span class="slot-opt">optional</span> &mdash; list</li>
+          </ul>
+          <h3>Example</h3>
+          <pre class="ds-example"><code>{% include components/cta-card.html title="..." body="..." actions=... %}</code></pre>
+        </article>
+        <article class="ds-component" id="stat-big">
+          <header>
+            <h2><code>stat-big</code></h2>
+            <span class="ds-partial">_includes/components/stat-big.html</span>
+          </header>
+          <p>Large gradient number with optional small unit suffix.</p>
+          <h3>Slots</h3>
+          <ul class="ds-slots">          <li><code>value</code> <span class="slot-req">required</span></li>
+          <li><code>unit</code> <span class="slot-opt">optional</span></li>
+          </ul>
+          <h3>Example</h3>
+          <pre class="ds-example"><code>{% include components/stat-big.html value="5.6" unit="x" %}</code></pre>
+        </article>
+        <article class="ds-component" id="source">
+          <header>
+            <h2><code>source</code></h2>
+            <span class="ds-partial">_includes/components/source.html</span>
+          </header>
+          <p>A single citation source. Renders inside a <ul class='sources'> for a centered, minimal citation list. Author label above, title link below.</p>
+          <h3>Slots</h3>
+          <ul class="ds-slots">          <li><code>author</code> <span class="slot-req">required</span> &mdash; <em>short source label like 'Theo (X)'</em></li>
+          <li><code>url</code> <span class="slot-req">required</span></li>
+          <li><code>title</code> <span class="slot-req">required</span></li>
+          </ul>
+          <h3>Example</h3>
+          <pre class="ds-example"><code><ul class="sources">
+  {% include components/source.html
+     author="Theo (X)"
+     url="https://x.com/theo/..."
+     title="Is GLM-5.2 cheaper?" %}
+</ul></code></pre>
+        </article>
+  </section>
+</div>
+</body>
+</html>

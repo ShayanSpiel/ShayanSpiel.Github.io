@@ -1,0 +1,210 @@
+---
+layout: post-shell
+title: "How a Developer Content Pipeline Maps Build Sessions to Blog Posts"
+date: 2026-06-15 09:00:00 +0000
+description: "5-document developer content pipeline that converts build sessions to LinkedIn, X, and blog drafts in 2 minutes of capture. No blank pages, no editorial calendar."
+tags:
+  - content-pipeline
+  - build-sessions
+  - developer-workflow
+  - building-in-public
+categories:
+  - Content Pipeline
+related:
+  - /content-pipeline/
+  - /pipeline-not-strategy/
+  - /decisions-are-content/
+permalink: /sessions-to-posts/
+---
+
+<section class='hero'>
+  <h1>Stop Writing. Start Scanning.</h1>
+  <p class='lede'>2 minutes of capture per build session. The rest runs itself. No blank pages, no editorial calendar.</p>
+</section>
+
+{% include components/post-meta.html %}
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The trap' title='Why Technical Founders Struggle With Content' sub='You ship real things. You solve hard problems. Your DMs are empty.' %}
+
+  {% include components/prose-center.html text='I spent 8 years shipping real things. Almost nobody knew. Not because the work was bad. Because I never connected the build to the post.' %}
+
+  {% include components/prose-center.html text='The issue was never writing skill. The issue was that the work happened, the lessons surfaced, and none of it ever connected to a post. A build-session pipeline solves this by making the build the source of every draft.' %}
+
+  <div class='grid grid-2'>
+    {% include components/card.html tag='8 years' icon='clock' title='Shipping real things' desc='Real products, real users, real numbers. Almost nobody knew because nothing was ever connected to a post.' %}
+    {% include components/card.html tag='2 minutes' icon='zap' title='Per build session' desc='That is the entire input. The rest of the content pipeline runs itself. No blank pages. No editorial calendar.' %}
+  </div>
+
+  {% include components/takeaway.html text='The build is the post. The build is just not connected to the output. That gap is the entire game.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The input' title='The Session Log' sub='2 minutes of capture. No thinking. This is the raw input that feeds the entire pipeline.' %}
+
+  {% include components/prose-center.html text='I dropped this into a markdown file at the end of a build. 2 minutes. No thinking. This is the raw input that feeds the entire content pipeline for developers.' %}
+
+  <pre><code>session: 2026-06-13
+title: refactored auth layer from sessions to jwt
+what i did:
+  - replaced session-based auth with jwt
+  - cut p95 login 800ms &rarr; 90ms
+  - fixed race condition in token refresh
+decisions:
+  - chose jwt over opaque tokens for stateless verification
+  - kept refresh tokens server-side for revocation
+numbers:
+  - 800ms &rarr; 90ms p95 login
+  - 0 &rarr; 100% of routes now stateless
+lessons:
+  - stateless auth is not &ldquo;less secure.&rdquo; it is just different secure.</code></pre>
+
+  {% include components/prose-center.html text='That is it. That is the entire input.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The output' title='What the Pipeline Produces' sub='The system loads your strategy documents, runs the session through the compiler, and produces platform-native drafts in your voice.' %}
+
+  <div class='grid grid-2'>
+    {% include components/card.html icon='file-text' tag='LinkedIn' title='The long-form draft' desc='Your auth is slow because your server is doing too much on every request. Mine was. 800ms p95 just to log in. The fix was not a faster database. It was moving from server sessions to JWT.' %}
+    {% include components/card.html icon='send' tag='X thread' title='The thread version' desc='Your auth is slow because your server does too much on every request. Mine was. 800ms p95 just to log in. Moved from server sessions to JWT. 800 &rarr; 90ms.' %}
+  </div>
+
+  <div class='grid grid-2 mt-6'>
+    {% include components/card.html tag='X single' icon='zap' title='The one-liner' desc='800ms login &rarr; 90ms login. moved from sessions to jwt. the server does almost nothing now. tradeoff is revocation. worth it.' %}
+    {% include components/card.html tag='Blog' icon='book' title='The long-form' desc='Full blog post: 4 sections, 800 words, your voice, the reader&rsquo;s problem at the headline, your build as the footnote.' %}
+  </div>
+
+  {% include components/prose-center.html text='2 minutes of capture, 30 seconds of review, 0 minutes of writing. The reader gets a post. You did not switch identities. You did not stare at a blank page.' %}
+
+  {% include components/takeaway.html text='The build is the footnote. The reader&rsquo;s problem is the headline.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The mechanism' title='The 5 Strategy Documents' sub='The configuration layer. Nothing else. The rest is execution.' %}
+
+  {% include components/prose-center.html text='I will not explain the full architecture. Just the point of each document. They are a compiled configuration. The pipeline makes a decision without one only by guessing.' %}
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>01</div>
+      <div class='step-body'>
+        <strong>session-as-content</strong>
+        The build is the source. Without it, you go back to a blank page and a calendar that never works.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>02</div>
+      <div class='step-body'>
+        <strong>funnel-and-matrix</strong>
+        Each session has a job. This one is a &lsquo;decision trade-off&rsquo; at the consideration stage with a &lsquo;fix the bottleneck&rsquo; call to action. Routes to platform, format, ask.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>03</div>
+      <div class='step-body'>
+        <strong>icp-offer</strong>
+        Write to one reader, in their own words, at one problem layer. Every draft is checked against your target reader. If it does not match, the gate fails.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>04</div>
+      <div class='step-body'>
+        <strong>voice-and-gates</strong>
+        Lowercase i, &rarr; aha pivots, &lsquo;Note:&rsquo; closings, broken grammar on purpose, named reader, specific numbers, no platitudes, no em-dashes. Plus a quality bar.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>05</div>
+      <div class='step-body'>
+        <strong>voice-corpus</strong>
+        8 of your best posts, fed in as training data. The drafts read 2-3 of them before writing. This is what makes the output sound like you.
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='By the numbers' title='3 Gates That Filter the Drafts' sub='Most of the 30 checks are mechanical noise. These 3 are the ones that change the output.' %}
+
+  <div class='grid grid-3'>
+    {% include components/card.html variant='stat-shift' icon='users' num='1' title='The reader gate' desc='If the draft does not talk to one named reader at one problem layer, it dies. This is the gate that filters out the &lsquo;here is what I built&rsquo; posts that nobody reads.' %}
+    {% include components/card.html variant='stat-shift' icon='eye-off' num='2' title='The no-system-leak gate' desc='If the draft mentions the engine, the compiler, the gates, the funnel, or the session log. It dies. The reader does not care about your pipeline. They care about their problem.' %}
+    {% include components/card.html variant='stat-shift' icon='zap' num='3' title='The hook gate' desc='If the first line is a preamble, a definition, or &lsquo;I wanted to share&rsquo;. It dies. The rewrite happens before it reaches the queue.' %}
+  </div>
+
+  {% include components/prose-center.html text='The other 27 checks are belt-and-suspenders. These 3 are why the drafts land.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The window' title='What Happens if You Remove One Document' sub='The 5 are not independent. They are a compiled configuration.' %}
+
+  <div class='grid grid-2'>
+    {% include components/card.html tag='Remove input' icon='circle-x' title='No session-as-content' desc='The pipeline has no input. You go back to the blank page and the calendar that never works.' %}
+    {% include components/card.html tag='Remove routing' icon='circle-x' title='No funnel-and-matrix' desc='Every post goes to the wrong stage with the wrong call to action.' %}
+    {% include components/card.html tag='Remove targeting' icon='circle-x' title='No icp-offer' desc='The posts talk to nobody in particular. They reach everyone and convince no one.' %}
+    {% include components/card.html tag='Remove voice' icon='circle-x' title='No voice-and-gates' desc='The output drifts. Internal labels leak. Posts start to sound like press releases.' %}
+  </div>
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='Try it' title='Try the Build-to-Blog Pipeline Yourself' sub='If you post 2 times a week, this is overkill. If you generate 20-30 pieces per month from shipped work, this is the minimum viable architecture.' %}
+
+  {% include components/prose-center.html text='The repo is open source. Clone it. Drop the setup prompt into any LLM agent. Walk through the 14-question setup. The 5 strategy documents get filled with your strategy. Then every build session becomes:' %}
+
+  <pre><code>git clone https://github.com/ShayanSpiel/SpielEngine my-engine
+cd my-engine</code></pre>
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>01</div>
+      <div class='step-body'>
+        <strong>Clone the repo</strong>
+        Open SETUP.md. Paste the prompt into any LLM agent.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>02</div>
+      <div class='step-body'>
+        <strong>Walk through 14 questions</strong>
+        The agent fills the 5 strategy documents with your positioning, voice, ICP, and offer.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>03</div>
+      <div class='step-body'>
+        <strong>Ship a build, log 2 minutes</strong>
+        What you decided, traded off, learned. The pipeline takes it from there.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>04</div>
+      <div class='step-body'>
+        <strong>Review, publish, keep building</strong>
+        Drafts land in queue. You review. You ship. You stay a builder.
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class='divider'>
+
+{% include components/closer.html
+   icon='lightbulb'
+   takeaway='You build. The system posts. You stay a builder.'
+   echo='8 years building, 0 years telling anyone. The 5 documents are the bridge. Stop staring at blank pages. Start scanning your sessions.'
+%}

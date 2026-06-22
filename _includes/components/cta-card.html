@@ -1,0 +1,24 @@
+{%- comment -%}
+  Component: cta-card
+  End-of-post CTA block. Title + body + 1-2 action buttons.
+  Slots:
+    title    — CTA heading (required)
+    body     — CTA description (optional)
+    actions  — list of { label, href, variant, arrow } (optional)
+  Example:
+    {% include components/cta-card.html
+       title="Build the work. Capture the decisions."
+       body="The session-as-content methodology turns every build session into publishable drafts."
+       actions=site.data.example_cta %}
+{%- endcomment -%}
+<div class="cta-card">
+  <h3>{{ include.title }}</h3>
+  {%- if include.body %}<p>{{ include.body }}</p>{% endif %}
+  {%- if include.actions %}
+  <div class="actions">
+    {%- for a in include.actions %}
+      {%- include components/btn.html label=a.label href=a.href variant=a.variant arrow=a.arrow attrs=a.attrs %}
+    {%- endfor %}
+  </div>
+  {%- endif %}
+</div>

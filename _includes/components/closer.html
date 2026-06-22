@@ -1,0 +1,35 @@
+{%- comment -%}
+  Component: closer
+  The closing block of a post. Distinct from sections and cards: a large
+  relevant icon, the key takeaway sentence (silver gradient), a smaller
+  echo line, and optional minimal actions. Use exactly once per post,
+  as the last content block before post-shell appends tags + related + cta.
+  Slots:
+    icon   — icon name (required, e.g. "lightbulb", "sparkles", "rocket")
+    takeaway — the key line. Silver gradient, large, balanced. (required)
+    echo   — a smaller line below the takeaway (optional)
+    actions — list of { label, href, variant, arrow, icon } (optional)
+  Example:
+    {% include components/closer.html
+       icon="lightbulb"
+       takeaway="Everything else is a byproduct."
+       echo="Build today. Capture in two minutes. The rest compounds."
+       actions=site.data.example_closer_actions %}
+{%- endcomment -%}
+{%- assign actions = include.actions -%}
+<aside class="closer">
+  <div class="closer-icon-wrap">
+    {% include components/icon.html name=include.icon size=28 class="closer-icon" %}
+  </div>
+  <p class="closer-takeaway">{{ include.takeaway }}</p>
+  {%- if include.echo %}
+  <p class="closer-echo">{{ include.echo }}</p>
+  {%- endif %}
+  {%- if actions and actions.size > 0 %}
+  <div class="closer-actions">
+    {%- for a in actions %}
+      {%- include components/btn.html label=a.label href=a.href variant=a.variant arrow=a.arrow icon=a.icon attrs=a.attrs %}
+    {%- endfor %}
+  </div>
+  {%- endif %}
+</aside>

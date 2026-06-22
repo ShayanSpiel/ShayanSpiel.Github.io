@@ -1,0 +1,39 @@
+{%- comment -%}
+  Component: card
+  Variants: default | stat-shift (centered number on top)
+  Slots:
+    tag     — small uppercase tag above title (use for stat numbers in default cards)
+    title   — card title (required)
+    desc    — card description (required)
+    href    — link target (optional; if set, card becomes <a>)
+    num     — large number for stat-shift variant (optional)
+    icon    — icon name; for stat-shift it sits BESIDE the num on the same row (optional)
+    variant — default | stat-shift (default: default)
+  Example:
+    {% include components/card.html tag="Refactor" title="Evidence, not code" desc="When you refactor a state machine..." %}
+    {% include components/card.html variant="stat-shift" num="1" icon="circle-check" title="Content improves" desc="..." %}
+    {% include components/card.html tag="2 min" icon="clock" title="Your session log" desc="Spiel Engine capture. Two minutes." %}
+{%- endcomment -%}
+{%- if include.href -%}
+<a class="card{% if include.variant %} {{ include.variant }}{% endif %}" href="{{ include.href }}">
+{%- else -%}
+<div class="card{% if include.variant %} {{ include.variant }}{% endif %}">
+{%- endif -%}
+  {%- if include.variant == 'stat-shift' %}
+    {%- if include.icon or include.num %}
+    <div class="stat-shift-head">
+      {%- if include.icon %}<div class="stat-shift-icon">{% include components/icon.html name=include.icon size=20 %}</div>{% endif %}
+      {%- if include.num %}<div class="stat-shift-num">{{ include.num }}</div>{% endif %}
+    </div>
+    {%- endif %}
+  {%- else %}
+    {%- if include.icon %}<div class="card-icon">{% include components/icon.html name=include.icon size=18 %}</div>{% endif %}
+  {%- endif %}
+  {%- if include.tag %}<div class="card-tag">{{ include.tag }}</div>{% endif %}
+  <h3 class="card-title">{{ include.title }}</h3>
+  <p class="card-desc">{{ include.desc }}</p>
+{%- if include.href -%}
+</a>
+{%- else -%}
+</div>
+{%- endif -%}

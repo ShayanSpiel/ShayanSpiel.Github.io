@@ -14,8 +14,8 @@
   "name": "{{ site.author.name }}",
   "alternateName": "Shayan Tawabi",
   "url": "{{ site.url }}",
-  "image": "{{ site.url }}/assets/og-default.png",
-  "logo": "{{ site.url }}/assets/logos/primary-transparent.svg",
+  "image": "{{ site.url }}/assets/og-default.png?v=2",
+  "logo": "{{ site.url }}/assets/logos/personal/primary-transparent.svg",
   "email": "mailto:{{ site.author.email }}",
   "jobTitle": "Solo operator, marketing strategist, agentic solutions architect",
   "worksFor": { "@type": "Organization", "name": "Shayan Spiel" },
@@ -67,7 +67,7 @@
   "publisher": { "@id": "{{ site.url }}/#person" },
   "image": {
     "@type": "ImageObject",
-    "url": "{{ site.url }}{{ page.image.path | default: '/assets/og-default.png' }}",
+    "url": "{{ site.url }}{{ page.image.path | default: '/assets/og-default.png?v=2' }}",
     "width": {{ page.image.width | default: 1200 }},
     "height": {{ page.image.height | default: 630 }}
   },

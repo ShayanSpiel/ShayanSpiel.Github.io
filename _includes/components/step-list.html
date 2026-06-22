@@ -1,0 +1,21 @@
+{%- comment -%}
+  Component: step-list
+  Numbered workflow. Pass steps as a YAML-like array via the `steps` param.
+  Each step is an object with `title` and `body`. Numbering is automatic (01, 02, ...).
+  Slots:
+    steps — list of { title, body } hashes (required)
+  Example:
+    {% include components/step-list.html steps=site.data.example_steps %}
+  (or pass inline if Jekyll version supports; for now use a data file)
+{%- endcomment -%}
+<ol class="step-list">
+  {%- for step in include.steps %}
+  <li class="step-item">
+    <div class="step-num">{%- assign n = forloop.index -%}{% if n < 10 %}0{{ n }}{% else %}{{ n }}{% endif %}</div>
+    <div class="step-body">
+      <strong>{{ step.title }}</strong>
+      {{ step.body }}
+    </div>
+  </li>
+  {%- endfor %}
+</ol>

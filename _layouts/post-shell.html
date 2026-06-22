@@ -1,0 +1,42 @@
+---
+layout: default
+---
+
+{%- assign post_categories = page.categories | default: 'post' -%}
+{%- if post_categories and post_categories.first -%}
+  {%- assign category_slug = post_categories | first | downcase | slugify -%}
+  {%- assign category_label = post_categories | first -%}
+{%- else -%}
+  {%- assign category_slug = 'post' -%}
+  {%- assign category_label = 'Post' -%}
+{%- endif -%}
+
+<article class="post-shell">
+
+  <nav class="breadcrumb breadcrumb-center" aria-label="Breadcrumb">
+    <a href="{{ '/' | relative_url }}" aria-label="Home">
+      {% include components/icon.html name="home" size=14 label="Home" %}
+    </a>
+    <span class="sep" aria-hidden="true">·</span>
+    <a href="/posts/">Blog</a>
+    <span class="sep" aria-hidden="true">·</span>
+    <span class="current" aria-current="page">{{ page.title | truncate: 50 }}</span>
+  </nav>
+
+  {{ content }}
+
+  <div class="post-end-sep" aria-hidden="true">&middot; &middot; &middot;</div>
+
+  {%- if page.tags and page.tags.size > 0 -%}
+  <div class="post-tags post-tags-center" role="list" aria-label="Post tags">
+    {%- for tag in page.tags -%}
+      <a href="/posts/?tag={{ tag | slugify }}" class="tag-chip" role="listitem">#{{ tag }}</a>
+    {%- endfor -%}
+  </div>
+  {%- endif -%}
+
+  {%- include related_posts.html -%}
+
+  {%- include post_cta.html -%}
+
+</article>

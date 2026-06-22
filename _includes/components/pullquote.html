@@ -1,0 +1,18 @@
+{%- comment -%}
+  Component: pullquote
+  A centered quote with a minimal horizontal mark above. No decorative icon.
+  Slots:
+    quote       — the quoted text (required)
+    attribution — author/source line (optional)
+  Example:
+    {% include components/pullquote.html
+       quote="Generic input produces generic output."
+       attribution="The system is not the writer. The builder is." %}
+{%- endcomment -%}
+<figure class="pullquote">
+  <div class="pullquote-mark" aria-hidden="true"></div>
+  <blockquote class="pullquote-text">{{ include.quote }}</blockquote>
+  {%- if include.attribution %}
+  <figcaption class="pullquote-attribution">&mdash; {{ include.attribution }}</figcaption>
+  {%- endif %}
+</figure>

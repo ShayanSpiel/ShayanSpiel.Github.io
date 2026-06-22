@@ -1,0 +1,19 @@
+{%- comment -%}
+  Component: source
+  A single citation source for the sources list.
+  Renders one <li> with author above and title link below.
+  Centered by the parent <ul class="sources">.
+  Slots:
+    author — short source label like "Theo (X)" (required)
+    url    — destination link (required)
+    title  — full title of the source (required)
+  Example:
+    <ul class="sources">
+      {% include components/source.html author="Theo (X)" url="https://..." title="Is GLM-5.2 cheaper?" %}
+      {% include components/source.html author="Anthropic" url="https://..." title="API pricing" %}
+    </ul>
+{%- endcomment -%}
+<li class="source">
+  <span class="source-author">{{ include.author }}</span>
+  <a href="{{ include.url }}" target="_blank" rel="noopener">{{ include.title }}</a>
+</li>

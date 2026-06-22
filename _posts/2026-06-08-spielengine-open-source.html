@@ -1,0 +1,165 @@
+---
+layout: post-shell
+title: "SpielEngine is Now Open Source: An AI Writing Pipeline for Builders"
+date: 2026-06-08 10:00:00 +0000
+description: "An open-source AI writing pipeline that turns build sessions into publishable content. 4 files, 2 loops, 19 commands, MIT licensed. Clone it, run it, own it."
+tags:
+  - open-source
+  - ai-agents
+  - content-engine
+  - automation
+  - positioning
+categories:
+  - AI & Agents
+related:
+  - /agentic-loops/
+  - /gates-not-models/
+  - /spiel-engine-update/
+permalink: /spielengine-open-source/
+---
+
+<section class='hero'>
+  <h1>The Engine, Open Source, MIT</h1>
+  <p class='lede'>An open-source AI writing pipeline that turns build sessions into publishable content. 4 files, 2 loops, 19 commands, MIT licensed. Clone it, run it, own it.</p>
+</section>
+
+{% include components/post-meta.html %}
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The proof' title='Here Is What That Looks Like' sub='A two-hour debugging session becomes a post. You never open a writing tool.' %}
+
+  {% include components/prose-center.html text='I ship consistently. Before the engine, I did not. Every Tuesday I would finish a build session, look at the work, think &lsquo;I should post about this,&rsquo; and not post. Not because I could not write. Because writing meant switching from builder to creator. That switch never happened.' %}
+
+  <div class='grid grid-2'>
+    {% include components/card.html tag='Session log' icon='clock' title='2 minutes of notes' desc='Spent 2 hours fixing context drift in a LangGraph workflow. Root cause: too many hidden state transitions between nodes. Fix: explicit state schema with required fields per transition.' %}
+    {% include components/card.html tag='Generated post' icon='rocket' title='The output' desc='Most AI agents don&rsquo;t fail because of prompting. They fail because nobody knows what state they&rsquo;re in. Every hidden transition is a drift point. Every drift point is a silent bug. Make the state explicit.' %}
+  </div>
+
+  {% include components/takeaway.html text='Same session. Different frame. Extracted, not written. The engine pulls what is already there.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The mechanism' title='How It Works' sub='Two state machines run independently. LLM handles creative steps. Scripts handle mechanical steps. The two never overlap.' %}
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>01</div>
+      <div class='step-body'>
+        <strong>Wiki loop</strong>
+        IDLE &rarr; INGEST &rarr; ANALYZE &rarr; RECONCILE &rarr; INDEX &rarr; VALIDATE &rarr; COMPLETE. Ingests raw notes, extracts entities, reconciles into wiki pages, links them.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>02</div>
+      <div class='step-body'>
+        <strong>Content loop</strong>
+        IDLE &rarr; SESSION &rarr; STRATEGY &rarr; COMPILE &rarr; DRAFT &rarr; GATE &rarr; QUEUE &rarr; PUBLISH. Classifies by archetype, runs the 8-step Compiler, drafts to platform-native format, gates every draft.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>03</div>
+      <div class='step-body'>
+        <strong>The quality gate</strong>
+        16 mechanical gates (char count, hook, audience, frontmatter, word repetition) plus 14 creative gates. Composite score must hit 0.85. Failing drafts do not enter the queue.
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='What you get' title='What You Get' sub='Clone the repo and you get the engine I run daily. 19 commands, 8 templates, 30 gates, two loops, one architecture.' %}
+
+  <div class='grid grid-3'>
+    {% include components/card.html variant='stat-shift' icon='code' num='19' title='Slash commands' desc='/extract, /post, /publish, /state, /health, /config, /optimize, /prune, and 11 more. Each is a markdown file your agent reads at invocation.' %}
+    {% include components/card.html variant='stat-shift' icon='file-text' num='8' title='Templates' desc='Blog, LinkedIn, X, concept, entity, summary, comparison, session-log. Each with the right frontmatter and structure for its platform.' %}
+    {% include components/card.html variant='stat-shift' icon='check' num='30' title='Quality gates' desc='16 mechanical (code-enforced) + 14 creative (LLM-judged). Each gate is a hard floor the pipeline cannot cross. Composite score must hit 0.85.' %}
+    {% include components/card.html variant='stat-shift' icon='layers' num='2' title='State machines' desc='Wiki loop for compound knowledge. Content loop for publishing. Same Act&rarr;Observe&rarr;Evaluate&rarr;Update&rarr;Repeat pattern. Different scope, same architecture.' %}
+    {% include components/card.html variant='stat-shift' icon='settings' num='14' title='Setup questions' desc='Paste SETUP.md into any LLM agent. The agent auto-detects your platform, installs all commands, runs a 14-question ICP/voice/brand setup. ~15 minutes.' %}
+    {% include components/card.html variant='stat-shift' icon='zap' title='Zero dependencies' desc='Python 3, bash, git. Everything else is optional. No npm. No Docker. No SaaS subscription. The system lives in your repo.' %}
+  </div>
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='Setup' title='Setup: Clone + Paste' sub='Four steps. One paste. ~15 minutes. The engine is wired to your workflow.' %}
+
+  <pre><code>git clone https://github.com/ShayanSpiel/SpielEngine my-engine
+cd my-engine</code></pre>
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>01</div>
+      <div class='step-body'>
+        <strong>Clone the repo</strong>
+        <code>git clone https://github.com/ShayanSpiel/SpielEngine my-engine &amp;&amp; cd my-engine</code>
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>02</div>
+      <div class='step-body'>
+        <strong>Open SETUP.md in any LLM agent</strong>
+        Cursor, Claude Code, opencode, Continue, ChatGPT. Copy the prompt block, paste it.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>03</div>
+      <div class='step-body'>
+        <strong>Agent handles install + setup</strong>
+        Detects platform, installs commands, runs 14-question setup. Writes all config files. ~15 minutes.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>04</div>
+      <div class='step-body'>
+        <strong>Run your first commands</strong>
+        <code>/state</code> for status, <code>/extract my-notes.md</code> to ingest, <code>/post &ldquo;my first session&rdquo;</code> to draft, <code>/health</code> to check.
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='Two layers' title='The Two-Layer System' sub='Open source. Or done-for-you. Your call.' %}
+
+  <div class='grid grid-2'>
+    {% include components/card.html tag='Layer 1' icon='check' title='Open Source &middot; Free' desc='The repo, methodology, pipeline. Clone, paste, customize. This is what you get from the GitHub repo. The engine I run daily. Clone it, paste the setup prompt into your agent, answer 14 questions, and you have a working content pipeline in an afternoon.' %}
+    {% include components/card.html tag='Layer 2' icon='rocket' title='DFY Install &middot; $990' desc='Full pipeline installed inside your workflow, positioned to your voice, 30 days review. Positioning strategy, offer design, bio rewrite, agents and templates in your voice, workflow design, 3 sample pillars ready to publish, 30 days post-publish review.' %}
+  </div>
+
+  <div class='grid grid-3 mt-6'>
+    {% include components/card.html variant='stat-shift' icon='clock' num='14 days' title='Install' desc='Full pipeline in your workflow. You own every file. No subscription. No &lsquo;we changed the pricing&rsquo; email in 2 years.' %}
+    {% include components/card.html variant='stat-shift' icon='check' num='30 days' title='Money-back guarantee' desc='If after 30 days you have run 5 sessions through the engine and you do not have 5 standalone-tested drafts, full refund. You keep the system.' %}
+    {% include components/card.html variant='stat-shift' icon='rocket' num='3' title='Slots per month' desc='Hard cap. The 14-day install is hands-on. 3 founders per month. The rest wait or run the open-source version themselves.' %}
+  </div>
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='Why it exists' title='Why This Exists' sub='I built this for myself first. The repo was extracted from my working vault after months of iteration. The templates are the ones I use every day. There is no theory here. Every file has been tested in production.' %}
+
+  {% include components/prose-center.html text='The insight is simple: you should never &lsquo;go create content.&rsquo; Your work should already contain it. The engine extracts what is already there.' %}
+
+  <div class='grid grid-3'>
+    {% include components/card.html icon='lightbulb' title='If you ship and do not post' desc='This is the system that fixes it. The work happens. The capture happens. The drafts happen. You just review and publish.' %}
+    {% include components/card.html icon='target' title='If you do not ship' desc='This system will not save you. There is no content to extract. Build first. Then run the engine.' %}
+    {% include components/card.html icon='zap' title='If you want both' desc='DFY install gets you the system AND the strategy. You get the methodology installed, the templates positioned to your voice, 3 sample pillars ready, and 30 days of review.' %}
+  </div>
+</section>
+
+<hr class='divider'>
+
+{% include components/closer.html
+   icon='rocket'
+   takeaway='Clone the repo. Paste the setup. Answer 14 questions. The engine is wired to your workflow in 15 minutes.'
+   echo='Open source. MIT licensed. Or done-for-you at $990. 3 slots per month. DM @ShayanSpiel or apply for the DFY install.'
+%}

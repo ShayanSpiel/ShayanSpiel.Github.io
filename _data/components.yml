@@ -1,0 +1,150 @@
+# Shayan Spiel — Component manifest
+# Canonical source of truth for every design-system component.
+# Each entry maps to:
+#   - A partial at _includes/components/{partial}.html
+#   - A CSS block in assets/css/components.css
+# Build enforcement: _tools/sync-design-system.py validates that
+# every component has all three, and regenerates /design-system/.
+
+components:
+  - name: btn
+    partial: btn
+    css_section: btn
+    description: "A button. Two variants: primary, ghost. Optional arrow and leading icon."
+    slots:
+      - { name: label, required: true }
+      - { name: href, required: true }
+      - { name: variant, type: "primary | ghost", default: primary }
+      - { name: arrow, type: boolean, default: false }
+      - { name: icon, type: "svg-path", optional: true }
+      - { name: attrs, type: string, optional: true }
+    example: |
+      {% include components/btn.html label="Get Spiel" href="/SpielEngine/" variant="primary" arrow=true %}
+
+  - name: section-head
+    partial: section-head
+    css_section: section
+    description: "Centered section header with optional tag, title, and subtitle."
+    slots:
+      - { name: tag, optional: true }
+      - { name: title, required: true }
+      - { name: sub, optional: true }
+    example: |
+      {% include components/section-head.html tag="The premise" title="The Hidden Asset" sub="..." %}
+
+  - name: card
+    partial: card
+    css_section: card
+    description: "A card. Variants: default, stat-shift. Optional href makes it a link. Optional icon adds visual variety."
+    slots:
+      - { name: tag, optional: true, note: "use for stat numbers in default cards" }
+      - { name: title, required: true }
+      - { name: desc, required: true }
+      - { name: href, optional: true }
+      - { name: num, optional: true, note: "used with variant=stat-shift" }
+      - { name: icon, optional: true, note: "decorative; above num for stat-shift" }
+      - { name: variant, type: "default | stat-shift", default: default }
+    example: |
+      {% include components/card.html tag="Refactor" title="Evidence, not code" desc="..." %}
+
+  - name: prose-center
+    partial: prose-center
+    css_section: prose-center
+    description: "Centered single-column reading prose."
+    slots:
+      - { name: text, required: true }
+      - { name: small, type: boolean, default: false }
+    example: |
+      {% include components/prose-center.html text="For years I believed..." %}
+
+  - name: takeaway
+    partial: takeaway
+    css_section: takeaway
+    description: "End-of-section insight. Lightbulb icon + text on one line, regular weight. Marks the single line a reader should leave the section with."
+    slots:
+      - { name: text, required: true }
+    example: |
+      {% include components/takeaway.html text="The building never stops. The content never starts. Not laziness. Wrong abstraction." %}
+
+  - name: closer
+    partial: closer
+    css_section: closer
+    description: "The closing block of a post. Distinct from sections: large relevant icon, silver-gradient key line, smaller echo, optional minimal actions. Use once per post, as the last content block."
+    slots:
+      - { name: icon, required: true }
+      - { name: takeaway, required: true }
+      - { name: echo, optional: true }
+      - { name: actions, type: list, optional: true, item: "{ label, href, variant, arrow, icon }" }
+    example: |
+      {% include components/closer.html
+         icon="lightbulb"
+         takeaway="Everything else is a byproduct."
+         echo="Build today. Capture in two minutes. The rest compounds."
+         actions=site.data.example_closer_actions %}
+
+  - name: pullquote
+    partial: pullquote
+    css_section: pullquote
+    description: "Large left-bordered quote with optional attribution."
+    slots:
+      - { name: quote, required: true }
+      - { name: attribution, optional: true }
+    example: |
+      {% include components/pullquote.html quote="..." attribution="..." %}
+
+  - name: step-list
+    partial: step-list
+    css_section: step-list
+    description: "Numbered workflow. Pass steps as a list of title + body items."
+    slots:
+      - { name: steps, type: list, required: true, item: "{ title, body }" }
+    example: |
+      {% include components/step-list.html steps=page.steps %}
+
+  - name: definition
+    partial: definition
+    css_section: definition
+    description: "Term card with optional phonetic mark and definition."
+    slots:
+      - { name: term, required: true }
+      - { name: mark, optional: true }
+      - { name: def, required: true }
+    example: |
+      {% include components/definition.html term="Session-as-Content" mark="/sesh/" def="..." %}
+
+  - name: cta-card
+    partial: cta-card
+    css_section: cta-card
+    description: "End-of-post CTA with title, body, and action buttons."
+    slots:
+      - { name: title, required: true }
+      - { name: body, optional: true }
+      - { name: actions, type: list, item: "{ label, href, variant, arrow }" }
+    example: |
+      {% include components/cta-card.html title="..." body="..." actions=... %}
+
+  - name: stat-big
+    partial: stat-big
+    css_section: stat-big
+    description: "Large gradient number with optional small unit suffix."
+    slots:
+      - { name: value, required: true }
+      - { name: unit, optional: true }
+    example: |
+      {% include components/stat-big.html value="5.6" unit="x" %}
+
+  - name: source
+    partial: source
+    css_section: sources
+    description: "A single citation source. Renders inside a <ul class='sources'> for a centered, minimal citation list. Author label above, title link below."
+    slots:
+      - { name: author, required: true, note: "short source label like 'Theo (X)'" }
+      - { name: url, required: true }
+      - { name: title, required: true }
+    example: |
+      <ul class="sources">
+        {% include components/source.html
+           author="Theo (X)"
+           url="https://x.com/theo/..."
+           title="Is GLM-5.2 cheaper?" %}
+      </ul>

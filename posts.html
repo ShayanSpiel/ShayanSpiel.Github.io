@@ -1,0 +1,143 @@
+---
+layout: blog
+title: Blog
+description: Every pillar post on the ShayanSpiel blog. Newest first.
+keywords: all posts, blog archive, Shayan Spiel, session-as-content, content engine, building in public
+image:
+  path: /assets/og-default.png
+  width: 1200
+  height: 630
+permalink: /posts/
+---
+
+{%- assign all_cats = site.posts | map: 'categories' | join: ',' | split: ',' | uniq | sort -%}
+{%- assign total_posts = site.posts | size -%}
+
+<section class="blog-stats">
+  <div class="blog-stat">
+    <span class="blog-stat-num">{{ total_posts }}</span>
+    <span class="blog-stat-label">posts</span>
+  </div>
+  <div class="blog-stat-sep" aria-hidden="true">·</div>
+  <div class="blog-stat">
+    <span class="blog-stat-num">{{ all_cats | size }}</span>
+    <span class="blog-stat-label">topics</span>
+  </div>
+  <div class="blog-stat-sep" aria-hidden="true">·</div>
+  <div class="blog-stat">
+    <span class="blog-stat-num">newest first</span>
+  </div>
+</section>
+
+<nav class="blog-filters" id="post-filters" role="group" aria-label="Filter posts by topic">
+  <a href="/posts/" class="filter-btn active" data-filter="all" role="button" aria-pressed="true">
+    All <span class="filter-count">{{ total_posts }}</span>
+  </a>
+  {%- for cat in all_cats -%}
+    {%- assign cat_strip = cat | strip -%}
+    {%- if cat_strip != '' -%}
+      {%- assign cat_count = site.posts | where_exp: "p", "p.categories contains cat_strip" | size -%}
+      <a href="?cat={{ cat_strip | slugify }}" class="filter-btn" data-filter="{{ cat_strip | slugify }}" role="button" aria-pressed="false">
+        {{ cat_strip }} <span class="filter-count">{{ cat_count }}</span>
+      </a>
+    {%- endif -%}
+  {%- endfor %}
+</nav>
+
+<div id="post-list" class="post-grid">
+  {%- assign sorted = site.posts | sort: 'date' | reverse -%}
+  {%- for post in sorted -%}
+    <a href="{{ post.url | relative_url }}" class="post-card" data-categories="{%- for c in post.categories -%}{{ c | slugify }}{% unless forloop.last %} {% endunless %}{%- endfor -%}">
+      <div class="post-card-head">
+        <time class="post-card-date" datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %-d, %Y" }}</time>
+        {%- if post.categories and post.categories.first %}
+        <span class="post-card-cat">{{ post.categories | first }}</span>
+        {%- endif %}
+      </div>
+      <h2 class="post-card-title">{{ post.title }}</h2>
+      {%- if post.description %}
+      <p class="post-card-excerpt">{{ post.description | strip_html | truncatewords: 24 }}</p>
+      {%- endif %}
+      <div class="post-card-foot">
+        <span class="post-card-meta">
+          {%- if post.read_time %}{{ post.read_time }} min read{%- else %}Read post{%- endif %}
+        </span>
+        <span class="post-card-arrow" aria-hidden="true">&rarr;</span>
+      </div>
+    </a>
+  {%- endfor %}
+</div>
+
+<div class="blog-empty" id="blog-empty">No posts match this filter.</div>
+
+<div class="blog-load-more" id="load-more-wrap" style="display:none;">
+  <button class="btn btn-ghost" id="load-more-btn" type="button">Load more posts</button>
+</div>
+
+<script>
+(function(){
+  var PAGE_SIZE = 12;
+  var visibleCount = PAGE_SIZE;
+
+  var params = new URLSearchParams(window.location.search);
+  var cat = params.get('cat');
+
+  var allRows = document.querySelectorAll('.post-card');
+  var btns = document.querySelectorAll('.filter-btn');
+  var loadMoreWrap = document.getElementById('load-more-wrap');
+  var loadMoreBtn = document.getElementById('load-more-btn');
+  var emptyState = document.getElementById('blog-empty');
+
+  function applyFilter() {
+    if (!cat) return;
+    btns.forEach(function(b){
+      if (b.getAttribute('data-filter') === cat) {
+        b.classList.add('active');
+        b.setAttribute('aria-pressed', 'true');
+      } else {
+        b.classList.remove('active');
+        b.setAttribute('aria-pressed', 'false');
+      }
+    });
+    allRows.forEach(function(r){
+      var cats = (r.getAttribute('data-categories') || '').split(' ');
+      if (cats.indexOf(cat) >= 0) r.style.display = '';
+      else r.style.display = 'none';
+    });
+  }
+
+  function getVisibleRows() {
+    var rows = [];
+    allRows.forEach(function(r){
+      if (r.style.display !== 'none') rows.push(r);
+    });
+    return rows;
+  }
+
+  function updateVisibility() {
+    var visible = getVisibleRows();
+    visible.forEach(function(r, i){
+      if (i < visibleCount) r.style.display = '';
+      else r.style.display = 'none';
+    });
+    if (visibleCount >= visible.length) {
+      loadMoreWrap.style.display = 'none';
+    } else {
+      loadMoreWrap.style.display = '';
+    }
+    if (visible.length === 0) {
+      emptyState.classList.add('visible');
+    } else {
+      emptyState.classList.remove('visible');
+    }
+  }
+
+  applyFilter();
+  updateVisibility();
+
+  loadMoreBtn.addEventListener('click', function(){
+    visibleCount += PAGE_SIZE;
+    updateVisibility();
+  });
+})();
+</script>

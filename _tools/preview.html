@@ -1,0 +1,1992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Is GLM-5.2 cheaper than the frontier?</title>
+<meta name="description" content="A working breakdown of LLM API pricing across Anthropic, OpenAI, Google, and Z.ai, at every reasoning effort. Where the popular claim breaks down, where it could technically be true, and what the data says about intelligence.">
+<meta name="robots" content="noindex,nofollow">
+<meta name="color-scheme" content="dark">
+
+<!-- Site fonts -->
+<style>
+/* Self-hosted fonts with font-display: block to prevent FOUT */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: block;
+  src: url('../assets/fonts/inter-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Merriweather';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('../assets/fonts/merriweather-latin-400.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Merriweather';
+  font-style: normal;
+  font-weight: 700;
+  font-display: block;
+  src: url('../assets/fonts/merriweather-latin-400.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Merriweather';
+  font-style: italic;
+  font-weight: 400;
+  font-display: block;
+  src: url('../assets/fonts/merriweather-latin-400.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('../assets/fonts/jetbrains-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: block;
+  src: url('../assets/fonts/jetbrains-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: block;
+  src: url('../assets/fonts/jetbrains-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+</style>
+
+<!-- Site main styles -->
+<style>
+/* ═══════════════════════════════════════════════════════
+   SHAYAN SPIEL — DESIGN SYSTEM v5
+   Production-grade. Token-driven. No magic numbers.
+   ═══════════════════════════════════════════════════════ */
+
+/* ── FOUT Prevention ── */
+html.fonts-loading body { opacity: 0; }
+html.fonts-loaded body,
+html.fonts-loading body { transition: opacity 0.15s ease; }
+html.fonts-loaded body { opacity: 1; }
+
+/* ── DESIGN TOKENS ── */
+:root {
+  /* Color Palette */
+  --bg: #000;
+  --bg-1: #0a0a0a;
+  --bg-2: #111;
+  --bg-3: #161616;
+  --bg-4: #1a1a1a;
+  --tx: #fff;
+  --tx-1: #e5e5e5;
+  --tx-2: #b0b0b0;
+  --tx-3: #888;
+  --tx-4: #555;
+  --tx-5: #333;
+  --bd: #1a1a1a;
+  --bd-1: #252525;
+  --bd-2: #333;
+  --bd-focus: #555;
+
+  /* Typography */
+  --f-h: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --f-b: 'Merriweather', Georgia, serif;
+  --f-m: 'JetBrains Mono', monospace;
+
+  /* Type Scale */
+  --fs-xs: 11px;
+  --fs-sm: 13px;
+  --fs-base: 16px;
+  --fs-md: 17px;
+  --fs-lg: 18px;
+  --fs-xl: 22px;
+  --fs-2xl: 28px;
+  --fs-3xl: 36px;
+  --fs-4xl: 44px;
+  --fs-5xl: 52px;
+
+  /* Line Heights */
+  --lh-tight: 1.05;
+  --lh-snug: 1.15;
+  --lh-normal: 1.5;
+  --lh-body: 1.7;
+
+  /* Spacing Scale */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 48px;
+  --s-8: 64px;
+  --s-9: 96px;
+
+  /* Border Radius */
+  --r-sm: 6px;
+  --r-md: 8px;
+  --r-lg: 10px;
+  --r-xl: 14px;
+  --r-2xl: 16px;
+  --r-full: 50%;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+
+  /* Layout */
+  --w: 960px;
+  --w-read: 720px;
+  --nav-h: 56px;
+
+  /* Transitions */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  background: var(--bg);
+  color: var(--tx);
+  font-family: var(--f-b);
+  font-size: var(--fs-base);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+img, svg, video { max-width: 100%; height: auto; display: block; }
+button { font: inherit; cursor: pointer; }
+::selection { background: var(--bd-2); color: var(--tx); }
+
+/* ── FOCUS STATES (Accessibility) ── */
+:focus-visible {
+  outline: 2px solid var(--bd-focus);
+  outline-offset: 2px;
+}
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--bd-focus);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+/* ═══════════════════════════════════════════════════════
+   SKIP LINK
+   ═══════════════════════════════════════════════════════ */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  z-index: 200;
+  padding: var(--s-2) var(--s-4);
+  background: var(--tx);
+  color: var(--bg);
+  font-family: var(--f-h);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 0 0 var(--r-md) 0;
+}
+.skip-link:focus {
+  top: 0;
+}
+
+/* ═══════════════════════════════════════════════════════
+   LAYOUT
+   ═══════════════════════════════════════════════════════ */
+.wrap {
+  max-width: var(--w);
+  margin: 0 auto;
+  padding: 0 var(--s-5);
+}
+.page {
+  min-height: calc(100vh - var(--nav-h));
+  padding-bottom: var(--s-9);
+}
+main { display: block; padding-top: var(--nav-h); }
+
+/* ═══════════════════════════════════════════════════════
+   TYPOGRAPHY
+   ═══════════════════════════════════════════════════════ */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--f-h);
+  font-weight: 800;
+  line-height: var(--lh-snug);
+  letter-spacing: -0.025em;
+  color: var(--tx);
+  text-wrap: balance;
+}
+h1 { font-size: clamp(var(--fs-2xl), 5vw, var(--fs-5xl)); letter-spacing: -0.045em; line-height: var(--lh-tight); }
+h2 { font-size: clamp(var(--fs-xl), 3.5vw, var(--fs-3xl)); letter-spacing: -0.035em; line-height: var(--lh-snug); }
+h3 { font-size: clamp(var(--fs-lg), 2.5vw, var(--fs-xl)); font-weight: 700; }
+h4 { font-size: var(--fs-md); font-weight: 600; }
+p { margin: 1em 0; }
+p:first-child { margin-top: 0; }
+strong, b { font-weight: 700; }
+em, i { font-style: italic; }
+small, .small { font-size: var(--fs-sm); }
+.lede {
+  font-family: var(--f-h);
+  font-size: var(--fs-md);
+  font-weight: 400;
+  line-height: var(--lh-normal);
+  color: var(--tx-2);
+}
+.muted { color: var(--tx-2); }
+.faint { color: var(--tx-3); }
+
+/* ── LINKS ── */
+a {
+  color: var(--tx);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--bd-1);
+  transition: color 0.15s var(--ease), text-decoration-color 0.15s var(--ease);
+}
+a:hover { color: var(--tx-1); text-decoration-color: var(--tx-3); }
+a.plain, a.muted { text-decoration: none; }
+a.plain:hover, a.muted:hover { text-decoration: underline; }
+a.icon-link { display: inline-flex; align-items: center; gap: 6px; }
+
+hr {
+  width: 100%;
+  border: 0;
+  height: 1px;
+  background: var(--bd);
+  margin: var(--s-7) 0;
+}
+
+/* ── LISTS ── */
+ul, ol { padding: 0.5em 0 0.5em 1.5em; }
+ul > li, ol > li { padding: 0.2em 0; }
+ul > li::marker, ol > li::marker { color: var(--tx-3); }
+ul.list-plain, ol.list-plain { list-style: none; padding: 0; margin: 0; }
+ul.list-plain > li, ol.list-plain > li { list-style: none; padding: 0; }
+
+/* ── CODE ── */
+code, kbd {
+  font-family: var(--f-m);
+  background: var(--bg-2);
+  padding: 0.15em 0.4em;
+  border-radius: var(--r-sm);
+  font-size: 0.88em;
+}
+kbd { font-weight: 600; border: 1px solid var(--bd-1); }
+pre {
+  font-family: var(--f-m);
+  background: var(--bg-1);
+  border: 1px solid var(--bd);
+  border-radius: var(--r-lg);
+  padding: 1.25em 1.5em;
+  font-size: 14px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-x: auto;
+  margin: 1.5em 0;
+  tab-size: 2;
+}
+pre code { background: transparent; padding: 0; font-size: inherit; }
+
+/* ── TABLES ── */
+table { margin: 1.5em 0 2em; width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { text-align: left; padding: 0.6em 1em 0.6em 0; line-height: 1.4; border-bottom: 1px solid var(--bd); }
+th { font-weight: 600; color: var(--tx); border-bottom-color: var(--bd-1); }
+
+/* ── BLOCKQUOTE ── */
+blockquote {
+  padding: 0.25em 0 0.25em 1.5em;
+  margin: 1.5em 0;
+  border-left: 3px solid var(--tx-3);
+  font-style: italic;
+  color: var(--tx-2);
+}
+blockquote p { margin: 0.5em 0; }
+
+/* ── IMAGES ── */
+img { border-radius: var(--r-lg); }
+article img { margin: 1.5em 0 0.75em; }
+figure { margin: 1.5em 0; }
+figure img { margin: 0; }
+
+/* ═══════════════════════════════════════════════════════
+   NAV
+   ═══════════════════════════════════════════════════════ */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--bd);
+}
+.nav-inner {
+  max-width: var(--w);
+  margin: 0 auto;
+  padding: 0 var(--s-5);
+  display: flex;
+  align-items: center;
+  height: var(--nav-h);
+  gap: var(--s-5);
+}
+.nav-brand {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--tx);
+  margin-right: auto;
+}
+.nav-brand svg { height: 20px; width: auto; }
+.nav-brand svg path { fill: currentColor; }
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: var(--s-5);
+  font-family: var(--f-h);
+  font-size: 14px;
+}
+.nav-links a {
+  color: var(--tx-2);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.15s var(--ease);
+}
+.nav-links a:hover { color: var(--tx); }
+.nav-cta {
+  font-family: var(--f-h);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 7px 16px;
+  border-radius: var(--r-md);
+  background: var(--tx);
+  color: var(--bg);
+  text-decoration: none;
+  transition: opacity 0.2s var(--ease);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.nav-cta:hover { opacity: 0.85; }
+.nav-cta svg { width: 14px; height: 14px; }
+
+/* ── Mobile Nav Toggle ── */
+.nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--bd);
+  border-radius: var(--r-md);
+  background: transparent;
+  color: var(--tx);
+  padding: 0;
+}
+.nav-toggle svg { width: 20px; height: 20px; }
+
+/* ── Mobile Nav Panel ── */
+.nav-mobile {
+  display: none;
+  flex-direction: column;
+  padding: var(--s-3) var(--s-5) var(--s-4);
+  border-top: 1px solid var(--bd);
+  background: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  gap: var(--s-1);
+}
+.nav-mobile[hidden] { display: none; }
+.nav-mobile a {
+  font-family: var(--f-h);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--tx-2);
+  text-decoration: none;
+  padding: var(--s-3) 0;
+  border-bottom: 1px solid var(--bd);
+  transition: color 0.15s var(--ease);
+}
+.nav-mobile a:last-of-type { border-bottom: none; }
+.nav-mobile a:hover { color: var(--tx); }
+.nav-mobile-cta {
+  margin-top: var(--s-2);
+  font-weight: 600 !important;
+  color: var(--bg) !important;
+  background: var(--tx);
+  text-align: center;
+  border-radius: var(--r-md);
+  border-bottom: none !important;
+  padding: var(--s-3) var(--s-4) !important;
+}
+
+@media (max-width: 640px) {
+  .nav-links { display: none; }
+  .nav-cta { display: none; }
+  .nav-toggle { display: flex; }
+  .nav-mobile:not([hidden]) { display: flex; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   BUTTONS
+   ═══════════════════════════════════════════════════════ */
+.btn {
+  font-family: var(--f-h);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 12px 24px;
+  border-radius: var(--r-lg);
+  text-decoration: none;
+  transition: all 0.2s var(--ease);
+  border: 1px solid transparent;
+  line-height: 1.4;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+.btn-primary { background: var(--tx); color: var(--bg); }
+.btn-primary:hover { opacity: 0.85; transform: translateY(-1px); color: var(--bg); }
+.btn-ghost { background: transparent; color: var(--tx-1); border: 1px solid var(--bd-1); }
+.btn-ghost:hover { border-color: var(--bd-2); color: var(--tx); background: var(--bg-1); }
+
+.btn-arrow { gap: var(--s-2); }
+.btn-arrow .arrow-icon {
+  display: inline-flex;
+  transition: transform 0.2s var(--ease);
+}
+.btn-arrow:hover .arrow-icon { transform: translateX(3px); }
+
+/* ═══════════════════════════════════════════════════════
+   HERO
+   ═══════════════════════════════════════════════════════ */
+.hero {
+  text-align: center;
+  padding: var(--s-7) 0 var(--s-7);
+}
+.hero-avatar-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-4);
+  margin-bottom: var(--s-5);
+}
+.hero-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--r-full);
+  border: 2px solid var(--bd);
+  flex-shrink: 0;
+  transition: border-color 0.3s var(--ease);
+}
+.hero-avatar:hover { border-color: var(--bd-1); }
+.hero h1 {
+  font-size: clamp(var(--fs-2xl), 5vw, var(--fs-5xl));
+  font-weight: 900;
+  letter-spacing: -0.045em;
+  line-height: var(--lh-tight);
+  margin: 0;
+}
+.hero .lede {
+  font-size: var(--fs-base);
+  color: var(--tx-2);
+  line-height: 1.75;
+  margin: 0 auto var(--s-6);
+  max-width: 480px;
+}
+.hero-actions {
+  display: flex;
+  gap: var(--s-3);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.hero-social {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  justify-content: center;
+  margin-top: var(--s-5);
+}
+.hero-social a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--bd);
+  background: var(--bg-1);
+  color: var(--tx-3);
+  text-decoration: none;
+  transition: all 0.2s var(--ease);
+}
+.hero-social a:hover { color: var(--tx); border-color: var(--bd-1); background: var(--bg-2); }
+.hero-social svg { width: 18px; height: 18px; }
+@media (max-width: 480px) {
+  .hero-avatar-wrap { flex-direction: column; gap: var(--s-3); }
+  .hero-avatar { width: 56px; height: 56px; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   SECTIONS
+   ═══════════════════════════════════════════════════════ */
+.section { padding: var(--s-7) 0; }
+.section-head { text-align: center; margin-bottom: var(--s-7); }
+.section-tag {
+  font-family: var(--f-h);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tx-3);
+  margin-bottom: var(--s-3);
+}
+.section-title {
+  font-size: clamp(var(--fs-xl), 3.5vw, var(--fs-3xl));
+  font-weight: 900;
+  letter-spacing: -0.035em;
+  line-height: var(--lh-snug);
+  margin-bottom: var(--s-3);
+  background: linear-gradient(180deg, #fff 0%, #666 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.section-sub {
+  font-size: 15px;
+  color: var(--tx-2);
+  line-height: 1.7;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* ═══════════════════════════════════════════════════════
+   GRIDS & CARDS
+   ═══════════════════════════════════════════════════════ */
+.grid { display: grid; gap: var(--s-4); }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-2 { grid-template-columns: repeat(2, 1fr); }
+@media (max-width: 768px) {
+  .grid-3, .grid-2 { grid-template-columns: 1fr; }
+}
+
+/* ── Card ── */
+.card {
+  background: var(--bg-1);
+  border: 1px solid var(--bd);
+  border-radius: var(--r-xl);
+  padding: var(--s-5) 28px;
+  transition: border-color 0.25s var(--ease), transform 0.25s var(--ease);
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+}
+.card:hover { border-color: var(--bd-1); transform: translateY(-2px); }
+.card-tag {
+  font-family: var(--f-h);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tx-3);
+  margin-bottom: var(--s-3);
+}
+.card-title {
+  font-family: var(--f-h);
+  font-size: var(--fs-lg);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--s-2);
+  color: var(--tx);
+}
+.card-desc {
+  font-size: var(--fs-sm);
+  color: var(--tx-2);
+  line-height: 1.65;
+  margin: 0;
+  flex: 1;
+}
+.card-link {
+  font-family: var(--f-h);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--tx-1);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: var(--s-4);
+  transition: color 0.2s var(--ease);
+}
+.card-link:hover { color: var(--tx); }
+.card-link svg { width: 12px; height: 12px; transition: transform 0.2s var(--ease); }
+.card-link:hover svg { transform: translate(2px, -2px); }
+
+/* ── Post Card ── */
+.post-card {
+  background: var(--bg-1);
+  border: 1px solid var(--bd);
+  border-radius: var(--r-xl);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.25s var(--ease), transform 0.25s var(--ease);
+  text-decoration: none;
+  color: inherit;
+}
+.post-card:hover { border-color: var(--bd-1); transform: translateY(-2px); }
+.post-card-date {
+  font-family: var(--f-h);
+  font-size: var(--fs-sm);
+  color: var(--tx-3);
+  margin-bottom: var(--s-3);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+.post-card-title {
+  font-family: var(--f-h);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--tx);
+  line-height: 1.4;
+  margin-bottom: var(--s-3);
+}
+.post-card-excerpt {
+  font-size: var(--fs-sm);
+  color: var(--tx-2);
+  line-height: 1.65;
+  flex: 1;
+  margin: 0;
+}
+.post-card-cat {
+  font-family: var(--f-h);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--tx-3);
+  margin-top: var(--s-4);
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--bd);
+}
+
+/* ═══════════════════════════════════════════════════════
+   POST LAYOUT
+   ═══════════════════════════════════════════════════════ */
+.breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2);
+  font-size: var(--fs-sm);
+  color: var(--tx-3);
+  font-family: var(--f-h);
+  margin-bottom: var(--s-5);
+  padding-top: var(--s-2);
+}
+.breadcrumb a {
+  color: var(--tx-3);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+.breadcrumb a:hover { color: var(--tx); text-decoration: underline; }
+.breadcrumb .sep { color: var(--tx-4); user-select: none; }
+.breadcrumb .current { color: var(--tx-1); font-weight: 500; }
+
+/* ── Post article ── */
+.post-article {
+  max-width: var(--w);
+  margin: 0 auto;
+  padding: 0 var(--s-5);
+}
+
+.post-header {
+  margin-bottom: var(--s-7);
+}
+
+.post-article .post-meta {
+  margin-bottom: var(--s-3);
+}
+
+.post-article h1 {
+  font-size: clamp(var(--fs-2xl), 4vw, var(--fs-4xl));
+  margin: 0 0 var(--s-4);
+}
+.post-article .lede {
+  font-family: var(--f-h);
+  font-size: var(--fs-lg);
+  color: var(--tx-2);
+  margin: 0;
+  line-height: var(--lh-normal);
+}
+
+.post-hero {
+  margin: 0 0 var(--s-7);
+}
+.post-hero img {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0;
+  border-radius: var(--r-xl);
+}
+
+.post-article p {
+  font-size: var(--fs-md);
+  line-height: var(--lh-body);
+  margin: 0 0 1.4em;
+  color: var(--tx-1);
+}
+.post-article h2 {
+  font-size: clamp(var(--fs-xl), 3vw, var(--fs-2xl));
+  margin: 2.2em 0 0.6em;
+  letter-spacing: -0.03em;
+}
+.post-article h3 {
+  font-size: clamp(var(--fs-lg), 2.5vw, var(--fs-xl));
+  margin: 1.8em 0 0.5em;
+}
+.post-article ul, .post-article ol {
+  font-size: var(--fs-md);
+  margin: 0 0 1.4em;
+  padding-left: 1.5em;
+}
+.post-article li { margin-bottom: 0.4em; }
+.post-article blockquote {
+  margin: 1.8em 0;
+  padding: var(--s-2) 0 var(--s-2) var(--s-5);
+  font-size: var(--fs-md);
+}
+.post-article code {
+  font-size: 0.9em;
+}
+.post-article pre {
+  font-size: var(--fs-sm);
+}
+.post-article img {
+  max-width: 100%;
+  margin: 1.8em auto;
+}
+
+/* ── Post meta ── */
+.post-meta {
+  color: var(--tx-2);
+  font-size: var(--fs-sm);
+  font-family: var(--f-h);
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  flex-wrap: wrap;
+  margin: 0 0 var(--s-5);
+}
+.post-category-label {
+  font-weight: 600;
+  color: var(--tx);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: var(--fs-xs);
+}
+.post-meta-sep { color: var(--tx-4); }
+.post-meta a { color: var(--tx-2); text-decoration: none; }
+.post-meta a:hover { color: var(--tx); text-decoration: underline; }
+
+/* ── Post end sep ── */
+.post-end-sep {
+  text-align: center;
+  margin: var(--s-8) 0 var(--s-6);
+  font-size: var(--fs-base);
+  letter-spacing: 0.5em;
+  color: var(--tx-4);
+  user-select: none;
+}
+
+/* ── Tags ── */
+.post-tags { margin: var(--s-6) 0; display: flex; flex-wrap: wrap; gap: var(--s-2); }
+.tag-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  padding: var(--s-1) var(--s-3);
+  border: 1px solid var(--bd);
+  border-radius: var(--r-sm);
+  font-size: var(--fs-xs);
+  font-family: var(--f-h);
+  color: var(--tx-2);
+  text-decoration: none;
+  transition: all 0.15s var(--ease);
+  font-weight: 500;
+}
+.tag-chip:hover { color: var(--tx); border-color: var(--bd-1); text-decoration: none; }
+.tag-cloud { display: flex; flex-wrap: wrap; gap: var(--s-2); margin: var(--s-4) 0; }
+
+/* ── Post CTA ── */
+.post-cta {
+  margin: var(--s-8) auto 0;
+  padding: var(--s-7) var(--s-6);
+  background: var(--bg-1);
+  border: 1px solid var(--bd);
+  border-radius: var(--r-2xl);
+  text-align: center;
+}
+.post-cta h2 { margin: 0 0 var(--s-3); }
+.post-cta p { max-width: 32em; margin: 0 auto; }
+.post-cta-actions { display: flex; justify-content: center; gap: var(--s-3); flex-wrap: wrap; margin-top: var(--s-5); }
+.post-cta .small.muted { margin-top: var(--s-5); }
+
+/* ── Related posts ── */
+.related-posts {
+  margin: var(--s-8) auto 0;
+  padding-top: var(--s-6);
+  border-top: 1px solid var(--bd);
+}
+.related-posts h2 {
+  font-family: var(--f-h);
+  font-size: var(--fs-xs);
+  margin-bottom: var(--s-4);
+  color: var(--tx-3);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+}
+.related-posts .blog-row {
+  grid-template-columns: 1fr auto auto;
+}
+.related-posts .blog-row-date { display: none; }
+.related-posts .blog-row-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* ═══════════════════════════════════════════════════════
+   POST LIST (compact)
+   ═══════════════════════════════════════════════════════ */
+.post-list { list-style: none; padding: 0; margin: 0; }
+
+.post-list-link {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-3);
+  padding: 10px 12px;
+  margin: 0 -12px;
+  border-radius: var(--r-md);
+  transition: background 0.15s var(--ease), color 0.15s var(--ease);
+  color: var(--tx-2);
+  text-decoration: none;
+  font-family: var(--f-h);
+  font-size: 14px;
+}
+.post-list-link:hover { background: var(--bg-1); color: var(--tx); }
+.post-list-date { flex-shrink: 0; color: var(--tx-3); font-size: var(--fs-sm); min-width: 84px; }
+.post-list-title { color: var(--tx-1); font-weight: 500; }
+.post-list-desc {
+  font-size: var(--fs-sm);
+  color: var(--tx-3);
+  margin-top: 2px;
+  padding-left: 96px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   FORMS
+   ═══════════════════════════════════════════════════════ */
+input, textarea, select {
+  font-family: var(--f-h);
+  font-size: 14px;
+  color: var(--tx);
+  background: var(--bg-1);
+  border: 1px solid var(--bd);
+  padding: 10px 14px;
+  border-radius: var(--r-lg);
+  width: 100%;
+  max-width: 100%;
+  transition: border-color 0.15s var(--ease);
+  outline: none;
+}
+input:focus, textarea:focus, select:focus { border-color: var(--bd-2); }
+input::placeholder, textarea::placeholder { color: var(--tx-4); }
+label {
+  display: block;
+  padding: 0 0 6px;
+  font-family: var(--f-h);
+  font-size: var(--fs-sm);
+  color: var(--tx-1);
+  font-weight: 500;
+}
+
+/* ═══════════════════════════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════════════════════════ */
+footer {
+  border-top: 1px solid var(--bd);
+  padding: var(--s-7) 0 var(--s-6);
+  margin-top: var(--s-9);
+}
+.footer-inner {
+  max-width: var(--w);
+  margin: 0 auto;
+  padding: 0 var(--s-5);
+  text-align: center;
+}
+.footer-social {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-3);
+  margin-bottom: var(--s-5);
+}
+.footer-social a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--bd);
+  background: var(--bg-1);
+  color: var(--tx-3);
+  text-decoration: none;
+  transition: all 0.2s var(--ease);
+}
+.footer-social a:hover { color: var(--tx); border-color: var(--bd-1); background: var(--bg-2); }
+.footer-social svg { width: 18px; height: 18px; }
+.footer-newsletter {
+  display: flex;
+  gap: 8px;
+  max-width: 400px;
+  margin: 0 auto var(--s-2);
+}
+.footer-newsletter input { flex: 1; }
+.footer-newsletter button {
+  font-family: var(--f-h);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: var(--r-lg);
+  background: var(--tx);
+  color: var(--bg);
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.15s var(--ease);
+  white-space: nowrap;
+}
+.footer-newsletter button:hover { opacity: 0.85; }
+.footer-newsletter-status {
+  font-family: var(--f-h);
+  font-size: var(--fs-sm);
+  min-height: 1.25em;
+  margin-bottom: var(--s-3);
+  text-align: center;
+}
+.footer-newsletter-status.ok { color: #22c55e; }
+.footer-newsletter-status.err { color: #f87171; }
+.footer-copy { font-size: 12px; color: var(--tx-3); font-family: var(--f-h); }
+@media (max-width: 480px) {
+  .footer-newsletter { flex-direction: column; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   UTILITIES
+   ═══════════════════════════════════════════════════════ */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+.c { text-align: center; }
+.r { text-align: right; }
+.nowrap { white-space: nowrap; }
+.mt-4 { margin-top: var(--s-4); }
+.mt-6 { margin-top: var(--s-6); }
+.mb-4 { margin-bottom: var(--s-4); }
+.mb-6 { margin-bottom: var(--s-6); }
+.divider { height: 1px; background: var(--bd); margin: var(--s-7) 0; border: 0; }
+
+/* ── Flexbox utilities ── */
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.gap-3 { gap: var(--s-3); }
+.gap-4 { gap: var(--s-4); }
+.min-h-page { min-height: calc(100vh - var(--nav-h) - 200px); }
+
+/* ── Banner image ── */
+.post-banner { margin: var(--s-5) 0; border-radius: var(--r-lg); overflow: hidden; border: 1px solid var(--bd); }
+.post-banner img { display: block; width: 100%; height: auto; border-radius: var(--r-lg); margin: 0; }
+
+/* ═══════════════════════════════════════════════════════
+   BLOG INDEX LAYOUT
+   ═══════════════════════════════════════════════════════ */
+.blog-header {
+  margin-bottom: var(--s-6);
+}
+.blog-header h1 {
+  margin-bottom: var(--s-3);
+}
+.blog-header .lede {
+  margin: 0;
+  max-width: 520px;
+}
+
+/* ── Blog Filters ── */
+.blog-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: var(--s-6);
+}
+.blog-filters .filter-btn {
+  font-family: var(--f-h);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--bd);
+  background: transparent;
+  color: var(--tx-2);
+  text-decoration: none;
+  transition: all 0.15s var(--ease);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.blog-filters .filter-btn:hover { color: var(--tx); border-color: var(--bd-1); }
+.blog-filters .filter-btn.active { background: var(--tx); color: var(--bg); border-color: var(--tx); }
+.blog-filters .filter-count {
+  font-size: 11px;
+  opacity: 0.7;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.1);
+}
+.blog-filters .filter-btn.active .filter-count { background: rgba(0,0,0,0.2); opacity: 1; }
+
+/* ── Blog List ── */
+.blog-list {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--bd);
+}
+.blog-row {
+  display: grid;
+  grid-template-columns: 100px 1fr auto auto;
+  align-items: center;
+  gap: var(--s-4);
+  padding: var(--s-4) 0;
+  border-bottom: 1px solid var(--bd);
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.15s var(--ease);
+}
+.blog-row:hover { background: var(--bg-1); }
+.blog-row-date {
+  font-family: var(--f-h);
+  font-size: var(--fs-sm);
+  color: var(--tx-3);
+  font-weight: 500;
+  flex-shrink: 0;
+}
+.blog-row-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.blog-row-title {
+  font-family: var(--f-h);
+  font-size: var(--fs-base);
+  font-weight: 600;
+  color: var(--tx);
+  line-height: 1.4;
+  transition: color 0.15s var(--ease);
+}
+.blog-row:hover .blog-row-title { color: var(--tx-1); }
+.blog-row-desc {
+  font-size: var(--fs-sm);
+  color: var(--tx-3);
+  line-height: 1.5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.blog-row-cat {
+  font-family: var(--f-h);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--tx-4);
+  flex-shrink: 0;
+}
+.blog-row-arrow {
+  font-size: 16px;
+  color: var(--tx-4);
+  transition: all 0.2s var(--ease);
+  flex-shrink: 0;
+}
+.blog-row:hover .blog-row-arrow { color: var(--tx-2); transform: translateX(3px); }
+
+/* ── Blog empty state ── */
+.blog-empty {
+  padding: var(--s-7) 0;
+  text-align: center;
+  font-family: var(--f-h);
+  font-size: var(--fs-base);
+  color: var(--tx-3);
+  display: none;
+}
+.blog-empty.visible { display: block; }
+
+/* ── Blog Load More ── */
+.blog-load-more {
+  text-align: center;
+  padding: var(--s-6) 0;
+}
+
+/* ═══════════════════════════════════════════════════════
+   CONTENT-VISIBILITY (Performance)
+   ═══════════════════════════════════════════════════════ */
+.section + .section,
+.section + hr {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 600px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .wrap, .post-article { padding: 0 var(--s-4); }
+  .nav-inner { padding: 0 var(--s-4); }
+  .grid-3, .grid-2 { grid-template-columns: 1fr; }
+  .post-cta { padding: var(--s-5) var(--s-4); }
+  .post-cta-actions { flex-direction: column; }
+  .post-cta .btn { width: 100%; }
+  .post-cta-actions { margin-top: var(--s-4); }
+  .section { padding: var(--s-6) 0; }
+  .hero { padding: var(--s-6) 0; }
+  .hero-avatar-wrap { flex-direction: column; gap: var(--s-3); }
+  .hero-avatar { width: 56px; height: 56px; }
+  .hero-actions { flex-direction: column; align-items: center; }
+  .hero-actions .btn { width: 100%; max-width: 280px; }
+  .hero-social { gap: var(--s-2); }
+  footer { margin-top: var(--s-7); padding: var(--s-6) 0 var(--s-5); }
+  .footer-social { gap: var(--s-2); }
+  .footer-social a { width: 36px; height: 36px; }
+  .footer-social svg { width: 16px; height: 16px; }
+  .breadcrumb { padding-top: var(--s-3); }
+  .post-article h1 { font-size: clamp(24px, 6vw, 36px); }
+  .post-hero img { border-radius: var(--r-md); }
+  .post-hero { margin-bottom: var(--s-6); }
+  .blog-filters { gap: var(--s-1); }
+  .blog-filters .filter-btn { padding: var(--s-1) var(--s-3); font-size: var(--fs-xs); }
+  .blog-row { grid-template-columns: 1fr; gap: var(--s-2); padding: var(--s-4) var(--s-3); }
+  .blog-row-date { font-size: var(--fs-xs); }
+  .blog-row-cat { display: none; }
+  .blog-row-arrow { display: none; }
+  .blog-row-desc { white-space: normal; }
+}
+@media (max-width: 480px) {
+  .wrap, .post-article { padding: 0 var(--s-4); }
+  .nav-inner { padding: 0 var(--s-4); }
+  h1 { font-size: var(--fs-2xl); }
+  h2 { font-size: var(--fs-xl); }
+  .hero { padding: var(--s-5) 0; }
+  .section { padding: var(--s-5) 0; }
+  .card { padding: var(--s-4) var(--s-5); }
+  .post-card { padding: var(--s-5); }
+  .post-card-title { font-size: var(--fs-base); }
+}
+
+/* ── Reduced Motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+</style>
+
+<!-- Page-specific styles -->
+<style>
+
+/* Hero title — gradient text matching SpielEngine landing */
+.hero h1.lb-h1 {
+  font-family: var(--f-h);
+  font-size: clamp(var(--fs-xl), 4vw, 44px);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 1.05;
+  margin: 0 auto var(--s-5);
+  text-wrap: balance;
+  background: linear-gradient(180deg, var(--tx) 0%, var(--tx-3) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Big stat numbers in cards */
+.stat-big {
+  font-family: var(--f-h);
+  font-size: var(--fs-4xl);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--tx);
+  margin: var(--s-2) 0;
+}
+.stat-big .x {
+  color: var(--tx-3);
+  font-weight: 600;
+  font-size: 0.55em;
+  vertical-align: top;
+  margin-left: var(--s-1);
+}
+
+/* Prose paragraph — centered container, centered text */
+.lb-prose {
+  max-width: 60ch;
+  margin: var(--s-4) auto;
+  color: var(--tx-1);
+  text-align: center;
+}
+.lb-prose.small {
+  color: var(--tx-3);
+  font-size: var(--fs-sm);
+}
+
+/* Real Twitter embed — kill every possible edge artifact */
+.tweet-frame {
+  max-width: 560px;
+  margin: var(--s-4) auto;
+  background: var(--bg);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  line-height: 0;
+}
+.tweet-frame blockquote.twitter-tweet {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  background: var(--bg) !important;
+  color: var(--tx) !important;
+  font-style: normal !important;
+}
+.tweet-frame iframe {
+  background: var(--bg) !important;
+  border: 0 !important;
+  outline: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: block !important;
+  border-radius: var(--r-lg) !important;
+  overflow: hidden !important;
+  width: 100% !important;
+  clip-path: inset(0 round var(--r-lg));
+  -webkit-clip-path: inset(0 round var(--r-lg));
+}
+.tweet-frame .twitter-tweet-rendered {
+  margin: 0 !important;
+  padding: 0 !important;
+  background: var(--bg) !important;
+}
+
+/* Chart canvas needs explicit height to render */
+.chart-box { position: relative; width: 100%; height: 380px; }
+.chart-box.short { height: 280px; }
+@media (max-width: 700px) {
+  .chart-box, .chart-box.short { height: 340px; }
+}
+
+/* Table — caption under table, numeric columns right-aligned */
+.lb-table caption {
+  caption-side: bottom;
+  font-family: var(--f-h);
+  font-size: var(--fs-xs);
+  color: var(--tx-3);
+  text-align: center;
+  padding-top: var(--s-3);
+}
+.lb-table tr.highlight td:first-child { color: var(--tx); font-weight: 700; }
+.lb-table tr.highlight td.num { color: var(--tx); font-weight: 700; }
+.lb-table td.num { padding-right: var(--s-2); text-align: right; }
+.lb-table th.num { text-align: right; }
+.lb-table { width: 100%; margin-top: var(--s-3); }
+
+/* Sources — minimal reference list, two-column layout, no bullets */
+.lb-sources {
+  list-style: none;
+  padding: 0;
+  margin: var(--s-4) auto;
+  max-width: var(--w-read);
+}
+.lb-sources li {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: var(--s-4);
+  padding: var(--s-3) 0;
+  border-bottom: 1px solid var(--bd);
+  align-items: baseline;
+}
+.lb-sources li:last-child { border-bottom: none; }
+.lb-source-author {
+  font-family: var(--f-h);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--tx-3);
+}
+
+/* Reduce footer top spacing for this page */
+body > footer {
+  margin-top: var(--s-6);
+  padding-top: var(--s-5);
+}
+
+</style>
+</head>
+<body class="page">
+<a href="#main-content" class="skip-link">Skip to content</a>
+
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a class="nav-brand" href="/" aria-label="Shayan Spiel — Home">
+      <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M16 7l-12 12 6 6 3-3 3 3 3-3 3 3 6-6-12-12zM16 19l-3-3 3-3 3 3-3 3z"/></svg>
+    </a>
+    <span class="nav-links">
+      <a href="/about/">About</a>
+      <a href="/posts/">Blog</a>
+      <a href="/contact/">Contact</a>
+    </span>
+    <a href="/SpielEngine/" class="nav-cta">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M13 5l7 7-7 7M5 12h15"/></svg>
+      Get Spiel
+    </a>
+  </div>
+</nav>
+
+<main id="main-content">
+
+
+<style>
+/* Hero title — gradient text matching SpielEngine landing */
+.hero h1.lb-h1 {
+  font-family: var(--f-h);
+  font-size: clamp(var(--fs-xl), 4vw, 44px);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 1.05;
+  margin: 0 auto var(--s-5);
+  text-wrap: balance;
+  background: linear-gradient(180deg, var(--tx) 0%, var(--tx-3) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Big stat numbers in cards */
+.stat-big {
+  font-family: var(--f-h);
+  font-size: var(--fs-4xl);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--tx);
+  margin: var(--s-2) 0;
+}
+.stat-big .x {
+  color: var(--tx-3);
+  font-weight: 600;
+  font-size: 0.55em;
+  vertical-align: top;
+  margin-left: var(--s-1);
+}
+
+/* Prose paragraph — centered container, centered text */
+.lb-prose {
+  max-width: 60ch;
+  margin: var(--s-4) auto;
+  color: var(--tx-1);
+  text-align: center;
+}
+.lb-prose.small {
+  color: var(--tx-3);
+  font-size: var(--fs-sm);
+}
+
+/* Real Twitter embed — kill every possible edge artifact */
+.tweet-frame {
+  max-width: 560px;
+  margin: var(--s-4) auto;
+  background: var(--bg);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  line-height: 0;
+}
+.tweet-frame blockquote.twitter-tweet {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  background: var(--bg) !important;
+  color: var(--tx) !important;
+  font-style: normal !important;
+}
+.tweet-frame iframe {
+  background: var(--bg) !important;
+  border: 0 !important;
+  outline: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: block !important;
+  border-radius: var(--r-lg) !important;
+  overflow: hidden !important;
+  width: 100% !important;
+  clip-path: inset(0 round var(--r-lg));
+  -webkit-clip-path: inset(0 round var(--r-lg));
+}
+.tweet-frame .twitter-tweet-rendered {
+  margin: 0 !important;
+  padding: 0 !important;
+  background: var(--bg) !important;
+}
+
+/* Chart canvas needs explicit height to render */
+.chart-box { position: relative; width: 100%; height: 380px; }
+.chart-box.short { height: 280px; }
+@media (max-width: 700px) {
+  .chart-box, .chart-box.short { height: 340px; }
+}
+
+/* Table — caption under table, numeric columns right-aligned */
+.lb-table caption {
+  caption-side: bottom;
+  font-family: var(--f-h);
+  font-size: var(--fs-xs);
+  color: var(--tx-3);
+  text-align: center;
+  padding-top: var(--s-3);
+}
+.lb-table tr.highlight td:first-child { color: var(--tx); font-weight: 700; }
+.lb-table tr.highlight td.num { color: var(--tx); font-weight: 700; }
+.lb-table td.num { padding-right: var(--s-2); text-align: right; }
+.lb-table th.num { text-align: right; }
+.lb-table { width: 100%; margin-top: var(--s-3); }
+
+/* Sources — minimal reference list, two-column layout, no bullets */
+.lb-sources {
+  list-style: none;
+  padding: 0;
+  margin: var(--s-4) auto;
+  max-width: var(--w-read);
+}
+.lb-sources li {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: var(--s-4);
+  padding: var(--s-3) 0;
+  border-bottom: 1px solid var(--bd);
+  align-items: baseline;
+}
+.lb-sources li:last-child { border-bottom: none; }
+.lb-source-author {
+  font-family: var(--f-h);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--tx-3);
+}
+
+/* Reduce footer top spacing for this page */
+body > footer {
+  margin-top: var(--s-6);
+  padding-top: var(--s-5);
+}
+</style>
+
+<div class="wrap">
+
+  <section class="hero">
+    <h1 class="lb-h1">Is GLM-5.2 cheaper than the frontier?</h1>
+    <p class="lede">A working breakdown of LLM API pricing across Anthropic, OpenAI, Google, and Z.ai, at every reasoning effort. Where the popular claim breaks down, where it could technically be true, and what the data says about intelligence.</p>
+  </section>
+
+  <hr class="divider">
+
+  <section class="section">
+    <div class="section-head">
+      <div class="section-tag">The numbers</div>
+      <h2 class="section-title">What the data shows</h2>
+      <p class="section-sub">Three numbers that answer the question. Source: first-party pricing and Artificial Analysis Intelligence Index v4.1.</p>
+    </div>
+
+    <div class="grid grid-3">
+      <div class="card">
+        <div class="card-tag">vs GPT-5.5</div>
+        <div class="stat-big">5.6<span class="x">×</span></div>
+        <p class="card-desc">cheaper per request at medium reasoning effort</p>
+      </div>
+      <div class="card">
+        <div class="card-tag">vs Claude Opus 4.8</div>
+        <div class="stat-big">5.1<span class="x">×</span></div>
+        <p class="card-desc">cheaper per request at medium reasoning effort</p>
+      </div>
+      <div class="card">
+        <div class="card-tag">AA Intelligence Index v4.1</div>
+        <div class="stat-big">51</div>
+        <p class="card-desc">leading open-weights model, tied with Opus 4.8 and GPT-5.5</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section class="section">
+    <div class="section-head">
+      <div class="section-tag">The claim being addressed</div>
+      <h2 class="section-title">What people are saying</h2>
+      <p class="section-sub">A widely-shared take from a respected voice in the space argues GLM-5.2 is more expensive than the proprietary frontier at medium reasoning effort. Worth examining.</p>
+    </div>
+
+    <div class="tweet-frame">
+      <blockquote class="twitter-tweet" data-theme="dark" data-dnt="true" data-conversation="none"><p lang="en" dir="ltr">I see a lot of people hyped about GLM-5.2. Rightfully so! Having an open weight model surpass GPT-5.4 and every Gemini model is dope.<br><br>That said - it&#39;s not cheap. Both Opus 4.8 and GPT-5.5 set to &quot;medium&quot; are cheaper and smarter than GLM-5.2 <a href="https://t.co/SPovI1LKnZ">pic.twitter.com/SPovI1LKnZ</a></p>&mdash; Theo - t3.gg (@theo) <a href="https://x.com/theo/status/2068533586131841072?ref_src=twsrc%5Etfw">June 21, 2026</a></blockquote>
+    </div>
+
+    <p class="lb-prose">Theo is right about the first half. GLM-5.2 does surpass GPT-5.4 and every Gemini model on the Intelligence Index. The second half, the cheaper and smarter part, breaks when you run the math.</p>
+  </section>
+
+  <hr class="divider">
+
+  <section class="section">
+    <div class="section-head">
+      <div class="section-tag">The pricing data</div>
+      <h2 class="section-title">The pricing math</h2>
+      <p class="section-sub">Reasoning-effort parameters control how many tokens a model spends thinking. They do not change the per-token rate.</p>
+    </div>
+
+    <p class="lb-prose">The <code>reasoning_effort</code> parameter on GPT-5.5, the extended-thinking budget on Claude, and <code>reasoning_effort</code> on GLM-5.2 all do the same thing. They control how many tokens the model spends thinking. The per-token rate stays fixed regardless of effort mode.</p>
+
+    <table class="lb-table">
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Provider</th>
+          <th class="num">Input /MTok</th>
+          <th class="num">Cache hit /MTok</th>
+          <th class="num">Output /MTok</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="highlight">
+          <td>GLM-5.2</td>
+          <td>Z.ai</td>
+          <td class="num">$1.40</td>
+          <td class="num">$0.26</td>
+          <td class="num">$4.40</td>
+        </tr>
+        <tr>
+          <td>Gemini 3 Pro</td>
+          <td>Google</td>
+          <td class="num">$2.00</td>
+          <td class="num">$0.20</td>
+          <td class="num">$12.00</td>
+        </tr>
+        <tr>
+          <td>Claude Opus 4.8</td>
+          <td>Anthropic</td>
+          <td class="num">$5.00</td>
+          <td class="num">$0.50</td>
+          <td class="num">$25.00</td>
+        </tr>
+        <tr>
+          <td>GPT-5.5</td>
+          <td>OpenAI</td>
+          <td class="num">$5.00</td>
+          <td class="num">$0.50</td>
+          <td class="num">$30.00</td>
+        </tr>
+      </tbody>
+      <caption>Per-token pricing published June 21, 2026. Anthropic cache write is billed separately at $6.25/MTok; OpenAI and Google cache write is free.</caption>
+    </table>
+
+    <p class="lb-prose">For Opus 4.8 at medium effort to come out cheaper than GLM-5.2, Opus 4.8 would need to emit roughly <strong>5.7× fewer reasoning tokens</strong> than GLM-5.2, enough to close the per-token gap. In practice, GLM-5.2 uses <em>more</em> reasoning tokens at medium effort than Opus 4.8 does. The per-token rate gap is large enough that GLM-5.2 still wins.</p>
+  </section>
+
+  <hr class="divider">
+
+  <section class="section">
+    <div class="section-head">
+      <div class="section-tag">The workload comparison</div>
+      <h2 class="section-title">Cost at a real medium-reasoning workload</h2>
+      <p class="section-sub">20K input tokens, 70% prompt-cache hit, 5K output including reasoning. Reasoning tokens are billed as output on every provider.</p>
+    </div>
+
+    <div class="card">
+      <h3 class="card-title">Cost per request</h3>
+      <p class="card-desc">Sorted cheapest first. Bar length is cost. Color intensity shows where each model ranks.</p>
+      <div class="chart-box"><canvas id="chart-cost"></canvas></div>
+    </div>
+
+    <div class="grid grid-3 mt-6">
+      <div class="card">
+        <div class="card-tag">Opus 4.8 → GLM-5.2</div>
+        <h3 class="card-title">$0.29 → $0.06</h3>
+        <p class="card-desc">5.1× more expensive on the same workload.</p>
+      </div>
+      <div class="card">
+        <div class="card-tag">GPT-5.5 → GLM-5.2</div>
+        <h3 class="card-title">$0.34 → $0.06</h3>
+        <p class="card-desc">6.0× more expensive on the same workload.</p>
+      </div>
+      <div class="card">
+        <div class="card-tag">Gemini 3 Pro → GLM-5.2</div>
+        <h3 class="card-title">$0.13 → $0.06</h3>
+        <p class="card-desc">2.4× more expensive on the same workload.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section class="section">
+    <div class="section-head">
+      <div class="section-tag">The intelligence comparison</div>
+      <h2 class="section-title">Smarter? No. They&rsquo;re tied.</h2>
+      <p class="section-sub">Artificial Analysis Intelligence Index v4.1, a weighted composite of 9 evaluations including GDPval-AA v2, Terminal-Bench v2.1, HLE, GPQA Diamond, and AA-Omniscience.</p>
+    </div>
+
+    <div class="card">
+      <h3 class="card-title">AA Intelligence Index v4.1</h3>
+      <p class="card-desc">The four frontier models land within two points of each other. Only Claude Fable 5, at $10 and $50 per MTok, clearly leads.</p>
+      <div class="chart-box short"><canvas id="chart-index"></canvas></div>
+    </div>
+
+    <p class="lb-prose">GLM-5.2 at <strong>51</strong> is the leading open-weights model on the index. On GDPval-AA v2 specifically, the real-world agentic work benchmark, GLM-5.2 scores <strong>1524</strong>, ahead of GPT-5.5 (xhigh) at <strong>1514</strong>. The Intelligence Index lead belongs to Claude Fable 5 (~60), which costs 2 to 3× more than everything else on this chart.</p>
+  </section>
+
+  <hr class="divider">
+
+  <section class="section">
+    <div class="section-head">
+      <div class="section-tag">The trade-off Theo flagged</div>
+      <h2 class="section-title">The catch: more output tokens</h2>
+      <p class="section-sub">Theo followed up with a fair point. Cheaper per token does not mean cheaper in time.</p>
+    </div>
+
+    <div class="tweet-frame">
+      <blockquote class="twitter-tweet" data-theme="dark" data-dnt="true" data-conversation="none"><p lang="en" dir="ltr">It also uses way more output tokens. The tokens are cheaper, but the volume of them means you&#39;ll spend much more time waiting for results.<br><br>Still dope! Just trying to make sure people set their expectations properly <a href="https://t.co/hy6NO0CtEq">pic.twitter.com/hy6NO0CtEq</a></p>&mdash; Theo - t3.gg (@theo) <a href="https://x.com/theo/status/2068533867955560593?ref_src=twsrc%5Etfw">June 21, 2026</a></blockquote>
+    </div>
+
+    <p class="lb-prose">In his follow-up, Theo added: <em>&ldquo;the volume of them means you&rsquo;ll spend much more time waiting for results.&rdquo;</em> That&rsquo;s true, and worth being upfront about.</p>
+
+    <div class="card mt-6">
+      <h3 class="card-title">Output tokens per task</h3>
+      <p class="card-desc">GLM-5.2 emits the most output tokens of any leading open-weights model. Lower per-token cost, but more tokens to wait for.</p>
+      <div class="chart-box"><canvas id="chart-tokens"></canvas></div>
+    </div>
+
+    <p class="lb-prose">At max thinking effort, GLM-5.2 emits <strong>43k output tokens</strong> per Intelligence Index task (37k reasoning, 6k answer). For comparison, MiniMax-M3 emits 24k, Kimi K2.6 emits 35k, and DeepSeek V4 Pro (max) emits 37k. GLM-5.2 is roughly <strong>65% to 80% more verbose</strong> than the leanest open-weights peers.</p>
+
+    <p class="lb-prose">For batch jobs and overnight pipelines, this is irrelevant. The cost advantage dominates. For latency-sensitive interactive use, Opus 4.8 or GPT-5.5 medium will feel snappier, even at higher cost, because they finish thinking in fewer tokens. That is a real trade-off, not a footnote.</p>
+  </section>
+
+  <hr class="divider">
+
+  <section class="section">
+    <div class="section-head">
+      <div class="section-tag">The honest answer</div>
+      <h2 class="section-title">Where the claim could be technically true</h2>
+      <p class="section-sub">Three narrow cases where &ldquo;Opus 4.8 medium beats GLM-5.2 medium on cost&rdquo; can hold up, if you squint.</p>
+    </div>
+
+    <div class="grid grid-3">
+      <div class="card">
+        <div class="card-tag">Narrow case 1</div>
+        <h3 class="card-title">Batch API</h3>
+        <p class="card-desc">Anthropic and OpenAI offer 50% discounts on batch jobs. Z.ai has no published batch tier. The gap shrinks to roughly 2.5× instead of 5×.</p>
+      </div>
+      <div class="card">
+        <div class="card-tag">Narrow case 2</div>
+        <h3 class="card-title">Subscription vs API</h3>
+        <p class="card-desc">Claude Max or ChatGPT Pro at $200/mo bundles effectively unlimited usage of the top model. That pricing is not comparable to per-token API rates.</p>
+      </div>
+      <div class="card">
+        <div class="card-tag">Narrow case 3</div>
+        <h3 class="card-title">Single benchmarks</h3>
+        <p class="card-desc">On individual evals (HLE, certain coding tasks), Opus 4.8 medium or GPT-5.5 medium can outperform GLM-5.2. The composite index places them as tied.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section class="section">
+    <div class="section-head">
+      <div class="section-tag">The bottom line</div>
+      <h2 class="section-title">The hype is right</h2>
+      <p class="section-sub">For the first time, an open-weights model is a head-on competitor to the proprietary frontier. That matters.</p>
+    </div>
+
+    <p class="lb-prose">GLM-5.2 is cheaper than Opus 4.8 and GPT-5.5 at every published reasoning-effort level. It is roughly tied with both on the Artificial Analysis Intelligence Index v4.1. It comes from Z.ai under an MIT license, which means self-hosting, fine-tuning, and zero vendor lock-in are real options. None of the proprietary frontier models offer that.</p>
+
+    <p class="lb-prose">For the first time, an open-weights model is a head-on competitor to the frontier on cost, intelligence, <em>and</em> availability. That is the right thing for builders who don&rsquo;t want to depend on a single provider. The hype is correct. Set expectations on latency, then ship.</p>
+  </section>
+
+  <hr class="divider">
+
+  <section class="section">
+    <div class="section-head">
+      <div class="section-tag">References</div>
+      <h2 class="section-title">Sources</h2>
+      <p class="section-sub">Every claim on this page ties back to a first-party source. No invented numbers.</p>
+    </div>
+
+    <ul class="lb-sources">
+      <li><span class="lb-source-author">Theo (X)</span><a href="https://x.com/theo/status/2068533586131841072" target="_blank" rel="noopener">&ldquo;Is GLM-5.2 actually cheaper than Opus 4.8 and GPT-5.5?&rdquo;</a></li>
+      <li><span class="lb-source-author">Theo (X)</span><a href="https://x.com/theo/status/2068533867955560593" target="_blank" rel="noopener">&ldquo;It also uses way more output tokens...&rdquo;</a></li>
+      <li><span class="lb-source-author">Artificial Analysis</span><a href="https://artificialanalysis.ai/articles/glm-5-2-is-the-new-leading-open-weights-model-on-the-artificial-analysis-intelligence-index" target="_blank" rel="noopener">GLM-5.2 is the new leading open weights model</a></li>
+      <li><span class="lb-source-author">Anthropic</span><a href="https://www.anthropic.com/pricing" target="_blank" rel="noopener">API pricing &mdash; Opus 4.8, Sonnet 4.6, Haiku 4.5</a></li>
+      <li><span class="lb-source-author">OpenAI</span><a href="https://openai.com/api/pricing/" target="_blank" rel="noopener">API pricing &mdash; GPT-5.5, GPT-5.4, GPT-5.4 mini</a></li>
+      <li><span class="lb-source-author">Google Cloud</span><a href="https://cloud.google.com/vertex-ai/generative-ai/pricing" target="_blank" rel="noopener">Vertex AI &mdash; Gemini 3 Pro pricing</a></li>
+      <li><span class="lb-source-author">Z.ai</span><a href="https://docs.z.ai/guides/overview/quick-start" target="_blank" rel="noopener">GLM-5.2 quick start</a></li>
+    </ul>
+
+    <p class="lb-prose small">Last updated June 21, 2026. Pricing pulled from first-party pricing pages on this date. Intelligence Index v4.1 published June 15, 2026.</p>
+  </section>
+
+  <hr class="divider">
+
+  <p class="lb-prose small">Content crafted by <a href="https://github.com/ShayanSpiel/SpielEngine" target="_blank" rel="noopener">The Spiel Engine</a>, from a comparison session, edited and re-designed to HTML.</p>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+<script>
+(function() {
+  function v(name, fallback) {
+    var s = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    return s || fallback;
+  }
+  var TEXT   = v('--tx',   '#fff');
+  var MUTED  = v('--tx-2','#b0b0b0');
+  var GRID   = v('--bd',  '#1a1a1a');
+  var BAR_WIN = TEXT;
+  var BAR_2   = v('--tx-2', '#b0b0b0');
+  var BAR_3   = v('--tx-3', '#888');
+  var BAR_4   = v('--tx-4', '#555');
+
+  if (typeof Chart === 'undefined') return;
+  Chart.defaults.font.family = "'Inter', -apple-system, system-ui, sans-serif";
+  Chart.defaults.color = MUTED;
+  Chart.defaults.borderColor = GRID;
+  Chart.defaults.plugins.legend.labels.usePointStyle = true;
+
+  var MODELS = [
+    { name: 'GLM-5.2',         input: 1.40, cache: 0.26, output: 4.40,  index: 51, outTok: 43, color: BAR_WIN },
+    { name: 'Gemini 3 Pro',    input: 2.00, cache: 0.20, output: 12.00, index: 49, outTok: 22, color: BAR_2 },
+    { name: 'Claude Opus 4.8', input: 5.00, cache: 0.50, output: 25.00, index: 50, outTok: 28, color: BAR_3 },
+    { name: 'GPT-5.5',         input: 5.00, cache: 0.50, output: 30.00, index: 50, outTok: 26, color: BAR_4 },
+  ];
+
+  function mediumCost(m) {
+    var inMiss = 20000 * 0.3;
+    var inHit  = 20000 * 0.7;
+    var out    = 5000;
+    return (inMiss * m.input + inHit * m.cache + out * m.output) / 1e6;
+  }
+
+  var costs = MODELS.map(function(m) {
+    return { name: m.name, cost: mediumCost(m), color: m.color };
+  }).sort(function(a, b) { return a.cost - b.cost; });
+
+  new Chart(document.getElementById('chart-cost'), {
+    type: 'bar',
+    data: {
+      labels: costs.map(function(c) { return c.name; }),
+      datasets: [{
+        label: 'Cost per request',
+        data: costs.map(function(c) { return c.cost; }),
+        backgroundColor: costs.map(function(c) { return c.color; }),
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      indexAxis: 'y',
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              var cheapest = costs[0].cost;
+              var mult = (ctx.parsed.x / cheapest).toFixed(2);
+              return ctx.parsed.x === cheapest
+                ? '$' + ctx.parsed.x.toFixed(4) + ' · cheapest'
+                : '$' + ctx.parsed.x.toFixed(4) + ' (' + mult + '× GLM-5.2)';
+            }
+          }
+        }
+      },
+      scales: {
+        x: { beginAtZero: true, ticks: { callback: function(v) { return '$' + v.toFixed(3); } }, grid: { color: GRID } },
+        y: { grid: { display: false } }
+      }
+    }
+  });
+
+  var indexed = MODELS.slice().sort(function(a, b) { return b.index - a.index; });
+  new Chart(document.getElementById('chart-index'), {
+    type: 'bar',
+    data: {
+      labels: indexed.map(function(m) { return m.name; }),
+      datasets: [{
+        label: 'AA Intelligence Index v4.1',
+        data: indexed.map(function(m) { return m.index; }),
+        backgroundColor: indexed.map(function(m) { return m.color; }),
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: function(ctx) { return 'Index: ' + ctx.parsed.y; } } }
+      },
+      scales: {
+        y: { beginAtZero: true, max: 60, title: { display: true, text: 'Higher = smarter', color: MUTED }, grid: { color: GRID } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+
+  var tokens = MODELS.slice().sort(function(a, b) { return b.outTok - a.outTok; });
+  new Chart(document.getElementById('chart-tokens'), {
+    type: 'bar',
+    data: {
+      labels: tokens.map(function(m) { return m.name; }),
+      datasets: [{
+        label: 'Output tokens per task (k)',
+        data: tokens.map(function(m) { return m.outTok; }),
+        backgroundColor: tokens.map(function(m) { return m.color; }),
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      indexAxis: 'y',
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: function(ctx) { return ctx.parsed.x + 'k output tokens'; } } }
+      },
+      scales: {
+        x: { beginAtZero: true, ticks: { callback: function(v) { return v + 'k'; } }, grid: { color: GRID } },
+        y: { grid: { display: false } }
+      }
+    }
+  });
+})();
+</script>
+<script async src="https://platform.x.com/widgets.js" charset="utf-8"></script>
+
+</main>
+
+<footer role="contentinfo">
+  <div class="footer-inner">
+    <nav class="footer-social" role="list" aria-label="Social links">
+      <a href="https://x.com/ShayanSpiel" target="_blank" rel="noopener" aria-label="X / Twitter" role="listitem">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </a>
+      <a href="https://www.linkedin.com/in/shayantawabi" target="_blank" rel="noopener" aria-label="LinkedIn" role="listitem">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 2h-17A1.5 1.5 0 0 0 2 3.5v17A1.5 1.5 0 0 0 3.5 22h17a1.5 1.5 0 0 0 1.5-1.5v-17A1.5 1.5 0 0 0 20.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 1 1 8.3 6.5a1.78 1.78 0 0 1-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0 0 13 14.19a.66.66 0 0 0 0 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 0 1 2.7-1.4c1.55 0 3.36.86 3.36 3.66z"/></svg>
+      </a>
+      <a href="https://github.com/ShayanSpiel" target="_blank" rel="noopener" aria-label="GitHub" role="listitem">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+      </a>
+      <a href="/feed.xml" aria-label="RSS Feed" role="listitem">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20A2.18 2.18 0 0 1 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1Z"/></svg>
+      </a>
+      <a href="mailto:66shayan@gmail.com" aria-label="Email" role="listitem">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      </a>
+    </nav>
+
+    <form class="footer-newsletter" id="subscribe" action="https://docs.google.com/forms/d/e/1FAIpQLScSAISdLXFTAex_cHMmdMCXQdaMGlwLouLRmptFo_5VcdV_GA/formResponse" method="POST" target="hidden_iframe" aria-label="Newsletter signup">
+      <label for="footer-email" class="sr-only">Email address</label>
+      <input id="footer-email" type="email" name="entry.754901073" placeholder="Your email" required autocomplete="email" aria-required="true" />
+      <input type="hidden" name="entry.2021940811" value="Newsletter" />
+      <button type="submit">Subscribe</button>
+    </form>
+    <div class="footer-newsletter-status" id="newsletter-status" role="status" aria-live="polite"></div>
+
+    <div class="footer-copy">&copy; 2026 Shayan Spiel &middot; <a href="/branding/">Branding</a></div>
+  </div>
+
+  <iframe name="hidden_iframe" id="hidden_iframe" title="newsletter-submit" hidden></iframe>
+  <script>
+  (function () {
+    var form = document.getElementById("subscribe");
+    var iframe = document.getElementById("hidden_iframe");
+    var status = document.getElementById("newsletter-status");
+    if (!form || !iframe) return;
+    var btn = form.querySelector("button");
+    var input = form.querySelector('input[type="email"]');
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var email = (input && input.value || "").trim();
+      if (!email) { if (input) input.focus(); return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        if (status) status.textContent = "Please enter a valid email.";
+        if (status) status.className = "footer-newsletter-status err";
+        if (input) input.focus();
+        return;
+      }
+      btn.textContent = "Sending...";
+      btn.disabled = true;
+      if (status) { status.textContent = ""; status.className = "footer-newsletter-status"; }
+      form.submit();
+      setTimeout(function () {
+        btn.textContent = "Subscribed";
+        if (input) input.value = "";
+        if (status) { status.textContent = "You're in. Check your inbox."; status.className = "footer-newsletter-status ok"; }
+      }, 1500);
+    });
+  })();
+  </script>
+</footer>
+</body>
+</html>

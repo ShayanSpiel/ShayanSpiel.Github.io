@@ -1,0 +1,17 @@
+{%- comment -%}
+  Component: definition
+  Term card. Displays a term with optional phonetic mark and a definition.
+  Slots:
+    term — the term being defined (required)
+    mark — small phonetic / category mark on the left (optional)
+    def  — the definition (required)
+  Example:
+    {% include components/definition.html term="Session-as-Content" mark="/ˌsesh(ə)n/" def="A methodology where the build session itself is the source material for published content." %}
+{%- endcomment -%}
+<div class="definition">
+  {%- if include.mark %}<div class="definition-mark">{{ include.mark }}</div>{% endif %}
+  <div class="definition-body">
+    <strong>{{ include.term }}</strong>
+    <span>{{ include.def }}</span>
+  </div>
+</div>

@@ -1,0 +1,136 @@
+---
+layout: post-shell
+title: "From Declarative Rules To Agentic Loops"
+date: 2026-06-08 03:35:01 +0000
+description: "Why your LLM agents ignore half your rules. Learn the agentic AI workflow architecture that replaces fragile prompts with state-machine loops that actually work."
+tags:
+  - ai-agents
+  - content-engine
+  - automation
+categories:
+  - AI & Agents
+related:
+  - /gates-not-models/
+  - /spiel-engine-update/
+  - /72-hour-sprint/
+permalink: /agentic-loops/
+---
+
+<section class='hero'>
+  <h1>You Built a Constitution, Not a Government</h1>
+  <p class='lede'>A year ago I built a prompt. 2000 words. Every rule I could think of. The model read it, nodded, and ignored half of it. This is not a model problem. It is an architecture problem.</p>
+</section>
+
+{% include components/post-meta.html %}
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The trap' title='Every AI System Needs a Loop' sub='The industry has been obsessed with prompts for 2 years. Bigger prompts. Structured prompts. Role-based prompts with 15 paragraphs of &lsquo;you are an expert.&rsquo;' %}
+
+  {% include components/prose-center.html text='The systems that actually work follow a different pattern. They follow a loop: Act, Observe, Evaluate, Update, Repeat. That is the only thing that matters. Not the prompt. The loop.' %}
+
+  <div class='grid grid-2'>
+    {% include components/card.html tag='Prompt' icon='circle-x' title='Static document' desc='A prompt is a static document. It does not recover from failure. If the model ignores line 47, nothing catches it. The output is wrong. You notice hours later.' %}
+    {% include components/card.html tag='Loop' icon='check' title='Dynamic process' desc='A loop is a dynamic process. The first breaks under context pressure. The second survives it. Each state has a validation gate.' %}
+  </div>
+
+  {% include components/takeaway.html text='A prompt does not recover from failure. A loop catches failure at every transition.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The mechanism' title='What the Loop Looks Like in Practice' sub='Two loops, one architecture. Both run on the same Act&rarr;Observe&rarr;Evaluate&rarr;Update&rarr;Repeat pattern.' %}
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>01</div>
+      <div class='step-body'>
+        <strong>Act</strong>
+        INGEST a raw source file, ANALYZE its entities, RECONCILE against existing pages. The first half of the loop.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>02</div>
+      <div class='step-body'>
+        <strong>Observe</strong>
+        Check the validation gates. Does the page have frontmatter. Do the links work. The first feedback signal.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>03</div>
+      <div class='step-body'>
+        <strong>Evaluate</strong>
+        Score the output. Pass or fail. The decision point that decides whether the loop advances.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>04</div>
+      <div class='step-body'>
+        <strong>Update</strong>
+        Write the new page, log the action, bump the state file. The system now reflects the new state.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>05</div>
+      <div class='step-body'>
+        <strong>Repeat</strong>
+        Next source file, or back to IDLE. The loop continues.
+      </div>
+    </div>
+  </div>
+
+  <pre><code>/extract &rarr; INGEST &rarr; ANALYZE &rarr; RECONCILE &rarr; INDEX &rarr; VALIDATE &rarr; IDLE
+/post    &rarr; SESSION &rarr; STRATEGY &rarr; DRAFT &rarr; GATES &rarr; QUEUE &rarr; REVIEW? &rarr; PUBLISH &rarr; ARCHIVE &rarr; ANALYZE &rarr; IDLE</code></pre>
+
+  {% include components/prose-center.html text='Two loops. One architecture. The Act&rarr;Observe&rarr;Evaluate&rarr;Update&rarr;Repeat pattern is the same.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The proof' title='Why Loops Beat Prompts' sub='The smallest possible example of the loop pattern replacing the prompt pattern.' %}
+
+  <div class='grid grid-2'>
+    {% include components/card.html tag='Prompt pattern' icon='circle-x' title='Hold a rule across time' desc='&lsquo;NEVER create a page for passing mentions. Only create pages when a concept appears in 2+ sources.&rsquo; Models are bad at this.' %}
+    {% include components/card.html tag='Loop pattern' icon='check' title='Execute a decision right now' desc='Before creating a page: check if concept is in 2+ sources &rarr; if yes, create &rarr; if no, check if central to one source &rarr; if yes, create &rarr; if no, skip. Models are good at this.' %}
+  </div>
+
+  {% include components/takeaway.html text='The first is a prohibition the model must hold across time. The second is a decision tree the model executes right now. Models are bad at the first and good at the second.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The flexibility' title='The Human Toggle' sub='Here is the other thing loops enable that prompts cannot: conditional human involvement.' %}
+
+  <div class='grid grid-3'>
+    {% include components/card.html variant='stat-shift' icon='user-check' title='Manual mode' desc='Always show me. The human reviews every draft before it ships. The loop pauses at REVIEW? and waits.' %}
+    {% include components/card.html variant='stat-shift' icon='gauge' title='Auto-threshold' desc='Publish if quality score is above 0.85. The loop runs end-to-end when the gate score is high enough.' %}
+    {% include components/card.html variant='stat-shift' icon='zap' title='Auto-always' desc='Zero human review. Opt-in only. The loop runs end-to-end every time. The gates are the only safety net.' %}
+  </div>
+
+  {% include components/prose-center.html text='A prompt cannot do this. A prompt cannot say &lsquo;if quality is above 0.85, proceed, otherwise pause.&rsquo; A prompt is static. A loop is dynamic.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The deeper shift' title='The Real Insight' sub='Prompt engineering is the past. Agentic loops are the future. The people building with state machines and execution gates are shipping.' %}
+
+  <div class='grid grid-2'>
+    {% include components/card.html tag='Then' icon='circle-x' title='Bigger prompt' desc='Adding more rules to a static document. The model still ignores some. The system still produces silently wrong output. The team still notices hours later.' %}
+    {% include components/card.html tag='Now' icon='rocket' title='State machine' desc='200 lines of code that defines states, transitions, and validation gates. The model executes a decision tree, not a memorized rule. Every state is observable.' %}
+  </div>
+
+  {% include components/prose-center.html text='I absolutely wrote the big prompt first. I spent months adding rules to it. The day I replaced it with a 200-line state machine was the day the system started working. The model did not change. The architecture did.' %}
+</section>
+
+<hr class='divider'>
+
+{% include components/closer.html
+   icon='zap'
+   takeaway='Do not build a bigger prompt. Build a loop.'
+   echo='Two loops. 200 lines. 30 gates. The model did not change. The architecture did. Clone the Spiel Engine repo and see for yourself.'
+%}

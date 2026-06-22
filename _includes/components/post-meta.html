@@ -1,0 +1,28 @@
+{%- comment -%}
+  Component: post-meta
+  Centered category · date · author block. Place directly after the post's
+  hero so it appears under the title.
+  Usage:
+    {% include components/post-meta.html %}
+{%- endcomment -%}
+{%- assign post_categories = page.categories | default: 'post' -%}
+{%- if post_categories and post_categories.first -%}
+  {%- assign category_slug = post_categories | first | downcase | slugify -%}
+  {%- assign category_label = post_categories | first -%}
+{%- else -%}
+  {%- assign category_slug = 'post' -%}
+  {%- assign category_label = 'Post' -%}
+{%- endif -%}
+<div class="post-meta post-meta-center">
+  <a href="/posts/?cat={{ category_slug }}" class="post-category-label">{{ category_label }}</a>
+  <span class="post-meta-sep" aria-hidden="true">·</span>
+  <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%b %-d, %Y" }}</time>
+  <span class="post-meta-sep" aria-hidden="true">·</span>
+  <span class="post-author" itemprop="author" itemscope itemtype="https://schema.org/Person">
+    <a href="{{ '/about/' | relative_url }}" class="plain" itemprop="url"><span itemprop="name">{{ site.author.name }}</span></a>
+  </span>
+  {%- if page.read_time -%}
+  <span class="post-meta-sep" aria-hidden="true">·</span>
+  <span>{{ page.read_time }} min read</span>
+  {%- endif -%}
+</div>

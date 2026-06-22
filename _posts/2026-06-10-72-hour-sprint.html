@@ -1,0 +1,159 @@
+---
+layout: post-shell
+title: "How I Built a Developer Content Pipeline in 72 Hours"
+date: 2026-06-10 08:00:00 +0000
+description: "A developer content pipeline workflow built in 72 hours. 4 blog posts, 3 LinkedIn posts, 2 state machines, ~85 queue drafts. One system that makes output compound."
+tags:
+  - content-system
+  - session-as-content
+  - content-pipeline
+  - lead-generation
+  - building-in-public
+categories:
+  - Content Pipeline
+related:
+  - /sessions-to-posts/
+  - /content-pipeline/
+  - /from-declarative-rules-to-agentic-loops/
+permalink: /72-hour-sprint/
+---
+
+<section class='hero'>
+  <h1>3 Days, 23 Outputs, One System</h1>
+  <p class='lede'>A developer content pipeline workflow built in 72 hours. 4 blog posts, 3 LinkedIn posts, 2 state machines, ~85 queued drafts. One system that makes output compound.</p>
+</section>
+
+{% include components/post-meta.html %}
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The trap' title='The Real Problem Was Not Content' sub='For a long time, every work session had the same ending. I built something. I learned something. I moved on. But nothing was captured in a way that could be reused.' %}
+
+  {% include components/prose-center.html text='I would finish building something, close the session, and the output would basically disappear. Not literally &mdash; the code was there, the ideas were there &mdash; but nothing carried forward into content, writing, or distribution. So the next day, I would start again from zero.' %}
+
+  {% include components/takeaway.html text='The disconnect was the real bottleneck. Not writing. Not ideas. Just capture.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='By the numbers' title='What Happened in 72 Hours' sub='By the end of the sprint, the system had produced this much output &mdash; and the numbers are not really the point.' %}
+
+  <div class='grid grid-3'>
+    {% include components/card.html variant='stat-shift' icon='file-text' num='4' title='Published blog posts' desc='Live and indexed. Each one routed from a session log through the compiler, drafts, and gates.' %}
+    {% include components/card.html variant='stat-shift' icon='send' num='3' title='LinkedIn posts' desc='Auto-published through the Buffer integration. Voice-matched, format-correct, approved in the queue.' %}
+    {% include components/card.html variant='stat-shift' icon='settings' num='18' title='Reusable commands' desc='Single-purpose building blocks. Write, classify, publish, archive, extract. No magic scripts.' %}
+    {% include components/card.html variant='stat-shift' icon='layers' num='2' title='Core workflow loops' desc='Knowledge loop and content loop. State machines, not agents. Deterministic. Reliable.' %}
+    {% include components/card.html variant='stat-shift' icon='file-check' num='85' title='Drafts queued' desc='Sitting in the queue for refinement, repurposing, scheduling. The system keeps producing, you keep curating.' %}
+    {% include components/card.html variant='stat-shift' icon='book' num='40' title='Knowledge pages' desc='Up from 10. The vault expanded. Every session now produces something that survives it.' %}
+  </div>
+
+  {% include components/prose-center.html text='The numbers are not really the point. The real change is this: now every session I run produces something that survives it.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The shift' title='What I Changed' sub='I rebuilt my workflow into three simple layers. Each one does one thing. Predictable building blocks, no magic scripts.' %}
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>01</div>
+      <div class='step-body'>
+        <strong>The knowledge layer (the vault)</strong>
+        One idea = one page. Each page has sources, tags, connections. Everything is cross-linked. Your system understands what you already know.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>02</div>
+      <div class='step-body'>
+        <strong>The execution layer (commands)</strong>
+        Each command does one thing. Write, classify, publish, archive, extract. No multi-purpose magic scripts. Just predictable building blocks.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>03</div>
+      <div class='step-body'>
+        <strong>The content pipeline (stages)</strong>
+        Every piece has a job. Awareness (TOFU), Mechanism (MOFU), Conversion (BOFU). Each piece has a single responsibility.
+      </div>
+    </div>
+  </div>
+
+  {% include components/prose-center.html text='I stopped trying to make every post do everything. Each piece now has a single responsibility.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='What broke' title='What Broke During the Sprint' sub='Not everything worked. At first, I over-engineered the system.' %}
+
+  <div class='grid grid-2'>
+    {% include components/card.html tag='Symptom' icon='alert-triangle' title='Rules started fighting' desc='The rules got too complex and started conflicting. The system was working against itself.' %}
+    {% include components/card.html tag='Symptom' icon='circle-x' title='Drafts sounded robotic' desc='Some outputs lost the human voice. The pipeline optimized for cleanness, not for feel.' %}
+    {% include components/card.html tag='Symptom' icon='circle-x' title='System overwrote needed state' desc='The system started overwriting things I actually needed to keep. Loss of history.' %}
+    {% include components/card.html tag='Fix' icon='check' title='Simplified aggressively' desc='Reduced the rule system by more than half. Enforced one principle: if it does not help output, it does not stay.' %}
+  </div>
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='What I learned' title='4 Things the Sprint Proved' sub='Output is not the hard part. Retention is.' %}
+
+  <div class='grid grid-2'>
+    {% include components/card.html icon='book' title='Output is not the hard part &mdash; retention is' desc='Most people do not lack ideas. They lose them. The real advantage comes from building something that preserves what you produce and feeds it back into the next session.' %}
+    {% include components/card.html icon='zap' title='Structure creates velocity' desc='Once I had clear stages, clear commands, clear roles for each output, decisions became almost automatic. No hesitation. No overthinking.' %}
+    {% include components/card.html icon='target' title='Constraints improve clarity' desc='The moment I forced every piece of content into a role (TOFU, MOFU, BOFU), quality actually increased. Because I stopped trying to say everything at once.' %}
+    {% include components/card.html icon='settings' title='Systems matter more than effort' desc='This sprint did not work because I worked harder. It worked because less of my output was getting lost. That changed the compounding effect.' %}
+  </div>
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='What it became' title='What This Actually Became' sub='At first, this was just a personal experiment. Then it evolved into a system where thinking produces structure, structure produces content, content feeds back into thinking.' %}
+
+  {% include components/prose-center.html text='Instead of isolated sessions, I now have continuity. That is the real win. A system where thinking produces structure, structure produces content, content feeds back into thinking.' %}
+
+  <div class='grid grid-3'>
+    {% include components/card.html icon='lightbulb' title='Thinking &rarr; structure' desc='Every build session produces structured artifacts. Decisions, numbers, lessons, tradeoffs. The system knows how to handle each shape.' %}
+    {% include components/card.html icon='settings' title='Structure &rarr; content' desc='Structured artifacts become drafts. The compiler inverts the frame toward the audience&rsquo;s problem. Gates filter the output.' %}
+    {% include components/card.html icon='rocket' title='Content &rarr; thinking' desc='Published content feeds engagement data back into the knowledge layer. Patterns surface. The next session starts smarter.' %}
+  </div>
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='What I&rsquo;m still figuring out' title='What I Am Still Figuring Out' sub='This is not finished. Some parts are still messy. But the loop itself is working now. And that matters more than perfection.' %}
+
+  <div class='grid grid-3'>
+    {% include components/card.html icon='pen' title='Voice consistency' desc='Still needs work. The compiler is good but not perfect. Corpus-driven voice is the long-term play.' %}
+    {% include components/card.html icon='settings' title='Some automation is overkill' desc='Not every step needs to be automated. Some things are better done by hand. The hard part is knowing which is which.' %}
+    {% include components/card.html icon='circle-x' title='Not every output deserves to exist' desc='The gates help, but human curation is still the most expensive part. Quality is a function of what you refuse to publish.' %}
+  </div>
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The takeaway' title='If You Take One Thing From This' sub='You do not need to produce more content. You need a system where nothing you produce disappears.' %}
+
+  {% include components/prose-center.html text='Because once output accumulates instead of evaporating, everything compounds. That is the system I build for technical founders &mdash; a developer content pipeline that makes your work durable and your output compound.' %}
+
+  <div class='grid grid-3'>
+    {% include components/card.html variant='stat-shift' icon='clock' num='72h' title='Sprint length' desc='The system was built in 72 hours. Not because I worked faster. Because I stopped losing work.' %}
+    {% include components/card.html variant='stat-shift' icon='rocket' num='14 days' title='DFY install' desc='Same system, installed in your workflow. Positioning, offer design, agents, templates, 30 days review. You own it.' %}
+    {% include components/card.html variant='stat-shift' icon='check' num='30 days' title='Money-back guarantee' desc='If after 30 days you have run 5 sessions through the engine and you do not have 5 standalone-tested drafts, full refund.' %}
+  </div>
+</section>
+
+<hr class='divider'>
+
+{% include components/closer.html
+   icon='rocket'
+   takeaway='Once output accumulates instead of evaporating, everything compounds.'
+   echo='72 hours. One system. 14-day install. You own the result. DM @ShayanSpiel or read the methodology to get started.'
+%}

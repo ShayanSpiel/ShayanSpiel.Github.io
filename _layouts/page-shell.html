@@ -1,0 +1,26 @@
+---
+layout: default
+---
+
+<article class="page-shell">
+  {%- if page.breadcrumb != false %}
+  <nav class="breadcrumb breadcrumb-center" aria-label="Breadcrumb">
+    <a href="{{ '/' | relative_url }}" aria-label="Home">
+      {% include components/icon.html name="home" size=14 label="Home" %}
+    </a>
+    <span class="sep" aria-hidden="true">·</span>
+    <span class="current" aria-current="page">{{ page.title }}</span>
+  </nav>
+  {%- endif %}
+
+  <header class="page-shell-header">
+    <h1>{{ page.title }}</h1>
+    {%- if page.description %}
+    <p class="lede">{{ page.description }}</p>
+    {%- endif %}
+  </header>
+
+  <div class="page-shell-body">
+    {{ content }}
+  </div>
+</article>

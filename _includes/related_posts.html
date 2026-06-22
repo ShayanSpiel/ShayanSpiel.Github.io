@@ -1,6 +1,51 @@
-{%- if page.tags and page.tags.size > 0 -%}
-  {%- assign related = "" | split: "" -%}
+{%- comment -%}
+  related_posts.html
+  Internal linking: finds related posts for the current page.
+  Renders as a centered card grid (3 cards max).
+  Strategy (in priority order):
+    1. Explicit `related:` front matter (URL slugs) — highest priority
+    2. Posts in the same cluster (from _data/clusters.yml)
+    3. Posts sharing tags (existing behavior)
+{%- endcomment -%}
+{%- assign related = "" | split: "" -%}
+
+{%- comment -%} 1. Explicit `related:` front matter (URL paths) {%- endcomment -%}
+{%- if page.related -%}
+  {%- for rel_path in page.related -%}
+    {%- assign rel_post = site.posts | where: "url", rel_path | first -%}
+    {%- if rel_post and rel_post.url != page.url -%}
+      {%- assign related = related | push: rel_post -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+
+{%- comment -%} 2. Same cluster {%- endcomment -%}
+{%- if site.data.clusters and related.size < 3 -%}
+  {%- for cluster in site.data.clusters.clusters -%}
+    {%- assign in_cluster = false -%}
+    {%- for member in cluster.members -%}
+      {%- if member == page.url -%}{%- assign in_cluster = true -%}{%- endif -%}
+    {%- endfor -%}
+    {%- if in_cluster -%}
+      {%- for member in cluster.members -%}
+        {%- if related.size >= 3 -%}{%- break -%}{%- endif -%}
+        {%- assign rel_post = site.posts | where: "url", member | first -%}
+        {%- if rel_post and rel_post.url != page.url -%}
+          {%- assign already = false -%}
+          {%- for r in related -%}{%- if r.url == rel_post.url -%}{%- assign already = true -%}{%- endif -%}{%- endfor -%}
+          {%- if already == false -%}
+            {%- assign related = related | push: rel_post -%}
+          {%- endif -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+
+{%- comment -%} 3. Tag-based fallback {%- endcomment -%}
+{%- if page.tags and related.size < 3 -%}
   {%- for post in site.posts -%}
+    {%- if related.size >= 3 -%}{%- break -%}{%- endif -%}
     {%- if post.url != page.url -%}
       {%- assign match_count = 0 -%}
       {%- for tag in page.tags -%}
@@ -9,29 +54,38 @@
         {%- endif -%}
       {%- endfor -%}
       {%- if match_count >= 1 -%}
-        {%- assign related = related | push: post -%}
+        {%- assign already = false -%}
+        {%- for r in related -%}{%- if r.url == post.url -%}{%- assign already = true -%}{%- endif -%}{%- endfor -%}
+        {%- if already == false -%}
+          {%- assign related = related | push: post -%}
+        {%- endif -%}
       {%- endif -%}
     {%- endif -%}
   {%- endfor -%}
-  {%- if related.size > 0 -%}
-    {%- assign sorted_related = related | sort: 'date' | reverse | slice: 0, 3 -%}
-    <aside class="related-posts">
-      <h2>Related posts</h2>
-      <div class="blog-list">
-        {%- for post in sorted_related -%}
-        <a href="{{ post.url | relative_url }}" class="blog-row">
-          <span class="blog-row-date">{{ post.date | date: "%b %-d, %Y" }}</span>
-          <span class="blog-row-body">
-            <span class="blog-row-title">{{ post.title }}</span>
-            {%- if post.description -%}
-            <span class="blog-row-desc">{{ post.description | strip_html | truncatewords: 18 }}</span>
-            {%- endif -%}
-          </span>
-          <span class="blog-row-cat">{{ post.categories | first | default: 'Post' }}</span>
-          <span class="blog-row-arrow" aria-hidden="true">&#8594;</span>
-        </a>
-        {%- endfor -%}
+{%- endif -%}
+
+{%- if related.size > 0 -%}
+<aside class="related-posts">
+  <h2>Related posts</h2>
+  <div class="grid grid-3">
+    {%- for post in related | slice: 0, 3 -%}
+    <a href="{{ post.url | relative_url }}" class="post-card">
+      <div class="post-card-head">
+        <time class="post-card-date">{{ post.date | date: "%b %-d, %Y" }}</time>
+        {%- if post.categories and post.categories.first %}
+        <span class="post-card-cat">{{ post.categories | first }}</span>
+        {%- endif %}
       </div>
-    </aside>
-  {%- endif -%}
+      <h3 class="post-card-title">{{ post.title }}</h3>
+      {%- if post.description %}
+      <p class="post-card-excerpt">{{ post.description | strip_html | truncatewords: 20 }}</p>
+      {%- endif %}
+      <div class="post-card-foot">
+        <span class="post-card-meta">Read post</span>
+        <span class="post-card-arrow" aria-hidden="true">&rarr;</span>
+      </div>
+    </a>
+    {%- endfor %}
+  </div>
+</aside>
 {%- endif -%}

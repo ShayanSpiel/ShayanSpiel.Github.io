@@ -12,6 +12,9 @@ vendor/bundle/
 # Lockfiles (use Gemfile only for GH Pages remote build)
 Gemfile.lock
 
+# Node
+node_modules/
+
 # OS
 .DS_Store
 Thumbs.db

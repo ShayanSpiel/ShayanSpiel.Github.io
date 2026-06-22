@@ -1,0 +1,160 @@
+---
+layout: post-shell
+title: "How I Rebuilt My Blog in 4 Hours With a Jekyll Automation Pipeline"
+date: 2026-06-07 09:00:00 +0000
+description: "A Jekyll blog automation pipeline that turns vault drafts into live posts with one command. From empty demo to brand blog with 2 posts shipped the same night."
+tags:
+  - building-in-public
+  - jekyll
+  - github-pages
+  - content-engine
+categories:
+  - Building in Public
+related:
+  - /agentic-loops/
+  - /pipeline-not-strategy/
+  - /sessions-to-posts/
+permalink: /blog-rebuild-4h/
+---
+
+<section class='hero'>
+  <h1>4 Hours, 2 Posts, 1 Command</h1>
+  <p class='lede'>A Jekyll blog automation pipeline that turns vault drafts into live posts with one command. From empty demo to brand blog, shipped the same night.</p>
+</section>
+
+{% include components/post-meta.html %}
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The trap' title='The Blog Was a Demo, Not a Brand' sub='The blog existed for 6 months. The home page rendered fine. The about page said &lsquo;this is a Jekyll theme demo.&rsquo; The posts were placeholder text. The site was online. The site was not me.' %}
+
+  {% include components/prose-center.html text='The reason: I built the blog as a demo, not as a brand. The theme was elegant. The content was empty. I never wired the blog to the vault. I never wired the blog to the resume. I never wrote a publish script. The blog was a folder on a server. The vault was a folder on my laptop. The two folders did not know about each other.' %}
+
+  {% include components/prose-center.html text='The asymmetry was embarrassing. The vault had 126 markdown files, 10 strategy pages, 30 concept pages, 8 entity pages, 1 corpus analysis. The blog had 1 page that said &lsquo;demo.&rsquo; The brain was full. The mouth was empty.' %}
+
+  {% include components/prose-center.html text='The fix is the publish layer. The publish layer is a script that takes a vault draft, transforms it for Jekyll, commits it, and pushes to GitHub Pages. One command. One URL. One published post.' %}
+
+  <div class='grid grid-2'>
+    {% include components/card.html tag='The vault' icon='book' num='126' title='Markdown files' desc='10 strategy pages, 30 concept pages, 8 entity pages, 1 corpus analysis. The brain was full. The mouth was empty.' %}
+    {% include components/card.html tag='The blog' icon='circle-x' title='1 demo page' desc='Said &lsquo;this is a Jekyll theme demo.&rsquo; The asymmetry was embarrassing. The fix is the publish layer.' %}
+  </div>
+
+  {% include components/takeaway.html text='The fix is the publish layer. The publish layer is a script that takes a vault draft, transforms it for Jekyll, commits it, and pushes to GitHub Pages. One command. One URL. One published post.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The constraint' title='CLI Mode, Broken Ruby, One Terminal' sub='The session that produced this rebuild was a CLI session. No GUI. No Obsidian. No browser tab. One shell, one editor, and a broken Ruby.' %}
+
+  <div class='grid grid-2'>
+    {% include components/card.html icon='circle-x' title='No GUI' desc='Could not run Obsidian. Could not preview the site. Could not click &lsquo;publish&rsquo; in a CMS. The publish step had to be one bash command.' %}
+    {% include components/card.html icon='circle-x' title='No local Jekyll build' desc='System Ruby was 2.6. Gemfile.lock required bundler 4.0.12. <code>bundle exec jekyll build</code> failed before it started.' %}
+    {% include components/card.html icon='circle-x' title='No GUI screenshots' desc='screencapture and chrome --headless both failed. The publish step had to work without them.' %}
+    {% include components/card.html icon='check' title='One shell' desc='The script takes a file path. Produces a live URL. The whole thing is testable in a terminal.' %}
+  </div>
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The mechanism' title='The 4-File Pipeline' sub='Vault &rarr; queue &rarr; script &rarr; live URL. That is the whole thing.' %}
+
+  <pre><code>content/queue/&lt;draft&gt;.md       (vault side, status: ready-to-publish)
+scripts/parse-frontmatter.py  (YAML &rarr; bash, helper)
+scripts/publish-blog.sh       (the pipeline: transform + copy + commit + push)
+~/ShayanSpiel.github.io/      (GH Pages side, _posts/, auto-builds on push)</code></pre>
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>01</div>
+      <div class='step-body'>
+        <strong>User writes a draft</strong>
+        In <code>content/queue/&lt;date&gt;-&lt;slug&gt;.md</code>. The draft has <code>status: ready-to-publish</code> in the frontmatter.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>02</div>
+      <div class='step-body'>
+        <strong>User runs one command</strong>
+        <code>bash scripts/publish-blog.sh &lt;draft-path&gt; --yes</code>. The script takes over from here.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>03</div>
+      <div class='step-body'>
+        <strong>Script transforms frontmatter</strong>
+        Adds Jekyll fields (layout, date, author). Drops vault fields (status, standalone_test, pillar). Whitelist, not blacklist. Stable contract.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>04</div>
+      <div class='step-body'>
+        <strong>Script copies screenshots</strong>
+        Scans body for image references. Resolves paths. Copies to <code>assets/uploads/&lt;date&gt;-&lt;slug&gt;/</code>. Rewrites paths in the post.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>05</div>
+      <div class='step-body'>
+        <strong>Script commits and pushes</strong>
+        Stages the new post and uploads. Commits with a meaningful message. Pushes to origin main. GitHub Pages rebuilds. The post is live in ~30 seconds.
+      </div>
+    </div>
+  </div>
+
+  {% include components/takeaway.html text='The whole flow is one command. The user runs the command, walks away, and the post is live. The script is the publish layer.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='By the numbers' title='The Result' sub='The rebuild shipped 4 deliverables in 4 hours. The brand hierarchy is now consistent.' %}
+
+  <div class='grid grid-3'>
+    {% include components/card.html variant='stat-shift' icon='home' num='1' title='Home page rewrite' desc='index.md now has a hero, latest 5 posts, &lsquo;currently shipping,&rsquo; and a &lsquo;what this site is&rsquo; section. No more demo content.' %}
+    {% include components/card.html variant='stat-shift' icon='user' num='1' title='About page rewrite' desc='about.md now has the personal-brand story arc, the 5 offers with detail, and contact info. No more &lsquo;demo&rsquo;.' %}
+    {% include components/card.html variant='stat-shift' icon='file-text' num='2' title='Pillar posts' desc='This post + the prior post on the second-brain architecture. Both published the same night.' %}
+    {% include components/card.html variant='stat-shift' icon='image' num='15' title='Screenshots' desc='7 for the first pillar, 8 for this pillar. All 1600x1600 PNGs. All in assets/uploads/.' %}
+    {% include components/card.html variant='stat-shift' icon='clock' num='4h' title='Total time' desc='From empty demo to brand blog. No GUI. No local Jekyll build. One command per post.' %}
+    {% include components/card.html variant='stat-shift' icon='zap' num='30s' title='Time to live' desc='From git push to live URL. GitHub Pages rebuilds. The post is public.' %}
+  </div>
+
+  {% include components/prose-center.html text='The brand hierarchy is now consistent. The blog about-page mirrors the wiki shayanspiel page. Every surface points to the same person.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The lesson' title='Publishing Is the Part No One Teaches' sub='Most blog advice is about writing. Most content-engine advice is about drafting. Nobody talks about the publish step.' %}
+
+  {% include components/prose-center.html text='The publish step is the layer between &lsquo;I have a draft&rsquo; and &lsquo;the draft is live.&rsquo; The publish step is the friction. The publish step is the part that makes people not post. The fix is a script. The script takes a file path. The script does the rest.' %}
+
+  <div class='grid grid-2'>
+    {% include components/card.html tag='Without a script' icon='circle-x' title='10 minutes of clicking' desc='Login to the CMS. Format the frontmatter. Copy screenshots to the right folder. Update the index. Commit. Push. Repeat. 10 minutes. Every. Single. Time.' %}
+    {% include components/card.html tag='With a script' icon='check' title='One command' desc='The script reads the draft. Transforms the frontmatter. Copies the screenshots. Stages the commit. Pushes. The post is live in 30 seconds. The user walks away.' %}
+  </div>
+
+  {% include components/takeaway.html text='You can&rsquo;t post if you can&rsquo;t publish. You can&rsquo;t publish if the publish step is 10 minutes of clicking. The 10 minutes is the friction. The friction is the reason you don&rsquo;t post. The script is the friction-killer.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='Apply it' title='If You Have a Vault, Build the Script' sub='The script is 4 hours. The script is the publish layer of Session-as-Content Infrastructure.' %}
+
+  <div class='grid grid-3'>
+    {% include components/card.html variant='stat-shift' icon='code' num='4' title='Files' desc='The whole pipeline is 4 files. The vault draft, the YAML helper, the publish script, the GH Pages destination. Nothing else.' %}
+    {% include components/card.html variant='stat-shift' icon='clock' num='4h' title='Build time' desc='The script took 4 hours to write. It saves 10 minutes per post. Break-even after 24 posts. The script is the leverage.' %}
+    {% include components/card.html variant='stat-shift' icon='rocket' num='2' title='Posts in 1 night' desc='First night using the script: 2 posts shipped. The pipeline works end-to-end. The vault is now wired to the live site.' %}
+  </div>
+</section>
+
+<hr class='divider'>
+
+{% include components/closer.html
+   icon='code'
+   takeaway='You can&rsquo;t post if you can&rsquo;t publish. The script is the friction-killer.'
+   echo='4 files. 4 hours. One command. The vault is now wired to the blog. Clone the Spiel Engine repo. Build the publish layer. Ship the same night.'
+%}
