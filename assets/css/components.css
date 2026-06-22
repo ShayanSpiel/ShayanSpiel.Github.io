@@ -1037,9 +1037,9 @@
   text-align: center;
   text-wrap: pretty;
 }
-.page-shell-body p { font-size: var(--fs-md); line-height: var(--lh-body); margin: 0 0 1.4em; color: var(--tx-1); }
-.page-shell-body h2 { font-size: clamp(var(--fs-xl), 3vw, var(--fs-2xl)); margin: 2.2em 0 0.6em; letter-spacing: -0.03em; }
-.page-shell-body h3 { font-size: clamp(var(--fs-lg), 2.5vw, var(--fs-xl)); margin: 1.8em 0 0.5em; }
+.page-shell-body > p { font-size: var(--fs-md); line-height: var(--lh-body); margin: 0 auto 1.4em; max-width: 60ch; color: var(--tx-1); text-wrap: pretty; }
+.page-shell-body > h2 { font-size: clamp(var(--fs-xl), 3vw, var(--fs-2xl)); margin: 2.2em auto 0.6em; max-width: 60ch; letter-spacing: -0.03em; }
+.page-shell-body > h3 { font-size: clamp(var(--fs-lg), 2.5vw, var(--fs-xl)); margin: 1.8em auto 0.5em; max-width: 60ch; }
 
 /* ── category-desc (in /categories page) ── */
 .category-desc { color: var(--tx-2); font-size: var(--fs-md); margin: 0 0 var(--s-5); max-width: 60ch; line-height: 1.65; }
