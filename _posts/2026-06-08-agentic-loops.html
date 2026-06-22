@@ -13,7 +13,44 @@ related:
   - /gates-not-models/
   - /spiel-engine-update/
   - /72-hour-sprint/
+image:
+  path: /assets/og/agentic-loops.png
+  width: 1200
+  height: 630
 permalink: /agentic-loops/
+redirect_from:
+  - /2026-06-08-from-declarative-rules-to-agentic-loops/
+  - /from-declarative-rules-to-agentic-loops/
+faq:
+  - q: "What is an agentic loop?"
+    a: "An agentic loop is a state-machine pattern that runs AI work as a continuous cycle of **Act → Observe → Evaluate → Update → Repeat**. Each transition has a validation gate, so failures get caught immediately rather than hours later. It replaces static prompts that models ignore under context pressure."
+  - q: "Why do agentic loops beat prompts?"
+    a: "Prompts are static documents. Models are bad at holding prohibitions across time, like *NEVER create a page for passing mentions*. Loops are dynamic processes. They execute decisions right now: *check if concept appears in 2+ sources → if yes, create → if no, skip*. Models are good at this. The loop also enables conditional human involvement — pause at REVIEW? when quality score is below threshold."
+  - q: "What's the difference between a loop and a prompt?"
+    a: "A prompt is a static document that does not recover from failure. If the model ignores line 47, nothing catches it. A loop is a dynamic process that validates at every state transition. The first breaks under context pressure. The second survives it."
+  - q: "What is a validation gate?"
+    a: "A validation gate is a checkpoint at a loop transition that scores the output against criteria (frontmatter present, links work, semantic completeness) before the loop advances. Gates are what make AI content pipelines produce work that sounds human, because they catch drift the model would otherwise permit."
+  - q: "How do I implement an agentic loop in my own pipeline?"
+    a: "Map your work as discrete states. For each state, write a single decision: *what's the test for moving forward?* Then wire those decisions in order, with a halt-and-return-to-IDLE on failure. The Spiel Engine implements two such loops (`/extract` and `/post`) using exactly this pattern, in 4 files and 19 commands."
+howto:
+  name: "Build a 5-state agentic loop for an AI content pipeline"
+  description: "Replace a 2000-word prompt with a state machine that actually survives context pressure."
+  total_time: "PT30M"
+  tools:
+    - "Python or any scripting language"
+    - "JSON state file"
+    - "A model API (Claude, GPT, GLM, etc.)"
+  steps:
+    - name: "Map the work as 5 states"
+      text: "Define Act, Observe, Evaluate, Update, Repeat. Each state has exactly one job and one output schema. Resist the urge to add a sixth state — five is enough."
+    - name: "Write the validation gate for the Act→Observe transition"
+      text: "Before observing, check the input is structurally valid (file exists, JSON parses, required fields present). Failures return to IDLE with a log entry."
+    - name: "Write the validation gate for the Observe→Evaluate transition"
+      text: "Check that observation matches what Act claimed to do. Did the file land where expected? Are counts correct? Mismatches return to Act with a corrective note."
+    - name: "Score and decide in Evaluate"
+      text: "Run a small model call (or deterministic check) to score the output. Pass or fail. The decision point that decides whether the loop advances."
+    - name: "Persist, log, and Repeat"
+      text: "Write the new state to disk, bump the state file, log the action, then either advance to the next state or return to IDLE. The loop is now self-correcting."
 ---
 
 <section class='hero'>

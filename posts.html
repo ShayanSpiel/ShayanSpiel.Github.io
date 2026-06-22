@@ -4,7 +4,7 @@ title: Blog
 description: Every pillar post on the ShayanSpiel blog. Newest first.
 keywords: all posts, blog archive, Shayan Spiel, session-as-content, content engine, building in public
 image:
-  path: /assets/og-default.png
+  path: /assets/og/blog.png
   width: 1200
   height: 630
 permalink: /posts/
@@ -81,6 +81,21 @@ permalink: /posts/
 
   var params = new URLSearchParams(window.location.search);
   var cat = params.get('cat');
+  var tag = params.get('tag');
+
+  // Inject canonical link to /posts/ for filtered views (avoids duplicate content)
+  if ((cat || tag) && !document.querySelector('link[rel="canonical"][data-injected]')) {
+    var canonical = document.createElement('link');
+    canonical.rel = 'canonical';
+    canonical.href = '{{ "/posts/" | absolute_url }}';
+    canonical.setAttribute('data-injected', '1');
+    var existing = document.querySelector('link[rel="canonical"]');
+    if (existing) existing.parentNode.removeChild(existing);
+    document.head.appendChild(canonical);
+    // Also set robots to noindex,follow for filtered views
+    var robots = document.querySelector('meta[name="robots"]');
+    if (robots) robots.setAttribute('content', 'noindex, follow');
+  }
 
   var allRows = document.querySelectorAll('.post-card');
   var btns = document.querySelectorAll('.filter-btn');

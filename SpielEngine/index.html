@@ -15,7 +15,7 @@ sitemap: true
   <meta property="og:title" content="Spiel Engine: Capture. Simulate. Publish." />
   <meta property="og:description" content="Turn your coding sessions into publishable content. Extract, draft, and publish across 6+ platforms in under 5 minutes." />
   <meta property="og:url" content="https://spielos.xyz/SpielEngine/" />
-  <meta property="og:image" content="https://spielos.xyz/assets/og-default.png?v=2" />
+  <meta property="og:image" content="https://spielos.xyz/assets/og/SpielEngine.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:site_name" content="Shayan Spiel" />
@@ -24,7 +24,7 @@ sitemap: true
   <meta name="twitter:site" content="@ShayanSpiel" />
   <meta name="twitter:title" content="Spiel Engine: Capture. Simulate. Publish." />
   <meta name="twitter:description" content="Turn your coding sessions into publishable content. Extract, draft, and publish across 6+ platforms." />
-  <meta name="twitter:image" content="https://spielos.xyz/assets/og-default.png?v=2" />
+  <meta name="twitter:image" content="https://spielos.xyz/assets/og/SpielEngine.png" />
 
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
   <meta name="author" content="Shayan Spiel" />
@@ -52,10 +52,17 @@ sitemap: true
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     "name": "Spiel Engine",
+    "@id": "https://spielos.xyz/SpielEngine/#software",
     "description": "Turn your coding sessions into publishable content. Extract, draft, and publish across 6+ platforms in under 5 minutes. Open-source CLI tool for developers.",
     "url": "https://spielos.xyz/SpielEngine/",
     "applicationCategory": "DeveloperApplication",
-    "operatingSystem": "macOS, Linux",
+    "applicationSubCategory": "Content Automation",
+    "operatingSystem": "macOS, Linux, Windows",
+    "downloadUrl": "https://github.com/ShayanSpiel/SpielEngine",
+    "codeRepository": "https://github.com/ShayanSpiel/SpielEngine",
+    "programmingLanguage": ["Python", "Shell"],
+    "license": "https://opensource.org/licenses/MIT",
+    "isAccessibleForFree": true,
     "offers": [
       {
         "@type": "Offer",
@@ -75,11 +82,107 @@ sitemap: true
     ],
     "author": {
       "@type": "Person",
+      "@id": "https://spielos.xyz/#person",
       "name": "Shayan Spiel",
-      "url": "https://x.com/ShayanSpiel"
+      "url": "https://spielos.xyz/"
     },
-    "softwareVersion": "1.0",
+    "publisher": {
+      "@type": "Organization",
+      "@id": "https://spielos.xyz/#organization",
+      "name": "Shayan Spiel"
+    },
+    "softwareVersion": "0.x",
     "fileFormat": "CLI"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "@id": "https://spielos.xyz/#person",
+    "name": "Shayan Spiel",
+    "alternateName": "Shayan Tawabi",
+    "url": "https://spielos.xyz/",
+    "jobTitle": "Solo operator, marketing strategist, agentic solutions architect",
+    "worksFor": {"@id": "https://spielos.xyz/#organization"},
+    "knowsAbout": [
+      {"@type": "DefinedTerm", "name": "Session-as-Content methodology"},
+      {"@type": "DefinedTerm", "name": "Content pipeline"},
+      {"@type": "DefinedTerm", "name": "Agentic AI workflows"}
+    ],
+    "sameAs": [
+      "https://twitter.com/ShayanSpiel",
+      "https://www.linkedin.com/in/shayantawabi",
+      "https://github.com/ShayanSpiel"
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": "https://spielos.xyz/#organization",
+    "name": "Shayan Spiel",
+    "alternateName": "spielos.xyz",
+    "url": "https://spielos.xyz/",
+    "logo": "https://spielos.xyz/assets/logos/personal/primary-transparent.svg",
+    "founder": {"@id": "https://spielos.xyz/#person"}
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://spielos.xyz/" },
+      { "@type": "ListItem", "position": 2, "name": "Spiel Engine", "item": "https://spielos.xyz/SpielEngine/" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": "https://spielos.xyz/SpielEngine/#webpage",
+    "url": "https://spielos.xyz/SpielEngine/",
+    "name": "Spiel Engine — Capture. Simulate. Publish.",
+    "isPartOf": {"@id": "https://spielos.xyz/#website"},
+    "primaryImageOfPage": {
+      "@type": "ImageObject",
+      "url": "https://spielos.xyz/assets/og-default.png?v=2"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the Spiel Engine?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Spiel Engine is an open-source CLI tool that turns your coding sessions into publishable content. It captures build sessions, drafts across 6+ platforms, and publishes — without an editorial calendar or identity switch."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How much does the Spiel Engine cost?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The open-source version is free forever (MIT licensed). The DFY (Done-For-You) White-Glove Install is $990 one-time, with 3 slots per month."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does Spiel Engine work with my IDE?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes — it works with Cursor, Claude Code, OpenCode, Codex, and any IDE. The CLI captures from anywhere you build."
+        }
+      }
+    ]
   }
   </script>
 </head>

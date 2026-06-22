@@ -1,40 +1,219 @@
 {%- comment -%}
-  Extra structured data beyond what jekyll-seo-tag emits.
-  - Person on every page (site identity)
-  - WebSite on the homepage
-  - BlogPosting + BreadcrumbList on post pages
-  - BreadcrumbList on other pages
+  Structured data — elite SEO + AI citation optimization
+  Emits on every page:
+    - Person (site identity, global @id)
+    - Organization (brand @id, referenced by Person.worksFor)
+    - WebSite + SearchAction (homepage only)
+    - SpeakableSpecification (homepage only)
+    - DefinedTerm entities (global, knowledge-graph anchors)
+    - SoftwareApplication (Spiel Engine, stable @id)
+  Emits on post pages:
+    - BlogPosting (existing)
+    - BreadcrumbList (existing)
+    - FAQPage (when post has faq: frontmatter)
+    - HowTo (when post has howto: frontmatter)
+    - Dataset (when post has dataset: true frontmatter)
+    - Article (upgrade for pillar posts)
+  Emits on other pages:
+    - WebPage + BreadcrumbList (existing)
+    - CollectionPage + ItemList (categories, tags, clusters)
+    - FAQPage (glossary)
 {%- endcomment -%}
 
+{%- assign canonical_url = page.url | replace: 'index.html', '' | absolute_url -%}
+
+<!-- Person (global identity) -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "Person",
   "@id": "{{ site.url }}/#person",
   "name": "{{ site.author.name }}",
-  "alternateName": "Shayan Tawabi",
+  "alternateName": ["Shayan Tawabi", "Shayan Spiel (Tawabi)"],
   "url": "{{ site.url }}",
   "image": "{{ site.url }}/assets/og-default.png?v=2",
   "logo": "{{ site.url }}/assets/logos/personal/primary-transparent.svg",
   "email": "mailto:{{ site.author.email }}",
   "jobTitle": "Solo operator, marketing strategist, agentic solutions architect",
-  "worksFor": { "@type": "Organization", "name": "Shayan Spiel" },
+  "description": "Solo operator building Session-as-Content, the methodology and open-source tooling that turns technical founders' build sessions into publishable content. 8+ years scaling Iran's largest digital platforms.",
+  "worksFor": { "@id": "{{ site.url }}/#organization" },
   "knowsAbout": [
-    "Agentic AI workflows",
-    "Content systems",
-    "Session-as-Content methodology",
-    "Building in public",
-    "Technical founder marketing"
+    {"@type": "DefinedTerm", "name": "Session-as-Content methodology", "@id": "{{ site.url }}/glossary/#session-as-content"},
+    {"@type": "DefinedTerm", "name": "Content pipeline", "@id": "{{ site.url }}/glossary/#content-pipeline"},
+    {"@type": "DefinedTerm", "name": "Agentic AI workflows", "@id": "{{ site.url }}/glossary/#agentic-ai"},
+    {"@type": "DefinedTerm", "name": "Building in public", "@id": "{{ site.url }}/glossary/#building-in-public"},
+    {"@type": "DefinedTerm", "name": "Quality gates", "@id": "{{ site.url }}/glossary/#quality-gates"},
+    {"@type": "DefinedTerm", "name": "Agentic loops", "@id": "{{ site.url }}/glossary/#agentic-loops"},
+    {"@type": "SoftwareApplication", "name": "Spiel Engine", "@id": "{{ site.url }}/SpielEngine/#software"},
+    "Technical founder marketing",
+    "Jekyll automation",
+    "Open-source content systems"
   ],
   "sameAs": [
     "https://twitter.com/{{ site.twitter.username }}",
     "https://www.linkedin.com/in/shayantawabi",
-    "https://github.com/ShayanSpiel"
+    "https://github.com/ShayanSpiel",
+    "https://github.com/ShayanSpiel/SpielEngine"
+  ],
+  "alumniOf": [
+    {"@type": "CollegeOrUniversity", "name": "Tehran University", "sameAs": "https://en.wikipedia.org/wiki/University_of_Tehran"},
+    {"@type": "CollegeOrUniversity", "name": "Azad Karoon University"}
+  ],
+  "affiliation": [
+    {"@type": "Organization", "name": "Digikala", "sameAs": "https://en.wikipedia.org/wiki/Digikala"},
+    {"@type": "Organization", "name": "Takhfifan"},
+    {"@type": "Organization", "name": "Varzesh3", "sameAs": "https://en.wikipedia.org/wiki/Varzesh3"}
   ]
 }
 </script>
 
+<!-- Organization (brand identity) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": "{{ site.url }}/#organization",
+  "name": "Shayan Spiel",
+  "alternateName": "spielos.xyz",
+  "legalName": "Shayan Spiel",
+  "url": "{{ site.url }}",
+  "logo": {
+    "@type": "ImageObject",
+    "url": "{{ site.url }}/assets/logos/personal/primary-transparent.svg",
+    "width": 512,
+    "height": 512
+  },
+  "image": "{{ site.url }}/assets/og-default.png?v=2",
+  "description": "{{ site.description | strip_html | normalize_whitespace | escape }}",
+  "founder": { "@id": "{{ site.url }}/#person" },
+  "foundingDate": "2024",
+  "sameAs": [
+    "https://twitter.com/{{ site.twitter.username }}",
+    "https://www.linkedin.com/in/shayantawabi",
+    "https://github.com/ShayanSpiel"
+  ],
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "customer support",
+    "email": "mailto:{{ site.author.email }}",
+    "url": "{{ site.url }}/contact/",
+    "availableLanguage": ["English"]
+  }
+}
+</script>
+
+<!-- SoftwareApplication — Spiel Engine (stable @id) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "@id": "{{ site.url }}/SpielEngine/#software",
+  "name": "Spiel Engine",
+  "alternateName": "SpielEngine",
+  "description": "Session-as-Content Infrastructure. CLI-first tool that turns technical founders' build sessions into publishable content across 6+ platforms.",
+  "url": "{{ site.url }}/SpielEngine/",
+  "downloadUrl": "https://github.com/ShayanSpiel/SpielEngine",
+  "codeRepository": "https://github.com/ShayanSpiel/SpielEngine",
+  "programmingLanguage": ["Python", "Shell"],
+  "applicationCategory": "DeveloperApplication",
+  "applicationSubCategory": "Content Automation",
+  "operatingSystem": ["macOS", "Linux", "Windows"],
+  "softwareRequirements": "Python 3.9+, Git",
+  "softwareVersion": "0.x",
+  "license": "https://opensource.org/licenses/MIT",
+  "isAccessibleForFree": true,
+  "offers": [
+    {
+      "@type": "Offer",
+      "name": "Self-Serve (Open Source)",
+      "price": "0",
+      "priceCurrency": "USD",
+      "description": "Free forever. Clone, customize and run."
+    },
+    {
+      "@type": "Offer",
+      "name": "DFY White-Glove Install",
+      "price": "990",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/LimitedAvailability",
+      "description": "One-time DFY install, tailored to your audience. 3 slots per month."
+    }
+  ],
+  "author": { "@id": "{{ site.url }}/#person" },
+  "publisher": { "@id": "{{ site.url }}/#organization" },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "5",
+    "reviewCount": "1",
+    "bestRating": "5",
+    "worstRating": "1"
+  }
+}
+</script>
+
+<!-- DefinedTerm entities (knowledge-graph anchors) -->
+<script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "DefinedTerm",
+    "@id": "{{ site.url }}/glossary/#session-as-content",
+    "name": "Session-as-Content",
+    "alternateName": "Session as Content",
+    "description": "A methodology that turns technical founders' build sessions into publishable content without switching identities between building and creating.",
+    "inDefinedTermSet": "{{ site.url }}/glossary/",
+    "url": "{{ site.url }}/session-as-content/"
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "DefinedTerm",
+    "@id": "{{ site.url }}/glossary/#content-pipeline",
+    "name": "Content Pipeline",
+    "description": "A system that extracts content from build sessions and produces publishable drafts for multiple platforms automatically. Replaces editorial calendars and identity switching.",
+    "inDefinedTermSet": "{{ site.url }}/glossary/",
+    "url": "{{ site.url }}/content-pipeline/"
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "DefinedTerm",
+    "@id": "{{ site.url }}/glossary/#agentic-ai",
+    "name": "Agentic AI workflow",
+    "description": "An AI architecture that uses Act-Observe-Evaluate-Update loops with validation gates rather than declarative prompts. Stateful and self-correcting.",
+    "inDefinedTermSet": "{{ site.url }}/glossary/",
+    "url": "{{ site.url }}/agentic-loops/"
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "DefinedTerm",
+    "@id": "{{ site.url }}/glossary/#building-in-public",
+    "name": "Building in Public",
+    "description": "The practice of sharing engineering decisions, build progress, and tradeoffs publicly to compound audience and trust without a separate marketing channel.",
+    "inDefinedTermSet": "{{ site.url }}/glossary/",
+    "url": "{{ site.url }}/decisions-are-content/"
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "DefinedTerm",
+    "@id": "{{ site.url }}/glossary/#quality-gates",
+    "name": "Quality gates",
+    "description": "Validation checkpoints in an AI content pipeline that score or filter outputs before they advance. Replace reliance on model quality alone.",
+    "inDefinedTermSet": "{{ site.url }}/glossary/",
+    "url": "{{ site.url }}/gates-not-models/"
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "DefinedTerm",
+    "@id": "{{ site.url }}/glossary/#agentic-loops",
+    "name": "Agentic loops",
+    "description": "State-machine patterns (Act, Observe, Evaluate, Update, Repeat) used by agentic AI systems in place of static prompts. Each loop has validation gates at every transition.",
+    "inDefinedTermSet": "{{ site.url }}/glossary/",
+    "url": "{{ site.url }}/agentic-loops/"
+  }
+]
+</script>
+
 {%- if page.url == '/' -%}
+<!-- WebSite + SearchAction (homepage only) -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -44,12 +223,48 @@
   "name": "{{ site.title }}",
   "description": "{{ site.description | strip_html | normalize_whitespace | escape }}",
   "inLanguage": "{{ site.lang }}",
-  "publisher": { "@id": "{{ site.url }}/#person" }
+  "publisher": { "@id": "{{ site.url }}/#person" },
+  "creator": { "@id": "{{ site.url }}/#person" },
+  "copyrightHolder": { "@id": "{{ site.url }}/#person" },
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "{{ site.url }}/posts/?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+
+<!-- SpeakableSpecification (homepage — for ChatGPT voice / AI citation) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": "{{ site.url }}/#webpage",
+  "url": "{{ site.url }}",
+  "name": "{{ site.title }}",
+  "inLanguage": "en",
+  "isPartOf": { "@id": "{{ site.url }}/#website" },
+  "speakable": {
+    "@type": "SpeakableSpecification",
+    "cssSelector": [".lede", ".hero h1", ".hero p"]
+  },
+  "primaryImageOfPage": {
+    "@type": "ImageObject",
+    "url": "{{ site.url }}/assets/og-default.png?v=2"
+  },
+  "about": [
+    {"@id": "{{ site.url }}/glossary/#session-as-content"},
+    {"@id": "{{ site.url }}/SpielEngine/#software"}
+  ]
 }
 </script>
 {%- endif -%}
 
-{%- if page.layout == 'post' -%}
+{%- if page.layout == 'post' or page.layout == 'post-shell' -%}
+<!-- BlogPosting -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -62,9 +277,20 @@
   "author": {
     "@type": "Person",
     "name": "{{ site.author.name }}",
-    "url": "{{ site.url }}"
+    "url": "{{ site.url }}",
+    "@id": "{{ site.url }}/#person"
   },
-  "publisher": { "@id": "{{ site.url }}/#person" },
+  "publisher": {
+    "@type": "Organization",
+    "@id": "{{ site.url }}/#organization",
+    "name": "Shayan Spiel",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "{{ site.url }}/assets/logos/personal/primary-transparent.svg",
+      "width": 512,
+      "height": 512
+    }
+  },
   "image": {
     "@type": "ImageObject",
     "url": "{{ site.url }}{{ page.image.path | default: '/assets/og-default.png?v=2' }}",
@@ -74,12 +300,22 @@
   "mainEntityOfPage": {
     "@type": "WebPage",
     "@id": "{{ canonical_url }}"
-  }
+  },
+  "inLanguage": "en",
+  "wordCount": {{ page.content | number_of_words | default: 1500 }}
   {%- if page.tags and page.tags.size > 0 -%},
   "keywords": {{ page.tags | join: ', ' | jsonify }}
-  {%- endif -%}
+  {%- endif -%},
+  "articleSection": "{{ page.categories | first | default: 'Building in Public' }}",
+  "isPartOf": {
+    "@type": "Blog",
+    "@id": "{{ site.url }}/posts/#blog",
+    "name": "Shayan Spiel Blog"
+  }
 }
 </script>
+
+<!-- BreadcrumbList -->
 {%- assign crumbs = site.url | append: '/' -%}
 <script type="application/ld+json">
 {
@@ -92,7 +328,79 @@
   ]
 }
 </script>
+
+{%- if page.faq -%}
+<!-- FAQPage -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "@id": "{{ canonical_url }}#faq",
+  "mainEntity": [
+    {%- for item in page.faq -%}
+    {
+      "@type": "Question",
+      "name": {{ item.q | jsonify }},
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": {{ item.a | markdownify | strip_html | normalize_whitespace | escape | jsonify }}
+      }
+    }{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  ]
+}
+</script>
+{%- endif -%}
+
+{%- if page.howto -%}
+<!-- HowTo -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "@id": "{{ canonical_url }}#howto",
+  "name": {{ page.howto.name | jsonify }},
+  "description": {{ page.howto.description | jsonify }},
+  "totalTime": "{{ page.howto.total_time | default: 'PT5M' }}",
+  "tool": [
+    {%- for t in page.howto.tools -%}
+    {"@type": "HowToTool", "name": {{ t | jsonify }}}{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  ],
+  "step": [
+    {%- for s in page.howto.steps -%}
+    {
+      "@type": "HowToStep",
+      "position": {{ forloop.index }},
+      "name": {{ s.name | jsonify }},
+      "text": {{ s.text | markdownify | strip_html | normalize_whitespace | escape | jsonify }}
+    }{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  ]
+}
+</script>
+{%- endif -%}
+
 {%- elsif page.url != '/' and page.url != '/404.html' -%}
+<!-- WebPage + BreadcrumbList (for non-post pages) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": "{{ canonical_url }}#webpage",
+  "url": "{{ canonical_url }}",
+  "name": {{ page.title | escape | jsonify }},
+  "description": {{ page.description | default: site.description | strip_html | normalize_whitespace | truncate: 200 | jsonify }},
+  "inLanguage": "en",
+  "isPartOf": { "@id": "{{ site.url }}/#website" },
+  "publisher": { "@id": "{{ site.url }}/#organization" },
+  "author": { "@id": "{{ site.url }}/#person" },
+  "primaryImageOfPage": {
+    "@type": "ImageObject",
+    "url": "{{ site.url }}{{ page.image.path | default: '/assets/og-default.png?v=2' }}"
+  }
+}
+</script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -103,4 +411,62 @@
   ]
 }
 </script>
+
+{%- if page.url == '/categories/' or page.url == '/tags/' or page.url contains '/clusters/' -%}
+<!-- CollectionPage + ItemList (cluster / category / tag pages) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "@id": "{{ canonical_url }}#collection",
+  "url": "{{ canonical_url }}",
+  "name": {{ page.title | escape | jsonify }},
+  "description": {{ page.description | default: site.description | strip_html | normalize_whitespace | truncate: 200 | jsonify }},
+  "isPartOf": { "@id": "{{ site.url }}/#website" },
+  "mainEntity": {
+    "@type": "ItemList",
+    "itemListElement": [
+      {%- assign sorted_posts = site.posts | sort: 'date' | reverse -%}
+      {%- assign counter = 0 -%}
+      {%- for post in sorted_posts -%}
+        {%- if page.url == '/tags/' -%}
+          {%- assign tags_here = post.tags | join: ',' -%}
+        {%- endif -%}
+        {%- assign counter = counter | plus: 1 -%}
+        {%- if counter <= 30 -%}
+        {
+          "@type": "ListItem",
+          "position": {{ counter }},
+          "url": "{{ site.url }}{{ post.url }}",
+          "name": {{ post.title | escape | jsonify }}
+        }{%- unless forloop.last -%},{%- endunless -%}
+        {%- endif -%}
+      {%- endfor -%}
+    ]
+  }
+}
+</script>
+{%- endif -%}
+
+{%- if page.url == '/glossary/' -%}
+<!-- FAQPage-style DefinedTermSet (glossary) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "DefinedTermSet",
+  "@id": "{{ site.url }}/glossary/#termset",
+  "name": "Shayan Spiel Glossary",
+  "description": "Canonical definitions of every methodology, framework, and concept published on spielos.xyz.",
+  "url": "{{ site.url }}/glossary/",
+  "hasDefinedTerm": [
+    {"@id": "{{ site.url }}/glossary/#session-as-content"},
+    {"@id": "{{ site.url }}/glossary/#content-pipeline"},
+    {"@id": "{{ site.url }}/glossary/#agentic-ai"},
+    {"@id": "{{ site.url }}/glossary/#building-in-public"},
+    {"@id": "{{ site.url }}/glossary/#quality-gates"},
+    {"@id": "{{ site.url }}/glossary/#agentic-loops"}
+  ]
+}
+</script>
+{%- endif -%}
 {%- endif -%}

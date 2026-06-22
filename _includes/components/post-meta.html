@@ -17,6 +17,10 @@
   <a href="/posts/?cat={{ category_slug }}" class="post-category-label">{{ category_label }}</a>
   <span class="post-meta-sep" aria-hidden="true">·</span>
   <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%b %-d, %Y" }}</time>
+  {%- if page.last_modified_at and page.last_modified_at != page.date -%}
+  <span class="post-meta-sep" aria-hidden="true">·</span>
+  <span class="post-updated-label">Updated <time datetime="{{ page.last_modified_at | date_to_xmlschema }}">{{ page.last_modified_at | date: "%b %-d, %Y" }}</time></span>
+  {%- endif -%}
   <span class="post-meta-sep" aria-hidden="true">·</span>
   <span class="post-author" itemprop="author" itemscope itemtype="https://schema.org/Person">
     <a href="{{ '/about/' | relative_url }}" class="plain" itemprop="url"><span itemprop="name">{{ site.author.name }}</span></a>

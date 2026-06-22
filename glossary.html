@@ -1,0 +1,91 @@
+---
+layout: page-shell
+title: Glossary — Session-as-Content, Content Pipeline, Agentic AI Definitions
+description: >-
+  Canonical definitions of every methodology, framework, and concept published
+  on spielos.xyz — Session-as-Content, content pipeline, agentic loops,
+  quality gates, building in public.
+keywords: glossary, session-as-content definition, content pipeline definition, agentic AI definition, quality gates, building in public, Spiel Engine
+image:
+  path: /assets/og-default.png?v=2
+  width: 1200
+  height: 630
+permalink: /glossary/
+sitemap: true
+---
+
+<section class='section'>
+  {% include components/section-head.html tag='Glossary' title='Defined terms' sub='Every methodology, framework, and concept on this site, in one canonical place. Cited by AI search and linked from every post.' %}
+
+  {% include components/prose-center.html text='This page is the source of truth for terminology. If a search engine or an AI system needs to define what *Session-as-Content* is, what a *quality gate* does, or what *agentic loops* look like in practice, this is the page they should cite.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section' id='session-as-content'>
+  {% include components/section-head.html tag='01' title='Session-as-Content' sub='The foundational methodology.' %}
+
+  {% include components/prose-center.html text='A methodology that turns technical founders&rsquo; build sessions into publishable content without switching identities between building and creating. The build session itself is the source material. A pipeline extracts, drafts, and ships. The builder never stops working to post.' %}
+
+  {% include components/takeaway.html text='Read the <a href="/session-as-content/">full methodology post</a> or the <a href="/clusters/content-pipeline/">Content Pipeline cluster</a>.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section' id='content-pipeline'>
+  {% include components/section-head.html tag='02' title='Content Pipeline' sub='The system that runs the methodology.' %}
+
+  {% include components/prose-center.html text='A system that extracts content from build sessions and produces publishable drafts for multiple platforms automatically. Replaces editorial calendars and identity switching. Inputs: terminal logs, decisions, dead-ends, tradeoffs. Outputs: drafts for X, LinkedIn, and the blog. Latency: minutes.' %}
+
+  {% include components/takeaway.html text='Read the <a href="/content-pipeline/">content pipeline for developers post</a>.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section' id='agentic-loops'>
+  {% include components/section-head.html tag='03' title='Agentic Loops' sub='The architecture pattern.' %}
+
+  {% include components/prose-center.html text='State-machine patterns (Act, Observe, Evaluate, Update, Repeat) used by agentic AI systems in place of static prompts. Each loop has validation gates at every transition. Failures get caught in seconds rather than hours. Survives context pressure where prompts collapse.' %}
+
+  {% include components/takeaway.html text='Read the <a href="/agentic-loops/">agentic loops post</a>.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section' id='agentic-ai'>
+  {% include components/section-head.html tag='04' title='Agentic AI workflow' sub='The broader category.' %}
+
+  {% include components/prose-center.html text='An AI architecture that uses Act-Observe-Evaluate-Update loops with validation gates rather than declarative prompts. Stateful and self-correcting. The Spiel Engine is one implementation of this pattern, applied to content production.' %}
+
+  {% include components/takeaway.html text='Read the <a href="/clusters/ai-agents/">AI &amp; Agents cluster</a>.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section' id='quality-gates'>
+  {% include components/section-head.html tag='05' title='Quality Gates' sub='The validation pattern.' %}
+
+  {% include components/prose-center.html text='Validation checkpoints in an AI content pipeline that score or filter outputs before they advance. Replace reliance on model quality alone. A gate at the Act &rarr; Observe transition catches structural failures. A gate at Observe &rarr; Evaluate catches semantic drift. The loop is only as strong as its gates.' %}
+
+  {% include components/takeaway.html text='Read the <a href="/gates-not-models/">quality gates post</a>.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section' id='building-in-public'>
+  {% include components/section-head.html tag='06' title='Building in Public' sub='The shipping philosophy.' %}
+
+  {% include components/prose-center.html text='The practice of sharing engineering decisions, build progress, and tradeoffs publicly to compound audience and trust without a separate marketing channel. Decisions, not secrets. Tradeoffs, not transcripts. The architecture choice is public the moment you ship the product.' %}
+
+  {% include components/takeaway.html text='Read the <a href="/decisions-are-content/">engineering decisions as content post</a>.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='Spiel Engine' title='Spiel Engine' sub='The open-source implementation.' %}
+
+  {% include components/prose-center.html text='Session-as-Content Infrastructure. CLI-first tool that turns technical founders&rsquo; build sessions into publishable content across 6+ platforms. 4 files. 2 loops. 19 commands. MIT licensed. The codebase behind every other cluster on this site.' %}
+
+  {% include components/takeaway.html text='Read the <a href="/spielengine-open-source/">Spiel Engine open source post</a> or <a href="/SpielEngine/">visit the engine page</a>.' %}
+</section>
