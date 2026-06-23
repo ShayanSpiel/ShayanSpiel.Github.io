@@ -9,5 +9,5 @@
   <g transform="translate(28, 28)">
     <path d="M16 7l-12 12 6 6 3-3 3 3 3-3 3 3 6-6-12-12zM16 19l-3-3 3-3 3 3-3 3z" fill="#ffffff"/>
   </g>
-  <text x="78" y="54" class="pixel" fill="#ffffff" font-size="34" letter-spacing="2">SPIEL OS</text>
+  <text x="64" y="54" class="pixel" fill="#ffffff" font-size="32" letter-spacing="2">SPIELOS</text>
 </svg>
