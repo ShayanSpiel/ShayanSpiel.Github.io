@@ -82,7 +82,8 @@
   max-width: 480px;
 }
 .hero-actions { display: flex; gap: var(--s-3); justify-content: center; flex-wrap: wrap; }
-.hero-social { display: flex; align-items: center; gap: var(--s-3); justify-content: center; margin-top: var(--s-5); }
+.hero-social { display: flex; align-items: center; gap: var(--s-3); justify-content: center; margin-top: var(--s-5); list-style: none; padding: 0; }
+.hero-social li { list-style: none; padding: 0; }
 .hero-social a {
   display: flex; align-items: center; justify-content: center;
   width: 40px; height: 40px;
