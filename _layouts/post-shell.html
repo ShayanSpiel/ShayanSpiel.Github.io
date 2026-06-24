@@ -30,7 +30,7 @@ layout: default
   {%- if page.tags and page.tags.size > 0 -%}
   <div class="post-tags post-tags-center" role="list" aria-label="Post tags">
     {%- for tag in page.tags -%}
-      <a href="/posts/?tag={{ tag | slugify }}" class="tag-chip" role="listitem">#{{ tag }}</a>
+      <li role="listitem"><a href="/posts/?tag={{ tag | slugify }}" class="tag-chip">#{{ tag }}</a></li>
     {%- endfor -%}
   </div>
   {%- endif -%}
