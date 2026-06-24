@@ -1,0 +1,88 @@
+<div class="email-popup-overlay" id="email-popup" role="dialog" aria-modal="true" aria-label="Newsletter signup" hidden>
+  <div class="email-popup-backdrop" tabindex="-1"></div>
+  <div class="email-popup-container">
+    <button class="email-popup-close" aria-label="Close popup" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+    <div class="email-popup-content">
+      <h2 class="email-popup-title">/Post your work into content</h2>
+      <p class="email-popup-subtitle">Get new ways to turn sessions into posts. No spam.</p>
+      <form class="email-popup-form" id="popup-subscribe" action="https://docs.google.com/forms/d/e/1FAIpQLScSAISdLXFTAex_cHMmdMCXQdaMGlwLouLRmptFo_5VcdV_GA/formResponse" method="POST" target="hidden_iframe_popup" aria-label="Newsletter signup">
+        <label for="popup-email" class="sr-only">Email address</label>
+        <input id="popup-email" type="email" name="entry.754901073" placeholder="you@domain.com" required autocomplete="email" aria-required="true" />
+        <input type="hidden" name="entry.2021940811" value="Newsletter" />
+        <button type="submit">Subscribe</button>
+      </form>
+      <div class="email-popup-status" id="popup-status" role="status" aria-live="polite"></div>
+    </div>
+  </div>
+</div>
+<iframe name="hidden_iframe_popup" id="hidden_iframe_popup" title="newsletter-submit" hidden></iframe>
+<script>
+(function() {
+  var popup = document.getElementById('email-popup');
+  var form = document.getElementById('popup-subscribe');
+  var iframe = document.getElementById('hidden_iframe_popup');
+  var status = document.getElementById('popup-status');
+  var closeBtn = popup ? popup.querySelector('.email-popup-close') : null;
+  var backdrop = popup ? popup.querySelector('.email-popup-backdrop') : null;
+  var btn = form ? form.querySelector('button') : null;
+  var input = form ? form.querySelector('input[type="email"]') : null;
+  if (!popup || !form || !iframe) return;
+
+  var scrollThreshold = 0.5;
+  var timeThreshold = 120000;
+  var shown = false;
+  var startTime = Date.now();
+
+  function showPopup() {
+    if (shown) return;
+    shown = true;
+    popup.hidden = false;
+    popup.classList.add('email-popup-visible');
+    document.body.style.overflow = 'hidden';
+    if (input) input.focus();
+  }
+
+  function hidePopup() {
+    popup.classList.remove('email-popup-visible');
+    document.body.style.overflow = '';
+    setTimeout(function() { popup.hidden = true; }, 500);
+  }
+
+  window.addEventListener('scroll', function() {
+    if (shown) return;
+    var scrollPercent = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+    if (scrollPercent >= scrollThreshold) showPopup();
+  }, { passive: true });
+
+  setInterval(function() {
+    if (!shown && Date.now() - startTime >= timeThreshold) showPopup();
+  }, 5000);
+
+  if (closeBtn) closeBtn.addEventListener('click', hidePopup);
+  if (backdrop) backdrop.addEventListener('click', hidePopup);
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && !popup.hidden) hidePopup();
+  });
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var email = (input && input.value || '').trim();
+    if (!email) { if (input) input.focus(); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      if (status) status.textContent = 'Please enter a valid email.';
+      if (input) input.focus();
+      return;
+    }
+    if (btn) { btn.textContent = 'Sending...'; btn.disabled = true; }
+    if (status) status.textContent = '';
+    form.submit();
+    setTimeout(function() {
+      if (btn) btn.textContent = 'Subscribed \u2713';
+      if (input) input.value = '';
+      if (status) status.textContent = "You're in.";
+    }, 1500);
+  });
+})();
+</script>
