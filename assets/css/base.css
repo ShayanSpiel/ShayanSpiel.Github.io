@@ -92,11 +92,8 @@ hr {
 }
 
 /* ── LISTS ── */
-ul, ol { padding: 0.5em 0 0.5em 1.5em; }
-ul > li, ol > li { padding: 0.2em 0; }
-ul > li::marker, ol > li::marker { color: var(--tx-3); }
-ul.list-plain, ol.list-plain { list-style: none; padding: 0; margin: 0; }
-ul.list-plain > li, ol.list-plain > li { list-style: none; padding: 0; }
+ul, ol { padding: 0; margin: 0; list-style: none; }
+ul > li, ol > li { padding: 0; }
 
 /* ── CODE ── */
 code, kbd {

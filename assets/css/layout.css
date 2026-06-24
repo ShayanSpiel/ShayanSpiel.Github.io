@@ -225,7 +225,6 @@ main { display: block; padding-top: var(--nav-h); }
   font-size: var(--fs-sm);
   padding-bottom: var(--s-5);
   margin-bottom: var(--s-5);
-  border-bottom: 1px solid var(--bd);
 }
 .footer-links ul {
   display: contents;
