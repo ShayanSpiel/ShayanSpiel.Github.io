@@ -234,6 +234,16 @@ main { display: block; padding-top: var(--nav-h); }
   font-size: var(--fs-sm);
   margin-bottom: var(--s-5);
 }
+.footer-links ul {
+  display: contents;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.footer-links li {
+  list-style: none;
+  padding: 0;
+}
 .footer-links a {
   color: var(--tx-2);
   text-decoration: none;
@@ -270,6 +280,16 @@ main { display: block; padding-top: var(--nav-h); }
   display: flex;
   align-items: center;
   gap: var(--s-1);
+}
+.footer-social ul {
+  display: contents;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.footer-social li {
+  list-style: none;
+  padding: 0;
 }
 .footer-social a {
   display: inline-flex;
