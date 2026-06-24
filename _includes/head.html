@@ -63,4 +63,11 @@
   {%- include ga4.html -%}
   {%- include posthog.html -%}
   <script src="{{ '/assets/js/analytics.js' | relative_url }}" defer></script>
+  <script>
+    function _loadAnalytics(){
+      var s=document.createElement('script');s.async=1;s.src='https://www.googletagmanager.com/gtag/js?id=G-P43CBK4EEX';document.head.appendChild(s);
+      setTimeout(function(){posthog.init('phc_1osIFVXYDFr7Z00RN5gRaF4kRfZ1safm9c7NswRfKpm',{api_host:'https://t.spielos.xyz',person_profiles:'always',disable_session_recording:true})},500);
+    }
+    'requestIdleCallback' in window?requestIdleCallback(_loadAnalytics,{timeout:2000}):setTimeout(_loadAnalytics,2000);
+  </script>
 </head>

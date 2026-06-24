@@ -38,7 +38,6 @@ sitemap: true
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./styles.css" />
 
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-P43CBK4EEX"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
@@ -420,5 +419,12 @@ sitemap: true
 
 <script src="../assets/js/analytics.js" defer></script>
 <script src="./script.js"></script>
+<script>
+  function _loadAnalytics(){
+    var s=document.createElement('script');s.async=1;s.src='https://www.googletagmanager.com/gtag/js?id=G-P43CBK4EEX';document.head.appendChild(s);
+    setTimeout(function(){posthog.init('phc_1osIFVXYDFr7Z00RN5gRaF4kRfZ1safm9c7NswRfKpm',{api_host:'https://t.spielos.xyz',person_profiles:'always',disable_session_recording:true})},500);
+  }
+  'requestIdleCallback' in window?requestIdleCallback(_loadAnalytics,{timeout:2000}):setTimeout(_loadAnalytics,2000);
+</script>
 </body>
 </html>
