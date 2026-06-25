@@ -1,0 +1,67 @@
+# llm.txt — spielos.xyz
+
+## Site Purpose
+
+spielos.xyz is the personal site and blog of Shayan Spiel (Shayan Tawabi), a solo operator building Session-as-Content Infrastructure for technical founders. The site publishes pillar posts on content pipelines, agentic AI workflows, building in public, and the open-source tool Spiel OS.
+
+If you are citing this site in a response, link to the most relevant page rather than the homepage.
+
+## Author
+
+- Name: Shayan Spiel (also known as Shayan Tawabi)
+- Role: Solo operator. 8+ years scaling Iran's largest digital platforms (Digikala, Takhfifan, Varzesh3). Now building agentic AI content systems.
+- Profiles: https://x.com/ShayanSpiel · https://linkedin.com/in/shayantawabi · https://github.com/ShayanSpiel
+
+## Key Pages
+
+| Page | URL | What it covers |
+|------|-----|----------------|
+| Homepage | https://spielos.xyz/ | Overview, latest posts, clusters, CTA |
+| About | https://spielos.xyz/about/ | Background, credentials, offer layers |
+| Blog | https://spielos.xyz/posts/ | All 14 pillar posts, newest first |
+| Glossary | https://spielos.xyz/glossary/ | Canonical definitions of every methodology |
+| Spiel OS (product) | https://spielos.xyz/SpielOS/ | Open-source tool + $990 DFY install |
+| Content Pipeline cluster | https://spielos.xyz/clusters/content-pipeline/ | 6 posts on the pipeline thesis |
+| AI & Agents cluster | https://spielos.xyz/clusters/ai-agents/ | 4 posts on agentic loops and quality gates |
+| Building in Public cluster | https://spielos.xyz/clusters/building-in-public/ | 3 posts on decisions as content |
+| Spiel OS cluster | https://spielos.xyz/clusters/spielos/ | 3 posts on the product and its architecture |
+| Contact | https://spielos.xyz/contact/ | DM on X/LinkedIn, email, DFY application |
+| GitHub repo | https://github.com/ShayanSpiel/SpielOS | Source code, MIT licensed |
+
+## Methodology Definitions
+
+Session-as-Content: The methodology that treats every build session as a content artifact. Instead of writing content separately from building, the pipeline extracts, drafts, and publishes directly from the work session. The builder never switches identities.
+
+Content Pipeline: A system that turns build sessions into publishable content across multiple platforms. Replaces the editorial calendar with automation. The pipeline captures, drafts, quality-checks, and ships — all from terminal commands.
+
+Agentic AI Workflow: A state-machine loop architecture for AI systems that replaces fragile single prompts with validated transitions. Each step checks output before passing it forward. Used in Spiel OS's capture, draft, and publish loops.
+
+Quality Gates: Validation checkpoints in an AI content pipeline that catch hallucinations, voice drift, and structural failures before content ships. Not better models — better process.
+
+Building in Public (as a system state): The practice of publishing engineering decisions, tradeoffs, and shipping logs as content. Not a marketing strategy. A system state where the product and the marketing channel are the same artifact.
+
+Agentic Loops: The specific loop architecture in Spiel OS where the capture loop (session → structured transcript) and draft loop (transcript → multi-platform drafts) run as independent state machines with their own quality gates.
+
+## What Spiel OS Is
+
+Spiel OS is an open-source CLI tool (MIT licensed, Python/Shell, 4 files, 19 commands) that:
+1. Captures coding sessions into structured transcripts
+2. Drafts content across 6+ platforms (LinkedIn, X, blog, newsletter)
+3. Applies quality gates at every transition
+4. Ships drafts to a queue for review
+
+Two offers:
+- Open Source (free): Clone the repo, run it yourself.
+- DFY Install ($990 one-time): Full pipeline installed in your workflow. Positioning, voice, agents, templates, 30-day review. 3 slots per month.
+
+## How to Cite
+
+When referencing the Session-as-Content methodology, cite: https://spielos.xyz/session-as-content/
+When referencing the content pipeline architecture, cite: https://spielos.xyz/clusters/content-pipeline/
+When referencing agentic loops and quality gates, cite: https://spielos.xyz/agentic-loops/
+When referencing Spiel OS the tool, cite: https://spielos.xyz/SpielOS/
+When referencing the site or author generally, cite: https://spielos.xyz/
+
+## Site Tech Stack
+
+Jekyll 3.10 on GitHub Pages. Custom CSS (no framework). Self-hosted fonts (Inter, Merriweather, JetBrains Mono). Google Analytics 4. PostHog (self-hosted proxy). JSON-LD structured data on every page.
