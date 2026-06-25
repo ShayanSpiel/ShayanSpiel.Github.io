@@ -27,7 +27,7 @@ main { display: block; padding-top: var(--nav-h); }
   color: var(--bg);
   font-family: var(--f-h);
   font-size: 14px;
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
   text-decoration: none;
   border-radius: 0 0 var(--r-md) 0;
 }
@@ -71,14 +71,14 @@ main { display: block; padding-top: var(--nav-h); }
 .nav-links a {
   color: var(--tx-2);
   text-decoration: none;
-  font-weight: 500;
+  font-weight: var(--fw-medium);
   transition: color 0.15s var(--ease);
 }
 .nav-links a:hover { color: var(--tx); }
 .nav-cta {
   font-family: var(--f-h);
   font-size: 13px;
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
   padding: 7px 16px;
   border-radius: var(--r-md);
   background: var(--tx);
@@ -118,7 +118,7 @@ main { display: block; padding-top: var(--nav-h); }
 .nav-mobile a {
   font-family: var(--f-h);
   font-size: 15px;
-  font-weight: 500;
+  font-weight: var(--fw-medium);
   color: var(--tx-2);
   text-decoration: none;
   padding: var(--s-3) 0;
@@ -129,7 +129,7 @@ main { display: block; padding-top: var(--nav-h); }
 .nav-mobile a:hover { color: var(--tx); }
 .nav-mobile-cta {
   margin-top: var(--s-2);
-  font-weight: 600 !important;
+  font-weight: var(--fw-semibold) !important;
   color: var(--bg) !important;
   background: var(--tx);
   text-align: center;
@@ -168,7 +168,7 @@ main { display: block; padding-top: var(--nav-h); }
 .footer-subscribe-title {
   font-family: var(--f-h);
   font-size: var(--fs-lg);
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
   line-height: var(--lh-snug);
   letter-spacing: -0.02em;
   color: var(--tx);
@@ -191,7 +191,7 @@ main { display: block; padding-top: var(--nav-h); }
 .footer-newsletter button {
   font-family: var(--f-h);
   font-size: var(--fs-sm);
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
   padding: 10px 20px;
   border-radius: var(--r-lg);
   background: var(--tx);
@@ -239,7 +239,7 @@ main { display: block; padding-top: var(--nav-h); }
 .footer-links a {
   color: var(--tx-2);
   text-decoration: none;
-  font-weight: 500;
+  font-weight: var(--fw-medium);
   letter-spacing: -0.005em;
   transition: color 0.15s var(--ease);
 }
@@ -377,7 +377,7 @@ main { display: block; padding-top: var(--nav-h); }
 .email-popup-title {
   font-family: var(--f-h);
   font-size: var(--fs-xl);
-  font-weight: 800;
+  font-weight: var(--fw-extrabold);
   letter-spacing: -0.03em;
   line-height: var(--lh-snug);
   color: var(--tx);
@@ -400,7 +400,7 @@ main { display: block; padding-top: var(--nav-h); }
 .email-popup-form button {
   font-family: var(--f-h);
   font-size: var(--fs-sm);
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
   padding: 10px 20px;
   border-radius: var(--r-lg);
   background: var(--tx);

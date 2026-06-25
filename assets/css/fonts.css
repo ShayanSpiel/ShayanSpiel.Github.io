@@ -1,8 +1,8 @@
-/* Self-hosted fonts with font-display: swap for fast rendering.
+/* Self-hosted variable fonts with font-display: swap for fast rendering.
    Fallback declarations use size-adjust + ascent/descent overrides
    to match system fonts to custom fonts, making the swap invisible. */
 
-/* ── Inter (sans-serif heading) ── */
+/* ── Inter (sans-serif heading) — variable wght 100–900 ── */
 @font-face {
   font-family: 'Inter';
   font-style: normal;
@@ -23,11 +23,11 @@
   line-gap-override: 0%;
 }
 
-/* ── Merriweather (serif body) ── */
+/* ── Merriweather (serif body) — variable wght 300–900 ── */
 @font-face {
   font-family: 'Merriweather';
   font-style: normal;
-  font-weight: 400;
+  font-weight: 300 900;
   font-display: swap;
   src: url('/assets/fonts/merriweather-latin-400.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
@@ -35,26 +35,7 @@
 @font-face {
   font-family: 'Merriweather';
   font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: local('Georgia');
-  size-adjust: 104.58%;
-  ascent-override: 92.77%;
-  descent-override: 22.38%;
-  line-gap-override: 0%;
-}
-@font-face {
-  font-family: 'Merriweather';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url('/assets/fonts/merriweather-latin-400.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face {
-  font-family: 'Merriweather';
-  font-style: normal;
-  font-weight: 700;
+  font-weight: 300 900;
   font-display: swap;
   src: local('Georgia');
   size-adjust: 104.58%;
@@ -67,7 +48,7 @@
   font-style: italic;
   font-weight: 400;
   font-display: swap;
-  src: url('/assets/fonts/merriweather-latin-400.woff2') format('woff2');
+  src: url('/assets/fonts/merriweather-latin-italic-400.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face {

@@ -27,6 +27,14 @@
   --f-b: 'Merriweather', Georgia, serif;
   --f-m: 'JetBrains Mono', monospace;
 
+  /* ── Font-Weight ── */
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+  --fw-extrabold: 800;
+  --fw-black: 900;
+
   /* ── Type-Scale ── */
   --fs-xs: 11px;
   --fs-sm: 13px;

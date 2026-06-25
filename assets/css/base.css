@@ -38,7 +38,7 @@ button:focus-visible {
 /* ── TYPOGRAPHY (global; components override where needed) ── */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--f-h);
-  font-weight: 800;
+  font-weight: var(--fw-extrabold);
   line-height: var(--lh-snug);
   letter-spacing: -0.025em;
   color: var(--tx);
@@ -46,17 +46,17 @@ h1, h2, h3, h4, h5, h6 {
 }
 h1 { font-size: clamp(var(--fs-2xl), 5vw, var(--fs-5xl)); letter-spacing: -0.045em; line-height: var(--lh-tight); }
 h2 { font-size: clamp(var(--fs-xl), 3.5vw, var(--fs-3xl)); letter-spacing: -0.035em; line-height: var(--lh-snug); }
-h3 { font-size: clamp(var(--fs-lg), 2.5vw, var(--fs-xl)); font-weight: 700; }
-h4 { font-size: var(--fs-md); font-weight: 600; }
+h3 { font-size: clamp(var(--fs-lg), 2.5vw, var(--fs-xl)); font-weight: var(--fw-bold); }
+h4 { font-size: var(--fs-md); font-weight: var(--fw-semibold); }
 p { margin: 1em 0; }
 p:first-child { margin-top: 0; }
-strong, b { font-weight: 700; }
+strong, b { font-weight: var(--fw-bold); }
 em, i { font-style: italic; }
 small, .small { font-size: var(--fs-sm); }
 .lede {
   font-family: var(--f-h);
   font-size: var(--fs-md);
-  font-weight: 400;
+  font-weight: var(--fw-regular);
   line-height: var(--lh-normal);
   color: var(--tx-2);
 }
@@ -97,7 +97,7 @@ code, kbd {
   border-radius: var(--r-sm);
   font-size: 0.88em;
 }
-kbd { font-weight: 600; border: 1px solid var(--bd-1); }
+kbd { font-weight: var(--fw-semibold); border: 1px solid var(--bd-1); }
 pre {
   font-family: var(--f-m);
   background: var(--bg-1);
@@ -116,7 +116,7 @@ pre code { background: transparent; padding: 0; font-size: inherit; }
 /* ── TABLES ── */
 table { margin: 1.5em 0 2em; width: 100%; border-collapse: collapse; font-size: 14px; }
 th, td { text-align: left; padding: 0.6em 1em 0.6em 0; line-height: 1.4; border-bottom: 1px solid var(--bd); }
-th { font-weight: 600; color: var(--tx); border-bottom-color: var(--bd-1); }
+th { font-weight: var(--fw-semibold); color: var(--tx); border-bottom-color: var(--bd-1); }
 
 /* ── BLOCKQUOTE ── */
 blockquote {
@@ -155,5 +155,5 @@ label {
   font-family: var(--f-h);
   font-size: var(--fs-sm);
   color: var(--tx-1);
-  font-weight: 500;
+  font-weight: var(--fw-medium);
 }
