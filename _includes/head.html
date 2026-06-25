@@ -18,24 +18,12 @@
 
   <link rel="author" href="{{ '/humans.txt' | relative_url }}" />
 
+  <link rel="preconnect" href="https://pbs.twimg.com" crossorigin />
   <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-latin.woff2" crossorigin />
   <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/merriweather-latin-400.woff2" crossorigin />
   <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/jetbrains-latin.woff2" crossorigin />
   <link rel="stylesheet" href="/assets/css/fonts.css" />
-  <script>
-    /* FOUT prevention: hide body until fonts load */
-    document.documentElement.classList.add('fonts-loading');
-    Promise.all([
-      document.fonts.load('1em Inter'),
-      document.fonts.load('1em Merriweather'),
-      document.fonts.load('1em "JetBrains Mono"')
-    ]).then(function() {
-      document.documentElement.classList.remove('fonts-loading');
-      document.documentElement.classList.add('fonts-loaded');
-    }).catch(function() {
-      document.documentElement.classList.remove('fonts-loading');
-    });
-  </script>
+  <link rel="preload" as="image" href="https://pbs.twimg.com/profile_images/2060556306096734210/wcCphjMi_400x400.jpg" />
 
   {%- seo -%}
 
@@ -58,7 +46,10 @@
   <link rel="alternate" type="application/rss+xml" title="{{ site_name }}, RSS" href="{{ '/feed.xml' | relative_url }}" />
   <link rel="sitemap" type="application/xml" title="Sitemap" href="{{ '/sitemap.xml' | relative_url }}" />
 
-  <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}?v={{ site.time | date: '%s' }}" />
+  <link rel="stylesheet" href="{{ '/assets/css/tokens.css' | relative_url }}" />
+  <link rel="stylesheet" href="{{ '/assets/css/base.css' | relative_url }}" />
+  <link rel="stylesheet" href="{{ '/assets/css/components.css' | relative_url }}" />
+  <link rel="stylesheet" href="{{ '/assets/css/layout.css' | relative_url }}" />
 
   {%- include ga4.html -%}
   {%- include posthog.html -%}

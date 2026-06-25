@@ -5,12 +5,6 @@
    These apply globally. Component CSS overrides where needed.
    ═══════════════════════════════════════════════════════ */
 
-/* ── FOUT Prevention ── */
-html.fonts-loading body { opacity: 0; }
-html.fonts-loaded body,
-html.fonts-loading body { transition: opacity 0.15s ease; }
-html.fonts-loaded body { opacity: 1; }
-
 /* ── RESET ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; background: var(--bg); }
