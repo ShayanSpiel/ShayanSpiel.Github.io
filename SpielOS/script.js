@@ -8,8 +8,8 @@ function setupCopy(boxId, btnId) {
   var btn = document.getElementById(btnId);
   if (!box || !btn) return;
   function cp() {
-    try { navigator.clipboard.writeText('curl -fsSL https://spielos.xyz/spielos | bash'); }
-    catch(e) { var t=document.createElement('textarea'); t.value='curl -fsSL https://spielos.xyz/spielos | bash'; document.body.appendChild(t); t.select(); document.execCommand('copy'); document.body.removeChild(t); }
+    try { navigator.clipboard.writeText('curl -fsSL https://spiel.xyz/install | bash'); }
+    catch(e) { var t=document.createElement('textarea'); t.value='curl -fsSL https://spiel.xyz/install | bash'; document.body.appendChild(t); t.select(); document.execCommand('copy'); document.body.removeChild(t); }
     box.classList.add('copied');
     setTimeout(function(){ box.classList.remove('copied'); }, 2200);
   }
