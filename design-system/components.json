@@ -233,6 +233,20 @@
       "example": "{% include components/cta-card.html title=\"...\" body=\"...\" actions=... %}\n"
     },
     {
+      "name": "data-table",
+      "partial": "data-table",
+      "css_section": "data-table",
+      "description": "Card-consistent table for pricing, benchmarks, and structured data. Variants: default, compact. Use .num for right-aligned numeric columns and .highlight for emphasized rows.",
+      "slots": [
+        {
+          "name": "caption",
+          "optional": true,
+          "note": "renders below table, centered"
+        }
+      ],
+      "example": "<table class=\"data-table\">\n  <thead><tr><th>Model</th><th class=\"num\">Input /MTok</th></tr></thead>\n  <tbody>\n    <tr class=\"highlight\"><td>GLM-5.2</td><td class=\"num\">$1.40</td></tr>\n  </tbody>\n  <caption>Pricing as of June 2026.</caption>\n</table>\n"
+    },
+    {
       "name": "stat-big",
       "partial": "stat-big",
       "css_section": "stat-big",

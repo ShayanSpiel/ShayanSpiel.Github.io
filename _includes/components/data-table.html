@@ -1,0 +1,25 @@
+{%- comment -%}
+  Component: data-table
+  Card-consistent table for pricing, benchmarks, and structured data.
+  Variants: default | compact (tighter row spacing for inline use)
+  Slots (applied as classes on <table>):
+    .compact  , tighter row spacing for use inside cards
+    .num      , right-align numeric columns (<td class="num"> or <th class="num">)
+    .highlight, bold first column and .num cells in that row
+
+  Usage:
+    <table class="data-table">
+      <thead><tr><th>Model</th><th class="num">Price</th></tr></thead>
+      <tbody>
+        <tr class="highlight"><td>GLM-5.2</td><td class="num">$1.40</td></tr>
+        <tr><td>Claude Opus 4.8</td><td class="num">$5.00</td></tr>
+      </tbody>
+      <caption>Pricing as of June 2026.</caption>
+    </table>
+
+    Compact variant (inside cards):
+    <table class="data-table compact">
+      ...
+    </table>
+{%- endcomment -%}
+{{ content }}

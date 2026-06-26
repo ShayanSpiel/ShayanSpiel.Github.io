@@ -61,7 +61,7 @@ description: Every component, token, and pattern in the Shayan Spiel design syst
   </section>
 
   <section>
-    <h2 style="margin-bottom: var(--s-5)">Components (12)</h2>
+    <h2 style="margin-bottom: var(--s-5)">Components (13)</h2>
         <article class="ds-component" id="btn">
           <header>
             <h2><code>btn</code></h2>
@@ -207,6 +207,24 @@ description: Every component, token, and pattern in the Shayan Spiel design syst
           </ul>
           <h3>Example</h3>
           <pre class="ds-example"><code>{% include components/cta-card.html title="..." body="..." actions=... %}</code></pre>
+        </article>
+        <article class="ds-component" id="data-table">
+          <header>
+            <h2><code>data-table</code></h2>
+            <span class="ds-partial">_includes/components/data-table.html</span>
+          </header>
+          <p>Card-consistent table for pricing, benchmarks, and structured data. Variants: default, compact. Use .num for right-aligned numeric columns and .highlight for emphasized rows.</p>
+          <h3>Slots</h3>
+          <ul class="ds-slots">          <li><code>caption</code> <span class="slot-opt">optional</span> &mdash; <em>renders below table, centered</em></li>
+          </ul>
+          <h3>Example</h3>
+          <pre class="ds-example"><code><table class="data-table">
+  <thead><tr><th>Model</th><th class="num">Input /MTok</th></tr></thead>
+  <tbody>
+    <tr class="highlight"><td>GLM-5.2</td><td class="num">$1.40</td></tr>
+  </tbody>
+  <caption>Pricing as of June 2026.</caption>
+</table></code></pre>
         </article>
         <article class="ds-component" id="stat-big">
           <header>

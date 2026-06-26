@@ -950,20 +950,67 @@
 .chart-box.short { height: 280px; }
 @media (max-width: 700px) { .chart-box, .chart-box.short { height: 340px; } }
 
-/* ── data-table (rich table variant for pillar posts) ── */
+/* ── data-table ──
+   Partial: _includes/components/data-table.html
+   Card-consistent table for pricing, benchmarks, and structured data.
+   Variants: default, compact (tighter row spacing for inline use)
+   Slots: thead rows, tbody rows, caption, .num (right-align), .highlight (bold row)
+*/
+.data-table {
+  width: 100%;
+  margin-top: var(--s-3);
+  background: var(--bg-1);
+  border: 1px solid var(--bd);
+  border-radius: var(--r-xl);
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  font-size: var(--fs-sm);
+}
+.data-table thead th {
+  font-family: var(--f-h);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--tx-3);
+  background: var(--bg-2);
+  padding: var(--s-3) var(--s-4);
+  border-bottom: 1px solid var(--bd);
+  text-align: left;
+}
+.data-table tbody td {
+  padding: var(--s-3) var(--s-4);
+  color: var(--tx-2);
+  border-bottom: 1px solid var(--bd);
+  text-align: left;
+  line-height: var(--lh-normal);
+}
+.data-table tbody tr:last-child td { border-bottom: none; }
+.data-table tr.highlight td:first-child { color: var(--tx); font-weight: var(--fw-bold); }
+.data-table tr.highlight td.num { color: var(--tx); font-weight: var(--fw-bold); }
+.data-table td.num { padding-right: var(--s-4); text-align: right; }
+.data-table th.num { text-align: right; }
 .data-table caption {
   caption-side: bottom;
   font-family: var(--f-h);
   font-size: var(--fs-xs);
   color: var(--tx-3);
   text-align: center;
-  padding-top: var(--s-3);
+  padding: var(--s-3) var(--s-4);
+  border-top: 1px solid var(--bd);
 }
-.data-table tr.highlight td:first-child { color: var(--tx); font-weight: var(--fw-bold); }
-.data-table tr.highlight td.num { color: var(--tx); font-weight: var(--fw-bold); }
-.data-table td.num { padding-right: var(--s-2); text-align: right; }
-.data-table th.num { text-align: right; }
-.data-table { width: 100%; margin-top: var(--s-3); }
+.data-table.compact thead th,
+.data-table.compact tbody td {
+  padding: var(--s-2) var(--s-3);
+}
+.data-table.flat {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  margin-top: 0;
+}
+.data-table.flat thead th { background: transparent; }
 
 /* ── icon ──
    Partial: _includes/components/icon.html
