@@ -403,9 +403,11 @@
 .post-meta a { color: var(--tx-2); text-decoration: none; }
 .post-meta a:hover { color: var(--tx); text-decoration: underline; }
 .post-nav {
-  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
   margin: var(--s-5) auto var(--s-6);
-  padding: var(--s-3) var(--s-4);
+  padding: var(--s-2) var(--s-4);
   background: var(--bg-2);
   border: 1px solid var(--bd);
   border-radius: var(--s-2);
@@ -418,7 +420,7 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-size: var(--fs-xs);
-  margin-right: var(--s-2);
+  flex-shrink: 0;
 }
 .post-nav-link {
   color: var(--tx-2);
@@ -429,6 +431,7 @@
   padding: var(--s-1) var(--s-3);
   border-radius: var(--s-1);
   transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
 }
 .post-nav-link:hover {
   background: var(--bg-3);
