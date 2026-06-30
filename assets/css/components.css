@@ -403,9 +403,11 @@
 .post-meta a { color: var(--tx-2); text-decoration: none; }
 .post-meta a:hover { color: var(--tx); text-decoration: underline; }
 .post-nav {
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  justify-content: center;
   gap: var(--s-3);
+  width: fit-content;
   margin: var(--s-5) auto var(--s-6);
   padding: var(--s-2) var(--s-4);
   background: var(--bg-2);
