@@ -402,6 +402,39 @@
 .post-meta-sep { color: var(--tx-4); }
 .post-meta a { color: var(--tx-2); text-decoration: none; }
 .post-meta a:hover { color: var(--tx); text-decoration: underline; }
+.post-nav {
+  text-align: center;
+  margin: var(--s-5) auto var(--s-6);
+  padding: var(--s-3) var(--s-4);
+  background: var(--bg-2);
+  border: 1px solid var(--bd);
+  border-radius: var(--s-2);
+  font-family: var(--f-h);
+  font-size: var(--fs-sm);
+}
+.post-nav-label {
+  color: var(--tx-3);
+  font-weight: var(--fw-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: var(--fs-xs);
+  margin-right: var(--s-2);
+}
+.post-nav-link {
+  color: var(--tx-2);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  padding: var(--s-1) var(--s-3);
+  border-radius: var(--s-1);
+  transition: background 0.15s, color 0.15s;
+}
+.post-nav-link:hover {
+  background: var(--bg-3);
+  color: var(--tx);
+}
+.post-nav-link .icon { flex-shrink: 0; }
 .post-tags { margin: var(--s-7) 0; display: flex; flex-wrap: wrap; gap: var(--s-2); }
 .post-tags-center { justify-content: center; }
 .tag-chip {
