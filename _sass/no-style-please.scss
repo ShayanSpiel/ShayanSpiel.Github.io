@@ -660,11 +660,7 @@ input[type=submit], button {
 
 // ---------------- Post navigation (related reading) ----------------
 .post-nav {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.75rem;
-  flex-wrap: wrap;
+  text-align: center;
   margin: 1.5rem auto 2rem;
   padding: 0.6rem 1rem;
   background: var(--color-bg-secondary);
@@ -672,7 +668,6 @@ input[type=submit], button {
   border-radius: var(--radius-md);
   font-family: var(--font-ui);
   font-size: var(--font-small);
-  max-width: var(--wrap-normal);
 }
 .post-nav-label {
   color: var(--color-tx-muted);
@@ -680,6 +675,7 @@ input[type=submit], button {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-size: 0.75em;
+  margin-right: 0.5rem;
 }
 .post-nav-link {
   color: var(--color-tx-normal);
@@ -687,7 +683,7 @@ input[type=submit], button {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-  padding: 0.2rem 0.5rem;
+  padding: 0.2rem 0.6rem;
   border-radius: var(--radius-sm);
   transition: background 0.15s, color 0.15s;
 }
