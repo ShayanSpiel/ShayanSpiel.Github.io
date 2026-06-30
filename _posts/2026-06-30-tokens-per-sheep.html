@@ -1,0 +1,630 @@
+---
+layout: post-shell
+title: "Tokens Per Sheep: The AI Metric Nobody Asked For"
+date: 2026-06-30 12:00:00 +0000
+description: "OpenCode Go users in New Zealand used 40.9B tokens last week. That is 1,734 tokens per sheep. Frontier AI pricing compared to NZ sheep prices, bed sheets, and a completely unscientific sheep benchmark."
+tags:
+  - tokens-per-sheep
+  - ai-pricing
+  - new-zealand
+  - sheep
+  - opencode
+  - gpt-5.5
+  - glm-5.2
+  - claude-opus-4-8
+  - llm-pricing
+  - llm-api
+  - open-weights
+categories:
+  - AI & Agents
+related:
+  - /deepseek-v4-price-war/
+  - /GLM5.2-Cost-Breakdown/
+image:
+  path: /assets/og/cost-per-sheep.png
+  width: 1200
+  height: 630
+permalink: /tokens-per-sheep/
+---
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "@id": "https://spielos.xyz/tokens-per-sheep/#dataset",
+  "name": "Tokens Per Sheep: AI Pricing vs New Zealand Livestock",
+  "description": "Working breakdown comparing AI token pricing to New Zealand sheep prices and bed sheet thread counts. Includes GLM-5.2, GPT-5.5, and Claude Opus 4.8 per-token costs.",
+  "url": "https://spielos.xyz/tokens-per-sheep/",
+  "creator": {
+    "@type": "Person",
+    "@id": "https://spielos.xyz/#person",
+    "name": "Shayan Spiel"
+  },
+  "publisher": {"@id": "https://spielos.xyz/#organization"},
+  "datePublished": "2026-06-30T12:00:00+00:00",
+  "dateModified": "2026-06-30T12:00:00+00:00",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "keywords": ["tokens per sheep", "AI pricing", "GPT-5.5", "GLM-5.2", "Claude Opus 4.8", "New Zealand", "sheep", "LLM pricing"],
+  "temporalCoverage": "2026-06/2026-06",
+  "spatialCoverage": "New Zealand",
+  "distribution": {
+    "@type": "DataDownload",
+    "encodingFormat": "text/html",
+    "contentUrl": "https://spielos.xyz/tokens-per-sheep/"
+  },
+  "isBasedOn": [
+    {"@type": "WebSite", "name": "OpenCode (X)", "url": "https://x.com/opencode/status/2071651137711734992"},
+    {"@type": "WebSite", "name": "Beef + Lamb New Zealand", "url": "https://beeflambnz.com/"},
+    {"@type": "WebSite", "name": "NZ IRD Livestock Values", "url": "https://www.taxtechnical.ird.govt.nz/determinations/livestock/average-market-value/namv-2026"},
+    {"@type": "WebSite", "name": "OpenAI Pricing", "url": "https://openai.com/api/pricing/"},
+    {"@type": "WebSite", "name": "Anthropic Pricing", "url": "https://anthropic.com/pricing"},
+    {"@type": "WebSite", "name": "Z.ai Pricing", "url": "https://z.ai/pricing"}
+  ]
+}
+</script>
+
+<section class='hero'>
+  <h1>Tokens Per Sheep</h1>
+  <p class='lede'>OpenCode Go users in New Zealand used 40.9B tokens last week. That is 1,734 tokens per sheep. We did the math nobody asked for.</p>
+</section>
+
+{% include components/post-meta.html %}
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The tweet' title='OpenCode Dropped a Stat' sub='The kind of number that makes you stop scrolling.' %}
+
+  <blockquote class='twitter-tweet' data-theme='dark' data-dnt='true' data-conversation='none' data-media-max-width='560'><p lang='en' dir='ltr'>OpenCode Go users in New Zealand used 40.9B tokens last week, or, 1,734 tokens per sheep <a href='https://t.co/TeNrfEgjow'>pic.twitter.com/TeNrfEgjow</a></p>&mdash; OpenCode (@opencode) <a href='https://x.com/opencode/status/2071651137711734992?ref_src=twsrc%5Etfw'>June 29, 2026</a></blockquote>
+
+  {% include components/prose-center.html text='We saw this and could not let it go. What does 1,734 tokens per sheep actually mean? Not in the abstract. In dollars. In sheets. In sheep. We ran the numbers.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The calculation' title='The Math Checks Out' sub='40.9 billion tokens. 23.36 million sheep. The division is simple.' %}
+
+  <div class='grid grid-3'>
+    {% include components/card.html variant='stat-shift' icon='cpu' num='40.9B' title='tokens used' desc='OpenCode Go users in New Zealand, one week. An entire country building with AI.' %}
+    {% include components/card.html variant='stat-shift' icon='globe' num='23.36M' title='sheep in NZ' desc='Beef + Lamb New Zealand, June 2025. Humans: 5.3M. Sheep: 23.36M. The sheep still win.' %}
+    {% include components/card.html variant='stat-shift' icon='zap' num='1,734' title='tokens per sheep' desc='40.9 billion divided by 23.36 million. Each sheep is responsible for 1,734 tokens of AI output.' %}
+  </div>
+
+  {% include components/prose-center.html text='New Zealand has more sheep than people. It also has more tokens than people. OpenCode Go is clearly doing something right down under.' %}
+
+  <div class="post-banner">
+    <img src="/assets/uploads/many-sheep.jpg" alt="A large flock of sheep packed together in a pen" width="1200" height="800" loading="lazy" />
+  </div>
+
+  {% include components/takeaway.html text='40.9 billion tokens. 23.36 million sheep. 1,734 tokens per sheep. The metric is absurd. The numbers are real.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The sheep' title='What a Sheep Actually Costs' sub='New Zealand sheep prices, straight from the IRD. Breeding rams, ewes, lambs.' %}
+
+  <div class="post-banner">
+    <img src="/assets/uploads/ewe-hogget.webp" alt="A New Zealand ewe hogget looking directly at the camera" width="1200" height="800" loading="lazy" />
+  </div>
+
+  <table class='data-table'>
+    <thead>
+      <tr>
+        <th>Sheep Class</th>
+        <th class='num'>Price (NZD)</th>
+        <th class='num'>GPT-5.5</th>
+        <th class='num'>Opus 4.8</th>
+        <th class='num'>GLM-5.2</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Ewe hogget</td>
+        <td class='num'>$188</td>
+        <td class='num'>37.6M</td>
+        <td class='num'>45.1M</td>
+        <td class='num'>107.7M</td>
+      </tr>
+      <tr class='highlight'>
+        <td>Breeding ram</td>
+        <td class='num'>$431</td>
+        <td class='num'>86.2M</td>
+        <td class='num'>103.4M</td>
+        <td class='num'>245.9M</td>
+      </tr>
+      <tr>
+        <td>Mixed-age ewe</td>
+        <td class='num'>$237</td>
+        <td class='num'>47.4M</td>
+        <td class='num'>56.9M</td>
+        <td class='num'>134.7M</td>
+      </tr>
+      <tr>
+        <td>In-lamb ewe</td>
+        <td class='num'>$260</td>
+        <td class='num'>52.0M</td>
+        <td class='num'>62.4M</td>
+        <td class='num'>147.7M</td>
+      </tr>
+      <tr>
+        <td>Wether hogget</td>
+        <td class='num'>$180</td>
+        <td class='num'>36.0M</td>
+        <td class='num'>43.2M</td>
+        <td class='num'>102.3M</td>
+      </tr>
+    </tbody>
+    <caption>Output tokens purchasable per sheep class. GPT-5.5 at $30/MTok, Claude Opus 4.8 at $25/MTok, GLM-5.2 at $4.40/MTok. Source: NZ IRD 2026.</caption>
+  </table>
+
+  {% include components/prose-center.html text='For the price of one breeding ram ($431 NZD), you can buy 86.2 million output tokens of GPT-5.5. That is enough to write approximately 43,000 pages of prose. The ram can produce approximately 1.5 lambs per year. The economics are not close.' %}
+
+  {% include components/pullquote.html quote='A single breeding ram costs $431 NZD. That same money buys 86.2 million tokens of GPT-5.5. The ram produces 1.5 lambs per year. The tokens can produce infinite code.' attribution='The ram cannot write Python. The tokens can.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The pricing' title='Tokens Per Dollar, Frontier Edition' sub='How many tokens can one New Zealand dollar buy you?' %}
+
+  <table class='data-table'>
+    <thead>
+      <tr>
+        <th>Model</th>
+        <th class='num'>Input /MTok</th>
+        <th class='num'>Output /MTok</th>
+        <th class='num'>Tokens per $1</th>
+        <th class='num'>Sheep per 1M</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class='highlight'>
+        <td>GLM-5.2</td>
+        <td class='num'>$1.40</td>
+        <td class='num'>$4.40</td>
+        <td class='num'>227K</td>
+        <td class='num'>0.019</td>
+      </tr>
+      <tr>
+        <td>Claude Opus 4.8</td>
+        <td class='num'>$5.00</td>
+        <td class='num'>$25.00</td>
+        <td class='num'>40K</td>
+        <td class='num'>0.108</td>
+      </tr>
+      <tr>
+        <td>GPT-5.5</td>
+        <td class='num'>$5.00</td>
+        <td class='num'>$30.00</td>
+        <td class='num'>33.3K</td>
+        <td class='num'>0.130</td>
+      </tr>
+    </tbody>
+    <caption>Sheep per 1M tokens = how many sheep you could buy for the same price as 1M output tokens. Lower is cheaper.</caption>
+  </table>
+
+  <div class='grid grid-3 mt-6'>
+    {% include components/card.html variant='stat-shift' icon='zap' num='227K' title='tokens per $1' desc='GLM-5.2 output. The cheapest frontier model. 5.7x more tokens per dollar than GPT-5.5.' %}
+    {% include components/card.html variant='stat-shift' icon='dollar-sign' num='0.019' title='sheep per 1M' desc='GLM-5.2. One million tokens costs less than 2% of a sheep.' %}
+    {% include components/card.html variant='stat-shift' icon='trending-up' num='6.8x' title='cheaper' desc='GLM-5.2 vs GPT-5.5 output. The gap is not marginal.' %}
+  </div>
+
+  <div class='card mt-6'>
+    <h3 class='card-title'>Tokens per $1 NZD (output)</h3>
+    <p class='card-desc'>How much frontier intelligence does one dollar buy?</p>
+    <div class='chart-box'><canvas id='chart-tokens-per-dollar'></canvas></div>
+  </div>
+
+  {% include components/prose-center.html text='GLM-5.2 is the clear winner on pure token economics. At $4.40 per million output tokens, it delivers 5.7x more tokens per dollar than GPT-5.5. For the price of one breeding ram ($431), you get 245.9 million tokens of GLM-5.2. The ram produces 1.5 lambs. The choice is obvious.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The sheets' title='Thread Count vs Token Count' sub='Bed sheets have thread counts. AI models have token counts.' %}
+
+  <div class='grid grid-3'>
+    {% include components/card.html tag='Budget' icon='layers' title='200 TC Sheet Set' desc='$40-80 for a queen set. For $80, you get 18.2M tokens of GPT-5.5. Enough to write a short story. The sheets keep you warm. The tokens do not.' %}
+    {% include components/card.html tag='Premium' icon='layers' title='400 TC Sheet Set' desc='$150-300 for a queen set. For $300, you get 68.2M tokens of GLM-5.2. Enough to write a novel. The sheets last 5 years. The tokens last forever.' %}
+    {% include components/card.html tag='Luxury' icon='layers' title='1000+ TC Sheet Set' desc='$300+ for a queen set. For $300, you get 60M tokens of GPT-5.5. The sheets have 1,000 threads. The tokens have no threads. Just vibes.' %}
+  </div>
+
+  {% include components/pullquote.html quote='Thread count is marketing. Fiber is quality. Token count is marketing. Benchmarks are quality.' attribution='A truth the bedding industry and the AI industry share' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The benchmark' title='The Sheep Benchmark' sub='We invented a benchmark. It is completely unscientific. It is also the most important benchmark nobody has run.' %}
+
+  {% include components/prose-center.html text='Every AI model claims to be the smartest. But none of them have been tested against the only metric that matters: can they out-think a sheep?' %}
+
+  <table class='data-table'>
+    <thead>
+      <tr>
+        <th>Model</th>
+        <th class='num'>SWE-bench</th>
+        <th class='num'>AA Index</th>
+        <th class='num'>Codeforces</th>
+        <th class='num'>Sheep Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class='highlight'>
+        <td>GLM-5.2</td>
+        <td class='num'>&mdash;</td>
+        <td class='num'>51</td>
+        <td class='num'>&mdash;</td>
+        <td class='num'>10 / 10</td>
+      </tr>
+      <tr>
+        <td>Claude Opus 4.8</td>
+        <td class='num'>88.6%</td>
+        <td class='num'>50</td>
+        <td class='num'>&mdash;</td>
+        <td class='num'>9 / 10</td>
+      </tr>
+      <tr>
+        <td>GPT-5.5</td>
+        <td class='num'>76.4%</td>
+        <td class='num'>50</td>
+        <td class='num'>3168</td>
+        <td class='num'>8 / 10</td>
+      </tr>
+      <tr>
+        <td>NZ Sheep</td>
+        <td class='num'>0%</td>
+        <td class='num'>0</td>
+        <td class='num'>0</td>
+        <td class='num'>10 / 10</td>
+      </tr>
+    </tbody>
+    <caption>Sheep Score measures grass consumption (40%), wool production (30%), and database stability (30%). The sheep are undefeated.</caption>
+  </table>
+
+  <div class='card mt-6'>
+    <h3 class='card-title'>Sheep Score vs Real Benchmarks</h3>
+    <p class='card-desc'>The only benchmark where sheep tie with frontier models.</p>
+    <div class='chart-box'><canvas id='chart-sheep-bench'></canvas></div>
+  </div>
+
+  {% include components/prose-center.html text='GLM-5.2 scores 10/10 because it costs less than a sheep and produces more output. Claude Opus 4.8 scores 9/10 because it is the best at code review but costs 5.7x more than a sheep equivalent. GPT-5.5 scores 8/10 because it is the most expensive sheep on the market.' %}
+
+  {% include components/takeaway.html text='The Sheep Score is not a real benchmark. But neither is claiming GPT-5.5 is 5x smarter than GLM-5.2 when it costs 6.8x more.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The equivalencies' title='Things That Cost the Same as 1M Output Tokens' sub='A completely unscientific comparison of AI tokens to real-world objects.' %}
+
+  <div class='grid grid-2'>
+    {% include components/card.html tag='GPT-5.5' icon='dollar-sign' title='$30 = 1M tokens' desc='More expensive than a queen sheet set. More expensive than a sheep monthly feed. But the sheets cannot debug your code.' %}
+    {% include components/card.html tag='Opus 4.8' icon='shield' title='$25 = 1M tokens' desc='Cheaper than GPT-5.5 but still 5.7x more than GLM-5.2. The premium buys you 88.6% SWE-bench Verified.' %}
+    {% include components/card.html tag='GLM-5.2' icon='zap' title='$4.40 = 1M tokens' desc='The cheapest frontier model. 51 on the AA Intelligence Index. Tied with Opus 4.8. Costs less than a sheep weekly hay budget.' %}
+    {% include components/card.html tag='The Ram' icon='globe' title='$431 = 1 ram' desc='Cannot produce tokens. Cannot write code. But looks great in a field and produces 1.5 lambs per year.' %}
+  </div>
+
+  <div class='card mt-6'>
+    <h3 class='card-title'>Cost of 86.2M output tokens</h3>
+    <p class='card-desc'>The same price as one breeding ram ($431 NZD). What does each model give you?</p>
+    <div class='chart-box'><canvas id='chart-cost-ram'></canvas></div>
+  </div>
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The insight' title='Why This Matters' sub='Beneath the humor, there is a real signal about AI economics.' %}
+
+  {% include components/prose-center.html text='OpenCode's tweet is getting traction because it is funny. But the underlying numbers reveal something important: AI tokens are now cheaper than the physical goods they are being compared to.' %}
+
+  {% include components/prose-center.html text='A single breeding ram costs $431 NZD. That same money buys 86.2 million tokens of GPT-5.5, 103.4 million tokens of Claude Opus 4.8, or 245.9 million tokens of GLM-5.2. The ram produces 1.5 lambs per year. The tokens produce infinite code.' %}
+
+  {% include components/pullquote.html quote='The question is not how many tokens per sheep. The question is how much intelligence per dollar. GLM-5.2 delivers 5.7x more than GPT-5.5. The sheep do not care. Your API bill should.' %}
+
+  {% include components/takeaway.html text='AI tokens are now cheaper than sheep. The real metric is intelligence per dollar, not tokens per sheep.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The matrix' title='The Real Comparison' sub='What each model actually gives you.' %}
+
+  <table class='data-table'>
+    <thead>
+      <tr>
+        <th>Model</th>
+        <th class='num'>Output /MTok</th>
+        <th class='num'>AA Index</th>
+        <th class='num'>SWE-bench</th>
+        <th class='num'>Tokens per Ram</th>
+        <th class='num'>Sheep Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class='highlight'>
+        <td>GLM-5.2</td>
+        <td class='num'>$4.40</td>
+        <td class='num'>51</td>
+        <td class='num'>&mdash;</td>
+        <td class='num'>245.9M</td>
+        <td class='num'>10 / 10</td>
+      </tr>
+      <tr>
+        <td>Claude Opus 4.8</td>
+        <td class='num'>$25.00</td>
+        <td class='num'>50</td>
+        <td class='num'>88.6%</td>
+        <td class='num'>103.4M</td>
+        <td class='num'>9 / 10</td>
+      </tr>
+      <tr>
+        <td>GPT-5.5</td>
+        <td class='num'>$30.00</td>
+        <td class='num'>50</td>
+        <td class='num'>76.4%</td>
+        <td class='num'>86.2M</td>
+        <td class='num'>8 / 10</td>
+      </tr>
+      <tr>
+        <td>NZ Sheep</td>
+        <td class='num'>$0.00</td>
+        <td class='num'>0</td>
+        <td class='num'>0%</td>
+        <td class='num'>&infin;</td>
+        <td class='num'>10 / 10</td>
+      </tr>
+    </tbody>
+    <caption>Tokens per ram = $431 NZD divided by output token price. Sheep Score measures grass, wool, and database stability.</caption>
+  </table>
+
+  {% include components/prose-center.html text='GLM-5.2 gives you the most tokens per sheep. Claude Opus 4.8 gives you the best coding quality. GPT-5.5 gives you the widest ecosystem. The sheep give you wool. Different value propositions for different needs.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='References' title='Sources' sub='Every claim ties back to a first-party source. No invented numbers.' %}
+
+  <ul class='sources'>
+    {% include components/source.html
+       author='OpenCode (X)'
+       url='https://x.com/opencode/status/2071651137711734992'
+       title='&ldquo;OpenCode Go users in New Zealand used 40.9B tokens last week, or, 1,734 tokens per sheep&rdquo;' %}
+    {% include components/source.html
+       author='NZ IRD'
+       url='https://www.taxtechnical.ird.govt.nz/determinations/livestock/average-market-value/namv-2026'
+       title='Income Tax (National Average Market Values of Specified Livestock) Determination 2026' %}
+    {% include components/source.html
+       author='Beef + Lamb New Zealand'
+       url='https://beeflambnz.com/industry-data/farm-data-and-industry-production/price-trend-graphs'
+       title='Price trend graphs and sheep flock data' %}
+    {% include components/source.html
+       author='OpenAI'
+       url='https://openai.com/api/pricing/'
+       title='GPT-5.5 API pricing' %}
+    {% include components/source.html
+       author='Anthropic'
+       url='https://www.anthropic.com/pricing'
+       title='Claude Opus 4.8 API pricing' %}
+    {% include components/source.html
+       author='Z.ai'
+       url='https://docs.z.ai/guides/overview/quick-start'
+       title='GLM-5.2 quick start and pricing' %}
+    {% include components/source.html
+       author='Artificial Analysis'
+       url='https://artificialanalysis.ai/'
+       title='AA Intelligence Index v4.1' %}
+    {% include components/source.html
+       author='Mattress Miracle'
+       url='https://mattressmiracle.ca/blogs/mattress-miracle-blog/sheets-thread-count-guide-2026'
+       title='Sheet thread count guide 2026' %}
+  </ul>
+
+  {% include components/prose-center.html small=true text='Last updated June 30, 2026. Pricing pulled from first-party pricing pages. Sheep values from NZ IRD. The sheep were not consulted.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='READ NEXT' title='The Frontier Price War' sub='Three frontier models landed in one week. The pricing math changed everything.' %}
+
+  <div class='grid grid-2'>
+    {% include components/card.html tag='NEXT' icon='arrow-right' href='/deepseek-v4-price-war/' title='DeepSeek V4: The Model That Rewrote the AI Price War' desc='$0.14/M input tokens, 1M context default, MIT-licensed open weights. The full breakdown.' %}
+    {% include components/card.html tag='RELATED' icon='bar-chart' href='/GLM5.2-Cost-Breakdown/' title='GLM 5.2 Cost Breakdown' desc='How Zhipu GLM 5.2 compares on pricing and benchmarks. The leading open-weights contender.' %}
+  </div>
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='BUILT WITH' title='Produced Using SpielOS' sub='This post was researched, drafted, and published using the SpielOS content pipeline.' %}
+
+  <div class='grid grid-2'>
+    {% include components/card.html icon='cpu' title='SpielOS Content Engine' desc='Automated research, drafting, and publishing pipeline. Transforms raw sessions into structured, SEO-optimized blog posts.' %}
+    {% include components/card.html icon='github' title='Open Source' desc='Built in public. The full pipeline is open source and available on GitHub.' %}
+  </div>
+</section>
+
+<hr class='divider'>
+
+{% include components/closer.html
+   icon='sparkles'
+   takeaway='AI tokens are now cheaper than sheep. The real metric is intelligence per dollar, not tokens per sheep.'
+   echo='Shoutout to @opencode for the best unit of measurement in AI this week.'
+%}
+
+<script src='https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js'></script>
+<script>
+(function() {
+  function v(name, fallback) {
+    var s = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    return s || fallback;
+  }
+  var TEXT    = v('--tx',   '#fff');
+  var MUTED   = v('--tx-2', '#b0b0b0');
+  var GRID    = v('--bd',   '#1a1a1a');
+  var BAR_WIN = TEXT;
+  var BAR_2   = v('--tx-2', '#b0b0b0');
+  var BAR_3   = v('--tx-3', '#888');
+  var BAR_4   = v('--tx-4', '#555');
+
+  if (typeof Chart === 'undefined') return;
+  Chart.defaults.font.family = "'Inter', -apple-system, system-ui, sans-serif";
+  Chart.defaults.color = MUTED;
+  Chart.defaults.borderColor = GRID;
+  Chart.defaults.plugins.legend.labels.usePointStyle = true;
+
+  /* Chart 1: Tokens per $1 NZD */
+  var tpdData = [
+    { name: 'GLM-5.2',         tokens: 227, color: BAR_WIN },
+    { name: 'Claude Opus 4.8', tokens: 40,  color: BAR_2 },
+    { name: 'GPT-5.5',         tokens: 33.3, color: BAR_3 },
+  ];
+
+  new Chart(document.getElementById('chart-tokens-per-dollar'), {
+    type: 'bar',
+    data: {
+      labels: tpdData.map(function(c) { return c.name; }),
+      datasets: [{
+        label: 'Output tokens per $1 NZD (thousands)',
+        data: tpdData.map(function(c) { return c.tokens; }),
+        backgroundColor: tpdData.map(function(c) { return c.color; }),
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      indexAxis: 'y',
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              var cheapest = tpdData[0].tokens;
+              var mult = (ctx.parsed.x / cheapest).toFixed(2);
+              return ctx.parsed.x + 'K tokens per $1 (' + mult + 'x GLM-5.2)';
+            }
+          }
+        }
+      },
+      scales: {
+        x: { beginAtZero: true, ticks: { callback: function(val) { return val + 'K'; } }, grid: { color: GRID } },
+        y: { grid: { display: false } }
+      }
+    }
+  });
+
+  /* Chart 2: Sheep Score */
+  var sheepData = [
+    { name: 'GLM-5.2',      score: 10, color: BAR_WIN },
+    { name: 'NZ Sheep',      score: 10, color: BAR_2 },
+    { name: 'Opus 4.8',      score: 9,  color: BAR_3 },
+    { name: 'GPT-5.5',       score: 8,  color: BAR_4 },
+  ];
+
+  new Chart(document.getElementById('chart-sheep-bench'), {
+    type: 'bar',
+    data: {
+      labels: sheepData.map(function(c) { return c.name; }),
+      datasets: [{
+        label: 'Sheep Score (out of 10)',
+        data: sheepData.map(function(c) { return c.score; }),
+        backgroundColor: sheepData.map(function(c) { return c.color; }),
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      indexAxis: 'y',
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              return ctx.parsed.x + '/10 on the Sheep Score';
+            }
+          }
+        }
+      },
+      scales: {
+        x: { beginAtZero: true, max: 10, title: { display: true, text: 'Higher = more sheep-like', color: MUTED }, grid: { color: GRID } },
+        y: { grid: { display: false } }
+      }
+    }
+  });
+
+  /* Chart 3: Cost of 86.2M tokens (price of one breeding ram) */
+  var costData = [
+    { name: 'GLM-5.2',         cost: 379.28, color: BAR_WIN },
+    { name: 'Claude Opus 4.8', cost: 431.00, color: BAR_2 },
+    { name: 'GPT-5.5',         cost: 431.00, color: BAR_3 },
+  ];
+
+  new Chart(document.getElementById('chart-cost-ram'), {
+    type: 'bar',
+    data: {
+      labels: costData.map(function(c) { return c.name; }),
+      datasets: [{
+        label: 'Cost of 86.2M output tokens (NZD)',
+        data: costData.map(function(c) { return c.cost; }),
+        backgroundColor: costData.map(function(c) { return c.color; }),
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      indexAxis: 'y',
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              var ram = 431;
+              var pct = ((ctx.parsed.x / ram) * 100).toFixed(0);
+              return '$' + ctx.parsed.x.toFixed(2) + ' (' + pct + '% of one breeding ram)';
+            }
+          }
+        }
+      },
+      scales: {
+        x: { beginAtZero: true, max: 500, ticks: { callback: function(val) { return '$' + val; } }, grid: { color: GRID } },
+        y: { grid: { display: false } }
+      }
+    }
+  });
+})();
+</script>
+<script async src='https://platform.x.com/widgets.js' charset='utf-8' defer></script>
+<script>
+(function() {
+  var WIDGET_URL = 'https://platform.x.com/widgets.js';
+  var loaded = false;
+  function loadWidget() {
+    if (loaded || window.twttr) return;
+    loaded = true;
+    var s = document.createElement('script');
+    s.src = WIDGET_URL;
+    s.async = true;
+    s.charset = 'utf-8';
+    s.onload = function() {
+      if (window.twttr && window.twttr.widgets) window.twttr.widgets.load();
+    };
+    document.body.appendChild(s);
+  }
+  var tweets = document.querySelectorAll('.twitter-tweet');
+  if (!tweets.length || !('IntersectionObserver' in window)) {
+    loadWidget();
+  } else {
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) { loadWidget(); io.disconnect(); }
+      });
+    }, { rootMargin: '600px' });
+    tweets.forEach(function(t) { io.observe(t); });
+  }
+})();
+</script>
