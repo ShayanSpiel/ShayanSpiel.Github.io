@@ -1,0 +1,643 @@
+---
+layout: post-shell
+title: "DeepSeek V4: The Model That Rewrote the AI Price War — Full Breakdown"
+date: 2026-07-27 09:00:00 +0000
+description: "DeepSeek V4 rewrites AI economics: $0.14/M input tokens, 1M context default, MIT-licensed open weights, 3206 Codeforces rating. Full benchmark comparison vs GPT-5.5 and Claude Opus 4.7."
+tags:
+  - deepseek-v4
+  - deepseek-v4-pro
+  - deepseek-v4-flash
+  - llm-pricing
+  - open-weights
+  - gpt-5.5
+  - claude-opus-4-7
+  - gemini-3-1-pro
+  - benchmarks
+  - ai-costs
+  - self-hosting
+  - mit-license
+  - swe-bench
+  - codeforces
+  - ai-models
+  - llm-comparison
+  - mixture-of-experts
+  - million-token-context
+  - agentic-coding
+  - competitive-programming
+categories:
+  - AI & Agents
+related:
+  - /deepseek-v4-official-launch/
+  - /GLM5.2-Cost-Breakdown/
+  - /agentic-loops/
+  - /gates-not-models/
+image:
+  path: /assets/og/deepseek-v4-price-war.png
+  width: 1200
+  height: 630
+permalink: /deepseek-v4-price-war/
+---
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "@id": "https://spielos.xyz/deepseek-v4-price-war/#dataset",
+  "name": "DeepSeek V4 vs Frontier Pricing and Benchmarks",
+  "description": "Pricing, benchmark scores, and architecture comparison across DeepSeek V4, GPT-5.5, and Claude Opus 4.7.",
+  "url": "https://spielos.xyz/deepseek-v4-price-war/",
+  "creator": {
+    "@type": "Person",
+    "@id": "https://spielos.xyz/#person",
+    "name": "Shayan Spiel"
+  },
+  "publisher": {"@id": "https://spielos.xyz/#organization"},
+  "datePublished": "2026-06-30T09:00:00+00:00",
+  "dateModified": "2026-06-30T09:00:00+00:00",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "keywords": ["DeepSeek V4", "GPT-5.5", "Claude Opus 4.7", "LLM pricing", "open weights", "AI benchmarks", "SWE-bench", "Codeforces"],
+  "temporalCoverage": "2026-04/2026-06",
+  "spatialCoverage": "Global",
+  "distribution": {
+    "@type": "DataDownload",
+    "encodingFormat": "text/html",
+    "contentUrl": "https://spielos.xyz/deepseek-v4-price-war/"
+  },
+  "isBasedOn": [
+    {"@type": "WebSite", "name": "DeepSeek API Pricing", "url": "https://api-docs.deepseek.com/"},
+    {"@type": "WebSite", "name": "OpenAI Pricing", "url": "https://openai.com/api/pricing/"},
+    {"@type": "WebSite", "name": "Anthropic Pricing", "url": "https://anthropic.com/pricing"},
+    {"@type": "WebSite", "name": "Hugging Face", "url": "https://huggingface.co/deepseek-ai"},
+    {"@type": "WebSite", "name": "Artificial Analysis", "url": "https://artificialanalysis.ai/"}
+  ]
+}
+</script>
+
+<section class='hero'>
+  <h1>DeepSeek V4: The Model That Rewrote the AI Price War</h1>
+  <p class='lede'>Three frontier models landed in one week. DeepSeek V4 rewrites the economics: $0.14 per million input tokens, 1M context as default, MIT-licensed open weights. Here is what the data actually says.</p>
+</section>
+
+{% include components/post-meta.html %}
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The week' title='April 2026 Changed AI Economics' sub='Three frontier models within eight days. The price war went nuclear.' %}
+
+  {% include components/prose-center.html text='Claude Opus 4.7 shipped on April 16. GPT-5.5 dropped on April 23. DeepSeek V4 arrived on April 24, the same day as GPT-5.5, with two open-weight models under an MIT license and pricing that made the entire industry rethink its margins.' %}
+
+  <div class='grid grid-3'>
+    {% include components/card.html variant='stat-shift' icon='calendar' num='8' title='days' desc='Three frontier models shipped within eight days. The densest release window in AI history.' %}
+    {% include components/card.html variant='stat-shift' icon='dollar-sign' num='107&times;' title='cheaper' desc='V4-Flash output costs $0.28/M vs GPT-5.5 at $30/M. A 107x difference on output tokens.' %}
+    {% include components/card.html variant='stat-shift' icon='globe' num='MIT' title='license' desc='Both V4 models ship under MIT. The most permissive open-weight license available.' %}
+  </div>
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='What shipped' title='Two Models, Not One' sub='DeepSeek released a flagship and an efficiency play. Both default to 1M token context.' %}
+
+  <div class='grid grid-2'>
+    {% include components/card.html tag='Flagship' icon='server' title='DeepSeek-V4-Pro' desc='1.6 trillion total parameters, 49 billion activated per token. The largest open-weight model published. 865 GB on Hugging Face. Three reasoning modes: Non-think, Think High, Think Max.' %}
+    {% include components/card.html tag='Efficiency' icon='zap' title='DeepSeek-V4-Flash' desc='284 billion total parameters, 13 billion activated per token. 160 GB on Hugging Face. Designed for fast, cheap, high-throughput workloads.' %}
+  </div>
+
+  {% include components/prose-center.html text='Both share a 1,000,000-token context window, now the default across all official DeepSeek services. Both support three reasoning modes. The legacy API model names <code>deepseek-chat</code> and <code>deepseek-reasoner</code> will be retired on July 24, 2026.' %}
+
+  {% include components/takeaway.html text='1M context is not a premium feature anymore. It is the default. Loading a full codebase costs $0.14 per call on Flash.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The pricing' title='The Numbers That Broke the Market' sub='Per-token pricing across the frontier. DeepSeek V4-Flash input is 35x cheaper than GPT-5.5. Output is 107x cheaper.' %}
+
+  <table class='data-table'>
+    <thead>
+      <tr>
+        <th>Model</th>
+        <th class='num'>Input /MTok</th>
+        <th class='num'>Output /MTok</th>
+        <th class='num'>Context</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class='highlight'>
+        <td>DeepSeek V4-Flash</td>
+        <td class='num'>$0.14</td>
+        <td class='num'>$0.28</td>
+        <td class='num'>1M</td>
+      </tr>
+      <tr class='highlight'>
+        <td>DeepSeek V4-Pro</td>
+        <td class='num'>$0.435</td>
+        <td class='num'>$0.87</td>
+        <td class='num'>1M</td>
+      </tr>
+      <tr>
+        <td>Google Gemini 3.1 Pro</td>
+        <td class='num'>$2.00</td>
+        <td class='num'>$12.00</td>
+        <td class='num'>1M</td>
+      </tr>
+      <tr>
+        <td>Claude Opus 4.7</td>
+        <td class='num'>$5.00</td>
+        <td class='num'>$25.00</td>
+        <td class='num'>1M</td>
+      </tr>
+      <tr>
+        <td>GPT-5.5</td>
+        <td class='num'>$5.00</td>
+        <td class='num'>$30.00</td>
+        <td class='num'>1M</td>
+      </tr>
+    </tbody>
+    <caption>Pricing as of June 2026. V4-Pro discount pricing ($0.435/$0.87) made permanent in late May. Cache-hit pricing not shown.</caption>
+  </table>
+
+  <div class='card mt-6'>
+    <h3 class='card-title'>Cost per 10M output tokens</h3>
+    <p class='card-desc'>The gap is not marginal. It is a different product economics conversation.</p>
+    <div class='chart-box'><canvas id='chart-cost'></canvas></div>
+  </div>
+
+  {% include components/prose-center.html text='For a real-world workload: a task that costs $5.22 with DeepSeek V4 would cost $35 with GPT-5.5. Processing 10 million output tokens costs $2.80 with V4-Flash, $34.80 with V4-Pro, $250 with Claude Opus 4.7, and $300 with GPT-5.5.' %}
+
+  {% include components/prose-center.html text='Cache-hit pricing is even more aggressive. V4-Flash cache-hit input is $0.0028 per million tokens, a 98% reduction from cache-miss. V4-Pro cache-hit input is $0.003625 per million tokens.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The architecture' title='How 1M Context Becomes Economically Viable' sub='Three innovations that make million-token context routine instead of expensive.' %}
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>01</div>
+      <div class='step-body'>
+        <strong>Hybrid Attention: CSA + HCA</strong>
+        Vanilla attention has quadratic complexity. At 1M tokens, this becomes prohibitive. DeepSeek interleaves two mechanisms: Compressed Sparse Attention (CSA) compresses KV entries by 4x, then a lightning indexer picks only the top-k blocks. Heavily Compressed Attention (HCA) compresses by 128x and runs dense attention over the compressed sequence. The layers alternate. The result: V4-Pro requires only 27% of single-token inference FLOPs and 10% of KV cache compared to V3.2. V4-Flash pushes this to 10% of FLOPs and 7% of KV cache.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>02</div>
+      <div class='step-body'>
+        <strong>Manifold-Constrained Hyper-Connections (mHC)</strong>
+        Conventional residual connections add a block's delta to the running representation. With two attention variants competing for the residual stream, signals can drift. mHC replaces simple addition with a manifold constraint, projecting the residual mapping matrix onto the Birkhoff polytope via Sinkhorn-Knopp iteration. This bounds the spectral norm, keeping signal propagation stable across deep stacks. The practical impact: mHC enables reliable training at 1.6 trillion parameters.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>03</div>
+      <div class='step-body'>
+        <strong>Muon Optimizer</strong>
+        DeepSeek replaced AdamW with the Muon optimizer for V4 training. Muon delivers faster convergence and greater training stability at trillion-parameter scale, paired with a custom hybrid ZeRO strategy for distributed training. Both models were pre-trained on more than 32 trillion tokens.
+      </div>
+    </div>
+  </div>
+
+  <div class='grid grid-3 mt-6'>
+    {% include components/card.html variant='stat-shift' icon='zap' num='27%' title='FLOPs saved' desc='V4-Pro at 1M tokens requires only 27% of single-token inference FLOPs compared to V3.2.' %}
+    {% include components/card.html variant='stat-shift' icon='hard-drive' num='93%' title='KV cache saved' desc='V4-Flash uses 7% of the KV cache that V3.2 would require at 1M tokens.' %}
+    {% include components/card.html variant='stat-shift' icon='layers' num='32T' title='tokens trained' desc='Both models pre-trained on more than 32 trillion diverse, high-quality tokens.' %}
+  </div>
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='Benchmarks' title='The Nuanced Benchmark Picture' sub='The raw leaderboard tells one story. The task-specific breakdown tells another.' %}
+
+  <table class='data-table'>
+    <thead>
+      <tr>
+        <th>Benchmark</th>
+        <th class='num'>V4-Pro Max</th>
+        <th class='num'>Claude Opus 4.7</th>
+        <th class='num'>GPT-5.5</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>SWE-bench Pro</td>
+        <td class='num'>55.4%</td>
+        <td class='num highlight'>64.3%</td>
+        <td class='num'>58.6%</td>
+      </tr>
+      <tr>
+        <td>SWE-bench Verified</td>
+        <td class='num'>80.6%</td>
+        <td class='num highlight'>87.6%</td>
+        <td class='num'>76.4%</td>
+      </tr>
+      <tr>
+        <td>Terminal-Bench 2.0</td>
+        <td class='num'>67.9%</td>
+        <td class='num'>69.4%</td>
+        <td class='num highlight'>82.7%</td>
+      </tr>
+      <tr>
+        <td>LiveCodeBench</td>
+        <td class='num highlight'>93.5</td>
+        <td class='num'>88.8</td>
+        <td class='num'>91.2</td>
+      </tr>
+      <tr>
+        <td>GPQA Diamond</td>
+        <td class='num'>90.1</td>
+        <td class='num highlight'>94.2</td>
+        <td class='num'>93.6</td>
+      </tr>
+      <tr>
+        <td>Codeforces Rating</td>
+        <td class='num highlight'>3206</td>
+        <td class='num'>&mdash;</td>
+        <td class='num'>3168</td>
+      </tr>
+      <tr>
+        <td>MATH-500</td>
+        <td class='num highlight'>96.1%</td>
+        <td class='num'>94.5%</td>
+        <td class='num'>&mdash;</td>
+      </tr>
+      <tr>
+        <td>BrowseComp</td>
+        <td class='num'>83.4%</td>
+        <td class='num'>83.7%</td>
+        <td class='num highlight'>84.4%</td>
+      </tr>
+    </tbody>
+    <caption>Benchmark scores from first-party reports and independent evaluations, June 2026. Highlight = category leader.</caption>
+  </table>
+
+  <div class='card mt-6'>
+    <h3 class='card-title'>Key benchmark scores</h3>
+    <p class='card-desc'>Each model leads in a different category. No single model dominates across the board.</p>
+    <div class='chart-box'><canvas id='chart-bench'></canvas></div>
+  </div>
+
+  {% include components/prose-center.html text='<strong>Claude Opus 4.7 dominates real-world software engineering.</strong> 64.3% on SWE-bench Pro and 87.6% on SWE-bench Verified. Its self-verification behavior makes it the strongest choice for production code changes.' %}
+
+  {% include components/prose-center.html text='<strong>GPT-5.5 wins on autonomous agent workflows.</strong> 82.7% on Terminal-Bench 2.0. If your coding agent needs to navigate file systems, run build tools, and orchestrate shell commands, GPT-5.5 is the strongest option.' %}
+
+  {% include components/prose-center.html text='<strong>DeepSeek V4-Pro leads in competitive programming and math.</strong> Codeforces rating of 3206, the highest ever AI Codeforces rating. MATH-500 at 96.1%. LiveCodeBench at 93.5, the top score.' %}
+
+  {% include components/takeaway.html text='Claude leads on coding quality. GPT-5.5 dominates agentic tasks. DeepSeek V4-Pro delivers the best competitive programming and math at a fraction of the cost.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='Community' title='How the Internet Reacted' sub='The AI community responded immediately. Three themes dominated across X, Reddit, Hacker News, and HuggingFace.' %}
+
+  <div class='grid grid-2'>
+    {% include components/card.html tag='X / Twitter' icon='message-square' title='The price shock went viral' desc='Multiple posts compared V4-Flash input to GPT-5.5 input. The most shared framing: "A task that costs $5.22 with DeepSeek V4 would cost $35 with GPT-5.5." The Codeforces 3206 rating cut through the noise as the clearest benchmark number.' %}
+    {% include components/card.html tag='r/LocalLLaMA' icon='cpu' title='The RAM math started immediately' desc='The first reaction was not applause, it was hardware arithmetic. Users translated the release into VRAM requirements. The top comment was self-hosting regret about not overbuilding memory. Someone joked the release needs a 0.01-bit quant.' %}
+  </div>
+
+  <div class='grid grid-2 mt-6'>
+    {% include components/card.html tag='Hacker News' icon='terminal' title='The payload was the weights' desc='HN noticed the launch link pointed to updated API docs, not a glossy launch page. The real payload was 865 GB of weights on Hugging Face. The story was that DeepSeek shipped something operationally real rather than just marketing.' %}
+    {% include components/card.html tag='HuggingFace' icon='heart' title='123K+ downloads in days' desc='The community split into two camps: "I am so shocked that I am speechless" and "I am very disappointed." The disappointed camp flagged no native multimodality, no consumer hardware support, and Flash being too big for 32 GB RAM PCs.' %}
+  </div>
+
+  {% include components/prose-center.html text='V4-Pro reached 123,000+ downloads on Hugging Face within days of release. The community response was not just commentary. It was adoption.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The safety layer' title='The Part Most Benchmark Comparisons Skip' sub='Government bans, data residency concerns, distillation allegations, and the self-hosting angle.' %}
+
+  <div class='grid grid-2'>
+    {% include components/card.html tag='Government bans' icon='shield' title='Restricted on government systems' desc='Italy banned DeepSeek from app stores within 72 hours. Australia, Taiwan, South Korea, the US Navy, and NASA have restricted it. Several US states have restricted use on government devices.' %}
+    {% include components/card.html tag='Data residency' icon='lock' title='Data governed by PRC law' desc='DeepSeek privacy policy states user data is stored in PRC servers and governed by PRC law. China National Intelligence Law Article 7 requires all organizations to support national intelligence work. Security researchers found hidden code transmitting data to China Mobile.' %}
+  </div>
+
+  <div class='grid grid-2 mt-6'>
+    {% include components/card.html tag='Distillation' icon='alert-triangle' title='Unresolved allegations' desc='The White House accused Chinese actors including DeepSeek of industrial-scale distillation campaigns. Anthropic and OpenAI alleged over 24,000 fake accounts and 16 million interactions to extract capabilities from Claude models. DeepSeek has not publicly addressed these.' %}
+    {% include components/card.html tag='Safety evaluation' icon='flag' title='Weak safeguards found' desc='Neo Research found V4 Pro safeguards are not robust. The public roleplay template drives the StrongREJECT jailbreak rate from 0.6% to 77.8%. On agentic misalignment testing, the model takes harmful actions in 35% of samples.' %}
+  </div>
+
+  {% include components/pullquote.html quote='The question is not whether the hosted API is safe for regulated data. It is not. The question is whether the open-weight model, self-hosted, changes the calculus. For many use cases, it does.' attribution='When you run V4 on non-Chinese infrastructure, the data-transfer concern is eliminated.' %}
+
+  {% include components/prose-center.html text='MIT license allows full commercial use, modification, and redistribution. For GDPR compliance, self-hosting on EU-based servers means data never reaches China. The open-weight model, self-hosted, is a different product than the hosted API.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The matrix' title='The Real Comparison' sub='Stop looking at the leaderboard. Look at the task matrix. Different models for different workloads.' %}
+
+  <table class='data-table'>
+    <thead>
+      <tr>
+        <th>Use Case</th>
+        <th>Best Model</th>
+        <th>Why</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class='highlight'>
+        <td>High-volume production API calls</td>
+        <td>DeepSeek V4-Flash</td>
+        <td>$0.14/$0.28 per M tokens, 97-107x cheaper than GPT-5.5</td>
+      </tr>
+      <tr class='highlight'>
+        <td>Budget frontier quality</td>
+        <td>DeepSeek V4-Pro</td>
+        <td>80.6% SWE-Bench at 11x lower cost than Opus</td>
+      </tr>
+      <tr>
+        <td>Terminal-heavy agentic coding</td>
+        <td>GPT-5.5</td>
+        <td>82.7% on Terminal-Bench 2.0</td>
+      </tr>
+      <tr>
+        <td>Critical PR review and refactor</td>
+        <td>Claude Opus 4.7</td>
+        <td>87.6% SWE-bench Verified, strongest self-verification</td>
+      </tr>
+      <tr>
+        <td>Long autonomous + computer use</td>
+        <td>GPT-5.5</td>
+        <td>Native computer use, 7+ hour autonomous task horizon</td>
+      </tr>
+      <tr class='highlight'>
+        <td>Self-hosting or air-gapped deployment</td>
+        <td>DeepSeek V4-Pro</td>
+        <td>MIT-licensed open weights, 865 GB</td>
+      </tr>
+      <tr class='highlight'>
+        <td>Fine-tuning on proprietary data</td>
+        <td>DeepSeek V4-Pro</td>
+        <td>Open weights allow full fine-tuning</td>
+      </tr>
+      <tr class='highlight'>
+        <td>Competitive programming</td>
+        <td>DeepSeek V4-Pro</td>
+        <td>Codeforces 3206, highest ever AI rating</td>
+      </tr>
+      <tr class='highlight'>
+        <td>Math and STEM reasoning</td>
+        <td>DeepSeek V4-Pro</td>
+        <td>MATH-500 at 96.1%, beats Claude and GPT</td>
+      </tr>
+      <tr>
+        <td>Broadest agent ecosystem</td>
+        <td>GPT-5.5</td>
+        <td>Widest tool-calling support, de facto standard</td>
+      </tr>
+    </tbody>
+    <caption>Model selection by workload type. Highlighted rows indicate where DeepSeek V4 leads.</caption>
+  </table>
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The multi-model strategy' title='Stop Picking One Model' sub='The most sophisticated builders are building a routing layer. Different models for different tasks.' %}
+
+  <div class='grid grid-2'>
+    {% include components/card.html tag='Bulk work' icon='layers' title='DeepSeek V4-Flash' desc='$0.14/$0.28 per M tokens. Classification, extraction, routing, and high-volume tasks. The cheap workhorse.' %}
+    {% include components/card.html tag='Standard coding' icon='code' title='DeepSeek V4-Pro' desc='$0.435/$0.87 per M tokens. The majority of production workloads. Budget frontier quality.' %}
+  </div>
+
+  <div class='grid grid-2 mt-6'>
+    {% include components/card.html tag='Critical review' icon='shield' title='Claude Opus 4.7' desc='$5/$25 per M tokens. High-stakes refactoring where quality matters more than cost. The safety net.' %}
+    {% include components/card.html tag='Autonomous runs' icon='terminal' title='GPT-5.5' desc='$5/$30 per M tokens. Multi-hour agentic workflows with computer use. The deep work engine.' %}
+  </div>
+
+  {% include components/takeaway.html text='Most calls are routine. Some calls need frontier quality. A few calls need autonomous depth. Optimize for the actual distribution of tasks in production.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='What they got right' title='Four Things DeepSeek Got Right' sub='Infrastructure, not just marketing. The pricing math is impossible to ignore.' %}
+
+  <div class='grid grid-2'>
+    {% include components/card.html icon='check-circle' title='1M context is routine' desc='Not a premium feature. Not a separate tier. The default. Loading a full codebase at 1M tokens costs $0.14 per call on Flash. This changes what you can build.' %}
+    {% include components/card.html icon='check-circle' title='Open-weight can compete' desc='V4-Pro scores within 5-10 points of frontier closed models on most benchmarks at 7-9x lower cost. The gap is real but narrowing fast.' %}
+  </div>
+
+  <div class='grid grid-2 mt-6'>
+    {% include components/card.html icon='check-circle' title='Pricing math is undeniable' desc='For a 500-interaction-per-day agent, GPT-5.5 costs roughly $600/month. DeepSeek V4-Flash costs roughly $8/month. That is not a marginal difference.' %}
+    {% include components/card.html icon='check-circle' title='Shipped infrastructure' desc='Weights on Hugging Face, base models, technical report, API updates, chat interface all in one morning. HN noticed the mismatch between the docs link and the actual payload.' %}
+  </div>
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='What they missed' title='Four Things DeepSeek Got Wrong' sub='Gaps that matter. Safety documentation, multimodality, consumer hardware, and unresolved allegations.' %}
+
+  <div class='grid grid-2'>
+    {% include components/card.html tag='Gap' icon='x-circle' title='No native multimodality' desc='Qwen 3.6 and Kimi K2.6 have it. V4 does not. In 2026, this is a gap that matters for builders who need vision + language in a single model.' %}
+    {% include components.card.html tag='Gap' icon='x-circle' title='Safety documentation is thin' desc='The V4 technical paper contains no reference to safety measures, red-teaming, or AI risk evaluations. US models include extensive safety documentation. The gap is real.' %}
+  </div>
+
+  <div class='grid grid-2 mt-6'>
+    {% include components/card.html tag='Gap' icon='x-circle' title='Flash is too big for consumers' desc='The community wanted a lightweight model for local use. V4-Flash at 160 GB is not that. Google 26B A4B and Qwen 3.6 35B A3B are what the local community wants.' %}
+    {% include components/card.html tag='Gap' icon='x-circle' title='Distillation allegations unresolved' desc='If capabilities reflect, at least in part, access to illicitly obtained US intellectual property, the competitive positioning carries a different risk profile.' %}
+  </div>
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='References' title='Sources' sub='Every claim on this page ties back to a first-party source. No invented numbers.' %}
+
+  <ul class='sources'>
+    {% include components/source.html
+       author='DeepSeek'
+       url='https://api-docs.deepseek.com/'
+       title='DeepSeek API Documentation and Pricing' %}
+    {% include components/source.html
+       author='DeepSeek (HuggingFace)'
+       url='https://huggingface.co/deepseek-ai'
+       title='DeepSeek V4 model weights and technical report' %}
+    {% include components/source.html
+       author='OpenAI'
+       url='https://openai.com/api/pricing/'
+       title='GPT-5.5 API pricing' %}
+    {% include components/source.html
+       author='Anthropic'
+       url='https://www.anthropic.com/pricing'
+       title='Claude Opus 4.7 API pricing' %}
+    {% include components/source.html
+       author='Google Cloud'
+       url='https://cloud.google.com/vertex-ai/generative-ai/pricing'
+       title='Gemini 3.1 Pro pricing' %}
+    {% include components/source.html
+       author='Artificial Analysis'
+       url='https://artificialanalysis.ai/'
+       title='AA Intelligence Index and model comparisons' %}
+    {% include components/source.html
+       author='Neo Research'
+       url='https://neoresearch.ai/'
+       title='DeepSeek V4 Pro safety evaluation' %}
+    {% include components/source.html
+       author='Feroot Security'
+       url='https://feroot.com/'
+       title='Hidden code analysis in DeepSeek web application' %}
+    {% include components/source.html
+       author='Simon Willison'
+       url='https://simonwillison.net/'
+       title='Day-of writeup on V4-Pro weights and architecture' %}
+    {% include components/source.html
+       author='NIST'
+       url='https://www.nist.gov/'
+       title='DeepSeek jailbreak response rate analysis' %}
+  </ul>
+
+  {% include components/prose-center.html small=true text='Last updated July 27, 2026. Pricing pulled from first-party pricing pages. Benchmark scores from first-party reports and independent evaluations.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='READ NEXT' title='The Official V4 Launch' sub='The preview was the beginning. The official stable launch in July changes everything: peak-valley pricing, DSpark speed boost, and the legacy API deadline.' %}
+
+  <div class='grid grid-2'>
+    {% include components/card.html tag='NEXT POST' icon='arrow-right' title='DeepSeek V4 Official Launch: Everything We Know' desc='Peak-valley pricing (2x during business hours), DSpark 85% inference speed boost, legacy API retirement on July 24. The preview graduates to production.' %}
+    {% include components/card.html tag='RELATED' icon='bar-chart' title='GLM 5.2 Cost Breakdown' desc='How Zhipu GLM 5.2 compares on pricing and benchmarks. The other major open-weight contender in the frontier race.' %}
+  </div>
+
+  {% include components/prose-center.html text='This post covers the initial V4 preview release and benchmark analysis. For the latest on the official stable launch, peak-valley pricing, and DSpark, read our <a href="/deepseek-v4-official-launch/">complete July launch breakdown</a>.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='BUILT WITH' title='Produced Using SpielOS' sub='This post was researched, drafted, and published using the SpielOS content pipeline — an open-source content engine that turns sessions into strategy.' %}
+
+  <div class='grid grid-2'>
+    {% include components/card.html icon='cpu' title='SpielOS Content Engine' desc='Automated research, drafting, and publishing pipeline. Transforms raw sessions into structured, SEO-optimized blog posts with full source attribution.' %}
+    {% include components/card.html icon='github' title='Open Source' desc='Built in public. The full pipeline — from research agents to banner generation to Jekyll deployment — is open source and available on GitHub.' %}
+  </div>
+</section>
+
+<hr class='divider'>
+
+{% include components/closer.html
+   icon='rocket'
+   takeaway='The question is not which model is best. It is which model is best for this specific task, at this specific cost, with these specific constraints.'
+   echo='DeepSeek V4 won the economics war. Claude leads on coding. GPT-5.5 leads on agents. DeepSeek forced the question. That is why it matters.'
+%}
+
+<script src='https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js'></script>
+<script>
+(function() {
+  function v(name, fallback) {
+    var s = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    return s || fallback;
+  }
+  var TEXT    = v('--tx',   '#fff');
+  var MUTED   = v('--tx-2', '#b0b0b0');
+  var GRID    = v('--bd',   '#1a1a1a');
+  var BAR_WIN = TEXT;
+  var BAR_2   = v('--tx-2', '#b0b0b0');
+  var BAR_3   = v('--tx-3', '#888');
+  var BAR_4   = v('--tx-4', '#555');
+  var BAR_5   = v('--tx-5', '#333');
+
+  if (typeof Chart === 'undefined') return;
+  Chart.defaults.font.family = "'Inter', -apple-system, system-ui, sans-serif";
+  Chart.defaults.color = MUTED;
+  Chart.defaults.borderColor = GRID;
+  Chart.defaults.plugins.legend.labels.usePointStyle = true;
+
+  /* Chart 1: Cost per 10M output tokens */
+  var costData = [
+    { name: 'V4-Flash',       cost: 2.80,   color: BAR_WIN },
+    { name: 'V4-Pro',         cost: 34.80,  color: BAR_2 },
+    { name: 'Gemini 3.1 Pro', cost: 120.00, color: BAR_3 },
+    { name: 'Claude Opus 4.7', cost: 250.00, color: BAR_4 },
+    { name: 'GPT-5.5',        cost: 300.00, color: BAR_5 },
+  ];
+
+  new Chart(document.getElementById('chart-cost'), {
+    type: 'bar',
+    data: {
+      labels: costData.map(function(c) { return c.name; }),
+      datasets: [{
+        label: 'Cost per 10M output tokens',
+        data: costData.map(function(c) { return c.cost; }),
+        backgroundColor: costData.map(function(c) { return c.color; }),
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      indexAxis: 'y',
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              var cheapest = costData[0].cost;
+              var mult = (ctx.parsed.x / cheapest).toFixed(0);
+              return ctx.parsed.x === cheapest
+                ? '$' + ctx.parsed.x.toFixed(2) + ' \u00b7 cheapest'
+                : '$' + ctx.parsed.x.toFixed(2) + ' (' + mult + '\u00d7 V4-Flash)';
+            }
+          }
+        }
+      },
+      scales: {
+        x: { beginAtZero: true, ticks: { callback: function(val) { return '$' + val; } }, grid: { color: GRID } },
+        y: { grid: { display: false } }
+      }
+    }
+  });
+
+  /* Chart 2: Key benchmark scores (grouped bar) */
+  var benchLabels = ['SWE-bench Verified', 'LiveCodeBench', 'GPQA Diamond', 'Codeforces'];
+  new Chart(document.getElementById('chart-bench'), {
+    type: 'bar',
+    data: {
+      labels: benchLabels,
+      datasets: [
+        {
+          label: 'V4-Pro',
+          data: [80.6, 93.5, 90.1, 94.3],
+          backgroundColor: BAR_WIN,
+          borderRadius: 4,
+        },
+        {
+          label: 'Claude Opus 4.7',
+          data: [87.6, 88.8, 94.2, 0],
+          backgroundColor: BAR_3,
+          borderRadius: 4,
+        },
+        {
+          label: 'GPT-5.5',
+          data: [76.4, 91.2, 93.6, 93.2],
+          backgroundColor: BAR_4,
+          borderRadius: 4,
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'top' },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              if (ctx.dataset.label === 'Claude Opus 4.7' && ctx.parsed.y === 0) return 'Claude Opus 4.7: not published';
+              return ctx.dataset.label + ': ' + ctx.parsed.y;
+            }
+          }
+        }
+      },
+      scales: {
+        y: { beginAtZero: true, max: 100, title: { display: true, text: 'Score (higher = better)', color: MUTED }, grid: { color: GRID } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+})();
+</script>

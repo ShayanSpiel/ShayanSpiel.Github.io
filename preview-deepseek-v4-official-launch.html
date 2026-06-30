@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DeepSeek V4 Official Launch: Everything We Know — Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Merriweather:wght@400;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #000; --bg-1: #0a0a0a; --bg-2: #111; --bg-3: #161616; --bg-4: #1a1a1a;
+      --tx: #fff; --tx-1: #e5e5e5; --tx-2: #b0b0b0; --tx-3: #888; --tx-4: #555; --tx-5: #333;
+      --bd: #1a1a1a; --bd-1: #252525; --bd-2: #333; --bd-focus: #555;
+      --f-h: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --f-b: 'Merriweather', Georgia, serif;
+      --f-m: 'JetBrains Mono', monospace;
+      --fw-regular: 400; --fw-medium: 500; --fw-semibold: 600; --fw-bold: 700; --fw-extrabold: 800; --fw-black: 900;
+      --fs-xs: 11px; --fs-sm: 13px; --fs-base: 16px; --fs-md: 17px; --fs-lg: 18px; --fs-xl: 22px; --fs-2xl: 28px; --fs-3xl: 36px; --fs-4xl: 44px; --fs-5xl: 52px;
+      --lh-tight: 1.05; --lh-snug: 1.15; --lh-normal: 1.5; --lh-body: 1.7;
+      --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px; --s-5: 24px; --s-6: 32px; --s-7: 48px; --s-8: 64px; --s-9: 96px;
+      --r-sm: 6px; --r-md: 8px; --r-lg: 10px; --r-xl: 14px; --r-2xl: 16px; --r-full: 50%;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.3); --shadow-md: 0 4px 12px rgba(0,0,0,0.4); --shadow-lg: 0 8px 24px rgba(0,0,0,0.5);
+      --w: 960px; --w-read: 720px; --nav-h: 56px;
+      --ease: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; background: var(--bg); }
+    body { background: var(--bg); color: var(--tx); font-family: var(--f-b); font-size: var(--fs-base); line-height: var(--lh-body); -webkit-font-smoothing: antialiased; overflow-x: hidden; min-height: 100vh; }
+    img, svg, video { max-width: 100%; height: auto; display: block; }
+    ::selection { background: var(--bd-2); color: var(--tx); }
+    h1, h2, h3, h4, h5, h6 { font-family: var(--f-h); font-weight: var(--fw-extrabold); line-height: var(--lh-snug); letter-spacing: -0.025em; color: var(--tx); text-wrap: balance; }
+    h1 { font-size: clamp(var(--fs-2xl), 5vw, var(--fs-5xl)); letter-spacing: -0.045em; line-height: var(--lh-tight); }
+    h2 { font-size: clamp(var(--fs-xl), 3.5vw, var(--fs-3xl)); letter-spacing: -0.035em; }
+    h3 { font-size: clamp(var(--fs-lg), 2.5vw, var(--fs-xl)); font-weight: var(--fw-bold); }
+    p { margin: 1em 0; }
+    p:first-child { margin-top: 0; }
+    strong, b { font-weight: var(--fw-bold); }
+    em, i { font-style: italic; }
+    small, .small { font-size: var(--fs-sm); }
+    .lede { font-family: var(--f-h); font-size: var(--fs-md); font-weight: var(--fw-regular); line-height: var(--lh-normal); color: var(--tx-2); }
+    .muted { color: var(--tx-2); }
+    a { color: var(--tx); text-decoration: underline; text-underline-offset: 2px; text-decoration-thickness: 1px; text-decoration-color: var(--bd-1); transition: color 0.15s var(--ease), text-decoration-color 0.15s var(--ease); }
+    a:hover { color: var(--tx-1); text-decoration-color: var(--tx-3); }
+    hr { width: 100%; border: 0; height: 1px; background: var(--bd); margin: var(--s-7) 0; }
+    ul, ol { padding: 0; margin: 0; list-style: none; }
+    code, kbd { font-family: var(--f-m); background: var(--bg-2); padding: 0.15em 0.4em; border-radius: var(--r-sm); font-size: 0.88em; }
+    table { margin: 1.5em 0 2em; width: 100%; border-collapse: collapse; font-size: 14px; }
+    th, td { text-align: left; padding: 0.6em 1em 0.6em 0; line-height: 1.4; border-bottom: 1px solid var(--bd); }
+    th { font-weight: var(--fw-semibold); color: var(--tx); border-bottom-color: var(--bd-1); }
+    blockquote { padding: 0.25em 0 0.25em 1.5em; margin: 1.5em 0; border-left: 3px solid var(--tx-3); font-style: italic; color: var(--tx-2); }
+
+    .wrap { max-width: var(--w); margin: 0 auto; padding: 0 var(--s-5); }
+    .page { min-height: calc(100vh - var(--nav-h)); padding-bottom: var(--s-9); }
+    main { display: block; padding-top: var(--nav-h); }
+
+    .preview-banner { position: fixed; top: 0; left: 0; right: 0; z-index: 200; background: #fbbf24; color: #000; text-align: center; padding: 6px; font-family: var(--f-h); font-size: 13px; font-weight: var(--fw-semibold); letter-spacing: 0.02em; }
+
+    .nav { position: sticky; top: 32px; z-index: 100; background: rgba(0,0,0,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--bd); }
+    .nav-inner { max-width: var(--w); margin: 0 auto; padding: 0 var(--s-5); display: flex; align-items: center; height: var(--nav-h); gap: var(--s-5); }
+    .nav-brand { display: flex; align-items: center; text-decoration: none; color: var(--tx); margin-right: auto; font-family: var(--f-h); font-weight: var(--fw-bold); font-size: var(--fs-lg); letter-spacing: -0.03em; }
+    .nav-links { display: flex; align-items: center; gap: var(--s-5); font-family: var(--f-h); font-size: 14px; }
+    .nav-links a { color: var(--tx-2); text-decoration: none; font-weight: var(--fw-medium); }
+    .nav-links a:hover { color: var(--tx); }
+
+    .breadcrumb { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2); font-size: var(--fs-sm); color: var(--tx-3); font-family: var(--f-h); margin-bottom: var(--s-5); padding-top: var(--s-5); justify-content: center; }
+    .breadcrumb a { color: var(--tx-3); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--tx); text-decoration: underline; }
+    .breadcrumb .sep { color: var(--tx-4); user-select: none; }
+    .breadcrumb .current { color: var(--tx-1); font-weight: var(--fw-medium); }
+
+    .post-shell { max-width: var(--w); margin: 0 auto; padding: 0 var(--s-5); }
+    .post-shell h1 { font-family: var(--f-h); font-size: clamp(38px, 5.5vw, 68px); font-weight: var(--fw-black); letter-spacing: -0.05em; line-height: 1.05; margin: 0 0 var(--s-4); text-align: center; background: linear-gradient(180deg, #fff 0%, #888 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-wrap: balance; }
+    .post-shell .lede { font-family: var(--f-h); font-size: var(--fs-lg); color: var(--tx-2); margin: 0 auto var(--s-6); line-height: 1.5; max-width: 60ch; text-align: center; }
+    .post-shell .hero:first-child { text-align: center; padding: var(--s-6) 0 var(--s-5); }
+
+    .post-meta { color: var(--tx-2); font-size: var(--fs-sm); font-family: var(--f-h); display: flex; align-items: center; gap: var(--s-2); flex-wrap: wrap; margin: 0 0 var(--s-5); justify-content: center; }
+    .post-category-label { font-weight: var(--fw-semibold); color: var(--tx); text-transform: uppercase; letter-spacing: 0.04em; font-size: var(--fs-xs); }
+
+    .section { padding: var(--s-6) 0; }
+    .section-head { text-align: center; margin-bottom: var(--s-5); }
+    .section-tag { font-family: var(--f-h); font-size: var(--fs-xs); font-weight: var(--fw-semibold); letter-spacing: 0.1em; text-transform: uppercase; color: var(--tx-3); margin-bottom: var(--s-3); }
+    .section-title { font-size: clamp(var(--fs-xl), 3.5vw, var(--fs-3xl)); font-weight: var(--fw-black); letter-spacing: -0.035em; line-height: var(--lh-snug); margin-bottom: var(--s-3); background: linear-gradient(180deg, #fff 0%, #666 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .section-sub { font-size: 15px; color: var(--tx-2); line-height: 1.7; max-width: 640px; margin: 0 auto; text-align: center; }
+
+    .grid { display: grid; gap: var(--s-4); }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    @media (max-width: 768px) { .grid-3, .grid-2 { grid-template-columns: 1fr; } }
+
+    .card { background: var(--bg-1); border: 1px solid var(--bd); border-radius: var(--r-xl); padding: var(--s-5) 28px; transition: border-color 0.25s var(--ease), transform 0.25s var(--ease); text-decoration: none; color: inherit; display: flex; flex-direction: column; }
+    .card:hover { border-color: var(--bd-1); transform: translateY(-2px); }
+    .card-tag { font-family: var(--f-h); font-size: var(--fs-xs); font-weight: var(--fw-semibold); letter-spacing: 0.08em; text-transform: uppercase; color: var(--tx-3); margin-bottom: var(--s-3); }
+    .card-icon { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: var(--r-md); background: var(--bg-2); border: 1px solid var(--bd); color: var(--tx-1); margin-bottom: var(--s-3); }
+    .card-title { font-family: var(--f-h); font-size: var(--fs-lg); font-weight: var(--fw-extrabold); letter-spacing: -0.02em; margin-bottom: var(--s-2); color: var(--tx); }
+    .card-desc { font-size: var(--fs-sm); color: var(--tx-2); line-height: 1.65; margin: 0; flex: 1; }
+
+    .card.stat-shift { text-align: center; }
+    .stat-shift-head { display: flex; align-items: center; justify-content: center; gap: var(--s-3); margin-bottom: var(--s-4); }
+    .stat-shift-icon { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: var(--r-md); background: var(--bg-2); border: 1px solid var(--bd); color: var(--tx-1); flex-shrink: 0; }
+    .stat-shift-num { font-family: var(--f-h); font-size: var(--fs-4xl); font-weight: var(--fw-extrabold); letter-spacing: -0.05em; line-height: 1; background: linear-gradient(180deg, #fff 0%, #666 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+    .prose-center { max-width: 60ch; margin: var(--s-4) auto; color: var(--tx-1); text-align: center; font-size: var(--fs-md); line-height: var(--lh-body); }
+    .prose-center.small { color: var(--tx-3); font-size: var(--fs-sm); }
+
+    .takeaway { max-width: 60ch; margin: var(--s-5) auto 0; text-align: center; font-family: var(--f-h); font-size: var(--fs-base); font-weight: var(--fw-regular); color: var(--tx-1); line-height: 1.6; letter-spacing: -0.005em; }
+    .takeaway-icon { color: var(--tx-3); vertical-align: -0.15em; margin-right: 6px; }
+
+    .step-list { max-width: 640px; margin: var(--s-5) auto; display: flex; flex-direction: column; gap: var(--s-3); }
+    .step-item { display: grid; grid-template-columns: 56px 1fr; gap: var(--s-4); padding: var(--s-4) var(--s-5); background: var(--bg-1); border: 1px solid var(--bd); border-radius: var(--r-xl); align-items: start; transition: border-color 0.2s var(--ease); }
+    .step-item:hover { border-color: var(--bd-1); }
+    .step-num { font-family: var(--f-h); font-size: var(--fs-xl); font-weight: var(--fw-extrabold); color: var(--tx-3); letter-spacing: -0.02em; text-align: center; line-height: 1; }
+    .step-body { font-size: var(--fs-sm); color: var(--tx-2); line-height: 1.6; }
+    .step-body strong { display: block; color: var(--tx); font-family: var(--f-h); font-size: var(--fs-base); font-weight: var(--fw-semibold); margin-bottom: 2px; letter-spacing: -0.01em; }
+
+    .pullquote { max-width: 60ch; margin: var(--s-7) auto; padding: 0; text-align: center; font-style: normal; }
+    .pullquote-mark { width: 24px; height: 1px; background: var(--tx-4); margin: 0 auto var(--s-5); }
+    .pullquote-text { display: block; font-family: var(--f-h); font-size: var(--fs-xl); font-weight: var(--fw-medium); line-height: 1.45; letter-spacing: -0.015em; color: var(--tx); margin: 0; text-wrap: balance; font-style: normal; }
+    .pullquote-attribution { display: block; margin-top: var(--s-4); font-family: var(--f-h); font-size: var(--fs-sm); font-weight: var(--fw-regular); color: var(--tx-3); letter-spacing: 0.04em; }
+
+    .data-table { width: 100%; margin-top: var(--s-3); background: var(--bg-1); border: 1px solid var(--bd); border-radius: var(--r-xl); border-collapse: separate; border-spacing: 0; overflow: hidden; font-size: var(--fs-sm); }
+    .data-table thead th { font-family: var(--f-h); font-size: var(--fs-xs); font-weight: var(--fw-semibold); letter-spacing: 0.04em; text-transform: uppercase; color: var(--tx-3); background: var(--bg-2); padding: var(--s-3) var(--s-4); border-bottom: 1px solid var(--bd); text-align: left; }
+    .data-table tbody td { padding: var(--s-3) var(--s-4); color: var(--tx-2); border-bottom: 1px solid var(--bd); text-align: left; line-height: var(--lh-normal); }
+    .data-table tbody tr:last-child td { border-bottom: none; }
+    .data-table tr.highlight td:first-child { color: var(--tx); font-weight: var(--fw-bold); }
+    .data-table tr.highlight td.num { color: var(--tx); font-weight: var(--fw-bold); }
+    .data-table td.num { padding-right: var(--s-4); text-align: right; }
+    .data-table th.num { text-align: right; }
+    .data-table caption { caption-side: bottom; font-family: var(--f-h); font-size: var(--fs-xs); color: var(--tx-3); text-align: center; padding: var(--s-3) var(--s-4); border-top: 1px solid var(--bd); }
+
+    .chart-box { position: relative; width: 100%; height: 380px; }
+    .chart-box.short { height: 280px; }
+
+    .sources { list-style: none; padding: 0; margin: var(--s-5) auto; max-width: 60ch; text-align: center; }
+    .source { margin: 0 0 var(--s-4); padding: 0; }
+    .source:last-child { margin-bottom: 0; }
+    .source-author { display: block; font-family: var(--f-h); font-size: var(--fs-xs); font-weight: var(--fw-bold); text-transform: uppercase; letter-spacing: 0.08em; color: var(--tx-3); margin-bottom: 6px; }
+    .source a { color: var(--tx-1); text-decoration: none; border-bottom: 1px solid var(--bd-1); padding-bottom: 1px; transition: color 0.15s var(--ease), border-color 0.15s var(--ease); }
+    .source a:hover { color: var(--tx); border-bottom-color: var(--tx-3); }
+
+    .closer { text-align: center; padding: var(--s-7) var(--s-5); margin: var(--s-7) auto var(--s-6); max-width: 60ch; }
+    .closer-icon-wrap { display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 56px; border-radius: var(--r-full); background: var(--bg-1); border: 1px solid var(--bd); margin-bottom: var(--s-5); }
+    .closer-icon { color: var(--tx-1); }
+    .closer-takeaway { font-family: var(--f-h); font-size: clamp(var(--fs-xl), 3vw, var(--fs-3xl)); font-weight: var(--fw-bold); letter-spacing: -0.025em; line-height: 1.15; margin: 0 0 var(--s-3); background: linear-gradient(180deg, #fff 0%, #888 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-wrap: balance; }
+    .closer-echo { font-family: var(--f-h); font-size: var(--fs-base); color: var(--tx-2); margin: 0 auto var(--s-5); line-height: 1.6; max-width: 50ch; }
+
+    .icon { display: inline-block; vertical-align: -0.125em; flex-shrink: 0; }
+    .mt-6 { margin-top: var(--s-6); }
+
+    .divider { height: 1px; background: var(--bd); margin: 0; border: 0; }
+  </style>
+</head>
+<body class="page">
+
+<div class="preview-banner">PREVIEW — This is a local preview of the blog post. Not deployed.</div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="#">Shayan Spiel</a>
+    <div class="nav-links">
+      <a href="#">About</a>
+      <a href="#">Blog</a>
+      <a href="#">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<main id="main-content">
+  <article class="post-shell">
+
+    <nav class="breadcrumb">
+      <a href="#">Home</a>
+      <span class="sep" aria-hidden="true">&middot;</span>
+      <a href="#">Blog</a>
+      <span class="sep" aria-hidden="true">&middot;</span>
+      <span class="current">DeepSeek V4 Official Launch</span>
+    </nav>
+
+    <section class="hero">
+      <h1>The Real DeepSeek V4 Launches in July</h1>
+      <p class="lede">The preview is over. DeepSeek confirmed the official stable V4 launch for mid-July 2026, with peak-valley pricing, a massive inference speed boost, and the hard retirement of every legacy API endpoint.</p>
+    </section>
+
+    <div class="post-meta">
+      <a class="post-category-label">AI &amp; Agents</a>
+      <span>&middot;</span>
+      <time>Jul 1, 2026</time>
+      <span>&middot;</span>
+      <span>Shayan Spiel</span>
+    </div>
+
+    <hr class="divider">
+
+    <!-- TIMELINE -->
+    <section class="section">
+      <div class="section-head">
+        <div class="section-tag">THE TIMELINE</div>
+        <h2 class="section-title">Preview to Official: What Changes in July</h2>
+        <p class="section-sub">April 24 was the preview. Mid-July is the real launch. Two months of production usage, now graduating to stable.</p>
+      </div>
+
+      <div class="grid grid-3">
+        <div class="card stat-shift">
+          <div class="stat-shift-head">
+            <div class="stat-shift-icon"><svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+            <div class="stat-shift-num">Apr 24</div>
+          </div>
+          <div class="card-tag">PREVIEW SHIPPED</div>
+          <h3 class="card-title">V4-Pro and V4-Flash released</h3>
+          <p class="card-desc">Preview under MIT license. Open weights, 1M context, production-ready API.</p>
+        </div>
+        <div class="card stat-shift">
+          <div class="stat-shift-head">
+            <div class="stat-shift-icon"><svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+            <div class="stat-shift-num">Jul ~15</div>
+          </div>
+          <div class="card-tag">OFFICIAL LAUNCH</div>
+          <h3 class="card-title">Stable V4 version</h3>
+          <p class="card-desc">Functional enhancements, performance gains. Peak-valley pricing activates.</p>
+        </div>
+        <div class="card stat-shift">
+          <div class="stat-shift-head">
+            <div class="stat-shift-icon"><svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></div>
+            <div class="stat-shift-num">Jul 24</div>
+          </div>
+          <div class="card-tag">LEGACY RETIRED</div>
+          <h3 class="card-title">Endpoints fail at 15:59 UTC</h3>
+          <p class="card-desc">deepseek-chat and deepseek-reasoner fully retired. No extensions.</p>
+        </div>
+      </div>
+
+      <p class="prose-center">DeepSeek confirmed on <strong>June 29, 2026</strong> that the official V4 version ships in <strong>mid-July</strong>. This is not a point release. The official version brings functional enhancements, performance gains, and a new pricing model that changes the economics of peak-hour API usage.</p>
+
+      <p class="takeaway"><svg class="icon takeaway-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg><span class="takeaway-text">If you are still on deepseek-chat or deepseek-reasoner, you have 24 days to migrate. The legacy endpoints will not survive July 24.</span></p>
+    </section>
+
+    <hr class="divider">
+
+    <!-- PEAK-VALLEY PRICING -->
+    <section class="section">
+      <div class="section-head">
+        <div class="section-tag">THE PRICING</div>
+        <h2 class="section-title">Peak-Valley Pricing: 2x During Business Hours</h2>
+        <p class="section-sub">DeepSeek is introducing time-of-day pricing. Peak hours cost double. Off-peak stays the same.</p>
+      </div>
+
+      <table class="data-table">
+        <thead>
+          <tr><th>Model</th><th class="num">Off-Peak Input</th><th class="num">Off-Peak Output</th><th class="num">Peak Input</th><th class="num">Peak Output</th></tr>
+        </thead>
+        <tbody>
+          <tr class="highlight"><td>DeepSeek V4-Flash</td><td class="num">$0.14</td><td class="num">$0.28</td><td class="num">$0.28</td><td class="num">$0.56</td></tr>
+          <tr class="highlight"><td>DeepSeek V4-Pro</td><td class="num">$0.435</td><td class="num">$0.87</td><td class="num">$0.87</td><td class="num">$1.74</td></tr>
+          <tr><td>Claude Opus 4.7</td><td class="num" colspan="2" style="text-align:center">$5.00 / $25.00</td><td class="num" colspan="2" style="text-align:center">$5.00 / $25.00</td></tr>
+          <tr><td>GPT-5.5</td><td class="num" colspan="2" style="text-align:center">$5.00 / $30.00</td><td class="num" colspan="2" style="text-align:center">$5.00 / $30.00</td></tr>
+        </tbody>
+        <caption>Peak hours: 9am-12pm and 2pm-6pm daily. Even at peak pricing, V4-Flash output is 44-53x cheaper than GPT-5.5.</caption>
+      </table>
+
+      <div class="card mt-6">
+        <h3 class="card-title">Cost per 10M output tokens</h3>
+        <p class="card-desc">Even at double price, DeepSeek V4 remains dramatically cheaper than closed alternatives.</p>
+        <div class="chart-box"><canvas id="chart-peak-valley"></canvas></div>
+      </div>
+
+      <p class="prose-center">DeepSeek says the peak-valley mechanism is designed to optimize resource allocation and enhance service stability. During peak hours (9am-12pm, 2pm-6pm daily), API prices double. Off-peak rates remain at current levels. <strong>Even at peak pricing, V4-Flash output ($0.56/M) is 53x cheaper than GPT-5.5 ($30/M).</strong></p>
+
+      <p class="prose-center">The strategic implication: batch processing, async workloads, and overnight inference jobs can run at the current rate. Real-time interactive usage during business hours absorbs the premium. This is load management, not price gouging.</p>
+    </section>
+
+    <hr class="divider">
+
+    <!-- DSPARK -->
+    <section class="section">
+      <div class="section-head">
+        <div class="section-tag">DSPARK</div>
+        <h2 class="section-title">DSpark: 85% Faster Generation, Now Live</h2>
+        <p class="section-sub">DeepSeek and Peking University shipped an inference acceleration framework. Single-user generation speeds jumped 57-85%.</p>
+      </div>
+
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-icon"><svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+          <h3 class="card-title">V4-Flash: 60-85% faster</h3>
+          <p class="card-desc">DSpark deployment boosts single-user generation speeds for V4-Flash by 60% to 85%. Validated in live production services.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon"><svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+          <h3 class="card-title">V4-Pro: 57-78% faster</h3>
+          <p class="card-desc">V4-Pro sees 57-78% speed improvements. DeepSpec speculative decoding toolchain open-sourced alongside DSpark.</p>
+        </div>
+      </div>
+
+      <p class="prose-center">On June 27, DeepSeek collaborated with Peking University to release DSpark, an inference acceleration framework, and simultaneously open-sourced DeepSpec, a full-stack speculative decoding toolchain. The research paper, authored by DeepSeek founder Liang Wenfeng, has been uploaded to public code repositories.</p>
+
+      <p class="prose-center">This is DeepSeek's first major open-source technical release following its <strong>$69 billion funding round</strong>. The benchmarks are not theoretical: DSpark has been fully deployed across online services and validated in production.</p>
+
+      <p class="takeaway"><svg class="icon takeaway-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg><span class="takeaway-text">DSpark means the July launch ships faster than the preview. The inference speed improvement is not incremental. It changes the real-time interaction quality.</span></p>
+    </section>
+
+    <hr class="divider">
+
+    <!-- BENCHMARKS -->
+    <section class="section">
+      <div class="section-head">
+        <div class="section-tag">BENCHMARKS</div>
+        <h2 class="section-title">How V4 Stacks Up Against the Frontier</h2>
+        <p class="section-sub">Preview benchmarks are strong. The official version should close further gaps. Here is the current picture.</p>
+      </div>
+
+      <table class="data-table">
+        <thead>
+          <tr><th>Benchmark</th><th class="num">V4-Pro Max</th><th class="num">Claude Opus 4.7</th><th class="num">GPT-5.5</th><th class="num">Gemini 3.1 Pro</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>SWE-bench Verified</td><td class="num">80.6%</td><td class="num" style="color:var(--tx);font-weight:600">87.6%</td><td class="num">76.4%</td><td class="num">80.6%</td></tr>
+          <tr><td>SWE-bench Pro</td><td class="num">55.4%</td><td class="num" style="color:var(--tx);font-weight:600">64.3%</td><td class="num">58.6%</td><td class="num">54.2%</td></tr>
+          <tr><td>LiveCodeBench</td><td class="num" style="color:var(--tx);font-weight:600">93.5</td><td class="num">88.8</td><td class="num">91.2</td><td class="num">91.7</td></tr>
+          <tr><td>Codeforces Rating</td><td class="num" style="color:var(--tx);font-weight:600">3206</td><td class="num">&mdash;</td><td class="num">3168</td><td class="num">3052</td></tr>
+          <tr><td>GPQA Diamond</td><td class="num">90.1</td><td class="num">94.2</td><td class="num">93.6</td><td class="num" style="color:var(--tx);font-weight:600">94.3</td></tr>
+          <tr><td>MATH-500</td><td class="num" style="color:var(--tx);font-weight:600">96.1%</td><td class="num">94.5%</td><td class="num">&mdash;</td><td class="num">93.4%</td></tr>
+          <tr><td>Terminal-Bench 2.0</td><td class="num">67.9%</td><td class="num">69.4%</td><td class="num" style="color:var(--tx);font-weight:600">82.7%</td><td class="num">68.5%</td></tr>
+          <tr><td>Putnam-2025</td><td class="num" style="color:var(--tx);font-weight:600">120/120</td><td class="num">&mdash;</td><td class="num">&mdash;</td><td class="num">&mdash;</td></tr>
+          <tr><td>MRCR 1M</td><td class="num">83.5</td><td class="num" style="color:var(--tx);font-weight:600">92.9</td><td class="num">&mdash;</td><td class="num">76.3</td></tr>
+        </tbody>
+        <caption>Benchmark scores from first-party reports and independent evaluations. Bold = category leader.</caption>
+      </table>
+
+      <div class="card mt-6">
+        <h3 class="card-title">Key benchmark positioning</h3>
+        <p class="card-desc">V4 leads on competitive programming and math. Claude leads on real-world coding. GPT-5.5 leads on agentic tasks. No single model dominates.</p>
+        <div class="chart-box"><canvas id="chart-benchmarks"></canvas></div>
+      </div>
+
+      <p class="prose-center"><strong>V4-Pro leads on competitive programming and math.</strong> Codeforces rating of 3206 (highest ever AI), LiveCodeBench at 93.5, Putnam-2025 at a perfect 120/120.</p>
+
+      <p class="prose-center"><strong>Claude Opus 4.7 dominates real-world software engineering.</strong> 87.6% on SWE-bench Verified, 64.3% on SWE-bench Pro. Its self-verification behavior makes it the strongest choice for production code changes.</p>
+
+      <p class="prose-center"><strong>GPT-5.5 wins on autonomous agent workflows.</strong> 82.7% on Terminal-Bench 2.0, roughly 15 points ahead of V4-Pro.</p>
+    </section>
+
+    <hr class="divider">
+
+    <!-- MATH REASONING -->
+    <section class="section">
+      <div class="section-head">
+        <div class="section-tag">MATH</div>
+        <h2 class="section-title">Mathematical Reasoning: Where V4 Dominates</h2>
+        <p class="section-sub">Formal math is one place V4 clearly stretches past the field. Perfect scores where competitors fall short.</p>
+      </div>
+
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-icon"><svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+          <h3 class="card-title">Putnam-2025: 120/120</h3>
+          <p class="card-desc">Proof-perfect score, tying Axiom and ahead of Aristotle (100/120) and Seed-1.5-Prover (110/120). The hardest formal math benchmark.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon"><svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+          <h3 class="card-title">Putnam-200 Pass@8: 81.0</h3>
+          <p class="card-desc">Compared to 35.5 for Seed-2.0-Pro, 26.5 for Gemini-3-Pro, and 26.5 for Seed-1.5-Prover. A 2.3x lead over the next competitor.</p>
+        </div>
+      </div>
+
+      <div class="grid grid-2 mt-6">
+        <div class="card">
+          <div class="card-icon"><svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+          <h3 class="card-title">HMMT 2026 Feb: 95.2</h3>
+          <p class="card-desc">Within range of GPT-5.4 (97.7) and ahead of Gemini 3.1 Pro. Competition math at near-frontier level.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon"><svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+          <h3 class="card-title">IMOAnswerBench: 89.8</h3>
+          <p class="card-desc">Ahead of Gemini 3.1 Pro and approaching GPT-5.4 (91.4). International math olympiad level reasoning.</p>
+        </div>
+      </div>
+
+      <p class="takeaway"><svg class="icon takeaway-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg><span class="takeaway-text">For math-heavy workloads, V4-Pro at 1/9th the cost of GPT-5.5 delivers comparable results. The Putnam perfect score is a signal that formal reasoning has reached a new tier.</span></p>
+    </section>
+
+    <hr class="divider">
+
+    <!-- COMMUNITY -->
+    <section class="section">
+      <div class="section-head">
+        <div class="section-tag">COMMUNITY</div>
+        <h2 class="section-title">Top X Posts, Reddit Threads, and Buzz</h2>
+        <p class="section-sub">The AI community reacted across X, Reddit, HuggingFace, Hacker News, and NVIDIA Forums.</p>
+      </div>
+
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-tag">X / TWITTER</div>
+          <div class="card-icon"><svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          <h3 class="card-title">Official announcement went viral</h3>
+          <p class="card-desc">DeepSeek's official tweet: "DeepSeek-V4 Preview is officially live &amp; open-sourced!" V4-Pro: 1.6T total / 49B active. V4-Flash: 284B total / 13B active. Thousands of retweets.</p>
+        </div>
+        <div class="card">
+          <div class="card-tag">R/LOCALLLAMA</div>
+          <div class="card-icon"><svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/></svg></div>
+          <h3 class="card-title">Architecture deep-dive</h3>
+          <p class="card-desc">Top thread: "Takeaways &amp; discussion about the DeepSeek V4 architecture" — analyzing CSA+HCA, mHC, and FP4 QAT. Community praised the architecture innovations.</p>
+        </div>
+      </div>
+
+      <div class="grid grid-2 mt-6">
+        <div class="card">
+          <div class="card-tag">NVIDIA FORUMS</div>
+          <div class="card-icon"><svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"/><rect x="9" y="9" width="6" height="6"/></svg></div>
+          <h3 class="card-title">1M context on DGX Spark</h3>
+          <p class="card-desc">The "Aiden Recipe" thread: community deployed V4-Flash at full 1M context across two DGX Spark nodes. 30-45 tok/s decode, zero fabric delays, 89/100 tool-calling.</p>
+        </div>
+        <div class="card">
+          <div class="card-tag">HACKER NEWS</div>
+          <div class="card-icon"><svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg></div>
+          <h3 class="card-title">The weights were the story</h3>
+          <p class="card-desc">HN noticed the launch link pointed to API docs, not a glossy page. The real payload was 865 GB of weights. DeepSeek shipped something operationally real.</p>
+        </div>
+      </div>
+
+      <div class="grid grid-2 mt-6">
+        <div class="card">
+          <div class="card-tag">HUGGINGFACE</div>
+          <div class="card-icon"><svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+          <h3 class="card-title">123K+ downloads in days</h3>
+          <p class="card-desc">Community split between "I am so shocked" and "I am very disappointed." Critics flagged no native multimodality and Flash being too big for consumer hardware.</p>
+        </div>
+        <div class="card">
+          <div class="card-tag">COST SAVINGS</div>
+          <div class="card-icon"><svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+          <h3 class="card-title">99% cost reduction stories</h3>
+          <p class="card-desc">"I cut my AI API costs 99% by switching from Claude to DeepSeek" — real practitioner outcomes. "V4 Pro at 5% the cost of Claude" as structural cost advantage.</p>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- LEGACY RETIREMENT -->
+    <section class="section">
+      <div class="section-head">
+        <div class="section-tag">LEGACY</div>
+        <h2 class="section-title">The July 24 Deadline</h2>
+        <p class="section-sub">If you use deepseek-chat or deepseek-reasoner, you have 24 days to migrate.</p>
+      </div>
+
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-tag">HARD DEADLINE</div>
+          <div class="card-icon"><svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></div>
+          <h3 class="card-title">July 24, 2026 at 15:59 UTC</h3>
+          <p class="card-desc">After this moment, requests using deepseek-chat or deepseek-reasoner fail. "Fully retired and inaccessible." No announced extension.</p>
+        </div>
+        <div class="card">
+          <div class="card-tag">MIGRATION PATH</div>
+          <div class="card-icon"><svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+          <h3 class="card-title">Switch to deepseek-v4-pro or v4-flash</h3>
+          <p class="card-desc">Until the deadline, legacy aliases route to V4-Flash. Change the model parameter. The API base URL stays the same.</p>
+        </div>
+      </div>
+
+      <p class="prose-center">The migration is straightforward: change <code>deepseek-chat</code> to <code>deepseek-v4-flash</code>, or <code>deepseek-reasoner</code> to <code>deepseek-v4-pro</code>. Both OpenAI ChatCompletions and Anthropic API formats are supported.</p>
+    </section>
+
+    <hr class="divider">
+
+    <!-- WHAT TO EXPECT -->
+    <section class="section">
+      <div class="section-head">
+        <div class="section-tag">WHAT TO EXPECT</div>
+        <h2 class="section-title">What the Official V4 Launch Should Bring</h2>
+        <p class="section-sub">Based on DeepSeek statements and the preview-to-stable pattern, here is what changes in mid-July.</p>
+      </div>
+
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-icon"><svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+          <h3 class="card-title">Performance improvements</h3>
+          <p class="card-desc">DeepSeek confirmed "further functional enhancements and performance gains." The preview was already competitive with frontier models.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon"><svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+          <h3 class="card-title">Peak-valley pricing activates</h3>
+          <p class="card-desc">Time-of-day pricing kicks in. Batch and async workloads benefit from off-peak rates. Real-time usage absorbs the premium.</p>
+        </div>
+      </div>
+
+      <div class="grid grid-2 mt-6">
+        <div class="card">
+          <div class="card-icon"><svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+          <h3 class="card-title">DSpark inference acceleration</h3>
+          <p class="card-desc">The 60-85% speed boost should be fully integrated. Single-user generation speeds improve dramatically.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon"><svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></div>
+          <h3 class="card-title">Possible multimodal hints</h3>
+          <p class="card-desc">Vision capabilities appeared in test interfaces but remain unverified. DeepSeek has not confirmed multimodal for the official launch.</p>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- SOURCES -->
+    <section class="section">
+      <div class="section-head">
+        <div class="section-tag">REFERENCES</div>
+        <h2 class="section-title">Sources</h2>
+        <p class="section-sub">Every claim ties back to a first-party or verified source.</p>
+      </div>
+
+      <ul class="sources">
+        <li class="source"><span class="source-author">DeepSeek</span><a href="https://api-docs.deepseek.com/news/news260424" target="_blank" rel="noopener">DeepSeek V4 Preview Official Announcement</a></li>
+        <li class="source"><span class="source-author">DeepSeek (HuggingFace)</span><a href="https://huggingface.co/deepseek-ai" target="_blank" rel="noopener">DeepSeek V4 model weights, model cards, and technical report</a></li>
+        <li class="source"><span class="source-author">Macrostream</span><a href="https://www.macrostream.ai/articles/6a4253eb3c80f748cb620ef3" target="_blank" rel="noopener">DeepSeek V4 Set for Mid-July Launch as Peak-Valley API Pricing Takes Effect</a></li>
+        <li class="source"><span class="source-author">Edgen Tech</span><a href="https://edgen.beta.edgen.tech/news/post/deepseek-v4-official-version-to-launch-in-july-with-2x-peak-pricing" target="_blank" rel="noopener">DeepSeek V4 official version to launch in July with 2x peak pricing</a></li>
+        <li class="source"><span class="source-author">Heise Online</span><a href="https://www.heise.de/en/news/AI-Model-DeepSeek-v4-New-Generation-with-1-6-Trillion-Parameters-11271628.html" target="_blank" rel="noopener">AI Model DeepSeek v4: New Generation with 1.6 Trillion Parameters</a></li>
+        <li class="source"><span class="source-author">Lambda AI</span><a href="https://lambda.ai/blog/deepseek-v4-the-most-expected-open-source-model" target="_blank" rel="noopener">DeepSeek V4: the most expected open-source model ever released</a></li>
+        <li class="source"><span class="source-author">BenchLM</span><a href="https://benchlm.ai/blog/posts/deepseek-v4-vs-claude-opus-4-7-vs-gpt-5-5" target="_blank" rel="noopener">DeepSeek V4 Pro vs Claude Opus 4.7 vs GPT-5.5</a></li>
+        <li class="source"><span class="source-author">r/LocalLLaMA</span><a href="https://www.reddit.com/r/LocalLLaMA/comments/1subuve/" target="_blank" rel="noopener">Takeaways &amp; discussion about the DeepSeek V4 architecture</a></li>
+        <li class="source"><span class="source-author">NVIDIA Forums</span><a href="https://forums.developer.nvidia.com/t/372268" target="_blank" rel="noopener">DeepSeek V4 Flash: 1M token session on DGX Spark</a></li>
+        <li class="source"><span class="source-author">CodersEra</span><a href="https://codersera.com/blog/deepseek-v4-release-date-features-benchmarks/" target="_blank" rel="noopener">DeepSeek V4 Release Date, Features &amp; Benchmarks 2026</a></li>
+      </ul>
+
+      <p class="prose-center small">Last updated July 1, 2026. Pricing from official DeepSeek API documentation. Benchmark scores from first-party reports and independent evaluations.</p>
+    </section>
+
+    <hr class="divider">
+
+    <aside class="closer">
+      <div class="closer-icon-wrap">
+        <svg class="icon closer-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09zM12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2zM9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>
+      </div>
+      <p class="closer-takeaway">The preview was good. The official version should be better. The July launch is the moment V4 graduates from preview to production.</p>
+      <p class="closer-echo">DeepSeek V4 already rewrote the economics of AI in April. The July official launch makes it permanent. If you are still paying $25-30 per million output tokens for tasks that V4 handles at $0.28-0.87, the question is not whether to switch. It is how fast you can migrate.</p>
+    </aside>
+
+  </article>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+<script>
+(function() {
+  function v(name, fallback) {
+    var s = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    return s || fallback;
+  }
+  var TEXT    = v('--tx',   '#fff');
+  var MUTED   = v('--tx-2', '#b0b0b0');
+  var GRID    = v('--bd',   '#1a1a1a');
+  var BAR_WIN = TEXT;
+  var BAR_2   = v('--tx-2', '#b0b0b0');
+  var BAR_3   = v('--tx-3', '#888');
+  var BAR_4   = v('--tx-4', '#555');
+  var BAR_5   = v('--tx-5', '#333');
+
+  if (typeof Chart === 'undefined') return;
+  Chart.defaults.font.family = "'Inter', -apple-system, system-ui, sans-serif";
+  Chart.defaults.color = MUTED;
+  Chart.defaults.borderColor = GRID;
+  Chart.defaults.plugins.legend.labels.usePointStyle = true;
+
+  /* Chart 1: Peak vs Off-Peak */
+  var peakData = [
+    { name: 'V4-Flash (off-peak)',   cost: 2.80,   color: BAR_WIN },
+    { name: 'V4-Flash (peak)',       cost: 5.60,   color: BAR_2 },
+    { name: 'V4-Pro (off-peak)',     cost: 8.70,   color: BAR_3 },
+    { name: 'V4-Pro (peak)',         cost: 17.40,  color: BAR_4 },
+    { name: 'Claude Opus 4.7',      cost: 250.00, color: BAR_5 },
+    { name: 'GPT-5.5',              cost: 300.00, color: v('--tx-6', '#222') },
+  ];
+
+  new Chart(document.getElementById('chart-peak-valley'), {
+    type: 'bar',
+    data: {
+      labels: peakData.map(function(c) { return c.name; }),
+      datasets: [{
+        label: 'Cost per 10M output tokens',
+        data: peakData.map(function(c) { return c.cost; }),
+        backgroundColor: peakData.map(function(c) { return c.color; }),
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      indexAxis: 'y',
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              var cheapest = peakData[0].cost;
+              var mult = (ctx.parsed.x / cheapest).toFixed(0);
+              return ctx.parsed.x === cheapest
+                ? '$' + ctx.parsed.x.toFixed(2) + ' \u00b7 cheapest'
+                : '$' + ctx.parsed.x.toFixed(2) + ' (' + mult + '\u00d7 V4-Flash off-peak)';
+            }
+          }
+        }
+      },
+      scales: {
+        x: { beginAtZero: true, ticks: { callback: function(val) { return '$' + val; } }, grid: { color: GRID } },
+        y: { grid: { display: false } }
+      }
+    }
+  });
+
+  /* Chart 2: Benchmarks */
+  var benchLabels = ['SWE-bench Verified', 'LiveCodeBench', 'GPQA Diamond', 'Codeforces'];
+  new Chart(document.getElementById('chart-benchmarks'), {
+    type: 'bar',
+    data: {
+      labels: benchLabels,
+      datasets: [
+        {
+          label: 'V4-Pro Max',
+          data: [80.6, 93.5, 90.1, 94.3],
+          backgroundColor: BAR_WIN,
+          borderRadius: 4,
+        },
+        {
+          label: 'Claude Opus 4.7',
+          data: [87.6, 88.8, 94.2, 0],
+          backgroundColor: BAR_3,
+          borderRadius: 4,
+        },
+        {
+          label: 'GPT-5.5',
+          data: [76.4, 91.2, 93.6, 93.2],
+          backgroundColor: BAR_4,
+          borderRadius: 4,
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'top' },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              if (ctx.dataset.label === 'Claude Opus 4.7' && ctx.parsed.y === 0) return 'Claude Opus 4.7: not published';
+              return ctx.dataset.label + ': ' + ctx.parsed.y;
+            }
+          }
+        }
+      },
+      scales: {
+        y: { beginAtZero: true, max: 100, title: { display: true, text: 'Score (higher = better)', color: MUTED }, grid: { color: GRID } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
