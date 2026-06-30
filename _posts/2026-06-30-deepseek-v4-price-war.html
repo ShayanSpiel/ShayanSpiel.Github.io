@@ -80,6 +80,12 @@ permalink: /deepseek-v4-price-war/
 
 {% include components/post-meta.html %}
 
+<nav class='post-nav'>
+  <span class='post-nav-label'>Related</span>
+  <a href='/deepseek-v4-official-launch/' class='post-nav-link'>{% include components/icon.html name='arrow-right' size=14 %} V4 Official Launch (July)</a>
+  <a href='/GLM5.2-Cost-Breakdown/' class='post-nav-link'>{% include components/icon.html name='bar-chart' size=14 %} GLM 5.2 Cost Breakdown</a>
+</nav>
+
 <hr class='divider'>
 
 <section class='section'>
@@ -418,13 +424,13 @@ permalink: /deepseek-v4-price-war/
   {% include components/section-head.html tag='What they got right' title='Four Things DeepSeek Got Right' sub='Infrastructure, not just marketing. The pricing math is impossible to ignore.' %}
 
   <div class='grid grid-2'>
-    {% include components/card.html icon='check-circle' title='1M context is routine' desc='Not a premium feature. Not a separate tier. The default. Loading a full codebase at 1M tokens costs $0.14 per call on Flash. This changes what you can build.' %}
-    {% include components/card.html icon='check-circle' title='Open-weight can compete' desc='V4-Pro scores within 5-10 points of frontier closed models on most benchmarks at 7-9x lower cost. The gap is real but narrowing fast.' %}
+    {% include components/card.html icon='circle-check' title='1M context is routine' desc='Not a premium feature. Not a separate tier. The default. Loading a full codebase at 1M tokens costs $0.14 per call on Flash. This changes what you can build.' %}
+    {% include components/card.html icon='circle-check' title='Open-weight can compete' desc='V4-Pro scores within 5-10 points of frontier closed models on most benchmarks at 7-9x lower cost. The gap is real but narrowing fast.' %}
   </div>
 
   <div class='grid grid-2 mt-6'>
-    {% include components/card.html icon='check-circle' title='Pricing math is undeniable' desc='For a 500-interaction-per-day agent, GPT-5.5 costs roughly $600/month. DeepSeek V4-Flash costs roughly $8/month. That is not a marginal difference.' %}
-    {% include components/card.html icon='check-circle' title='Shipped infrastructure' desc='Weights on Hugging Face, base models, technical report, API updates, chat interface all in one morning. HN noticed the mismatch between the docs link and the actual payload.' %}
+    {% include components/card.html icon='circle-check' title='Pricing math is undeniable' desc='For a 500-interaction-per-day agent, GPT-5.5 costs roughly $600/month. DeepSeek V4-Flash costs roughly $8/month. That is not a marginal difference.' %}
+    {% include components/card.html icon='circle-check' title='Shipped infrastructure' desc='Weights on Hugging Face, base models, technical report, API updates, chat interface all in one morning. HN noticed the mismatch between the docs link and the actual payload.' %}
   </div>
 </section>
 
@@ -434,13 +440,13 @@ permalink: /deepseek-v4-price-war/
   {% include components/section-head.html tag='What they missed' title='Four Things DeepSeek Got Wrong' sub='Gaps that matter. Safety documentation, multimodality, consumer hardware, and unresolved allegations.' %}
 
   <div class='grid grid-2'>
-    {% include components/card.html tag='Gap' icon='x-circle' title='No native multimodality' desc='Qwen 3.6 and Kimi K2.6 have it. V4 does not. In 2026, this is a gap that matters for builders who need vision + language in a single model.' %}
-    {% include components/card.html tag='Gap' icon='x-circle' title='Safety documentation is thin' desc='The V4 technical paper contains no reference to safety measures, red-teaming, or AI risk evaluations. US models include extensive safety documentation. The gap is real.' %}
+    {% include components/card.html tag='Gap' icon='circle-x' title='No native multimodality' desc='Qwen 3.6 and Kimi K2.6 have it. V4 does not. In 2026, this is a gap that matters for builders who need vision + language in a single model.' %}
+    {% include components/card.html tag='Gap' icon='circle-x' title='Safety documentation is thin' desc='The V4 technical paper contains no reference to safety measures, red-teaming, or AI risk evaluations. US models include extensive safety documentation. The gap is real.' %}
   </div>
 
   <div class='grid grid-2 mt-6'>
-    {% include components/card.html tag='Gap' icon='x-circle' title='Flash is too big for consumers' desc='The community wanted a lightweight model for local use. V4-Flash at 160 GB is not that. Google 26B A4B and Qwen 3.6 35B A3B are what the local community wants.' %}
-    {% include components/card.html tag='Gap' icon='x-circle' title='Distillation allegations unresolved' desc='If capabilities reflect, at least in part, access to illicitly obtained US intellectual property, the competitive positioning carries a different risk profile.' %}
+    {% include components/card.html tag='Gap' icon='circle-x' title='Flash is too big for consumers' desc='The community wanted a lightweight model for local use. V4-Flash at 160 GB is not that. Google 26B A4B and Qwen 3.6 35B A3B are what the local community wants.' %}
+    {% include components/card.html tag='Gap' icon='circle-x' title='Distillation allegations unresolved' desc='If capabilities reflect, at least in part, access to illicitly obtained US intellectual property, the competitive positioning carries a different risk profile.' %}
   </div>
 </section>
 

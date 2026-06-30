@@ -51,8 +51,8 @@ permalink: /deepseek-v4-official-launch/
     "name": "Shayan Spiel"
   },
   "publisher": {"@id": "https://spielos.xyz/#organization"},
-  "datePublished": "2026-07-01T09:00:00+00:00",
-  "dateModified": "2026-07-01T09:00:00+00:00",
+  "datePublished": "2026-07-29T09:00:00+00:00",
+  "dateModified": "2026-07-29T09:00:00+00:00",
   "license": "https://creativecommons.org/licenses/by/4.0/",
   "keywords": ["DeepSeek V4", "DeepSeek V4 official launch", "DeepSeek V4 July", "peak-valley pricing", "DSpark", "legacy API retirement", "open source AI", "LLM benchmarks"],
   "temporalCoverage": "2026-04/2026-07",
@@ -72,6 +72,12 @@ permalink: /deepseek-v4-official-launch/
 </section>
 
 {% include components/post-meta.html %}
+
+<nav class='post-nav'>
+  <span class='post-nav-label'>Related</span>
+  <a href='/deepseek-v4-price-war/' class='post-nav-link'>{% include components/icon.html name='arrow-left' size=14 %} V4 Preview &amp; Price War</a>
+  <a href='/GLM5.2-Cost-Breakdown/' class='post-nav-link'>{% include components/icon.html name='bar-chart' size=14 %} GLM 5.2 Cost Breakdown</a>
+</nav>
 
 <hr class='divider'>
 
@@ -121,13 +127,17 @@ permalink: /deepseek-v4-official-launch/
       </tr>
       <tr>
         <td>Claude Opus 4.7</td>
-        <td class='num' colspan='2' style='text-align:center'>$5.00 / $25.00</td>
-        <td class='num' colspan='2' style='text-align:center'>$5.00 / $25.00</td>
+        <td class='num'>$5.00</td>
+        <td class='num'>$25.00</td>
+        <td class='num'>$5.00</td>
+        <td class='num'>$25.00</td>
       </tr>
       <tr>
         <td>GPT-5.5</td>
-        <td class='num' colspan='2' style='text-align:center'>$5.00 / $30.00</td>
-        <td class='num' colspan='2' style='text-align:center'>$5.00 / $30.00</td>
+        <td class='num'>$5.00</td>
+        <td class='num'>$30.00</td>
+        <td class='num'>$5.00</td>
+        <td class='num'>$30.00</td>
       </tr>
     </tbody>
     <caption>Peak hours: 9am-12pm and 2pm-6pm daily. Even at peak pricing, V4-Flash output is 44-53x cheaper than GPT-5.5.</caption>
@@ -367,13 +377,13 @@ permalink: /deepseek-v4-official-launch/
   {% include components/section-head.html tag='Math' title='Mathematical Reasoning: Where V4 Dominates' sub='Formal math is one place V4 clearly stretches past the field. Perfect scores where competitors fall short.' %}
 
   <div class='grid grid-2'>
-    {% include components/card.html icon='check-circle' title='Putnam-2025: 120/120' desc='Proof-perfect score, tying Axiom and ahead of Aristotle (100/120) and Seed-1.5-Prover (110/120). V4 reaches a perfect score on the hardest formal math benchmark.' %}
-    {% include components/card.html icon='check-circle' title='Putnam-200 Pass@8: 81.0' desc='Compared to 35.5 for Seed-2.0-Pro, 26.5 for Gemini-3-Pro, and 26.5 for Seed-1.5-Prover. A 2.3x lead over the next competitor.' %}
+    {% include components/card.html icon='circle-check' title='Putnam-2025: 120/120' desc='Proof-perfect score, tying Axiom and ahead of Aristotle (100/120) and Seed-1.5-Prover (110/120). V4 reaches a perfect score on the hardest formal math benchmark.' %}
+    {% include components/card.html icon='circle-check' title='Putnam-200 Pass@8: 81.0' desc='Compared to 35.5 for Seed-2.0-Pro, 26.5 for Gemini-3-Pro, and 26.5 for Seed-1.5-Prover. A 2.3x lead over the next competitor.' %}
   </div>
 
   <div class='grid grid-2 mt-6'>
-    {% include components/card.html icon='check-circle' title='HMMT 2026 Feb: 95.2' desc='Within range of GPT-5.4 (97.7) and ahead of Gemini 3.1 Pro. Competition math at near-frontier level.' %}
-    {% include components/card.html icon='check-circle' title='IMOAnswerBench: 89.8' desc='Ahead of Gemini 3.1 Pro and approaching GPT-5.4 (91.4). International math olympiad level reasoning.' %}
+    {% include components/card.html icon='circle-check' title='HMMT 2026 Feb: 95.2' desc='Within range of GPT-5.4 (97.7) and ahead of Gemini 3.1 Pro. Competition math at near-frontier level.' %}
+    {% include components/card.html icon='circle-check' title='IMOAnswerBench: 89.8' desc='Ahead of Gemini 3.1 Pro and approaching GPT-5.4 (91.4). International math olympiad level reasoning.' %}
   </div>
 
   {% include components/takeaway.html text='For math-heavy workloads, V4-Pro at 1/9th the cost of GPT-5.5 delivers comparable results. The Putnam perfect score is a signal that formal reasoning capability has reached a new tier.' %}
@@ -555,7 +565,7 @@ permalink: /deepseek-v4-official-launch/
 
   <div class='grid grid-2 mt-6'>
     {% include components/card.html tag='Distillation' icon='alert-triangle' title='Unresolved allegations' desc='The White House accused Chinese actors including DeepSeek of industrial-scale distillation campaigns. Anthropic and OpenAI alleged over 24,000 fake accounts and 16 million interactions. DeepSeek has not publicly addressed these.' %}
-    {% include components/card.html tag='Self-hosting angle' icon='check-circle' title='MIT license changes the calculus' desc='MIT license allows full commercial use, modification, and redistribution. For GDPR compliance, self-hosting on EU-based servers means data never reaches China. The open-weight model, self-hosted, is a different product than the hosted API.' %}
+    {% include components/card.html tag='Self-hosting angle' icon='circle-check' title='MIT license changes the calculus' desc='MIT license allows full commercial use, modification, and redistribution. For GDPR compliance, self-hosting on EU-based servers means data never reaches China. The open-weight model, self-hosted, is a different product than the hosted API.' %}
   </div>
 
   {% include components/prose-center.html text='The question is not whether the hosted API is safe for regulated data. It is not. The question is whether the open-weight model, self-hosted, changes the calculus. For many use cases, it does. The MIT license means the model can run on any infrastructure.' %}
@@ -729,18 +739,18 @@ permalink: /deepseek-v4-official-launch/
   {% include components/section-head.html tag='What to expect' title='What the Official V4 Launch Should Bring' sub='Based on DeepSeek statements and the preview-to-stable pattern, here is what changes in mid-July.' %}
 
   <div class='grid grid-2'>
-    {% include components/card.html icon='check-circle' title='Performance improvements' desc='DeepSeek confirmed the official version delivers "further functional enhancements and performance gains." The preview was already competitive with frontier models.' %}
-    {% include components/card.html icon='check-circle' title='Peak-valley pricing activates' desc='Time-of-day pricing kicks in. Batch and async workloads benefit from off-peak rates. Real-time usage during business hours absorbs the premium.' %}
+    {% include components/card.html icon='circle-check' title='Performance improvements' desc='DeepSeek confirmed the official version delivers "further functional enhancements and performance gains." The preview was already competitive with frontier models.' %}
+    {% include components/card.html icon='circle-check' title='Peak-valley pricing activates' desc='Time-of-day pricing kicks in. Batch and async workloads benefit from off-peak rates. Real-time usage during business hours absorbs the premium.' %}
   </div>
 
   <div class='grid grid-2 mt-6'>
-    {% include components/card.html icon='check-circle' title='DSpark inference acceleration' desc='The 60-85% speed boost from DSpark should be fully integrated. Single-user generation speeds improve dramatically for both models.' %}
-    {% include components/card.html icon='check-circle' title='Legacy API retirement' desc='deepseek-chat and deepseek-reasoner fully retired July 24. The official launch clears the path for a clean V4-only API.' %}
+    {% include components/card.html icon='circle-check' title='DSpark inference acceleration' desc='The 60-85% speed boost from DSpark should be fully integrated. Single-user generation speeds improve dramatically for both models.' %}
+    {% include components/card.html icon='circle-check' title='Legacy API retirement' desc='deepseek-chat and deepseek-reasoner fully retired July 24. The official launch clears the path for a clean V4-only API.' %}
   </div>
 
   <div class='grid grid-2 mt-6'>
-    {% include components/card.html icon='x-circle' title='Possible multimodal hints' desc='Vision capabilities have appeared in test interfaces but remain unverified. DeepSeek has not confirmed multimodal support for the official launch.' %}
-    {% include components/card.html icon='x-circle' title='Huawei Ascend 950 capacity' desc='Bloomberg reports a capacity bottleneck for the Pro model. New Huawei Ascend 950 clusters expected in H2 2026, which should alleviate shortages and potentially lower prices.' %}
+    {% include components/card.html icon='circle-x' title='Possible multimodal hints' desc='Vision capabilities have appeared in test interfaces but remain unverified. DeepSeek has not confirmed multimodal support for the official launch.' %}
+    {% include components/card.html icon='circle-x' title='Huawei Ascend 950 capacity' desc='Bloomberg reports a capacity bottleneck for the Pro model. New Huawei Ascend 950 clusters expected in H2 2026, which should alleviate shortages and potentially lower prices.' %}
   </div>
 </section>
 
@@ -800,7 +810,7 @@ permalink: /deepseek-v4-official-launch/
        title='DeepSeek V4 Release Date, Features & Benchmarks 2026' %}
   </ul>
 
-  {% include components/prose-center.html small=true text='Last updated July 1, 2026. Pricing from official DeepSeek API documentation. Benchmark scores from first-party reports and independent evaluations. Community discussions sourced from Reddit, X, HN, and HuggingFace.' %}
+  {% include components/prose-center.html small=true text='Last updated July 29, 2026. Pricing from official DeepSeek API documentation. Benchmark scores from first-party reports and independent evaluations. Community discussions sourced from Reddit, X, HN, and HuggingFace.' %}
 </section>
 
 <hr class='divider'>
