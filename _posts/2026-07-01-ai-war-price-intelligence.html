@@ -311,21 +311,50 @@ faq:
 <hr class='divider'>
 
 <section class='section'>
-  {% include components/section-head.html tag='The cure' title='One American Open Model Is Not A Strategy' sub='A model is necessary. It is not sufficient.' %}
+  {% include components/section-head.html tag='The dirty loop' title='The Model Is Also A Teacher' sub='If a competitor can use an expensive frontier model to train a cheaper model that attacks its margins, the product becomes their R&amp;D subsidy.' %}
+
+  <div class='grid grid-3'>
+    {% include components/card.html tag='Spend' icon='dollar-sign' title='Billions train the frontier' desc='The closed lab absorbs the capex, talent, data, safety, and deployment cost.' %}
+    {% include components/card.html tag='Serve' icon='terminal' title='API exposes behavior' desc='Customers pay for output. Competitors may try to turn that output into training data.' %}
+    {% include components/card.html tag='Compress' icon='zap' title='Cheaper models undercut' desc='Distilled behavior, compressed capability, open weights, lower prices, then the loop repeats.' %}
+  </div>
+
+  {% include components/prose-center.html text='The frontier labs are not only competing with each other. They are defending their outputs as training assets. The model is not just a product. The model is also a teacher.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The cure' title='One American Open Model Is Not A Strategy' sub='A model is a weapon inside a strategy. It is not the whole strategy.' %}
+
+  {% include components/prose-center.html text='America absolutely needs strong open-weight models. But saying that is the cure is like saying the cure to losing the semiconductor supply chain is make one chip. No. You need the full stack.' %}
+
+  <div class='grid grid-3'>
+    {% include components/card.html icon='server' title='Models, chips, fabs, power' desc='Data centers, inference providers, and the physical infrastructure to run and serve models at scale.' %}
+    {% include components/card.html icon='layers' title='Routing layers, trust, standards' desc='Enterprise trust, developer adoption, open standards, and the middleware that makes routing possible.' %}
+    {% include components/card.html icon='shield' title='Procurement, alliances, capital' desc='Government procurement, export strategy, alliances, cost discipline, and capital that can survive margin compression.' %}
+  </div>
+
+  {% include components/prose-center.html text='A single American open-source model does not solve this. Because China is not attacking one model. China is attacking the assumption that intelligence should be expensive.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The final map' title='Financialize vs Commoditize' sub='This is the clean thesis.' %}
 
   <div class='grid grid-2'>
     {% include components/card.html tag='United States' icon='server' title='Financialize intelligence' desc='Frontier AI becomes the next cloud empire: metered, centralized, premium, scarce, and controlled.' %}
     {% include components/card.html tag='China' icon='globe' title='Commoditize intelligence' desc='Near-frontier AI becomes cheap industrial infrastructure: widely available, locally deployable, customizable, and hard to sanction.' %}
   </div>
 
-  {% include components/prose-center.html text='America absolutely needs strong open-weight models. But saying that is the cure is like saying the cure to losing the semiconductor supply chain is make one chip. You need models, chips, fabs, power, data centers, inference providers, routing layers, enterprise trust, developer adoption, open standards, procurement, export strategy, alliances, and cost discipline.' %}
-  {% include components/prose-center.html text='That is the same lesson behind <a href="/gates-not-models/">gates, not models</a>: the system matters more than any single artifact.' %}
+  {% include components/prose-center.html text='The U.S. is trying to win through frontier concentration. China is trying to win through capability diffusion. The U.S. says the best intelligence is here, rent it. China says good enough intelligence is everywhere, build on it.' %}
 </section>
 
 <hr class='divider'>
 
 <section class='section'>
-  {% include components/section-head.html tag='References' title='Sources' sub='Primary and secondary references behind the article. Exact wire-service URLs should be attached before syndicated republication.' %}
+  {% include components/section-head.html tag='References' title='Sources' sub='Primary and secondary references behind the article.' %}
 
   <ul class='sources'>
     {% include components/source.html author='DeepSeek' url='https://api-docs.deepseek.com/' title='DeepSeek API documentation and pricing' %}
@@ -344,7 +373,7 @@ faq:
 <aside class='closer'>
   <div class='closer-icon-wrap'>{% include components/icon.html name='zap' size=28 class='closer-icon' %}</div>
   <p class='closer-takeaway'>When model quality converges, price becomes strategy.</p>
-  <p class='closer-echo'>When price collapses, margins collapse. When margins collapse, valuations get questioned. When valuations get questioned, capex gets harder. When capex gets harder, the frontier slows.</p>
+  <p class='closer-echo'>When price collapses, margins collapse. When margins collapse, valuations get questioned. When valuations get questioned, capex gets harder. When capex gets harder, the frontier slows. One side does not need to beat you on every benchmark. It only needs to make your empire too expensive to maintain.</p>
 </aside>
 
 <script src='https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js'></script>
