@@ -1,0 +1,51 @@
+---
+layout: page-shell
+title: Context Engineering, System Prompts, Memory, Caching, Token Optimization
+description: >-
+  Notes on context engineering: system prompt architecture, memory systems,
+  prompt caching, context windows, cached tokens, token waste, and the
+  discipline of designing what goes into an LLM context window.
+keywords: context engineering, system prompts, prompt caching, cached tokens, context windows, token waste, memory systems, LLM context, prompt architecture, context optimization
+permalink: /clusters/context-engineering/
+sitemap: true
+---
+
+<section class='section'>
+  {% include components/section-head.html tag='Cluster' title='Context Engineering' sub='System prompts, memory, caching, context windows, and token waste. The discipline of designing what goes into an LLM context window.' %}
+
+  {% include components/prose-center.html text='Context engineering is the next frontier of AI system design. It is not prompt engineering. It is the architecture of what the model sees, remembers, and ignores. System prompt structure, memory retrieval, prompt caching, cached token economics, and the silent cost of context waste. This cluster covers the full stack.' %}
+
+  {% include components/takeaway.html text='If your agents work in demos but fail in production, the problem is usually context, not the model.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The cluster' title='All notes in this cluster' sub='From architecture to token economics.' %}
+
+  <div class='grid grid-2'>
+    {% include components/card.html href='/GLM5.2-Cost-Breakdown/' tag='01 · Token Economics' icon='bar-chart' title='Is GLM-5.2 Cheaper Than the Frontier?' desc='A working breakdown of LLM API pricing. Where caching, context size, and token waste change the real cost calculation.' %}
+  </div>
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='Related project' title='From the gaps' sub='A project built from context engineering insights.' %}
+
+  <div class='c'>
+    {% include components/btn.html label='Try CacheCatch' href='https://cachecatch.spielos.xyz' variant='primary' arrow=true %}
+  </div>
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='Explore' title='Related clusters' sub='Other clusters on the site.' %}
+
+  <div class='grid grid-3'>
+    {% include components/card.html href='/clusters/ai-market/' tag='Cluster' icon='crosshair' title='AI Market' desc='Models, pricing, open weights, infra, geopolitics, and culture.' %}
+    {% include components/card.html href='/clusters/agents-loops-evals/' tag='Cluster' icon='refresh' title='Agents, Loops &amp; Evals' desc='Agent workflows, traces, evals, failures, and reliability loops.' %}
+    {% include components/card.html href='/clusters/founder-distribution/' tag='Cluster' icon='send' title='Founder Distribution' desc='Product-as-distribution, technical founder marketing, and work becoming content.' %}
+  </div>
+</section>

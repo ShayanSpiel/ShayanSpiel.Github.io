@@ -1,11 +1,10 @@
 title: Shayan Spiel
-tagline: Session-as-Content for Technical Founders
+tagline: AI Market Notes, Agent Systems & Founder Projects
 description: >-
-  Shayan Spiel, solo operator building Session-as-Content, the methodology
-  and open-source tooling that turns technical founders' build sessions into
-  publishable content. 8+ years scaling Iran's largest digital platforms.
-  Writing in the open from Tehran.
-keywords: Shayan Spiel, Shayan Tawabi, Session-as-Content, session as content methodology, build in public, technical founder content system, agentic AI content pipeline, open source content engine, Spiel OS
+  Sharp notes on the AI market: model wars, open weights, agents, evals,
+  context engineering, inference economics, founder distribution, and
+  projects from the gaps. 8+ years scaling Iran's largest digital platforms.
+keywords: Shayan Spiel, Shayan Tawabi, AI market, AI model war, AI agents, agent evals, LLM evals, context engineering, prompt caching, open-weight models, inference economics, AI model pricing, technical founder marketing, founder distribution, product as distribution, agent tracing, AI infrastructure, Spiel OS
 
 url: https://spielos.xyz
 baseurl: ""

@@ -1,8 +1,8 @@
 ---
 layout: page-shell
 title: About
-description: Shayan Spiel, building AI content pipelines and developer content systems for technical founders. 8+ years scaling Iran's largest digital platforms.
-keywords: about Shayan Spiel, Shayan Tawabi, session-as-content, agentic AI, technical founder marketing, building in public, content pipeline for developers, DFY content system, AI content automation, open source content engine, developer content system
+description: Shayan Spiel. Tracks the AI market like a war. Builds projects from the gaps. Ex-marketing strategist turned systems builder.
+keywords: about Shayan Spiel, Shayan Tawabi, AI market analyst, technical founder, founder distribution, agent systems, context engineering, Spiel OS, CacheCatch
 image:
   path: /assets/og/about.png
   width: 1200
@@ -11,37 +11,54 @@ permalink: /about/
 ---
 
 <section class='section'>
-  {% include components/section-head.html tag='The premise' title='What I build' sub='Systems that turn build sessions into publishable content, so you never stop working to post.' %}
+  {% include components/section-head.html tag='The premise' title='What I do' sub='I track the AI market like a war. Then I build projects from the gaps.' %}
 
-  {% include components/prose-center.html text='I build <strong>Session-as-Content Infrastructure</strong> for technical founders. Systems that turn build sessions into publishable content, so you never stop working to post.' %}
+  {% include components/prose-center.html text='I look at AI as a market, a culture, a weapon, a distribution layer, and an operating system at the same time. I track model wars, agents, evals, context engineering, inference economics, geopolitics, and the weird culture forming around all of it. Then I build projects from the gaps I find.' %}
 </section>
 
 <hr class='divider'>
 
 <section class='section'>
-  {% include components/section-head.html tag='The offer' title='What I sell' sub='Two layers. Open source. Or done-for-you. Your call.' %}
+  {% include components/section-head.html tag='The background' title='How I got here' sub='8+ years scaling Iran&#39;s largest digital platforms. Now building AI systems and market intelligence.' %}
 
-  <div class='grid grid-2'>
-    {% include components/card.html href='/SpielOS/' tag='Layer 1' icon='code' title='Open Source' desc='The repo, the methodology, free. Clone and customize. Setup walkthrough on the Spiel OS page.' %}
-    {% include components/card.html href='/contact/' tag='Layer 2' icon='rocket' title='DFY Install &middot; $990' desc='Full pipeline installed in your workflow. Positioning, offer design, agents, templates, 30 days review. You own it.' %}
-  </div>
-
-  {% include components/takeaway.html text='If after 30 days you&rsquo;ve run 5 sessions through the engine and you don&rsquo;t have 5 standalone-tested drafts in your queue, I&rsquo;ll refund 100%. You keep the system. 3 slots per month. Hard cap.' %}
-
-  <div class='c mt-6'>
-    {% include components/btn.html label='Apply now' href='/contact/' variant='primary' arrow=true %}
-  </div>
+  {% include components/prose-center.html text='I was a marketing strategist for startups before I became a systems builder. That mix became my edge. I shipped at traffic levels that are hard to fake and at team sizes that require process, not just hustle. 2024&ndash;25: pivot to agentic AI. Langchain, Langgraph, Claude Code, full-stack dev. Solo operator. Based in Tehran, Iran. MBA Strategy, Tehran University (2017). Associate in CS, Azad Karoon University (2013).' %}
 </section>
 
 <hr class='divider'>
 
 <section class='section'>
-  {% include components/section-head.html tag='In progress' title='What I&rsquo;m building right now' sub='Three active projects. One source of truth (this site).' %}
+  {% include components/section-head.html tag='Receipts' title='8+ years, 3 platforms, 1 arc' sub='If you want the long version.' %}
 
   <div class='grid grid-3'>
-    {% include components/card.html href='/SpielOS/' tag='01' icon='rocket' title='Spiel OS' desc='Session-as-Content Infrastructure. Two-layer offer. The open-source repo + the DFY install.' %}
-    {% include components/card.html href='/GeoGent-Waitlist/' tag='02' icon='globe' title='GeoGent' desc='A browser-based strategy MMO. Build cities, run economies, win wars. In test phase.' %}
-    {% include components/card.html href='/posts/' tag='03' icon='book' title='This site' desc='The front door. The blog. The source of truth.' %}
+    {% include components/card.html variant='stat-shift' icon='trending-up' num='3M' title='Black Friday visitors' desc='Digikala (Iran&#39;s Amazon). Single paid campaign. Real numbers, real team, real production.' %}
+    {% include components/card.html variant='stat-shift' icon='rocket' num='+50%' title='Revenue YoY' desc='Takhfifan (Iran&#39;s Groupon). As Marketing Director. Year-over-year growth, attributed to the campaigns I ran.' %}
+    {% include components/card.html variant='stat-shift' icon='users' num='560k' title='App installs' desc='Farakav / Varzesh3 (Iran&#39;s biggest sports site). 250k &rarr; 560k in 2 seasons. +80% YoY traffic.' %}
+  </div>
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='Projects' title='What I build' sub='Every project comes from watching the AI market collide with itself.' %}
+
+  <div class='grid grid-2'>
+    {% include components/card.html href='/SpielOS/' tag='Active' icon='rocket' title='SpielOS' desc='Turns real founder work into distribution assets. Open-source, CLI-first, 6+ platforms. The founder distribution engine.' %}
+    {% include components/card.html href='https://cachecatch.spielos.xyz' tag='Active' icon='layers' title='CacheCatch' desc='Context and cost intelligence for agentic systems. Finds context waste, prompt cache misses, and hidden agent cost leaks.' %}
+    {% include components/card.html href='/GeoGent-Waitlist/' tag='In Development' icon='globe' title='GeoGent' desc='An agentic geopolitical MMO for the AI age. Agents, companies, governments, wars, economies, and world simulation.' %}
+    {% include components/card.html tag='Archive' icon='code' title='Vibebaba' desc='An open-source LangGraph software factory experiment. Founder to PM to UX to Backend to QA. Research artifact.' %}
+  </div>
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='What I track' title='The four clusters' sub='The topics I write about most.' %}
+
+  <div class='grid grid-2'>
+    {% include components/card.html href='/clusters/ai-market/' tag='Cluster' icon='crosshair' title='AI Market' desc='Models, pricing, open weights, infra, geopolitics, and culture.' %}
+    {% include components/card.html href='/clusters/agents-loops-evals/' tag='Cluster' icon='refresh' title='Agents, Loops &amp; Evals' desc='Agent workflows, traces, evals, failures, and reliability loops.' %}
+    {% include components/card.html href='/clusters/context-engineering/' tag='Cluster' icon='layers' title='Context Engineering' desc='System prompts, memory, caching, context windows, and token waste.' %}
+    {% include components/card.html href='/clusters/founder-distribution/' tag='Cluster' icon='send' title='Founder Distribution' desc='Product-as-distribution, technical founder marketing, and work becoming content.' %}
   </div>
 </section>
 
@@ -51,27 +68,11 @@ permalink: /about/
   {% include components/section-head.html tag='Surfaces' title='Where to find me' sub='Four surfaces. Pick the one that matches your habit.' %}
 
   <div class='grid grid-2'>
-    {% include components/card.html href='https://twitter.com/ShayanSpiel' tag='Fast' icon='send' title='X' desc='Fast surface. Casual updates. Building-in-public. twitter.com/ShayanSpiel' %}
+    {% include components/card.html href='https://twitter.com/ShayanSpiel' tag='Fast' icon='send' title='X' desc='Fast surface. Casual updates. Market takes. Building-in-public. @ShayanSpiel' %}
     {% include components/card.html href='https://www.linkedin.com/in/shayantawabi' tag='Middle' icon='users' title='LinkedIn' desc='Middle surface. 1 post per work session. The professional layer.' %}
     {% include components/card.html href='/contact/' tag='Direct' icon='mail' title='Contact' desc='For offers, partnerships, press. The inquiry layer.' %}
-    {% include components/card.html href='/posts/' tag='Source' icon='book-open' title='Blog' desc='The source of truth. Every post is dated, durable, and discoverable.' %}
+    {% include components/card.html href='/posts/' tag='Source' icon='book-open' title='Notes' desc='The source of truth. Every note is dated, durable, and discoverable.' %}
   </div>
-</section>
-
-<hr class='divider'>
-
-<section class='section'>
-  {% include components/section-head.html tag='Receipts' title='8+ years, 3 platforms, 1 arc' sub='If you want the long version.' %}
-
-  <div class='grid grid-3'>
-    {% include components/card.html variant='stat-shift' icon='trending-up' num='3M' title='Black Friday visitors' desc='Digikala (Iran&rsquo;s Amazon). Single paid campaign. Real numbers, real team, real production.' %}
-    {% include components/card.html variant='stat-shift' icon='rocket' num='+50%' title='Revenue YoY' desc='Takhfifan (Iran&rsquo;s Groupon). As Marketing Director. Year-over-year growth, attributed to the campaigns I ran.' %}
-    {% include components/card.html variant='stat-shift' icon='users' num='560k' title='App installs' desc='Farakav / Varzesh3 (Iran&rsquo;s biggest sports site). 250k &rarr; 560k in 2 seasons. +80% YoY traffic.' %}
-  </div>
-
-  {% include components/prose-center.html text='2024&ndash;25: pivot to agentic AI. Langchain, Langgraph, Claude Code, full-stack dev. Solo operator. Based in Tehran, Iran. MBA Strategy, Tehran University (2017). Associate in CS, Azad Karoon University (2013).' %}
-
-  {% include components/prose-center.html text='I don&rsquo;t claim &ldquo;early-stage startup experience&rdquo; because what I have is <strong>scale</strong> experience. I shipped at traffic levels that are hard to fake and at team sizes that require process, not just hustle. If that&rsquo;s the kind of operator you want to learn from, start with the <a href="/content-pipeline/">content pipeline for developers</a> or the <a href="/session-as-content/">session-as-content methodology</a>.' %}
 </section>
 
 <hr class='divider'>
@@ -80,11 +81,11 @@ permalink: /about/
   {% include components/section-head.html tag='Read next' title='Where to go from here' sub='Pick the surface that matches your question.' %}
 
   <div class='grid grid-3'>
-    {% include components/card.html href='/clusters/content-pipeline/' tag='Cluster' icon='book' title='Content Pipeline cluster' desc='The complete cluster on building a content pipeline for developers. Session-as-Content, AI second brain, and Spiel OS.' %}
-    {% include components/card.html href='/glossary/' tag='Glossary' icon='book-open' title='Glossary' desc='Canonical definitions of every methodology, framework, and concept on this site.' %}
-    {% include components/card.html href='/categories/' tag='Topics' icon='grid' title='All topics' desc='Browse every post by topic. Four clusters, fifteen posts, one source of truth.' %}
-    {% include components/card.html href='/SpielOS/' tag='Tooling' icon='code' title='Spiel OS' desc='Open-source Session-as-Content Infrastructure. CLI-first, 4 files, MIT licensed.' %}
-    {% include components/card.html href='/posts/' tag='Blog' icon='book' title='All posts' desc='Every pillar post, newest first. The complete archive.' %}
-    {% include components/card.html href='/contact/' tag='Contact' icon='mail' title='Get in touch' desc='For the DFY install, open-source questions, or partnerships.' %}
+    {% include components/card.html href='/clusters/ai-market/' tag='Cluster' icon='crosshair' title='AI Market cluster' desc='Models, pricing, open weights, infra, geopolitics, and culture.' %}
+    {% include components/card.html href='/clusters/founder-distribution/' tag='Cluster' icon='send' title='Founder Distribution cluster' desc='Session-as-Content, the content pipeline, and building in public as a system state.' %}
+    {% include components/card.html href='/glossary/' tag='Glossary' icon='book-open' title='Glossary' desc='Canonical definitions of every concept on this site.' %}
+    {% include components/card.html href='/posts/' tag='Notes' icon='book' title='All notes' desc='Every note, newest first. The complete archive.' %}
+    {% include components/card.html href='/SpielOS/' tag='Project' icon='code' title='Spiel OS' desc='Open-source Founder Distribution Infrastructure. CLI-first, 4 files, MIT licensed.' %}
+    {% include components/card.html href='/contact/' tag='Contact' icon='mail' title='Get in touch' desc='For projects, partnerships, or just to say hi.' %}
   </div>
 </section>

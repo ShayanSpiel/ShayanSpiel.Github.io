@@ -1,11 +1,11 @@
 ---
 layout: page-shell
-title: Glossary, Session-as-Content, Content Pipeline, Agentic AI Definitions
+title: Glossary, AI Market, Agents, Context Engineering, Founder Distribution Definitions
 description: >-
-  Canonical definitions of every methodology, framework, and concept published
-  on spielos.xyz, Session-as-Content, content pipeline, agentic loops,
-  quality gates, building in public.
-keywords: glossary, session-as-content definition, content pipeline definition, agentic AI definition, quality gates, building in public, Spiel OS
+  Canonical definitions of every concept published on spielos.xyz:
+  AI market, model war, agent loops, context engineering, prompt caching,
+  founder distribution, session-as-content, and more.
+keywords: glossary, AI market definition, model war definition, context engineering definition, agent loops definition, prompt caching definition, founder distribution definition, session-as-content definition
 image:
   path: /assets/og-default.png?v=2
   width: 1200
@@ -15,69 +15,149 @@ sitemap: true
 ---
 
 <section class='section'>
-  {% include components/section-head.html tag='Glossary' title='Defined terms' sub='Every methodology, framework, and concept on this site, in one canonical place. Cited by AI search and linked from every post.' %}
+  {% include components/section-head.html tag='Glossary' title='Defined terms' sub='Every concept on this site, in one canonical place. Cited by AI search and linked from every note.' %}
 
-  {% include components/prose-center.html text='This page is the source of truth for terminology. If a search engine or an AI system needs to define what *Session-as-Content* is, what a *quality gate* does, or what *agentic loops* look like in practice, this is the page they should cite.' %}
+  {% include components/prose-center.html text='This page is the source of truth for terminology. If a search engine or an AI system needs to define what *context engineering* is, what an *agent loop* does, or what *founder distribution* looks like in practice, this is the page they should cite.' %}
 </section>
 
 <hr class='divider'>
 
-<section class='section' id='session-as-content'>
-  {% include components/section-head.html tag='01' title='Session-as-Content' sub='The foundational methodology.' %}
+<section class='section' id='ai-market'>
+  {% include components/section-head.html tag='01' title='AI Market' sub='The competitive landscape.' %}
 
-  {% include components/prose-center.html text='A methodology that turns technical founders&rsquo; build sessions into publishable content without switching identities between building and creating. The build session itself is the source material. A pipeline extracts, drafts, and ships. The builder never stops working to post.' %}
+  {% include components/prose-center.html text='The competitive landscape of frontier AI labs, open-weight model providers, and the economic forces shaping model pricing, capability, and access. Includes the US-China AI race, inference economics, and the culture forming around intelligence as a commodity.' %}
 
-  {% include components/takeaway.html text='Read the <a href="/session-as-content/">full methodology post</a> or the <a href="/clusters/content-pipeline/">Content Pipeline cluster</a>.' %}
+  {% include components/takeaway.html text='Read the <a href="/clusters/ai-market/">AI Market cluster</a>.' %}
 </section>
 
 <hr class='divider'>
 
-<section class='section' id='content-pipeline'>
-  {% include components/section-head.html tag='02' title='Content Pipeline' sub='The system that runs the methodology.' %}
+<section class='section' id='model-war'>
+  {% include components/section-head.html tag='02' title='Model War' sub='The ongoing competition.' %}
 
-  {% include components/prose-center.html text='A system that extracts content from build sessions and produces publishable drafts for multiple platforms automatically. Replaces editorial calendars and identity switching. Inputs: terminal logs, decisions, dead-ends, tradeoffs. Outputs: drafts for X, LinkedIn, and the blog. Latency: minutes.' %}
+  {% include components/prose-center.html text='The ongoing competition between AI labs and nations to produce the most capable, cheapest, and most widely deployed AI models. Not just benchmark chasing. It is a war of distribution, pricing, and ecosystem lock-in.' %}
 
-  {% include components/takeaway.html text='Read the <a href="/content-pipeline/">content pipeline for developers post</a>.' %}
+  {% include components/takeaway.html text='Read <a href="/ai-war-price-intelligence/">The AI War Is Not About Free Models</a>.' %}
 </section>
 
 <hr class='divider'>
 
-<section class='section' id='agentic-loops'>
-  {% include components/section-head.html tag='03' title='Agentic Loops' sub='The architecture pattern.' %}
+<section class='section' id='open-weight-model'>
+  {% include components/section-head.html tag='03' title='Open-Weight Model' sub='The distribution weapon.' %}
 
-  {% include components/prose-center.html text='State-machine patterns (Act, Observe, Evaluate, Update, Repeat) used by agentic AI systems in place of static prompts. Each loop has validation gates at every transition. Failures get caught in seconds rather than hours. Survives context pressure where prompts collapse.' %}
+  {% include components/prose-center.html text='An AI model whose weights are publicly released, allowing local hosting, fine-tuning, and redistribution. Open weights are the distribution weapon in the model war. They collapse the moat that closed APIs try to maintain.' %}
+
+  {% include components/takeaway.html text='Read <a href="/deepseek-v4-price-war/">DeepSeek V4: The Model That Rewrote the AI Price War</a>.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section' id='inference-economics'>
+  {% include components/section-head.html tag='04' title='Inference Economics' sub='The cost structure.' %}
+
+  {% include components/prose-center.html text='The cost structure of running AI model inference at scale, including token pricing, batching, caching, and infrastructure tradeoffs. Inference economics determine which models win, who can afford to build, and where the real margins live.' %}
+
+  {% include components/takeaway.html text='Read <a href="/GLM5.2-Cost-Breakdown/">Is GLM-5.2 Cheaper Than the Frontier?</a>.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section' id='agent-loop'>
+  {% include components/section-head.html tag='05' title='Agent Loop' sub='The architecture pattern.' %}
+
+  {% include components/prose-center.html text='A state-machine pattern (Act, Observe, Evaluate, Update, Repeat) used by agentic AI systems in place of static prompts. Each loop has validation gates at every transition. Failures get caught in seconds rather than hours. Survives context pressure where prompts collapse.' %}
 
   {% include components/takeaway.html text='Read the <a href="/agentic-loops/">agentic loops post</a>.' %}
 </section>
 
 <hr class='divider'>
 
-<section class='section' id='agentic-ai'>
-  {% include components/section-head.html tag='04' title='Agentic AI workflow' sub='The broader category.' %}
+<section class='section' id='agent-evals'>
+  {% include components/section-head.html tag='06' title='Agent Evals' sub='The measurement layer.' %}
 
-  {% include components/prose-center.html text='An AI architecture that uses Act-Observe-Evaluate-Update loops with validation gates rather than declarative prompts. Stateful and self-correcting. Spiel OS is one implementation of this pattern, applied to content production.' %}
+  {% include components/prose-center.html text='Systematic evaluation of agent performance across tasks, reliability, cost, and quality dimensions. Agent evals are the measurement layer that separates demo agents from production agents. Without evals, you are shipping blind.' %}
 
-  {% include components/takeaway.html text='Read the <a href="/clusters/ai-agents/">AI &amp; Agents cluster</a>.' %}
+  {% include components/takeaway.html text='Read the <a href="/clusters/agents-loops-evals/">Agents, Loops &amp; Evals cluster</a>.' %}
 </section>
 
 <hr class='divider'>
 
-<section class='section' id='quality-gates'>
-  {% include components/section-head.html tag='05' title='Quality Gates' sub='The validation pattern.' %}
+<section class='section' id='agent-tracing'>
+  {% include components/section-head.html tag='07' title='Agent Tracing' sub='The observability layer.' %}
 
-  {% include components/prose-center.html text='Validation checkpoints in an AI content pipeline that score or filter outputs before they advance. Replace reliance on model quality alone. A gate at the Act &rarr; Observe transition catches structural failures. A gate at Observe &rarr; Evaluate catches semantic drift. The loop is only as strong as its gates.' %}
+  {% include components/prose-center.html text='Recording the full execution path of an agent loop for debugging, optimization, and cost analysis. Traces show where agents fail, where tokens are wasted, and where context drifts. The observability layer for production agents.' %}
 
-  {% include components/takeaway.html text='Read the <a href="/gates-not-models/">quality gates post</a>.' %}
+  {% include components/takeaway.html text='Read the <a href="/clusters/agents-loops-evals/">Agents, Loops &amp; Evals cluster</a>.' %}
 </section>
 
 <hr class='divider'>
 
-<section class='section' id='building-in-public'>
-  {% include components/section-head.html tag='06' title='Building in Public' sub='The shipping philosophy.' %}
+<section class='section' id='context-engineering'>
+  {% include components/section-head.html tag='08' title='Context Engineering' sub='The next frontier.' %}
 
-  {% include components/prose-center.html text='The practice of sharing engineering decisions, build progress, and tradeoffs publicly to compound audience and trust without a separate marketing channel. Decisions, not secrets. Tradeoffs, not transcripts. The architecture choice is public the moment you ship the product.' %}
+  {% include components/prose-center.html text='The discipline of designing what goes into an LLM context window, including system prompts, memory, retrieval, and caching strategies. Context engineering is not prompt engineering. It is the architecture of what the model sees, remembers, and ignores.' %}
 
-  {% include components/takeaway.html text='Read the <a href="/decisions-are-content/">engineering decisions as content post</a>.' %}
+  {% include components/takeaway.html text='Read the <a href="/clusters/context-engineering/">Context Engineering cluster</a>.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section' id='prompt-caching'>
+  {% include components/section-head.html tag='09' title='Prompt Caching' sub='The cost lever.' %}
+
+  {% include components/prose-center.html text='Storing and reusing portions of the context window across requests to reduce latency and cost. Prompt caching is becoming part of context engineering. Providers charge less for cached tokens, making cache hits a direct cost lever.' %}
+
+  {% include components/takeaway.html text='Try <a href="https://cachecatch.spielos.xyz">CacheCatch</a> to find missed caching opportunities.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section' id='cached-tokens'>
+  {% include components/section-head.html tag='10' title='Cached Tokens' sub='The unit of savings.' %}
+
+  {% include components/prose-center.html text='Tokens from a previous request that are reused in a new request&#39;s context, charged at a lower rate by providers. Cached tokens are the unit of savings in prompt caching. The more you cache, the less you pay.' %}
+
+  {% include components/takeaway.html text='Try <a href="https://cachecatch.spielos.xyz">CacheCatch</a> to audit your token waste.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section' id='session-as-content'>
+  {% include components/section-head.html tag='11' title='Session-as-Content' sub='The foundational methodology.' %}
+
+  {% include components/prose-center.html text='A methodology that turns technical founders&#39; build sessions into publishable content without switching identities between building and creating. The build session itself is the source material. A pipeline extracts, drafts, and ships. The builder never stops working to post.' %}
+
+  {% include components/takeaway.html text='Read the <a href="/session-as-content/">full methodology post</a> or the <a href="/clusters/founder-distribution/">Founder Distribution cluster</a>.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section' id='founder-distribution'>
+  {% include components/section-head.html tag='12' title='Founder Distribution' sub='The system state.' %}
+
+  {% include components/prose-center.html text='The practice of turning a founder&#39;s real technical work into public distribution surface area across multiple platforms. Not a content strategy. A system state where the product and the marketing channel are the same artifact.' %}
+
+  {% include components/takeaway.html text='Read the <a href="/clusters/founder-distribution/">Founder Distribution cluster</a>.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section' id='product-as-distribution'>
+  {% include components/section-head.html tag='13' title='Product-as-Distribution' sub='The compounding loop.' %}
+
+  {% include components/prose-center.html text='When the product itself becomes the marketing channel, compounding audience and trust through usage. Every user who installs, shares, or documents the product creates distribution surface area. The product markets itself through being built.' %}
+
+  {% include components/takeaway.html text='Read the <a href="/clusters/founder-distribution/">Founder Distribution cluster</a>.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section' id='minimum-viable-market'>
+  {% include components/section-head.html tag='14' title='Minimum Viable Market' sub='The validation threshold.' %}
+
+  {% include components/prose-center.html text='The smallest viable audience and distribution surface a founder needs to validate a project before scaling. Not a minimum viable product. A minimum viable market. The smallest number of people who care enough to use, share, and pay for what you build.' %}
+
+  {% include components/takeaway.html text='Read the <a href="/clusters/founder-distribution/">Founder Distribution cluster</a>.' %}
 </section>
 
 <hr class='divider'>
@@ -85,7 +165,7 @@ sitemap: true
 <section class='section'>
   {% include components/section-head.html tag='Spiel OS' title='Spiel OS' sub='The open-source implementation.' %}
 
-  {% include components/prose-center.html text='Session-as-Content Infrastructure. CLI-first tool that turns technical founders&rsquo; build sessions into publishable content across 6+ platforms. 4 files. 2 loops. 19 commands. MIT licensed. The codebase behind every other cluster on this site.' %}
+  {% include components/prose-center.html text='Founder Distribution Infrastructure. CLI-first tool that turns technical founders&#39; build sessions into publishable content across 6+ platforms. 4 files. 2 loops. 19 commands. MIT licensed. The codebase behind the Founder Distribution cluster.' %}
 
   {% include components/takeaway.html text='Read the <a href="/spielos-open-source/">Spiel OS open source post</a> or <a href="/SpielOS/">visit the Spiel OS page</a>.' %}
 </section>
@@ -96,11 +176,11 @@ sitemap: true
   {% include components/section-head.html tag='Explore' title='Continue reading' sub='The clusters, topics, and tooling behind these terms.' %}
 
   <div class='grid grid-3'>
-    {% include components/card.html href='/clusters/content-pipeline/' tag='Cluster' icon='book' title='Content Pipeline' desc='The complete cluster on Session-as-Content, the AI second brain, and the developer content pipeline.' %}
-    {% include components/card.html href='/clusters/ai-agents/' tag='Cluster' icon='refresh' title='AI &amp; Agents' desc='The architecture behind every term in this glossary. Loops, gates, and state machines.' %}
-    {% include components/card.html href='/clusters/building-in-public/' tag='Cluster' icon='lightbulb' title='Building in Public' desc='The shipping philosophy. Why decisions are content, why pipelines beat plans.' %}
-    {% include components/card.html href='/categories/' tag='Topics' icon='grid' title='All topics' desc='Browse every post by topic. Four clusters, fifteen posts.' %}
-    {% include components/card.html href='/posts/' tag='Blog' icon='book' title='All posts' desc='Every pillar post, newest first. The complete archive.' %}
-    {% include components/card.html href='/SpielOS/' tag='Tooling' icon='code' title='Spiel OS' desc='Open-source Session-as-Content Infrastructure. CLI-first, 4 files, MIT licensed.' %}
+    {% include components/card.html href='/clusters/ai-market/' tag='Cluster' icon='crosshair' title='AI Market' desc='Models, pricing, open weights, infra, geopolitics, and culture.' %}
+    {% include components/card.html href='/clusters/agents-loops-evals/' tag='Cluster' icon='refresh' title='Agents, Loops &amp; Evals' desc='Agent workflows, traces, evals, failures, and reliability loops.' %}
+    {% include components/card.html href='/clusters/context-engineering/' tag='Cluster' icon='layers' title='Context Engineering' desc='System prompts, memory, caching, context windows, and token waste.' %}
+    {% include components/card.html href='/clusters/founder-distribution/' tag='Cluster' icon='send' title='Founder Distribution' desc='Product-as-distribution, technical founder marketing, and work becoming content.' %}
+    {% include components/card.html href='/categories/' tag='Topics' icon='grid' title='All topics' desc='Browse every note by topic. Five clusters, eighteen notes.' %}
+    {% include components/card.html href='/posts/' tag='Notes' icon='book' title='All notes' desc='Every note, newest first. The complete archive.' %}
   </div>
 </section>

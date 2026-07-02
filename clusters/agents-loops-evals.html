@@ -1,0 +1,66 @@
+---
+layout: page-shell
+title: "Agents, Loops & Evals, Agent Workflows, Traces, Reliability"
+description: >-
+  Notes on agent systems: state-machine loops, agent evals, tracing,
+  observability, failures, tool calls, workflow reliability, coding agents,
+  and the engineering behind agents that actually work.
+keywords: agent loops, agent evals, agent tracing, agentic AI, agent workflows, LangGraph, coding agents, agent observability, quality gates, state machines, agent reliability
+permalink: /clusters/agents-loops-evals/
+redirect_from:
+  - /clusters/ai-agents/
+sitemap: true
+---
+
+<section class='section'>
+  {% include components/section-head.html tag='Cluster' title='Agents, Loops &amp; Evals' sub='Agent workflows, traces, evals, failures, and reliability loops. The architecture behind AI systems that actually produce work, not just impressive demos.' %}
+
+  {% include components/prose-center.html text='Prompts are static documents. Models ignore them under context pressure. Loops are dynamic processes. They validate at every transition and recover from failure in seconds rather than hours. This cluster covers agent loop architecture, evaluation frameworks, tracing, observability, and the engineering patterns that make agents reliable in production.' %}
+
+  {% include components/takeaway.html text='If you have ever lost an afternoon to a model that quietly ignored half your rules, this cluster is for you.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='Pillar' title='Start here' sub='The pillar post that anchors the cluster.' %}
+
+  <div class='single-card'>
+    {% include components/card.html href='/agentic-loops/' tag='Pillar · Agentic Loops' icon='refresh' title='From Declarative Rules To Agentic Loops' desc='Why your LLM agents ignore half your rules. The agentic AI workflow architecture that replaces fragile prompts with state-machine loops that actually work.' %}
+  </div>
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='The cluster' title='All notes in this cluster' sub='From architecture to receipts.' %}
+
+  <div class='grid grid-2'>
+    {% include components/card.html href='/agentic-loops/' tag='01 · The Architecture' icon='refresh' title='From Declarative Rules To Agentic Loops' desc='Why your LLM agents ignore half your rules. Learn the agentic AI workflow architecture that replaces fragile prompts with state-machine loops.' %}
+    {% include components/card.html href='/gates-not-models/' tag='02 · The Pattern' icon='check' title='AI Content Pipelines Need Quality Gates, Not Just Better Models' desc='Why AI content automation fails without quality gates, and the handoff pattern that keeps automated pipelines producing.' %}
+    {% include components/card.html href='/blog-rebuild-4h/' tag='03 · The Receipts' icon='rocket' title='How I Rebuilt My Blog in 4 Hours With a Jekyll Automation Pipeline' desc='A Jekyll blog automation pipeline that turns vault drafts into live posts with one command.' %}
+    {% include components/card.html href='/GLM5.2-Cost-Breakdown/' tag='04 · The Economics' icon='bar-chart' title='Is GLM-5.2 Cheaper Than the Frontier?' desc='A working breakdown of LLM API pricing across Anthropic, OpenAI, Google, and Z.ai, at every reasoning effort.' %}
+  </div>
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='Apply it' title='Get the tooling' sub='Two loops. One architecture. Open source.' %}
+
+  <div class='c'>
+    {% include components/btn.html label='Spiel OS, Open Source' href='/SpielOS/' variant='primary' arrow=true %}
+  </div>
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='Explore' title='Related clusters' sub='Other clusters on the site.' %}
+
+  <div class='grid grid-3'>
+    {% include components/card.html href='/clusters/ai-market/' tag='Cluster' icon='crosshair' title='AI Market' desc='Models, pricing, open weights, infra, geopolitics, and culture.' %}
+    {% include components/card.html href='/clusters/context-engineering/' tag='Cluster' icon='layers' title='Context Engineering' desc='System prompts, memory, caching, context windows, and token waste.' %}
+    {% include components/card.html href='/clusters/founder-distribution/' tag='Cluster' icon='send' title='Founder Distribution' desc='Product-as-distribution, technical founder marketing, and work becoming content.' %}
+  </div>
+</section>

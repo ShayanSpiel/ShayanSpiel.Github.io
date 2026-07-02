@@ -6,37 +6,48 @@
 #   - individual posts : for explicit cluster attribution
 
 clusters:
-  - name: "Content Pipeline"
-    slug: content-pipeline
-    description: "How to turn build sessions into publishable content. The content pipeline for developers removes the identity switch between building and publishing. No blank pages. No editorial calendar. Just extraction."
-    pillar: /second-brain/
+  - name: "AI Market"
+    slug: ai-market
+    description: "Models, pricing, open weights, infra, geopolitics, and culture. The war room for understanding how the AI market actually moves."
+    pillar: /ai-war-price-intelligence/
     members:
-      - /content-pipeline/
-      - /sessions-to-posts/
-      - /72-hour-sprint/
-      - /decisions-are-content/
+      - /GLM5.2-Cost-Breakdown/
+      - /deepseek-v4-price-war/
+      - /deepseek-v4-official-launch/
+      - /tokens-per-sheep/
 
-  - name: "AI & Agents"
-    slug: ai-agents
-    description: "State machines, agentic loops, and quality gates for AI content. Why prompts fail and loops survive. The architecture behind Spiel OS."
+  - name: "Agents, Loops & Evals"
+    slug: agents-loops-evals
+    description: "Agent workflows, traces, evals, failures, and reliability loops. The architecture behind AI systems that actually produce work."
     pillar: /agentic-loops/
     members:
       - /gates-not-models/
       - /blog-rebuild-4h/
-      - /GLM5.2-Cost-Breakdown/
 
-  - name: "Building in Public"
-    slug: building-in-public
-    description: "Your engineering decisions are already content. Positioning as infrastructure. The blog rebuild. Shipping in public without switching identities."
+  - name: "Context Engineering"
+    slug: context-engineering
+    description: "System prompts, memory, caching, context windows, and token waste. The discipline of designing what goes into an LLM context window."
+    pillar: null
+    members: []
+
+  - name: "Founder Distribution"
+    slug: founder-distribution
+    description: "Product-as-distribution, technical founder marketing, and work becoming content. The system that turns building into publishing."
     pillar: /decisions-are-content/
     members:
-      - /positioning-state/
+      - /second-brain/
+      - /session-as-content/
+      - /content-pipeline/
+      - /sessions-to-posts/
+      - /72-hour-sprint/
+      - /decisions-are-content/
       - /pipeline-not-strategy/
+      - /positioning-state/
+      - /spielos-update/
 
   - name: "Spiel OS"
     slug: spielos
-    description: "Product updates, feature ships, and architecture details. The open-source Session-as-Content Infrastructure for technical founders."
+    description: "Product updates, feature ships, and architecture details. The open-source Founder Distribution Infrastructure for technical founders."
     pillar: /spielos-open-source/
     members:
-      - /spielos-update/
       - /session-as-content/

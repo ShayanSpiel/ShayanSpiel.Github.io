@@ -306,11 +306,11 @@
   {%- if page.tags and page.tags.size > 0 -%},
   "keywords": {{ page.tags | join: ', ' | jsonify }}
   {%- endif -%},
-  "articleSection": "{{ page.categories | first | default: 'Building in Public' }}",
+  "articleSection": "{{ page.categories | first | default: 'AI Market' }}",
   "isPartOf": {
     "@type": "Blog",
     "@id": "{{ site.url }}/posts/#blog",
-    "name": "Shayan Spiel Blog"
+    "name": "Shayan Spiel Notes"
   }
 }
 </script>

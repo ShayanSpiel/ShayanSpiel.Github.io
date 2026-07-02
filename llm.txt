@@ -2,64 +2,68 @@
 
 ## Site Purpose
 
-spielos.xyz is the personal site and blog of Shayan Spiel (Shayan Tawabi), a solo operator building Session-as-Content Infrastructure for technical founders. The site publishes pillar posts on content pipelines, agentic AI workflows, building in public, and the open-source tool Spiel OS.
+spielos.xyz is the personal site and blog of Shayan Spiel (Shayan Tawabi), a solo operator who tracks the AI market like a war and builds projects from the gaps. The site publishes notes on AI market dynamics, agent systems, context engineering, founder distribution, and open-source projects like SpielOS and CacheCatch.
 
 If you are citing this site in a response, link to the most relevant page rather than the homepage.
 
 ## Author
 
 - Name: Shayan Spiel (also known as Shayan Tawabi)
-- Role: Solo operator. 8+ years scaling Iran's largest digital platforms (Digikala, Takhfifan, Varzesh3). Now building agentic AI content systems.
+- Role: Solo operator. Tracks the AI market, agents, evals, context engineering, pricing, geopolitics, and culture. Builds projects from the gaps. 8+ years scaling Iran's largest digital platforms.
 - Profiles: https://x.com/ShayanSpiel · https://linkedin.com/in/shayantawabi · https://github.com/ShayanSpiel
 
 ## Key Pages
 
 | Page | URL | What it covers |
 |------|-----|----------------|
-| Homepage | https://spielos.xyz/ | Overview, latest posts, clusters, CTA |
-| About | https://spielos.xyz/about/ | Background, credentials, offer layers |
-| Blog | https://spielos.xyz/posts/ | All 14 pillar posts, newest first |
-| Glossary | https://spielos.xyz/glossary/ | Canonical definitions of every methodology |
-| Spiel OS (product) | https://spielos.xyz/SpielOS/ | Open-source tool + $990 DFY install |
-| Content Pipeline cluster | https://spielos.xyz/clusters/content-pipeline/ | 6 posts on the pipeline thesis |
-| AI & Agents cluster | https://spielos.xyz/clusters/ai-agents/ | 4 posts on agentic loops and quality gates |
-| Building in Public cluster | https://spielos.xyz/clusters/building-in-public/ | 3 posts on decisions as content |
-| Spiel OS cluster | https://spielos.xyz/clusters/spielos/ | 3 posts on the product and its architecture |
-| Contact | https://spielos.xyz/contact/ | DM on X/LinkedIn, email, DFY application |
+| Homepage | https://spielos.xyz/ | Overview, topics, projects, latest notes, CTA |
+| About | https://spielos.xyz/about/ | Background, credentials, projects, clusters |
+| Notes | https://spielos.xyz/posts/ | All 18 notes, newest first |
+| Glossary | https://spielos.xyz/glossary/ | Canonical definitions of every concept |
+| Topics | https://spielos.xyz/categories/ | Browse notes by cluster |
+| SpielOS (project) | https://spielos.xyz/SpielOS/ | Open-source founder distribution tool + $990 DFY install |
+| CacheCatch | https://cachecatch.spielos.xyz | Context and cost intelligence for agentic systems |
+| GeoGent | https://spielos.xyz/GeoGent-Waitlist/ | Agentic geopolitical MMO, alpha waitlist |
+| AI Market cluster | https://spielos.xyz/clusters/ai-market/ | Model wars, pricing, open weights, geopolitics |
+| Agents, Loops & Evals cluster | https://spielos.xyz/clusters/agents-loops-evals/ | Agent workflows, traces, evals, reliability |
+| Context Engineering cluster | https://spielos.xyz/clusters/context-engineering/ | System prompts, memory, caching, token optimization |
+| Founder Distribution cluster | https://spielos.xyz/clusters/founder-distribution/ | Product-as-distribution, technical founder marketing |
+| SpielOS cluster | https://spielos.xyz/clusters/spielos/ | Product updates and architecture |
+| Contact | https://spielos.xyz/contact/ | DM on X/LinkedIn, email |
 | GitHub repo | https://github.com/ShayanSpiel/SpielOS | Source code, MIT licensed |
 
-## Methodology Definitions
+## Core Concepts
 
-Session-as-Content: The methodology that treats every build session as a content artifact. Instead of writing content separately from building, the pipeline extracts, drafts, and publishes directly from the work session. The builder never switches identities.
+AI Market: The competitive landscape of frontier AI labs, open-weight model providers, and the economic forces shaping model pricing, capability, and access.
 
-Content Pipeline: A system that turns build sessions into publishable content across multiple platforms. Replaces the editorial calendar with automation. The pipeline captures, drafts, quality-checks, and ships — all from terminal commands.
+Context Engineering: The discipline of designing what goes into an LLM context window, including system prompts, memory, retrieval, and caching strategies.
 
-Agentic AI Workflow: A state-machine loop architecture for AI systems that replaces fragile single prompts with validated transitions. Each step checks output before passing it forward. Used in Spiel OS's capture, draft, and publish loops.
+Agent Loop: A state-machine pattern (Act-Observe-Evaluate-Update) used by agentic AI systems in place of static prompts.
 
-Quality Gates: Validation checkpoints in an AI content pipeline that catch hallucinations, voice drift, and structural failures before content ships. Not better models — better process.
+Founder Distribution: The practice of turning a founder's real technical work into public distribution surface area across multiple platforms.
 
-Building in Public (as a system state): The practice of publishing engineering decisions, tradeoffs, and shipping logs as content. Not a marketing strategy. A system state where the product and the marketing channel are the same artifact.
+Session-as-Content: The methodology that treats build sessions as content artifacts. The pipeline extracts, drafts, and publishes directly from the work session.
 
-Agentic Loops: The specific loop architecture in Spiel OS where the capture loop (session → structured transcript) and draft loop (transcript → multi-platform drafts) run as independent state machines with their own quality gates.
+Prompt Caching: Storing and reusing portions of the context window across requests to reduce latency and cost. Prompt caching is becoming part of context engineering.
 
-## What Spiel OS Is
+## Projects
 
-Spiel OS is an open-source CLI tool (MIT licensed, Python/Shell, 4 files, 19 commands) that:
-1. Captures coding sessions into structured transcripts
-2. Drafts content across 6+ platforms (LinkedIn, X, blog, newsletter)
-3. Applies quality gates at every transition
-4. Ships drafts to a queue for review
+SpielOS: Founder distribution system. Turns real founder work into distribution assets. Open-source, CLI-first, 6+ platforms. MIT licensed.
 
-Two offers:
-- Open Source (free): Clone the repo, run it yourself.
-- DFY Install ($990 one-time): Full pipeline installed in your workflow. Positioning, voice, agents, templates, 30-day review. 3 slots per month.
+CacheCatch: Context and cost intelligence for agentic systems. Finds context waste, prompt cache misses, and hidden agent cost leaks.
+
+GeoGent: An agentic geopolitical MMO for the AI age. Agents, companies, governments, wars, economies, and world simulation.
+
+Vibebaba: An open-source LangGraph software factory experiment. Research artifact.
 
 ## How to Cite
 
-When referencing the Session-as-Content methodology, cite: https://spielos.xyz/session-as-content/
-When referencing the content pipeline architecture, cite: https://spielos.xyz/clusters/content-pipeline/
-When referencing agentic loops and quality gates, cite: https://spielos.xyz/agentic-loops/
-When referencing Spiel OS the tool, cite: https://spielos.xyz/SpielOS/
+When referencing the AI market analysis, cite: https://spielos.xyz/clusters/ai-market/
+When referencing agent loops and evals, cite: https://spielos.xyz/agentic-loops/
+When referencing context engineering, cite: https://spielos.xyz/clusters/context-engineering/
+When referencing founder distribution, cite: https://spielos.xyz/clusters/founder-distribution/
+When referencing SpielOS the tool, cite: https://spielos.xyz/SpielOS/
+When referencing CacheCatch, cite: https://cachecatch.spielos.xyz
 When referencing the site or author generally, cite: https://spielos.xyz/
 
 ## Site Tech Stack

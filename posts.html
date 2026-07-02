@@ -1,8 +1,8 @@
 ---
-layout: blog
-title: Blog
-description: Every pillar post on the ShayanSpiel blog. Newest first.
-keywords: all posts, blog archive, Shayan Spiel, session-as-content, content engine, building in public
+layout: page-shell
+title: Notes
+description: Every note on the Shayan Spiel site. AI market, agents, evals, context engineering, founder distribution, and projects from the gaps.
+keywords: all notes, notes archive, Shayan Spiel, AI market, agent evals, context engineering, founder distribution
 image:
   path: /assets/og/blog.png
   width: 1200
@@ -16,7 +16,7 @@ permalink: /posts/
 <section class="blog-stats">
   <div class="blog-stat">
     <span class="blog-stat-num">{{ total_posts }}</span>
-    <span class="blog-stat-label">posts</span>
+    <span class="blog-stat-label">notes</span>
   </div>
   <div class="blog-stat-sep" aria-hidden="true">·</div>
   <div class="blog-stat">
@@ -29,7 +29,7 @@ permalink: /posts/
   </div>
 </section>
 
-<nav class="blog-filters" id="post-filters" role="group" aria-label="Filter posts by topic">
+<nav class="blog-filters" id="post-filters" role="group" aria-label="Filter notes by topic">
   <a href="/posts/" class="filter-btn active" data-filter="all" role="button" aria-pressed="true">
     All <span class="filter-count">{{ total_posts }}</span>
   </a>
@@ -60,7 +60,7 @@ permalink: /posts/
       {%- endif %}
       <div class="post-card-foot">
         <span class="post-card-meta">
-          {%- if post.read_time %}{{ post.read_time }} min read{%- else %}Read post{%- endif %}
+          {%- if post.read_time %}{{ post.read_time }} min read{%- else %}Read note{%- endif %}
         </span>
         <span class="post-card-arrow" aria-hidden="true">&rarr;</span>
       </div>
@@ -68,10 +68,10 @@ permalink: /posts/
   {%- endfor %}
 </div>
 
-<div class="blog-empty" id="blog-empty">No posts match this filter.</div>
+<div class="blog-empty" id="blog-empty">No notes match this filter.</div>
 
 <div class="blog-load-more" id="load-more-wrap" style="display:none;">
-  <button class="btn btn-ghost" id="load-more-btn" type="button">Load more posts</button>
+  <button class="btn btn-ghost" id="load-more-btn" type="button">Load more notes</button>
 </div>
 
 <script>
@@ -83,7 +83,6 @@ permalink: /posts/
   var cat = params.get('cat');
   var tag = params.get('tag');
 
-  // Inject canonical link to /posts/ for filtered views (avoids duplicate content)
   if ((cat || tag) && !document.querySelector('link[rel="canonical"][data-injected]')) {
     var canonical = document.createElement('link');
     canonical.rel = 'canonical';
@@ -92,7 +91,6 @@ permalink: /posts/
     var existing = document.querySelector('link[rel="canonical"]');
     if (existing) existing.parentNode.removeChild(existing);
     document.head.appendChild(canonical);
-    // Also set robots to noindex,follow for filtered views
     var robots = document.querySelector('meta[name="robots"]');
     if (robots) robots.setAttribute('content', 'noindex, follow');
   }

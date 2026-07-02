@@ -1,8 +1,8 @@
 ---
 layout: default
-title: Shayan Spiel, Session-as-Content for Technical Founders
-description: Shayan Spiel. Solo operator. 8+ years scaling Iran's largest digital platforms. Now building Session-as-Content, the methodology and tooling that turn build sessions into publishable content, so technical founders never stop working to post.
-keywords: Shayan Spiel, Shayan Tawabi, Session-as-Content, session as content methodology, build in public, technical founder, Spiel OS, agentic AI, content pipeline, content pipeline for developers, AI content automation, open source content engine, automate blog posts from coding sessions, DFY content system, developer content system, technical founder marketing
+title: "AI Market Notes, Agent Systems & Founder Projects"
+description: "Sharp notes on the AI market: model wars, open weights, agents, evals, context engineering, inference economics, founder distribution, and projects from the gaps."
+keywords: Shayan Spiel, Shayan Tawabi, AI market, AI model war, AI agents, agent evals, LLM evals, context engineering, prompt caching, open-weight models, inference economics, AI model pricing, technical founder marketing, founder distribution, agent tracing, Spiel OS, CacheCatch
 image:
   path: /assets/og/home.png
   width: 1200
@@ -17,13 +17,13 @@ permalink: /
       <img src="/assets/avatars/avatar.jpg" alt="Shayan Spiel" class="hero-avatar" width="64" height="64" loading="eager" fetchpriority="high" decoding="async"/>
       <h1>Shayan Spiel</h1>
     </div>
-    <p class="lede">Solo operator. I build Session-as-Content Infrastructure for technical founders. Systems that turn build sessions into publishable content, so you never stop working to post.</p>
+    <p class="lede">I track the AI market like a war. Then I build projects from the gaps. Notes on model wars, agents, evals, context engineering, AI pricing, founder distribution, and the weird market culture forming around all of it.</p>
     <div class="hero-actions">
-      {% include components/btn.html label="Get Spiel" href="/SpielOS/" variant="primary" arrow=true %}
-      <a href="https://github.com/ShayanSpiel/SpielOS" target="_blank" rel="noopener" class="btn btn-ghost">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-        GitHub
+      <a href="https://cachecatch.spielos.xyz" target="_blank" rel="noopener" class="btn btn-primary btn-arrow">
+        Try CacheCatch
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg>
       </a>
+      {% include components/btn.html label="Read the Notes" href="/posts/" variant="ghost" arrow=true %}
       <a href="/about/" class="btn btn-ghost">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         About
@@ -45,33 +45,39 @@ permalink: /
   <hr class="divider">
 
   <section class="section" aria-label="Projects">
-    {% include components/section-head.html tag="What I'm shipping" title="Building systems, not just products" sub="Every project I ship is infrastructure for technical founders to build in public, without switching identities." %}
-    <div class="grid grid-3">
-      <a href="https://github.com/ShayanSpiel/SpielOS" target="_blank" rel="noopener" class="card">
-        <div class="card-tag">Open Source</div>
-        <h3 class="card-title">Spiel OS</h3>
-        <p class="card-desc">Session-as-Content Infrastructure. Capture, draft, publish. CLI-first, 6+ platforms.</p>
-        <span class="card-link">View on GitHub <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
+    {% include components/section-head.html tag="What I'm building" title="Projects from the gaps" sub="Every project I ship comes from watching the AI market collide with itself." %}
+    <div class="grid grid-2">
+      <a href="/SpielOS/" class="card">
+        <div class="card-tag">Active</div>
+        <h3 class="card-title">SpielOS</h3>
+        <p class="card-desc">Turns real founder work into distribution assets. Open-source, CLI-first, 6+ platforms.</p>
+        <span class="card-link">View project <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
+      </a>
+      <a href="https://cachecatch.spielos.xyz" target="_blank" rel="noopener" class="card">
+        <div class="card-tag">Active</div>
+        <h3 class="card-title">CacheCatch</h3>
+        <p class="card-desc">Finds context waste, prompt cache misses, and hidden agent cost leaks.</p>
+        <span class="card-link">Try CacheCatch <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
       </a>
       <a href="/GeoGent-Waitlist/" class="card">
         <div class="card-tag">In Development</div>
         <h3 class="card-title">GeoGent</h3>
-        <p class="card-desc">A browser-based strategy MMO. Build cities, run economies, win wars. In test phase.</p>
+        <p class="card-desc">An agentic geopolitical MMO for the AI age. Agents, economies, wars, and world simulation.</p>
         <span class="card-link">Join waitlist <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
       </a>
-      <a href="/SpielOS/" class="card">
-        <div class="card-tag">DFY Install</div>
-        <h3 class="card-title">Spiel for Teams</h3>
-        <p class="card-desc">Done-for-you pipeline install. We write your positioning, configure your voice, set up publishing. 3 slots per month.</p>
-        <span class="card-link">Get Spiel <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
+      <a href="https://github.com/ShayanSpiel/vibebaba" target="_blank" rel="noopener" class="card">
+        <div class="card-tag">Archive</div>
+        <h3 class="card-title">Vibebaba</h3>
+        <p class="card-desc">An open-source LangGraph software factory experiment. Founder to PM to UX to Backend to QA.</p>
+        <span class="card-link">View on GitHub <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
       </a>
     </div>
   </section>
 
   <hr class="divider">
 
-  <section class="section" aria-label="Latest posts">
-    {% include components/section-head.html tag="The Blog" title="Latest posts" sub="Pillar posts on building in public, content systems, and agentic AI workflows." %}
+  <section class="section" aria-label="Latest notes">
+    {% include components/section-head.html tag="Latest notes" title="Notes" sub="AI market, agents, evals, context engineering, founder distribution, and projects from the gaps." %}
     <div class="grid grid-3">
       {%- assign recent = site.posts | sort: 'date' | reverse | slice: 0, 6 -%}
       {%- for post in recent %}
@@ -87,60 +93,62 @@ permalink: /
         <p class="post-card-excerpt">{{ post.description | strip_html | truncatewords: 20 }}</p>
         {%- endif %}
         <div class="post-card-foot">
-          <span class="post-card-meta">Read post</span>
+          <span class="post-card-meta">Read note</span>
           <span class="post-card-arrow" aria-hidden="true">&rarr;</span>
         </div>
       </a>
       {%- endfor %}
     </div>
     <div class="c mt-6">
-      {% include components/btn.html label="View all posts" href="/posts/" variant="ghost" arrow=true %}
+      {% include components/btn.html label="View all notes" href="/posts/" variant="ghost" arrow=true %}
     </div>
   </section>
 
   <hr class="divider">
 
-  <section class="section" aria-label="Clusters">
-    {% include components/section-head.html tag="Browse by cluster" title="Topical hubs" sub="Four clusters. Pick the one that matches your question." %}
+  <section class="section" aria-label="What I Track">
+    {% include components/section-head.html tag="What I track" title="Topics" sub="Four clusters. Pick the one that matches your question." %}
     <div class="grid grid-2">
-      <a href="/clusters/content-pipeline/" class="card">
-        <div class="card-tag">Cluster · 6 posts</div>
-        <h3 class="card-title">Content Pipeline</h3>
-        <p class="card-desc">Turn build sessions into publishable content. Session-as-Content methodology, the AI second brain, and the developer content pipeline.</p>
+      <a href="/clusters/ai-market/" class="card">
+        <div class="card-tag">Cluster</div>
+        <h3 class="card-title">AI Market</h3>
+        <p class="card-desc">Models, pricing, open weights, infra, geopolitics, and culture.</p>
         <span class="card-link">Explore cluster <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
       </a>
-      <a href="/clusters/ai-agents/" class="card">
-        <div class="card-tag">Cluster · 4 posts</div>
-        <h3 class="card-title">AI &amp; Agents</h3>
-        <p class="card-desc">State-machine loops, validation gates, and the architecture behind AI systems that actually produce work.</p>
+      <a href="/clusters/agents-loops-evals/" class="card">
+        <div class="card-tag">Cluster</div>
+        <h3 class="card-title">Agents, Loops &amp; Evals</h3>
+        <p class="card-desc">Agent workflows, traces, evals, failures, and reliability loops.</p>
         <span class="card-link">Explore cluster <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
       </a>
-      <a href="/clusters/building-in-public/" class="card">
-        <div class="card-tag">Cluster · 3 posts</div>
-        <h3 class="card-title">Building in Public</h3>
-        <p class="card-desc">Engineering decisions as content. Positioning as infrastructure. Shipping as the marketing channel.</p>
+      <a href="/clusters/context-engineering/" class="card">
+        <div class="card-tag">Cluster</div>
+        <h3 class="card-title">Context Engineering</h3>
+        <p class="card-desc">System prompts, memory, caching, context windows, and token waste.</p>
         <span class="card-link">Explore cluster <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
       </a>
-      <a href="/clusters/spielos/" class="card">
-        <div class="card-tag">Cluster · 3 posts</div>
-        <h3 class="card-title">Spiel OS</h3>
-        <p class="card-desc">Open-source Session-as-Content Infrastructure. CLI-first, 4 files, MIT licensed. The codebase behind every cluster on this site.</p>
+      <a href="/clusters/founder-distribution/" class="card">
+        <div class="card-tag">Cluster</div>
+        <h3 class="card-title">Founder Distribution</h3>
+        <p class="card-desc">Product-as-distribution, technical founder marketing, and work becoming content.</p>
         <span class="card-link">Explore cluster <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
       </a>
     </div>
     <div class="c mt-6">
       {% include components/btn.html label="View all topics" href="/categories/" variant="ghost" arrow=true %}
       {% include components/btn.html label="Glossary" href="/glossary/" variant="ghost" arrow=true %}
-      {% include components/btn.html label="All tags" href="/tags/" variant="ghost" arrow=true %}
     </div>
   </section>
 
   <hr class="divider">
 
   <section class="section c" aria-label="Call to action">
-    {% include components/section-head.html title="Work with me" sub="I build Session-as-Content Infrastructure for technical founders. Your build sessions become publishable content. You stay a builder." %}
+    {% include components/section-head.html title="Work with me" sub="I track the AI market, build projects from the gaps, and help technical founders turn real work into distribution. AI-native project building, agent workflows, context audits, and founder distribution systems." %}
     <div class="hero-actions">
-      {% include components/btn.html label="Get Spiel" href="/SpielOS/" variant="primary" arrow=true %}
+      <a href="https://cachecatch.spielos.xyz" target="_blank" rel="noopener" class="btn btn-primary btn-arrow">
+        Try CacheCatch
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg>
+      </a>
       <a href="/contact/" class="btn btn-ghost">Contact</a>
     </div>
   </section>
