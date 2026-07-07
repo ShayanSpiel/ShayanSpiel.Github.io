@@ -68,7 +68,7 @@
 <aside class="related-posts">
   <h2>Related posts</h2>
   <div class="grid grid-3">
-    {%- for post in related | slice: 0, 3 -%}
+    {%- for post in related limit:3 -%}
     <a href="{{ post.url | relative_url }}" class="post-card">
       <div class="post-card-head">
         <time class="post-card-date">{{ post.date | date: "%b %-d, %Y" }}</time>

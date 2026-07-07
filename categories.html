@@ -12,7 +12,7 @@ permalink: /categories/
 
 <p>Every note belongs to a topic and a cluster. Clusters group topics that share an underlying thesis. Each cluster has a <em>pillar</em> post, the long, comprehensive entry that anchors the rest.</p>
 
-<p class="muted small" style="margin-top: var(--s-3);">
+<p class="muted small mt-4">
   New here? Start with the <a href="/glossary/">glossary</a> for canonical definitions, or jump into the <a href="/clusters/ai-market/">AI Market cluster</a>.
 </p>
 
@@ -40,8 +40,8 @@ permalink: /categories/
   <p class="category-desc">{{ cluster.description }}</p>
 
   {%- if cluster.pillar -%}
-  <p class="category-desc" style="font-size: var(--fs-sm); color: var(--tx-3); margin-top: -8px;">
-    <strong style="color: var(--tx-1);">Pillar:</strong>
+  <p class="category-desc category-pillar">
+    <strong>Pillar:</strong>
     <a href="{{ cluster.pillar }}">{{ cluster.pillar | replace: "/", "" | replace: "-", " " | capitalize }}</a>
   </p>
   {%- endif -%}
@@ -50,7 +50,7 @@ permalink: /categories/
     {%- for member_path in cluster.members -%}
       {%- assign post = site.posts | where: "url", member_path | first -%}
       {%- if post %}
-      <li style="margin-bottom: var(--s-3);">
+      <li class="mb-4">
         <a href="{{ post.url | relative_url }}" class="plain">
           <span class="muted small post-list-date">{{ post.date | date: "%b %-d, %Y" }}</span>
           <u>{{ post.title }}</u>
@@ -73,8 +73,8 @@ permalink: /categories/
 {%- for cat in all_cats_sorted -%}
   {%- assign cat_strip = cat | strip -%}
   {%- if cat_strip != '' -%}
-    <section id="{{ cat_strip | slugify }}" style="margin-top: var(--s-5);">
-      <h3 style="font-size: var(--fs-lg);"><a href="/posts/?cat={{ cat_strip | slugify }}" class="plain">{{ cat_strip }}</a></h3>
+    <section id="{{ cat_strip | slugify }}" class="mt-6">
+      <h3><a href="/posts/?cat={{ cat_strip | slugify }}" class="plain h3-link">{{ cat_strip }}</a></h3>
       <ul class="list-plain">
         {%- for post in site.posts -%}
           {%- if post.categories contains cat_strip -%}

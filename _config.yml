@@ -71,7 +71,6 @@ exclude:
   - Gemfile
   - Gemfile.lock
   - README.md
-  - assets/js/mouse_coords.js
   - assets/css/main.css.map
   - assets/logos/preview.html
   - infra/
@@ -81,3 +80,5 @@ exclude:
   - design-system/components.json
   - _drafts
   - _tools/preview
+  - preview-deepseek-v4.html
+  - preview-deepseek-v4-official-launch.html

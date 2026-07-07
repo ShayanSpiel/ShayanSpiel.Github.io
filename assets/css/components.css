@@ -515,6 +515,20 @@
 }
 .related-posts .grid-3 { margin-top: 0; }
 
+/* ── category-pillar (pillar link in categories list) ── */
+.category-pillar { font-size: var(--fs-sm); color: var(--tx-3); margin-top: -8px; }
+.category-pillar strong { color: var(--tx-1); }
+
+/* ── h3-link (category heading link on /categories) ── */
+.h3-link { font-size: var(--fs-lg); }
+
+/* ── text-404 (404 page big number) ── */
+.text-404 { font-size: clamp(80px, 15vw, 160px) !important; letter-spacing: -0.06em; line-height: 1; margin-bottom: var(--s-4); }
+.text-404-lede { max-width: 360px; margin-bottom: var(--s-6); }
+
+/* ── grid-sitemap (sitemap page single column) ── */
+.grid-sitemap { grid-template-columns: 1fr; gap: 0; margin-top: var(--s-5); }
+
 /* ── post-list (compact post link) ── */
 .post-list { list-style: none; padding: 0; margin: 0; }
 .post-list-link {

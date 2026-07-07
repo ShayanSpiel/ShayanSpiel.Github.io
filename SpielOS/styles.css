@@ -2,6 +2,9 @@
    Spiel OS, Product Landing Page
    ===================================================================== */
 
+/* Hide site chrome when page is rendered inside Jekyll layout */
+.nav, .site-footer { display: none; }
+
 /* ---- Reset & Tokens ---- */
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
