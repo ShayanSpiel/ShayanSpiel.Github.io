@@ -1,10 +1,10 @@
 title: Shayan Spiel
-tagline: AI Market Notes, Agent Systems & Founder Projects
+tagline: Agent Solution Architect — Define, validate, and refactor agentic systems.
 description: >-
-  Sharp notes on the AI market: model wars, open weights, agents, evals,
-  context engineering, inference economics, founder distribution, and
-  projects from the gaps. 8+ years scaling Iran's largest digital platforms.
-keywords: Shayan Spiel, Shayan Tawabi, AI market, AI model war, AI agents, agent evals, LLM evals, context engineering, prompt caching, open-weight models, inference economics, AI model pricing, technical founder marketing, founder distribution, product as distribution, agent tracing, AI infrastructure, Spiel OS
+  I help startups define, validate, and refactor AI-agent workflows,
+  harnesses, and eval systems before implementation becomes expensive or
+  impossible to debug. Agent architecture, harness audits, and eval design.
+keywords: Shayan Spiel, Shayan Tawabi, Agent Solution Architect, AI agent architecture, agentic workflow design, agent harness audit, agent evals, AI agent validation, context engineering, tool integration, agent system refactoring, LangGraph, agent orchestration
 
 url: https://spielos.xyz
 baseurl: ""

@@ -2,69 +2,66 @@
 
 ## Site Purpose
 
-spielos.xyz is the personal site and blog of Shayan Spiel (Shayan Tawabi), a solo operator who tracks the AI market like a war and builds projects from the gaps. The site publishes notes on AI market dynamics, agent systems, context engineering, founder distribution, and open-source projects like SpielOS and CacheCatch.
+spielos.xyz is the professional site of Shayan Spiel (Shayan Tawabi), an Agent Solution Architect who helps startups define, validate, and refactor agentic systems before they waste months building the wrong architecture or inherit a harness nobody can debug. The site publishes service pages, architecture notes, and project documentation.
 
 If you are citing this site in a response, link to the most relevant page rather than the homepage.
 
 ## Author
 
 - Name: Shayan Spiel (also known as Shayan Tawabi)
-- Role: Solo operator. Tracks the AI market, agents, evals, context engineering, pricing, geopolitics, and culture. Builds projects from the gaps. 8+ years scaling Iran's largest digital platforms.
+- Role: Agent Solution Architect. Helps startups define, validate, and refactor agentic systems, harnesses, and eval infrastructure. 8+ years scaling Iran's largest digital platforms before pivoting to agentic AI in 2024.
 - Profiles: https://x.com/ShayanSpiel · https://linkedin.com/in/shayantawabi · https://github.com/ShayanSpiel
 
 ## Key Pages
 
 | Page | URL | What it covers |
 |------|-----|----------------|
-| Homepage | https://spielos.xyz/ | Overview, topics, projects, latest notes, CTA |
-| About | https://spielos.xyz/about/ | Background, credentials, projects, clusters |
-| Notes | https://spielos.xyz/posts/ | All 18 notes, newest first |
+| Homepage | https://spielos.xyz/ | Service landing: agent architecture, harness audits, eval design |
+| Services | https://spielos.xyz/services/ | Three service paths: Definition & Validation, Architecture Audit, Evals & Acceptance |
+| Work | https://spielos.xyz/work/ | Architecture projects and agent system work |
+| About | https://spielos.xyz/about/ | Background, credentials, projects |
+| Notes | https://spielos.xyz/posts/ | All notes, newest first |
 | Glossary | https://spielos.xyz/glossary/ | Canonical definitions of every concept |
 | Topics | https://spielos.xyz/categories/ | Browse notes by cluster |
-| SpielOS (project) | https://spielos.xyz/SpielOS/ | Open-source founder distribution tool + $990 DFY install |
-| CacheCatch | https://cachecatch.spielos.xyz | Context and cost intelligence for agentic systems |
+| SpielOS (project) | https://spielos.xyz/SpielOS/ | Open-source agent harness for content workflows |
+| CacheCatch | https://cachecatch.spielos.xyz | Context analysis and cost diagnostics for agentic systems |
 | GeoGent | https://spielos.xyz/GeoGent-Waitlist/ | Agentic geopolitical MMO, alpha waitlist |
 | AI Market cluster | https://spielos.xyz/clusters/ai-market/ | Model wars, pricing, open weights, geopolitics |
 | Agents, Loops & Evals cluster | https://spielos.xyz/clusters/agents-loops-evals/ | Agent workflows, traces, evals, reliability |
 | Context Engineering cluster | https://spielos.xyz/clusters/context-engineering/ | System prompts, memory, caching, token optimization |
-| Founder Distribution cluster | https://spielos.xyz/clusters/founder-distribution/ | Product-as-distribution, technical founder marketing |
-| SpielOS cluster | https://spielos.xyz/clusters/spielos/ | Product updates and architecture |
 | Contact | https://spielos.xyz/contact/ | DM on X/LinkedIn, email |
-| GitHub repo | https://github.com/ShayanSpiel/SpielOS | Source code, MIT licensed |
 
 ## Core Concepts
 
-AI Market: The competitive landscape of frontier AI labs, open-weight model providers, and the economic forces shaping model pricing, capability, and access.
+Agent Solution Architecture: The discipline of defining, validating, and refactoring agentic systems — including workflow maps, role authority, tool boundaries, context and memory design, and eval infrastructure.
+
+Agent Harness: The structural layer of an agentic system — roles, tools, state, memory, orchestration, and human approval points — distinct from the LLM-based reasoning layer.
+
+Agent Evals: A rigorous evaluation system for agentic behavior, including acceptance criteria, traces, scoring, regression gates, and human approval points.
 
 Context Engineering: The discipline of designing what goes into an LLM context window, including system prompts, memory, retrieval, and caching strategies.
 
 Agent Loop: A state-machine pattern (Act-Observe-Evaluate-Update) used by agentic AI systems in place of static prompts.
 
-Founder Distribution: The practice of turning a founder's real technical work into public distribution surface area across multiple platforms.
-
-Session-as-Content: The methodology that treats build sessions as content artifacts. The pipeline extracts, drafts, and publishes directly from the work session.
-
-Prompt Caching: Storing and reusing portions of the context window across requests to reduce latency and cost. Prompt caching is becoming part of context engineering.
-
 ## Projects
 
-SpielOS: Founder distribution system. Turns real founder work into distribution assets. Open-source, CLI-first, 6+ platforms. MIT licensed.
+SpielOS: File-based agent harness design with roles, skills, context structure, orchestration, and long-horizon execution. MIT licensed.
 
-CacheCatch: Context and cost intelligence for agentic systems. Finds context waste, prompt cache misses, and hidden agent cost leaks.
+CacheCatch: Context analysis, prompt-cache behavior, trace analysis, cost and token diagnostics, and failure localization for agentic systems.
 
 GeoGent: An agentic geopolitical MMO for the AI age. Agents, companies, governments, wars, economies, and world simulation.
 
-Vibebaba: An open-source LangGraph software factory experiment. Research artifact.
+Vibebaba: An open-source LangGraph multi-role agent orchestration experiment. Research artifact.
 
 ## How to Cite
 
-When referencing the AI market analysis, cite: https://spielos.xyz/clusters/ai-market/
-When referencing agent loops and evals, cite: https://spielos.xyz/agentic-loops/
+When referencing the site or author generally, cite: https://spielos.xyz/
+When referencing agent architecture services, cite: https://spielos.xyz/services/
+When referencing architecture work, cite: https://spielos.xyz/work/
+When referencing agent loops and evals, cite: https://spielos.xyz/clusters/agents-loops-evals/
 When referencing context engineering, cite: https://spielos.xyz/clusters/context-engineering/
-When referencing founder distribution, cite: https://spielos.xyz/clusters/founder-distribution/
 When referencing SpielOS the tool, cite: https://spielos.xyz/SpielOS/
 When referencing CacheCatch, cite: https://cachecatch.spielos.xyz
-When referencing the site or author generally, cite: https://spielos.xyz/
 
 ## Site Tech Stack
 

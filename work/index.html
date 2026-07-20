@@ -1,0 +1,89 @@
+---
+layout: page-shell
+title: Work
+description: Agent architecture projects, system audits, and selected writing by Shayan Spiel.
+permalink: /work/
+---
+
+<section class='section'>
+  {% include components/section-head.html tag='Products and systems' title='Architecture work in practice' sub='Projects that demonstrate agent system definition, harness design, and evaluation thinking.' %}
+
+  <div class='grid grid-2'>
+    <a href='/SpielOS/' class='card'>
+      <div class='card-tag'>Active</div>
+      <h3 class='card-title'>SpielOS</h3>
+      <p class='card-desc'>File-based agent harness with roles, skills, context management, orchestration, and long-horizon execution. Demonstrates how architecture decisions about state, tools, and authority translate into a working system.</p>
+      <span class='card-link'>View project <svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' aria-hidden='true'><path d='M7 17 17 7M7 7h10v10'/></svg></span>
+    </a>
+    <a href='https://cachecatch.spielos.xyz' target='_blank' rel='noopener' class='card'>
+      <div class='card-tag'>Active</div>
+      <h3 class='card-title'>CacheCatch</h3>
+      <p class='card-desc'>Diagnostic tool for agentic systems. Analyzes context construction, prompt-cache behavior, token cost, and failure patterns. Demonstrates evaluation thinking applied to agent observability.</p>
+      <span class='card-link'>Try CacheCatch <svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' aria-hidden='true'><path d='M7 17 17 7M7 7h10v10'/></svg></span>
+    </a>
+    <a href='https://github.com/ShayanSpiel/vibebaba' target='_blank' rel='noopener' class='card'>
+      <div class='card-tag'>Archive</div>
+      <h3 class='card-title'>Vibebaba</h3>
+      <p class='card-desc'>Multi-role agent orchestration on LangGraph. Workflow decomposition, QA and correction loops, and role-based authority. Demonstrates how role separation and human-in-the-loop patterns work in practice.</p>
+      <span class='card-link'>View on GitHub <svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' aria-hidden='true'><path d='M7 17 17 7M7 7h10v10'/></svg></span>
+    </a>
+  </div>
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='Sample deliverables' title='Architecture artifacts' sub='Examples of what a service engagement produces. These are demonstration materials, not client work.' %}
+
+  <div class='grid grid-3'>
+    <div class='card'>
+      <div class='card-tag'>Sample</div>
+      <h3 class='card-title'>Agent System Blueprint</h3>
+      <p class='card-desc'>Architecture specification for a multi-role content agent: roles, tools, context boundaries, memory policy, and approval gates.</p>
+    </div>
+    <div class='card'>
+      <div class='card-tag'>Sample</div>
+      <h3 class='card-title'>Evaluation Plan</h3>
+      <p class='card-desc'>Eval design for a customer-support triage agent: scenarios, rubrics, trajectory checks, and acceptance thresholds.</p>
+    </div>
+    <div class='card'>
+      <div class='card-tag'>Sample</div>
+      <h3 class='card-title'>Implementation Brief</h3>
+      <p class='card-desc'>Engineer-ready brief for a code-review agent: role definitions, tool schemas, success criteria, and integration points.</p>
+    </div>
+    <div class='card'>
+      <div class='card-tag'>Sample</div>
+      <h3 class='card-title'>Harness Audit Summary</h3>
+      <p class='card-desc'>Hypothetical audit of a research-agent harness: overlapping roles, prompt-embedded logic, missing evals, and refactor priorities.</p>
+    </div>
+    <div class='card'>
+      <div class='card-tag'>Sample</div>
+      <h3 class='card-title'>Refactor Plan</h3>
+      <p class='card-desc'>Priority-ranked refactor sequence for a fragile multi-agent system: what to change, why, and in what order.</p>
+    </div>
+  </div>
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='Selected writing' title='Notes on agent architecture' sub='Articles that explain the thinking behind the services.' %}
+
+  <div class='grid grid-2'>
+    <a href='/clusters/agents-loops-evals/' class='card'>
+      <div class='card-tag'>Cluster</div>
+      <h3 class='card-title'>Agents, Loops &amp; Evals</h3>
+      <p class='card-desc'>Agent workflows, traces, evals, failures, reliability loops, harness design patterns, and architecture decisions.</p>
+      <span class='card-link'>Explore cluster <svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' aria-hidden='true'><path d='M7 17 17 7M7 7h10v10'/></svg></span>
+    </a>
+    <a href='/clusters/context-engineering/' class='card'>
+      <div class='card-tag'>Cluster</div>
+      <h3 class='card-title'>Context Engineering</h3>
+      <p class='card-desc'>System prompts, memory, caching, context windows, token optimization, and cost-aware agent design.</p>
+      <span class='card-link'>Explore cluster <svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' aria-hidden='true'><path d='M7 17 17 7M7 7h10v10'/></svg></span>
+    </a>
+  </div>
+  <div class='c mt-4'>
+    {% include components/btn.html label='Browse all notes' href='/posts/' variant='ghost' arrow=true %}
+  </div>
+</section>

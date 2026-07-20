@@ -1,7 +1,14 @@
 entries:
-  - title: about
+  - title: Services
+    url: /services/
+  - title: Work
+    url: /work/
+  - title: About
     url: /about/
-  - title: blog
+  - title: Notes
     url: /posts/
-  - title: contact
+  - title: Contact
     url: /contact/
+cta:
+  label: Book a Fit Call
+  url: /contact/

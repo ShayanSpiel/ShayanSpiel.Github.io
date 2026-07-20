@@ -1,0 +1,178 @@
+---
+layout: page-shell
+title: Agent Harness Architecture Audit
+description: Find what is making your agent harness brittle. Architecture audit for agentic systems that are fragile, expensive, or hard to change.
+permalink: /agent-harness-audit/
+---
+
+<section class='section'>
+  {% include components/section-head.html tag='Service' title='Find what is making your agent harness brittle' sub='For existing agent systems that are difficult to reason about, test, maintain, or scale.' %}
+
+  <div class='grid grid-2'>
+    <div class='card'>
+      <div class='card-tag'>Buyer stage</div>
+      <h3 class='card-title'>System is live but fragile</h3>
+      <p class='card-desc'>Your agent is in production or near it. The team can ship changes but nobody is confident about what will break. Engineering time is consumed by unpredictable failures rather than feature work.</p>
+    </div>
+    <div class='card'>
+      <div class='card-tag'>Main symptoms</div>
+      <h3 class='card-title'>You know these signs</h3>
+      <p class='card-desc'>Small changes break unrelated behavior. Nobody knows the source of truth for prompts, tools, or roles. Context grows without policy. Memory behavior is unpredictable. Tests only check final outputs.</p>
+    </div>
+    <div class='card'>
+      <div class='card-tag'>Inputs required</div>
+      <h3 class='card-title'>What I need from you</h3>
+      <p class='card-desc'>Access to the codebase or harness configuration, traces or logs from recent failures, prompt definitions, tool schemas, current tests, and a candid conversation with the team about pain points.</p>
+    </div>
+    <div class='card'>
+      <div class='card-tag'>What is not included</div>
+      <h3 class='card-title'>Boundaries</h3>
+      <p class='card-desc'>No production code changes. No deployment. No full system rewrite. The audit identifies structural problems and recommends a sequence of changes, but your team or an implementation vendor performs the work.</p>
+    </div>
+  </div>
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='Symptoms' title='Common patterns of a brittle harness' sub='' %}
+
+  <div class='grid grid-3'>
+    <div class='card'>
+      <div class='card-tag'>Pattern</div>
+      <h3 class='card-title'>Agent roles overlap</h3>
+      <p class='card-desc'>Multiple agents or subagents can perform the same operation, creating conflicts and unpredictable routing.</p>
+    </div>
+    <div class='card'>
+      <div class='card-tag'>Pattern</div>
+      <h3 class='card-title'>Prompts contain business logic</h3>
+      <p class='card-desc'>Rules, permissions, and approval criteria are embedded in system prompts instead of defined in structured configuration.</p>
+    </div>
+    <div class='card'>
+      <div class='card-tag'>Pattern</div>
+      <h3 class='card-title'>State ownership is unclear</h3>
+      <p class='card-desc'>Multiple components read and write the same state without a defined owner, causing drift and conflicts.</p>
+    </div>
+    <div class='card'>
+      <div class='card-tag'>Pattern</div>
+      <h3 class='card-title'>Context grows without policy</h3>
+      <p class='card-desc'>Every turn adds more context. No eviction strategy exists. Token limits are hit unpredictably.</p>
+    </div>
+    <div class='card'>
+      <div class='card-tag'>Pattern</div>
+      <h3 class='card-title'>Memory behavior is unpredictable</h3>
+      <p class='card-desc'>What the agent remembers across sessions depends on implicit rules rather than explicit design.</p>
+    </div>
+    <div class='card'>
+      <div class='card-tag'>Pattern</div>
+      <h3 class='card-title'>Tool permissions are broad</h3>
+      <p class='card-desc'>Tools have access beyond what the agent needs. Permission boundaries are not enforced at the tool level.</p>
+    </div>
+    <div class='card'>
+      <div class='card-tag'>Pattern</div>
+      <h3 class='card-title'>Subagents lack clear boundaries</h3>
+      <p class='card-desc'>Subagents can access parent state, override decisions, or operate outside their intended scope.</p>
+    </div>
+    <div class='card'>
+      <div class='card-tag'>Pattern</div>
+      <h3 class='card-title'>Small changes break unrelated behavior</h3>
+      <p class='card-desc'>A prompt change in one area causes failures in another. No isolation boundaries exist.</p>
+    </div>
+    <div class='card'>
+      <div class='card-tag'>Pattern</div>
+      <h3 class='card-title'>Tests only check final outputs</h3>
+      <p class='card-desc'>No trajectory, tool-call, or intermediate-state tests exist. Passing end-to-end tests can mask serious structural problems.</p>
+    </div>
+  </div>
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='Audit dimensions' title='What I examine' sub='Seventeen dimensions of harness health, assessed against structural best practices.' %}
+
+  <div class='grid grid-3'>
+    <div class='card'><div class='card-tag'>Dimension</div><h3 class='card-title'>Workflow decomposition</h3><p class='card-desc'>How the operational workflow is split into agent steps and whether the boundaries match reality.</p></div>
+    <div class='card'><div class='card-tag'>Dimension</div><h3 class='card-title'>Graph and node responsibility</h3><p class='card-desc'>Whether each node has a single clear responsibility and how nodes communicate.</p></div>
+    <div class='card'><div class='card-tag'>Dimension</div><h3 class='card-title'>Role boundaries</h3><p class='card-desc'>Whether agent roles overlap, conflict, or leave gaps.</p></div>
+    <div class='card'><div class='card-tag'>Dimension</div><h3 class='card-title'>State ownership</h3><p class='card-desc'>Who owns each piece of state and how conflicts are resolved.</p></div>
+    <div class='card'><div class='card-tag'>Dimension</div><h3 class='card-title'>Prompt hierarchy</h3><p class='card-desc'>How prompts are structured, versioned, and which contain logic that belongs elsewhere.</p></div>
+    <div class='card'><div class='card-tag'>Dimension</div><h3 class='card-title'>Context construction</h3><p class='card-desc'>What enters context, in what order, and whether injection, truncation, or overflow is handled.</p></div>
+    <div class='card'><div class='card-tag'>Dimension</div><h3 class='card-title'>Memory policy</h3><p class='card-desc'>What is stored, retrieved, and evicted across sessions and whether the policy is explicit.</p></div>
+    <div class='card'><div class='card-tag'>Dimension</div><h3 class='card-title'>Tool permissions</h3><p class='card-desc'>Scope, access control, and safety boundaries for every tool connected to the agent.</p></div>
+    <div class='card'><div class='card-tag'>Dimension</div><h3 class='card-title'>Human approval points</h3><p class='card-desc'>Where humans must approve, review, or intervene and whether those gates are enforced.</p></div>
+    <div class='card'><div class='card-tag'>Dimension</div><h3 class='card-title'>Failure recovery</h3><p class='card-desc'>How the system handles errors, retries, and degraded states and whether recovery is deterministic.</p></div>
+    <div class='card'><div class='card-tag'>Dimension</div><h3 class='card-title'>Observability</h3><p class='card-desc'>Whether traces, logs, and metrics capture enough information to debug failures.</p></div>
+    <div class='card'><div class='card-tag'>Dimension</div><h3 class='card-title'>Evals</h3><p class='card-desc'>What is measured, what is not, and whether evals cover trajectory or only final output.</p></div>
+    <div class='card'><div class='card-tag'>Dimension</div><h3 class='card-title'>Cost and caching</h3><p class='card-desc'>Whether prompt caching is used effectively, token waste exists, or cost grows unbounded.</p></div>
+    <div class='card'><div class='card-tag'>Dimension</div><h3 class='card-title'>Configuration</h3><p class='card-desc'>How the system is configured and whether configuration changes require code changes.</p></div>
+    <div class='card'><div class='card-tag'>Dimension</div><h3 class='card-title'>Separation of concerns</h3><p class='card-desc'>Whether prompts, logic, state, and configuration are cleanly separated or tangled together.</p></div>
+    <div class='card'><div class='card-tag'>Dimension</div><h3 class='card-title'>Duplicated policy</h3><p class='card-desc'>Whether the same rules exist in multiple places and whether they stay in sync.</p></div>
+    <div class='card'><div class='card-tag'>Dimension</div><h3 class='card-title'>Documentation drift</h3><p class='card-desc'>Whether architecture documentation matches the running system and where it diverges.</p></div>
+  </div>
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='Deliverables' title='What you receive' sub='' %}
+
+  <div class='grid grid-2'>
+    <div class='card'>
+      <div class='card-tag'>Deliverable</div>
+      <h3 class='card-title'>Architecture map</h3>
+      <p class='card-desc'>Visual and textual map of the current system structure including roles, state, tools, and data flow.</p>
+    </div>
+    <div class='card'>
+      <div class='card-tag'>Deliverable</div>
+      <h3 class='card-title'>Failure and risk register</h3>
+      <p class='card-desc'>Documented failure patterns, their root causes, and the risk level of each.</p>
+    </div>
+    <div class='card'>
+      <div class='card-tag'>Deliverable</div>
+      <h3 class='card-title'>Source-of-truth analysis</h3>
+      <p class='card-desc'>What the system actually depends on versus what the team believes it depends on.</p>
+    </div>
+    <div class='card'>
+      <div class='card-tag'>Deliverable</div>
+      <h3 class='card-title'>Evidence-backed findings</h3>
+      <p class='card-desc'>Every finding traced to specific evidence from the codebase, traces, logs, or team interviews.</p>
+    </div>
+    <div class='card'>
+      <div class='card-tag'>Deliverable</div>
+      <h3 class='card-title'>Priority-ranked refactor sequence</h3>
+      <p class='card-desc'>Ordered list of changes ranked by impact, risk, and effort so the team knows where to start.</p>
+    </div>
+    <div class='card'>
+      <div class='card-tag'>Deliverable</div>
+      <h3 class='card-title'>Proposed target architecture</h3>
+      <p class='card-desc'>What the harness should look like after the refactor sequence is complete.</p>
+    </div>
+    <div class='card'>
+      <div class='card-tag'>Deliverable</div>
+      <h3 class='card-title'>Evaluation gaps</h3>
+      <p class='card-desc'>What is not being tested and what should be tested before and after the refactor.</p>
+    </div>
+    <div class='card'>
+      <div class='card-tag'>Deliverable</div>
+      <h3 class='card-title'>Implementation brief</h3>
+      <p class='card-desc'>Engineer-ready specification for the recommended changes including what to change and in what order.</p>
+    </div>
+  </div>
+</section>
+
+<hr class='divider'>
+
+<section class='section'>
+  {% include components/section-head.html tag='Outcome' title='Expected result' sub='' %}
+  {% include components/prose-center.html text='Evidence of what is structurally wrong with the harness and a prioritized refactor plan your team can execute. The audit identifies problems and recommends a sequence of changes, but your internal engineers or a vendor perform the implementation.' %}
+</section>
+
+<hr class='divider'>
+
+<section class='section c'>
+  {% include components/section-head.html title='Ready to review your harness?' sub='Before the refactor becomes a rewrite.' %}
+  <div class='hero-actions'>
+    {% include components/btn.html label='Request a harness review' href='/contact/?service=harness-audit' variant='primary' arrow=true %}
+  </div>
+</section>

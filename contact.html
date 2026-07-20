@@ -1,74 +1,282 @@
 ---
-layout: page-shell
+layout: default
 title: Contact
-description: Get in touch with Shayan Spiel for AI-native project building, agent workflows, context audits, founder distribution, or partnerships. DM on X or LinkedIn.
-keywords: contact Shayan Spiel, AI project consulting, agent workflows, context audit, founder distribution, Spiel OS, CacheCatch, partnerships
-image:
-  path: /assets/og/contact.png
-  width: 1200
-  height: 630
+description: Tell me what you are planning, building, or trying to fix. Qualified commercial inquiries receive a 25-minute fit call.
 permalink: /contact/
 ---
 
-<section class='section'>
-  {% include components/section-head.html tag='The fast way' title='Get in touch' sub='Fastest response: DM me on X or LinkedIn.' %}
+<div class="wrap">
 
-  <div class='grid grid-2'>
-    {% include components/card.html href='https://twitter.com/ShayanSpiel' tag='X / Twitter' icon='send' title='Direct message' desc='Fastest response. Market takes, building-in-public, open to anything. @ShayanSpiel' %}
-    {% include components/card.html href='https://www.linkedin.com/in/shayantawabi' tag='LinkedIn' icon='users' title='Direct message' desc='Professional layer. Partnership inquiries, press, AI collaborations. /in/shayantawabi' %}
-  </div>
-</section>
+  <section class="section" aria-label="Contact form">
+    <div class="page-shell-header c">
+      <h1>Tell me what you are planning, building, or trying to fix</h1>
+      <p class="lede">I review every inquiry personally. If the work fits, you will receive a 25-minute fit call within 48 hours.</p>
+    </div>
 
-<hr class='divider'>
+    <form class="contact-form" id="contact-form" onsubmit="return handleContactSubmit(event)" aria-label="Service inquiry">
+      <div class="contact-form-body">
 
-<section class='section'>
-  {% include components/section-head.html tag='Email' title='For offers and partnerships' sub='Click below to open your mail client.' %}
+        <label class="contact-label" for="contact-name">Name <span aria-hidden="true">*</span></label>
+        <input class="contact-input" id="contact-name" name="name" type="text" required autocomplete="name" />
 
-  <div class='single-card'>
-    <a class='card mail-card' id='email-link' href='mailto:&#54;&#54;&#115;&#104;&#97;&#121;&#97;&#110;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;?subject=Spiel%20OS%20%E2%80%94%20'>
-      <div class='card-icon'>{% include components/icon.html name='mail' size=18 %}</div>
-      <h3 class='card-title'>Click to compose</h3>
-      <p class='card-desc'>For projects, partnerships, and longer-form inquiries. Replies typically within 24&ndash;48 hours.</p>
-      <span class='card-link'>Open mail client {% include components/icon.html name='arrow-up-right' size=12 %}</span>
-    </a>
-  </div>
-</section>
+        <label class="contact-label" for="contact-email">Work email <span aria-hidden="true">*</span></label>
+        <input class="contact-input" id="contact-email" name="email" type="email" required autocomplete="email" />
+
+        <label class="contact-label" for="contact-company">Company</label>
+        <input class="contact-input" id="contact-company" name="company" type="text" />
+
+        <label class="contact-label" for="contact-role">Role</label>
+        <input class="contact-input" id="contact-role" name="role" type="text" />
+
+        <fieldset class="contact-fieldset">
+          <legend class="contact-label">Inquiry type <span aria-hidden="true">*</span></legend>
+          <div class="contact-radios">
+            <label class="contact-radio">
+              <input type="radio" name="service" value="definition" />
+              <span>Planning a new agentic workflow</span>
+            </label>
+            <label class="contact-radio">
+              <input type="radio" name="service" value="pre-review" />
+              <span>Reviewing architecture before implementation</span>
+            </label>
+            <label class="contact-radio">
+              <input type="radio" name="service" value="harness-audit" />
+              <span>Refactoring an existing harness</span>
+            </label>
+            <label class="contact-radio">
+              <input type="radio" name="service" value="evals" />
+              <span>Designing agent evals</span>
+            </label>
+            <label class="contact-radio">
+              <input type="radio" name="service" value="vendor-eval" />
+              <span>Evaluating an implementation vendor</span>
+            </label>
+            <label class="contact-radio">
+              <input type="radio" name="service" value="other" />
+              <span>Other agent-system work</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <label class="contact-label" for="contact-workflow">Workflow or agent <span aria-hidden="true">*</span></label>
+        <input class="contact-input" id="contact-workflow" name="workflow" type="text" placeholder="e.g. customer support triage, code review, document processing" required />
+
+        <label class="contact-label" for="contact-problem">Main problem <span aria-hidden="true">*</span></label>
+        <textarea class="contact-textarea" id="contact-problem" name="problem" rows="4" required placeholder="What is not working? What are you trying to achieve?"></textarea>
+
+        <label class="contact-label" for="contact-stack">Current stack</label>
+        <input class="contact-input" id="contact-stack" name="stack" type="text" placeholder="e.g. LangGraph, CrewAI, custom, not started" />
+
+        <label class="contact-label" for="contact-timeline">Target timeline</label>
+        <input class="contact-input" id="contact-timeline" name="timeline" type="text" placeholder="e.g. next quarter, urgent, exploring" />
+
+        <label class="contact-label" for="contact-link">Supporting link</label>
+        <input class="contact-input" id="contact-link" name="link" type="url" placeholder="optional: repo, doc, or relevant page" />
+
+        <div class="c mt-6">
+          <button class="btn btn-primary btn-arrow" type="submit">
+            Send inquiry
+            <span class="arrow-icon" aria-hidden="true">
+              <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </span>
+          </button>
+        </div>
+
+      </div>
+    </form>
+
+    <div class="contact-status" id="contact-status" role="status" aria-live="polite"></div>
+
+    <div class="c mt-4">
+      <p class="small muted" id="contact-fallback">
+        Form not working?
+        <a href="mailto:66shayan@gmail.com?subject=Agent%20Architecture%20Inquiry">Send an email directly</a>.
+      </p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section class="section c">
+    {% include components/section-head.html title='What happens after you submit' sub='' %}
+    <div class="grid grid-2 c" style="max-width: 600px; margin: 0 auto;">
+      <div class="card">
+        <div class="card-tag">Step 1</div>
+        <h3 class="card-title">Shayan reviews your inquiry</h3>
+        <p class="card-desc">I read every submission personally. If the project fits, you will hear from me within 48 hours.</p>
+      </div>
+      <div class="card">
+        <div class="card-tag">Step 2</div>
+        <h3 class="card-title">25-minute fit call</h3>
+        <p class="card-desc">We check workflow clarity, ownership, evidence, urgency, and implementation path. No pitch. Just a conversation about whether the work fits.</p>
+      </div>
+      <div class="card">
+        <div class="card-tag">Step 3</div>
+        <h3 class="card-title">Proposal (if it fits)</h3>
+        <p class="card-desc">Only when the project is a clear fit. No generic proposals. No pressure.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section class="section">
+    {% include components/section-head.html tag='Also available' title='Prefer another channel?' sub='Same response time. Pick the one that matches your habit.' %}
+
+    <div class='grid grid-3'>
+      <a href='https://twitter.com/ShayanSpiel' target='_blank' rel='noopener' class='card'>
+        <div class='card-tag'>Fast</div>
+        <h3 class='card-title'>X / Twitter</h3>
+        <p class='card-desc'>Direct message. I read every DM. @ShayanSpiel</p>
+        <span class='card-link'>Message on X <svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' aria-hidden='true'><path d='M7 17 17 7M7 7h10v10'/></svg></span>
+      </a>
+      <a href='https://www.linkedin.com/in/shayantawabi' target='_blank' rel='noopener' class='card'>
+        <div class='card-tag'>Professional</div>
+        <h3 class='card-title'>LinkedIn</h3>
+        <p class='card-desc'>Connect and message. /in/shayantawabi</p>
+        <span class='card-link'>Message on LinkedIn <svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' aria-hidden='true'><path d='M7 17 17 7M7 7h10v10'/></svg></span>
+      </a>
+      <a href='mailto:66shayan@gmail.com?subject=Agent%20Architecture%20Inquiry' class='card' id='email-link'>
+        <div class='card-tag'>Direct</div>
+        <h3 class='card-title'>Email</h3>
+        <p class='card-desc'>For detailed inquiries. Replies within 24-48 hours.</p>
+        <span class='card-link'>Send email <svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' aria-hidden='true'><path d='M7 17 17 7M7 7h10v10'/></svg></span>
+      </a>
+    </div>
+  </section>
+
+</div>
 
 <script>
-  (function () {
-    var link = document.getElementById('email-link');
-    if (!link) return;
-    var u = ['6', '6', 's', 'h', 'a', 'y', 'a', 'n'].join('');
-    var d = ['g', 'm', 'a', 'i', 'l', '.', 'c', 'o', 'm'].join('');
-    var addr = u + String.fromCharCode(64) + d;
-    var subject = '?subject=Spiel%20OS%20%E2%80%94%20';
-    link.setAttribute('href', 'mailto:' + addr + subject);
-  })();
+(function() {
+  // Preselect inquiry type from URL query parameter
+  var params = new URLSearchParams(window.location.search);
+  var service = params.get('service');
+  if (service) {
+    var radio = document.querySelector('input[name="service"][value="' + service + '"]');
+    if (radio) radio.checked = true;
+  }
+
+  // Set email subject based on service selection
+  var emailLink = document.getElementById('email-link');
+  var radios = document.querySelectorAll('input[name="service"]');
+  function updateEmailSubject() {
+    var selected = document.querySelector('input[name="service"]:checked');
+    var subject = 'Agent Architecture Inquiry';
+    if (selected) {
+      var map = {
+        'definition': 'Agent Definition Inquiry',
+        'pre-review': 'Architecture Pre-Review Inquiry',
+        'harness-audit': 'Harness Audit Inquiry',
+        'evals': 'Agent Evals Inquiry',
+        'vendor-eval': 'Vendor Evaluation Inquiry',
+        'other': 'Agent Architecture Inquiry'
+      };
+      subject = map[selected.value] || subject;
+    }
+    emailLink.href = 'mailto:66shayan@gmail.com?subject=' + encodeURIComponent(subject);
+  }
+  radios.forEach(function(r) { r.addEventListener('change', updateEmailSubject); });
+  if (service) updateEmailSubject();
+
+  // Update fallback email link too
+  var fallbackLink = document.querySelector('#contact-fallback a');
+  if (fallbackLink) {
+    fallbackLink.addEventListener('click', function() {
+      var selected = document.querySelector('input[name="service"]:checked');
+      var subject = 'Agent Architecture Inquiry';
+      if (selected) {
+        var map = {
+          'definition': 'Agent Definition Inquiry',
+          'pre-review': 'Architecture Pre-Review Inquiry',
+          'harness-audit': 'Harness Audit Inquiry',
+          'evals': 'Agent Evals Inquiry',
+          'vendor-eval': 'Vendor Evaluation Inquiry',
+          'other': 'Agent Architecture Inquiry'
+        };
+        subject = map[selected.value] || subject;
+      }
+      this.href = 'mailto:66shayan@gmail.com?subject=' + encodeURIComponent(subject);
+    });
+  }
+})();
+
+function handleContactSubmit(e) {
+  e.preventDefault();
+  var status = document.getElementById('contact-status');
+  var btn = e.target.querySelector('button[type="submit"]');
+  var form = e.target;
+
+  // Gather data
+  var name = form.querySelector('#contact-name').value.trim();
+  var email = form.querySelector('#contact-email').value.trim();
+  var company = form.querySelector('#contact-company').value.trim();
+  var role = form.querySelector('#contact-role').value.trim();
+  var service = form.querySelector('input[name="service"]:checked');
+  var workflow = form.querySelector('#contact-workflow').value.trim();
+  var problem = form.querySelector('#contact-problem').value.trim();
+  var stack = form.querySelector('#contact-stack').value.trim();
+  var timeline = form.querySelector('#contact-timeline').value.trim();
+  var link = form.querySelector('#contact-link').value.trim();
+
+  // Validate required
+  if (!name || !email || !workflow || !problem) {
+    status.textContent = 'Please fill in all required fields.';
+    status.className = 'contact-status err';
+    return;
+  }
+
+  if (!service) {
+    status.textContent = 'Please select an inquiry type.';
+    status.className = 'contact-status err';
+    return;
+  }
+
+  var serviceLabels = {
+    'definition': 'Planning a new agentic workflow',
+    'pre-review': 'Reviewing architecture before implementation',
+    'harness-audit': 'Refactoring an existing harness',
+    'evals': 'Designing agent evals',
+    'vendor-eval': 'Evaluating an implementation vendor',
+    'other': 'Other agent-system work'
+  };
+
+  var subject = 'Agent Architecture Inquiry';
+  var subjectMap = {
+    'definition': 'Agent Definition Inquiry',
+    'pre-review': 'Architecture Pre-Review Inquiry',
+    'harness-audit': 'Harness Audit Inquiry',
+    'evals': 'Agent Evals Inquiry',
+    'vendor-eval': 'Vendor Evaluation Inquiry',
+    'other': 'Agent Architecture Inquiry'
+  };
+  subject = subjectMap[service.value] || subject;
+
+  var body = 'Name: ' + name + '\n' +
+    'Email: ' + email + '\n' +
+    'Company: ' + (company || '—') + '\n' +
+    'Role: ' + (role || '—') + '\n' +
+    'Inquiry type: ' + (serviceLabels[service.value] || service.value) + '\n' +
+    'Workflow or agent: ' + workflow + '\n' +
+    'Main problem: ' + problem + '\n' +
+    'Current stack: ' + (stack || '—') + '\n' +
+    'Target timeline: ' + (timeline || '—') + '\n' +
+    'Supporting link: ' + (link || '—') + '\n';
+
+  var mailto = 'mailto:66shayan@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+
+  // Show sending state
+  if (btn) { btn.textContent = 'Opening email...'; btn.disabled = true; }
+  status.textContent = 'Opening your email client with the inquiry pre-filled.';
+  status.className = 'contact-status ok';
+
+  window.location.href = mailto;
+
+  setTimeout(function() {
+    if (btn) { btn.textContent = 'Send inquiry'; btn.disabled = false; }
+    status.innerHTML = 'Email client did not open? <a href="' + mailto + '">Click here</a> or copy: 66shayan@gmail.com';
+  }, 3000);
+
+  return false;
+}
 </script>
-
-<hr class='divider'>
-
-<section class='section'>
-  {% include components/section-head.html tag='What to say' title='Make it easy' sub='Three lines that get you what you need fastest.' %}
-
-  <div class='grid grid-3'>
-    {% include components/card.html href='https://cachecatch.spielos.xyz' tag='For the audit' icon='layers' title='Reply &ldquo;CACHE&rdquo;' desc='I&#39;ll send you to CacheCatch. Context and cost intelligence for your agent systems.' %}
-    {% include components/card.html href='/SpielOS/' tag='For the repo' icon='code' title='Reply &ldquo;GITHUB&rdquo;' desc='Setup walkthrough, repo link, and customization guide on the Spiel OS page.' %}
-    {% include components/card.html href='/posts/' tag='For anything else' icon='mail' title='Just say hi' desc='I read every message. If you have a question, a thought, or just want to connect, send it.' %}
-  </div>
-</section>
-
-<hr class='divider'>
-
-<section class='section'>
-  {% include components/section-head.html tag='Read first' title='Before you write' sub='A few pages that answer the most common questions faster than I can.' %}
-
-  <div class='grid grid-3'>
-    {% include components/card.html href='/about/' tag='About' icon='user' title='Who I am' desc='Tracks the AI market, builds projects from the gaps. 8+ years scaling Iran&#39;s largest digital platforms.' %}
-    {% include components/card.html href='/clusters/founder-distribution/' tag='Cluster' icon='send' title='Founder Distribution cluster' desc='Session-as-Content, the content pipeline, and building in public as a system state.' %}
-    {% include components/card.html href='/glossary/' tag='Glossary' icon='book-open' title='Glossary' desc='Canonical definitions of every concept on this site.' %}
-    {% include components/card.html href='/SpielOS/' tag='Project' icon='code' title='Spiel OS' desc='Open-source Founder Distribution Infrastructure. Setup walkthrough and DFY install option.' %}
-    {% include components/card.html href='/categories/' tag='Topics' icon='grid' title='All topics' desc='Browse every note by topic cluster.' %}
-    {% include components/card.html href='/GeoGent-Waitlist/' tag='Project' icon='globe' title='GeoGent' desc='An agentic geopolitical MMO for the AI age. Alpha waitlist is open.' %}
-  </div>
-</section>
