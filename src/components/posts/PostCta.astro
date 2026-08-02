@@ -1,0 +1,30 @@
+---
+import { WAITLIST_URL } from "../../config";
+import { t } from "../../i18n/translations";
+
+const { takeaway, echo, btnText, btnHref } = Astro.props as {
+  takeaway?: string;
+  echo?: string;
+  btnText?: string;
+  btnHref?: string;
+};
+
+const isFa = Astro.url.pathname.startsWith("/fa/");
+const locale = isFa ? "fa" : "en";
+
+const href = btnHref || (isFa ? "/fa/waitlist/" : WAITLIST_URL);
+const label = btnText || t(locale, "postCta.joinWaitlist");
+const icon = btnHref ? "bx-link-external" : "bx-right-arrow-alt";
+---
+
+<div class="post-cta">
+  <div class="post-cta-icon">
+    <i class="bx bx-rocket text-2xl"></i>
+  </div>
+  <h3>{takeaway || t(locale, "postCta.defaultTakeaway")}</h3>
+  <p>{echo || t(locale, "postCta.defaultEcho")}</p>
+  <a href={href} class="post-cta-btn">
+    {label}
+    <i class={`bx ${icon} rtl-flip icon-base`}></i>
+  </a>
+</div>

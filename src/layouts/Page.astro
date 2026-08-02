@@ -1,0 +1,27 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+import { type Locale } from "../i18n/translations";
+
+export interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  robots?: string;
+  ogType?: "website" | "article";
+  publishedTime?: string;
+  modifiedTime?: string;
+  tags?: string[];
+  locale?: Locale;
+}
+
+const { title, description, image, robots, ogType, publishedTime, modifiedTime, tags, locale = "en" } = Astro.props;
+---
+
+<BaseLayout title={title} description={description} image={image} robots={robots} ogType={ogType} publishedTime={publishedTime} modifiedTime={modifiedTime} tags={tags} locale={locale}>
+  <Nav slot="nav" locale={locale} />
+  <slot />
+  <div class="mt-16" />
+  <Footer slot="footer" showThemeToggle locale={locale} />
+</BaseLayout>

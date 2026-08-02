@@ -1,0 +1,30 @@
+---
+export interface Props {
+  label?: string;
+  title: string;
+  description?: string;
+  align?: "center" | "left";
+}
+
+const { label, title, description, align = "center" } = Astro.props;
+---
+
+<div class:list={[
+  "mb-12",
+  align === "center" ? "text-center" : "",
+]} data-aos="fade-up">
+  {label && (
+    <span class="text-2xs font-semibold uppercase tracking-widest text-primary">{label}</span>
+  )}
+  <h2 class:list={[
+    "font-bold text-foreground-strong tracking-tight",
+    label ? "mt-3" : "",
+    "text-3xl sm:text-4xl",
+  ]} set:html={title} />
+  {description && (
+    <p class:list={[
+      "mt-4 text-sm text-muted-foreground leading-relaxed",
+      align === "center" ? "max-w-xl mx-auto" : "max-w-2xl",
+    ]} set:html={description} />
+  )}
+</div>

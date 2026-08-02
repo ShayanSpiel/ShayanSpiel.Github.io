@@ -1,16 +1,6 @@
-# Jekyll build artifacts
-_site/
-.sass-cache/
-.jekyll-cache/
-.jektex-cache/
-.jekyll-metadata
-
-# Ruby/Bundler
-.bundle/
-vendor/bundle/
-
-# Lockfiles (use Gemfile only for GH Pages remote build)
-Gemfile.lock
+# Astro build output
+dist/
+.astro/
 
 # Node
 node_modules/

@@ -1,0 +1,298 @@
+---
+import FeaturesLayout from "../../../layouts/FeaturesLayout.astro";
+import SectionHeader from "../../../components/sections/SectionHeader.astro";
+import FeatureHero from "../../../components/features/FeatureHero.astro";
+import FeatureCTA from "../../../components/features/FeatureCTA.astro";
+import { type Locale, t } from "../../../i18n/translations";
+import { localizePath } from "../../../i18n";
+import { SITE } from "../../../config";
+
+export interface Props {
+  locale?: Locale;
+}
+
+const { locale = "en" } = Astro.props;
+
+const connectionTypes = [
+  {
+    icon: "network-chart",
+    iconColor: "primary",
+    title: "MCP",
+    descKey: "features.infrastructure.connections.type.mcp",
+  },
+  {
+    icon: "key",
+    iconColor: "accent",
+    title: "OAuth",
+    descKey: "features.infrastructure.connections.type.oauth",
+  },
+  {
+    icon: "code-alt",
+    iconColor: "purple",
+    title: "API",
+    descKey: "features.infrastructure.connections.type.api",
+  },
+  {
+    icon: "slider",
+    iconColor: "success",
+    title: "Custom",
+    descKey: "features.infrastructure.connections.type.custom",
+  },
+];
+
+const steps = [
+  {
+    num: "01",
+    icon: "plus-circle",
+    titleKey: "features.infrastructure.connections.how.step1.title",
+    descKey: "features.infrastructure.connections.how.step1.desc",
+  },
+  {
+    num: "02",
+    icon: "task",
+    titleKey: "features.infrastructure.connections.how.step2.title",
+    descKey: "features.infrastructure.connections.how.step2.desc",
+  },
+  {
+    num: "03",
+    icon: "play-circle",
+    titleKey: "features.infrastructure.connections.how.step3.title",
+    descKey: "features.infrastructure.connections.how.step3.desc",
+  },
+];
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: t(locale, "features.infrastructure.connections.pageTitle"),
+  description: t(locale, "features.infrastructure.connections.pageDesc"),
+  url: SITE.url + "/features/infrastructure/connections/",
+  isPartOf: {
+    "@type": "WebSite",
+    name: SITE.name,
+    url: SITE.url,
+  },
+  about: {
+    "@type": "SoftwareApplication",
+    name: SITE.name,
+    url: SITE.url,
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Web",
+  },
+};
+---
+
+<FeaturesLayout
+  title={t(locale, "features.infrastructure.connections.pageTitle")}
+  description={t(locale, "features.infrastructure.connections.pageDesc")}
+  image="/assets/og/features-infrastructure-connections.png"
+  locale={locale}
+>
+  <FeatureHero
+    locale={locale}
+    breadcrumbs={[
+      { label: t(locale, "nav.features"), href: "/features/" },
+      { label: t(locale, "features.infrastructure.label"), href: "/features/infrastructure/" },
+      { label: t(locale, "features.infrastructure.connections.label") },
+    ]}
+    label={t(locale, "features.infrastructure.connections.label")}
+    title={t(locale, "features.infrastructure.connections.hero.title")}
+    description={t(locale, "features.infrastructure.connections.hero.desc")}
+  />
+
+  <!-- Real Connections Panel UI Mockup -->
+  <section class="relative py-24 sm:py-32 overflow-hidden">
+    <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(var(--foreground) 1px, transparent 1px); background-size: 24px 24px;"></div>
+    <div class="relative mx-auto max-w-6xl px-6">
+      <div class="mx-auto max-w-4xl" data-aos="fade-up">
+        <div class="rounded-lg border border-border bg-panel overflow-hidden shadow-panel">
+          <!-- Window Header -->
+          <div class="flex items-center justify-between px-4 py-3 border-b border-border bg-panel-raised">
+            <div class="flex items-center gap-2">
+              <div class="h-3 w-3 rounded-full bg-destructive/60"></div>
+              <div class="h-3 w-3 rounded-full bg-warning/60"></div>
+              <div class="h-3 w-3 rounded-full bg-success/60"></div>
+            </div>
+            <span class="text-2xs text-muted-foreground font-mono">{t(locale, "features.infrastructure.connections.mock.window")}</span>
+          </div>
+
+          <!-- Connections Content -->
+          <div class="p-4 space-y-3">
+            <!-- Active Connections -->
+            <div class="space-y-2">
+              <div class="flex items-center justify-between rounded-md border border-border bg-background p-3">
+                <div class="flex items-center gap-3">
+                  <div class="flex h-8 w-8 items-center justify-center rounded-sm bg-primary-soft">
+                    <i class="bx bx-envelope text-primary icon-md"></i>
+                  </div>
+                  <div>
+                    <span class="text-xs font-medium text-foreground-strong">{t(locale, "features.infrastructure.connections.mock.notion")}</span>
+                    <p class="text-2xs text-muted-foreground">{t(locale, "features.infrastructure.connections.mock.notionSub")}</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="inline-flex items-center gap-1 rounded-sm px-1.5 py-0.5 text-2xs font-medium" style="background: var(--success-soft); color: var(--success);">
+                    <span class="h-1 w-1 rounded-full bg-success"></span>
+                    {t(locale, "features.infrastructure.connections.mock.active")}
+                  </span>
+                  <button type="button" class="inline-flex items-center rounded-sm border border-border bg-panel px-2 py-1 text-2xs font-medium text-foreground-muted">
+                    <i class="bx bx-slider icon-xs"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between rounded-md border border-border bg-background p-3">
+                <div class="flex items-center gap-3">
+                  <div class="flex h-8 w-8 items-center justify-center rounded-sm bg-accent-soft">
+                    <i class="bx bx-calendar text-accent icon-md"></i>
+                  </div>
+                  <div>
+                    <span class="text-xs font-medium text-foreground-strong">{t(locale, "features.infrastructure.connections.mock.slack")}</span>
+                    <p class="text-2xs text-muted-foreground">{t(locale, "features.infrastructure.connections.mock.slackSub")}</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="inline-flex items-center gap-1 rounded-sm px-1.5 py-0.5 text-2xs font-medium" style="background: var(--success-soft); color: var(--success);">
+                    <span class="h-1 w-1 rounded-full bg-success"></span>
+                    {t(locale, "features.infrastructure.connections.mock.active")}
+                  </span>
+                  <button type="button" class="inline-flex items-center rounded-sm border border-border bg-panel px-2 py-1 text-2xs font-medium text-foreground-muted">
+                    <i class="bx bx-slider icon-xs"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between rounded-md border border-border bg-background p-3">
+                <div class="flex items-center gap-3">
+                  <div class="flex h-8 w-8 items-center justify-center rounded-sm bg-purple-soft">
+                    <i class="bx bx-network-chart text-purple icon-md"></i>
+                  </div>
+                  <div>
+                    <span class="text-xs font-medium text-foreground-strong">{t(locale, "features.infrastructure.connections.mock.github")}</span>
+                    <p class="text-2xs text-muted-foreground">{t(locale, "features.infrastructure.connections.mock.githubSub")}</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="inline-flex items-center gap-1 rounded-sm px-1.5 py-0.5 text-2xs font-medium" style="background: var(--warning-soft); color: var(--warning);">
+                    <span class="h-1 w-1 rounded-full bg-warning"></span>
+                    {t(locale, "features.infrastructure.connections.mock.needsReauth")}
+                  </span>
+                  <button type="button" class="inline-flex items-center rounded-sm border border-border bg-panel px-2 py-1 text-2xs font-medium text-foreground-muted">
+                    <i class="bx bx-slider icon-xs"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Add Connection -->
+            <div class="rounded-md border border-dashed border-border bg-background p-3">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <i class="bx bx-plus text-muted-foreground icon-md"></i>
+                  <span class="text-2xs text-muted-foreground">{t(locale, "features.infrastructure.connections.mock.addNew")}</span>
+                </div>
+                <span class="text-2xs text-foreground-muted font-mono">{t(locale, "features.infrastructure.connections.mock.types")}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative py-24 sm:py-32">
+    <div class="mx-auto max-w-6xl px-6">
+      <SectionHeader
+        label={t(locale, "features.infrastructure.connections.problem.label")}
+        title={t(locale, "features.infrastructure.connections.problem.title")}
+        description={t(locale, "features.infrastructure.connections.problem.desc")}
+      />
+
+      <div class="mx-auto max-w-2xl rounded-lg border border-border bg-panel p-8" data-aos="fade-up">
+        <div class="flex items-start gap-4">
+          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-destructive-soft">
+            <i class="bx bx-error text-destructive icon-xl"></i>
+          </div>
+          <div>
+            <h3 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, "features.infrastructure.connections.problem.title")}</h3>
+            <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, "features.infrastructure.connections.problem.desc")}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative py-24 sm:py-32 overflow-hidden">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="relative mx-auto max-w-6xl px-6">
+      <SectionHeader
+        title={t(locale, "features.infrastructure.connections.what.title")}
+        description={t(locale, "features.infrastructure.connections.what.desc")}
+      />
+
+      <div class="mx-auto max-w-2xl rounded-lg border border-border bg-panel p-8" data-aos="fade-up">
+        <div class="flex items-start gap-4">
+          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-success-soft">
+            <i class="bx bx-check-square text-success icon-xl"></i>
+          </div>
+          <div>
+            <h3 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, "features.infrastructure.connections.what.title")}</h3>
+            <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, "features.infrastructure.connections.what.desc")}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative py-24 sm:py-32">
+    <div class="mx-auto max-w-6xl px-6">
+      <SectionHeader
+        label={t(locale, "features.infrastructure.layers.label")}
+        title={t(locale, "features.infrastructure.connections.types.title")}
+        description={t(locale, "features.infrastructure.connections.types.desc")}
+      />
+
+      <div class="grid gap-4 sm:grid-cols-2" data-aos="fade-up">
+        {connectionTypes.map((ct) => (
+          <div class="rounded-md border border-border bg-panel p-5">
+            <div class={`flex h-9 w-9 items-center justify-center rounded-md bg-${ct.iconColor}-soft mb-3`}>
+              <i class={`bx bx-${ct.icon} text-${ct.iconColor} icon-xl`}></i>
+            </div>
+            <h3 class="text-sm font-semibold text-foreground-strong mb-1">{ct.title}</h3>
+            <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, ct.descKey)}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="relative py-24 sm:py-32 overflow-hidden">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="relative mx-auto max-w-6xl px-6">
+      <SectionHeader
+        title={t(locale, "features.infrastructure.connections.how.title")}
+      />
+
+      <div class="grid gap-6 sm:grid-cols-3" data-aos="fade-up">
+        {steps.map((step) => (
+          <div class="rounded-md border border-border bg-panel p-5">
+            <div class="flex h-9 w-9 items-center justify-center rounded-md bg-primary-soft mb-3">
+              <i class={`bx bx-${step.icon} text-primary icon-xl`}></i>
+            </div>
+            <span class="text-2xs font-semibold uppercase tracking-widest text-muted-foreground">{step.num}</span>
+            <h3 class="text-sm font-semibold text-foreground-strong mt-1 mb-1">{t(locale, step.titleKey)}</h3>
+            <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, step.descKey)}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <FeatureCTA
+    locale={locale}
+    title={t(locale, "features.related.title")}
+    description={t(locale, "features.infrastructure.hero.desc")}
+  />
+
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+</FeaturesLayout>

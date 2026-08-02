@@ -1,0 +1,294 @@
+---
+import FeaturesLayout from "../../../layouts/FeaturesLayout.astro";
+import SectionHeader from "../../../components/sections/SectionHeader.astro";
+import FeatureHero from "../../../components/features/FeatureHero.astro";
+import FeatureCTA from "../../../components/features/FeatureCTA.astro";
+import { type Locale, t } from "../../../i18n/translations";
+import { localizePath } from "../../../i18n";
+import { SITE, WAITLIST_URL } from "../../../config";
+
+export interface Props {
+  locale?: Locale;
+}
+
+const { locale = "en" } = Astro.props;
+
+const steps = [
+  { num: 1, titleKey: "features.chat.directMode.how.step1.title", descKey: "features.chat.directMode.how.step1.desc" },
+  { num: 2, titleKey: "features.chat.directMode.how.step2.title", descKey: "features.chat.directMode.how.step2.desc" },
+  { num: 3, titleKey: "features.chat.directMode.how.step3.title", descKey: "features.chat.directMode.how.step3.desc" },
+  { num: 4, titleKey: "features.chat.directMode.how.step4.title", descKey: "features.chat.directMode.how.step4.desc" },
+];
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: t(locale, "features.chat.directMode.pageTitle"),
+  description: t(locale, "features.chat.directMode.pageDesc"),
+  url: SITE.url + "/features/chat/direct-mode/",
+  isPartOf: {
+    "@type": "WebSite",
+    name: SITE.name,
+    url: SITE.url,
+  },
+};
+---
+
+<FeaturesLayout
+  title={t(locale, "features.chat.directMode.pageTitle")}
+  description={t(locale, "features.chat.directMode.pageDesc")}
+  image="/assets/og/features.png"
+  locale={locale}
+>
+  <FeatureHero
+    locale={locale}
+    breadcrumbs={[
+      { label: t(locale, "nav.features"), href: "/features/" },
+      { label: t(locale, "features.chat.label"), href: "/features/chat/" },
+      { label: t(locale, "features.chat.directMode.label") },
+    ]}
+    label={t(locale, "features.chat.directMode.label")}
+    title={t(locale, "features.chat.directMode.hero.title")}
+    description={t(locale, "features.chat.directMode.hero.desc")}
+    cta={{
+      label: t(locale, "features.hero.cta"),
+      href: localizePath(WAITLIST_URL, locale),
+    }}
+  />
+
+  <!-- Real Direct Mode UI Mockup -->
+  <section class="relative py-24 sm:py-32 overflow-hidden">
+    <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(var(--foreground) 1px, transparent 1px); background-size: 24px 24px;"></div>
+    <div class="relative mx-auto max-w-6xl px-6">
+      <div class="mx-auto max-w-4xl" data-aos="fade-up">
+        <div class="rounded-lg border border-border bg-panel overflow-hidden shadow-panel">
+          <!-- Window Header -->
+          <div class="flex items-center justify-between px-4 py-3 border-b border-border bg-panel-raised">
+            <div class="flex items-center gap-2">
+              <div class="h-3 w-3 rounded-full bg-destructive/60"></div>
+              <div class="h-3 w-3 rounded-full bg-warning/60"></div>
+              <div class="h-3 w-3 rounded-full bg-success/60"></div>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="inline-flex items-center gap-1 rounded-sm px-1.5 py-0.5 text-2xs font-medium" style="background: var(--primary-soft); color: var(--primary);">
+                <i class="bx bx-play-circle icon-xs"></i>
+                {t(locale, "features.chat.directMode.mock.window")}
+              </span>
+            </div>
+          </div>
+
+          <!-- Workflow Execution Content -->
+          <div class="p-4 space-y-3">
+            <!-- Input Form -->
+            <div class="rounded-md border border-border bg-background p-3">
+              <label class="text-2xs font-medium text-foreground-muted mb-1.5 block">{t(locale, "features.chat.directMode.mock.inputLabel")}</label>
+              <div class="rounded-sm border border-border bg-panel px-3 py-2 mb-2">
+                <span class="text-xs text-muted-foreground">{t(locale, "features.chat.directMode.mock.input")}</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <button type="button" class="inline-flex items-center rounded-sm bg-accent px-2 py-1 text-2xs font-medium text-primary-foreground">
+                  <i class="bx bx-play icon-xs"></i>
+                  {t(locale, "features.chat.directMode.mock.runNow")}
+                </button>
+                <button type="button" class="inline-flex items-center rounded-sm border border-border bg-panel px-2 py-1 text-2xs font-medium text-foreground-muted">
+                  <i class="bx bx-time-five icon-xs"></i>
+                  {t(locale, "features.chat.directMode.mock.schedule")}
+                </button>
+              </div>
+            </div>
+
+            <!-- Status Tracker -->
+            <div class="rounded-md border border-border bg-background p-3">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-2xs font-medium text-foreground-strong">{t(locale, "features.chat.directMode.mock.execution")}</span>
+                <span class="inline-flex items-center gap-1 rounded-sm px-1.5 py-0.5 text-2xs font-medium" style="background: var(--success-soft); color: var(--success);">
+                  <span class="h-1 w-1 rounded-full bg-success"></span>
+                  {t(locale, "features.chat.directMode.mock.completed")}
+                </span>
+              </div>
+              <div class="space-y-1.5">
+                <div class="flex items-center gap-2">
+                  <i class="bx bx-check-square text-success icon-sm"></i>
+                  <span class="text-2xs text-muted-foreground">{t(locale, "features.chat.directMode.mock.step1")}</span>
+                  <span class="text-2xs text-foreground-muted ms-auto font-mono">1.2s</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <i class="bx bx-check-square text-success icon-sm"></i>
+                  <span class="text-2xs text-muted-foreground">{t(locale, "features.chat.directMode.mock.step2")}</span>
+                  <span class="text-2xs text-foreground-muted ms-auto font-mono">3.8s</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <i class="bx bx-check-square text-success icon-sm"></i>
+                  <span class="text-2xs text-muted-foreground">{t(locale, "features.chat.directMode.mock.step3")}</span>
+                  <span class="text-2xs text-foreground-muted ms-auto font-mono">2.1s</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <i class="bx bx-check-square text-success icon-sm"></i>
+                  <span class="text-2xs text-muted-foreground">{t(locale, "features.chat.directMode.mock.step4")}</span>
+                  <span class="text-2xs text-foreground-muted ms-auto font-mono">0.4s</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Execution History -->
+            <div class="rounded-md border border-border bg-background p-3">
+              <span class="text-2xs font-medium text-foreground-strong mb-2 block">{t(locale, "features.chat.directMode.mock.recentRuns")}</span>
+              <div class="space-y-1.5">
+                <div class="flex items-center justify-between rounded-sm bg-panel px-2 py-1">
+                  <div class="flex items-center gap-2">
+                    <i class="bx bx-check-square text-success icon-xs"></i>
+                    <span class="text-2xs text-muted-foreground">{t(locale, "features.chat.directMode.mock.runToday")}</span>
+                  </div>
+                  <span class="text-2xs text-foreground-muted font-mono">7.5s</span>
+                </div>
+                <div class="flex items-center justify-between rounded-sm bg-panel px-2 py-1">
+                  <div class="flex items-center gap-2">
+                    <i class="bx bx-check-square text-success icon-xs"></i>
+                    <span class="text-2xs text-muted-foreground">{t(locale, "features.chat.directMode.mock.runYesterday")}</span>
+                  </div>
+                  <span class="text-2xs text-foreground-muted font-mono">8.1s</span>
+                </div>
+                <div class="flex items-center justify-between rounded-sm bg-panel px-2 py-1">
+                  <div class="flex items-center gap-2">
+                    <i class="bx bx-error text-destructive icon-xs"></i>
+                    <span class="text-2xs text-muted-foreground">{t(locale, "features.chat.directMode.mock.runMon")}</span>
+                  </div>
+                  <span class="text-2xs text-destructive font-mono">{t(locale, "features.chat.directMode.mock.failed")}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Problem -->
+  <section class="relative py-24 sm:py-32 overflow-hidden">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="relative mx-auto max-w-6xl px-6">
+      <SectionHeader
+        label={t(locale, "features.chat.directMode.problem.label")}
+        title={t(locale, "features.chat.directMode.problem.title")}
+        description={t(locale, "features.chat.directMode.problem.desc")}
+      />
+
+      <div class="mx-auto max-w-2xl" data-aos="fade-up">
+        <div class="rounded-md border border-border bg-panel p-6">
+          <div class="flex items-start gap-4">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-destructive-soft">
+              <i class="bx bx-error text-destructive icon-xl"></i>
+            </div>
+            <div>
+              <h3 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, "features.chat.directMode.problem.title")}</h3>
+              <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, "features.chat.directMode.problem.desc")}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What It Is -->
+  <section class="relative py-24 sm:py-32">
+    <div class="mx-auto max-w-6xl px-6">
+      <SectionHeader
+        title={t(locale, "features.chat.directMode.what.title")}
+        description={t(locale, "features.chat.directMode.what.desc")}
+      />
+
+      <div class="mx-auto max-w-2xl" data-aos="fade-up">
+        <div class="rounded-md border border-border bg-panel p-6">
+          <div class="flex items-start gap-4">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-accent-soft">
+              <i class="bx bx-play-circle text-accent icon-xl"></i>
+            </div>
+            <div>
+              <h3 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, "features.chat.directMode.what.title")}</h3>
+              <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, "features.chat.directMode.what.desc")}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="relative py-24 sm:py-32 overflow-hidden">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="relative mx-auto max-w-6xl px-6">
+      <SectionHeader
+        title={t(locale, "features.chat.directMode.how.title")}
+      />
+
+      <div class="grid gap-4 sm:grid-cols-2" data-aos="fade-up">
+        {steps.map((step) => (
+          <div class="rounded-md border border-border bg-panel p-5">
+            <div class="flex h-9 w-9 items-center justify-center rounded-md bg-accent-soft mb-3">
+              <span class="text-sm font-bold text-accent">{step.num}</span>
+            </div>
+            <h3 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, step.titleKey)}</h3>
+            <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, step.descKey)}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Scheduling -->
+  <section class="relative py-24 sm:py-32">
+    <div class="mx-auto max-w-6xl px-6">
+      <SectionHeader
+        title={t(locale, "features.chat.directMode.scheduling.title")}
+        description={t(locale, "features.chat.directMode.scheduling.desc")}
+      />
+
+      <div class="mx-auto max-w-2xl" data-aos="fade-up">
+        <div class="rounded-md border border-border bg-panel p-6">
+          <div class="flex items-start gap-4">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-warning-soft">
+              <i class="bx bx-time-five text-warning icon-xl"></i>
+            </div>
+            <div>
+              <h3 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, "features.chat.directMode.scheduling.title")}</h3>
+              <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, "features.chat.directMode.scheduling.desc")}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Controls -->
+  <section class="relative py-24 sm:py-32 overflow-hidden">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="relative mx-auto max-w-6xl px-6">
+      <SectionHeader
+        title={t(locale, "features.chat.directMode.controls.title")}
+        description={t(locale, "features.chat.directMode.controls.desc")}
+      />
+
+      <div class="mx-auto max-w-2xl" data-aos="fade-up">
+        <div class="rounded-md border border-border bg-panel p-6">
+          <div class="flex items-start gap-4">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-success-soft">
+              <i class="bx bx-slider text-success icon-xl"></i>
+            </div>
+            <div>
+              <h3 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, "features.chat.directMode.controls.title")}</h3>
+              <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, "features.chat.directMode.controls.desc")}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <FeatureCTA
+    locale={locale}
+    title={t(locale, "features.chat.directMode.cta.title")}
+    description={t(locale, "features.chat.directMode.cta.desc")}
+  />
+
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+</FeaturesLayout>

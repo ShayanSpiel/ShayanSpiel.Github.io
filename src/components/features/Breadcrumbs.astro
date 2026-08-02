@@ -1,0 +1,29 @@
+---
+import { type Locale, t } from "../../i18n/translations";
+import { localizePath } from "../../i18n";
+
+export interface Props {
+  items: { label: string; href?: string }[];
+  locale?: Locale;
+}
+
+const { items, locale = "en" } = Astro.props;
+---
+
+<nav aria-label={t(locale, "common.breadcrumbAria")} class="mb-8">
+  <ol class="flex items-center justify-center gap-1.5 text-2xs text-muted-foreground flex-wrap">
+    <li>
+      <a href={localizePath("/", locale)} class="hover:text-foreground transition-colors">{t(locale, "nav.home")}</a>
+    </li>
+    {items.map((item, i) => (
+      <li class="flex items-center gap-1.5">
+        <span aria-hidden="true" class="text-border-strong">/</span>
+        {item.href ? (
+          <a href={localizePath(item.href, locale)} class="hover:text-foreground transition-colors">{item.label}</a>
+        ) : (
+          <span class="text-foreground font-medium" aria-current="page">{item.label}</span>
+        )}
+      </li>
+    ))}
+  </ol>
+</nav>

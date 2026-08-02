@@ -1,0 +1,8 @@
+---
+const { tag, title, sub } = Astro.props as { tag?: string; title: string; sub?: string };
+---
+<div class="section-head">
+  {tag && <span class="section-tag">{tag}</span>}
+  <h2>{title}</h2>
+  {sub && <p class="section-sub">{sub}</p>}
+</div>

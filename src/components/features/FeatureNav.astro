@@ -1,0 +1,269 @@
+---
+import { type Locale, t } from "../../i18n/translations";
+import { localizePath } from "../../i18n";
+
+export interface Props {
+  locale?: Locale;
+  currentPath: string;
+}
+
+const { locale = "en", currentPath } = Astro.props;
+const isRtl = locale === "fa";
+const hiddenTranslate = isRtl ? "translate-x-[-100%]" : "translate-x-full";
+
+function isActive(href: string): boolean {
+  const localized = localizePath(href, locale);
+  return currentPath === localized || currentPath.startsWith(localized + "/");
+}
+
+const layers = [
+  {
+    icon: "bx-message-rounded",
+    color: "primary",
+    titleKey: "features.layers.chat.title",
+    hubHref: "/features/chat/",
+    items: [
+      { titleKey: "features.chat.directorMode.title", href: "/features/chat/director-mode/" },
+      { titleKey: "features.chat.directMode.title", href: "/features/chat/direct-mode/" },
+    ],
+  },
+  {
+    icon: "bx-file",
+    color: "accent",
+    titleKey: "features.layers.context.title",
+    hubHref: "/features/context/",
+    items: [
+      { titleKey: "features.context.files.title", href: "/features/context/files/" },
+      { titleKey: "features.context.strategy.title", href: "/features/context/strategy/" },
+      { titleKey: "features.context.memory.title", href: "/features/context/memory/" },
+    ],
+  },
+  {
+    icon: "bx-slider",
+    color: "purple",
+    titleKey: "features.layers.harness.title",
+    hubHref: "/features/harness/",
+    items: [
+      { titleKey: "features.harness.agents.title", href: "/features/harness/agents/" },
+      { titleKey: "features.harness.skills.title", href: "/features/harness/skills/" },
+      { titleKey: "features.harness.workflows.title", href: "/features/harness/workflows/" },
+      { titleKey: "features.harness.evals.title", href: "/features/harness/evals/" },
+    ],
+  },
+  {
+    icon: "bx-server",
+    color: "success",
+    titleKey: "features.layers.infrastructure.title",
+    hubHref: "/features/infrastructure/",
+    items: [
+      { titleKey: "features.infrastructure.providers.title", href: "/features/infrastructure/providers/" },
+      { titleKey: "features.infrastructure.connections.title", href: "/features/infrastructure/connections/" },
+    ],
+  },
+];
+---
+
+<!-- Mobile toggle button -->
+<button
+  type="button"
+  id="feature-nav-toggle"
+  class="lg:hidden fixed bottom-6 z-50 flex h-11 w-11 items-center justify-center rounded-md bg-primary text-primary-foreground shadow-lg shadow-primary/30 hover:brightness-110 active:brightness-95 transition-all duration-300"
+  style="inset-inline-end: 1.5rem;"
+  aria-label={t(locale, "common.navAria")}
+  aria-expanded="false"
+>
+  <i class="bx bx-menu icon-3xl" id="feature-nav-icon"></i>
+</button>
+
+<!-- Mobile backdrop -->
+<div
+  id="feature-nav-backdrop"
+  class="lg:hidden fixed inset-0 z-50 bg-background/60 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300"
+></div>
+
+<!-- Mobile sidebar -->
+<aside
+  id="feature-nav-mobile"
+  class:list={[
+    "lg:hidden fixed top-0 z-50 h-full w-72 bg-panel overflow-y-auto transition-transform duration-300",
+    isRtl ? "right-auto left-0 border-r" : "right-0 left-auto border-l",
+  ]}
+  style={`border-color: var(--border); transform: ${isRtl ? 'translateX(-100%)' : 'translateX(100%)'};`}
+>
+  <div class="flex items-center justify-between px-5 h-16 border-b border-border">
+    <a href={localizePath("/features/", locale)} class="flex items-center gap-2">
+      <i class="bx bx-layer text-primary icon-lg"></i>
+      <span class="text-sm font-semibold text-foreground-strong">{t(locale, "nav.features")}</span>
+    </a>
+    <button
+      type="button"
+      id="feature-nav-close"
+      class="flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-panel-raised transition-colors"
+      aria-label="Close"
+    >
+      <i class="bx bx-x icon-lg"></i>
+    </button>
+  </div>
+  <nav class="p-4 space-y-1" aria-label={t(locale, "common.navAria")}>
+    <a
+      href={localizePath("/features/", locale)}
+      class:list={[
+        "flex items-center gap-2.5 rounded-md px-3 py-2 text-sm transition-colors",
+        currentPath === localizePath("/features/", locale)
+          ? "bg-primary-soft text-primary font-medium"
+          : "text-muted-foreground hover:text-foreground hover:bg-panel-raised",
+      ]}
+    >
+      <i class="bx bx-home icon-lg"></i>
+      {t(locale, "nav.features")}
+    </a>
+
+    {layers.map((layer) => (
+      <div>
+        <a
+          href={localizePath(layer.hubHref, locale)}
+          class:list={[
+            "flex items-center gap-2.5 rounded-md px-3 py-2 text-sm transition-colors",
+            isActive(layer.hubHref) && !layer.items.some(item => isActive(item.href))
+              ? `bg-${layer.color}-soft text-${layer.color} font-medium`
+              : "text-foreground hover:bg-panel-raised",
+          ]}
+        >
+          <i class={`bx ${layer.icon} icon-lg`}></i>
+          {t(locale, layer.titleKey)}
+        </a>
+        <div class="ms-4 border-s border-border ps-3 mt-1 space-y-0.5">
+          {layer.items.map((item) => (
+            <a
+              href={localizePath(item.href, locale)}
+              class:list={[
+                "block rounded-md px-3 py-1.5 text-xs transition-colors",
+                isActive(item.href)
+                  ? `bg-${layer.color}-soft text-${layer.color} font-medium`
+                  : "text-muted-foreground hover:text-foreground hover:bg-panel-raised",
+              ]}
+            >
+              {t(locale, item.titleKey)}
+            </a>
+          ))}
+        </div>
+      </div>
+    ))}
+  </nav>
+</aside>
+
+<!-- Desktop sidebar -->
+<aside
+  class:list={[
+    "hidden lg:block fixed top-16 z-40 w-56 h-[calc(100vh-4rem)] overflow-y-auto bg-background/80 backdrop-blur-sm",
+    isRtl ? "right-0 left-auto border-l" : "left-0 right-auto border-r",
+  ]}
+  style="border-color: var(--border);"
+>
+  <nav class="p-4 space-y-1" aria-label={t(locale, "common.navAria")}>
+    <a
+      href={localizePath("/features/", locale)}
+      class:list={[
+        "flex items-center gap-2.5 rounded-md px-3 py-2 text-sm transition-colors",
+        currentPath === localizePath("/features/", locale)
+          ? "bg-primary-soft text-primary font-medium"
+          : "text-muted-foreground hover:text-foreground hover:bg-panel-raised",
+      ]}
+    >
+      <i class="bx bx-home icon-lg"></i>
+      {t(locale, "nav.features")}
+    </a>
+
+    {layers.map((layer) => (
+      <div>
+        <a
+          href={localizePath(layer.hubHref, locale)}
+          class:list={[
+            "flex items-center gap-2.5 rounded-md px-3 py-2 text-sm transition-colors",
+            isActive(layer.hubHref) && !layer.items.some(item => isActive(item.href))
+              ? `bg-${layer.color}-soft text-${layer.color} font-medium`
+              : "text-foreground hover:bg-panel-raised",
+          ]}
+        >
+          <i class={`bx ${layer.icon} icon-lg`}></i>
+          {t(locale, layer.titleKey)}
+        </a>
+        <div class="ms-4 border-s border-border ps-3 mt-1 space-y-0.5">
+          {layer.items.map((item) => (
+            <a
+              href={localizePath(item.href, locale)}
+              class:list={[
+                "block rounded-md px-3 py-1.5 text-xs transition-colors",
+                isActive(item.href)
+                  ? `bg-${layer.color}-soft text-${layer.color} font-medium`
+                  : "text-muted-foreground hover:text-foreground hover:bg-panel-raised",
+              ]}
+            >
+              {t(locale, item.titleKey)}
+            </a>
+          ))}
+        </div>
+      </div>
+    ))}
+  </nav>
+</aside>
+
+<script is:inline>
+(function() {
+  var toggle = document.getElementById('feature-nav-toggle');
+  var mobile = document.getElementById('feature-nav-mobile');
+  var backdrop = document.getElementById('feature-nav-backdrop');
+  var closeBtn = document.getElementById('feature-nav-close');
+  var icon = document.getElementById('feature-nav-icon');
+  if (!toggle || !mobile || !backdrop || !closeBtn || !icon) return;
+
+  var isRtl = document.documentElement.dir === 'rtl';
+  var hiddenTf = isRtl ? 'translateX(-100%)' : 'translateX(100%)';
+
+  function open() {
+    mobile.style.transform = 'translateX(0)';
+    backdrop.classList.remove('opacity-0', 'pointer-events-none');
+    backdrop.classList.add('opacity-100', 'pointer-events-auto');
+    toggle.setAttribute('aria-expanded', 'true');
+    icon.className = 'bx bx-x';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function close() {
+    mobile.style.transform = hiddenTf;
+    backdrop.classList.add('opacity-0', 'pointer-events-none');
+    backdrop.classList.remove('opacity-100', 'pointer-events-auto');
+    toggle.setAttribute('aria-expanded', 'false');
+    icon.className = 'bx bx-menu';
+    document.body.style.overflow = '';
+  }
+
+  toggle.addEventListener('click', function() {
+    if (mobile.style.transform === 'translateX(0)' || mobile.style.transform === '') {
+      close();
+    } else {
+      open();
+    }
+  });
+
+  closeBtn.addEventListener('click', close);
+  backdrop.addEventListener('click', close);
+
+  mobile.querySelectorAll('a').forEach(function(link) {
+    link.addEventListener('click', close);
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') close();
+  });
+
+  var footer = document.querySelector('footer');
+  if (footer) {
+    var footerObs = new IntersectionObserver(function(entries) {
+      toggle.style.opacity = entries[0].isIntersecting ? '0' : '1';
+      toggle.style.pointerEvents = entries[0].isIntersecting ? 'none' : 'auto';
+    }, { threshold: 0 });
+    footerObs.observe(footer);
+  }
+})();
+</script>

@@ -1,0 +1,159 @@
+---
+title: 'Spiel OS حالا اوپن‌سورسه: یک پایپلاین نوشتن AI برای سازنده‌ها'
+date: 2026-06-08 10:00:00 +0000
+description: 'یک پایپلاین نوشتن AI اوپن‌سورس که جلسه‌های بیلد رو به محتوای آماده انتشار تبدیل می‌کنه: ۴ فایل، ۲ لوپ، ۱۹ کامند، لایسنس MIT. کلونش کن، اجراش کن، مال خودت کن.'
+permalink: /spielos-open-source/
+category: journey
+tags:
+- ایجنت‌ها، لوپ‌ها و ارزیابی‌ها
+- اوپن-سورس
+- ایجنت-های-هوش-مصنوعی
+- موتور-محتوا
+- اتوماسیون
+- پوزیشنینگ
+image: /assets/og/spielos-open-source.png
+---
+
+import SectionHead from "@/components/posts/SectionHead.astro";
+import ProseCenter from "@/components/posts/ProseCenter.astro";
+import Card from "@/components/posts/Card.astro";
+import Pullquote from "@/components/posts/Pullquote.astro";
+import Takeaway from "@/components/posts/Takeaway.astro";
+import Source from "@/components/posts/Source.astro";
+import PostCta from "@/components/posts/PostCta.astro";
+
+
+
+<SectionHead tag='اثبات' title='این شکلشه' sub='یک جلسه دیباگ دو ساعته تبدیل به یک پست می‌شه. تو حتی یک ابزار نوشتن هم باز نمی‌کنی.' />
+
+<ProseCenter text='الان مرتب منتشر می‌کنم؛ قبل از موتور اینطور نبود. هر سه‌شنبه جلسه بیلد رو تموم می‌کردم، به کار نگاه می‌کردم و فکر می‌کردم «باید درباره این پست بذارم» — و پست نمی‌ذاشتم. نه چون نمی‌تونستم بنویسم؛ چون نوشتن یعنی سوییچ کردن از سازنده به خالق. و اون سوییچ هیچ‌وقت اتفاق نمی‌افتاد.' />
+
+<div class='grid grid-2'>
+  <Card title='لاگ جلسه: ۲ دقیقه یادداشت' desc='۲ ساعت وقت صرف رفع context drift توی یک ورک‌فلو LangGraph کردم. ریشه مشکل: تعداد زیاد انتقال استیت پنهان بین نودها. راه‌حل: اسکیمای صریح استیت با فیلدهای اجباری برای هر انتقال.' icon='clock' />
+  <Card title='پست تولیدشده: خروجی' desc='بیشتر ایجنت‌های AI به‌خاطر پرامپت شکست نمی‌خورن؛ به‌خاطر اینکه هیچ‌کس نمی‌دونه توی چه استیتی هستن. هر انتقال پنهان یه نقطه driftه و هر نقطه drift یه باگ خاموشه. استیت رو صریح کن.' icon='rocket' />
+</div>
+
+<Takeaway text='همون جلسه، با قاب متفاوت. استخراج‌شده، نه نوشته‌شده. موتور چیزی رو بیرون می‌کشه که از قبل اونجاست.' />
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='مکانیزم' title='چطور کار می‌کنه' sub='دو ماشین حالت مستقل از هم اجرا می‌شن: LLM مراحل خلاقانه رو انجام می‌ده و اسکریپت‌ها مراحل مکانیکی رو. این دو هیچ‌وقت همپوشانی ندارن.' />
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>01</div>
+      <div class='step-body'>
+        <strong>لوپ ویکی</strong>
+        IDLE ← INGEST ← ANALYZE ← RECONCILE ← INDEX ← VALIDATE ← COMPLETE. یادداشت‌های خام رو وارد می‌کنه، موجودیت‌ها رو استخراج می‌کنه، به صفحه‌های ویکی تبدیل می‌کنه و به هم لینک می‌کنه.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>02</div>
+      <div class='step-body'>
+        <strong>لوپ محتوا</strong>
+        IDLE ← SESSION ← STRATEGY ← COMPILE ← DRAFT ← GATE ← QUEUE ← PUBLISH. بر اساس آرکی‌تایپ دسته‌بندی می‌کنه، کامپایلر ۸ مرحله‌ای رو اجرا می‌کنه، برای هر پلتفرم به فرمت خودش درفت می‌کنه و هر درفت رو از دروازه‌ها رد می‌کنه.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>03</div>
+      <div class='step-body'>
+        <strong>دروازه کیفیت</strong>
+        ۱۶ دروازه مکانیکی (تعداد کاراکتر، قلاب، مخاطب، frontmatter، تکرار واژه) به‌علاوه ۱۴ دروازه خلاقانه. نمره ترکیبی باید به ۰.۸۵ برسه؛ درفت‌های ردشده وارد صف نمی‌شن.
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='چی به دست میاری' title='چی به دست میاری' sub='ریپو رو کلون کن و موتوری رو می‌گیری که من روزانه باهاش کار می‌کنم. ۱۹ کامند، ۸ تمپلیت، ۳۰ دروازه، دو لوپ، یک معماری.' />
+
+  <div class='grid grid-3'>
+    <Card title='۱۹ کامند اسلش' desc='/extract, /post, /publish, /state, /health, /config, /optimize, /prune و ۱۱ تای دیگه. هر کدوم یه فایل مارک‌داونه که ایجنتت موقع فراخوانی می‌خونتش.' icon='code' num='19' variant='stat-shift' />
+    <Card title='۸ تمپلیت' desc='وبلاگ، LinkedIn، X، مفهوم، موجودیت، خلاصه، مقایسه، لاگ جلسه. هر کدوم با frontmatter و ساختار مناسب پلتفرم خودش.' icon='layers' num='8' variant='stat-shift' />
+    <Card title='۳۰ دروازه کیفیت' desc='۱۶ مکانیکی (با کد اعمال می‌شن) + ۱۴ خلاقانه (قضاوت با LLM). هر دروازه یه کف سخته که پایپلاین نمی‌تونه ازش رد بشه. نمره ترکیبی باید به ۰.۸۵ برسه.' icon='shield' num='30' variant='stat-shift' />
+  </div>
+
+  <div class='grid grid-3 mt-6'>
+    <Card title='۲ ماشین حالت' desc='لوپ ویکی برای دانش انباشتی؛ لوپ محتوا برای انتشار. همون الگوی اقدام←مشاهده←ارزیابی←به‌روزرسانی←تکرار. دامنه متفاوت، معماری یکسان.' icon='network-chart' num='2' variant='stat-shift' />
+    <Card title='۱۴ سوال راه‌اندازی' desc='SETUP.md رو توی هر ایجنت LLM پیست کن. ایجنت خودش پلتفرمت رو تشخیص می‌ده، همه کامندها رو نصب می‌کنه و ستاپ ۱۴ سوالی ICP/صدا/برند رو اجرا می‌کنه. حدود ۱۵ دقیقه.' icon='task' num='14' variant='stat-shift' />
+    <Card title='صفر وابستگی' desc='Python 3، bash، git؛ بقیه اختیاریان. نه npm. نه Docker. نه اشتراک SaaS. سیستم توی ریپوی خودته.' icon='check' />
+  </div>
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='راه‌اندازی' title='راه‌اندازی: کلون + پیست' sub='چهار قدم. یک پیست. حدود ۱۵ دقیقه. موتور به ورک‌فلوی تو وصله.' />
+
+  ```
+  git clone https://github.com/ShayanSpiel/SpielOS my-os
+  cd my-os
+  ```
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>01</div>
+      <div class='step-body'>
+        <strong>ریپو رو کلون کن</strong>
+        <code>git clone https://github.com/ShayanSpiel/SpielOS my-os && cd my-os</code>
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>02</div>
+      <div class='step-body'>
+        <strong>SETUP.md رو توی هر ایجنت LLM باز کن</strong>
+        Cursor، Claude Code، opencode، Continue، ChatGPT. بلوک پرامپت رو کپی کن و پیستش کن.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>03</div>
+      <div class='step-body'>
+        <strong>ایجنت نصب و ستاپ رو انجام می‌ده</strong>
+        پلتفرم رو تشخیص می‌ده، کامندها رو نصب می‌کنه، ستاپ ۱۴ سوالی رو اجرا می‌کنه. همه فایل‌های کانفیگ رو می‌نویسه. حدود ۱۵ دقیقه.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>04</div>
+      <div class='step-body'>
+        <strong>اولین کامندهات رو اجرا کن</strong>
+        <code>/state</code> برای وضعیت، <code>/extract my-notes.md</code> برای ورود یادداشت‌ها، <code>/post "my first session"</code> برای درفت و <code>/health</code> برای چک.
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='دو لایه' title='سیستم دو لایه‌ای' sub='اوپن‌سورس، یا انجام‌شده برای تو. انتخاب با خودته.' />
+
+  <div class='grid grid-2'>
+    <Card title='لایه ۱: اوپن‌سورس · رایگان' desc='ریپو، متدولوژی، پایپلاین. کلون کن، پیست کن، سفارشی کن. این چیزیه که از ریپوی گیت‌هاب می‌گیری: همون موتوری که من روزانه باهاش کار می‌کنم. کلونش کن، پرامپت ستاپ رو توی ایجنتت پیست کن، به ۱۴ سوال جواب بده — تا عصر یه پایپلاین محتوای کارآمد داری.' icon='check' />
+    <Card title='لایه ۲: نصب DFY · ۹۹۰ دلار' desc='پایپلاین کامل که توی ورک‌فلوی تو نصب می‌شه، با صدای تو پوزیشن گرفته و ۳۰ روز بازبینی داره: استراتژی پوزیشنینگ، طراحی آفر، بازنویسی بایو، ایجنت‌ها و تمپلیت‌ها با صدای تو، طراحی ورک‌فلو، ۳ نمونه ستون آماده انتشار و ۳۰ روز بازبینی بعد از انتشار.' icon='rocket' />
+  </div>
+
+  <div class='grid grid-3 mt-6'>
+    <Card title='۱۴ روز نصب' desc='پایپلاین کامل توی ورک‌فلوی تو؛ صاحب همه فایل‌ها تویی. بدون اشتراک، بدون ایمیلی که دو سال بعد بگه «قیمت‌ها عوض شد».' icon='calendar' num='14' variant='stat-shift' />
+    <Card title='۳۰ روز ضمانت برگشت پول' desc='اگه بعد از ۳۰ روز ۵ جلسه رو با موتور اجرا کرده باشی و ۵ درفت مستقلِ تست‌شده نداشته باشی، کل پول برمی‌گرده و سیستم رو هم نگه می‌داری.' icon='shield' num='30' variant='stat-shift' />
+    <Card title='۳ اسلات در ماه' desc='سقف سخته؛ نصب ۱۴ روزه رو خودم دست‌به‌کار می‌شم. ۳ فاندر در ماه؛ بقیه یا صبر می‌کنن یا خودشون نسخه اوپن‌سورس رو اجرا می‌کنن.' icon='users' num='3' variant='stat-shift' />
+  </div>
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='چرا وجود داره' title='چرا این وجود داره' sub='اول برای خودم ساختمش؛ ریپو بعد از ماه‌ها تکرار از خزانه کاری خودم درومد. تمپلیت‌ها هموناییان که هر روز باهاشون کار می‌کنم. اینجا هیچ تئوری‌ای نیست؛ هر فایل توی پروداکشن تست شده.' />
+
+  <ProseCenter text='بینش ساده‌ست: هیچ‌وقت نباید بری سراغ ساختن محتوا؛ کار خودت باید از قبل محتوا رو توش داشته باشه. موتور چیزی رو استخراج می‌کنه که از قبل اونجاست.' />
+
+  <div class='grid grid-3'>
+    <Card title='اگه منتشر می‌کنی ولی پست نمی‌ذاری' desc='این سیستمه که درستش می‌کنه. کار انجام می‌شه، ثبت می‌شه، درفت‌ها ساخته می‌شن. تو فقط بازبینی می‌کنی و منتشر می‌کنی.' icon='check' />
+    <Card title='اگه منتشر نمی‌کنی' desc='این سیستم نجاتت نمی‌ده؛ محتوایی برای استخراج وجود نداره. اول بساز، بعد موتور رو اجرا کن.' icon='circle-x' />
+    <Card title='اگه هر دو رو می‌خوای' desc='نصب DFY هم سیستم رو بهت می‌ده هم استراتژی رو: متدولوژی نصب‌شده، تمپلیت‌های پوزیشن‌شده با صدای تو، ۳ نمونه ستون آماده و ۳۰ روز بازبینی.' icon='rocket' />
+  </div>
+</section>
+
+<PostCta takeaway='ریپو رو کلون کن. ستاپ رو پیست کن. به ۱۴ سوال جواب بده. موتور در ۱۵ دقیقه به ورک‌فلوی تو وصله.' echo='اوپن‌سورس، با لایسنس MIT. یا انجام‌شده برای تو با ۹۹۰ دلار. ۳ اسلات در ماه. به @ShayanSpiel DM بزن یا برای نصب DFY درخواست بده.' btnText='ریپوی SpielOS رو کلون کن' btnHref='https://github.com/ShayanSpiel/SpielOS' />

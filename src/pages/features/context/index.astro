@@ -1,0 +1,244 @@
+---
+import FeaturesLayout from "../../../layouts/FeaturesLayout.astro";
+import FeatureHero from "../../../components/features/FeatureHero.astro";
+import FeatureCTA from "../../../components/features/FeatureCTA.astro";
+import SectionHeader from "../../../components/sections/SectionHeader.astro";
+import { SITE } from "../../../config";
+import { type Locale, t } from "../../../i18n/translations";
+import { localizePath } from "../../../i18n";
+
+export interface Props {
+  locale?: Locale;
+}
+
+const { locale = "en" } = Astro.props;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: t(locale, "features.context.pageTitle"),
+  description: t(locale, "features.context.pageDesc"),
+  url: SITE.url + "/features/context/",
+  isPartOf: {
+    "@type": "WebSite",
+    name: SITE.name,
+    url: SITE.url,
+  },
+};
+---
+
+<FeaturesLayout
+  title={t(locale, "features.context.pageTitle")}
+  description={t(locale, "features.context.pageDesc")}
+  locale={locale}
+>
+  <FeatureHero
+    locale={locale}
+    breadcrumbs={[
+      { label: t(locale, "nav.features"), href: "/features/" },
+      { label: t(locale, "features.context.label") },
+    ]}
+    label={t(locale, "features.context.label")}
+    title={t(locale, "features.context.hero.title")}
+    description={t(locale, "features.context.hero.desc")}
+    cta={{ label: t(locale, "features.hero.cta"), href: localizePath("/waitlist/", locale) }}
+  />
+
+  <!-- Real Context UI Mockup -->
+  <section class="relative py-24 sm:py-32 overflow-hidden">
+    <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(var(--foreground) 1px, transparent 1px); background-size: 24px 24px;"></div>
+    <div class="relative mx-auto max-w-6xl px-6">
+      <div class="mx-auto max-w-4xl" data-aos="fade-up">
+        <div class="rounded-lg border border-border bg-panel overflow-hidden shadow-panel">
+          <!-- Window Header -->
+          <div class="flex items-center justify-between px-4 py-3 border-b border-border bg-panel-raised">
+            <div class="flex items-center gap-2">
+              <div class="h-3 w-3 rounded-full bg-destructive/60"></div>
+              <div class="h-3 w-3 rounded-full bg-warning/60"></div>
+              <div class="h-3 w-3 rounded-full bg-success/60"></div>
+            </div>
+            <span class="text-2xs text-muted-foreground font-mono">{t(locale, "features.context.mock.window")}</span>
+          </div>
+
+          <!-- Tabs + Content -->
+          <div>
+            <!-- Tab Bar -->
+            <div class="flex border-b border-border bg-panel-raised">
+              <div class="flex items-center gap-1.5 border-b-2 border-primary px-4 py-2.5">
+                <i class="bx bx-file text-primary icon-sm"></i>
+                <span class="text-2xs font-semibold text-foreground-strong">{t(locale, "features.context.files.label")}</span>
+              </div>
+              <div class="flex items-center gap-1.5 px-4 py-2.5 cursor-pointer hover:bg-panel transition-colors">
+                <i class="bx bx-slider text-muted-foreground icon-sm"></i>
+                <span class="text-2xs font-medium text-muted-foreground">{t(locale, "features.context.strategy.label")}</span>
+              </div>
+              <div class="flex items-center gap-1.5 px-4 py-2.5 cursor-pointer hover:bg-panel transition-colors">
+                <i class="bx bx-data text-muted-foreground icon-sm"></i>
+                <span class="text-2xs font-medium text-muted-foreground">{t(locale, "features.context.memory.label")}</span>
+              </div>
+            </div>
+
+            <!-- Tab Content: Files -->
+            <div class="flex min-h-[320px]">
+              <!-- File Tree -->
+              <div class="w-2/5 border-e border-border bg-panel-raised p-3">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-2xs font-medium text-foreground-strong">{t(locale, "features.context.mock.knowledgeBase")}</span>
+                  <button type="button" class="inline-flex items-center rounded-sm bg-primary px-1.5 py-0.5 text-2xs font-medium text-primary-foreground">
+                    <i class="bx bx-plus icon-xs"></i> {t(locale, "features.context.mock.add")}
+                  </button>
+                </div>
+                <div class="space-y-0.5">
+                  <div class="flex items-center gap-1.5 rounded-sm bg-panel px-2 py-1.5">
+                    <i class="bx bx-chevron-down text-muted-foreground icon-xs"></i>
+                    <i class="bx bx-folder text-warning icon-sm"></i>
+                    <span class="text-2xs text-foreground-muted">brand/</span>
+                  </div>
+                  <div class="flex items-center gap-1.5 rounded-sm bg-primary-soft ps-5 pe-2 py-1.5">
+                    <i class="bx bx-file text-primary icon-sm"></i>
+                    <span class="text-2xs text-primary font-medium">guidelines.md</span>
+                  </div>
+                  <div class="flex items-center gap-1.5 rounded-sm bg-panel ps-5 pe-2 py-1.5">
+                    <i class="bx bx-file text-foreground-muted icon-sm"></i>
+                    <span class="text-2xs text-muted-foreground">colors.json</span>
+                  </div>
+                  <div class="flex items-center gap-1.5 rounded-sm bg-panel px-2 py-1.5">
+                    <i class="bx bx-folder text-warning icon-sm"></i>
+                    <span class="text-2xs text-foreground-muted">docs/</span>
+                  </div>
+                  <div class="flex items-center gap-1.5 rounded-sm bg-panel px-2 py-1.5">
+                    <i class="bx bx-file text-foreground-muted icon-sm"></i>
+                    <span class="text-2xs text-muted-foreground">product_spec.md</span>
+                  </div>
+                  <div class="flex items-center gap-1.5 rounded-sm bg-panel px-2 py-1.5">
+                    <i class="bx bx-file text-foreground-muted icon-sm"></i>
+                    <span class="text-2xs text-muted-foreground">faq.md</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- File Preview -->
+              <div class="flex-1 p-4">
+                <div class="flex items-center justify-between mb-3">
+                  <div class="flex items-center gap-2">
+                    <i class="bx bx-file text-primary icon-md"></i>
+                    <span class="text-xs font-medium text-foreground-strong">brand/guidelines.md</span>
+                    <span class="text-2xs text-muted-foreground">1.8 KB</span>
+                  </div>
+                  <span class="inline-flex items-center gap-1 rounded-sm px-1.5 py-0.5 text-2xs font-medium" style="background: var(--success-soft); color: var(--success);">
+                    <span class="h-1 w-1 rounded-full bg-success"></span>
+                    {t(locale, "features.context.mock.indexed")}
+                  </span>
+                </div>
+                <div class="rounded-md border border-border bg-background p-3 font-mono text-2xs text-muted-foreground leading-relaxed">
+                  <p class="text-foreground-muted">{t(locale, "features.context.mock.docTitle")}</p>
+                  <p class="mt-1">{t(locale, "features.context.mock.docVoice")}</p>
+                  <p>{t(locale, "features.context.mock.docVoiceLine")}</p>
+                  <p class="mt-1">{t(locale, "features.context.mock.docColors")}</p>
+                  <p>{t(locale, "features.context.mock.docPrimary")}</p>
+                  <p>{t(locale, "features.context.mock.docSecondary")}</p>
+                </div>
+                <div class="mt-2 flex items-center gap-2">
+                  <span class="text-2xs text-foreground-muted">{t(locale, "features.context.mock.indexedMeta")}</span>
+                  <span class="text-2xs text-muted-foreground">|</span>
+                  <span class="text-2xs text-foreground-muted">{t(locale, "features.context.mock.usedBy", { count: 4 })}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative py-24 sm:py-32">
+    <div class="mx-auto max-w-6xl px-6">
+      <SectionHeader
+        label={t(locale, "features.context.layers.label")}
+        title={t(locale, "features.context.layers.title")}
+        description={t(locale, "features.context.layers.desc")}
+      />
+
+      <div class="grid sm:grid-cols-3 gap-6" data-aos="fade-up">
+        <a href={localizePath("/features/context/files/", locale)} class="group rounded-md border border-border bg-panel p-5 hover:border-border-strong hover:bg-panel-raised transition-all">
+          <div class="flex h-9 w-9 items-center justify-center rounded-md bg-primary-soft mb-3">
+            <i class="bx bx-file text-primary icon-xl"></i>
+          </div>
+          <h3 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, "features.context.files.title")}</h3>
+          <p class="text-xs text-muted-foreground leading-relaxed mb-3">{t(locale, "features.context.files.desc")}</p>
+          <span class="text-xs text-primary font-medium group-hover:opacity-80 transition-opacity">{t(locale, "features.context.files.link")}</span>
+        </a>
+
+        <a href={localizePath("/features/context/strategy/", locale)} class="group rounded-md border border-border bg-panel p-5 hover:border-border-strong hover:bg-panel-raised transition-all">
+          <div class="flex h-9 w-9 items-center justify-center rounded-md bg-accent-soft mb-3">
+            <i class="bx bx-slider text-accent icon-xl"></i>
+          </div>
+          <h3 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, "features.context.strategy.title")}</h3>
+          <p class="text-xs text-muted-foreground leading-relaxed mb-3">{t(locale, "features.context.strategy.desc")}</p>
+          <span class="text-xs text-primary font-medium group-hover:opacity-80 transition-opacity">{t(locale, "features.context.strategy.link")}</span>
+        </a>
+
+        <a href={localizePath("/features/context/memory/", locale)} class="group rounded-md border border-border bg-panel p-5 hover:border-border-strong hover:bg-panel-raised transition-all">
+          <div class="flex h-9 w-9 items-center justify-center rounded-md bg-purple-soft mb-3">
+            <i class="bx bx-data text-purple icon-xl"></i>
+          </div>
+          <h3 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, "features.context.memory.title")}</h3>
+          <p class="text-xs text-muted-foreground leading-relaxed mb-3">{t(locale, "features.context.memory.desc")}</p>
+          <span class="text-xs text-primary font-medium group-hover:opacity-80 transition-opacity">{t(locale, "features.context.memory.link")}</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative py-24 sm:py-32 overflow-hidden">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="relative mx-auto max-w-6xl px-6">
+      <SectionHeader
+        title={t(locale, "features.context.how.title")}
+        description={t(locale, "features.context.how.desc")}
+      />
+
+      <div class="grid sm:grid-cols-3 gap-8" data-aos="fade-up">
+        <div class="text-center">
+          <div class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary-soft mb-4">
+            <i class="bx bx-file text-primary icon-xl"></i>
+          </div>
+          <h3 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, "features.context.files.title")}</h3>
+          <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, "features.context.files.desc")}</p>
+        </div>
+        <div class="flex items-center justify-center">
+          <i class="bx bx-right-arrow-alt rtl-flip text-border-strong icon-4xl"></i>
+        </div>
+        <div class="text-center">
+          <div class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-accent-soft mb-4">
+            <i class="bx bx-slider text-accent icon-xl"></i>
+          </div>
+          <h3 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, "features.context.strategy.title")}</h3>
+          <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, "features.context.strategy.desc")}</p>
+        </div>
+      </div>
+
+      <div class="flex justify-center mt-6" data-aos="fade-up">
+        <i class="bx bx-down-arrow-alt text-border-strong icon-4xl"></i>
+      </div>
+
+      <div class="flex justify-center mt-4" data-aos="fade-up">
+        <div class="text-center">
+          <div class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-purple-soft mb-4">
+            <i class="bx bx-data text-purple icon-xl"></i>
+          </div>
+          <h3 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, "features.context.memory.title")}</h3>
+          <p class="text-xs text-muted-foreground leading-relaxed max-w-sm">{t(locale, "features.context.memory.desc")}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <FeatureCTA
+    locale={locale}
+    title={t(locale, "waitlist.cta.title")}
+    description={t(locale, "waitlist.cta.p")}
+  />
+
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+</FeaturesLayout>

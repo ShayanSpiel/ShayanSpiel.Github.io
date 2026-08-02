@@ -1,0 +1,124 @@
+---
+title: "پایپلاین محتوا: فول‌استک"
+date: 2026-06-08 09:33:47 +0000
+description: "یک تشریح کامل و فنی از پایپلاین محتوایی که تفکر خام رو به پست منتشرشده تبدیل
+  می‌کنه. از لاگ جلسه تا محتوای زنده در ۱۶ دقیقه."
+permalink: /content-pipeline/
+category: ai-agents
+tags:
+- عملیات و معماری
+- موتور-محتوا
+- ایجنت-های-هوش-مصنوعی
+- اتوماسیون
+image: /assets/og/content-pipeline.png
+---
+
+import SectionHead from "@/components/posts/SectionHead.astro";
+import ProseCenter from "@/components/posts/ProseCenter.astro";
+import Card from "@/components/posts/Card.astro";
+import Pullquote from "@/components/posts/Pullquote.astro";
+import Takeaway from "@/components/posts/Takeaway.astro";
+import Source from "@/components/posts/Source.astro";
+import PostCta from "@/components/posts/PostCta.astro";
+
+
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='مرور کلی' title='فول‌استک' sub='این پایپلاین کامل محتواست. از فکر خام تا پست منتشرشده. هر لایه. هر دروازه. هر تصمیم.' />
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>01</div>
+      <div class='step-body'>
+        <strong>لاگ جلسه</strong>
+        گفت‌وگوی خام. تفکر بدون فیلتر. ماده اولیه. ۲ تا ۱۵ دقیقه حرف زدن.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>02</div>
+      <div class='step-body'>
+        <strong>استخراج استراتژی</strong>
+        AI جلسه رو تحلیل می‌کنه. بینش رو شناسایی می‌کنه. فرمت رو تعیین می‌کنه. مخاطب رو انتخاب می‌کنه.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>03</div>
+      <div class='step-body'>
+        <strong>تولید درفت</strong>
+        AI پست رو می‌نویسه. از داده جلسه استفاده می‌کنه. صدا رو حفظ می‌کنه. بدون توهم.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>04</div>
+      <div class='step-body'>
+        <strong>اعتبارسنجی دروازه</strong>
+        ۸ دروازه اعتبارسنجی. Frontmatter. محتوا. طول. یکدستی. کیفیت. فقط محتوای قبول‌شده منتشر می‌شه.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>05</div>
+      <div class='step-body'>
+        <strong>انتشار</strong>
+        محتوا زنده می‌شه. متادیتا لاگ می‌شه. آنالیتیکس ردیابی می‌شه. لوپ بسته می‌شه.
+      </div>
+    </div>
+  </div>
+
+  <Takeaway text='۵ لایه. ۸ دروازه. ۱۶ دقیقه. این پایپلاینه. زیرساخت Session-as-Content — پایپلاینی که جلسه‌های خام بیلد رو بدون جابه‌جایی بین هویت‌ها به محتوای قابل انتشار تبدیل می‌کنه.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='لایه‌ها' title='هر لایه فقط یک کار می‌کنه' sub='پایپلاین یک جعبه سیاه نیست. مجموعه‌ای از تبدیل‌های صریحه. هر مرحله قابل مشاهده‌ست. هر مرحله قابل دیباگه.' />
+
+  <div class='grid grid-3'>
+    <Card tag='ثبت' title='لاگ جلسه' desc='گفت‌وگوهای خام. تفکر بدون فیلتر. ماده اولیه. هر گفت‌وگویی ثبت می‌شه.' icon='message' />
+    <Card tag='پردازش' title='استراتژی + درفت' desc='AI بینش رو استخراج می‌کنه. پست رو می‌نویسه. صدا رو حفظ می‌کنه. بدون توهم.' icon='cog' />
+    <Card tag='اعتبارسنجی' title='دروازه‌ها + انتشار' desc='۸ دروازه اعتبارسنجی. فقط محتوای باکیفیت منتشر می‌شه. پایپلاین از اعتبارت محافظت می‌کنه.' icon='check-square' />
+  </div>
+
+  <ProseCenter text='لایه ثبت منفعلانه. لایه پردازش فعال. لایه اعتبارسنجی محافظ. هر لایه یک مسئولیت واحد داره. ترکیبشون هرج‌ومرج می‌سازه. جداشون وضوح می‌سازه.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='دروازه‌ها' title='۸ دروازه اعتبارسنجی' sub='هر دروازه یک حالت شکست خاص رو می‌گیره. مدل لازم نیست عالی باشه. سیستم باید نقص‌ها رو بگیره.' />
+
+  <div class='grid grid-2'>
+    <Card tag='دروازه ۱' title='Frontmatter' desc='آیا خروجی frontmatter معتبر YAML با همه فیلدهای لازم داره؟ ساده‌ترین چک.' icon='check-square' />
+    <Card tag='دروازه ۲' title='محتوا' desc='آیا خروجی محتوای واقعی داره یا فقط متن placeholder؟ مدل عاشق اینه که به‌جای محتوا خلاصه پس بده.' icon='check-square' />
+    <Card tag='دروازه ۳' title='طول' desc='آیا خروجی در محدوده قابل قبوله؟ خیلی کوتاه یعنی مدل کارش رو رها کرده. خیلی بلند یعنی توهم.' icon='check-square' />
+    <Card tag='دروازه ۴' title='یکدستی' desc='آیا خروجی با خودش یا محتوای موجود تناقض داره؟ مدل عاشق تناقضه.' icon='check-square' />
+  </div>
+
+  <div class='grid grid-2'>
+    <Card tag='دروازه ۵' title='صدا' desc='آیا خروجی با صدای تثبیت‌شده مطابقت داره؟ مدل صدای خودش رو داره. تو صدای خودت رو می‌خوای.' icon='check-square' />
+    <Card tag='دروازه ۶' title='دقت' desc='آیا حقایق درستن؟ آیا داده‌ها مطابقت دارن؟ مدل آمار جعل می‌کنه. دروازه‌ها جلوشو می‌گیرن.' icon='check-square' />
+    <Card tag='دروازه ۷' title='لینک‌ها' desc='آیا همه لینک‌های داخلی درست کار می‌کنن؟ آیا permalink درسته؟ لینک خراب اعتبار رو نابود می‌کنه.' icon='check-square' />
+    <Card tag='دروازه ۸' title='کیفیت' desc='آیا خروجی واقعاً خوبه؟ دروازه ذهنی. از یک روبریک امتیازدهی استفاده کن. مقیاس ۰ تا ۱.' icon='check-square' />
+  </div>
+
+  <Takeaway text='۸ دروازه. ۸ حالت شکست مشخص. ۸ دلیل برای اینکه محتوات باکیفیت می‌مونه.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='عددها' title='پایپلاین به عدد' sub='عددها داستان رو تعریف می‌کنن. ۱۶ دقیقه از فکر تا انتشار. نرخ دوباره‌کاری ۸٪. ده برابر حجم بیشتر.' />
+
+  <div class='grid grid-3'>
+    <Card tag='سرعت' title='۱۶ دقیقه' desc='از فکر تا پست منتشرشده. نه ۱۶ ساعت. نه ۱۶ روز. ۱۶ دقیقه. پایپلاین کار سنگین رو می‌کنه.' icon='zap' />
+    <Card tag='کیفیت' title='۸٪ دوباره‌کاری' desc='فقط ۸٪ خروجی به دوباره‌کاری دستی نیاز داره. دروازه‌ها شکست‌ها رو قبل از رسیدن به تو می‌گیرن.' icon='check-square' />
+    <Card tag='حجم' title='ده برابر خروجی' desc='ده برابر محتوای بیشتر. نه به خاطر اینکه بیشتر کار می‌کنی. به خاطر اینکه پایپلاین برای تو کار می‌کنه.' icon='trending-up' />
+  </div>
+
+  <ProseCenter text='پایپلاین جای تفکر رو نمی‌گیره. تفکر رو تقویت می‌کنه. بخش سخت با توئه. بقیه‌ش با پایپلاینه.' />
+</section>
+
+<hr class='divider' />
+
+<PostCta takeaway='پایپلاین یک ابزار نیست. یک سیستمه. سیستمی که فکرها رو به محتوا تبدیل می‌کنه.' echo='۵ لایه. ۸ دروازه. ۱۶ دقیقه. این SpielOS است. ریپو رو کلون کن و خودت ببین.' btnText='کلون کردن ریپوی SpielOS' btnHref='https://github.com/ShayanSpiel/SpielOS' />

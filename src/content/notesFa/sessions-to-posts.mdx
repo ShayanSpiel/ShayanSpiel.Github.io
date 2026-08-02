@@ -1,0 +1,224 @@
+---
+title: "از سشن‌ها تا پست‌ها: استک ۴ لایه‌ای که کارو راه می‌ندازه"
+date: 2026-06-08 15:26:15 +0000
+description: "چطور مکالمات خام AI رو به محتوای آماده‌ی انتشار تبدیل کنیم. یه واکاوی
+  فنی از پایپلاین سشن تا پست، با گیت‌های ارزیابی و معماری محتوا."
+permalink: /sessions-to-posts/
+category: ai-agents
+tags:
+- عملیات و معماری
+- موتور-محتوا
+- ایجنت‌های-ai
+- اتوماسیون
+image: /assets/og/sessions-to-posts.png
+---
+
+import SectionHead from "@/components/posts/SectionHead.astro";
+import ProseCenter from "@/components/posts/ProseCenter.astro";
+import Card from "@/components/posts/Card.astro";
+import Pullquote from "@/components/posts/Pullquote.astro";
+import Takeaway from "@/components/posts/Takeaway.astro";
+import Source from "@/components/posts/Source.astro";
+import PostCta from "@/components/posts/PostCta.astro";
+
+
+
+<SectionHead tag='تله' title='چرا فاندرهای فنی با محتوا دست‌وپنجه نرم می‌کنن' sub='چیزهای واقعی منتشر می‌کنی. مشکل‌های سخت حل می‌کنی. پیویهات خالیه.' />
+
+<ProseCenter text='۸ سال چیزهای واقعی منتشر کردم. تقریباً هیچ‌کس نمی‌دونست. نه به خاطر اینکه کار بد بود؛ به خاطر اینکه هیچ‌وقت ساخت رو به پست وصل نکردم.' />
+
+<ProseCenter text='مشکل هیچ‌وقت مهارت نوشتن نبود. کار انجام می‌شد، درس‌ها ازش بیرون می‌زدن و هیچ‌کدومشون هیچ‌وقت به یه پست وصل نمی‌شد. یه پایپلاین برای سشن‌های ساخت این رو حل می‌کنه؛ چون ساخت رو منبعِ همه‌ی پیش‌نویس‌ها می‌کنه.' />
+
+<div class='grid grid-2'>
+  <Card title='۸ سال انتشار چیزهای واقعی' desc='محصول‌های واقعی، کاربرهای واقعی، عددهای واقعی. تقریباً هیچ‌کس نمی‌دونست چون هیچ‌وقت هیچی به یه پست وصل نشده بود.' icon='rocket' num='۸' variant='stat-shift' />
+  <Card title='۲ دقیقه برای هر سشن ساخت' desc='همین کل ورودیه. بقیه‌ی پایپلاین محتوا خودش اجرا می‌شه. نه صفحه‌ی خالی. نه تقویم تحریریه.' icon='clock' num='۲' variant='stat-shift' />
+</div>
+
+<Takeaway text='ساخت همون پسته؛ فقط به خروجی وصل نشده. همین فاصله‌ست که کل بازیه.' />
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='ورودی' title='لاگ سشن' sub='۲ دقیقه ثبت کردن. بدون فکر کردن. این ورودی خامیه که کل پایپلاین رو تغذیه می‌کنه.' />
+
+  <ProseCenter text='این رو در پایان یه ساخت ریختم تو یه فایل Markdown. ۲ دقیقه. بدون فکر کردن. این همون ورودی خامیه که کل پایپلاین محتوایی توسعه‌دهنده‌ها رو تغذیه می‌کنه.' />
+
+  ```
+  session: 2026-06-13
+  title: refactored auth layer from sessions to jwt
+  what i did:
+    - replaced session-based auth with jwt
+    - cut p95 login 800ms to 90ms
+    - fixed race condition in token refresh
+  decisions:
+    - chose jwt over opaque tokens for stateless verification
+    - kept refresh tokens server-side for revocation
+  numbers:
+    - 800ms to 90ms p95 login
+    - 0 to 100% of routes now stateless
+  lessons:
+    - stateless auth is not less secure. it is just different secure.
+  ```
+
+  <Takeaway text='همین. کل ورودی همینه.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='خروجی' title='پایپلاین چی تولید می‌کنه' sub='سیستم سندهای استراتژی تو رو لود می‌کنه، سشن رو از کامپایلر رد می‌کنه و پیش‌نویس‌های بومی هر پلتفرم رو با صدای خودت تولید می‌کنه.' />
+
+  <div class='grid grid-2'>
+    <Card title='LinkedIn: پیش‌نویس بلند' desc='احراز هویتِ تو کنده چون سرورت تو هر درخواست کار زیادی انجام می‌ده. مال من همین‌طور بود. ۸۰۰ میلی‌ثانیه p95 فقط برای ورود. راه‌حل دیتابیس سریع‌تر نبود؛ تغییر از سشن‌های سمت سرور به JWT بود.' icon='message-square' />
+    <Card title='X: نسخه‌ی ترد' desc='احراز هویتِ تو کنده چون سرورت تو هر درخواست کار زیادی انجام می‌ده. مال من همین‌طور بود. ۸۰۰ میلی‌ثانیه p95 فقط برای ورود. از سشن‌های سمت سرور رفتم به JWT. ۸۰۰ → ۹۰ میلی‌ثانیه.' icon='message-circle' />
+  </div>
+
+  <div class='grid grid-2'>
+    <Card title='X: پست تکی' desc='ورود ۸۰۰ میلی‌ثانیه → ۹۰ میلی‌ثانیه. از sessions رفتم به jwt. سرور الآن تقریباً هیچ کاری نمی‌کنه. توی مقابلش revoke کردن لازمه. ارزشش رو داره.' icon='send' />
+    <Card title='بلاگ: فرم بلند' desc='پست کامل بلاگ: ۴ بخش، ۸۰۰ کلمه، صدای خودت، مشکلِ خواننده توی تیتر و ساخت تو به‌عنوان پانوشت.' icon='file-text' />
+  </div>
+
+  <Takeaway text='۲ دقیقه ثبت کردن، ۳۰ ثانیه بازبینی، ۰ دقیقه نوشتن. خواننده یه پست می‌گیره. تو هیچ هویتی عوض نکردی. به هیچ صفحه‌ی خالی خیره نشدی.' />
+
+  <ProseCenter text='ساخت تو پانوشته؛ مشکلِ خواننده تیتره.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='مکانیزم' title='۵ سند استراتژی' sub='لایه‌ی پیکربندی. فقط همین. بقیه‌ش اجراست.' />
+
+  <ProseCenter text='قصد ندارم کل معماری رو توضیح بدم؛ فقط نکته‌ی هر سند رو می‌گم. اون‌ها یه پیکربندی کامپایل‌شده‌ان. اگه یکی از اون‌ها نباشه، پایپلاین فقط می‌تونه حدس بزنه.' />
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>۰۱</div>
+      <div class='step-body'>
+        <strong>session-as-content</strong>
+        ساخت منبعه. بدونش برمی‌گردی به صفحه‌ی خالی و تقویمی که هیچ‌وقت کار نمی‌کنه.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>۰۲</div>
+      <div class='step-body'>
+        <strong>funnel-and-matrix</strong>
+        هر سشن یه کار داره. این یکی یه معاوضه‌ی تصمیم توی مرحله‌ی بررسیه، با فراخوان اقدام «گلوگاه رو درست کن». به پلتفرم، قالب و درخواست مسیریابی می‌کنه.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>۰۳</div>
+      <div class='step-body'>
+        <strong>icp-offer</strong>
+        برای یه خواننده بنویس، با کلمه‌های خودش، در یه لایه‌ی مشکل. هر پیش‌نویس در برابر خواننده‌ی هدفت چک می‌شه. اگه مطابقت نداشته باشه، گیت رد می‌شه.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>۰۴</div>
+      <div class='step-body'>
+        <strong>voice-and-gates</strong>
+        i کوچیک، پیوت‌های «آها»، پایان‌بندی‌های «نکته:»، گرامر عمداً شکسته، خواننده‌ی نام‌برده، عددهای مشخص، بدون حرف کلیشه‌ای، بدون خط فاصله‌ی بلند. به‌علاوه یه سطح کیفیت.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>۰۵</div>
+      <div class='step-body'>
+        <strong>voice-corpus</strong>
+        ۸ تا از بهترین پست‌های تو که به‌عنوان داده‌ی آموزشی وارد می‌شن. پیش‌نویس‌ها قبل از نوشتن ۲ تا ۳ تاشون رو می‌خونن. همینه که باعث می‌شه خروجی شبیه خودت باشه.
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='با اعداد' title='۳ گیتی که پیش‌نویس‌ها رو فیلتر می‌کنن' sub='بیشترِ ۳۰ بررسی فقط سر و صدای مکانیکیه. این ۳ تا اون‌هایی‌ان که خروجی رو عوض می‌کنن.' />
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>۱</div>
+      <div class='step-body'>
+        <strong>گیت خواننده</strong>
+        اگه پیش‌نویس با یه خواننده‌ی نام‌برده توی یه لایه‌ی مشکل حرف نزنه، می‌میره. این گیتی که پست‌های «اینو ساختم» رو که هیچ‌کس نمی‌خونه فیلتر می‌کنه.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>۲</div>
+      <div class='step-body'>
+        <strong>گیت بدون لو رفتن سیستم</strong>
+        اگه پیش‌نویس به موتور، کامپایلر، گیت‌ها، قیف یا لاگ سشن اشاره کنه، می‌میره. خواننده به پایپلاین تو اهمیت نمی‌ده. به مشکل خودش اهمیت می‌ده.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>۳</div>
+      <div class='step-body'>
+        <strong>گیت قلاب</strong>
+        اگه خط اول یه مقدمه، یه تعریف یا «می‌خواستم به اشتراک بذارم» باشه، می‌میره. قبل از اینکه به صف برسه، بازنویسی می‌شه.
+      </div>
+    </div>
+  </div>
+
+  <Takeaway text='۲۷ بررسی دیگه فقط کمربند و بندِ اضافه‌ان. این ۳ تا ان که پیش‌نویس‌ها فرود میان.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='حذف یه سند' title='اگه یکی از سندها رو حذف کنی چی می‌شه' sub='این ۵ تا مستقل نیستن. یه پیکربندی کامپایل‌شده‌ان.' />
+
+  <div class='grid grid-2'>
+    <Card title='حذف ورودی: بدون session-as-content' desc='پایپلاین ورودی نداره. برمی‌گردی به صفحه‌ی خالی و تقویمی که هیچ‌وقت کار نمی‌کنه.' icon='circle-x' />
+    <Card title='حذف مسیریابی: بدون funnel-and-matrix' desc='هر پست با فراخوان اقدام اشتباه به مرحله‌ی اشتباه می‌ره.' icon='circle-x' />
+  </div>
+
+  <div class='grid grid-2'>
+    <Card title='حذف هدف‌گیری: بدون icp-offer' desc='پست‌ها با هیچ‌کسِ خاصی حرف نمی‌زنن. به همه می‌رسن و هیچ‌کس رو قانع نمی‌کنن.' icon='circle-x' />
+    <Card title='حذف صدا: بدون voice-and-gates' desc='خروجی منحرف می‌شه. برچسب‌های داخلی لو می‌رن. پست‌ها شروع می‌کنن شبیه بیانیه‌ی مطبوعاتی شدن.' icon='circle-x' />
+  </div>
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='امتحانش کن' title='خودت پایپلاین ساخت تا بلاگ رو امتحان کن' sub='اگه هفته‌ای ۲ بار پست می‌ذاری، این کار زیاده‌رویه. اگه ماهانه ۲۰ تا ۳۰ محتوا از کارهای منتشرشده تولید می‌کنی، این حداقل معماری کارامده.' />
+
+  <ProseCenter text='مخزن متن‌بازه. کلونش کن. پرامپت راه‌اندازی رو بده به هر ایجنت مدل زبانی. از ۱۴ سوال راه‌اندازی رد شو. ۵ سند استراتژی با جایگاه‌سازی، صدا و ICP خودت پر می‌شن. بعد هر سشن ساخت تبدیل می‌شه به:' />
+
+  ```
+  git clone https://github.com/ShayanSpiel/SpielOS my-engine
+  cd my-engine
+  ```
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>۰۱</div>
+      <div class='step-body'>
+        <strong>مخزن رو کلون کن</strong>
+        SETUP.md رو باز کن. پرامپت رو به هر ایجنت مدل زبانی پیست کن.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>۰۲</div>
+      <div class='step-body'>
+        <strong>از ۱۴ سوال رد شو</strong>
+        ایجنت ۵ سند استراتژی رو با جایگاه‌سازی، صدا، ICP و آفر تو پر می‌کنه.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>۰۳</div>
+      <div class='step-body'>
+        <strong>یه ساخت منتشر کن، ۲ دقیقه لاگ بنویس</strong>
+        چی تصمیم گرفتی، چی رو با چی معاوضه کردی، چی یاد گرفتی. پایپلاین از همون‌جا ادامه می‌ده.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>۰۴</div>
+      <div class='step-body'>
+        <strong>بازبینی کن، منتشر کن، به ساختن ادامه بده</strong>
+        پیش‌نویس‌ها تو صف فرود میان. تو بازبینی می‌کنی. منتشر می‌کنی. سازنده می‌مونی.
+      </div>
+    </div>
+  </div>
+</section>
+
+<PostCta takeaway='تو می‌سازی. سیستم پست می‌ذاره. تو سازنده می‌مونی.' echo='۸ سال ساختن، ۰ سال به کسی گفتن. اون ۵ سند پل هستن. خیره شدن به صفحه‌های خالی رو بس کن. شروع کن به اسکن کردن سشن‌هات.' btnText='پایپلاین رو تو عمل ببین' btnHref='https://github.com/ShayanSpiel/SpielOS' />

@@ -1,0 +1,180 @@
+---
+title: چطور با یه مغز دوم AI پایپلاین محتوام رو اتوماسیون کردم
+date: 2026-06-06 09:00:00 +0000
+description: یه پایپلاین محتوای AI برای توسعه‌دهنده‌ها بساز که سشن‌های ساخت رو
+  به پیش‌نویس‌های قابل انتشار تبدیل می‌کنه. متن‌باز، ۴ فایل، از ترمینال خودت اجرا می‌شه.
+permalink: /second-brain/
+category: journey
+tags:
+- توزیع فاندر
+- موتور-محتوا
+- اتوماسیون
+- مغز-دوم
+- opencode
+- ساختن-در-ملاء-عام
+image: /assets/og/second-brain.png
+---
+
+import SectionHead from "@/components/posts/SectionHead.astro";
+import ProseCenter from "@/components/posts/ProseCenter.astro";
+import Card from "@/components/posts/Card.astro";
+import Pullquote from "@/components/posts/Pullquote.astro";
+import Takeaway from "@/components/posts/Takeaway.astro";
+import Source from "@/components/posts/Source.astro";
+import PostCta from "@/components/posts/PostCta.astro";
+
+
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='تله' title='مغز دوم دقیقاً چیه' sub='بدون اصطلاحات. بدون SaaS. بدون وابستگی به فروشنده. مغز دوم یه پوشه از یادداشت‌های متنی ساده‌ست که یه مدل زبانی می‌تونه بخونتش.' />
+
+  <ProseCenter text='کار رو انجام می‌دادم. هیچ‌وقت درباره‌ش پست نمی‌ذاشتم. این مشکل دو ساله‌ی من بود. هر سه‌شنبه یه سشن ساخت رو تموم می‌کردم، به کار نگاه می‌کردم، فکر می‌کردم باید درباره‌ش پست بذارم و نمی‌ذاشتم. دلیل همیشه یکی بود: نمی‌دونستم چی پست بذارم، نمی‌دونستم از کجا شروع کنم و تا چهارشنبه رفته بودم سراغ چیز بعدی.' />
+
+  <div class='grid grid-2'>
+    <Card tag='الگو' title='هر ایده یه صفحه می‌گیره' desc='هر صفحه frontmatter داره. هر صفحه با ویکیلینک به صفحه‌های دیگه وصل می‌شه. لینک‌ها یه گراف می‌سازن. همون گراف مغزه. مدل کانتکست می‌گیره.' icon='lightbulb' />
+    <Card tag='نتیجه' title='پست‌هایی که شبیه خودتن' desc='وقتی مدل کانتکست داشته باشه، پستی می‌نویسه که بقیه‌ی ذهن تو رو می‌شناسه. پست یه توییت کلیشه‌ای نیست. پست یه نمونه از طرز فکر توئه.' icon='check-square' />
+  </div>
+
+  <Takeaway text='مغز دوم یه پوشه‌ست؛ فایل‌های Markdown که به هم وصلن. ابزار مهم نیست. پوشه مهمه.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='معماری' title='معماری ۴ فایلی' sub='موتور محتوا ۴ فایله. کل سیستم همینه. اگه سیستم تو ۴۰ فایل باشه، اون وقت یه سیستم داری، نه یه ابزار.' />
+
+  ```
+  ~/.config/opencode/
+  ├── opencode.jsonc          (registers the skill + command)
+  ├── .env                    (X / LinkedIn API keys, chmod 600)
+  ├── skill/geogent-content/
+  │   └── SKILL.md            (the system spec, auto-injected into every session)
+  └── command/
+      └── post.md             (the /post slash command)
+  ```
+
+  <ProseCenter text='بقیه‌ی چیزها تو vault زندگی می‌کنن. در پایان هر سشن /post رو اجرا می‌کنم. این دستور اسلش آخرین لاگ سشن رو می‌خونه، ۱۰ صفحه‌ی استراتژی رو می‌خونه و ۲ تا ۳ پست پیش‌نویس می‌کنه. پیش‌نویس‌ها تو content/queue/ قرار می‌گیرن. پوشه رو باز می‌کنم، یکی رو انتخاب می‌کنم و منتشرش می‌کنم.' />
+
+  <ProseCenter text='سیستم پیش‌نویس می‌سازه. من تصمیم می‌گیرم. مدل نویسنده‌ست. من ویراستارم. مرز همون صفه.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='مکانیزم' title='درخت تصمیم' sub='سخت‌ترین بخشِ «اینو پست بذارم یا نه» نوشتنش نیست؛ نوعشه. این پست از جنس انتشاره؟ درسه؟ تصمیمه؟' />
+
+  ```
+  Did something ship?
+    YES → Ship Announcement
+    NO  → Was there a decision?
+            YES → Decision Post
+            NO  → Was there a lesson?
+                    YES → Today I Learned
+                    NO  → Milestone?
+                            YES → Vision / Big Picture
+                            NO  → Dev Log
+  ```
+
+  <ProseCenter text='این درخت یه رویه‌ی تصمیم با ۷ گره‌ست. لاگ سشن رو می‌گیره و یه نوع واحد برمی‌گردونه. اون نوع، ساختار رو تعیین می‌کنه؛ ساختار صدا رو؛ صدا هم خودِ پست رو.' />
+
+  <ProseCenter text='این همون روشِ پست ستونیه، فقط در یه جمله: یه تکه کار به چند تکه محتوا تبدیل می‌شه که همه از یه منبع نمونه‌برداری شدن.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='با اعداد' title='آزمون کیفیت مستقل' sub='نسخه‌ی اول تو یه نشست ۲۵ پیش‌نویس X ساخت. نصفشون بی‌معنی بود. راه‌حل ۴ تا بررسیه که هر پیش‌نویسی باید پاس کنه.' />
+
+  <div class='grid grid-2'>
+    <Card tag='۵ث' title='آزمون ۵ ثانیه‌ای' desc='یه غریبه تو ۵ ثانیه می‌تونه یه ایده ازش بیرون بکشه. اگه نتونه، پست شکست خورده. خواننده نمی‌دونه تو کی هستی.' icon='zap' />
+    <Card tag='۰' title='آزمون بدون پیش‌زمینه' desc='پست نیازی به خوندن پست‌های قبلی نداره. هیچ «همون‌طور که دفعه‌ی قبل گفتم»ی. پست تنها کانتکستیه که خواننده داره.' icon='check-square' />
+    <Card tag='۱' title='آزمون ارزش بدون من' desc='«من» رو با اسم یه غریبه عوض کن. پست بازم کار می‌کنه. بینش جهانیه، نه شخصی.' icon='check-square' />
+    <Card tag='۴' title='آزمون توضیح برای یه دوست' desc='پست رو می‌شه تو یه کافه تعریف کرد بدون اینکه «باید اون‌جا می‌بودی». بازگویی، آزمون شفافیته.' icon='check-square' />
+  </div>
+
+  <ProseCenter text='پیش‌نویسی که یه بررسی رو رد کنه، قابل درسته. اونی که ۲ تا یا بیشتر رو رد کنه، تیکه‌شکسته‌ست؛ بندازش دور. سیستم این آزمون رو روی هر پیش‌نویسی قبل از ورود به صف اجرا می‌کنه؛ اونایی که رد می‌شن اصلاً به صف نمی‌رسن. صف تمیز می‌مونه.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='مدل' title='مدل ۳ پلتفرمی' sub='X، LinkedIn و بلاگ. هر کدوم یه نقش دارن. بلاگ منبع حقیقته.' />
+
+  <div class='grid grid-3'>
+    <Card tag='سطح سریع' title='X' desc='۲۸۰ کاراکتر. ۱ تا ۳ پست در هر سشن. ایده‌ها رو سریع تست می‌کنه. لایه‌ی سرعته.' icon='zap' />
+    <Card tag='سطح میانی' title='LinkedIn' desc='۱۳۰۰ تا ۳۰۰۰ کاراکتر. ۱ تا ۲ پست در هفته. حالت داستانی. به سازنده‌ها و فاندرها می‌رسه. لایه‌ی دیده‌شدنه.' icon='users' />
+    <Card tag='سطح عمیق' title='بلاگ' desc='۱۰۰۰ تا ۲۵۰۰ کلمه. ۱ پست در هر ۱ تا ۲ هفته. ستون. منبع حقیقت. لایه‌ی عمقه.' icon='book' />
+  </div>
+
+  <ProseCenter text='بلاگ منبع حقیقته. X و LinkedIn نمونه‌هایی از بلاگن. وقتی یه پست ستونی می‌نویسم، سیستم ۳ زاویه برای LinkedIn و ۵ تا ۱۰ بینش اتمی برای X نمونه‌برداری می‌کنه. نمونه‌ها محتوای جدید نیستن؛ عصاره‌ان.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='هزینه' title='استک' sub='کل موتور روی زیرساختی اجرا می‌شه که از قبل داشتم. بدون SaaS جدید. بدون اشتراک جدید. بدون کارت اعتباری جدید.' />
+
+  <div class='grid grid-3'>
+    <Card tag='رایگان' title='استک پایه' desc='Obsidian. opencode. فایل‌سیستم. Cloudflare Pages. همه رایگان. همه روی زیرساختی که از قبل داری. تنها چیزی که هزینه داره خود مدله.' icon='check-square' />
+    <Card tag='۰ دلار در ماه' title='مسیر دستی' desc='بدون X API، بدون LinkedIn API. پیش‌نویس‌ها تو صف می‌مونن. خودت دستی کپی-پیست می‌کنی. سیستم بدون API هم کار می‌کنه. هزینه‌ش صفره.' icon='dollar' />
+    <Card tag='۱۰۰ دلار در ماه' title='مسیر API' desc='پلن پایه‌ی X API + LinkedIn API اختیاری. پیش‌نویس‌ها خودکار منتشر می‌شن. هم‌هزینه‌ی یه پست LinkedIn آژانسی در ماه. همین عدم تقارنه که استراتژیه.' icon='zap' />
+  </div>
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='امتحانش کن' title='ساخت در ۲۴ ساعت' sub='سیستم متن‌بازه. اون ۴ فایل، ۴ فایل Markdown ان. کل چیز تو یه بعدازظهر قابل بازسازیه.' />
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>۰۱</div>
+      <div class='step-body'>
+        <strong>ساعت ۱: vault</strong>
+        یه Obsidian vault راه بنداز. ۴ پوشه: entities/، concepts/، summaries/، raw/. ۵ صفحه درباره‌ی کارت بنویس. با ویکیلینک به هم وصلشون کن. مدل به گراف نیاز داره.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>۰۲</div>
+      <div class='step-body'>
+        <strong>ساعت ۲: صفحه‌های استراتژی</strong>
+        ۴ صفحه بنویس: استراتژی محتوا، لحن صدا، انواع محتوا و چشم‌انداز پایه. این‌ها صفحه‌هایی‌ان که مشخص می‌کنن سیستم چی پست بذاره. اگه نتونی اسپک رو بنویسی، مدل هم نمی‌تونه پیش‌نویس کنه.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>۰۳</div>
+      <div class='step-body'>
+        <strong>ساعت ۳: دستور اسلش</strong>
+        opencode رو نصب کن. یه SKILL.md بساز. یه دستور /post بساز و وصلش کن که vault رو بخونه، صفحه‌های استراتژی رو بخونه، درخت تصمیم رو اجرا کنه و پیش‌نویس‌ها رو به پوشه‌ی صف خروجی بده. با یه سشن فیک تستش کن.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>۰۴</div>
+      <div class='step-body'>
+        <strong>ساعت ۴: اولین پست واقعی</strong>
+        یه سشن کاری واقعی انجام بده. در پایان /post رو اجرا کن. پیش‌نویس‌ها رو بخون. آزمون کیفیت مستقل رو اجرا کن. بهترین رو انتخاب کن. منتشرش کن. سیستم الآن اولین پستش رو تولید کرده.
+      </div>
+    </div>
+  </div>
+
+  <ProseCenter text='اولین پست بی‌نقص نخواهد بود. دومی بهتره. دهمی کاملاً با صدای خودت هم‌خون می‌شه. پنجاهمیش یه کتابخانه‌ست. سیستم سود مرکب می‌ده.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='نتیجه' title='نقطه‌ی فرود' sub='کل موتور محتوا ۴ فایل Markdown و کل ورک‌فلویه یه دستور اسلش. کل خروجی هم صفی از پیش‌نویس‌هاست که تو تأییدشون می‌کنی.' />
+
+  <div class='grid grid-2'>
+    <Card tag='مدل' title='نویسنده' desc='مدل تو نوشتن خوبه؛ توی تصمیم‌گیری اینکه چی بنویسه، بده. تصمیم با توئه. سیستم تصمیم‌گیری رو از دوشت برمی‌داره. نوشتن روی خلبان خودکاره.' icon='lightbulb' />
+    <Card tag='تو' title='ویراستار' desc='تصمیم بگیر چی منتشر بشه. سیستم پیش‌نویس‌ها رو صف می‌کنه. تو تأیید می‌کنی. مرز همون صفه. تصمیم با توئه.' icon='user' />
+  </div>
+
+  <ProseCenter text='اگه تا حالا پست نمی‌ذاشتی، همون ۴ فایل رو بساز. اون ۴ فایل سیستم هستن. سیستم پسته. پست مخاطبه. مخاطب هم اهرمه.' />
+</section>
+
+<hr class='divider' />
+
+<PostCta takeaway='اون ۴ فایل سیستم هستن. سیستم پسته. پست مخاطبه.' echo='متن‌باز روی GitHub. نصب DFY با ۹۹۰ دلار. اولین پست بی‌نقص نیست. پنجاهمی یه کتابخانه‌ست. همون ۴ فایل رو امروز بساز.' btnText='مخزن SpielOS رو کلون کن' btnHref='https://github.com/ShayanSpiel/SpielOS' />

@@ -1,0 +1,145 @@
+---
+title: "The Migration Audit"
+date: 2026-07-27 07:56:00 +0000
+description: "If you generate code with AI, you already know the shape of this story: the thing that
+  compiles is not the thing that works. Migrating from Jekyll to Astro was easy. Knowing what the
+  migration broke was the real work — 45 pages, one green build, two real audits."
+permalink: /migration-audits/
+category: ai-agents
+tags:
+- Agents, Loops & Evals
+- ai-agents
+- audit
+- jekyll
+- astro
+image: /assets/og/migration-audits.png
+---
+
+import SectionHead from "@/components/posts/SectionHead.astro";
+import ProseCenter from "@/components/posts/ProseCenter.astro";
+import Card from "@/components/posts/Card.astro";
+import Pullquote from "@/components/posts/Pullquote.astro";
+import Takeaway from "@/components/posts/Takeaway.astro";
+import Source from "@/components/posts/Source.astro";
+import PostCta from "@/components/posts/PostCta.astro";
+
+
+
+<SectionHead tag='The setup' title='The Migration Looked Complete' sub='Jekyll to Astro, 45 pages, build passing. If you generate code with AI, you already know the shape of this: the thing that compiles is not the thing that works. A rebuild nobody audited is not a migration — it is a moving accident.' />
+
+<ProseCenter text='The site merged from Jekyll to Astro. The build passed. The pages rendered. And buried inside the output were the failures that only an audit could surface: a broken JavaScript redirect, article SEO metadata silently dropped, truncated links, dead references, and icons that had stopped existing.' />
+
+<Takeaway text='A green build is the start of verification, not the end of it. The build compiles the code; the audit verifies the product.' />
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='The audit' title='What the Move Actually Broke' sub='Every migration needs a second pass. Here is what the second pass found.' />
+
+  <ProseCenter text='The audit went page by page, line by line: HTML structure, components, typography, icons, content structure, CTAs, and the design-system compliance of every element. The goal was not just to fix pages — it was to find the classes of damage a migration causes.' />
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>01</div>
+      <div class='step-body'>
+        <strong>Broken JS redirect</strong>
+        A template literal that never resolved — the page that was supposed to redirect simply did nothing.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>02</div>
+      <div class='step-body'>
+        <strong>Silent SEO loss</strong>
+        Article metadata — ogType, publishedTime, modifiedTime, tags — was dropped because the layout did not forward it.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>03</div>
+      <div class='step-body'>
+        <strong>Truncated links</strong>
+        Three articles had anchor tags cut mid-attribute, replaced with broken prose.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>04</div>
+      <div class='step-body'>
+        <strong>Dead references</strong>
+        Seven broken <code>/scripts/</code> references and one broken <code>/styles/</code> reference left over from the old stack.
+      </div>
+    </div>
+  </div>
+
+  <Pullquote quote='Nothing in a migration breaks loudly. Everything breaks quietly. The audit is what turns quiet failure into an actual list.' />
+
+  <Takeaway text='Migrate fast, audit slower. The second pass is where the product is saved.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='The second pass' title='Audit the Architecture, Not Just the Pages' sub='The page fixes were the surface. The real work was the config-driven cleanup underneath.' />
+
+  <ProseCenter text='A second, deeper audit looked at the whole codebase: architecture, dead code, hardcoded values, dependencies, and docs. The mandate was zero hardcoding and a lean, fast stack. What it found was a Jekyll-era skeleton still wearing Astro clothes.' />
+
+  <div class='grid grid-2'>
+    <Card title='Dead weight removed' desc='Puppeteer (~300MB of Chromium) and lucide (~50MB) gone. Unused components, duplicate CSS, stale tokens deleted.' icon='file-text' />
+    <Card title='Hardcoding → config' desc='GA4 ID, PostHog key, social URLs, Formspree endpoint, waitlist URL — all moved into a single config module.' icon='settings' />
+  </div>
+
+  <ProseCenter text='The pattern is the lesson: a migration that only changes the framework keeps the bad habits. Moving from Jekyll to Astro was meaningless unless the codebase was rebuilt to Astro standards — typed, config-driven, and free of the old stack artifacts.' />
+
+  <Takeaway text='A framework migration that does not also clean the architecture just moves the mess to a faster compiler.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='The principle' title='Audits Are the Quality Gate' sub='This is the same gate logic that runs inside SpielOS: before anything advances — code, content, an agent run — it passes inspection.' />
+
+  <ProseCenter text='The migration audit is evaluation in the oldest sense: a gate between a broken state and a working one. It is the mechanical gate that the content engine applies to drafts — hard rules, no negotiation, pass or fail.' />
+
+  <ProseCenter text='The content pipeline applies the same thinking to writing. The migration applies it to infrastructure. The harness applies it to agents. In every case the shape is identical: <em>generation is cheap, verification is the product</em>.' />
+
+  <div class='grid grid-2'>
+    <Card title='Migration audit' desc='Page by page, line by line. Dead references, dropped metadata, broken redirects. 45 pages, one green build, two real audits.' icon='task' />
+    <Card title='Draft gates' desc='The same pass-or-fail logic applied to AI output. No gate, no publish. The gate is what keeps the output human.' icon='shield' />
+  </div>
+
+  <ProseCenter text='If you generate code with AI, this is the lesson: the build compiles what you asked for, the audit verifies what you actually needed. Skip the verification and you advance bugs.' />
+
+  <Takeaway text='Whether it is code or content, the pattern is the same: build, then verify, then advance. Skip the verification and you advance bugs.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='Apply it' title='Audit Everything You Generate' sub='The checks that caught this class of bug are the same checks you should run on anything AI produces.' />
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>1</div>
+      <div class='step-body'>
+        <strong>Verify the silent metadata.</strong>
+        Open the built HTML and confirm SEO tags, redirects, and structured data survived. The compiler does not care about your og:image.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>2</div>
+      <div class='step-body'>
+        <strong>Grep for the old stack.</strong>
+        Search for old paths, old class names, old icon libraries. The old stack leaves fingerprints; delete them.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>3</div>
+      <div class='step-body'>
+        <strong>Move every hardcoded value to config.</strong>
+        If a URL, key, or name appears more than once, it belongs in a config module. Migration is the best excuse to centralize.
+      </div>
+    </div>
+  </div>
+
+  <Takeaway text='A migration is complete when the audit passes, not when the build does.' />
+</section>
+
+<PostCta takeaway='The build said 45 pages, zero errors. The audit found the errors the build could not see.' echo='Broken redirects, dropped metadata, dead references, hardcoded keys. Verification is the product; generation is just the first draft.' btnText='Read about the gates' btnHref='/notes/gates-not-models/' />

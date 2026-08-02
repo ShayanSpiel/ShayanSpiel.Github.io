@@ -1,0 +1,408 @@
+/*
+ * Base styles. Theme-agnostic. Tokens imported via global.css.
+ */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv11";
+  letter-spacing: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* RTL — set DOTS axis on html so all children inherit it (Tailwind reset overrides @font-face descriptor) */
+html[dir="rtl"] {
+  font-variation-settings: "DOTS" 7;
+}
+
+/* RTL heading weight boost — IRANSansX needs heavier weights to match Outfit's visual weight */
+[dir="rtl"] h1, [dir="rtl"] .text-3xl, [dir="rtl"] .text-4xl, [dir="rtl"] .text-5xl, [dir="rtl"] .text-6xl {
+  font-weight: 800;
+}
+[dir="rtl"] h2 {
+  font-weight: 700;
+}
+[dir="rtl"] h3, [dir="rtl"] h4, [dir="rtl"] h5, [dir="rtl"] h6 {
+  font-weight: 600;
+}
+
+/* RTL arrow direction */
+[dir="rtl"] .rtl-flip {
+  transform: scaleX(-1);
+}
+
+/* RTL — code blocks stay LTR regardless of page direction */
+[dir="rtl"] pre,
+[dir="rtl"] code {
+  direction: ltr;
+  text-align: left;
+}
+
+/* RTL — use Persian font for numerals in tables (JetBrains Mono lacks Persian glyphs) */
+[dir="rtl"] .data-table td.num {
+  font-family: 'IRANSansX', 'Outfit', sans-serif;
+}
+
+/* RTL list markers — keep bullets inside in RTL for proper alignment */
+[dir="rtl"] ul {
+  list-style-position: inside;
+}
+
+[dir="rtl"] ol {
+  list-style-position: inside;
+}
+
+/*
+ * RTL flex direction — no row-reverse overrides needed.
+ * The `direction: rtl` inherited from <html> already makes `flex-direction: row`
+ * flow items from inline-start (right) to inline-end (left).  Adding
+ * row-reverse on top would double-reverse items back to LTR order.
+ */
+
+/* RTL nav link hover effect */
+[dir="rtl"] nav a {
+  transition: all 0.15s ease;
+}
+
+/* RTL hero grid pattern — gradient directions are physical, need no swap */
+[dir="rtl"] .hero-grid {
+  background-image:
+    linear-gradient(var(--foreground) 1px, transparent 1px),
+    linear-gradient(90deg, var(--foreground) 1px, transparent 1px);
+}
+
+/* RTL grid layouts — direction:rtl so grid children order correctly */
+@media (min-width: 640px) {
+  [dir="rtl"] .war-split {
+    direction: rtl;
+  }
+}
+
+@media (min-width: 640px) {
+  [dir="rtl"] .grid-2 {
+    direction: rtl;
+  }
+  
+  [dir="rtl"] .grid-3 {
+    direction: rtl;
+  }
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border: 2px solid var(--background);
+  border-radius: var(--radius-pill);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-strong);
+}
+
+*:focus {
+  outline: none;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 0;
+}
+
+/* Code block reset for markdown content */
+pre,
+code {
+  font-family: var(--font-mono);
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+@keyframes spiel-overlay-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes spiel-overlay-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes spiel-dialog-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + var(--motion-distance-sm))) scale(var(--motion-scale-in));
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes spiel-dialog-out {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + var(--motion-distance-sm))) scale(var(--motion-scale-in));
+  }
+}
+
+@keyframes spiel-dialog-top-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, var(--motion-distance-sm)) scale(var(--motion-scale-in));
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+@keyframes spiel-dialog-top-out {
+  from {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, var(--motion-distance-sm)) scale(var(--motion-scale-in));
+  }
+}
+
+@keyframes spiel-popover-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--motion-distance-sm)) scale(var(--motion-scale-in));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes spiel-popover-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(var(--motion-distance-sm)) scale(var(--motion-scale-in));
+  }
+}
+
+.motion-overlay[data-state="open"] {
+  animation: spiel-overlay-in var(--duration-fast) var(--ease) both;
+}
+
+.motion-overlay[data-state="closed"] {
+  animation: spiel-overlay-out var(--duration-fast) var(--ease) both;
+}
+
+.motion-dialog[data-state="open"] {
+  animation: spiel-dialog-in var(--duration) var(--ease) both;
+}
+
+.motion-dialog {
+  transform: translate(-50%, -50%);
+}
+
+.motion-dialog[data-state="closed"] {
+  animation: spiel-dialog-out var(--duration-fast) var(--ease) both;
+}
+
+.motion-dialog-top {
+  transform: translate(-50%, 0);
+}
+
+.motion-dialog-top[data-state="open"] {
+  animation: spiel-dialog-top-in var(--duration) var(--ease) both;
+}
+
+.motion-dialog-top[data-state="closed"] {
+  animation: spiel-dialog-top-out var(--duration-fast) var(--ease) both;
+}
+
+.motion-popover[data-state="open"] {
+  animation: spiel-popover-in var(--duration) var(--ease) both;
+}
+
+.motion-popover[data-state="closed"] {
+  animation: spiel-popover-out var(--duration-fast) var(--ease) both;
+}
+
+/* Skeleton pulse */
+/* Style number input spinners with design system colors */
+input[type="number"]::-webkit-inner-spin-button {
+  opacity: 0.5;
+  background: var(--panel);
+  border-left: 1px solid var(--border);
+  cursor: pointer;
+}
+
+input[type="number"]::-webkit-inner-spin-button:hover {
+  opacity: 1;
+  background: var(--hover);
+}
+
+@keyframes spiel-drawer-in {
+  from {
+    opacity: 0;
+    transform: translateX(var(--motion-distance-sm));
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes spiel-drawer-out {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(var(--motion-distance-sm));
+  }
+}
+
+.motion-drawer[data-state="open"] {
+  animation: spiel-drawer-in var(--duration-slow) var(--ease) both;
+}
+
+.motion-drawer[data-state="closed"] {
+  animation: spiel-drawer-out var(--duration-slow) var(--ease) both;
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.skeleton {
+  background: var(--skeleton-bg);
+  border-radius: var(--radius-md);
+  animation: skeleton-pulse 1.5s var(--ease) infinite;
+}
+
+/*
+ * Electric border — shared animation primitive.
+ * Intensity scale: "high" → subtle crackle, "xhigh" → medium, "max" → intense.
+ * Color driven by --accent token. Applied via data-reasoning-level attribute.
+ */
+@keyframes electric-glow-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+/*
+ * Activity shimmer — calm "working" motion for inline run activity rows.
+ * Opacity-only so it never moves layout; covers the whole row (icon + text).
+ * Slower than the skeleton pulse so it reads as gentle, not urgent.
+ * Respects reduced-motion below.
+ */
+@keyframes activity-shimmer {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+
+.activity-row-shimmer {
+  animation: activity-shimmer 1.6s var(--ease) infinite;
+}
+
+/*
+ * Streaming text fade-in — smooths the appearance of newly appended
+ * tokens so they don't pop in abruptly. Applied to the streaming
+ * message container while the run is active. A short opacity ramp on
+ * the tail of the content. Respects reduced-motion below.
+ */
+@keyframes stream-fade-in {
+  from { opacity: 0.35; }
+  to { opacity: 1; }
+}
+
+.stream-text-active {
+  animation: stream-fade-in var(--duration) var(--ease);
+}
+
+.electric-border-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+
+  .activity-row-shimmer {
+    animation: none !important;
+  }
+
+  .stream-text-active {
+    animation: none !important;
+  }
+
+  .motion-overlay,
+  .motion-dialog,
+  .motion-dialog-top,
+  .motion-popover {
+    animation: none !important;
+  }
+
+  .animate-pulse,
+  .animate-bounce {
+    animation: none !important;
+  }
+}

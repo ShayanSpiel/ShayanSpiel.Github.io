@@ -1,0 +1,17 @@
+{
+  "name": "SpielOS",
+  "short_name": "SpielOS",
+  "description": "Build AI employees and departments. Define roles, connect skills, and run autonomous workflows from day one.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#282828",
+  "theme_color": "#282828",
+  "lang": "en",
+  "icons": [
+    { "src": "/assets/favicons/favicon.svg", "type": "image/svg+xml", "sizes": "any", "purpose": "any" },
+    { "src": "/assets/favicons/favicon-192.png", "type": "image/png", "sizes": "192x192", "purpose": "any maskable" },
+    { "src": "/assets/favicons/favicon-512.png", "type": "image/png", "sizes": "512x512", "purpose": "any maskable" },
+    { "src": "/assets/favicons/apple-touch-icon.png", "type": "image/png", "sizes": "180x180", "purpose": "any" }
+  ]
+}

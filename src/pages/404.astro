@@ -1,0 +1,457 @@
+---
+import Page from "../layouts/Page.astro";
+import { type Locale, t } from "../i18n/translations";
+import { getLocaleFromPathname, localizePath } from "../i18n";
+
+// The static build emits a single global 404.html, so the locale baked in at
+// build time is always EN. Locale is re-detected client-side (below) so /fa/*
+// 404s render in Persian RTL too. Every string below still comes from t(),
+// and both locales are shipped into the page — zero hardcoding.
+function buildLogData(locale: Locale) {
+  return {
+    command: t(locale, "404.log.command"),
+    agentNames: [
+      t(locale, "404.agent.researcher"),
+      t(locale, "404.agent.strategist"),
+      t(locale, "404.agent.copywriter"),
+      t(locale, "404.agent.reviewer"),
+    ],
+    actions: [
+      t(locale, "404.log.scanning"),
+      t(locale, "404.log.mapping"),
+      t(locale, "404.log.drafting"),
+      t(locale, "404.log.checking"),
+    ],
+    verdict: t(locale, "404.log.verdict"),
+    error: t(locale, "404.log.error"),
+    aftermath: t(locale, "404.log.aftermath"),
+    redirect: t(locale, "404.log.redirect"),
+  };
+}
+
+const buildLocale = getLocaleFromPathname(Astro.url.pathname);
+const locale = buildLocale === "fa" ? "fa" : "en";
+
+const logDataEn = buildLogData("en");
+const logDataFa = buildLogData("fa");
+
+const strings = {
+  en: {
+    title: t("en", "404.title"),
+    desc: t("en", "404.desc"),
+    badge: t("en", "404.badge"),
+    subtitle: t("en", "404.subtitle"),
+    status: t("en", "404.status"),
+    terminalTitle: t("en", "404.terminalTitle"),
+    goHome: t("en", "404.goHome"),
+    ctaNotes: t("en", "404.cta.notes"),
+    ctaReplay: t("en", "404.cta.replay"),
+  },
+  fa: {
+    title: t("fa", "404.title"),
+    desc: t("fa", "404.desc"),
+    badge: t("fa", "404.badge"),
+    subtitle: t("fa", "404.subtitle"),
+    status: t("fa", "404.status"),
+    terminalTitle: t("fa", "404.terminalTitle"),
+    goHome: t("fa", "404.goHome"),
+    ctaNotes: t("fa", "404.cta.notes"),
+    ctaReplay: t("fa", "404.cta.replay"),
+  },
+};
+
+const hrefs = {
+  en: { home: localizePath("/", "en"), notes: localizePath("/notes/", "en") },
+  fa: { home: localizePath("/", "fa"), notes: localizePath("/notes/", "fa") },
+};
+---
+
+<Page title={t(locale, "404.title")} description={t(locale, "404.desc")} locale={locale} robots="noindex">
+  <section class="relative min-h-[82vh] flex flex-col items-center justify-center overflow-hidden pt-10 pb-20 scanlines">
+    <div class="absolute inset-0 opacity-[0.03] hero-grid"></div>
+
+    <!-- Aurora / magic glow -->
+    <div class="absolute top-[12%] -left-44 w-[560px] h-[560px] glow-blob opacity-20 animate-drift"></div>
+    <div class="absolute bottom-[8%] -right-44 w-[560px] h-[560px] rounded-full opacity-20 animate-drift-slow" style="background: radial-gradient(closest-side, var(--purple), transparent 72%);"></div>
+    <div class="absolute top-[45%] left-[18%] w-[260px] h-[260px] rounded-full opacity-10 animate-drift-slow" style="background: radial-gradient(closest-side, var(--accent), transparent 72%);"></div>
+
+    <!-- Floating particles -->
+    <div class="absolute inset-0 pointer-events-none" id="magic-particles" aria-hidden="true"></div>
+
+    <div class="relative z-10 mx-auto max-w-3xl px-6 text-center">
+      <!-- Badge -->
+      <div class="inline-flex items-center gap-2 rounded-full border border-border bg-panel-raised px-3 py-1 mb-8" data-aos="fade-up">
+        <i class="bx bxs-bot text-primary icon-base"></i>
+        <span data-i18n="badge" class="text-2xs text-muted-foreground font-medium">{strings.en.badge}</span>
+        <span class="h-1.5 w-1.5 rounded-full bg-success animate-pulse"></span>
+      </div>
+
+      <!-- Orbit scene -->
+      <div class="relative inline-flex items-center justify-center w-[20rem] h-[20rem] sm:w-[26rem] sm:h-[26rem]" data-aos="fade-up">
+        <!-- Radar sweep + rings -->
+        <div class="absolute inset-0 rounded-full border border-border/60"></div>
+        <div class="absolute inset-6 rounded-full border border-dashed border-border/70"></div>
+        <div class="absolute inset-14 rounded-full border border-dashed border-border/40"></div>
+        <div class="absolute inset-0 rounded-full radar-sweep"></div>
+        <div class="absolute inset-0 rounded-full radar-ping"></div>
+        <div class="absolute inset-0 rounded-full radar-ping delay"></div>
+
+        <!-- Orbiting AI employees -->
+        <div class="absolute inset-0 orbit-spin orbit-slow">
+          <span class="orbit-bot text-primary"><i class="bx bxs-bot"></i></span>
+        </div>
+        <div class="absolute inset-0 orbit-spin orbit-med">
+          <span class="orbit-bot text-accent"><i class="bx bxs-brain"></i></span>
+        </div>
+        <div class="absolute inset-0 orbit-spin orbit-fast">
+          <span class="orbit-bot text-purple"><i class="bx bxs-edit"></i></span>
+        </div>
+        <div class="absolute inset-0 orbit-spin orbit-med-rev">
+          <span class="orbit-bot text-warning"><i class="bx bxs-check-shield"></i></span>
+        </div>
+
+        <!-- 404 -->
+        <h1 class="relative z-10 text-[6.5rem] sm:text-[9rem] font-bold leading-none tracking-tight glitch-404" data-text="404">
+          <span class="bg-clip-text text-transparent bg-gradient-to-b from-foreground-strong via-primary to-transparent">404</span>
+        </h1>
+      </div>
+
+      <p data-i18n="subtitle" class="mt-8 text-base sm:text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed" data-aos="fade-up">
+        {strings.en.subtitle}
+      </p>
+
+      <!-- Agent dispatch log -->
+      <div class="mt-12 mx-auto max-w-xl text-start" data-aos="fade-up">
+        <div class="rounded-xl border border-border bg-background-deep shadow-panel overflow-hidden">
+          <div class="flex items-center gap-2 border-b border-border px-4 h-10">
+            <span class="h-3 w-3 rounded-full bg-destructive/70"></span>
+            <span class="h-3 w-3 rounded-full bg-warning/70"></span>
+            <span class="h-3 w-3 rounded-full bg-success/70"></span>
+            <span data-i18n="terminalTitle" class="ml-2 font-mono text-2xs text-muted-foreground truncate">{strings.en.terminalTitle}</span>
+            <span class="ml-auto inline-flex items-center gap-1.5 rounded-md bg-success-soft px-2 py-0.5 text-2xs font-semibold text-success">
+              <span class="h-1 w-1 rounded-full bg-success animate-pulse"></span>
+              <span data-i18n="status">{strings.en.status}</span>
+            </span>
+          </div>
+          <div id="agent-log" class="p-4 sm:p-5 font-mono text-xs sm:text-sm leading-relaxed h-[290px] overflow-hidden"></div>
+        </div>
+      </div>
+
+      <!-- CTAs -->
+      <div class="mt-10 flex flex-wrap items-center justify-center gap-3" data-aos="fade-up">
+        <a href={hrefs.en.home} data-i18n-href="home" class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20">
+          <i class="bx bx-home icon-base mr-2"></i>
+          <span data-i18n="goHome">{strings.en.goHome}</span>
+        </a>
+        <a href={hrefs.en.notes} data-i18n-href="notes" class="inline-flex items-center justify-center rounded-md border border-border bg-panel px-6 h-11 text-sm font-medium hover:bg-panel-raised hover:border-border-strong transition-all">
+          <span data-i18n="ctaNotes">{strings.en.ctaNotes}</span>
+          <i class="bx bx-chevron-right icon-base ml-2"></i>
+        </a>
+        <button type="button" id="replay-dispatch" class="inline-flex items-center justify-center rounded-md px-4 h-11 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-panel-raised transition-all">
+          <i class="bx bx-sync icon-base mr-2" id="replay-icon"></i>
+          <span data-i18n="ctaReplay">{strings.en.ctaReplay}</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <script is:inline define:vars={{ logDataEn, logDataFa, strings, hrefs }}>
+  (function() {
+    var logEl = document.getElementById('agent-log');
+    var replayBtn = document.getElementById('replay-dispatch');
+    var replayIcon = document.getElementById('replay-icon');
+    if (!logEl) return;
+
+    /* Locale is re-detected at request time: the single static 404.html is
+       served for both / and /fa/* misses, so flip the page to Persian RTL
+       when the URL is under /fa/. */
+    var isFa = window.location.pathname === '/fa' || window.location.pathname.indexOf('/fa/') === 0;
+    var lang = isFa ? 'fa' : 'en';
+    var logData = isFa ? logDataFa : logDataEn;
+    var s = strings[lang];
+
+    if (isFa) {
+      document.documentElement.setAttribute('lang', 'fa');
+      document.documentElement.setAttribute('dir', 'rtl');
+      document.title = s.title;
+      var metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) metaDesc.setAttribute('content', s.desc);
+      document.querySelectorAll('[data-i18n]').forEach(function(el) {
+        var key = el.getAttribute('data-i18n');
+        if (s[key]) el.textContent = s[key];
+      });
+      document.querySelectorAll('[data-i18n-href]').forEach(function(el) {
+        var key = el.getAttribute('data-i18n-href');
+        if (hrefs[lang][key]) el.setAttribute('href', hrefs[lang][key]);
+      });
+    }
+
+    var PATH = window.location.pathname || '/';
+
+    function makeLine(html) {
+      var el = document.createElement('div');
+      el.className = 'log-line';
+      el.innerHTML = html;
+      logEl.appendChild(el);
+      requestAnimationFrame(function(){ el.classList.add('show'); });
+      return el;
+    }
+
+    function runDispatch() {
+      logEl.innerHTML = '';
+
+      /* Type the command: $ dispatch --find "/path" */
+      var cmdLine = makeLine('<span class="log-prompt">$</span> <span class="log-cmd" id="typed-cmd"></span><span class="cursor-blink"></span>');
+      var cmdText = logData.command + ' "/' + PATH.replace(/^\//, '').replace(/\/$/, '') + '"';
+      var charIdx = 0;
+      var typed = document.getElementById('typed-cmd');
+
+      function typeChar() {
+        if (charIdx < cmdText.length) {
+          typed.textContent += cmdText[charIdx];
+          charIdx++;
+          setTimeout(typeChar, 22 + Math.random() * 18);
+        } else {
+          setTimeout(function() {
+            var cursor = cmdLine.querySelector('.cursor-blink');
+            if (cursor) cursor.remove();
+            nextStep(0);
+          }, 350);
+        }
+      }
+      setTimeout(typeChar, 350);
+
+      var agentIcons = ['bxs-bot', 'bxs-brain', 'bxs-edit', 'bxs-check-shield'];
+      var agentColors = ['text-primary', 'text-accent', 'text-purple', 'text-warning'];
+
+      function agentStep(i, done) {
+        var icon = agentIcons[i];
+        var color = agentColors[i];
+        var line = makeLine(
+          '<span class="log-icon ' + color + '"><i class="bx ' + icon + '"></i></span>' +
+          '<span class="log-name">' + logData.agentNames[i] + '</span>' +
+          '<span class="log-arrow">→</span>' +
+          '<span class="log-action">' + logData.actions[i] + '</span>' +
+          '<span class="log-dots"></span>'
+        );
+        var dotEl = line.querySelector('.log-dots');
+        var dots = 0;
+        var dotTimer = setInterval(function() {
+          dots++;
+          dotEl.textContent = '.'.repeat(dots);
+          if (dots >= 3) {
+            clearInterval(dotTimer);
+            dotEl.remove();
+            line.classList.add('working');
+            if (i === 0) {
+              line.innerHTML += '<span class="log-result ok">\u2713</span>';
+            } else {
+              line.innerHTML += '<span class="log-result miss">\u2717</span>';
+            }
+            setTimeout(done, 500);
+          }
+        }, 170);
+      }
+
+      function nextStep(i) {
+        if (i < logData.agentNames.length) {
+          agentStep(i, function() { nextStep(i + 1); });
+          return;
+        }
+        if (i === logData.agentNames.length) {
+          /* Director verdict */
+          var verdict = makeLine(
+            '<span class="log-icon text-foreground-strong"><i class="bx bxs-crown"></i></span>' +
+            '<span class="log-name">' + logData.verdict + '</span>'
+          );
+          setTimeout(function() {
+            verdict.classList.add('working');
+            setTimeout(function() {
+              var err = makeLine('<span class="log-error">\u2717 ' + logData.error + '</span>');
+              err.classList.add('error');
+              setTimeout(function() {
+                makeLine('<span class="log-aftermath">' + logData.aftermath + '</span>');
+                makeLine('<span class="log-redirect">' + logData.redirect + '</span>');
+                if (replayIcon) replayIcon.className = 'bx bx-sync icon-base mr-2';
+                if (replayBtn) replayBtn.disabled = false;
+              }, 450);
+            }, 500);
+          }, 500);
+        }
+      }
+    }
+
+    if (replayBtn) {
+      replayBtn.addEventListener('click', function() {
+        replayIcon.className = 'bx bx-loader bx-spin icon-base mr-2';
+        replayBtn.disabled = true;
+        runDispatch();
+      });
+      replayBtn.disabled = true;
+    }
+
+    runDispatch();
+
+    /* ---- Floating magic particles ---- */
+    var container = document.getElementById('magic-particles');
+    if (container) {
+      var colors = ['var(--primary)', 'var(--accent)', 'var(--purple)', 'var(--warning)'];
+      var count = window.innerWidth < 640 ? 14 : 24;
+      for (var p = 0; p < count; p++) {
+        var dot = document.createElement('span');
+        dot.className = 'particle';
+        var size = 2 + Math.random() * 4;
+        dot.style.width = size + 'px';
+        dot.style.height = size + 'px';
+        dot.style.left = (Math.random() * 100) + '%';
+        dot.style.bottom = (Math.random() * 30) + '%';
+        dot.style.background = colors[Math.floor(Math.random() * colors.length)];
+        dot.style.animationDuration = (6 + Math.random() * 8) + 's';
+        dot.style.animationDelay = (Math.random() * 6) + 's';
+        dot.style.opacity = (0.2 + Math.random() * 0.5);
+        container.appendChild(dot);
+      }
+    }
+  })();
+  </script>
+
+  <style is:global>
+    /* ── Background aurora drift ── */
+    @keyframes spiel-404-drift {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -20px) scale(1.05); }
+      66% { transform: translate(-25px, 15px) scale(0.97); }
+    }
+    .animate-drift { animation: spiel-404-drift 18s ease-in-out infinite; }
+    .animate-drift-slow { animation: spiel-404-drift 26s ease-in-out infinite reverse; }
+
+    /* ── Scanlines ── */
+    .scanlines::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: repeating-linear-gradient(0deg, transparent 0 2px, rgba(255,255,255,0.02) 2px 4px);
+      z-index: 1;
+    }
+
+    /* ── Radar sweep ── */
+    @keyframes spiel-404-spin {
+      to { transform: rotate(360deg); }
+    }
+    .radar-sweep {
+      background: conic-gradient(from 0deg, color-mix(in oklab, var(--primary) 22%, transparent), transparent 55deg);
+      animation: spiel-404-spin 4.5s linear infinite;
+    }
+
+    /* ── Radar ping rings ── */
+    @keyframes spiel-404-ping {
+      0% { transform: scale(0.55); opacity: 0.7; }
+      100% { transform: scale(1.12); opacity: 0; }
+    }
+    .radar-ping {
+      border: 1px solid color-mix(in oklab, var(--primary) 45%, transparent);
+      animation: spiel-404-ping 3.2s ease-out infinite;
+    }
+    .radar-ping.delay { animation-delay: 1.6s; }
+
+    /* ── Orbiting AI employees ── */
+    .orbit-spin { animation: spiel-404-spin linear infinite; }
+    .orbit-slow { animation-duration: 16s; }
+    .orbit-med { animation-duration: 12s; }
+    .orbit-fast { animation-duration: 9s; }
+    .orbit-med-rev { animation-duration: 12s; animation-direction: reverse; }
+    .orbit-bot {
+      position: absolute;
+      top: -17px;
+      left: 50%;
+      margin-left: -13px;
+      width: 26px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      border-radius: 9999px;
+      background: var(--background-deep);
+      border: 1px solid var(--border);
+      box-shadow: 0 0 14px color-mix(in oklab, currentColor 45%, transparent);
+    }
+    .orbit-med .orbit-bot { top: -15px; }
+    .orbit-fast .orbit-bot { top: -13px; }
+    .orbit-med-rev .orbit-bot { top: -15px; }
+
+    /* ── Floating particles ── */
+    @keyframes spiel-404-float {
+      0% { transform: translateY(0); opacity: 0; }
+      12% { opacity: 1; }
+      88% { opacity: 1; }
+      100% { transform: translateY(-46vh); opacity: 0; }
+    }
+    .particle {
+      position: absolute;
+      border-radius: 9999px;
+      animation: spiel-404-float ease-in infinite;
+      pointer-events: none;
+    }
+
+    /* ── 404 glitch ── */
+    @keyframes spiel-404-glitch {
+      0%, 86%, 100% { transform: translate(0, 0); text-shadow: 0 0 0 transparent; }
+      88% { transform: translate(-3px, 1px); text-shadow: -3px 0 var(--purple), 3px 0 transparent; }
+      90% { transform: translate(3px, -1px); text-shadow: 3px 0 var(--primary), -3px 0 transparent; }
+      92% { transform: translate(-2px, 0); text-shadow: -2px 0 var(--accent); }
+      94% { transform: translate(2px, 1px); text-shadow: 2px 0 var(--warning); }
+      96% { transform: translate(-1px, -1px); text-shadow: -1px 0 var(--purple); }
+    }
+    .glitch-404 { animation: spiel-404-glitch 5s linear infinite; }
+
+    /* ── Agent log ── */
+    .log-line {
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .log-line.show { opacity: 1; transform: translateY(0); }
+    .log-line .log-prompt { color: var(--primary); font-weight: 600; }
+    .log-line .log-cmd { color: var(--foreground-strong); }
+    .log-line .log-icon { display: inline-flex; font-size: 13px; }
+    .log-line .log-name { color: var(--foreground-strong); font-weight: 600; }
+    .log-line .log-arrow { color: var(--muted-foreground); }
+    .log-line .log-action { color: var(--muted-foreground); }
+    .log-line .log-dots { color: var(--muted-foreground); }
+    .log-line .log-result { margin-left: auto; font-size: 13px; font-weight: 700; }
+    .log-line .log-result.ok { color: var(--success); }
+    .log-line .log-result.miss { color: var(--destructive); }
+    .log-line .log-error { color: var(--destructive); font-weight: 600; letter-spacing: 0.02em; }
+    .log-line .log-aftermath { color: var(--muted-foreground); }
+    .log-line .log-redirect { color: var(--primary); font-weight: 600; }
+    .log-line.working .log-action { color: var(--foreground); }
+
+    .cursor-blink {
+      display: inline-block;
+      width: 8px;
+      height: 1em;
+      vertical-align: text-bottom;
+      margin-left: 2px;
+      background: var(--primary);
+      animation: spiel-404-cursor 1s step-end infinite;
+    }
+    @keyframes spiel-404-cursor {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .animate-drift, .animate-drift-slow { animation: none; }
+      .radar-sweep, .radar-ping, .orbit-spin, .particle, .glitch-404 { animation: none; }
+      .cursor-blink { animation: none; }
+      .log-line { transition: none; }
+    }
+  </style>
+</Page>

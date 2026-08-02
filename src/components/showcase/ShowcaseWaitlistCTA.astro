@@ -1,0 +1,25 @@
+---
+import ShowcaseWaitlistForm from "./ShowcaseWaitlistForm.astro";
+import { type Locale, t } from "../../i18n/translations";
+
+export interface Props {
+  locale?: Locale;
+}
+
+const { locale = "en" } = Astro.props;
+---
+
+<section class="py-24 sm:py-32">
+  <div class="mx-auto max-w-3xl px-6 text-center">
+    <div class="rounded-xl border border-border bg-panel p-10 sm:p-14 relative overflow-hidden" data-aos="fade-up">
+      <div class="absolute inset-0 opacity-10" style="background: radial-gradient(ellipse at center, var(--primary) 0%, transparent 70%);"></div>
+      <div class="relative z-10">
+        <h2 class="text-2xl sm:text-3xl font-bold text-foreground-strong tracking-tight">{t(locale, "waitlist.cta.title")}</h2>
+        <p class="mt-4 text-sm text-muted-foreground max-w-lg mx-auto">{t(locale, "waitlist.cta.p")}</p>
+        <div class="mt-8 max-w-md mx-auto">
+          <ShowcaseWaitlistForm locale={locale} />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

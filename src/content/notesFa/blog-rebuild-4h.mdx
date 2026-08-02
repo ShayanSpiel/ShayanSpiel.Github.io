@@ -1,0 +1,156 @@
+---
+title: چطور وبلاگم رو در ۴ ساعت با یک پایپلاین اتوماسیون Jekyll بازسازی کردم
+date: 2026-06-07 09:00:00 +0000
+description: یک پایپلاین اتوماسیون وبلاگ Jekyll که درفت‌های خزانه رو با یک کامند به پست
+  زنده تبدیل می‌کنه. از دموی خالی تا وبلاگ برند با ۲ پست منتشرشده در همون شب.
+permalink: /blog-rebuild-4h/
+category: journey
+tags:
+- توزیع فاندر
+- ساخت-در-ملأعام
+- jekyll
+- github-pages
+- موتور-محتوا
+image: /assets/og/blog-rebuild-4h.png
+---
+
+import SectionHead from "@/components/posts/SectionHead.astro";
+import ProseCenter from "@/components/posts/ProseCenter.astro";
+import Card from "@/components/posts/Card.astro";
+import Pullquote from "@/components/posts/Pullquote.astro";
+import Takeaway from "@/components/posts/Takeaway.astro";
+import Source from "@/components/posts/Source.astro";
+import PostCta from "@/components/posts/PostCta.astro";
+
+
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='تله' title='وبلاگ یک دمو بود، نه یک برند' sub='وبلاگ ۶ ماه بود که وجود داشت. صفحه اصلی درست رندر می‌شد. صفحه درباره می‌گفت این یک دموی تم Jekyll است. پست‌ها متن placeholder بودن.' />
+
+  <ProseCenter text='دلیلش: وبلاگ رو به‌عنوان دمو ساختم، نه به‌عنوان برند. تم شیک بود. محتوا خالی بود. هیچ‌وقت وبلاگ رو به خزانه وصل نکردم. هیچ‌وقت وبلاگ رو به رزومه وصل نکردم. هیچ‌وقت اسکریپت انتشار ننوشتم. وبلاگ یک فولدر روی سرور بود. خزانه یک فولدر روی لپ‌تاپ من بود. این دو فولدر از وجود هم خبر نداشتن.' />
+
+  <ProseCenter text='این عدم تقارن خجالت‌آور بود. خزانه ۱۲۶ فایل مارک‌داون داشت، ۱۰ صفحه استراتژی، ۳۰ صفحه مفهوم، ۸ صفحه موجودیت، ۱ تحلیل کرپوس. وبلاگ ۱ صفحه داشت که می‌گفت دمو. مغز پر بود. دهان خالی.' />
+
+  <div class='grid grid-2'>
+    <Card tag='خزانه' title='فایل‌های مارک‌داون' desc='۱۰ صفحه استراتژی، ۳۰ صفحه مفهوم، ۸ صفحه موجودیت، ۱ تحلیل کرپوس. مغز پر بود. دهان خالی.' icon='book' />
+    <Card tag='وبلاگ' title='۱ صفحه دمو' desc='می‌گفت این یک دموی تم Jekyll است. عدم تقارن خجالت‌آور بود. راه‌حل، لایه انتشاره.' icon='circle-x' />
+  </div>
+
+  <Takeaway text='راه‌حل، لایه انتشاره. لایه انتشار یک اسکریپته که درفت خزانه رو می‌گیره، به فرمت Jekyll تبدیلش می‌کنه، کامیت می‌کنه و به GitHub Pages پوش می‌کنه. یک کامند. یک URL. یک پست منتشرشده.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='محدودیت' title='حالت CLI، Ruby خراب، یک ترمینال' sub='جلسه‌ای که این بازسازی رو تولید کرد یک جلسه CLI بود.' />
+
+  <div class='grid grid-2'>
+    <Card tag='بدون GUI' title='فقط CLI' desc='نمی‌شد Obsidian اجرا کرد. نمی‌شد پیش‌نمایش سایت دید. نمی‌شد توی یک CMS دکمه انتشار رو زد. مرحله انتشار باید یک کامند bash می‌بود.' icon='terminal' />
+    <Card tag='بدون بیلد محلی Jekyll' title='Ruby خراب' desc='Ruby سیستم نسخه ۲.۶ بود. Gemfile.lock به bundler 4.0.12 نیاز داشت. bundle exec jekyll build قبل از شروع به خطا خورد.' icon='circle-x' />
+    <Card tag='بدون اسکرین‌شات GUI' title='Headless شکست خورد' desc='هم screencapture و هم chrome --headless شکست خوردن. مرحله انتشار باید بدون اونا کار می‌کرد.' icon='circle-x' />
+    <Card tag='یک شل' title='قابل تست در ترمینال' desc='اسکریپت یک مسیر فایل می‌گیره. یک URL زنده تحویل می‌ده. کل ماجرا در ترمینال قابل تست‌ست.' icon='check-square' />
+  </div>
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='مکانیزم' title='پایپلاین ۴ فایلی' sub='خزانه ← صف ← اسکریپت ← URL زنده. کل ماجرا همینه.' />
+
+  ```
+content/queue/<draft>.md       (vault side, status: ready-to-publish)
+scripts/parse-frontmatter.py  (YAML → bash, helper)
+scripts/publish-blog.sh       (the pipeline: transform + copy + commit + push)
+~/ShayanSpiel.github.io/      (GH Pages side, _posts/, auto-builds on push)
+```
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>01</div>
+      <div class='step-body'>
+        <strong>کاربر درفت می‌نویسه</strong>
+        توی content/queue/&lt;date&gt;-&lt;slug&gt;.md. درفت در frontmatter استیت status: ready-to-publish داره.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>02</div>
+      <div class='step-body'>
+        <strong>کاربر یک کامند اجرا می‌کنه</strong>
+        bash scripts/publish-blog.sh &lt;draft-path&gt; --yes. از اینجا به بعد با اسکریپته.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>03</div>
+      <div class='step-body'>
+        <strong>اسکریپت frontmatter رو تبدیل می‌کنه</strong>
+        فیلدهای Jekyll رو اضافه می‌کنه (layout, date, author). فیلدهای خزانه رو حذف می‌کنه (status, standalone_test, pillar). وایت‌لیست، نه بلاک‌لیست. قرارداد پایدار.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>04</div>
+      <div class='step-body'>
+        <strong>اسکریپت اسکرین‌شات‌ها رو کپی می‌کنه</strong>
+        بدنه رو برای ارجاع تصویر اسکن می‌کنه. مسیرها رو حل می‌کنه. به assets/uploads/&lt;date&gt;-&lt;slug&gt;/ کپی می‌کنه. مسیرها رو توی پست بازنویسی می‌کنه.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>05</div>
+      <div class='step-body'>
+        <strong>اسکریپت کامیت و پوش می‌کنه</strong>
+        پست جدید و آپلودها رو stage می‌کنه. با یک پیام معنادار کامیت می‌کنه. به origin main پوش می‌کنه. GitHub Pages دوباره بیلد می‌کنه. پست حدود ۳۰ ثانیه بعد زنده‌ست.
+      </div>
+    </div>
+  </div>
+
+  <Takeaway text='کل جریان یک کامنده. کاربر کامند رو اجرا می‌کنه، می‌ره و پست زنده‌ست. اسکریپت همون لایه انتشاره.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='به عدد' title='نتیجه' sub='بازسازی در ۴ ساعت ۴ تا خروجی تحویل داد. سلسله‌مراتب برند حالا یکدست و هماهنگه.' />
+
+  <div class='grid grid-3'>
+    <Card tag='۱' title='بازنویسی صفحه اصلی' desc='index.md حالا هیرو داره، ۵ پست آخر، بخش «در حال انتشار» و بخش «این سایت چیه». دیگه خبری از محتوای دمو نیست.' icon='check-square' />
+    <Card tag='۱' title='بازنویسی صفحه درباره' desc='about.md حالا قوس داستان برند شخصی، ۵ آفر با جزئیات و اطلاعات تماس داره. دیگه خبری از دمو نیست.' icon='check-square' />
+    <Card tag='۲' title='پست‌های ستونی' desc='این پست + پست قبلی درباره معماری مغز دوم. هر دو در همون شب منتشر شدن.' icon='check-square' />
+    <Card tag='۱۵' title='اسکرین‌شات' desc='۷ تا برای ستون اول، ۸ تا برای این ستون. همه PNGهای 1600x1600. همه توی assets/uploads/.' icon='image' />
+    <Card tag='۴ ساعت' title='زمان کل' desc='از دموی خالی تا وبلاگ برند. بدون GUI. بدون بیلد محلی Jekyll. یک کامند برای هر پست.' icon='zap' />
+    <Card tag='۳۰ ثانیه' title='زمان تا زنده شدن' desc='از git push تا URL زنده. GitHub Pages بیلد می‌کنه. پست عمومی می‌شه.' icon='zap' />
+  </div>
+
+  <ProseCenter text='سلسله‌مراتب برند حالا یکدست و هماهنگه. صفحه درباره وبلاگ، صفحه ویکی shayanspiel رو بازتاب می‌ده. هر سطح به یک آدم اشاره می‌کنه.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='درس' title='انتشار بخشیه که هیچ‌کس یادت نمی‌ده' sub='بیشتر توصیه‌های وبلاگ درباره نوشتنه. بیشتر توصیه‌های موتور محتوا درباره درفت‌ست. هیچ‌کس درباره مرحله انتشار حرف نمی‌زنه.' />
+
+  <ProseCenter text='مرحله انتشار لایه‌ایه بین «درفت دارم» و «درفت زنده‌ست». مرحله انتشار همون اصطکاکه. مرحله انتشار همون جاییه که باعث می‌شه آدم‌ها پست نذارن. راه‌حل یک اسکریپته. اسکریپت یک مسیر فایل می‌گیره. بقیه‌ش با اسکریپته.' />
+
+  <div class='grid grid-2'>
+    <Card tag='بدون اسکریپت' title='۱۰ دقیقه کلیک' desc='وارد CMS شو. frontmatter رو فرمت کن. اسکرین‌شات‌ها رو توی فولدر درست کپی کن. ایندکس رو به‌روزرسانی کن. کامیت کن. پوش کن. تکرار کن. ۱۰ دقیقه. هر. تک. بار.' icon='circle-x' />
+    <Card tag='با اسکریپت' title='یک کامند' desc='اسکریپت درفت رو می‌خونه. frontmatter رو تبدیل می‌کنه. اسکرین‌شات‌ها رو کپی می‌کنه. کامیت رو stage می‌کنه. پوش می‌کنه. پست در ۳۰ ثانیه زنده‌ست. کاربر می‌ره دنبال کارش.' icon='check-square' />
+  </div>
+
+  <Takeaway text='اگه نتونی منتشر کنی، پست نمی‌ذاری. اگه مرحله انتشار ۱۰ دقیقه کلیک باشه، نتونی منتشر کنی. اون ۱۰ دقیقه همون اصطکاکه. اصطکاک همون دلیله که پست نمی‌ذاری. اسکریپت کشنده اصطکاکه.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='به کار ببر' title='اگه خزانه داری، اسکریپت رو بساز' sub='اسکریپت ۴ ساعته. اسکریپت لایه انتشار زیرساخت Session-as-Content است.' />
+
+  <div class='grid grid-3'>
+    <Card tag='۴' title='فایل' desc='کل پایپلاین ۴ فایله. درفت خزانه، هلپر YAML، اسکریپت انتشار، مقصد GH Pages. هیچ‌چیز دیگه‌ای.' icon='layer' />
+    <Card tag='۴ ساعت' title='زمان ساخت' desc='نوشتن اسکریپت ۴ ساعت طول کشید. برای هر پست ۱۰ دقیقه صرفه‌جویی می‌کنه. بعد از ۲۴ پست به نقطه سربه‌سر می‌رسی. اسکریپت همون اهرمه.' icon='zap' />
+    <Card tag='۲' title='پست در یک شب' desc='اولین شبی که از اسکریپت استفاده کردم: ۲ پست منتشر شد. پایپلاین سرتاسری کار می‌کنه. خزانه حالا به سایت زنده وصله.' icon='check-square' />
+  </div>
+</section>
+
+<hr class='divider' />
+
+<PostCta takeaway='اگه نتونی منتشر کنی، پست نمی‌ذاری. اسکریپت کشنده اصطکاکه.' echo='۴ فایل. ۴ ساعت. یک کامند. خزانه حالا به وبلاگ وصله. ریپوی Spiel OS رو کلون کن. لایه انتشار رو بساز. همون شب منتشر کن.' btnText='کلون کردن ریپوی SpielOS' btnHref='https://github.com/ShayanSpiel/SpielOS' />

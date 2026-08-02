@@ -1,0 +1,33 @@
+_________________________
+SpielOS · spielos.xyz
+__________________________
+
+## Site
+
+  SpielOS — AI employee and department platform.
+  Build AI employees with roles, skills, context, and workflows.
+  https://spielos.xyz
+
+## Author
+
+  Shayan Spiel (@ShayanSpiel)
+  Founder of SpielOS · Agent Harness Architect
+  Tehran, Iran
+  X: https://x.com/ShayanSpiel
+  LinkedIn: https://linkedin.com/in/shayantawabi
+  GitHub: https://github.com/ShayanSpiel
+
+## Stack
+
+  Astro 5 (static site generator)
+  Tailwind CSS + CSS custom properties (design tokens)
+  MDX (content)
+  Boxicons (icons)
+  GitHub Pages (hosting)
+  Google Analytics + PostHog (analytics)
+
+## Colophon
+
+  Typeface: Outfit (sans) + JetBrains Mono (mono) + IRANSansX (Persian)
+  Design: Custom design system with 10 theme variants
+  License: MIT

@@ -1,0 +1,7 @@
+---
+const { author, url, title: sourceTitle } = Astro.props as { author: string; url: string; title: string };
+---
+<div class="source-item">
+  <a href={url} target="_blank" rel="noopener noreferrer">{sourceTitle}</a>
+  {author && <span class="source-author"> — {author}</span>}
+</div>

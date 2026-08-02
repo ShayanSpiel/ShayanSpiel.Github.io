@@ -1,0 +1,369 @@
+---
+export interface BarItem {
+  label: string;
+  value: number;
+  display?: string;
+  color?: string;
+}
+
+export interface BarGroup {
+  title: string;
+  items: BarItem[];
+}
+
+export type ChartType = "bar" | "donut" | "radial" | "area" | "pie";
+
+export interface Props {
+  label?: string;
+  groups?: BarGroup[];
+  items?: BarItem[];
+  type?: ChartType;
+  note?: string;
+  height?: number;
+}
+
+const { label, groups, items, type = "bar", note, height } = Astro.props;
+
+let dataId = 0;
+if (groups) {
+  dataId = groups.reduce((acc, g) => acc + g.title.length + g.items.length, 0);
+} else if (items) {
+  dataId = items.reduce((acc, i) => acc + i.label.length + i.value, 0);
+}
+const chartId = `chart-${dataId}-${Math.random().toString(36).slice(2, 6)}`;
+
+const isDonut = type === "donut" || type === "pie";
+const isRadial = type === "radial";
+const isArea = type === "area";
+---
+
+<div class="data-chart-wrap">
+  {label && <div class="data-chart-label">{label}</div>}
+  <div class="data-chart" id={chartId}
+    data-groups={groups ? JSON.stringify(groups) : undefined}
+    data-items={items ? JSON.stringify(items) : undefined}
+    data-type={type}
+    data-height={height || (isDonut ? 280 : isRadial ? 200 : isArea ? 240 : groups ? groups.length * 100 + 60 : items ? items.length * 44 + 20 : 200)}
+  ></div>
+</div>
+{note && <p class="war-note">{note}</p>}
+
+<script>
+  function initCharts() {
+    const charts = document.querySelectorAll('.data-chart');
+    charts.forEach(async (el) => {
+      const ApexCharts = (await import('apexcharts')).default;
+      const container = el as HTMLElement;
+      const groups = container.dataset.groups ? JSON.parse(container.dataset.groups!) : null;
+      const items = container.dataset.items ? JSON.parse(container.dataset.items!) : null;
+      const chartType = container.dataset.type || 'bar';
+      const chartHeight = parseInt(container.dataset.height || '200');
+
+      const style = getComputedStyle(document.documentElement);
+      const colorPrimary = style.getPropertyValue('--primary').trim() || '#a8a29e';
+      const colorSuccess = style.getPropertyValue('--success').trim() || '#4ade80';
+      const colorWarning = style.getPropertyValue('--warning').trim() || '#fbbf24';
+      const colorDestructive = style.getPropertyValue('--destructive').trim() || '#f87171';
+      const colorInfo = style.getPropertyValue('--info').trim() || '#60a5fa';
+      const colorAccent = style.getPropertyValue('--accent').trim() || '#c084fc';
+      const colorPurple = style.getPropertyValue('--purple').trim() || '#a78bfa';
+      const colorFg = style.getPropertyValue('--foreground').trim() || '#e7e5e4';
+      const colorFgMuted = style.getPropertyValue('--muted-foreground').trim() || '#a8a29e';
+      const colorPanelBg = style.getPropertyValue('--panel').trim() || '#1c1917';
+      const colorPanelRaised = style.getPropertyValue('--panel-raised').trim() || '#292524';
+
+      const colorMap: Record<string, string> = {
+        primary: colorPrimary,
+        success: colorSuccess,
+        warning: colorWarning,
+        destructive: colorDestructive,
+        info: colorInfo,
+        accent: colorAccent,
+        purple: colorPurple,
+        muted: colorFgMuted,
+      };
+
+      const palette = [colorPrimary, colorInfo, colorSuccess, colorAccent, colorPurple, colorWarning, colorDestructive];
+
+      if (chartType === 'donut' || chartType === 'pie') {
+        const data = (items || []).map((i: any) => ({ label: i.label, value: i.value }));
+        const colors = (items || []).map((i: any) => colorMap[i.color!] || palette[0]);
+        const total = data.reduce((s: number, d: any) => s + d.value, 0);
+
+        const chart = new ApexCharts(container, {
+          chart: {
+            type: chartType === 'donut' ? 'donut' : 'pie',
+            height: chartHeight,
+            background: 'transparent',
+            toolbar: { show: false },
+            animations: { enabled: true, easing: 'easeOutQuart', speed: 800 },
+            fontFamily: 'var(--font-sans), sans-serif',
+          },
+          series: data.map((d: any) => d.value),
+          labels: data.map((d: any) => d.label),
+          colors,
+          plotOptions: {
+            pie: {
+              donut: {
+                size: chartType === 'donut' ? '65%' : undefined,
+                labels: {
+                  show: true,
+                  name: { show: true, fontSize: '11px', color: colorFgMuted },
+                  value: {
+                    show: true,
+                    fontSize: '20px',
+                    fontWeight: 700,
+                    color: colorFg,
+                    formatter: (val: string) => {
+                      const pct = total > 0 ? ((parseInt(val) / total) * 100).toFixed(0) : '0';
+                      return `${pct}%`;
+                    },
+                  },
+                },
+              },
+            },
+          },
+          dataLabels: {
+            enabled: true,
+            style: { fontSize: '11px', fontWeight: 600 },
+            formatter: (val: number) => `${val.toFixed(0)}%`,
+            dropShadow: { enabled: false },
+          },
+          stroke: { width: 2, colors: [colorPanelBg] },
+          legend: {
+            show: true,
+            position: 'bottom',
+            fontSize: '11px',
+            fontWeight: 500,
+            labels: { colors: [colorFgMuted] },
+            markers: { size: 10 },
+            itemMargin: { horizontal: 8, vertical: 4 },
+          },
+          tooltip: { enabled: false },
+          states: { hover: { filter: { type: 'none' } } },
+        });
+        chart.render();
+
+      } else if (chartType === 'radial') {
+        const data = (items || []).map((i: any) => ({ label: i.label, value: i.value }));
+        const colors = (items || []).map((i: any) => colorMap[i.color!] || palette[0]);
+
+        const chart = new ApexCharts(container, {
+          chart: {
+            type: 'radialBar',
+            height: chartHeight,
+            background: 'transparent',
+            toolbar: { show: false },
+            animations: { enabled: true, easing: 'easeOutQuart', speed: 800 },
+            fontFamily: 'var(--font-sans), sans-serif',
+          },
+          series: data.map((d: any) => d.value),
+          labels: data.map((d: any) => d.label),
+          colors,
+          plotOptions: {
+            radialBar: {
+              hollow: { size: '55%', background: 'transparent' },
+              track: { background: colorPanelRaised, strokeWidth: '100%', margin: 0, dropShadow: { enabled: false } },
+              dataLabels: {
+                name: { show: true, fontSize: '11px', color: colorFgMuted, offsetY: -8 },
+                value: {
+                  show: true, fontSize: '16px', fontWeight: 700, color: colorFg,
+                  formatter: (val: number) => `${val.toFixed(0)}%`,
+                },
+                total: { show: false },
+              },
+            },
+          },
+          stroke: { lineCap: 'round' },
+          legend: {
+            show: true,
+            position: 'bottom',
+            fontSize: '11px',
+            fontWeight: 500,
+            labels: { colors: [colorFgMuted] },
+            markers: { size: 10 },
+            itemMargin: { horizontal: 8, vertical: 4 },
+          },
+          tooltip: { enabled: false },
+          states: { hover: { filter: { type: 'none' } } },
+        });
+        chart.render();
+
+      } else if (chartType === 'area') {
+        const series = (groups || []).map((g: any) => ({
+          name: g.title,
+          data: g.items.map((i: any) => i.value),
+        }));
+        const categories = groups?.[0]?.items?.map((i: any) => i.label) || [];
+        const colors = (groups || []).map((g: any, idx: number) => colorMap[g.items[0]?.color!] || palette[idx % palette.length]);
+
+        const chart = new ApexCharts(container, {
+          chart: {
+            type: 'area',
+            height: chartHeight,
+            background: 'transparent',
+            toolbar: { show: false },
+            animations: { enabled: true, easing: 'easeOutQuart', speed: 800 },
+            fontFamily: 'var(--font-sans), sans-serif',
+          },
+          series,
+          colors,
+          stroke: { width: 2.5, curve: 'smooth' },
+          fill: {
+            type: 'gradient',
+            gradient: { shadeIntensity: 1, opacityFrom: 0.3, opacityTo: 0.05, stops: [0, 100] },
+          },
+          dataLabels: { enabled: false },
+          xaxis: {
+            categories,
+            labels: { style: { fontSize: '11px', colors: [colorFgMuted] } },
+            axisBorder: { show: false },
+            axisTicks: { show: false },
+          },
+          yaxis: {
+            labels: { style: { fontSize: '11px', colors: [colorFgMuted] }, show: true },
+          },
+          grid: { borderColor: 'var(--border)', strokeDashArray: 3, xaxis: { lines: { show: false } }, yaxis: { lines: { show: true } } },
+          legend: {
+            show: series.length > 1,
+            position: 'top',
+            horizontalAlign: 'left',
+            fontSize: '11px',
+            fontWeight: 600,
+            labels: { colors: [colorFgMuted] },
+            markers: { size: 10 },
+            itemMargin: { horizontal: 12 },
+          },
+          tooltip: {
+            enabled: true,
+            theme: 'dark',
+            style: { fontSize: '12px' },
+            y: { formatter: (val: number) => val.toLocaleString() },
+          },
+          states: { hover: { filter: { type: 'none' } }, active: { filter: { type: 'none' } } },
+        });
+        chart.render();
+
+      } else {
+        // Bar chart (default)
+        if (groups) {
+          const series = groups.map((g: any) => ({
+            name: g.title,
+            data: g.items.map((i: any) => ({
+              x: i.label,
+              y: i.value,
+              fillColor: colorMap[i.color] || colorPrimary,
+            })),
+          }));
+
+          const maxVal = Math.max(...groups.flatMap((g: any) => g.items.map((i: any) => i.value)));
+
+          const chart = new ApexCharts(container, {
+            chart: {
+              type: 'bar',
+              height: chartHeight,
+              background: 'transparent',
+              toolbar: { show: false },
+              animations: { enabled: true, easing: 'easeOutQuart', speed: 800 },
+              fontFamily: 'var(--font-sans), sans-serif',
+            },
+            plotOptions: {
+              bar: {
+                horizontal: true,
+                barHeight: '60%',
+                borderRadius: 4,
+                dataLabels: { position: 'top' },
+              },
+            },
+            dataLabels: {
+              enabled: true,
+              offsetX: 8,
+              style: { fontSize: '12px', fontWeight: 600, colors: [colorFg] },
+              formatter: (val: number) => {
+                if (maxVal <= 100 && groups.some((g: any) => g.items.some((i: any) => i.value > 50 && i.value <= 100))) {
+                  return val.toFixed(1);
+                }
+                return val.toLocaleString();
+              },
+            },
+            series,
+            xaxis: {
+              max: maxVal * 1.15,
+              labels: { show: false },
+              axisBorder: { show: false },
+              axisTicks: { show: false },
+            },
+            yaxis: {
+              labels: { style: { fontSize: '12px', fontWeight: 500, colors: [colorFgMuted] } },
+            },
+            grid: { xaxis: { lines: { show: false } }, yaxis: { lines: { show: false } } },
+            fill: { opacity: 0.9 },
+            tooltip: { enabled: false },
+            legend: {
+              show: true, position: 'top', horizontalAlign: 'left',
+              fontSize: '11px', fontWeight: 600, labels: { colors: [colorFgMuted] },
+              markers: { size: 10 }, itemMargin: { horizontal: 12 },
+            },
+            states: { hover: { filter: { type: 'none' } } },
+          });
+          chart.render();
+
+        } else if (items) {
+          const colors = items.map((i: any) => colorMap[i.color] || colorPrimary);
+
+          const chart = new ApexCharts(container, {
+            chart: {
+              type: 'bar',
+              height: chartHeight,
+              background: 'transparent',
+              toolbar: { show: false },
+              animations: { enabled: true, easing: 'easeOutQuart', speed: 800 },
+              fontFamily: 'var(--font-sans), sans-serif',
+            },
+            plotOptions: {
+              bar: {
+                horizontal: true,
+                barHeight: '55%',
+                borderRadius: 4,
+                distributed: true,
+                dataLabels: { position: 'top' },
+              },
+            },
+            dataLabels: {
+              enabled: true, offsetX: 8,
+              style: { fontSize: '12px', fontWeight: 600, colors: [colorFg] },
+            },
+            series: [{
+              data: items.map((i: any, idx: number) => ({
+                x: i.label,
+                y: i.value,
+                fillColor: colors[idx],
+              })),
+            }],
+            colors,
+            xaxis: { labels: { show: false }, axisBorder: { show: false }, axisTicks: { show: false } },
+            yaxis: { labels: { style: { fontSize: '12px', fontWeight: 500, colors: [colorFgMuted] } } },
+            grid: { xaxis: { lines: { show: false } }, yaxis: { lines: { show: false } } },
+            fill: { opacity: 0.9 },
+            tooltip: { enabled: false },
+            legend: { show: false },
+            states: { hover: { filter: { type: 'none' } } },
+          });
+          chart.render();
+        }
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCharts);
+  } else {
+    initCharts();
+  }
+</script>
+
+<style>
+  .data-chart-wrap { margin: 0.5rem 0; }
+  .data-chart-label { @apply text-2xs font-semibold uppercase tracking-wider text-muted-foreground mb-3; }
+  .data-chart { width: 100%; }
+</style>

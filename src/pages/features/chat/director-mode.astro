@@ -1,0 +1,283 @@
+---
+import FeaturesLayout from "../../../layouts/FeaturesLayout.astro";
+import FeatureHero from "../../../components/features/FeatureHero.astro";
+import FeatureCTA from "../../../components/features/FeatureCTA.astro";
+import { type Locale, t } from "../../../i18n/translations";
+import { localizePath } from "../../../i18n";
+import { SITE, WAITLIST_URL } from "../../../config";
+
+export interface Props {
+  locale?: Locale;
+}
+
+const { locale = "en" } = Astro.props;
+
+const steps = [
+  { num: 1, titleKey: "features.chat.directorMode.how.step1.title", descKey: "features.chat.directorMode.how.step1.desc" },
+  { num: 2, titleKey: "features.chat.directorMode.how.step2.title", descKey: "features.chat.directorMode.how.step2.desc" },
+  { num: 3, titleKey: "features.chat.directorMode.how.step3.title", descKey: "features.chat.directorMode.how.step3.desc" },
+  { num: 4, titleKey: "features.chat.directorMode.how.step4.title", descKey: "features.chat.directorMode.how.step4.desc" },
+];
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: t(locale, "features.chat.directorMode.pageTitle"),
+  description: t(locale, "features.chat.directorMode.pageDesc"),
+  url: SITE.url + "/features/chat/director-mode/",
+  isPartOf: {
+    "@type": "WebSite",
+    name: SITE.name,
+    url: SITE.url,
+  },
+};
+---
+
+<FeaturesLayout
+  title={t(locale, "features.chat.directorMode.pageTitle")}
+  description={t(locale, "features.chat.directorMode.pageDesc")}
+  image="/assets/og/features.png"
+  locale={locale}
+>
+  <FeatureHero
+    locale={locale}
+    breadcrumbs={[
+      { label: t(locale, "nav.features"), href: "/features/" },
+      { label: t(locale, "features.chat.label"), href: "/features/chat/" },
+      { label: t(locale, "features.chat.directorMode.label") },
+    ]}
+    label={t(locale, "features.chat.directorMode.label")}
+    title={t(locale, "features.chat.directorMode.hero.title")}
+    description={t(locale, "features.chat.directorMode.hero.desc")}
+    cta={{
+      label: t(locale, "features.hero.cta"),
+      href: localizePath(WAITLIST_URL, locale),
+    }}
+  />
+
+  <!-- Real Director Mode UI Mockup -->
+  <section class="relative py-24 sm:py-32 overflow-hidden">
+    <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(var(--foreground) 1px, transparent 1px); background-size: 24px 24px;"></div>
+    <div class="relative mx-auto max-w-6xl px-6">
+      <div class="mx-auto max-w-4xl" data-aos="fade-up">
+        <div class="rounded-lg border border-border bg-panel overflow-hidden shadow-panel">
+          <!-- Window Header -->
+          <div class="flex items-center justify-between px-4 py-3 border-b border-border bg-panel-raised">
+            <div class="flex items-center gap-2">
+              <div class="h-3 w-3 rounded-full bg-destructive/60"></div>
+              <div class="h-3 w-3 rounded-full bg-warning/60"></div>
+              <div class="h-3 w-3 rounded-full bg-success/60"></div>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="inline-flex items-center gap-1 rounded-sm px-1.5 py-0.5 text-2xs font-medium" style="background: var(--success-soft); color: var(--success);">
+                <span class="h-1 w-1 rounded-full bg-success animate-pulse"></span>
+                {t(locale, "waitlist.director.running")}
+              </span>
+              <span class="text-2xs text-muted-foreground font-mono">{t(locale, "features.chat.directorMode.mock.window")}</span>
+            </div>
+          </div>
+
+          <!-- Session Content -->
+          <div class="p-4 space-y-3">
+            <!-- User Message -->
+            <div class="flex justify-end">
+              <div class="max-w-[80%] rounded-md bg-primary-soft px-3 py-2">
+                <p class="text-xs text-foreground">{t(locale, "features.chat.directorMode.mock.userMsg")}</p>
+              </div>
+            </div>
+
+            <!-- Agent Response -->
+            <div class="flex justify-start">
+              <div class="max-w-[80%] rounded-md bg-panel-raised px-3 py-2">
+                <div class="flex items-center gap-2 mb-1.5">
+                  <div class="flex h-5 w-5 items-center justify-center rounded-sm bg-primary-soft">
+                    <i class="bx bx-message-rounded text-primary icon-sm"></i>
+                  </div>
+                  <span class="text-2xs font-medium text-foreground-strong">{t(locale, "features.chat.directorMode.mock.agentName")}</span>
+                  <span class="ms-auto inline-flex items-center gap-1 rounded-sm px-1.5 py-0.5 text-3xs font-medium bg-success-soft text-success">
+                    <span class="h-1 w-1 rounded-full bg-success animate-pulse"></span>
+                    {t(locale, "features.harness.mock.running")}
+                  </span>
+                </div>
+                <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, "features.chat.directorMode.mock.agentReply")}</p>
+              </div>
+            </div>
+
+            <!-- Tool Call -->
+            <div class="flex justify-start">
+              <div class="max-w-[80%] rounded-md border border-border bg-background px-3 py-2">
+                <div class="flex items-center gap-2 mb-1">
+                  <i class="bx bx-link text-accent icon-sm"></i>
+                  <span class="text-2xs font-medium text-foreground-strong">{t(locale, "features.chat.directorMode.mock.toolCall")}</span>
+                </div>
+                <div class="rounded-sm bg-panel px-2 py-1 font-mono text-2xs text-muted-foreground">
+                  {t(locale, "features.chat.directorMode.mock.toolQuery")}
+                </div>
+              </div>
+            </div>
+
+            <!-- File Access -->
+            <div class="flex justify-start">
+              <div class="max-w-[80%] rounded-md border border-border bg-background px-3 py-2">
+                <div class="flex items-center gap-2">
+                  <i class="bx bx-file text-success icon-sm"></i>
+                  <span class="text-2xs font-medium text-foreground-strong">{t(locale, "features.chat.directorMode.mock.reading")}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pause for Approval -->
+            <div class="flex justify-start">
+              <div class="max-w-[80%] rounded-md border border-warning/30 bg-warning-soft px-3 py-2">
+                <div class="flex items-center gap-2 mb-1.5">
+                  <i class="bx bx-time-five text-warning icon-sm"></i>
+                  <span class="text-2xs font-medium text-foreground-strong">{t(locale, "features.chat.directorMode.mock.paused")}</span>
+                </div>
+                <p class="text-xs text-muted-foreground leading-relaxed mb-2">{t(locale, "features.chat.directorMode.mock.approveQ")}</p>
+                <div class="flex items-center gap-2">
+                  <button type="button" class="inline-flex items-center rounded-sm bg-primary px-2 py-1 text-2xs font-medium text-primary-foreground">
+                    {t(locale, "features.chat.directorMode.mock.approve")}
+                  </button>
+                  <button type="button" class="inline-flex items-center rounded-sm border border-border bg-panel px-2 py-1 text-2xs font-medium text-foreground-muted">
+                    {t(locale, "features.chat.directorMode.mock.redirect")}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Problem -->
+  <section class="relative py-24 sm:py-32">
+    <div class="mx-auto max-w-6xl px-6">
+      <div class="text-center mb-12" data-aos="fade-up">
+        <span class="text-2xs font-semibold uppercase tracking-widest text-destructive">{t(locale, "features.chat.directorMode.problem.label")}</span>
+        <h2 class="mt-3 text-3xl sm:text-4xl font-bold text-foreground-strong tracking-tight">{t(locale, "features.chat.directorMode.problem.title")}</h2>
+        <p class="mt-4 text-sm text-muted-foreground max-w-xl mx-auto">{t(locale, "features.chat.directorMode.problem.desc")}</p>
+      </div>
+
+      <div class="mx-auto max-w-2xl" data-aos="fade-up">
+        <div class="rounded-md border border-border bg-panel p-5">
+          <div class="flex items-start gap-3">
+            <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-destructive-soft">
+              <i class="bx bx-error text-destructive icon-2xl"></i>
+            </div>
+            <div>
+              <h3 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, "features.chat.directorMode.problem.title")}</h3>
+              <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, "features.chat.directorMode.problem.desc")}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What It Is -->
+  <section class="relative py-24 sm:py-32 overflow-hidden">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="relative mx-auto max-w-6xl px-6">
+      <div class="text-center mb-12" data-aos="fade-up">
+        <h2 class="text-3xl sm:text-4xl font-bold text-foreground-strong tracking-tight">{t(locale, "features.chat.directorMode.what.title")}</h2>
+        <p class="mt-4 text-sm text-muted-foreground max-w-xl mx-auto">{t(locale, "features.chat.directorMode.what.desc")}</p>
+      </div>
+
+      <div class="mx-auto max-w-2xl" data-aos="fade-up">
+        <div class="rounded-md border border-border bg-panel p-5">
+          <div class="flex items-start gap-3">
+            <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary-soft">
+              <i class="bx bx-message-rounded text-primary icon-2xl"></i>
+            </div>
+            <div>
+              <h3 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, "features.chat.directorMode.what.title")}</h3>
+              <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, "features.chat.directorMode.what.desc")}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="relative py-24 sm:py-32">
+    <div class="mx-auto max-w-6xl px-6">
+      <div class="text-center mb-12" data-aos="fade-up">
+        <h2 class="text-3xl sm:text-4xl font-bold text-foreground-strong tracking-tight">{t(locale, "features.chat.directorMode.how.title")}</h2>
+      </div>
+
+      <div class="grid gap-4 sm:grid-cols-2" data-aos="fade-up">
+        {steps.map((step) => (
+          <div class="rounded-md border border-border bg-panel p-5">
+            <div class="flex h-9 w-9 items-center justify-center rounded-md bg-primary-soft mb-3">
+              <span class="text-sm font-bold text-primary">{step.num}</span>
+            </div>
+            <h3 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, step.titleKey)}</h3>
+            <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, step.descKey)}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Controls -->
+  <section class="relative py-24 sm:py-32 overflow-hidden">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="relative mx-auto max-w-6xl px-6">
+      <div class="text-center mb-12" data-aos="fade-up">
+        <h2 class="text-3xl sm:text-4xl font-bold text-foreground-strong tracking-tight">{t(locale, "features.chat.directorMode.controls.title")}</h2>
+        <p class="mt-4 text-sm text-muted-foreground max-w-xl mx-auto">{t(locale, "features.chat.directorMode.controls.desc")}</p>
+      </div>
+
+      <div class="mx-auto max-w-2xl" data-aos="fade-up">
+        <div class="rounded-md border border-border bg-panel p-5">
+          <div class="flex items-start gap-3">
+            <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-success-soft">
+              <i class="bx bx-slider text-success icon-2xl"></i>
+            </div>
+            <div>
+              <h3 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, "features.chat.directorMode.controls.title")}</h3>
+              <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, "features.chat.directorMode.controls.desc")}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Comparison -->
+  <section class="relative py-24 sm:py-32">
+    <div class="mx-auto max-w-6xl px-6">
+      <div class="text-center mb-12" data-aos="fade-up">
+        <h2 class="text-3xl sm:text-4xl font-bold text-foreground-strong tracking-tight">{t(locale, "features.chat.directorMode.vs.title")}</h2>
+        <p class="mt-4 text-sm text-muted-foreground max-w-xl mx-auto">{t(locale, "features.chat.directorMode.vs.desc")}</p>
+      </div>
+
+      <div class="grid gap-4 sm:grid-cols-2" data-aos="fade-up">
+        <div class="rounded-md border border-border bg-panel p-5">
+          <div class="flex h-9 w-9 items-center justify-center rounded-md bg-primary-soft mb-3">
+            <i class="bx bx-message-rounded text-primary icon-2xl"></i>
+          </div>
+          <h3 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, "features.chat.directorMode.title")}</h3>
+          <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, "features.chat.directorMode.desc")}</p>
+        </div>
+        <div class="rounded-md border border-border bg-panel p-5">
+          <div class="flex h-9 w-9 items-center justify-center rounded-md bg-accent-soft mb-3">
+            <i class="bx bx-right-arrow rtl-flip text-accent icon-2xl"></i>
+          </div>
+          <h3 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, "features.chat.directMode.title")}</h3>
+          <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, "features.chat.directMode.desc")}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <FeatureCTA
+    locale={locale}
+    title={t(locale, "features.chat.directorMode.cta.title")}
+    description={t(locale, "features.chat.directorMode.cta.desc")}
+  />
+
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+</FeaturesLayout>

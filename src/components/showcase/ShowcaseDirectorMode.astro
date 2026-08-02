@@ -1,0 +1,160 @@
+---
+import Icon from "./Icon.astro";
+import { type Locale, t } from "../../i18n/translations";
+
+export interface Props {
+  locale?: Locale;
+}
+
+const { locale = "en" } = Astro.props;
+
+const manualSteps = [
+  { agent: t(locale, "waitlist.director.role.contentStrategist"), icon: "brain", action: t(locale, "waitlist.director.action.brief"), status: "completed" as const },
+  { agent: t(locale, "waitlist.director.role.you"), icon: "head", action: t(locale, "waitlist.director.action.approve"), status: "pending" as const },
+  { agent: t(locale, "waitlist.director.role.seoWriter"), icon: "reading-glass", action: t(locale, "waitlist.director.action.draft"), status: "completed" as const },
+  { agent: t(locale, "waitlist.director.role.qaReviewer"), icon: "medical-flask", action: t(locale, "waitlist.director.action.evaluate"), status: "completed" as const, eval: { score: 84, passed: true, rules: [{ label: t(locale, "waitlist.director.rule.brand"), passed: true }, { label: t(locale, "waitlist.director.rule.seo"), passed: true }, { label: t(locale, "waitlist.director.rule.minWords"), passed: true }] } },
+  { agent: t(locale, "waitlist.director.role.publisher"), icon: "send", action: t(locale, "waitlist.director.action.publish"), status: "completed" as const },
+];
+
+const autoSteps = [
+  { agent: t(locale, "waitlist.director.role.director"), icon: "intellect", action: t(locale, "waitlist.director.action.plan"), type: "plan" as const, steps: [t(locale, "waitlist.director.plan1"), t(locale, "waitlist.director.plan2"), t(locale, "waitlist.director.plan3")] },
+  { agent: t(locale, "waitlist.director.role.director"), icon: "intellect", action: t(locale, "waitlist.director.action.exec"), type: "exec" as const, tools: [{ name: "LinkedIn", icon: "linkedin" as const }, { name: "Gmail", icon: "link" as const }, { name: "Notion", icon: "notion" as const }] },
+  { agent: t(locale, "waitlist.director.role.taSpecialist"), icon: "group", action: t(locale, "waitlist.director.action.search"), type: "spawn" as const },
+  { agent: t(locale, "waitlist.director.role.director"), icon: "intellect", action: t(locale, "waitlist.director.action.filter"), type: "status" as const },
+];
+---
+
+<section id="director" class="py-24 sm:py-32 relative overflow-hidden">
+  <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(var(--foreground) 1px, transparent 1px); background-size: 24px 24px;"></div>
+  <div class="relative mx-auto max-w-6xl px-6">
+    <div class="text-center mb-16">
+      <span class="text-2xs font-semibold uppercase tracking-widest text-purple">{t(locale, "waitlist.director.label")}</span>
+      <h2 class="mt-3 text-3xl sm:text-4xl font-bold text-foreground-strong tracking-tight">{t(locale, "waitlist.director.title")}</h2>
+      <p class="mt-4 text-sm text-muted-foreground max-w-xl mx-auto">{t(locale, "waitlist.director.p")}</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="rounded-md border border-border bg-panel overflow-hidden h-full flex flex-col">
+        <div class="p-5 pb-4 border-b border-border">
+          <div class="flex items-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-md" style="background: var(--panel-raised);">
+              <span class="text-muted-foreground"><Icon name="head" size={24} /></span>
+            </div>
+            <div>
+              <h3 class="text-sm font-semibold text-foreground-strong">{t(locale, "waitlist.director.manual.title")}</h3>
+              <p class="text-3xs text-muted-foreground">{t(locale, "waitlist.director.manual.p")}</p>
+            </div>
+          </div>
+        </div>
+        <div class="p-5 space-y-4 flex-1">
+          {manualSteps.map((step, i) => (
+            <div>
+              <div class="flex items-start gap-2.5">
+                <div class="flex h-7 w-7 shrink-0 items-center justify-center rounded-md mt-0.5" style={step.status === "completed" ? "background: var(--panel-raised); opacity: 0.5;" : "background: var(--primary-soft);"}>
+                  <span style={step.status === "completed" ? "color: var(--muted-foreground);" : "color: var(--primary);"}><Icon name={step.icon} size={20} /></span>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <span class={`text-3xs font-medium ${step.status === "completed" ? "text-muted-foreground" : "text-foreground"}`}>{step.agent}</span>
+                  <div class="flex items-center gap-1.5 mt-0.5">
+                    {step.status === "pending" && <span class="h-1.5 w-1.5 rounded-full shrink-0" style="background: var(--warning);"></span>}
+                    <span class={`text-3xs leading-relaxed ${step.status === "completed" ? "text-muted-foreground" : "text-foreground-muted"}`}>{step.action}</span>
+                  </div>
+                </div>
+              </div>
+              {"eval" in step && step.eval && (
+                <div class="ms-9 mt-2 rounded-md border border-border bg-background overflow-hidden">
+                  <div class="flex items-center justify-between px-2.5 py-1.5 border-b border-border">
+                    <span class="text-3xs font-medium text-foreground">{t(locale, "waitlist.director.evalLabel")}</span>
+                    <span class="inline-flex items-center gap-1 rounded-sm px-1.5 py-0.5 text-3xs font-medium" style={step.eval.passed ? "background: var(--success-soft); color: var(--success);" : "background: var(--destructive-soft); color: var(--destructive);"}>
+                      {step.eval.score}% {step.eval.passed ? t(locale, "waitlist.director.pass") : t(locale, "waitlist.director.fail")}
+                    </span>
+                  </div>
+                  <div class="p-2 space-y-1">
+                    {step.eval.rules.map((r) => (
+                      <div class="flex items-center gap-1.5 text-3xs">
+                        <span style={r.passed ? "color: var(--success); font-size: var(--font-size-3xs);" : "color: var(--destructive); font-size: var(--font-size-3xs);"}><Icon name={r.passed ? "check-square" : "x-square"} size={10} /></span>
+                        <span class="text-foreground">{r.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {i < manualSteps.length - 1 && <div class="ms-3.5 mt-2 border-s border-border h-2"></div>}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="rounded-md border border-border bg-panel overflow-hidden h-full flex flex-col">
+        <div class="p-5 pb-4 border-b border-border">
+          <div class="flex items-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-md" style="background: var(--purple-soft);">
+              <span class="text-purple"><Icon name="brain" size={24} /></span>
+            </div>
+            <div>
+              <h3 class="text-sm font-semibold text-foreground-strong">{t(locale, "waitlist.director.auto.title")}</h3>
+              <p class="text-3xs text-muted-foreground">{t(locale, "waitlist.director.auto.p")}</p>
+            </div>
+          </div>
+        </div>
+        <div class="p-5 space-y-4 flex-1">
+          {autoSteps.map((step, i) => (
+            <div>
+              <div class="flex items-start gap-2.5">
+                <div class="flex h-7 w-7 shrink-0 items-center justify-center rounded-md mt-0.5" style="background: var(--primary-soft);">
+                  <span style="color: var(--primary);"><Icon name={step.icon} size={20} /></span>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <span class="text-3xs font-medium text-foreground">{step.agent}</span>
+                  <div class="flex items-center gap-1.5 mt-0.5">
+                    <span class="text-3xs leading-relaxed text-foreground-muted">{step.action}</span>
+                  </div>
+                </div>
+              </div>
+              {step.type === "plan" && step.steps && (
+                <div class="ms-9 mt-2 space-y-1">
+                  {step.steps.map((s, j) => (
+                    <div class="flex items-center gap-1.5 text-3xs text-muted-foreground">
+                      <span class="text-muted-foreground/60 w-3 text-end">{j + 1}.</span>
+                      {s}
+                    </div>
+                  ))}
+                </div>
+              )}
+              {step.type === "exec" && step.tools && (
+                <div class="ms-9 mt-2 flex items-center gap-1.5">
+                  {step.tools.map((tool) => (
+                    <span class="inline-flex items-center gap-1.5 rounded-md border border-border bg-background px-2 py-1 text-3xs text-foreground">
+                      {tool.icon === "linkedin" && <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>}
+                      {tool.icon === "notion" && <Icon name="notion" size={12} />}
+                      {tool.name}
+                    </span>
+                  ))}
+                </div>
+              )}
+              {step.type === "spawn" && (
+                <div class="ms-9 mt-2">
+                  <span class="inline-flex items-center gap-1 rounded-sm px-1.5 py-0.5 text-3xs font-medium" style="background: var(--success-soft); color: var(--success);">
+                    <span class="h-1 w-1 rounded-full bg-success animate-pulse"></span>
+                    {t(locale, "waitlist.director.running")}
+                  </span>
+                </div>
+              )}
+              {step.type === "status" && (
+                <div class="ms-9 mt-1">
+                  <span class="inline-flex items-center gap-1 rounded-sm px-1.5 py-0.5 text-3xs font-medium" style="background: var(--success-soft); color: var(--success);">
+                    <span class="h-1 w-1 rounded-full bg-success animate-pulse"></span>
+                    {t(locale, "waitlist.director.running")}
+                  </span>
+                </div>
+              )}
+              {i < autoSteps.length - 1 && (
+                <div class="ms-3.5 mt-2 border-s border-border h-2"></div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

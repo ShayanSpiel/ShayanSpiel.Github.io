@@ -1,0 +1,72 @@
+---
+import SpielOSLogo from "../SpielOSLogo.astro";
+import { SITE, SOCIAL } from "../../config";
+import { ICONS } from "../../lib/icons";
+import { type Locale, t } from "../../i18n/translations";
+import LanguageSwitcher from "../LanguageSwitcher.astro";
+
+export interface Props {
+  locale?: Locale;
+}
+
+const { locale = "en" } = Astro.props;
+const footerLinks = [
+  { label: t(locale, "waitlist.privacy"), href: "#" },
+  { label: t(locale, "waitlist.terms"), href: "#" },
+];
+---
+
+<footer class="border-t border-border py-10">
+  <div class:list={[
+    "mx-auto max-w-6xl px-6 flex flex-col items-center justify-between gap-4 sm:flex-row",
+  ]}>
+    <div class="flex items-center gap-2">
+      <SpielOSLogo size="sm" textClass="text-xs font-semibold text-foreground-strong" />
+    </div>
+    <div class="flex items-center gap-6">
+      {footerLinks.map((link) => (
+        <a href={link.href} class="text-2xs text-muted-foreground hover:text-foreground transition-colors">{link.label}</a>
+      ))}
+    </div>
+    <div class="flex items-center gap-4">
+      <LanguageSwitcher locale={locale} />
+      <button
+        type="button"
+        id="footer-theme-toggle"
+        class="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-panel-raised transition-colors"
+        aria-label={t(locale, "common.themeToggle")}
+      >
+        <span id="theme-icon-wrap"><i class="bx bx-moon icon-base"></i></span>
+      </button>
+      <a href={SOCIAL.x} target="_blank" rel="noopener noreferrer me" class="text-muted-foreground hover:text-foreground transition-colors" aria-label={t(locale, "waitlist.followX")} set:html={ICONS.x} />
+      <a href={SOCIAL.linkedin} target="_blank" rel="noopener noreferrer me" class="text-muted-foreground hover:text-foreground transition-colors" aria-label={t(locale, "waitlist.followLinkedin")} set:html={ICONS.linkedin} />
+    </div>
+    <span class="text-2xs text-muted-foreground">&copy; {new Date().getFullYear()} {SITE.name}</span>
+  </div>
+</footer>
+
+<script is:inline>
+(function(){
+  var btn=document.getElementById('footer-theme-toggle');
+  var wrap=document.getElementById('theme-icon-wrap');
+  if(!btn||!wrap)return;
+
+  var themes=['gruvbox-dark','gruvbox-light','monochrome-dark','monochrome-light','blue-dark','blue-light','discord-dark','discord-light','black-gold-dark','black-gold-light'];
+  var darkThemes=['gruvbox-dark','monochrome-dark','blue-dark','discord-dark','black-gold-dark'];
+
+  function currentTheme(){return document.documentElement.dataset.theme||'gruvbox-dark';}
+  function isDark(t){return darkThemes.indexOf(t)!==-1;}
+  function updateIcon(){var t=currentTheme();wrap.innerHTML=isDark(t)?'<i class="bx bx-moon icon-base"></i>':'<i class="bx bx-sun icon-base"></i>';}
+
+  btn.addEventListener('click',function(){
+    var t=currentTheme();
+    var idx=themes.indexOf(t);
+    var next=themes[(idx+1)%themes.length];
+    document.documentElement.dataset.theme=next;
+    try{localStorage.setItem('spielos.theme',next);}catch(e){}
+    updateIcon();
+  });
+
+  updateIcon();
+})();
+</script>

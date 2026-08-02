@@ -1,0 +1,91 @@
+---
+import SocialIcons from "./SocialIcons.astro";
+import LanguageSwitcher from "./LanguageSwitcher.astro";
+import { FOOTER_LINKS, THEMES } from "../config";
+import { type Locale, t } from "../i18n/translations";
+import { localizePath } from "../i18n";
+
+export interface Props {
+  variant?: "default" | "showcase";
+  links?: { label: string; href: string }[];
+  showThemeToggle?: boolean;
+  showSocial?: boolean;
+  copyright?: string;
+  locale?: Locale;
+}
+
+const { variant = "default", links, showThemeToggle = variant === "showcase", showSocial = variant !== "showcase", copyright, locale = "en" } = Astro.props;
+
+const footerLinks = links || (variant === "showcase" ? FOOTER_LINKS.showcase : FOOTER_LINKS.default.map(link => {
+  const key = link.label.toLowerCase().replace(/\s+/g, '');
+  const translationKey = key === 'joinwaitlist' ? 'nav.joinWaitlist' : `nav.${key}`;
+  return {
+    href: localizePath(link.href, locale),
+    label: t(locale, translationKey) || link.label,
+  };
+}));
+const year = new Date().getFullYear();
+const copyrightText = copyright || t(locale, "footer.copyright", { year });
+---
+
+<footer class:list={[
+  "border-t border-border py-4",
+  locale === "fa" ? "font-iransansx" : "",
+]}>
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="flex flex-col items-center justify-between gap-3 sm:flex-row">
+      <div class="flex items-center gap-1.5 text-2xs text-muted-foreground">
+        <span class="font-semibold text-foreground-strong">SpielOS</span>
+        <span aria-hidden="true">·</span>
+        <span>{copyrightText}</span>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <div class="flex items-center gap-4">
+          {footerLinks.map((link) => (
+            <a href={link.href} class="text-2xs text-muted-foreground hover:text-foreground transition-colors">{link.label}</a>
+          ))}
+        </div>
+
+        <span class="text-border" aria-hidden="true">·</span>
+
+        <div class="flex items-center gap-3">
+          <LanguageSwitcher locale={locale} />
+          {showThemeToggle && (
+            <button
+              type="button"
+              id="footer-theme-toggle"
+              class="flex h-6 w-6 items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-panel-raised transition-colors"
+              aria-label={t(locale, "common.themeToggle")}
+            >
+              <i class="bx bx-moon text-sm" id="theme-icon"></i>
+            </button>
+          )}
+          {showSocial && <SocialIcons size="sm" show={["x", "github"]} />}
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+{showThemeToggle && (
+  <script is:inline>
+  (function() {
+    var btn = document.getElementById('footer-theme-toggle');
+    var icon = document.getElementById('theme-icon');
+    if (!btn || !icon) return;
+    var themes = {all: ['gruvbox-dark','gruvbox-light','monochrome-dark','monochrome-light','blue-dark','blue-light','discord-dark','discord-light','black-gold-dark','black-gold-light'], dark: ['gruvbox-dark','monochrome-dark','blue-dark','discord-dark','black-gold-dark']};
+    function currentTheme() { return document.documentElement.dataset.theme || 'gruvbox-dark'; }
+    function isDark(t) { return themes.dark.indexOf(t) !== -1; }
+    function updateIcon() { icon.className = isDark(currentTheme()) ? 'bx bx-moon' : 'bx bx-sun'; }
+    btn.addEventListener('click', function() {
+      var t = currentTheme();
+      var next = themes.all[(themes.all.indexOf(t) + 1) % themes.all.length];
+      document.documentElement.dataset.theme = next;
+      try { localStorage.setItem('spielos.theme', next); } catch(e) {}
+      updateIcon();
+    });
+    updateIcon();
+  })();
+  </script>
+)}

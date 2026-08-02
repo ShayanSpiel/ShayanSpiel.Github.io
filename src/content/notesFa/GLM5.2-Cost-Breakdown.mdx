@@ -1,0 +1,210 @@
+---
+title: آیا GLM-5.2 از فرانتیر ارزون‌تره؟
+date: 2026-06-21 10:31:11 +0000
+description: یک تجزیه‌ی کامل از قیمت‌گذاری API مدل‌های LLM در Anthropic، OpenAI، Google
+  و Z.ai، در همه سطح‌های تلاش استدلال. کجا ادعای رایج به هم می‌ریزه، کجا
+  به لحاظ فنی می‌تونه درست باشه، و داده‌ها درباره هوش چی می‌گن.
+permalink: /GLM5.2-Cost-Breakdown/
+category: ai-agents
+tags:
+- بازار-هوش-مصنوعی
+- glm-5-2
+- claude-opus
+- gpt-5-5
+- قیمت-گذاری-LLM
+- artificial-analysis
+- وزن-باز
+- سطح-تلاش-استدلال
+- کش-پرامپت
+- API-LLM
+image: /assets/og/GLM5.2-Cost-Breakdown.png
+---
+
+import SectionHead from "@/components/posts/SectionHead.astro";
+import ProseCenter from "@/components/posts/ProseCenter.astro";
+import Card from "@/components/posts/Card.astro";
+import Pullquote from "@/components/posts/Pullquote.astro";
+import Takeaway from "@/components/posts/Takeaway.astro";
+import Source from "@/components/posts/Source.astro";
+import PostCta from "@/components/posts/PostCta.astro";
+
+
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='اعداد' title='داده‌ها چی نشون می‌دن' sub='سه عدد که به سوال جواب می‌دن. منبع: قیمت‌گذاری دست‌اول و Artificial Analysis Intelligence Index v4.1.' />
+
+  <div class='grid grid-3'>
+    <Card tag='۵.۶×' title='در برابر GPT-5.5' desc='ارزون‌تر به ازای هر درخواست در سطح تلاش استدلال متوسط' icon='trending-up' />
+    <Card tag='۵.۱×' title='در برابر Claude Opus 4.8' desc='ارزون‌تر به ازای هر درخواست در سطح تلاش استدلال متوسط' icon='trending-up' />
+    <Card tag='۵۱' title='AA Intelligence Index' desc='مدل پیشروی وزن باز، هم‌تراز با Opus 4.8 و GPT-5.5' icon='check-square' />
+  </div>
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='ادعا' title='مردم چی می‌گن' sub='یک نظر پرطرفدار از یک صدای معتبر این فضا ادعا می‌کنه GLM-5.2 در سطح تلاش استدلال متوسط از فرانتیر اختصاصی گرون‌تره. ارزش بررسی داره.' />
+
+  <Pullquote text='می‌دونم خیلی‌ها راجع به GLM-5.2 هیجان‌زده‌ان. به‌حق هم هست! اینکه یک مدل وزن باز از GPT-5.4 و همه مدل‌های Gemini جلو بزنه فوق‌العاده‌ست. با این حال، ارزون نیست. هم Opus 4.8 و هم GPT-5.5 با سطح تلاش متوسط، از GLM-5.2 هم ارزون‌ترن هم باهوش‌تر' attribution='Theo' />
+
+  <ProseCenter text='تئو درباره نیمه اول حرفش درسته. GLM-5.2 واقعاً در Intelligence Index از GPT-5.4 و همه مدل‌های Gemini جلوتره. اما نیمه دوم — بخش ارزون‌تر و باهوش‌تر — وقتی حسابوکتاب می‌کنی به هم می‌ریزه.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='ریاضیات' title='داده‌های قیمت‌گذاری' sub='پارامترهای سطح تلاش استدلال کنترل می‌کنن مدل چند توکن صرف فکر کردن می‌کنه. نرخ هر توکن رو تغییر نمی‌دن.' />
+
+  <ProseCenter text='پارامتر reasoning_effort در GPT-5.5، بودجه extended-thinking در Claude و reasoning_effort در GLM-5.2 همگی یک کار می‌کنن: کنترل می‌کنن مدل چند توکن صرف فکر کردن می‌کنه. نرخ هر توکن بدون توجه به حالت تلاش ثابت می‌مونه.' />
+
+  <table class='data-table'>
+    <thead>
+      <tr>
+        <th>مدل</th>
+        <th>ارائه‌دهنده</th>
+        <th class='num'>ورودی /MTok</th>
+        <th class='num'>هیت کش /MTok</th>
+        <th class='num'>خروجی /MTok</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>GLM-5.2</td>
+        <td>Z.ai</td>
+        <td class='num'>$۱.۴۰</td>
+        <td class='num'>$۰.۲۶</td>
+        <td class='num'>$۴.۴۰</td>
+      </tr>
+      <tr>
+        <td>Gemini 3 Pro</td>
+        <td>Google</td>
+        <td class='num'>$۲.۰۰</td>
+        <td class='num'>$۰.۲۰</td>
+        <td class='num'>$۱۲.۰۰</td>
+      </tr>
+      <tr>
+        <td>Claude Opus 4.8</td>
+        <td>Anthropic</td>
+        <td class='num'>$۵.۰۰</td>
+        <td class='num'>$۰.۵۰</td>
+        <td class='num'>$۲۵.۰۰</td>
+      </tr>
+      <tr>
+        <td>GPT-5.5</td>
+        <td>OpenAI</td>
+        <td class='num'>$۵.۰۰</td>
+        <td class='num'>$۰.۵۰</td>
+        <td class='num'>$۳۰.۰۰</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <Source text='قیمت‌گذاری هر توکن در ۲۱ ژوئن ۲۰۲۶ منتشر شده. نوشتن کش Anthropic جداگانه به نرخ ۶٫۲۵ دلار به ازای هر MTok صورتحساب می‌شه؛ نوشتن کش OpenAI و Google رایگانه.' />
+
+  <ProseCenter text='برای اینکه Opus 4.8 در سطح تلاش متوسط از GLM-5.2 ارزون‌تر دربیاد، باید تقریباً ۵٫۷ برابر توکن استدلال کمتری نسبت به GLM-5.2 تولید کنه — به اندازه‌ای که فاصله هر توکن رو ببنده. در عمل، GLM-5.2 در سطح تلاش متوسط توکن استدلال بیشتری نسبت به Opus 4.8 مصرف می‌کنه. فاصله نرخ هر توکن به اندازه کافی بزرگه که GLM-5.2 همچنان برنده باشه.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='بار کاری' title='هزینه در یک بار کاری واقعی با استدلال متوسط' sub='۲۰K توکن ورودی، ۷۰٪ هیت کش پرامپت، ۵K خروجی شامل استدلال. توکن‌های استدلال در همه ارائه‌دهنده‌ها به عنوان خروجی صورتحساب می‌شن.' />
+
+  <h3 class='text-sm font-semibold text-foreground-strong mb-4'>هزینه به ازای هر درخواست</h3>
+
+  <ProseCenter text='از ارزون‌ترین مرتب شده. طول نوار هزینه‌ست. شدت رنگ نشون می‌ده هر مدل کجا قرار می‌گیره.' />
+
+  <div class='compare-card'>
+    <div class='compare-label'>Opus 4.8 → GLM-5.2</div>
+    <div class='compare-bar' style='width: 100%;'></div>
+    <div class='compare-value'>$۰.۲۹ → $۰.۰۶</div>
+    <div class='compare-note'>در همین بار کاری ۵٫۱ برابر گرون‌تره.</div>
+  </div>
+
+  <div class='compare-card'>
+    <div class='compare-label'>GPT-5.5 → GLM-5.2</div>
+    <div class='compare-bar' style='width: 100%;'></div>
+    <div class='compare-value'>$۰.۳۴ → $۰.۰۶</div>
+    <div class='compare-note'>در همین بار کاری ۶٫۰ برابر گرون‌تره.</div>
+  </div>
+
+  <div class='compare-card'>
+    <div class='compare-label'>Gemini 3 Pro → GLM-5.2</div>
+    <div class='compare-bar' style='width: 100%;'></div>
+    <div class='compare-value'>$۰.۱۳ → $۰.۰۶</div>
+    <div class='compare-note'>در همین بار کاری ۲٫۴ برابر گرون‌تره.</div>
+  </div>
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='هوش' title='باهوش‌تر؟ نه. هم‌ترازن.' sub='Artificial Analysis Intelligence Index v4.1، یک ترکیب وزنی از ۹ ارزیابی شامل GDPval-AA v2، Terminal-Bench v2.1، HLE، GPQA Diamond و AA-Omniscience.' />
+
+  <h3 class='text-sm font-semibold text-foreground-strong mb-4'>AA Intelligence Index v4.1</h3>
+
+  <ProseCenter text='چهار مدل فرانتیر در فاصله دو امتیازی هم‌دیگه قرار گرفتن. فقط Claude Fable 5 با قیمت ۱۰ و ۵۰ دلار به ازای هر MTok، واضح جلوتره.' />
+
+  <ProseCenter text='GLM-5.2 با امتیاز ۵۱ مدل پیشروی وزن باز در این شاخصه. به‌طور خاص در GDPval-AA v2 — بنچمارک کار ایجنتیک دنیای واقعی — GLM-5.2 امتیاز ۱۵۲۴ می‌گیره و از GPT-5.5 (xhigh) با ۱۵۱۴ جلوتره. صدرنشینی شاخص هوش متعلق به Claude Fable 5 (~۶۰)ه که ۲ تا ۳ برابر بقیه چیزهای این نمودار هزینه داره.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='معاوضه' title='تله: توکن‌های خروجی بیشتر' sub='تئو با یک نکته منصفانه دنبالش کرد. ارزون‌تر بودن هر توکن به معنای ارزون‌تر بودن در زمان نیست.' />
+
+  <Pullquote text='همچنین خیلی توکن خروجی بیشتری مصرف می‌کنه. خود توکن‌ها ارزون‌ترن، اما حجمشون یعنی زمان خیلی بیشتری برای انتظار نتایج صرف می‌کنی. بازم فوق‌العاده‌ست! فقط می‌خوام مطمئن بشم آدم‌ها انتظاراتشون رو درست تنظیم می‌کنن' attribution='Theo' />
+
+  <ProseCenter text='تئو در دنباله‌اش اضافه کرد: حجمشون یعنی زمان خیلی بیشتری برای انتظار نتایج صرف می‌کنی. این درسته و ارزش این رو داره که صریح باشیم.' />
+
+  <h3 class='text-sm font-semibold text-foreground-strong mb-4'>توکن‌های خروجی به ازای هر کار</h3>
+
+  <ProseCenter text='GLM-5.2 بیشترین توکن خروجی رو بین مدل‌های پیشروی وزن باز تولید می‌کنه. هزینه هر توکن پایین‌تره، اما توکن‌های بیشتری برای انتظار داری.' />
+
+  <ProseCenter text='در حداکثر سطح تلاش فکر کردن، GLM-5.2 به ازای هر کار شاخص هوش ۴۳هزار توکن خروجی تولید می‌کنه (۳۷هزار استدلال، ۶هزار پاسخ). برای مقایسه، MiniMax-M3 ۲۴هزار، Kimi K2.6 ۳۵هزار و DeepSeek V4 Pro (max) ۳۷هزار توکن تولید می‌کنن. GLM-5.2 تقریباً ۶۵٪ تا ۸۰٪ پرگوی‌تر از سبک‌ترین همتایان وزن بازشه.' />
+
+  <ProseCenter text='برای کارهای batch و پایپلاین‌های شبانه این بی‌معنیه؛ مزیت هزینه غالب می‌شه. برای استفاده تعاملی حساس به تأخیر، Opus 4.8 یا GPT-5.5 با سطح تلاش متوسط چابک‌تر به نظر می‌رسن، حتی با هزینه بالاتر، چون با توکن کمتری فکر کردنشون رو تموم می‌کنن. این یک معاوضه واقعیه، نه یک پاورقی.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='پاسخ صادقانه' title='کجا ادعا می‌تونه به لحاظ فنی درست باشه' sub='سه مورد محدود که توش Opus 4.8 متوسط می‌تونه از نظر هزینه از GLM-5.2 متوسط جلو بزنه، اگه چشمت رو نیمه‌بسته کنی.' />
+
+  <div class='grid grid-3'>
+    <Card tag='مورد محدود ۱' title='Batch API' desc='Anthropic و OpenAI برای کارهای batch پنجاه‌درصد تخفیف می‌دن. Z.ai هیچ سطح batch منتشرشده‌ای نداره. فاصله به جای ۵ برابر به حدود ۲٫۵ برابر می‌رسه.' icon='check-square' />
+    <Card tag='مورد محدود ۲' title='اشتراک در برابر API' desc='Claude Max یا ChatGPT Pro با ۲۰۰ دلار در ماه عملاً استفاده نامحدود از بهترین مدل رو بسته‌بندی می‌کنن. این قیمت‌گذاری با نرخ‌های هر توکن API قابل مقایسه نیست.' icon='check-square' />
+    <Card tag='مورد محدود ۳' title='بنچمارک‌های تکی' desc='در ارزیابی‌های تکی (HLE، بعضی کارهای کدنویسی)، Opus 4.8 یا GPT-5.5 با سطح تلاش متوسط می‌تونن از GLM-5.2 بهتر عمل کنن. شاخص ترکیبی اون‌ها رو هم‌تراز نشون می‌ده.' icon='check-square' />
+  </div>
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='خط آخر' title='داده‌ها چی می‌گن' sub='سه جمع‌بندی. هزینه، هوش، دسترسی. داده‌ها روی هر سه صادقه.' />
+
+  <ProseCenter text='GLM-5.2 در همه سطح‌های منتشرشده تلاش استدلال از Opus 4.8 و GPT-5.5 ارزون‌تره. در Artificial Analysis Intelligence Index v4.1 تقریباً با هر دو هم‌ترازه. از Z.ai با مجوز MIT میاد، یعنی خودمیزبانی، فاین‌تیونینگ و نبود هیچ وابستگی به فروشنده، گزینه‌های واقعیان. هیچ‌کدوم از مدل‌های فرانتیر اختصاصی همچین چیزی ارائه نمی‌دن.' />
+
+  <ProseCenter text='برای اولین بار، یک مدل وزن باز در هزینه، هوش و دسترسی، رقیب رودرروی فرانتیره. این چیز درستی برای سازنده‌هایییه که نمی‌خوان به یک ارائه‌دهنده واحد وابسته باشن. هایپ درسته. روی تأخیر انتظارات رو تنظیم کن، بعد منتشر کن.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='منابع' title='منابع' sub='هر ادعای این صفحه به یک منبع دست‌اول برمی‌گرده. هیچ عدد ساختگی‌ای وجود نداره.' />
+
+  <Source text='Theo (X) «آیا GLM-5.2 واقعاً از Opus 4.8 و GPT-5.5 ارزون‌تره؟»' />
+  <Source text='Theo (X) «همچنین توکن‌های خروجی خیلی بیشتری مصرف می‌کنه...»' />
+  <Source text='Artificial Analysis — GLM-5.2 جدیدترین مدل پیشروی وزن بازه' />
+  <Source text='قیمت‌گذاری Anthropic API — Opus 4.8، Sonnet 4.6، Haiku 4.5' />
+  <Source text='قیمت‌گذاری OpenAI API — GPT-5.5، GPT-5.4، GPT-5.4 mini' />
+  <Source text='Google Cloud Vertex AI — قیمت‌گذاری Gemini 3 Pro' />
+  <Source text='راهنمای شروع سریع Z.ai GLM-5.2' />
+
+  <ProseCenter text='آخرین به‌روزرسانی: ۲۱ ژوئن ۲۰۲۶. قیمت‌ها در همین تاریخ از صفحه‌های قیمت‌گذاری دست‌اول گرفته شدن. Intelligence Index v4.1 در ۱۵ ژوئن ۲۰۲۶ منتشر شده.' />
+</section>
+
+<hr class='divider' />
+
+<PostCta takeaway='وزن باز. هوش واقعی. مزیت هزینه واقعی.' echo='GLM-5.2 در همه سطح‌های تلاش استدلال از Opus 4.8 و GPT-5.5 ارزون‌تره. در شاخص هوش با هر دو هم‌ترازه. مجوز MIT. خودمیزبانی، فاین‌تیونینگ، بدون وابستگی به فروشنده. فرانتیر بازه.' btnText='مخزن SpielOS رو کلون کن' btnHref='https://github.com/ShayanSpiel/SpielOS' />

@@ -1,0 +1,21 @@
+---
+import { type Locale } from "../../i18n/translations";
+
+export interface Props {
+  locale?: Locale;
+  icon: string;
+  iconColor?: string;
+  title: string;
+  description: string;
+}
+
+const { locale = "en", icon, iconColor = "primary", title, description } = Astro.props;
+---
+
+<div class="rounded-md border border-border bg-panel p-5">
+  <div class={`flex h-9 w-9 items-center justify-center rounded-md bg-${iconColor}-soft mb-3`}>
+    <i class={`bx bx-${icon} text-${iconColor} icon-xl`}></i>
+  </div>
+  <h3 class="text-sm font-semibold text-foreground-strong mb-1">{title}</h3>
+  <p class="text-xs text-muted-foreground leading-relaxed">{description}</p>
+</div>

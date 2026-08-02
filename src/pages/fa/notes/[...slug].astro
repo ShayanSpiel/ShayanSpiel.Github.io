@@ -1,0 +1,23 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import NotePage from "../../notes/[...slug].astro";
+import type { Locale } from "../../../i18n/translations";
+
+export async function getStaticPaths() {
+  const notes = await getCollection("notesFa");
+  return notes.map((note) => ({
+    params: { slug: note.data.permalink.replace(/^\/|\/$/g, "") },
+    props: { note, locale: "fa" as Locale },
+  }));
+}
+
+interface Props {
+  note: CollectionEntry<"notesFa">;
+  locale: Locale;
+}
+
+const { note, locale } = Astro.props;
+const noteAsEn = note as unknown as CollectionEntry<"notes">;
+---
+
+<NotePage note={noteAsEn} locale={locale} />

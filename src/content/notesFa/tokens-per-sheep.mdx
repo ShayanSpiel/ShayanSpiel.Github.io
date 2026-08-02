@@ -1,0 +1,352 @@
+---
+title: 'توکن به ازای هر گوسفند: معیار AI که هیچکس نخواسته بود'
+date: 2026-06-30 12:03:24 +0000
+description: کاربرهای OpenCode Go در نیوزیلند هفته پیش ۴۰.۹ میلیارد توکن مصرف کردن؛ یعنی ۱٬۷۳۴ توکن به ازای هر گوسفند. همون حسابوکتابی که هیچکس نخواسته بود رو انجام دادیم.
+permalink: /tokens-per-sheep/
+category: ai-agents
+tags:
+- بازار-هوش-مصنوعی
+- توکن-به-ازای-هر-گوسفند
+- قیمت-گذاری-هوش-مصنوعی
+- نیوزیلند
+- گوسفند
+- opencode
+- gpt-5-5
+- glm-5-2
+- claude-opus-4-8
+- قیمت-گذاری-LLM
+- API-LLM
+- وزن-باز
+image: /assets/og/tokens-per-sheep.png
+---
+
+import SectionHead from "@/components/posts/SectionHead.astro";
+import ProseCenter from "@/components/posts/ProseCenter.astro";
+import Card from "@/components/posts/Card.astro";
+import Pullquote from "@/components/posts/Pullquote.astro";
+import Takeaway from "@/components/posts/Takeaway.astro";
+import Source from "@/components/posts/Source.astro";
+import PostCta from "@/components/posts/PostCta.astro";
+
+
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='توییت' title='OpenCode یک عدد منتشر کرد' sub='همون جور عددی که وقتی وسط اسکرول میکنی وایمیستی.' />
+
+  <Pullquote text='کاربرهای OpenCode Go در نیوزیلند هفته پیش ۴۰.۹ میلیارد توکن مصرف کردن؛ یعنی ۱٬۷۳۴ توکن به ازای هر گوسفند' attribution='OpenCode' />
+
+  <ProseCenter text='دیدیمش و نتونستیم ولش کنیم. ۱٬۷۳۴ توکن به ازای هر گوسفند واقعاً یعنی چی؟ نه توی انتزاع — توی دلار، توی ملحفه، توی گوسفند. نشستیم حسابوکتابش رو درآوردیم.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='محاسبه' title='ریاضیات درست از آب درمیاد' sub='۴۰.۹ میلیارد توکن. ۲۳.۳۶ میلیون گوسفند. تقسیمش که سادهست.' />
+
+  <div class='grid grid-3'>
+    <Card tag='۴۰.۹B' title='توکن مصرف‌شده' desc='کاربرهای OpenCode Go در نیوزیلند، توی یک هفته. کل یک کشور که داره با AI می‌سازه.' icon='zap' />
+    <Card tag='۲۳.۳۶M' title='گوسفند در نیوزیلند' desc='Beef + Lamb New Zealand، ژوئن ۲۰۲۵. انسان‌ها: ۵.۳ میلیون. گوسفندها: ۲۳.۳۶ میلیون. بازم گوسفندها برنده‌ان.' icon='check-square' />
+    <Card tag='۱,۷۳۴' title='توکن به ازای هر گوسفند' desc='۴۰.۹ میلیارد تقسیم بر ۲۳.۳۶ میلیون. یعنی به ازای هر گوسفند ۱٬۷۳۴ توکن خروجی AI.' icon='check-square' />
+  </div>
+
+  <ProseCenter text='نیوزیلند گوسفندهاش از آدمهاش بیشتره؛ توکنهاش هم از آدمهاش بیشتره. معلومه OpenCode Go اون پایین‌ها داره درست کار می‌کنه.' />
+
+![گله بزرگی از گوسفندها که توی یک آغل کنار هم جمع شدن](/assets/uploads/many-sheep.jpg)
+
+  <Takeaway text='۴۰.۹ میلیارد توکن. ۲۳.۳۶ میلیون گوسفند. ۱٬۷۳۴ توکن به ازای هر گوسفند. معیار مضحکیه، ولی اعداد واقعیان.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='گوسفند' title='یک گوسفند واقعاً چقدر می‌ارزه' sub='قیمت گوسفند در نیوزیلند، مستقیم از IRD. قوچ‌های پرورشی، میش‌ها، بره‌ها.' />
+
+![یک میش جوان نیوزیلندی که مستقیم به دوربین نگاه می‌کنه](/assets/uploads/ewe-hogget.webp)
+
+  <table class='data-table'>
+    <thead>
+      <tr>
+        <th>کلاس گوسفند</th>
+        <th class='num'>قیمت (دلار نیوزیلند)</th>
+        <th class='num'>GPT-5.5</th>
+        <th class='num'>Opus 4.8</th>
+        <th class='num'>GLM-5.2</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>میش جوان</td>
+        <td class='num'>$۱۸۸</td>
+        <td class='num'>۳۷.۶M</td>
+        <td class='num'>۴۵.۱M</td>
+        <td class='num'>۱۰۷.۷M</td>
+      </tr>
+      <tr>
+        <td>قوچ پرورشی</td>
+        <td class='num'>$۴۳۱</td>
+        <td class='num'>۸۶.۲M</td>
+        <td class='num'>۱۰۳.۴M</td>
+        <td class='num'>۲۴۵.۹M</td>
+      </tr>
+      <tr>
+        <td>میش با سن‌های مختلف</td>
+        <td class='num'>$۲۳۷</td>
+        <td class='num'>۴۷.۴M</td>
+        <td class='num'>۵۶.۹M</td>
+        <td class='num'>۱۳۴.۷M</td>
+      </tr>
+      <tr>
+        <td>میش آبستن</td>
+        <td class='num'>$۲۶۰</td>
+        <td class='num'>۵۲.۰M</td>
+        <td class='num'>۶۲.۴M</td>
+        <td class='num'>۱۴۷.۷M</td>
+      </tr>
+      <tr>
+        <td>قوچ اخته جوان</td>
+        <td class='num'>$۱۸۰</td>
+        <td class='num'>۳۶.۰M</td>
+        <td class='num'>۴۳.۲M</td>
+        <td class='num'>۱۰۲.۳M</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <Source text='با قیمت هر کلاس گوسفند چند تا توکن خروجی می‌تونی بخری. GPT-5.5 با ۳۰ دلار به ازای هر MTok، Claude Opus 4.8 با ۲۵ دلار و GLM-5.2 با ۴.۴۰ دلار. منبع: NZ IRD ۲۰۲۶.' />
+
+  <ProseCenter text='با قیمت یک قوچ پرورشی (۴۳۱ دلار نیوزیلند) می‌تونی ۸۶.۲ میلیون توکن خروجی GPT-5.5 بخری — چیزی حدود ۴۳٬۰۰۰ صفحه متن نوشتاری. قوچ هم سالی یک‌ونیم بره میاره. حساب‌وکتابش اصلاً به هم نزدیک نیست.' />
+
+  <Pullquote text='یک قوچ پرورشی ۴۳۱ دلار نیوزیلند قیمت داره. با همون پول می‌شه ۸۶.۲ میلیون توکن GPT-5.5 خرید. قوچ سالی یک‌ونیم بره میاره؛ توکن‌ها بی‌نهایت کد تولید می‌کنن.' attribution='قوچ نمی‌تونه Python بنویسه. توکن‌ها می‌تونن.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='قیمت‌گذاری' title='توکن به ازای هر دلار، نسخه فرانتیر' sub='با یک دلار نیوزیلند چند تا توکن می‌تونی بخری؟' />
+
+  <table class='data-table'>
+    <thead>
+      <tr>
+        <th>مدل</th>
+        <th class='num'>ورودی /MTok</th>
+        <th class='num'>خروجی /MTok</th>
+        <th class='num'>توکن به ازای هر ۱ دلار</th>
+        <th class='num'>گوسفند به ازای هر ۱M</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>GLM-5.2</td>
+        <td class='num'>$۱.۴۰</td>
+        <td class='num'>$۴.۴۰</td>
+        <td class='num'>۲۲۷K</td>
+        <td class='num'>۰.۰۱۹</td>
+      </tr>
+      <tr>
+        <td>Claude Opus 4.8</td>
+        <td class='num'>$۵.۰۰</td>
+        <td class='num'>$۲۵.۰۰</td>
+        <td class='num'>۴۰K</td>
+        <td class='num'>۰.۱۰۸</td>
+      </tr>
+      <tr>
+        <td>GPT-5.5</td>
+        <td class='num'>$۵.۰۰</td>
+        <td class='num'>$۳۰.۰۰</td>
+        <td class='num'>۳۳.۳K</td>
+        <td class='num'>۰.۱۳۰</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <Source text='گوسفند به ازای هر ۱M توکن یعنی با پول ۱M توکن خروجی چند گوسفند می‌تونی بخری. هرچی کمتر باشه ارزون‌تره.' />
+
+  <div class='grid grid-3'>
+    <Card tag='۲۲۷K' title='توکن به ازای هر ۱ دلار' desc='خروجی GLM-5.2. ارزون‌ترین مدل فرانتیر. به ازای هر دلار ۵.۷ برابر GPT-5.5 توکن می‌گیری.' icon='zap' />
+    <Card tag='۰.۰۱۹' title='گوسفند به ازای هر ۱M' desc='GLM-5.2. هزینه یک میلیون توکن کمتر از ۲٪ قیمت یک گوسفنده.' icon='check-square' />
+    <Card tag='۶.۸x' title='ارزون‌تر' desc='خروجی GLM-5.2 در برابر GPT-5.5. این فاصله جزئی نیست.' icon='trending-up' />
+  </div>
+
+  <ProseCenter text='اگه فقط اقتصاد توکن رو حساب کنی، GLM-5.2 برنده‌ی قطعیه. با ۴.۴۰ دلار به ازای هر میلیون توکن خروجی، به ازای هر دلار ۵.۷ برابر GPT-5.5 توکن بهت می‌ده. با قیمت یک قوچ پرورشی (۴۳۱ دلار) ۲۴۵.۹ میلیون توکن GLM-5.2 می‌گیری؛ قوچ هم سالی یک‌ونیم بره میاره. انتخاب واضحه.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='ملحفه‌ها' title='تعداد نخ در برابر تعداد توکن' sub='ملحفه‌ها تعداد نخ دارن. مدل‌های AI تعداد توکن.' />
+
+  <div class='grid grid-3'>
+    <Card tag='اقتصادی' title='ست ملحفه ۲۰۰ نخ' desc='۴۰ تا ۸۰ دلار برای سایز کویین. با ۸۰ دلار ۱۸.۲ میلیون توکن GPT-5.5 می‌گیری؛ برای نوشتن یه داستان کوتاه کافیه. ملحفه‌ها گرمت نگه می‌دارن؛ توکن‌ها گرمت نگه نمی‌دارن.' icon='check-square' />
+    <Card tag='پرمیوم' title='ست ملحفه ۴۰۰ نخ' desc='۱۵۰ تا ۳۰۰ دلار برای سایز کویین. با ۳۰۰ دلار ۶۸.۲ میلیون توکن GLM-5.2 می‌گیری؛ برای نوشتن یه رمان کافیه. ملحفه‌ها ۵ سال دوام میارن؛ توکن‌ها هم برای همیشه می‌مونن.' icon='check-square' />
+    <Card tag='لوکس' title='ست ملحفه ۱۰۰۰+ نخ' desc='۳۰۰ دلار به بالا برای سایز کویین. با ۳۰۰ دلار ۶۰ میلیون توکن GPT-5.5 می‌گیری. ملحفه‌ها ۱٬۰۰۰ نخ دارن؛ توکن‌ها هیچ نخی ندارن. فقط حال و هوا.' icon='check-square' />
+  </div>
+
+  <Pullquote text='تعداد نخ یه شگرد بازاریابیه؛ جنس پارچه‌ست که کیفیت واقعیه. تعداد توکن هم همینه؛ بنچمارک‌هاست که کیفیت واقعیه.' attribution='حقیقتی که صنعت ملحفه و صنعت AI باهاش مشترکن' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='بنچمارک' title='بنچمارک گوسفند' sub='یه بنچمارک اختراع کردیم. کاملاً غیرعلمیه. و مهم‌ترین بنچمارکیه که هنوز هیچ‌کس اجراش نکرده.' />
+
+  <ProseCenter text='هر مدل AI ادعا می‌کنه باهوش‌ترینه، ولی هیچ‌کدومشون با معیاری که تنها چیز مهمه آزمایش نشدن: آیا می‌تونن از یه گوسفند باهوش‌تر فکر کنن؟' />
+
+  <table class='data-table'>
+    <thead>
+      <tr>
+        <th>مدل</th>
+        <th class='num'>SWE-bench</th>
+        <th class='num'>AA Index</th>
+        <th class='num'>Codeforces</th>
+        <th class='num'>امتیاز گوسفند</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>GLM-5.2</td>
+        <td class='num'>—</td>
+        <td class='num'>۵۱</td>
+        <td class='num'>—</td>
+        <td class='num'>۱۰ / ۱۰</td>
+      </tr>
+      <tr>
+        <td>Claude Opus 4.8</td>
+        <td class='num'>۸۸.۶٪</td>
+        <td class='num'>۵۰</td>
+        <td class='num'>—</td>
+        <td class='num'>۹ / ۱۰</td>
+      </tr>
+      <tr>
+        <td>GPT-5.5</td>
+        <td class='num'>۷۶.۴٪</td>
+        <td class='num'>۵۰</td>
+        <td class='num'>۳٬۱۶۸</td>
+        <td class='num'>۸ / ۱۰</td>
+      </tr>
+      <tr>
+        <td>گوسفند نیوزیلندی</td>
+        <td class='num'>۰٪</td>
+        <td class='num'>۰</td>
+        <td class='num'>۰</td>
+        <td class='num'>۱۰ / ۱۰</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <Source text='امتیاز گوسفند سه چیز رو اندازه می‌گیره: مصرف علف (۴۰٪)، تولید پشم (۳۰٪) و پایداری دیتابیس (۳۰٪). گوسفندها هیچ‌وقت شکست نخوردن.' />
+
+  <ProseCenter text='GLM-5.2 امتیاز ۱۰ از ۱۰ می‌گیره چون از یه گوسفند ارزون‌تره و خروجی بیشتری تولید می‌کنه. Claude Opus 4.8 امتیاز ۹ از ۱۰ می‌گیره: تو بازبینی کد بهترینه، ولی ۵.۷ برابر معادل گوسفندیش قیمت داره. GPT-5.5 هم امتیاز ۸ از ۱۰ می‌گیره چون گرون‌ترین گوسفند بازاره.' />
+
+  <Takeaway text='امتیاز گوسفند بنچمارک واقعی‌ای نیست. ولی ادعای اینکه GPT-5.5 پنج برابر باهوش‌تر از GLM-5.2ه، وقتی ۶.۸ برابر گرون‌تره، از اون واقعی‌تر نیست.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='معادل‌ها' title='چیزهایی که به اندازه ۱M توکن خروجی هزینه دارن' sub='یک مقایسه کاملاً غیرعلمی بین توکن‌های AI و چیزهای واقعی دنیا.' />
+
+  <div class='grid grid-2'>
+    <Card tag='GPT-5.5' title='$۳۰ = ۱M توکن' desc='گرون‌تر از یه ست ملحفه کویینه و گرون‌تر از خوراک یه ماه گوسفنده. ولی ملحفه‌ها کدت رو دیباگ نمی‌کنن.' icon='zap' />
+    <Card tag='Opus 4.8' title='$۲۵ = ۱M توکن' desc='از GPT-5.5 ارزون‌تره، ولی هنوز ۵.۷ برابر GLM-5.2 قیمت داره. پول اضافه‌ش بهت ۸۸.۶٪ توی SWE-bench Verified می‌ده.' icon='zap' />
+    <Card tag='GLM-5.2' title='$۴.۴۰ = ۱M توکن' desc='ارزون‌ترین مدل فرانتیر؛ امتیاز ۵۱ در AA Intelligence Index و هم‌تراز با Opus 4.8. حتی از بودجه هفتگی یونجه یه گوسفند هم ارزون‌تره.' icon='zap' />
+    <Card tag='قوچ' title='$۴۳۱ = ۱ قوچ' desc='نمی‌تونه توکن تولید کنه و کد هم نمی‌تونه بنویسه. ولی توی مزرعه عالی به نظر می‌رسه و سالی یک‌ونیم بره میاره.' icon='check-square' />
+  </div>
+
+### هزینه ۸۶.۲M توکن خروجی
+
+به اندازه قیمت یه قوچ پرورشی (۴۳۱ دلار نیوزیلند). هر مدل بهت چی می‌ده؟
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='نکته' title='چرا مهمه' sub='زیر این شوخی، یک سیگنال واقعی درباره اقتصاد AI هست.' />
+
+  <ProseCenter text='توییت OpenCode داره وایرال می‌شه چون خنده‌داره. ولی اعداد پشتش یه چیز مهم رو نشون می‌دن: توکن‌های AI حالا از کالاهای فیزیکی‌ای که باهاشون مقایسه می‌شن ارزون‌ترن.' />
+
+  <ProseCenter text='یک قوچ پرورشی ۴۳۱ دلار نیوزیلند قیمت داره. با همون پول می‌شه ۸۶.۲ میلیون توکن GPT-5.5، ۱۰۳.۴ میلیون توکن Claude Opus 4.8 یا ۲۴۵.۹ میلیون توکن GLM-5.2 خرید. قوچ سالی یک‌ونیم بره میاره؛ توکن‌ها بی‌نهایت کد تولید می‌کنن.' />
+
+  <Pullquote text='سوال این نیست که چند توکن به ازای هر گوسفند؛ سوال اینه که به ازای هر دلار چقدر هوش می‌گیری. GLM-5.2 به ازای هر دلار ۵.۷ برابر GPT-5.5 هوش تحویل می‌ده. گوسفندها براشون مهم نیست؛ قبض API تو باید مهم باشه.' />
+
+  <Takeaway text='توکن‌های AI حالا از گوسفند ارزون‌ترن. معیار واقعی هوش به ازای هر دلاره، نه توکن به ازای هر گوسفند.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='ماتریس' title='مقایسه واقعی' sub='هر مدل واقعاً چی بهت می‌ده.' />
+
+  <table class='data-table'>
+    <thead>
+      <tr>
+        <th>مدل</th>
+        <th class='num'>خروجی /MTok</th>
+        <th class='num'>AA Index</th>
+        <th class='num'>SWE-bench</th>
+        <th class='num'>توکن به ازای هر قوچ</th>
+        <th class='num'>امتیاز گوسفند</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>GLM-5.2</td>
+        <td class='num'>$۴.۴۰</td>
+        <td class='num'>۵۱</td>
+        <td class='num'>—</td>
+        <td class='num'>۲۴۵.۹M</td>
+        <td class='num'>۱۰ / ۱۰</td>
+      </tr>
+      <tr>
+        <td>Claude Opus 4.8</td>
+        <td class='num'>$۲۵.۰۰</td>
+        <td class='num'>۵۰</td>
+        <td class='num'>۸۸.۶٪</td>
+        <td class='num'>۱۰۳.۴M</td>
+        <td class='num'>۹ / ۱۰</td>
+      </tr>
+      <tr>
+        <td>GPT-5.5</td>
+        <td class='num'>$۳۰.۰۰</td>
+        <td class='num'>۵۰</td>
+        <td class='num'>۷۶.۴٪</td>
+        <td class='num'>۸۶.۲M</td>
+        <td class='num'>۸ / ۱۰</td>
+      </tr>
+      <tr>
+        <td>گوسفند نیوزیلندی</td>
+        <td class='num'>$۰.۰۰</td>
+        <td class='num'>۰</td>
+        <td class='num'>۰٪</td>
+        <td class='num'>∞</td>
+        <td class='num'>۱۰ / ۱۰</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <Source text='توکن به ازای هر قوچ = ۴۳۱ دلار نیوزیلند تقسیم بر قیمت توکن خروجی. امتیاز گوسفند هم علف، پشم و پایداری دیتابیس رو اندازه می‌گیره.' />
+
+  <ProseCenter text='GLM-5.2 بیشترین توکن به ازای هر گوسفند رو بهت می‌ده؛ Claude Opus 4.8 بهترین کیفیت کدنویسی رو داره؛ GPT-5.5 هم گسترده‌ترین اکوسیستم رو. گوسفندها هم پشم بهت می‌دن. هر کدوم ارزش متفاوتی دارن، برای نیازهای متفاوت.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='منابع' title='منابع' sub='هر ادعا به منبع دست‌اول برمی‌گرده. هیچ عددی از خودمون درنیاوردیم.' />
+
+  <Source text='OpenCode (X) «کاربرهای OpenCode Go در نیوزیلند هفته پیش ۴۰.۹ میلیارد توکن مصرف کردن؛ یعنی ۱٬۷۳۴ توکن به ازای هر گوسفند»' />
+  <Source text='تصمیم مالیات بر درآمد NZ IRD (میانگین ملی ارزش بازار دام مشخص‌شده) ۲۰۲۶' />
+  <Source text='نمودارهای روند قیمت و داده‌های جمعیت گوسفندان Beef + Lamb New Zealand' />
+  <Source text='قیمت‌گذاری OpenAI GPT-5.5 API' />
+  <Source text='قیمت‌گذاری Anthropic Claude Opus 4.8 API' />
+  <Source text='شروع سریع و قیمت‌گذاری Z.ai GLM-5.2' />
+  <Source text='Artificial Analysis AA Intelligence Index v4.1' />
+  <Source text='راهنمای تعداد نخ ملحفه Mattress Miracle ۲۰۲۶' />
+
+  <ProseCenter text='آخرین به‌روزرسانی: ۳۰ ژوئن ۲۰۲۶. قیمت‌ها از صفحه‌های قیمت‌گذاری دست‌اول گرفته شدن؛ ارزش گوسفندها از NZ IRD. از خود گوسفندها هم نظرخواهی نشده.' />
+</section>
+
+<hr class='divider' />
+
+<PostCta takeaway='توکن‌های AI حالا از گوسفند ارزون‌ترن. معیار واقعی هوش به ازای هر دلاره، نه توکن به ازای هر گوسفند.' echo='تشکر ویژه از @opencode بابت بهترین واحد اندازه‌گیری AI این هفته.' btnText='ریپوی SpielOS رو کلون کن' btnHref='https://github.com/ShayanSpiel/SpielOS' />

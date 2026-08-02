@@ -1,0 +1,84 @@
+---
+import Icon from "./Icon.astro";
+import { type Locale, t } from "../../i18n/translations";
+
+export interface Props {
+  locale?: Locale;
+}
+
+const { locale = "en" } = Astro.props;
+
+const steps = [
+  {
+    num: "01",
+    icon: "group",
+    title: t(locale, "waitlist.step1.title"),
+    description: t(locale, "waitlist.step1.desc"),
+    image: "/showcase/roles.svg",
+    color: "var(--primary)",
+  },
+  {
+    num: "02",
+    icon: "reading-glass",
+    title: t(locale, "waitlist.step2.title"),
+    description: t(locale, "waitlist.step2.desc"),
+    image: "/showcase/skills.svg",
+    color: "var(--accent)",
+  },
+  {
+    num: "03",
+    icon: "medical-flask",
+    title: t(locale, "waitlist.step3.title"),
+    description: t(locale, "waitlist.step3.desc"),
+    image: "/showcase/evals.svg",
+    color: "var(--warning)",
+  },
+  {
+    num: "04",
+    icon: "workflow-alt",
+    title: t(locale, "waitlist.step4.title"),
+    description: t(locale, "waitlist.step4.desc"),
+    image: "/showcase/workflows.svg",
+    color: "var(--purple)",
+  },
+];
+---
+
+<section id="how-it-works" class="py-24 sm:py-32">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="text-center mb-16">
+      <span class="text-2xs font-semibold uppercase tracking-widest text-primary">{t(locale, "waitlist.howItWorks.label")}</span>
+      <h2 class="mt-3 text-3xl sm:text-4xl font-bold text-foreground-strong tracking-tight">{t(locale, "waitlist.howItWorks.title")}</h2>
+      <p class="mt-4 text-sm text-muted-foreground max-w-xl mx-auto">{t(locale, "waitlist.howItWorks.p")}</p>
+    </div>
+
+    <div class="space-y-24">
+      {steps.map((step, i) => (
+        <div class:list={[
+          "grid gap-10 lg:gap-16 items-center",
+          i % 2 === 0 ? "lg:grid-cols-[1fr_1.2fr]" : "lg:grid-cols-[1.2fr_1fr]",
+        ]}>
+          <div class:list={["min-w-0", i % 2 === 1 && "lg:order-2"]}>
+            <div class="flex items-center gap-3 mb-4">
+              <span class="flex h-10 w-10 items-center justify-center rounded-lg text-sm font-bold" style="background: var(--primary-soft); color: var(--primary);">{step.num}</span>
+              <div class="h-px flex-1 bg-border"></div>
+            </div>
+            <h3 class="text-xl sm:text-2xl font-bold text-foreground-strong tracking-tight mb-3">{step.title}</h3>
+            <p class="text-sm text-muted-foreground leading-relaxed max-w-md">{step.description}</p>
+          </div>
+          <div class:list={["min-w-0 w-full", i % 2 === 1 && "lg:order-1"]}>
+            <div class="rounded-xl border border-border bg-panel shadow-panel overflow-hidden">
+              <div class="flex h-10 items-center gap-2 border-b border-border bg-panel-raised px-4">
+                <span style={`color: ${step.color};`}><Icon name={step.icon} size={14} /></span>
+                <span class="text-xs font-medium text-foreground">{step.title}</span>
+              </div>
+              <div class="aspect-[16/10] bg-panel">
+                <img src={step.image} alt={step.title} class="w-full h-full object-cover object-top" loading="lazy" />
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

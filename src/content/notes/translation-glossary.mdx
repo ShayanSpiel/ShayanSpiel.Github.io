@@ -1,0 +1,136 @@
+---
+title: "The Dictionary That Fixed Translation"
+date: 2026-07-31 12:14:00 +0000
+description: "If your AI output is inconsistent, the reflex is to blame the model. Most of the time it
+  is not the model. It is the missing glossary — the contract between your product and the language
+  you are generating. The story of turning a failed translation pass into a living dictionary."
+permalink: /translation-glossary/
+category: journey
+tags:
+- Ops and Architecture
+- translation
+- glossary
+- i18n
+- ai-agents
+image: /assets/og/translation-glossary.png
+---
+
+import SectionHead from "@/components/posts/SectionHead.astro";
+import ProseCenter from "@/components/posts/ProseCenter.astro";
+import Card from "@/components/posts/Card.astro";
+import Pullquote from "@/components/posts/Pullquote.astro";
+import Takeaway from "@/components/posts/Takeaway.astro";
+import Source from "@/components/posts/Source.astro";
+import PostCta from "@/components/posts/PostCta.astro";
+
+
+
+<SectionHead tag='The failure' title='The Translation Was Really Bad' sub='If your AI output is inconsistent, the reflex is to blame the model. Most of the time it is not the model. It is the missing contract — the glossary — between your product and the language you are generating.' />
+
+<ProseCenter text='I gave the agent a translation job without a glossary. The output was technically Persian and emotionally wrong. Verb conjugations mismatched their subjects. Terms were invented instead of chosen. Sentences closed in ways Persian sentences cannot close. When I read it back, I asked the obvious question: <em>do we need to create a full dictionary for you to translate properly?</em>' />
+
+<Takeaway text='Without a dictionary, every translation pass is a first draft — including the one the model already forgot it wrote.' />
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='The insight' title='The Dictionary Is the Product Decision' sub='Terms like role, skill, workflow, and agent had to be locked before a single sentence was translated.' />
+
+  <ProseCenter text='The glossary is not a style guide. It is a contract between the product and the language. <code>Agent</code> is <code>ایجنت</code>. <code>Skill</code> is <code>مهارت</code>. <code>Role</code> is <code>نقش</code>. <code>Workflow</code> is <code>ورک‌فلو</code>. <code>Session</code> is <code>جلسه کاری</code>, never <code>سشن</code>. Once those are locked, the sentences can be rebuilt honestly.' />
+
+  <div class='grid grid-2'>
+    <Card title='Locked terms' desc='Agent, Skill, Role, Memory, Department, Worker. Each maps to exactly one Persian word with explicit rejects.' icon='check' />
+    <Card title='Explicit rejects' desc='Never کارمندا (not a word). Never کارگر for worker. Never سشن for session. Never سیستم‌های ایجنت — always ایجنتیک.' icon='error' />
+  </div>
+
+  <ProseCenter text='This is the meta-lesson for anyone running a business with AI: consistent output does not come from a better model. It comes from a better contract. The dictionary is that contract.' />
+
+  <Takeaway text='A glossary is a decision log. Every entry records not just the right word, but the wrong words you must never use.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='The method' title='Translate the Meaning, Not the Grammar' sub='English copy is context-free. Persian needs the context to be meaningful.' />
+
+  <ProseCenter text='The skill codified what my best human translation instincts already knew. English removes context; Persian demands it. A bare "I spent ten years building systems" is meaningless in Persian — systems for whom? The Persian translation has to make the referent explicit even when English leaves it implied.' />
+
+  <ProseCenter text='That is not a license to invent. It is a license to complete. Every added phrase must be supported by the source, and the result must stand alone — a Persian reader should never need the English to understand it.' />
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>01</div>
+      <div class='step-body'>
+        <strong>Recover the meaning</strong>
+        What is the source really saying? What context does Persian need that English omits?
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>02</div>
+      <div class='step-body'>
+        <strong>Define the message</strong>
+        Write the meaning plainly before translating anything.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>03</div>
+      <div class='step-body'>
+        <strong>Render it in Persian</strong>
+        Now translate the message, not the grammar. Verbs before nouns, outcome before architecture.
+      </div>
+    </div>
+  </div>
+
+  <Takeaway text='If a Persian reader has to reverse-translate your sentence to understand it, rewrite it.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='The rules' title='Plural Verbs, Concretely' sub='The mechanical rules that catch the most embarrassing errors.' />
+
+  <ProseCenter text='Persian subject-verb agreement was the biggest recurring bug. <code>ایجنت‌ها چی فراهم می‌کنه</code> is wrong — plural subjects take plural verbs. The skill now mandates it: skills provide, agents execute, evals run. Every plural subject gets a plural verb, even when the English treats a product name as singular.' />
+
+  <div class='grid grid-2'>
+    <Card title='Plural subjects, plural verbs' desc='ایجنت‌ها ... می‌کنن. مهارت‌ها ... می‌کنن. ارزیابی‌ها ... می‌کنن. Matches Persian grammar, not English.' icon='user-check' />
+    <Card title='Outcome before architecture' desc='If a run fails, the message says work is safe and what to do next — not that the infrastructure is resumable.' icon='shield' />
+  </div>
+
+  <Pullquote quote='Good translation sounds like a smart Iranian founder speaking to another intelligent person. Anything else gets rejected.' />
+
+  <ProseCenter text='The quality test is brutal on purpose. Does it sound like something a founder would actually say? Would it make sense without the English? Is every word doing work? If any answer is no, the translation is rewritten.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='Apply it' title='Build the Dictionary First' sub='Before you generate a single word with AI.' />
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>1</div>
+      <div class='step-body'>
+        <strong>Lock the nouns.</strong>
+        Every product object — role, skill, workflow, memory, agent — gets exactly one term and a list of rejected alternatives.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>2</div>
+      <div class='step-body'>
+        <strong>Write the grammar rules.</strong>
+        Plural agreement, verb-first construction, context completion. Codify the mechanical rules so they are enforced, not hoped for.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>3</div>
+      <div class='step-body'>
+        <strong>Test against reality.</strong>
+        Read every output as a native user. If it sounds generated, it is rejected. The dictionary makes that rejection reproducible.
+      </div>
+    </div>
+  </div>
+
+  <Takeaway text='AI fails without a glossary because generation is a decision, not a rendering. The dictionary is the decision.' />
+</section>
+
+<PostCta takeaway='The dictionary fixed what the model could not.' echo='Locked terms, explicit rejects, and a quality test that rejects translated-sounding Persian. This is how the whole site speaks one language.' btnText='Read about the RTL design system' btnHref='/notes/rtl-design-system/' />

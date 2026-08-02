@@ -1,0 +1,29 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ShowcaseNav from "../components/showcase/ShowcaseNav.astro";
+import ShowcaseHero from "../components/showcase/ShowcaseHero.astro";
+import ShowcaseHowItWorks from "../components/showcase/ShowcaseHowItWorks.astro";
+import ShowcaseDirectorMode from "../components/showcase/ShowcaseDirectorMode.astro";
+import ShowcaseFeatures from "../components/showcase/ShowcaseFeatures.astro";
+import ShowcaseWaitlistCTA from "../components/showcase/ShowcaseWaitlistCTA.astro";
+import Footer from "../components/Footer.astro";
+import { type Locale, t } from "../i18n/translations";
+
+export interface Props {
+  locale?: Locale;
+}
+
+const { locale = "en" } = Astro.props;
+const title = t(locale, "waitlist.title");
+const description = t(locale, "waitlist.desc");
+---
+
+<BaseLayout title={title} description={description} locale={locale}>
+  <ShowcaseNav slot="nav" locale={locale} />
+  <ShowcaseHero locale={locale} />
+  <ShowcaseHowItWorks locale={locale} />
+  <ShowcaseDirectorMode locale={locale} />
+  <ShowcaseFeatures locale={locale} />
+  <ShowcaseWaitlistCTA locale={locale} />
+  <Footer slot="footer" showThemeToggle locale={locale} />
+</BaseLayout>

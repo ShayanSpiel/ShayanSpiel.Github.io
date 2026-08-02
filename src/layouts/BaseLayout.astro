@@ -1,0 +1,404 @@
+---
+import "../styles/global.css";
+import "../assets/fonts/fonts.css";
+import "boxicons/css/boxicons.min.css";
+import { SITE, AUTHOR, SEO, ANALYTICS, SOCIAL } from "../config";
+import { type Locale, t } from "../i18n/translations";
+
+export interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+  image?: string;
+  ogType?: "website" | "article";
+  publishedTime?: string;
+  modifiedTime?: string;
+  tags?: string[];
+  robots?: string;
+  locale?: Locale;
+}
+
+const {
+  title,
+  description,
+  canonical = Astro.url.href,
+  image = SEO.defaultImage,
+  ogType = "website",
+  publishedTime,
+  modifiedTime,
+  tags = [],
+  robots = SEO.robots,
+  locale = SITE.locale as Locale,
+} = Astro.props;
+
+const pageTitle = title.includes(SITE.name) ? title : `${title} — ${SITE.name}`;
+const imageUrl = image.startsWith("http") ? image : `${SITE.url}${image}`;
+const dir = locale === "fa" ? "rtl" : "ltr";
+const lang = locale === "fa" ? "fa" : "en";
+---
+
+<!doctype html>
+<html lang={lang} dir={dir} data-theme={SITE.defaultTheme}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content={SITE.themeColor} />
+    <meta name="color-scheme" content={SITE.colorScheme} />
+    <meta name="robots" content={robots} />
+    <link rel="author" href="/humans.txt" />
+
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:width" content={SEO.ogImageWidth} />
+    <meta property="og:image:height" content={SEO.ogImageHeight} />
+    <meta property="og:locale" content={lang === "fa" ? "fa_IR" : "en_US"} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content={AUTHOR.handle} />
+    <meta name="twitter:creator" content={AUTHOR.handle} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageUrl} />
+
+    {ogType === "article" && publishedTime && <meta property="article:published_time" content={publishedTime} />}
+    {ogType === "article" && modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
+    {ogType === "article" && <meta property="article:author" content={AUTHOR.name} />}
+    {tags.map(tag => <meta property="article:tag" content={tag} />)}
+
+    <link rel="icon" type="image/svg+xml" href="/assets/favicons/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicons/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicons/favicon-16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicons/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="alternate" type="application/rss+xml" title={`${SITE.name} RSS`} href="/feed.xml" />
+
+    <!-- Preload critical fonts to prevent FOUT -->
+    <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/outfit-latin.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/IRANSansXVF.woff2" crossorigin />
+
+    <!-- hreflang alternates for i18n SEO -->
+    {(() => {
+      const path = Astro.url.pathname;
+      const enPath = locale === "fa" ? path.replace(/^\/fa/, "") || "/" : path;
+      const faPath = locale === "fa" ? path : `/fa${path}`;
+      return (
+        <>
+          <link rel="alternate" hreflang="en" href={`${SITE.url}${enPath}`} />
+          <link rel="alternate" hreflang="fa" href={`${SITE.url}${faPath}`} />
+          <link rel="alternate" hreflang="x-default" href={`${SITE.url}${enPath}`} />
+        </>
+      );
+    })()}
+
+    <link rel="preload" as="image" href="/assets/avatars/avatar.jpg" fetchpriority="low" />
+
+    <!-- Google Search Console verification -->
+    <meta name="google-site-verification" content={ANALYTICS.googleSearchConsoleVerification} />
+
+    <script is:inline>
+      (function(){
+        try{
+          var t=localStorage.getItem('spielos.theme');
+          if(t){document.documentElement.dataset.theme=t;}
+          else{document.documentElement.dataset.theme='gruvbox-dark';}
+        }catch(e){document.documentElement.dataset.theme='gruvbox-dark';}
+      })();
+    </script>
+
+    <!-- PostHog stub: creates window.posthog array interface and auto-loads library -->
+    <script is:inline define:vars={{ phKey: ANALYTICS.posthogApiKey, phHost: ANALYTICS.posthogApiHost }}>
+      !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("head")[0]).appendChild(p);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+    </script>
+
+    <!-- GA4: queue commands before gtag.js loads -->
+    <script is:inline define:vars={{ gaId: ANALYTICS.googleAnalyticsId, gaDebug: ANALYTICS.debug }}>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', gaId, {
+        send_page_view: true,
+        cookie_flags: 'SameSite=None;Secure',
+        debug_mode: gaDebug
+      });
+    </script>
+
+    <!-- Organization schema: global brand identity for every page -->
+    <script is:inline type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "@id": `${SITE.url}/#organization`,
+      name: SITE.name,
+      url: SITE.url,
+      logo: {
+        "@type": "ImageObject",
+        url: `${SITE.url}/assets/logos/primary-transparent.svg`,
+        width: 512,
+        height: 512,
+      },
+      founder: {
+        "@type": "Person",
+        name: AUTHOR.name,
+        url: `${SITE.url}/founder/`,
+      },
+      sameAs: [SOCIAL.x, SOCIAL.linkedin, SOCIAL.github],
+      description: SITE.description,
+    })} />
+  </head>
+  <body class="bg-background text-foreground antialiased">
+    <a href="#main-content" class="sr-only skip-link">{t(locale, "common.skipToContent")}</a>
+    <slot name="nav" />
+    <main id="main-content">
+      <slot />
+    </main>
+    <slot name="footer" />
+
+    <script>
+      import AOS from "aos";
+      AOS.init({ duration: 550, easing: "ease-out-cubic", once: true, offset: 60 });
+      AOS.refresh();
+
+      // Reveal-fallback: if an animated element is already in the viewport but
+      // AOS never fired (e.g. observer flakiness), force it visible so no
+      // section can ever stay stuck at opacity 0.
+      function revealStuck() {
+        document.querySelectorAll("[data-aos]").forEach(function (el) {
+          if (!el.classList.contains("aos-animate")) {
+            var rect = el.getBoundingClientRect();
+            var vh = window.innerHeight || document.documentElement.clientHeight;
+            if (rect.top < vh && rect.bottom > 0) {
+              el.classList.add("aos-animate");
+            }
+          }
+        });
+      }
+      window.addEventListener("load", revealStuck);
+      window.addEventListener("scroll", revealStuck, { passive: true });
+    </script>
+
+    <!-- Deferred: load gtag.js + initialize PostHog -->
+    <script is:inline define:vars={{ gaId: ANALYTICS.googleAnalyticsId, phKey: ANALYTICS.posthogApiKey, phHost: ANALYTICS.posthogApiHost }}>
+      (function(){
+        function loadAnalytics(){
+          /* Load GA4 via gtag.js — head script already queued config into dataLayer */
+          var s=document.createElement('script');
+          s.async=1;
+          s.src='https://www.googletagmanager.com/gtag/js?id='+gaId;
+          document.head.appendChild(s);
+          var tries = 0;
+          function initPostHog(){
+            if(typeof posthog!=='undefined' && typeof posthog.init==='function'){
+              posthog.init(phKey,{
+                api_host: phHost,
+                person_profiles: 'always',
+                disable_session_recording: true
+              });
+            }else{
+              tries++;
+              if(tries < 50){setTimeout(initPostHog,100);}
+            }
+          }
+          setTimeout(initPostHog, 500);
+        }
+        'requestIdleCallback' in window
+          ? requestIdleCallback(loadAnalytics, {timeout: 2000})
+          : setTimeout(loadAnalytics, 2000);
+      })();
+    </script>
+
+    <!-- Event tracking: CTA clicks, outbound links, scroll depth, form submits -->
+    <script is:inline>
+      (function(){
+        'use strict';
+
+        function track(eventName, params){
+          params = params || {};
+          if(typeof gtag === 'function'){ gtag('event', eventName, params); }
+          if(typeof posthog !== 'undefined' && posthog && typeof posthog.capture === 'function'){
+            posthog.capture(eventName, params);
+          }
+        }
+
+        function getPage(){
+          return window.location.pathname + window.location.search;
+        }
+
+        function getDevice(){
+          var w = window.innerWidth;
+          if(w < 768) return 'mobile';
+          if(w < 1024) return 'tablet';
+          return 'desktop';
+        }
+
+        function getLocale(){
+          return document.documentElement.lang || 'en';
+        }
+
+        /* ---- Waitlist form submission tracking ---- */
+        document.addEventListener('submit', function(e){
+          var form = e.target;
+          if(form && form.closest && form.closest('.showcase-waitlist-form')){
+            var f = form.closest('.showcase-waitlist-form').querySelector('form') || form;
+            var emailInput = f.querySelector('input[name="email"]');
+            var email = emailInput ? emailInput.value.trim() : '';
+            track('waitlist_form_submit', {
+              page: getPage(),
+              device: getDevice(),
+              locale: getLocale(),
+              email_provided: !!email
+            });
+          }
+        }, true);
+
+        /* Waitlist form success / error via MutationObserver */
+        function observeWaitlistResult(){
+          var successEl = document.querySelector('.showcase-form-success');
+          var errorEl = document.querySelector('.showcase-form-error');
+          if(!successEl && !errorEl) return;
+
+          var seenSuccess = false, seenError = false;
+          var observer = new MutationObserver(function(){
+            if(successEl && !seenSuccess &&
+               !successEl.classList.contains('hidden') &&
+               successEl.classList.contains('flex')){
+              seenSuccess = true;
+              track('waitlist_form_success', {
+                page: getPage(), device: getDevice(), locale: getLocale()
+              });
+            }
+            if(errorEl && !seenError &&
+               !errorEl.classList.contains('hidden') &&
+               errorEl.classList.contains('flex')){
+              seenError = true;
+              var errorText = errorEl.querySelector('.showcase-form-error-text');
+              track('waitlist_form_error', {
+                page: getPage(),
+                device: getDevice(),
+                locale: getLocale(),
+                error_message: errorText ? errorText.textContent.trim() : ''
+              });
+            }
+          });
+          if(successEl) observer.observe(successEl, { attributes: true, attributeFilter: ['class'] });
+          if(errorEl) observer.observe(errorEl, { attributes: true, attributeFilter: ['class'] });
+        }
+
+        /* ---- CTA clicked (links to /waitlist/ and primary buttons) ---- */
+        document.addEventListener('click', function(e){
+          var el = e.target;
+          if(!el || !el.tagName) return;
+
+          var link = el.tagName === 'A' ? el : el.closest('a');
+          if(link){
+            var href = link.getAttribute('href') || '';
+            if(href.indexOf('/waitlist') !== -1 || href.indexOf('/fa/waitlist') !== -1){
+              track('cta_clicked', {
+                page: getPage(),
+                device: getDevice(),
+                locale: getLocale(),
+                cta_type: 'waitlist',
+                link_text: (link.textContent || '').trim().substring(0, 100)
+              });
+            }
+
+            /* Social icon clicks */
+            if(href.indexOf('x.com') !== -1 || href.indexOf('twitter.com') !== -1 ||
+               href.indexOf('linkedin.com') !== -1 || href.indexOf('github.com') !== -1){
+              track('social_clicked', {
+                page: getPage(),
+                device: getDevice(),
+                locale: getLocale(),
+                platform: href.indexOf('github') !== -1 ? 'github' :
+                          href.indexOf('linkedin') !== -1 ? 'linkedin' :
+                          href.indexOf('x.com') !== -1 ? 'x' : 'twitter',
+                url: href
+              });
+            }
+
+            /* Outbound link clicks */
+            try{
+              var u = new URL(href, window.location.href);
+              if(u.origin !== window.location.origin){
+                track('outbound_link', {
+                  page: getPage(),
+                  device: getDevice(),
+                  locale: getLocale(),
+                  url: href,
+                  link_text: (link.textContent || '').trim().substring(0, 100)
+                });
+              }
+            }catch(err){}
+          }
+
+          /* Primary action buttons */
+          var btn = el.tagName === 'BUTTON' ? el : el.closest('button');
+          if(btn){
+            var classes = btn.className || '';
+            if(classes.indexOf('bg-primary') !== -1){
+              track('cta_clicked', {
+                page: getPage(),
+                device: getDevice(),
+                locale: getLocale(),
+                cta_type: 'primary',
+                link_text: (btn.textContent || '').trim().substring(0, 100)
+              });
+            }
+          }
+        });
+
+        /* ---- Scroll depth tracking ---- */
+        (function(){
+          var thresholds = [25, 50, 75, 100];
+          var fired = {};
+          function checkScroll(){
+            var docHeight = Math.max(
+              document.body.scrollHeight || 0,
+              document.documentElement.scrollHeight || 0
+            );
+            var winHeight = window.innerHeight || document.documentElement.clientHeight;
+            if(docHeight <= winHeight) return;
+            var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            var percent = Math.round((scrollTop / (docHeight - winHeight)) * 100);
+            thresholds.forEach(function(t){
+              if(!fired[t] && percent >= t){
+                fired[t] = true;
+                track('scroll_depth', {
+                  page: getPage(),
+                  device: getDevice(),
+                  locale: getLocale(),
+                  depth_percent: t
+                });
+              }
+            });
+          }
+          window.addEventListener('scroll', checkScroll, { passive: true });
+          setTimeout(checkScroll, 1000);
+        })();
+
+        /* ---- Theme toggle tracking ---- */
+        document.addEventListener('click', function(e){
+          var btn = e.target.closest ? e.target.closest('#footer-theme-toggle') : null;
+          if(btn){
+            track('theme_toggled', {
+              page: getPage(), device: getDevice(), locale: getLocale()
+            });
+          }
+        });
+
+        /* ---- Initialize observers after DOM ready ---- */
+        if(document.readyState === 'loading'){
+          document.addEventListener('DOMContentLoaded', observeWaitlistResult);
+        }else{
+          observeWaitlistResult();
+        }
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,73 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+import FeatureNav from "../components/features/FeatureNav.astro";
+import { SITE } from "../config";
+import { type Locale, t } from "../i18n/translations";
+
+export interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  robots?: string;
+  locale?: Locale;
+}
+
+const { title, description, image, robots, locale = "en" } = Astro.props;
+const currentPath = Astro.url.pathname;
+
+/* Map route segments to breadcrumb labels via translations */
+const segmentLabel: Record<string, string> = {
+  "features": t(locale, "nav.features"),
+  "chat": t(locale, "features.chat.label"),
+  "director-mode": t(locale, "features.chat.directorMode.label"),
+  "direct-mode": t(locale, "features.chat.directMode.label"),
+  "context": t(locale, "features.context.label"),
+  "files": t(locale, "features.context.files.label"),
+  "strategy": t(locale, "features.context.strategy.label"),
+  "memory": t(locale, "features.context.memory.label"),
+  "harness": t(locale, "features.harness.label"),
+  "agents": t(locale, "features.harness.agents.label"),
+  "skills": t(locale, "features.harness.skills.label"),
+  "workflows": t(locale, "features.harness.workflows.label"),
+  "evals": t(locale, "features.harness.evals.label"),
+  "infrastructure": t(locale, "features.infrastructure.label"),
+  "providers": t(locale, "features.infrastructure.providers.label"),
+  "connections": t(locale, "features.infrastructure.connections.label"),
+};
+
+const pathSegments = currentPath.replace(/^\/fa/, "").split("/").filter(Boolean);
+const localePrefix = locale === "fa" ? "/fa" : "";
+
+let cumulativePath = "";
+const breadcrumbItems = pathSegments.map((seg) => {
+  cumulativePath += "/" + seg;
+  return {
+    "@type": "ListItem",
+    name: segmentLabel[seg] || seg,
+    item: `${SITE.url}${localePrefix}${cumulativePath}/`,
+  };
+});
+
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: SITE.url + (locale === "fa" ? "/fa" : "") },
+    ...breadcrumbItems.map((item, i) => ({ ...item, position: i + 2 })),
+  ],
+};
+---
+
+<BaseLayout title={title} description={description} image={image} robots={robots} locale={locale}>
+  <Nav slot="nav" locale={locale} />
+  <FeatureNav locale={locale} currentPath={currentPath} />
+  <div class="lg:ms-56">
+    <slot />
+  </div>
+  <div class="lg:ms-56">
+    <Footer showThemeToggle locale={locale} />
+  </div>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
+</BaseLayout>

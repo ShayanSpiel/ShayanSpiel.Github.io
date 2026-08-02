@@ -1,0 +1,156 @@
+---
+title: How I Rebuilt My Blog in 4 Hours With a Jekyll Automation Pipeline
+date: 2026-06-07 09:00:00 +0000
+description: A Jekyll blog automation pipeline that turns vault drafts into live posts
+  with one command. From empty demo to brand blog with 2 posts shipped the same night.
+permalink: /blog-rebuild-4h/
+category: journey
+tags:
+- Founder Distribution
+- building-in-public
+- jekyll
+- github-pages
+- content-engine
+image: /assets/og/blog-rebuild-4h.png
+---
+
+import SectionHead from "@/components/posts/SectionHead.astro";
+import ProseCenter from "@/components/posts/ProseCenter.astro";
+import Card from "@/components/posts/Card.astro";
+import Pullquote from "@/components/posts/Pullquote.astro";
+import Takeaway from "@/components/posts/Takeaway.astro";
+import Source from "@/components/posts/Source.astro";
+import PostCta from "@/components/posts/PostCta.astro";
+
+
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='The trap' title='The Blog Was a Demo, Not a Brand' sub='The blog existed for 6 months. The home page rendered fine. The about page said this is a Jekyll theme demo. The posts were placeholder text.' />
+
+  <ProseCenter text='The reason: I built the blog as a demo, not as a brand. The theme was elegant. The content was empty. I never wired the blog to the vault. I never wired the blog to the resume. I never wrote a publish script. The blog was a folder on a server. The vault was a folder on my laptop. The two folders did not know about each other.' />
+
+  <ProseCenter text='The asymmetry was embarrassing. The vault had 126 markdown files, 10 strategy pages, 30 concept pages, 8 entity pages, 1 corpus analysis. The blog had 1 page that said demo. The brain was full. The mouth was empty.' />
+
+  <div class='grid grid-2'>
+    <Card tag='The vault' title='Markdown files' desc='10 strategy pages, 30 concept pages, 8 entity pages, 1 corpus analysis. The brain was full. The mouth was empty.' icon='book' />
+    <Card tag='The blog' title='1 demo page' desc='Said this is a Jekyll theme demo. The asymmetry was embarrassing. The fix is the publish layer.' icon='circle-x' />
+  </div>
+
+  <Takeaway text='The fix is the publish layer. The publish layer is a script that takes a vault draft, transforms it for Jekyll, commits it, and pushes to GitHub Pages. One command. One URL. One published post.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='The constraint' title='CLI Mode, Broken Ruby, One Terminal' sub='The session that produced this rebuild was a CLI session.' />
+
+  <div class='grid grid-2'>
+    <Card tag='No GUI' title='CLI only' desc='Could not run Obsidian. Could not preview the site. Could not click publish in a CMS. The publish step had to be one bash command.' icon='terminal' />
+    <Card tag='No local Jekyll build' title='Broken Ruby' desc='System Ruby was 2.6. Gemfile.lock required bundler 4.0.12. bundle exec jekyll build failed before it started.' icon='circle-x' />
+    <Card tag='No GUI screenshots' title='Headless failed' desc='screencapture and chrome --headless both failed. The publish step had to work without them.' icon='circle-x' />
+    <Card tag='One shell' title='Testable in terminal' desc='The script takes a file path. Produces a live URL. The whole thing is testable in a terminal.' icon='check-square' />
+  </div>
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='The mechanism' title='The 4-File Pipeline' sub='Vault → queue → script → live URL. That is the whole thing.' />
+
+  ```
+content/queue/<draft>.md       (vault side, status: ready-to-publish)
+scripts/parse-frontmatter.py  (YAML → bash, helper)
+scripts/publish-blog.sh       (the pipeline: transform + copy + commit + push)
+~/ShayanSpiel.github.io/      (GH Pages side, _posts/, auto-builds on push)
+```
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>01</div>
+      <div class='step-body'>
+        <strong>User writes a draft</strong>
+        In content/queue/&lt;date&gt;-&lt;slug&gt;.md. The draft has status: ready-to-publish in the frontmatter.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>02</div>
+      <div class='step-body'>
+        <strong>User runs one command</strong>
+        bash scripts/publish-blog.sh &lt;draft-path&gt; --yes. The script takes over from here.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>03</div>
+      <div class='step-body'>
+        <strong>Script transforms frontmatter</strong>
+        Adds Jekyll fields (layout, date, author). Drops vault fields (status, standalone_test, pillar). Whitelist, not blacklist. Stable contract.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>04</div>
+      <div class='step-body'>
+        <strong>Script copies screenshots</strong>
+        Scans body for image references. Resolves paths. Copies to assets/uploads/&lt;date&gt;-&lt;slug&gt;/. Rewrites paths in the post.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>05</div>
+      <div class='step-body'>
+        <strong>Script commits and pushes</strong>
+        Stages the new post and uploads. Commits with a meaningful message. Pushes to origin main. GitHub Pages rebuilds. The post is live in ~30 seconds.
+      </div>
+    </div>
+  </div>
+
+  <Takeaway text='The whole flow is one command. The user runs the command, walks away, and the post is live. The script is the publish layer.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='By the numbers' title='The Result' sub='The rebuild shipped 4 deliverables in 4 hours. The brand hierarchy is now consistent.' />
+
+  <div class='grid grid-3'>
+    <Card tag='1' title='Home page rewrite' desc='index.md now has a hero, latest 5 posts, currently shipping, and a what this site is section. No more demo content.' icon='check-square' />
+    <Card tag='1' title='About page rewrite' desc='about.md now has the personal-brand story arc, the 5 offers with detail, and contact info. No more demo.' icon='check-square' />
+    <Card tag='2' title='Pillar posts' desc='This post + the prior post on the second-brain architecture. Both published the same night.' icon='check-square' />
+    <Card tag='15' title='Screenshots' desc='7 for the first pillar, 8 for this pillar. All 1600x1600 PNGs. All in assets/uploads/.' icon='image' />
+    <Card tag='4h' title='Total time' desc='From empty demo to brand blog. No GUI. No local Jekyll build. One command per post.' icon='zap' />
+    <Card tag='30s' title='Time to live' desc='From git push to live URL. GitHub Pages rebuilds. The post is public.' icon='zap' />
+  </div>
+
+  <ProseCenter text='The brand hierarchy is now consistent. The blog about-page mirrors the wiki shayanspiel page. Every surface points to the same person.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='The lesson' title='Publishing Is the Part No One Teaches' sub='Most blog advice is about writing. Most content-engine advice is about drafting. Nobody talks about the publish step.' />
+
+  <ProseCenter text='The publish step is the layer between I have a draft and the draft is live. The publish step is the friction. The publish step is the part that makes people not post. The fix is a script. The script takes a file path. The script does the rest.' />
+
+  <div class='grid grid-2'>
+    <Card tag='Without script' title='10 minutes of clicking' desc='Login to the CMS. Format the frontmatter. Copy screenshots to the right folder. Update the index. Commit. Push. Repeat. 10 minutes. Every. Single. Time.' icon='circle-x' />
+    <Card tag='With script' title='One command' desc='The script reads the draft. Transforms the frontmatter. Copies the screenshots. Stages the commit. Pushes. The post is live in 30 seconds. The user walks away.' icon='check-square' />
+  </div>
+
+  <Takeaway text='You can not post if you can not publish. You can not publish if the publish step is 10 minutes of clicking. The 10 minutes is the friction. The friction is the reason you do not post. The script is the friction-killer.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='Apply it' title='If You Have a Vault, Build the Script' sub='The script is 4 hours. The script is the publish layer of Session-as-Content Infrastructure.' />
+
+  <div class='grid grid-3'>
+    <Card tag='4' title='Files' desc='The whole pipeline is 4 files. The vault draft, the YAML helper, the publish script, the GH Pages destination. Nothing else.' icon='layer' />
+    <Card tag='4h' title='Build time' desc='The script took 4 hours to write. It saves 10 minutes per post. Break-even after 24 posts. The script is the leverage.' icon='zap' />
+    <Card tag='2' title='Posts in 1 night' desc='First night using the script: 2 posts shipped. The pipeline works end-to-end. The vault is now wired to the live site.' icon='check-square' />
+  </div>
+</section>
+
+<hr class='divider' />
+
+<PostCta takeaway='You can not post if you can not publish. The script is the friction-killer.' echo='4 files. 4 hours. One command. The vault is now wired to the blog. Clone the Spiel OS repo. Build the publish layer. Ship the same night.' btnText='Clone the SpielOS repo' btnHref='https://github.com/ShayanSpiel/SpielOS' />

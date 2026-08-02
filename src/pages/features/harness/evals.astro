@@ -1,0 +1,263 @@
+---
+import FeaturesLayout from "../../../layouts/FeaturesLayout.astro";
+import SectionHeader from "../../../components/sections/SectionHeader.astro";
+import FeatureHero from "../../../components/features/FeatureHero.astro";
+import FeatureCTA from "../../../components/features/FeatureCTA.astro";
+import { type Locale, t } from "../../../i18n/translations";
+import { SITE } from "../../../config";
+
+export interface Props {
+  locale?: Locale;
+}
+
+const { locale = "en" } = Astro.props;
+
+const steps = [
+  {
+    num: "01",
+    titleKey: "features.harness.evals.how.step1.title",
+    descKey: "features.harness.evals.how.step1.desc",
+  },
+  {
+    num: "02",
+    titleKey: "features.harness.evals.how.step2.title",
+    descKey: "features.harness.evals.how.step2.desc",
+  },
+  {
+    num: "03",
+    titleKey: "features.harness.evals.how.step3.title",
+    descKey: "features.harness.evals.how.step3.desc",
+  },
+  {
+    num: "04",
+    titleKey: "features.harness.evals.how.step4.title",
+    descKey: "features.harness.evals.how.step4.desc",
+  },
+];
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: t(locale, "features.harness.evals.pageTitle"),
+  description: t(locale, "features.harness.evals.pageDesc"),
+  url: SITE.url + "/features/harness/evals/",
+  isPartOf: {
+    "@type": "WebSite",
+    name: SITE.name,
+    url: SITE.url,
+  },
+  about: {
+    "@type": "SoftwareApplication",
+    name: SITE.name,
+    url: SITE.url,
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Web",
+  },
+};
+---
+
+<FeaturesLayout
+  title={t(locale, "features.harness.evals.pageTitle")}
+  description={t(locale, "features.harness.evals.pageDesc")}
+  image="/assets/og/features.png"
+  locale={locale}
+>
+  <FeatureHero
+    locale={locale}
+    breadcrumbs={[
+      { label: t(locale, "nav.features"), href: "/features/" },
+      { label: t(locale, "features.harness.label"), href: "/features/harness/" },
+      { label: t(locale, "features.harness.evals.label") },
+    ]}
+    label={t(locale, "features.harness.evals.label")}
+    title={t(locale, "features.harness.evals.hero.title")}
+    description={t(locale, "features.harness.evals.hero.desc")}
+  />
+
+  <!-- Real Eval Results UI Mockup -->
+  <section class="relative py-24 sm:py-32 overflow-hidden">
+    <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(var(--foreground) 1px, transparent 1px); background-size: 24px 24px;"></div>
+    <div class="relative mx-auto max-w-6xl px-6">
+      <div class="mx-auto max-w-4xl" data-aos="fade-up">
+        <div class="rounded-lg border border-border bg-panel overflow-hidden shadow-panel">
+          <!-- Window Header -->
+          <div class="flex items-center justify-between px-4 py-3 border-b border-border bg-panel-raised">
+            <div class="flex items-center gap-2">
+              <div class="h-3 w-3 rounded-full bg-destructive/60"></div>
+              <div class="h-3 w-3 rounded-full bg-warning/60"></div>
+              <div class="h-3 w-3 rounded-full bg-success/60"></div>
+            </div>
+            <span class="text-2xs text-muted-foreground font-mono">{t(locale, "features.harness.evals.mock.window")}</span>
+          </div>
+
+          <!-- Eval Results Content -->
+          <div class="p-4 space-y-3">
+            <!-- Overall Score -->
+            <div class="flex items-center gap-4 rounded-md border border-border bg-background p-4">
+              <div class="flex h-14 w-14 items-center justify-center rounded-md bg-success-soft">
+                <span class="text-xl font-bold text-success">85</span>
+              </div>
+              <div>
+                <span class="text-sm font-semibold text-foreground-strong">{t(locale, "features.harness.evals.mock.overall")}</span>
+                <p class="text-2xs text-muted-foreground">{t(locale, "features.harness.evals.mock.overallSub", { cases: 24, criteria: 3 })}</p>
+              </div>
+              <div class="ms-auto flex items-center gap-1">
+                <i class="bx bx-trending-up text-success icon-md"></i>
+                <span class="text-2xs text-success font-medium">{t(locale, "features.harness.evals.mock.delta")}</span>
+              </div>
+            </div>
+
+            <!-- Criteria Scores -->
+            <div class="grid grid-cols-2 gap-2">
+              <div class="rounded-md border border-border bg-background p-3">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="text-2xs font-medium text-foreground-strong">{t(locale, "features.harness.evals.mock.accuracy")}</span>
+                  <span class="text-2xs font-bold text-success">85%</span>
+                </div>
+                <div class="h-1.5 rounded-full bg-panel">
+                  <div class="h-1.5 rounded-full bg-success" style="width: 85%;"></div>
+                </div>
+                <span class="text-2xs text-muted-foreground mt-1 block">{t(locale, "features.harness.evals.mock.passedCount", { passed: 21, total: 24 })}</span>
+              </div>
+
+              <div class="rounded-md border border-border bg-background p-3">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="text-2xs font-medium text-foreground-strong">{t(locale, "features.harness.evals.mock.brandVoice")}</span>
+                  <span class="text-2xs font-bold text-success">82%</span>
+                </div>
+                <div class="h-1.5 rounded-full bg-panel">
+                  <div class="h-1.5 rounded-full bg-success" style="width: 82%;"></div>
+                </div>
+                <span class="text-2xs text-muted-foreground mt-1 block">{t(locale, "features.harness.evals.mock.passedCount", { passed: 20, total: 24 })}</span>
+              </div>
+
+              <div class="rounded-md border border-border bg-background p-3">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="text-2xs font-medium text-foreground-strong">{t(locale, "features.harness.evals.mock.completeness")}</span>
+                  <span class="text-2xs font-bold text-primary">84%</span>
+                </div>
+                <div class="h-1.5 rounded-full bg-panel">
+                  <div class="h-1.5 rounded-full bg-primary" style="width: 84%;"></div>
+                </div>
+                <span class="text-2xs text-muted-foreground mt-1 block">{t(locale, "features.harness.evals.mock.weighted", { value: 84 })}</span>
+              </div>
+
+              <div class="rounded-md border border-border bg-background p-3">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="text-2xs font-medium text-foreground-strong">{t(locale, "features.harness.evals.mock.safety")}</span>
+                  <span class="text-2xs font-bold text-warning">88%</span>
+                </div>
+                <div class="h-1.5 rounded-full bg-panel">
+                  <div class="h-1.5 rounded-full bg-warning" style="width: 88%;"></div>
+                </div>
+                <span class="text-2xs text-muted-foreground mt-1 block">{t(locale, "features.harness.evals.mock.falsePositives")}</span>
+              </div>
+            </div>
+
+            <!-- Failed Test Cases -->
+            <div class="rounded-md border border-border bg-background p-3">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-2xs font-medium text-foreground-strong">{t(locale, "features.harness.evals.mock.failedCases")}</span>
+                <span class="text-2xs text-muted-foreground">{t(locale, "features.harness.evals.mock.ofTotal", { failed: 3 })}</span>
+              </div>
+              <div class="space-y-1.5">
+                <div class="flex items-center gap-2 rounded-sm bg-panel px-2 py-1.5">
+                  <i class="bx bx-error text-destructive icon-xs"></i>
+                  <span class="text-2xs text-muted-foreground">{t(locale, "features.harness.evals.mock.case1")}</span>
+                  <span class="text-2xs text-destructive ms-auto font-mono">customer-safe-communication</span>
+                </div>
+                <div class="flex items-center gap-2 rounded-sm bg-panel px-2 py-1.5">
+                  <i class="bx bx-error text-destructive icon-xs"></i>
+                  <span class="text-2xs text-muted-foreground">{t(locale, "features.harness.evals.mock.case2")}</span>
+                  <span class="text-2xs text-destructive ms-auto font-mono">evidence-integrity</span>
+                </div>
+                <div class="flex items-center gap-2 rounded-sm bg-panel px-2 py-1.5">
+                  <i class="bx bx-time-five text-warning icon-xs"></i>
+                  <span class="text-2xs text-muted-foreground">{t(locale, "features.harness.evals.mock.case3")}</span>
+                  <span class="text-2xs text-warning ms-auto font-mono">operational-readiness</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative py-24 sm:py-32">
+    <div class="mx-auto max-w-6xl px-6">
+      <SectionHeader
+        label={t(locale, "features.harness.evals.problem.label")}
+        title={t(locale, "features.harness.evals.problem.title")}
+        description={t(locale, "features.harness.evals.problem.desc")}
+      />
+
+      <div class="mx-auto max-w-2xl" data-aos="fade-up">
+        <div class="rounded-md border border-border bg-panel p-5">
+          <div class="flex items-start gap-3">
+            <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-destructive-soft">
+              <i class="bx bx-error text-destructive icon-2xl"></i>
+            </div>
+            <div>
+              <h3 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, "features.harness.evals.problem.title")}</h3>
+              <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, "features.harness.evals.problem.desc")}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative py-24 sm:py-32 overflow-hidden">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="relative mx-auto max-w-6xl px-6">
+      <SectionHeader
+        title={t(locale, "features.harness.evals.what.title")}
+        description={t(locale, "features.harness.evals.what.desc")}
+      />
+
+      <div class="mx-auto max-w-3xl" data-aos="fade-up">
+        <div class="grid gap-4 sm:grid-cols-3">
+          <div class="rounded-md border border-border bg-panel p-5 text-center">
+            <span class="text-2xl font-bold text-foreground-strong font-mono">85%</span>
+            <p class="text-xs text-muted-foreground mt-1">{t(locale, "features.harness.evals.how.step1.title")}</p>
+          </div>
+          <div class="rounded-md border border-border bg-panel p-5 text-center">
+            <span class="text-2xl font-bold text-success font-mono">21/24</span>
+            <p class="text-xs text-muted-foreground mt-1">{t(locale, "features.harness.evals.how.step2.title")}</p>
+          </div>
+          <div class="rounded-md border border-border bg-panel p-5 text-center">
+            <span class="text-2xl font-bold text-primary font-mono">3</span>
+            <p class="text-xs text-muted-foreground mt-1">{t(locale, "features.harness.evals.how.step3.title")}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative py-24 sm:py-32">
+    <div class="mx-auto max-w-6xl px-6">
+      <SectionHeader
+        title={t(locale, "features.harness.evals.how.title")}
+      />
+
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4" data-aos="fade-up">
+        {steps.map((step) => (
+          <div class="rounded-md border border-border bg-panel p-5">
+            <span class="text-2xs font-semibold text-primary">{step.num}</span>
+            <h3 class="text-sm font-semibold text-foreground-strong mt-2 mb-1">{t(locale, step.titleKey)}</h3>
+            <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, step.descKey)}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <FeatureCTA
+    locale={locale}
+    title={t(locale, "features.harness.evals.hero.title")}
+    description={t(locale, "features.harness.evals.hero.desc")}
+  />
+
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+</FeaturesLayout>

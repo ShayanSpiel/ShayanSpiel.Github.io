@@ -1,0 +1,134 @@
+---
+title: "RTL at the Design-System Level"
+date: 2026-07-30 22:02:00 +0000
+description: "If you serve Persian speakers — or any second language — i18n is a system problem, not a
+  string problem. Fonts, direction, spacing, icons, and tokens all change. The story of making RTL
+  the default, not the exception."
+permalink: /rtl-design-system/
+category: journey
+tags:
+- Ops and Architecture
+- rtl
+- design-system
+- i18n
+- technical-founder
+image: /assets/og/rtl-design-system.png
+---
+
+import SectionHead from "@/components/posts/SectionHead.astro";
+import ProseCenter from "@/components/posts/ProseCenter.astro";
+import Card from "@/components/posts/Card.astro";
+import Pullquote from "@/components/posts/Pullquote.astro";
+import Takeaway from "@/components/posts/Takeaway.astro";
+import Source from "@/components/posts/Source.astro";
+import PostCta from "@/components/posts/PostCta.astro";
+
+
+
+<SectionHead tag='The mistake' title='RTL Is Not a Translation Problem' sub='If you serve Persian speakers — or any second language — i18n is a system problem, not a string problem. Most teams translate the strings and hope the layout survives. That is how you get a product that feels broken in your own market.' />
+
+<ProseCenter text='When I asked for Persian support on this site, I asked for it wrong at first. I said: add the language, flip the direction, use the right font. The result was a site where Persian pages existed but the design system did not. Breadcrumbs pointed the wrong way. Flex rows refused to mirror. Icons faced the wrong direction. It felt translated, not built.' />
+
+<Takeaway text='Translation is a content problem. RTL is a design-system problem. Fix the second or the first is invisible.' />
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='The font' title='IRANSansX: Not a Font, a Requirement' sub='Persian has visual density English does not. The font had to carry it.' />
+
+  <ProseCenter text='The site already ran Outfit for Latin and JetBrains Mono for code. Persian needed its own variable font, IRANSansX, loaded from local assets with a specific configuration: the DOTS axis set to 7.' />
+
+  <div class='grid grid-2'>
+    <Card title='Seven dots' desc='IRANSansX has multiple dot configurations. DOTS 7 matches how Persian is actually read and printed today.' icon='settings' />
+    <Card title='Weight mapping' desc='Persian headings need heavier weights to match Latin visual mass: h1 at 800, h2 at 700, h3 and below at 600, via [dir="rtl"] rules.' icon='slider' />
+  </div>
+
+  <ProseCenter text='The font was restricted to Arabic and Persian unicode ranges so it never competes with Outfit. Two fonts, zero overlap, one design system.' />
+
+  <Takeaway text='If the font is a bolt-on, the text will look like a bolt-on. Persian is denser; it needs the heavier axis.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='The layout' title='Direction Is a Token, Not a Hack' sub='Zero hardcoded ml/mr/pl/pr. Everything logical, everything mirrored.' />
+
+  <ProseCenter text='The audit rule was absolute: no physical utilities anywhere. No <code>ml</code>, no <code>mr</code>, no <code>pl</code>, no <code>pr</code>, no <code>left</code>, no <code>right</code>. Every margin and padding uses the logical variants — <code>ms</code>, <code>me</code>, <code>ps</code>, <code>pe</code> — so direction flips automatically with <code>dir="rtl"</code>.' />
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>01</div>
+      <div class='step-body'>
+        <strong>Logical utilities</strong>
+        <code>ms/me/ps/pe/start/end</code> everywhere. The same class works in both directions.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>02</div>
+      <div class='step-body'>
+        <strong>Nav centering</strong>
+        Absolute centering with <code>left-1/2 -translate-x-1/2</code> that survives direction changes.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>03</div>
+      <div class='step-body'>
+        <strong>Row reversal</strong>
+        <code>sm:flex-row</code> becomes row-reverse in RTL so justify-between lands correctly.
+      </div>
+    </div>
+  </div>
+
+  <Takeaway text='The day you hardcode a margin for one direction is the day you ship a second site. Logical properties are the only path.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='The details' title='The Audit That Found the Cracks' sub='Double-flips, unmirrored arrows, and code blocks that broke under bidi.' />
+
+  <ProseCenter text='A line-by-line audit across all pages found the bugs that live in the details. The nav had a double flip: <code>flex-row-reverse</code> plus <code>dir="rtl"</code> cancelling each other. The footer had the same bug. Slider arrows pointed the wrong way. Code blocks — which must always stay LTR — were getting mangled by bidirectional text.' />
+
+  <div class='grid grid-2'>
+    <Card title='Nav double-flip' desc='flex-row-reverse plus dir=rtl canceled out. Removed the manual flip; dir=rtl does the mirroring.' icon='error' />
+    <Card title='Code under bidi' desc='pre and code forced LTR so code stays readable inside a Persian page.' icon='code' />
+  </div>
+
+  <Pullquote quote='RTL done right is invisible. When it is wrong, every Persian visitor feels the site was built for someone else.' />
+
+  <ProseCenter text='The fixes were systematic, not guessed: every RTL-sensitive rule audited, every directional icon flipped with a shared <code>rtl-flip</code> class, every flex row verified in both directions. If you localize with AI, remember: the model can translate your strings, but it cannot redesign your layout. That part is yours.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='Apply it' title='Ship RTL the Right Way' sub='If you are localizing for the Iranian market, start at the system, not the strings.' />
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>1</div>
+      <div class='step-body'>
+        <strong>Design the font first.</strong>
+        Persian needs its own variable font with the correct dot mode and weight mapping. A Latin font stretched into Persian is a bug.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>2</div>
+      <div class='step-body'>
+        <strong>Ban physical utilities.</strong>
+        Grep for ml/mr/pl/pr/left/right and eliminate them. Logical properties are the contract.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>3</div>
+      <div class='step-body'>
+        <strong>Audit the details.</strong>
+        Nav, footer, arrows, code blocks, breadcrumbs. The layout bugs hide in the components you touch least.
+      </div>
+    </div>
+  </div>
+
+  <Takeaway text='Persian support is a design-system project with a translation deliverable. Build it that way.' />
+</section>
+
+<PostCta takeaway='The site does not support Persian. The design system does.' echo='A variable font, logical utilities, and an audit that found the double-flips. RTL is the default, not the exception.' btnText='See the bilingual architecture' btnHref='/notes/seo-from-architecture/' />

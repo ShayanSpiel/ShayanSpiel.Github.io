@@ -1,0 +1,134 @@
+---
+import SpielOSLogo from "./SpielOSLogo.astro";
+import { NAV_LINKS } from "../config";
+import { type Locale, t } from "../i18n/translations";
+import { localizePath } from "../i18n";
+
+export interface Props {
+  links?: { label: string; href: string }[];
+  cta?: { label: string; href: string };
+  locale?: Locale;
+}
+
+const { links, cta, locale = "en" } = Astro.props;
+
+const navLinks = links || NAV_LINKS.default.map(link => ({
+  href: localizePath(link.href, locale),
+  label: t(locale, `nav.${link.label.toLowerCase().replace(/\s+/g, '')}`) || link.label,
+}));
+const ctaLink = cta || { label: t(locale, "nav.joinWaitlist"), href: "/waitlist/" };
+---
+
+<nav
+  aria-label={t(locale, "common.navAria")}
+  id="site-nav"
+  class:list={[
+    "fixed top-0 left-0 right-0 z-50 border-b border-transparent",
+    "transition-[background-color,backdrop-filter,border-color,box-shadow] duration-300",
+    locale === "fa" ? "font-iransansx" : "",
+  ]}
+  data-scrolled="false"
+>
+  <div class="flex items-center justify-between px-6 lg:px-12 h-16">
+    <a href={localizePath("/", locale)} class="flex items-center gap-2.5 relative z-10 shrink-0" aria-label={t(locale, "common.homeAria")}>
+      <SpielOSLogo />
+    </a>
+
+    <div class="hidden md:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
+      {navLinks.map((link) => (
+        <a href={link.href} class="text-xs text-muted-foreground hover:text-foreground transition-colors">{link.label}</a>
+      ))}
+      <a
+        href={localizePath("/contact/", locale)}
+        class="flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-panel-raised transition-colors"
+        title={t(locale, "nav.contact")}
+        aria-label={t(locale, "nav.contact")}
+      >
+        <i class="bx bx-envelope icon-lg"></i>
+      </a>
+    </div>
+
+    <div class="flex items-center gap-3 relative z-10 shrink-0">
+      <a
+        href={localizePath(ctaLink.href, locale)}
+        class="hidden sm:inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-4 h-8 text-xs font-medium hover:brightness-110 active:brightness-95 transition-all"
+      >
+        {ctaLink.label}
+      </a>
+
+      <button
+        type="button"
+        class="md:hidden flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-panel-raised transition-colors"
+        id="nav-menu-toggle"
+        aria-label="Toggle menu"
+        aria-expanded="false"
+      >
+        <i class="bx bx-menu icon-2xl"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="hidden md:hidden" id="nav-mobile-menu">
+    <div class="px-6 pb-4 pt-2 border-t border-border space-y-1">
+      {navLinks.map((link) => (
+        <a href={link.href} class="block rounded-md px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-panel-raised transition-colors">{link.label}</a>
+      ))}
+      <a
+        href={localizePath(ctaLink.href, locale)}
+        class="block mt-2 rounded-md bg-primary text-primary-foreground px-3 py-2 text-sm text-center font-medium"
+      >
+        {ctaLink.label}
+      </a>
+    </div>
+  </div>
+</nav>
+<div class="h-16" />
+
+<script is:inline>
+(function() {
+  var nav = document.getElementById('site-nav');
+  var toggle = document.getElementById('nav-menu-toggle');
+  var menu = document.getElementById('nav-mobile-menu');
+
+  function updateNav() {
+    if (!nav) return;
+    var scrolled = window.scrollY > 20;
+    nav.setAttribute('data-scrolled', scrolled ? 'true' : 'false');
+  }
+
+  window.addEventListener('scroll', updateNav, { passive: true });
+  updateNav();
+
+  if (!toggle || !menu) return;
+
+  toggle.addEventListener('click', function() {
+    var expanded = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!expanded));
+    menu.classList.toggle('hidden');
+
+    var icon = toggle.querySelector('i');
+    if (icon) {
+      icon.className = expanded ? 'bx bx-menu' : 'bx bx-x';
+    }
+  });
+
+  menu.querySelectorAll('a').forEach(function(link) {
+    link.addEventListener('click', function() {
+      menu.classList.add('hidden');
+      toggle.setAttribute('aria-expanded', 'false');
+      var icon = toggle.querySelector('i');
+      if (icon) icon.className = 'bx bx-menu';
+    });
+  });
+})();
+</script>
+
+<style>
+  #site-nav[data-scrolled="true"] {
+    background-color: var(--background);
+    backdrop-filter: blur(24px) saturate(1.5);
+    -webkit-backdrop-filter: blur(24px) saturate(1.5);
+    border-bottom-color: var(--border);
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.04);
+  }
+</style>

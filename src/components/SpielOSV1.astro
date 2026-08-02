@@ -1,0 +1,605 @@
+---
+import SectionHeader from "./sections/SectionHeader.astro";
+import { type Locale, t } from "../i18n/translations";
+
+export interface Props {
+  locale?: Locale;
+}
+
+const { locale = "en" } = Astro.props;
+
+const L = locale;
+const cliCommand = t(L, "spielosV1.hero.cliCommand");
+const platforms = t(L, "spielosV1.buffer.platforms").split(", ").filter(Boolean);
+
+const faqItems = [
+  {
+    id: "faq-a-1",
+    icon: "bx-package",
+    question: t(L, "spielosV1.faq.q1"),
+    answers: [
+      t(L, "spielosV1.faq.a1.p1"),
+      t(L, "spielosV1.faq.a1.p2"),
+    ],
+    list: [
+      t(L, "spielosV1.faq.a1.i1"),
+      t(L, "spielosV1.faq.a1.i2"),
+      t(L, "spielosV1.faq.a1.i3"),
+      t(L, "spielosV1.faq.a1.i4"),
+      t(L, "spielosV1.faq.a1.i5"),
+    ],
+    tail: t(L, "spielosV1.faq.a1.p3"),
+  },
+  {
+    id: "faq-a-2",
+    icon: "bx-check-shield",
+    question: t(L, "spielosV1.faq.q2"),
+    answers: [t(L, "spielosV1.faq.a2.p1"), t(L, "spielosV1.faq.a2.p2")],
+    list: [],
+    tail: "",
+  },
+  {
+    id: "faq-a-3",
+    icon: "bx-link",
+    question: t(L, "spielosV1.faq.q3"),
+    answers: [t(L, "spielosV1.faq.a3.p1"), t(L, "spielosV1.faq.a3.p2"), t(L, "spielosV1.faq.a3.p3")],
+    list: [
+      t(L, "spielosV1.faq.a3.i1"),
+      t(L, "spielosV1.faq.a3.i2"),
+      t(L, "spielosV1.faq.a3.i3"),
+    ],
+    tail: t(L, "spielosV1.faq.a3.p4"),
+  },
+  {
+    id: "faq-a-4",
+    icon: "bx-time-five",
+    question: t(L, "spielosV1.faq.q4"),
+    answers: [t(L, "spielosV1.faq.a4.p1"), t(L, "spielosV1.faq.a4.p2")],
+    list: [t(L, "spielosV1.faq.a4.i1"), t(L, "spielosV1.faq.a4.i2")],
+    answers2: [t(L, "spielosV1.faq.a4.p3")],
+    list2: [
+      t(L, "spielosV1.faq.a4.i3"),
+      t(L, "spielosV1.faq.a4.i4"),
+      t(L, "spielosV1.faq.a4.i5"),
+    ],
+    tail: t(L, "spielosV1.faq.a4.p4"),
+  },
+];
+---
+
+<!-- Hero -->
+<section class="relative flex flex-col items-center justify-center overflow-hidden pt-14 pb-12 sm:pt-20 sm:pb-16">
+  <div class="absolute inset-0 opacity-[0.03] hero-grid"></div>
+  <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[720px] h-[460px] glow-blob opacity-15"></div>
+
+  <div class="relative z-10 mx-auto max-w-4xl px-6 text-center">
+    <div class="inline-flex items-center gap-2 rounded-full border border-border bg-panel-raised px-3 py-1 mb-8" data-aos="fade-up">
+      <i class="bx bx-history text-muted-foreground icon-base"></i>
+      <span class="text-2xs text-muted-foreground font-medium">{t(L, "spielosV1.hero.badge")}</span>
+    </div>
+
+    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground-strong tracking-tight leading-tightest" data-aos="fade-up">
+      {t(L, "spielosV1.hero.title1")} <span class="text-primary">{t(L, "spielosV1.hero.title2")}</span>
+    </h1>
+
+    <p class="mt-6 text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed" data-aos="fade-up">
+      {t(L, "spielosV1.hero.sub")}
+    </p>
+
+    <div class="mt-10 mx-auto max-w-xl" data-aos="fade-up">
+      <div
+        id="hero-cli"
+        class="flex items-center gap-2.5 rounded-md border border-border bg-panel-raised px-4 h-12 font-mono text-sm select-none cursor-pointer transition-colors hover:border-border-strong"
+        role="button"
+        tabindex="0"
+        aria-label={t(L, "spielosV1.hero.cliCopy")}
+      >
+        <span class="text-primary font-semibold">$</span>
+        <span class="text-foreground-strong truncate">{cliCommand}</span>
+        <button type="button" id="hero-btn" class="ml-auto flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-panel transition-colors" aria-label={t(L, "spielosV1.hero.cliCopy")}>
+          <i class="bx bx-copy icon-base" id="hero-icon"></i>
+        </button>
+      </div>
+    </div>
+
+    <p class="mt-4 text-2xs text-muted-foreground" data-aos="fade-up">{t(L, "spielosV1.hero.note")}</p>
+  </div>
+</section>
+
+<!-- Stats -->
+<section class="relative pb-16 sm:pb-20">
+  <div class="mx-auto max-w-5xl px-6">
+    <div class="grid grid-cols-3 gap-3 sm:gap-4" data-aos="fade-up">
+      <div class="rounded-md border border-border bg-panel p-4 sm:p-6 text-center">
+        <div class="text-2xl sm:text-3xl font-bold text-foreground-strong">{t(L, "spielosV1.stats.stat1.value")}</div>
+        <div class="mt-1 text-2xs sm:text-xs text-muted-foreground">{t(L, "spielosV1.stats.stat1.label")}</div>
+      </div>
+      <div class="rounded-md border border-border bg-panel p-4 sm:p-6 text-center">
+        <div class="text-2xl sm:text-3xl font-bold text-foreground-strong">{t(L, "spielosV1.stats.stat2.value")}</div>
+        <div class="mt-1 text-2xs sm:text-xs text-muted-foreground">{t(L, "spielosV1.stats.stat2.label")}</div>
+      </div>
+      <div class="rounded-md border border-border bg-panel p-4 sm:p-6 text-center">
+        <div class="text-2xl sm:text-3xl font-bold text-foreground-strong">{t(L, "spielosV1.stats.stat3.value")}</div>
+        <div class="mt-1 text-2xs sm:text-xs text-muted-foreground">{t(L, "spielosV1.stats.stat3.label")}</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Terminal -->
+<section class="relative py-24 sm:py-32 overflow-hidden">
+  <div class="absolute inset-0 bg-panel-deep/50"></div>
+  <div class="relative mx-auto max-w-3xl px-6">
+    <div class="text-center mb-10" data-aos="fade-up">
+      <p class="text-2xs font-semibold uppercase tracking-widest text-primary">{t(L, "spielosV1.terminal.tag")}</p>
+    </div>
+
+    <div id="terminal-window" class="rounded-xl border border-border bg-background-deep shadow-panel overflow-hidden" data-aos="fade-up">
+      <div class="flex items-center gap-2 border-b border-border px-4 h-10">
+        <span class="h-3 w-3 rounded-full bg-destructive/70"></span>
+        <span class="h-3 w-3 rounded-full bg-warning/70"></span>
+        <span class="h-3 w-3 rounded-full bg-success/70"></span>
+        <span class="ml-2 font-mono text-2xs text-muted-foreground">{t(L, "spielosV1.terminal.title")}</span>
+      </div>
+      <div id="term-body" class="p-4 sm:p-6 font-mono text-xs sm:text-sm leading-relaxed h-[340px] sm:h-[380px] overflow-y-auto"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Published -->
+<section class="relative py-24 sm:py-32">
+  <div class="mx-auto max-w-2xl px-6 text-center">
+    <h2 id="pub-transition" class="text-3xl sm:text-4xl font-bold text-foreground-strong tracking-tight" data-aos="fade-up">
+      {t(L, "spielosV1.publish.title")}
+    </h2>
+    <div id="x-post" class="x-post mt-10 text-start rounded-md border border-border bg-panel p-5 min-h-[140px] flex items-center justify-center">
+      <div id="x-embed-container" class="w-full flex items-center justify-center">
+        <i class="bx bx-loader bx-spin text-muted-foreground icon-xl"></i>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Platforms -->
+<section class="relative py-24 sm:py-32 overflow-hidden">
+  <div class="absolute inset-0 bg-panel-deep/50"></div>
+  <div class="relative mx-auto max-w-4xl px-6 text-center">
+    <p class="text-2xs font-semibold uppercase tracking-widest text-primary mb-8" data-aos="fade-up">{t(L, "spielosV1.buffer.tag")}</p>
+
+    <div class="flex flex-wrap items-center justify-center gap-2.5" data-aos="fade-up">
+      {platforms.map((platform) => (
+        <span class="inline-flex items-center rounded-md border border-border bg-panel px-3 h-8 text-xs font-medium text-foreground-strong hover:border-border-strong hover:bg-panel-raised transition-colors">{platform}</span>
+      ))}
+    </div>
+
+    <p class="mt-6 text-xs text-muted-foreground flex items-center justify-center gap-1.5" data-aos="fade-up">
+      <i class="bx bx-pulse text-primary icon-base"></i>
+      {t(L, "spielosV1.buffer.note")}
+    </p>
+  </div>
+</section>
+
+<!-- Support / second CLI -->
+<section class="relative py-24 sm:py-32">
+  <div class="mx-auto max-w-3xl px-6 text-center">
+    <h2 class="text-3xl sm:text-4xl font-bold text-foreground-strong tracking-tight" data-aos="fade-up">
+      {t(L, "spielosV1.support.title1")} <span class="text-primary">{t(L, "spielosV1.support.title2")}</span>
+    </h2>
+
+    <div class="mt-8 mx-auto max-w-xl" data-aos="fade-up">
+      <div
+        id="cli2"
+        class="flex items-center gap-2.5 rounded-md border border-border bg-panel-raised px-4 h-12 font-mono text-sm select-none cursor-pointer transition-colors hover:border-border-strong"
+        role="button"
+        tabindex="0"
+        aria-label={t(L, "spielosV1.hero.cliCopy")}
+      >
+        <span class="text-primary font-semibold">$</span>
+        <span class="text-foreground-strong truncate">{cliCommand}</span>
+        <button type="button" id="btn2" class="ml-auto flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-panel transition-colors" aria-label={t(L, "spielosV1.hero.cliCopy")}>
+          <i class="bx bx-copy icon-base" id="icon2"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing -->
+<section class="relative py-24 sm:py-32 overflow-hidden" id="features">
+  <div class="absolute inset-0 bg-panel-deep/50"></div>
+  <div class="relative mx-auto max-w-5xl px-6">
+    <SectionHeader
+      title={t(L, "spielosV1.pricing.title")}
+      description={t(L, "spielosV1.pricing.desc")}
+    />
+
+    <div class="grid sm:grid-cols-2 gap-4 max-w-3xl mx-auto" data-aos="fade-up">
+      <!-- Open Source / Self-Serve -->
+      <div class="rounded-md border border-border bg-panel p-6 sm:p-7 flex flex-col">
+        <span class="inline-flex items-center gap-1.5 self-start rounded-md bg-panel-raised px-2 py-0.5 text-2xs font-semibold text-foreground-muted">
+          <span class="h-1.5 w-1.5 rounded-full bg-success"></span>
+          {t(L, "spielosV1.pricing.card1.badge")}
+        </span>
+        <h3 class="mt-4 text-lg font-semibold text-foreground-strong">{t(L, "spielosV1.pricing.card1.title")}</h3>
+        <p class="mt-1 text-xs text-muted-foreground">{t(L, "spielosV1.pricing.card1.sub")}</p>
+        <ul class="mt-6 space-y-2.5 text-xs text-foreground flex-1">
+          {[
+            t(L, "spielosV1.pricing.card1.f1"),
+            t(L, "spielosV1.pricing.card1.f2"),
+            t(L, "spielosV1.pricing.card1.f3"),
+            t(L, "spielosV1.pricing.card1.f4"),
+            t(L, "spielosV1.pricing.card1.f5"),
+          ].map((feature) => (
+            <li class="flex items-start gap-2">
+              <i class="bx bx-check text-success icon-base mt-0.5"></i>
+              <span>{feature}</span>
+            </li>
+          ))}
+        </ul>
+        <a href="https://github.com/shayanspiel" target="_blank" rel="noopener noreferrer" class="mt-8 inline-flex items-center justify-center rounded-md border border-border bg-panel px-6 h-11 text-sm font-medium hover:bg-panel-raised hover:border-border-strong transition-all">
+          <i class="bx bxl-github icon-base mr-2"></i>
+          {t(L, "spielosV1.pricing.card1.cta")}
+        </a>
+      </div>
+
+      <!-- DFY White-Glove -->
+      <div class="relative rounded-md border border-primary/40 bg-panel p-6 sm:p-7 flex flex-col shadow-lg shadow-primary/10">
+        <span class="inline-flex items-center gap-1.5 self-start rounded-md bg-primary-soft px-2 py-0.5 text-2xs font-semibold text-primary">
+          <span class="h-1.5 w-1.5 rounded-full bg-primary"></span>
+          {t(L, "spielosV1.pricing.card2.badge")}
+        </span>
+        <div class="mt-4">
+          <span class="text-3xl font-bold text-foreground-strong">{t(L, "spielosV1.pricing.card2.price")}</span>
+        </div>
+        <p class="mt-1 text-xs text-muted-foreground">{t(L, "spielosV1.pricing.card2.sub")}</p>
+        <ul class="mt-6 space-y-2.5 text-xs text-foreground flex-1">
+          {[
+            { text: t(L, "spielosV1.pricing.card2.f1"), strong: true },
+            { text: t(L, "spielosV1.pricing.card2.f2"), strong: false },
+            { text: t(L, "spielosV1.pricing.card2.f3"), strong: false },
+            { text: t(L, "spielosV1.pricing.card2.f4"), strong: false },
+            { text: t(L, "spielosV1.pricing.card2.f5"), strong: false },
+          ].map((feature) => (
+            <li class="flex items-start gap-2">
+              <i class="bx bx-check text-primary icon-base mt-0.5"></i>
+              <span class:list={[feature.strong ? "font-semibold text-foreground-strong" : ""]}>{feature.text}</span>
+            </li>
+          ))}
+        </ul>
+        <a href="https://x.com/ShayanSpiel" target="_blank" rel="noopener noreferrer" class="mt-8 inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20">
+          {t(L, "spielosV1.pricing.card2.cta")}
+          <i class="bx bx-link-external icon-base ml-2"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="relative py-24 sm:py-32">
+  <div class="mx-auto max-w-2xl px-6">
+    <h2 class="text-3xl sm:text-4xl font-bold text-foreground-strong tracking-tight text-center mb-10" data-aos="fade-up">{t(L, "spielosV1.faq.title")}</h2>
+
+    <div class="space-y-3" data-aos="fade-up">
+      {faqItems.map((item) => (
+        <div class="faq-card rounded-md border border-border bg-panel overflow-hidden">
+          <button type="button" class="faq-q flex w-full items-center justify-between gap-3 px-5 py-4 text-start text-sm font-medium text-foreground-strong hover:bg-panel-raised transition-colors" aria-expanded="false" aria-controls={item.id}>
+            <span class="flex items-center gap-3">
+              <i class:list={[item.icon, "text-primary icon-lg"]}></i>
+              <span>{item.question}</span>
+            </span>
+            <i class="bx bx-chevron-down text-muted-foreground icon-lg faq-chevron transition-transform duration-200"></i>
+          </button>
+          <div class="faq-a hidden px-5 pb-5" id={item.id} role="region">
+            <div class="space-y-3 text-xs text-muted-foreground leading-relaxed border-t border-border pt-4">
+              {item.answers.map((p) => <p>{p}</p>)}
+              {item.list.length > 0 && (
+                <ul class="space-y-1.5">
+                  {item.list.map((li) => (
+                    <li class="flex items-start gap-2">
+                      <i class="bx bx-check text-success icon-base mt-0.5"></i>
+                      <span>{li}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {item.answers2 && item.answers2.map((p) => <p>{p}</p>)}
+              {item.list2 && item.list2.length > 0 && (
+                <ul class="space-y-1.5">
+                  {item.list2.map((li) => (
+                    <li class="flex items-start gap-2">
+                      <i class="bx bx-check text-success icon-base mt-0.5"></i>
+                      <span>{li}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {item.tail && <p>{item.tail}</p>}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<!-- Cycle command -->
+<section class="relative py-24 sm:py-32 overflow-hidden">
+  <div class="absolute inset-0 bg-panel-deep/50"></div>
+  <div class="relative mx-auto max-w-3xl px-6 text-center">
+    <p class="text-2xs font-semibold uppercase tracking-widest text-primary" data-aos="fade-up">{t(L, "spielosV1.cycle.label")}</p>
+    <div class="mt-6 font-mono text-3xl sm:text-5xl font-bold text-foreground-strong tracking-tight" data-aos="fade-up">
+      {t(L, "spielosV1.cycle.command")}
+      <span class="text-primary inline-block" id="cycle-word">[Topic]</span>
+    </div>
+    <p class="mt-4 text-sm text-muted-foreground" data-aos="fade-up">{t(L, "spielosV1.cycle.time")}</p>
+  </div>
+</section>
+
+<!-- DFY CTA -->
+<section class="relative py-24 sm:py-32" id="cta">
+  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] glow-blob opacity-10"></div>
+  <div class="relative mx-auto max-w-3xl px-6 text-center">
+    <h2 class="text-3xl sm:text-4xl font-bold text-foreground-strong tracking-tight leading-tightest" data-aos="fade-up">
+      {t(L, "spielosV1.cta.title1")}<br />
+      <span class="text-primary">{t(L, "spielosV1.cta.title2")}</span>
+    </h2>
+    <p class="mt-5 text-sm text-muted-foreground max-w-xl mx-auto leading-relaxed" data-aos="fade-up">{t(L, "spielosV1.cta.desc")}</p>
+    <a href="https://x.com/ShayanSpiel" target="_blank" rel="noopener noreferrer" class="mt-8 inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20" data-aos="fade-up">
+      {t(L, "spielosV1.cta.cta")}
+      <i class="bx bx-link-external icon-base ml-2"></i>
+    </a>
+  </div>
+</section>
+
+<script is:inline define:vars={{ cliCommand }}>
+(function() {
+  var COPY_COMMAND = cliCommand || 'curl -fsSL https://spielos.xyz/install | bash';
+
+  /* ---- Copy to clipboard (both CLI boxes) ---- */
+  function setupCopy(boxId, btnId, iconId) {
+    var box = document.getElementById(boxId);
+    var btn = document.getElementById(btnId);
+    var icon = document.getElementById(iconId);
+    if (!box) return;
+    function cp() {
+      try { navigator.clipboard.writeText(COPY_COMMAND); }
+      catch(e) { var ta=document.createElement('textarea'); ta.value=COPY_COMMAND; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); }
+      if (icon) { icon.className = 'bx bx-check text-success icon-base'; }
+      setTimeout(function(){ if (icon) icon.className = 'bx bx-copy icon-base'; }, 2000);
+    }
+    box.addEventListener('click', cp);
+    if (btn) btn.addEventListener('click', function(e){ e.stopPropagation(); cp(); });
+  }
+  setupCopy('hero-cli', 'hero-btn', 'hero-icon');
+  setupCopy('cli2', 'btn2', 'icon2');
+
+  /* ---- Terminal animation ---- */
+  var termBody = document.getElementById('term-body');
+  var termStarted = false;
+
+  var steps = [
+    { type: 'loading', msg: '> Loading skills from .spiel/skills' },
+    { type: 'check', msg: 'LOADING SKILL/SCRIPTS' },
+    { type: 'loading', msg: '> Scanning session context' },
+    { type: 'check', msg: 'SESSION_CAPTURE' },
+    { type: 'loading', msg: '> Running ICP simulation' },
+    { type: 'check', msg: 'COMPILE (ICP World)' },
+    { type: 'loading', msg: '> Selecting format wizard' },
+    { type: 'check', msg: 'SELECT FORMAT_WIZARD' },
+    { type: 'loading', msg: '> Drafting content in your voice' },
+    { type: 'check', msg: 'DRAFTING' },
+    { type: 'loading', msg: '> Generating banner' },
+    { type: 'check', msg: 'BANNER_GENERATING' },
+    { type: 'sep' },
+    { type: 'text', msg: 'Publishing to:', cls: 'highlight' },
+    { type: 'text', msg: '  \u2713 X / Twitter', cls: 'white' },
+    { type: 'text', msg: '  \u2713 LinkedIn', cls: 'white' },
+    { type: 'text', msg: '  \u2713 Threads', cls: 'white' },
+    { type: 'text', msg: '  \u2713 Mastodon', cls: 'white' },
+    { type: 'text', msg: '  \u2713 Bluesky', cls: 'white' },
+    { type: 'text', msg: '  \u2713 Blog', cls: 'white' },
+    { type: 'sep' },
+    { type: 'check', msg: 'DONE \u2014 6 platforms published' },
+    { type: 'text', msg: '> Banner saved \u2192 ./banners/session-01.png', cls: 'dim' },
+    { type: 'text', msg: '> Draft saved \u2192 ./drafts/session-01.md', cls: 'dim' },
+    { type: 'text', msg: 'Session captured. Content created. Published.', cls: 'highlight' }
+  ];
+
+  function runTerminal() {
+    if (!termBody || termStarted) return;
+    termStarted = true;
+
+    var promptLine = document.createElement('div');
+    promptLine.className = 't-line show';
+    promptLine.innerHTML = '<span class="prompt">$</span> <span class="cmd-text" id="typed-cmd"></span><span class="cursor-blink"></span>';
+    termBody.appendChild(promptLine);
+
+    var cmdText = '/post';
+    var charIdx = 0;
+    function typeChar() {
+      if (charIdx < cmdText.length) {
+        var el = document.getElementById('typed-cmd');
+        if (el) el.textContent += cmdText[charIdx];
+        charIdx++;
+        setTimeout(typeChar, 80 + Math.random() * 40);
+      } else {
+        setTimeout(function() {
+          var cursor = promptLine.querySelector('.cursor-blink');
+          if (cursor) cursor.remove();
+          runSteps();
+        }, 400);
+      }
+    }
+    setTimeout(typeChar, 500);
+
+    function runSteps() {
+      var i = 0;
+      function nextStep() {
+        if (i >= steps.length) return;
+        var item = steps[i];
+        i++;
+
+        if (item.type === 'sep') {
+          var sep = document.createElement('div');
+          sep.className = 't-sep';
+          termBody.appendChild(sep);
+          requestAnimationFrame(function(){ sep.classList.add('show'); });
+          termBody.scrollTop = termBody.scrollHeight;
+          setTimeout(nextStep, 200);
+          return;
+        }
+
+        if (item.type === 'loading') {
+          var el = document.createElement('div');
+          el.className = 't-line';
+          el.innerHTML = '<span class="msg dim">' + item.msg + '</span><span class="dots"></span>';
+          termBody.appendChild(el);
+          requestAnimationFrame(function(){ el.classList.add('show'); });
+          termBody.scrollTop = termBody.scrollHeight;
+          var dotEl = el.querySelector('.dots');
+          var dots = 0;
+          var dotTimer = setInterval(function() {
+            dots++;
+            if (dotEl) dotEl.textContent = '.'.repeat(dots);
+            if (dots >= 3) {
+              clearInterval(dotTimer);
+              setTimeout(nextStep, 300);
+            }
+          }, 150);
+          return;
+        }
+
+        var el = document.createElement('div');
+        el.className = 't-line';
+        if (item.type === 'check') {
+          el.innerHTML = '<span class="check">\u2713</span> <span class="msg highlight">' + item.msg + '</span>';
+        } else {
+          el.innerHTML = '<span class="msg ' + item.cls + '">' + item.msg + '</span>';
+        }
+        termBody.appendChild(el);
+        requestAnimationFrame(function(){ el.classList.add('show'); });
+        termBody.scrollTop = termBody.scrollHeight;
+        setTimeout(nextStep, item.type === 'check' ? 150 : 200);
+      }
+      nextStep();
+    }
+  }
+
+  var termWindow = document.getElementById('terminal-window');
+  if (termWindow) {
+    var termObs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e){ if (e.isIntersecting) { runTerminal(); termObs.disconnect(); } });
+    }, { threshold: 0.3 });
+    termObs.observe(termWindow);
+  }
+
+  /* ---- X post embed ---- */
+  var pubTrans = document.getElementById('pub-transition');
+  var xPost = document.getElementById('x-post');
+  var container = document.getElementById('x-embed-container');
+  if (pubTrans && xPost && container) {
+    var pubObs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e){
+        if (e.isIntersecting) {
+          pubObs.disconnect();
+          var tweetUrl = 'https://x.com/ShayanSpiel/status/2067446487005466949';
+          var oembedUrl = 'https://publish.twitter.com/oembed?url=' + encodeURIComponent(tweetUrl) + '&theme=dark&omit_script=true';
+          fetch(oembedUrl)
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+              container.innerHTML = data.html;
+              var script = document.createElement('script');
+              script.src = 'https://platform.x.com/widgets.js';
+              script.async = true;
+              script.onload = function() { xPost.classList.add('show'); };
+              document.body.appendChild(script);
+              setTimeout(function() { xPost.classList.add('show'); }, 4000);
+            })
+            .catch(function() { container.innerHTML = ''; xPost.classList.add('show'); });
+        }
+      });
+    }, { threshold: 0.2 });
+    pubObs.observe(pubTrans);
+  }
+
+  /* ---- Cycle words ---- */
+  var cycleWords = ['[Topic]', '[Bug Fix]', '[Feature]', '[Architecture]', '[Lesson]'];
+  var cycleIdx = 0;
+  var cycleEl = document.getElementById('cycle-word');
+  if (cycleEl) {
+    setInterval(function() {
+      cycleEl.style.opacity = '0';
+      cycleEl.style.transform = 'translateY(-6px)';
+      setTimeout(function() {
+        cycleIdx = (cycleIdx + 1) % cycleWords.length;
+        cycleEl.textContent = cycleWords[cycleIdx];
+        cycleEl.style.opacity = '1';
+        cycleEl.style.transform = 'translateY(0)';
+      }, 250);
+    }, 2200);
+  }
+
+  /* ---- FAQ accordion ---- */
+  document.querySelectorAll('.faq-card').forEach(function(card) {
+    var btn = card.querySelector('.faq-q');
+    if (!btn) return;
+    btn.addEventListener('click', function() {
+      var wasOpen = card.classList.contains('open');
+      document.querySelectorAll('.faq-card.open').forEach(function(el){
+        el.classList.remove('open');
+        var a = el.querySelector('.faq-a');
+        if (a) a.classList.add('hidden');
+        var q = el.querySelector('.faq-q');
+        if (q) q.setAttribute('aria-expanded', 'false');
+      });
+      if (!wasOpen) {
+        card.classList.add('open');
+        var a = card.querySelector('.faq-a');
+        if (a) a.classList.remove('hidden');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+})();
+</script>
+
+<style is:global>
+  .x-post { opacity: 0; transform: translateY(8px); transition: opacity 0.4s ease, transform 0.4s ease; }
+  .x-post.show { opacity: 1; transform: translateY(0); }
+
+  .t-line { opacity: 0; transform: translateY(4px); transition: opacity 0.25s ease, transform 0.25s ease; margin-bottom: 4px; }
+  .t-line.show { opacity: 1; transform: translateY(0); }
+  .t-line .prompt { color: var(--primary); font-weight: 600; }
+  .t-line .cmd-text { color: var(--foreground-strong); }
+  .t-line .msg.dim { color: var(--muted-foreground); }
+  .t-line .msg.highlight { color: var(--primary); }
+  .t-line .msg.white { color: var(--foreground-strong); }
+  .t-line .check { color: var(--success); }
+  .t-line .dots { color: var(--muted-foreground); }
+  .t-sep { height: 1px; background: var(--border); margin: 10px 0; opacity: 0; transition: opacity 0.25s ease; }
+  .t-sep.show { opacity: 1; }
+
+  .cursor-blink {
+    display: inline-block;
+    width: 8px;
+    height: 1em;
+    vertical-align: text-bottom;
+    margin-left: 2px;
+    background: var(--foreground-strong);
+    animation: spiel-cursor-blink 1s step-end infinite;
+  }
+
+  @keyframes spiel-cursor-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  .faq-card.open .faq-chevron { transform: rotate(180deg); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .x-post { transition: none; }
+    .t-line { transition: none; }
+    .cursor-blink { animation: none; }
+  }
+</style>

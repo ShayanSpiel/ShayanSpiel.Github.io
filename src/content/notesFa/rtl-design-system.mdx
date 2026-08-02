@@ -1,0 +1,134 @@
+---
+title: "RTL در سطح سیستم طراحی"
+date: 2026-07-30 22:02:00 +0000
+description: "اگه برای فارسی‌زبان‌ها محصول می‌سازی — یا هر زبان دومی — i18n یه مسئله‌ی سیستمی‌ست، نه
+  مسئله‌ی ترجمه. فونت، جهت، فاصله‌ها، آیکون‌ها و توکن‌ها همگی عوض می‌شن. داستان تبدیل RTL به
+  پیش‌فرض، نه استثنا."
+permalink: /rtl-design-system/
+category: journey
+tags:
+- معماری و عملیات
+- rtl
+- سیستم-طراحی
+- i18n
+- فاندر-فنی
+image: /assets/og/rtl-design-system.png
+---
+
+import SectionHead from "@/components/posts/SectionHead.astro";
+import ProseCenter from "@/components/posts/ProseCenter.astro";
+import Card from "@/components/posts/Card.astro";
+import Pullquote from "@/components/posts/Pullquote.astro";
+import Takeaway from "@/components/posts/Takeaway.astro";
+import Source from "@/components/posts/Source.astro";
+import PostCta from "@/components/posts/PostCta.astro";
+
+
+
+<SectionHead tag='اشتباه' title='RTL مسئله‌ی ترجمه نیست' sub='اگه برای بازار فارسی محصول می‌سازی — یا هر زبان دومی — i18n یه مسئله‌ی سیستمی‌ست، نه مسئله‌ی استرینگ. بیشتر تیم‌ها استرینگ‌ها رو ترجمه می‌کنن و امیدوارن لایه‌آوت سر جاش بمونه. اینجوری‌ست که محصولت توی بازار خودت خراب به نظر می‌رسه.' />
+
+<ProseCenter text='وقتی پشتیبانی فارسی خواستم، اولش اشتباه خواستم. گفتم: زبان رو اضافه کن، جهت رو برعکس کن، فونت درست رو بذار. نتیجه سایتی بود که صفحه‌های فارسی داشت ولی سیستم طراحی نداشت. بریدکرامب‌ها جهت اشتباه می‌رفتن. ردیف‌های فلکس آینه نمی‌شدن. آیکون‌ها جهت اشتباه داشتن. حسش ترجمه‌بودن بود، نه ساخته‌شدن.' />
+
+<Takeaway text='ترجمه یه مشکل محتواست. RTL یه مشکل سیستم‌طراحیه. دومینو درست نکنی، اولی دیده نمی‌شه.' />
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='فونت' title='IRANSansX: فونت نیست، نیازمنده' sub='فارسی تراکم بصری‌ای داره که انگلیسی نداره. فونت باید حملش کنه.' />
+
+  <ProseCenter text='سایت از قبل Outfit برای لاتین و JetBrains Mono برای کد داشت. فارسی به فونت متغیر خودش نیاز داشت: IRANSansX، لودشده از فایل‌های محلی با کانفیگ خاص — اکسیس DOTS روی ۷.' />
+
+  <div class='grid grid-2'>
+    <Card title='هفت نقطه' desc='IRANSansX چند کانفیگ نقطه داره. DOTS ۷ هم‌خونه‌ست با اون‌جوری که فارسی امروز واقعاً خونده و چاپ می‌شه.' icon='settings' />
+    <Card title='نگاشت وزن' desc='تیترهای فارسی برای رسیدن به جرم بصری لاتین به وزن سنگین‌تر نیاز دارن: h1 با ۸۰۰، h2 با ۷۰۰، h3 و پایین‌تر با ۶۰۰، از طریق قواعد [dir="rtl"].' icon='slider' />
+  </div>
+
+  <ProseCenter text='فونت به یونیکد-رنج عربی و فارسی محدود شد تا هیچ‌وقت با Outfit رقابت نکنه. دو فونت، صفر هم‌پوشانی، یک سیستم طراحی.' />
+
+  <Takeaway text='اگه فونت چسب‌زده باشه، متن هم چسب‌زده به نظر میاد. فارسی متراکم‌تره؛ اکسیس سنگین‌تر می‌خواد.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='لایه‌آوت' title='جهت یه توکنه، نه یه هک' sub='صفر ml/mr/pl/pr هاردکد. همه‌چیز logical، همه‌چیز آینه‌شونده.' />
+
+  <ProseCenter text='قانون حسابرسی مطلق بود: هیچ utility فیزیکی هیچ‌جا. نه <code>ml</code>، نه <code>mr</code>، نه <code>pl</code>، نه <code>pr</code>، نه <code>left</code>، نه <code>right</code>. هر مارجین و پدینگ از نسخه‌های logical استفاده می‌کنه — <code>ms</code>، <code>me</code>، <code>ps</code>، <code>pe</code> — تا جهت با <code>dir="rtl"</code> خودکار عوض بشه.' />
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>۰۱</div>
+      <div class='step-body'>
+        <strong>utilityهای logical</strong>
+        <code>ms/me/ps/pe/start/end</code> همه‌جا. همون کلاس توی هر دو جهت کار می‌کنه.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>۰۲</div>
+      <div class='step-body'>
+        <strong>وسط‌چینی ناو</strong>
+        وسط‌چینی مطلق با <code>left-1/2 -translate-x-1/2</code> که تغییر جهت رو دوام می‌آره.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>۰۳</div>
+      <div class='step-body'>
+        <strong>برعکس‌بودن ردیف</strong>
+        <code>sm:flex-row</code> توی RTL به row-reverse تبدیل می‌شه تا justify-between درست جا بیفته.
+      </div>
+    </div>
+  </div>
+
+  <Takeaway text='روزی که یه مارجین برای یه جهت هاردکد کنی، همون روزه که یه سایت دوم منتشر کردی. propertyهای logical تنها مسیرن.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='جزئیات' title='حسابرسی‌ای که ترک‌ها رو پیدا کرد' sub='فلپ‌های دوبل، آیکون‌های آینه‌نشده و بلوک‌های کدی که زیر bidi خراب می‌شدن.' />
+
+  <ProseCenter text='حسابرسی خط‌به‌خط روی همه‌ی صفحات، باگ‌هایی رو پیدا کرد که توی جزئیات زندگی می‌کنن. ناو فلپ دوبل داشت: <code>flex-row-reverse</code> به‌علاوه‌ی <code>dir="rtl"</code> که همدیگه رو خنثی می‌کردن. فوتر همون باگ رو داشت. فلش‌های اسلایدر جهت اشتباه داشتن. بلوک‌های کد — که همیشه باید LTR بمونن — داشتند با متن دوجهته خراب می‌شدن.' />
+
+  <div class='grid grid-2'>
+    <Card title='فلپ دوبل ناو' desc='flex-row-reverse به‌علاوه‌ی dir=rtl همدیگه رو خنثی می‌کردن. فلپ دستی حذف شد؛ dir=rtl خودش آینه می‌کنه.' icon='error' />
+    <Card title='کد زیر bidi' desc='pre و code مجبور به LTR شدن تا کد توی صفحه‌ی فارسی خونا بمونه.' icon='code' />
+  </div>
+
+  <Pullquote quote='RTL درست، نامرئیه. وقتی غلط باشه، هر بازدیدکننده‌ی فارسی حس می‌کنه سایت برای یکی دیگه ساخته شده.' />
+
+  <ProseCenter text='راه‌حل‌ها سیستماتیک بودن، نه حدسی: هر قانون حساس به RTL حسابرسی شد، هر آیکون جهت‌دار با کلاس مشترک <code>rtl-flip</code> چرخید، هر ردیف فلکس توی هر دو جهت تایید شد. اگه با AI بومی‌سازی می‌کنی، یادت باشه: مدل می‌تونه استرینگ‌هات رو ترجمه کنه، ولی نمی‌تونه لایه‌آوتت رو از نو طراحی کنه. اون بخش کار خودته.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='به کار ببرش' title='RTL رو درست منتشر کن' sub='اگه برای بازار فارسی بومی‌سازی می‌کنی، از سیستم شروع کن، نه از استرینگ‌ها.' />
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>۱</div>
+      <div class='step-body'>
+        <strong>اول فونت رو طراحی کن.</strong>
+        فارسی به فونت متغیر خودش با حالت نقطه و نگاشت وزن درست نیاز داره. یه فونت لاتین که کش اومده توی فارسی، یه باگه.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>۲</div>
+      <div class='step-body'>
+        <strong>utilityهای فیزیکی رو ممنوع کن.</strong>
+        با grep دنبال ml/mr/pl/pr/left/right بگرد و حذفشون کن. propertyهای logical قراردادن.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>۳</div>
+      <div class='step-body'>
+        <strong>جزئیات رو حسابرسی کن.</strong>
+        ناو، فوتر، فلش‌ها، بلوک‌های کد، بریدکرامب. باگ‌های لایه‌آوت توی کامپوننت‌هایی قایم شدن که کمترین لمس رو دارن.
+      </div>
+    </div>
+  </div>
+
+  <Takeaway text='پشتیبانی فارسی یه پروژه‌ی سیستم‌طراحیه با یه خروجی ترجمه. همین‌جوری بسازش.' />
+</section>
+
+<PostCta takeaway='سایت از فارسی پشتیبانی نمی‌کنه؛ سیستم طراحی ازش پشتیبانی می‌کنه.' echo='یه فونت متغیر، utilityهای logical و یه حسابرسی که فلپ‌های دوبل رو پیدا کرد. RTL پیش‌فرضه، نه استثنا.' btnText='معماری دوزبانه رو ببین' btnHref='/fa/notes/seo-from-architecture/' />

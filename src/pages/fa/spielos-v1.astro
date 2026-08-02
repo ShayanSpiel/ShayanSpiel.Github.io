@@ -1,0 +1,13 @@
+---
+import Page from "../../layouts/Page.astro";
+import SpielOSV1 from "../../components/SpielOSV1.astro";
+import { t } from "../../i18n/translations";
+
+const locale = "en";
+const title = t(locale, "spielosV1.pageTitle");
+const description = t(locale, "spielosV1.pageDesc");
+---
+
+<Page title={title} description={description} image="/assets/og/SpielOS.png" locale={locale}>
+  <SpielOSV1 locale={locale} />
+</Page>

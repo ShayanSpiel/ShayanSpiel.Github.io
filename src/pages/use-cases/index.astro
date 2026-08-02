@@ -1,0 +1,68 @@
+---
+import Page from "../../layouts/Page.astro";
+import FeatureHero from "../../components/features/FeatureHero.astro";
+import FeatureCTA from "../../components/features/FeatureCTA.astro";
+import { type Locale, t } from "../../i18n/translations";
+import { SITE } from "../../config";
+
+export interface Props {
+  locale?: Locale;
+}
+
+const { locale = "en" } = Astro.props;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: t(locale, "useCases.pageTitle"),
+  description: t(locale, "useCases.pageDesc"),
+  url: SITE.url + "/use-cases/",
+  isPartOf: {
+    "@type": "WebSite",
+    name: SITE.name,
+    url: SITE.url,
+  },
+  about: {
+    "@type": "SoftwareApplication",
+    name: SITE.name,
+    url: SITE.url,
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Web",
+  },
+};
+---
+
+  <Page
+    title={t(locale, "useCases.pageTitle")}
+    description={t(locale, "useCases.pageDesc")}
+    image="/assets/og/use-cases.png"
+    locale={locale}
+    robots="noindex"
+  >
+  <FeatureHero
+    locale={locale}
+    breadcrumbs={[{ label: "Use Cases" }]}
+    title={t(locale, "useCases.hero.title")}
+    description={t(locale, "useCases.hero.desc")}
+  />
+
+  <section class="relative py-24 sm:py-32">
+    <div class="mx-auto max-w-3xl px-6">
+      <div class="rounded-md border border-border bg-panel p-8 text-center" data-aos="fade-up">
+        <div class="flex h-12 w-12 items-center justify-center rounded-md bg-primary-soft mx-auto mb-4">
+          <i class="bx bx-time-five text-primary icon-4xl"></i>
+        </div>
+        <h2 class="text-lg font-semibold text-foreground-strong mb-2">{t(locale, "useCases.placeholder.title")}</h2>
+        <p class="text-sm text-muted-foreground leading-relaxed max-w-lg mx-auto">{t(locale, "useCases.placeholder.desc")}</p>
+      </div>
+    </div>
+  </section>
+
+  <FeatureCTA
+    locale={locale}
+    title={t(locale, "useCases.hero.title")}
+    description={t(locale, "useCases.hero.desc")}
+  />
+
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+</Page>

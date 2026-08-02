@@ -1,0 +1,151 @@
+---
+title: "Gates Not Models"
+date: 2026-06-08 11:13:14 +0000
+description: "Why your AI agents produce garbage and how to fix it with validation gates.
+  A practical guide to building reliable content pipelines with evaluation-driven development."
+permalink: /gates-not-models/
+category: ai-agents
+tags:
+- Agents, Loops & Evals
+- ai-agents
+- content-engine
+- automation
+image: /assets/og/gates-not-models.png
+---
+
+import SectionHead from "@/components/posts/SectionHead.astro";
+import ProseCenter from "@/components/posts/ProseCenter.astro";
+import Card from "@/components/posts/Card.astro";
+import Pullquote from "@/components/posts/Pullquote.astro";
+import Takeaway from "@/components/posts/Takeaway.astro";
+import Source from "@/components/posts/Source.astro";
+import PostCta from "@/components/posts/PostCta.astro";
+
+
+
+<SectionHead tag='The trap' title='The Wrong Direction' sub='Every week there is a new AI writing tool. Better models. Smarter agents. More automation. The feeds get fuller of content that sounds like everyone else.' />
+
+<ProseCenter text='The assumption is linear: more AI capability leads to better output. It is intuitive. It is wrong. The problem is not that the AI is not smart enough. The problem is that the pipeline has no quality gates. The AI keeps generating. Nobody says stop.' />
+
+<Takeaway text='Volume without a gate is just noise at scale.' />
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='The proof' title='What I Learned the Hard Way' sub='A content pipeline that produced 120 drafts per week. Published almost all of them. Engagement collapsed.' />
+
+  <ProseCenter text='I built a content pipeline that produced 120 drafts per week. Top-of-the-line models. Beautiful prompts. Full automation. We published almost all of them. Engagement collapsed.' />
+
+  <ProseCenter text='Not because the writing was bad. Because there was no selection mechanism. Volume without a gate is just noise at scale.' />
+
+  <div class='grid grid-2'>
+    <Card title='120 drafts per week' desc='Top models, full automation. No selection. Engagement collapsed because there was no gate.' icon='file-text' num='120' variant='stat-shift' />
+    <Card title='Fewer, better drafts' desc='Built on state machines, not agents. Two LLM handoffs, two human checkpoints. The AI does the creative work, the human does the selection.' icon='check' />
+  </div>
+
+  <Takeaway text='The capability question is easy. The boundary question is everything.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='The shift' title='Automation Is About Boundaries' sub='A self-driving car does not work because it has the best sensor. It works because it has brakes that fire when the sensor says stop.' />
+
+  <ProseCenter text='Content automation works the same way.' />
+
+  <div class='grid grid-2'>
+    <Card title='Sensor' desc='Best models, best prompts. Volume is useful here. The creative layer generates options. Divergent work, exploration, drafts.' icon='cpu' />
+    <Card title='Brakes' desc='Hard constraints, no exceptions. No core insight? Cannot draft. No format chosen? Cannot draft. Banner missing? Cannot publish. Gates are stop signs.' icon='shield' />
+  </div>
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='The mechanism' title='The Handoff Pattern' sub='Every automated pipeline needs three layers, and they run in strict order.' />
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>01</div>
+      <div class='step-body'>
+        <strong>The creative layer</strong>
+        The AI does divergent work: extracting meanings from raw material, exploring angles, generating options. Volume is useful here.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>02</div>
+      <div class='step-body'>
+        <strong>The selection layer</strong>
+        A human picks one direction out of many. Taste lives here. In Spiel OS, this happens at exactly two checkpoints: format selection and publish decision.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>03</div>
+      <div class='step-body'>
+        <strong>The gate layer</strong>
+        The stop signs. Hard constraints that prevent the pipeline from advancing unless specific conditions are met. Each gate is a hard floor the pipeline cannot cross.
+      </div>
+    </div>
+  </div>
+
+  <Takeaway text='Most builders optimize Layer 1. They want better prompts, smarter models, more creative output. The leverage is in Layer 2 and Layer 3.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='By the numbers' title='30 Gates, Not 0' sub='Spiel OS is 30 gates wrapped around an LLM. Not because the LLM is weak. Because the gates keep the output human.' />
+
+  <div class='grid grid-2'>
+    <Card title='16 Mechanical gates' desc='Hard rules enforced by code. Char count, hook, audience, frontmatter, word repetition. No judgment. No negotiation. Pass or fail.' icon='settings' num='16' variant='stat-shift' />
+    <Card title='14 Creative gates' desc='LLM-judged checks. Voice match, insight density, format fit. Composite score must hit 0.85 or the draft does not enter the queue.' icon='lightbulb' num='14' variant='stat-shift' />
+  </div>
+
+  <Card title='30 Total stop signs' desc='Every gate is a floor the pipeline cannot cross. 100 drafts in, 0 published without selection. Volume is easy. Taste is the gate.' icon='shield' num='30' variant='stat-shift' />
+
+  <Takeaway text='A pipeline that generates 100 drafts and publishes none is more valuable than one that generates 100 and publishes 90.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='Why now' title='Taste Is the Last Differentiator' sub='Content has a quality problem. The barrier to entry dropped to zero. The only differentiator left is taste. And taste cannot be automated. It can be gated.' />
+
+  <ProseCenter text='The best content systems are bottlenecked by human judgment, not machine throughput. This is why I built the gate layer in Spiel OS: 30 checks total, 16 mechanical rules plus 14 creative gates. The engine is 30 gates wrapped around an LLM.' />
+
+  <ProseCenter text='Not because the LLM is weak. Because the gates are what keep the output human.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='Apply it' title='Start With the Stop Signs' sub='Before you write a single prompt, answer these three questions.' />
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>1</div>
+      <div class='step-body'>
+        <strong>Where does it hand off?</strong>
+        Where does the machine hand off to a human? Find the seam. Spiel OS has exactly two. Format selection. Publish decision.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>2</div>
+      <div class='step-body'>
+        <strong>What must exist before advancing?</strong>
+        What artifacts must exist before the pipeline advances? No core insight? Cannot draft. No format chosen? Cannot draft.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>3</div>
+      <div class='step-body'>
+        <strong>How is garbage caught?</strong>
+        What happens if the machine generates garbage? How is it caught? Build the catch before the generation. The catch is the gate.
+      </div>
+    </div>
+  </div>
+
+  <Takeaway text='Build those gates first. Then add the AI. The system that knows when to stop will outperform the system that never does.' />
+</section>
+
+<PostCta takeaway='If your system never stops, it is not automated. It is uncontrolled.' echo='Build the gates first. Then add the AI. Taste is the gate.' btnText='Clone the SpielOS repo' btnHref='https://github.com/ShayanSpiel/SpielOS' />

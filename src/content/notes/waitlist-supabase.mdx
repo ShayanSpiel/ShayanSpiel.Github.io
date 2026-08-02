@@ -1,0 +1,133 @@
+---
+title: "The Waitlist That Almost Didn't Work"
+date: 2026-08-01 16:06:00 +0000
+description: "You use AI to build fast. But the field that decides whether your launch has a market is
+  usually the least verified thing you own. The story of wiring a waitlist to an isolated Supabase
+  table with RLS, so the signups actually arrive."
+permalink: /waitlist-supabase/
+category: journey
+tags:
+- Ops and Architecture
+- waitlist
+- supabase
+- email-capture
+- building-in-public
+image: /assets/og/waitlist-supabase.png
+---
+
+import SectionHead from "@/components/posts/SectionHead.astro";
+import ProseCenter from "@/components/posts/ProseCenter.astro";
+import Card from "@/components/posts/Card.astro";
+import Pullquote from "@/components/posts/Pullquote.astro";
+import Takeaway from "@/components/posts/Takeaway.astro";
+import Source from "@/components/posts/Source.astro";
+import PostCta from "@/components/posts/PostCta.astro";
+
+
+
+<SectionHead tag='The problem' title='The Whole Funnel Is One Field' sub='You use AI to ship fast — pages, features, copy. But the field that decides whether your launch has a market is usually the least engineered thing you own. Mine was a form that accepted emails, with no way to prove they arrived.' />
+
+<ProseCenter text='Every business has a single make-or-break surface. For a pre-launch product it is the waitlist. For a service business it is the quote request or the booking. For this site it is one action: a qualified visitor enters an email. Everything else — the founder page, the notes, the features hub — exists to make that one field feel safe and worth filling.' />
+
+<ProseCenter text='You already use AI to generate the pages around the field. That is exactly why the field itself matters more: it is the one surface nobody can fake. My waitlist form was the least verified thing on the site. The warning and success messages were misaligned and untranslated, and the capture pointed at a third-party endpoint I could not query.' />
+
+<Takeaway text='If you cannot read the output of a funnel, you do not know the funnel works. You only know the button was clicked.' />
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='The fix' title='First the Messages, Then the Data' sub='Two separate problems: the UI state of the form, and the destination of the email. I fixed them in that order — presentation first, then a back end I could actually verify.' />
+
+  <ProseCenter text='The first pass was presentation. The warning and success messages lived as plain text floating next to inputs, misaligned, untranslated in Persian, and disconnected from the theme. They needed a proper wrapper: a styled box that sat in the same visual system as the rest of the form, aligned to the input field, with real color semantics.' />
+
+  <div class='grid grid-2'>
+    <Card title='Before' desc='Validation messages as loose text, wrong alignment, English-only, themeless. A broken state and a broken message about the state.' icon='error' />
+    <Card title='After' desc='Warning and success in a bordered wrapper with token-driven colors, aligned to the input, fully translated through the waitlist key namespace.' icon='check' />
+  </div>
+
+  <Takeaway text='The success message is part of the product. If it is not designed, the product is not designed.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='The data' title='An Isolated Table With Insert-Only Access' sub='The form needed to write emails, and nothing else. One table, one policy, one key.' />
+
+  <ProseCenter text='For the destination, the requirement was simple: an isolated table that only accepts new signups. Not a shared database, not a bucket of every event, not a form service I could not inspect. A single <code>waitlist_signups</code> table, RLS enabled, with an insert-only anon policy.' />
+
+  <ProseCenter text='That means anonymous visitors can insert a row and do nothing else — no select, no update, no delete. The publishable key is safe to ship in the client because the policy is what protects the data, not the key.' />
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>01</div>
+      <div class='step-body'>
+        <strong>The table</strong>
+        <code>waitlist_signups</code>, isolated. One purpose, one shape.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>02</div>
+      <div class='step-body'>
+        <strong>The policy</strong>
+        RLS enabled, insert-only for anonymous users. Reads are blocked.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>03</div>
+      <div class='step-body'>
+        <strong>The key</strong>
+        A publishable key in config, used client-side, safe because the policy does the guarding.
+      </div>
+    </div>
+  </div>
+
+  <Takeaway text='Security by policy, not by secrecy. If your client key must stay secret, your data is already exposed.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='Why it matters' title='A Funnel Is a Promise' sub='Every email in that table is a person who raised their hand during pre-launch. That list is the only asset that survives before revenue.' />
+
+  <ProseCenter text='When the form finally wrote to a table I could query, I did the unglamorous thing: I checked. A few test signups, a query against the table, rows present. For the first time I had proof the funnel was not silently leaking.' />
+
+  <ProseCenter text='If you want real results from AI, you run it like a team with a verifiable pipeline — not like a chat window you hope delivers. An unverified pipeline is a pipeline you do not own. The waitlist was the smallest funnel on the site and the one with the most at stake.' />
+
+  <Pullquote quote='A form is not a product until you can read its output. Before that, it is a hope.' />
+
+  <ProseCenter text='The form now sits on a landing page built around the real SpielOS architecture — roles, skills, context, and the harness — so the promise of the email matches the product it announces. That landing page is locale-aware: every label, state, and message routes through the translation layer, in both English and Persian.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='Apply it' title='Verify Your One Field' sub='Three checks before you launch anything that captures demand.' />
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>1</div>
+      <div class='step-body'>
+        <strong>Can you read the output?</strong>
+        Where do the leads go? Can you query it right now? If the answer is a dashboard you do not control, you are guessing.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>2</div>
+      <div class='step-body'>
+        <strong>Is every state designed?</strong>
+        Loading, error, success — every state is part of the interface. If success looks accidental, trust is accidental too.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>3</div>
+      <div class='step-body'>
+        <strong>Does it speak every language you serve?</strong>
+        If you serve two languages, the form speaks both. Untranslated form copy on a translated site is a loud signal that the site is abandoned.
+      </div>
+    </div>
+  </div>
+
+  <Takeaway text='The field that captures demand is a product. Build it like the whole business depends on it, because it does.' />
+</section>
+
+<PostCta takeaway='The waitlist form finally writes to a table I can read.' echo='One table, one insert-only policy, one key. If you cannot verify the funnel, you do not have a funnel.' btnText='Join the waitlist' btnHref='/waitlist/' />

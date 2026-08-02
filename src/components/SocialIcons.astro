@@ -1,0 +1,32 @@
+---
+import { SOCIAL, AUTHOR } from "../config";
+import { ICONS } from "../lib/icons";
+
+export interface Props {
+  size?: "sm" | "md";
+  show?: ("x" | "linkedin" | "github" | "rss" | "email")[];
+}
+
+const { size = "sm", show = ["x", "linkedin", "github"] } = Astro.props;
+const iconSize = size === "sm" ? "var(--font-size-base)" : "var(--font-size-lg)";
+---
+
+{show.includes("x") && (
+  <a href={SOCIAL.x} target="_blank" rel="noopener noreferrer me" class="text-muted-foreground hover:text-foreground transition-colors" aria-label="X" set:html={ICONS.x} />
+)}
+{show.includes("linkedin") && (
+  <a href={SOCIAL.linkedin} target="_blank" rel="noopener noreferrer me" class="text-muted-foreground hover:text-foreground transition-colors" aria-label="LinkedIn" set:html={ICONS.linkedin} />
+)}
+{show.includes("github") && (
+  <a href={SOCIAL.github} target="_blank" rel="noopener noreferrer me" class="text-muted-foreground hover:text-foreground transition-colors" aria-label="GitHub" set:html={ICONS.github} />
+)}
+{show.includes("rss") && (
+  <a href="/feed.xml" class="text-muted-foreground hover:text-foreground transition-colors" aria-label="RSS">
+    <i class="bx bx-rss" style={`font-size: ${iconSize};`}></i>
+  </a>
+)}
+{show.includes("email") && (
+  <a href={`mailto:${AUTHOR.email}`} class="text-muted-foreground hover:text-foreground transition-colors" aria-label="Email">
+    <i class="bx bx-envelope" style={`font-size: ${iconSize};`}></i>
+  </a>
+)}

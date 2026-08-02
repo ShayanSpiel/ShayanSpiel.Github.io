@@ -1,0 +1,160 @@
+---
+title: 'Spiel OS is Now Open Source: An AI Writing Pipeline for Builders'
+date: 2026-06-08 10:00:00 +0000
+description: An open-source AI writing pipeline that turns build sessions into publishable
+  content. 4 files, 2 loops, 19 commands, MIT licensed. Clone it, run it, own it.
+permalink: /spielos-open-source/
+category: journey
+tags:
+- Agents, Loops & Evals
+- open-source
+- ai-agents
+- content-engine
+- automation
+- positioning
+image: /assets/og/spielos-open-source.png
+---
+
+import SectionHead from "@/components/posts/SectionHead.astro";
+import ProseCenter from "@/components/posts/ProseCenter.astro";
+import Card from "@/components/posts/Card.astro";
+import Pullquote from "@/components/posts/Pullquote.astro";
+import Takeaway from "@/components/posts/Takeaway.astro";
+import Source from "@/components/posts/Source.astro";
+import PostCta from "@/components/posts/PostCta.astro";
+
+
+
+<SectionHead tag='The proof' title='Here Is What That Looks Like' sub='A two-hour debugging session becomes a post. You never open a writing tool.' />
+
+<ProseCenter text='I ship consistently. Before the engine, I did not. Every Tuesday I would finish a build session, look at the work, think I should post about this, and not post. Not because I could not write. Because writing meant switching from builder to creator. That switch never happened.' />
+
+<div class='grid grid-2'>
+  <Card title='Session log: 2 minutes of notes' desc='Spent 2 hours fixing context drift in a LangGraph workflow. Root cause: too many hidden state transitions between nodes. Fix: explicit state schema with required fields per transition.' icon='clock' />
+  <Card title='Generated post: The output' desc='Most AI agents do not fail because of prompting. They fail because nobody knows what state they are in. Every hidden transition is a drift point. Every drift point is a silent bug. Make the state explicit.' icon='rocket' />
+</div>
+
+<Takeaway text='Same session. Different frame. Extracted, not written. The engine pulls what is already there.' />
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='The mechanism' title='How It Works' sub='Two state machines run independently. LLM handles creative steps. Scripts handle mechanical steps. The two never overlap.' />
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>01</div>
+      <div class='step-body'>
+        <strong>Wiki loop</strong>
+        IDLE → INGEST → ANALYZE → RECONCILE → INDEX → VALIDATE → COMPLETE. Ingests raw notes, extracts entities, reconciles into wiki pages, links them.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>02</div>
+      <div class='step-body'>
+        <strong>Content loop</strong>
+        IDLE → SESSION → STRATEGY → COMPILE → DRAFT → GATE → QUEUE → PUBLISH. Classifies by archetype, runs the 8-step Compiler, drafts to platform-native format, gates every draft.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>03</div>
+      <div class='step-body'>
+        <strong>The quality gate</strong>
+        16 mechanical gates (char count, hook, audience, frontmatter, word repetition) plus 14 creative gates. Composite score must hit 0.85. Failing drafts do not enter the queue.
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='What you get' title='What You Get' sub='Clone the repo and you get the engine I run daily. 19 commands, 8 templates, 30 gates, two loops, one architecture.' />
+
+  <div class='grid grid-3'>
+    <Card title='19 Slash commands' desc='/extract, /post, /publish, /state, /health, /config, /optimize, /prune, and 11 more. Each is a markdown file your agent reads at invocation.' icon='code' num='19' variant='stat-shift' />
+    <Card title='8 Templates' desc='Blog, LinkedIn, X, concept, entity, summary, comparison, session-log. Each with the right frontmatter and structure for its platform.' icon='layers' num='8' variant='stat-shift' />
+    <Card title='30 Quality gates' desc='16 mechanical (code-enforced) + 14 creative (LLM-judged). Each gate is a hard floor the pipeline cannot cross. Composite score must hit 0.85.' icon='shield' num='30' variant='stat-shift' />
+  </div>
+
+  <div class='grid grid-3 mt-6'>
+    <Card title='2 State machines' desc='Wiki loop for compound knowledge. Content loop for publishing. Same Act→Observe→Evaluate→Update→Repeat pattern. Different scope, same architecture.' icon='network-chart' num='2' variant='stat-shift' />
+    <Card title='14 Setup questions' desc='Paste SETUP.md into any LLM agent. The agent auto-detects your platform, installs all commands, runs a 14-question ICP/voice/brand setup. ~15 minutes.' icon='task' num='14' variant='stat-shift' />
+    <Card title='Zero dependencies' desc='Python 3, bash, git. Everything else is optional. No npm. No Docker. No SaaS subscription. The system lives in your repo.' icon='check' />
+  </div>
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='Setup' title='Setup: Clone + Paste' sub='Four steps. One paste. ~15 minutes. The engine is wired to your workflow.' />
+
+  ```
+  git clone https://github.com/ShayanSpiel/SpielOS my-os
+  cd my-os
+  ```
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>01</div>
+      <div class='step-body'>
+        <strong>Clone the repo</strong>
+        <code>git clone https://github.com/ShayanSpiel/SpielOS my-os && cd my-os</code>
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>02</div>
+      <div class='step-body'>
+        <strong>Open SETUP.md in any LLM agent</strong>
+        Cursor, Claude Code, opencode, Continue, ChatGPT. Copy the prompt block, paste it.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>03</div>
+      <div class='step-body'>
+        <strong>Agent handles install + setup</strong>
+        Detects platform, installs commands, runs 14-question setup. Writes all config files. ~15 minutes.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>04</div>
+      <div class='step-body'>
+        <strong>Run your first commands</strong>
+        <code>/state</code> for status, <code>/extract my-notes.md</code> to ingest, <code>/post "my first session"</code> to draft, <code>/health</code> to check.
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='Two layers' title='The Two-Layer System' sub='Open source. Or done-for-you. Your call.' />
+
+  <div class='grid grid-2'>
+    <Card title='Layer 1: Open Source · Free' desc='The repo, methodology, pipeline. Clone, paste, customize. This is what you get from the GitHub repo. The engine I run daily. Clone it, paste the setup prompt into your agent, answer 14 questions, and you have a working content pipeline in an afternoon.' icon='check' />
+    <Card title='Layer 2: DFY Install · $990' desc='Full pipeline installed inside your workflow, positioned to your voice, 30 days review. Positioning strategy, offer design, bio rewrite, agents and templates in your voice, workflow design, 3 sample pillars ready to publish, 30 days post-publish review.' icon='rocket' />
+  </div>
+
+  <div class='grid grid-3 mt-6'>
+    <Card title='14 days Install' desc='Full pipeline in your workflow. You own every file. No subscription. No we changed the pricing email in 2 years.' icon='calendar' num='14' variant='stat-shift' />
+    <Card title='30 days Money-back guarantee' desc='If after 30 days you have run 5 sessions through the engine and you do not have 5 standalone-tested drafts, full refund. You keep the system.' icon='shield' num='30' variant='stat-shift' />
+    <Card title='3 Slots per month' desc='Hard cap. The 14-day install is hands-on. 3 founders per month. The rest wait or run the open-source version themselves.' icon='users' num='3' variant='stat-shift' />
+  </div>
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='Why it exists' title='Why This Exists' sub='I built this for myself first. The repo was extracted from my working vault after months of iteration. The templates are the ones I use every day. There is no theory here. Every file has been tested in production.' />
+
+  <ProseCenter text='The insight is simple: you should never go create content. Your work should already contain it. The engine extracts what is already there.' />
+
+  <div class='grid grid-3'>
+    <Card title='If you ship and do not post' desc='This is the system that fixes it. The work happens. The capture happens. The drafts happen. You just review and publish.' icon='check' />
+    <Card title='If you do not ship' desc='This system will not save you. There is no content to extract. Build first. Then run the engine.' icon='circle-x' />
+    <Card title='If you want both' desc='DFY install gets you the system AND the strategy. You get the methodology installed, the templates positioned to your voice, 3 sample pillars ready, and 30 days of review.' icon='rocket' />
+  </div>
+</section>
+
+<PostCta takeaway='Clone the repo. Paste the setup. Answer 14 questions. The engine is wired to your workflow in 15 minutes.' echo='Open source. MIT licensed. Or done-for-you at $990. 3 slots per month. DM @ShayanSpiel or apply for the DFY install.' btnText='Clone the SpielOS repo' btnHref='https://github.com/ShayanSpiel/SpielOS' />

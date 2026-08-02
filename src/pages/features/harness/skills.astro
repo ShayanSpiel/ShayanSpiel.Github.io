@@ -1,0 +1,290 @@
+---
+import FeaturesLayout from "../../../layouts/FeaturesLayout.astro";
+import SectionHeader from "../../../components/sections/SectionHeader.astro";
+import FeatureHero from "../../../components/features/FeatureHero.astro";
+import FeatureCTA from "../../../components/features/FeatureCTA.astro";
+import { type Locale, t } from "../../../i18n/translations";
+import { SITE } from "../../../config";
+
+export interface Props {
+  locale?: Locale;
+}
+
+const { locale = "en" } = Astro.props;
+
+const steps = [
+  {
+    num: "01",
+    titleKey: "features.harness.skills.how.step1.title",
+    descKey: "features.harness.skills.how.step1.desc",
+  },
+  {
+    num: "02",
+    titleKey: "features.harness.skills.how.step2.title",
+    descKey: "features.harness.skills.how.step2.desc",
+  },
+  {
+    num: "03",
+    titleKey: "features.harness.skills.how.step3.title",
+    descKey: "features.harness.skills.how.step3.desc",
+  },
+];
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: t(locale, "features.harness.skills.pageTitle"),
+  description: t(locale, "features.harness.skills.pageDesc"),
+  url: SITE.url + "/features/harness/skills/",
+  isPartOf: {
+    "@type": "WebSite",
+    name: SITE.name,
+    url: SITE.url,
+  },
+  about: {
+    "@type": "SoftwareApplication",
+    name: SITE.name,
+    url: SITE.url,
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Web",
+  },
+};
+---
+
+<FeaturesLayout
+  title={t(locale, "features.harness.skills.pageTitle")}
+  description={t(locale, "features.harness.skills.pageDesc")}
+  image="/assets/og/features.png"
+  locale={locale}
+>
+  <FeatureHero
+    locale={locale}
+    breadcrumbs={[
+      { label: t(locale, "nav.features"), href: "/features/" },
+      { label: t(locale, "features.harness.label"), href: "/features/harness/" },
+      { label: t(locale, "features.harness.skills.label") },
+    ]}
+    label={t(locale, "features.harness.skills.label")}
+    title={t(locale, "features.harness.skills.hero.title")}
+    description={t(locale, "features.harness.skills.hero.desc")}
+  />
+
+  <!-- Real Skills Panel UI Mockup -->
+  <section class="relative py-24 sm:py-32 overflow-hidden">
+    <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(var(--foreground) 1px, transparent 1px); background-size: 24px 24px;"></div>
+    <div class="relative mx-auto max-w-6xl px-6">
+      <div class="mx-auto max-w-4xl" data-aos="fade-up">
+        <div class="rounded-lg border border-border bg-panel overflow-hidden shadow-panel">
+          <!-- Window Header -->
+          <div class="flex items-center justify-between px-4 py-3 border-b border-border bg-panel-raised">
+            <div class="flex items-center gap-2">
+              <div class="h-3 w-3 rounded-full bg-destructive/60"></div>
+              <div class="h-3 w-3 rounded-full bg-warning/60"></div>
+              <div class="h-3 w-3 rounded-full bg-success/60"></div>
+            </div>
+            <span class="text-2xs text-muted-foreground font-mono">{t(locale, "features.harness.skills.mock.window")}</span>
+          </div>
+
+          <!-- Skills Content -->
+          <div class="p-4 space-y-3">
+            <!-- Active Skill -->
+            <div class="rounded-md border border-primary/30 bg-primary-soft p-3">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                  <div class="flex h-6 w-6 items-center justify-center rounded-sm bg-primary">
+                    <i class="bx bx-search-alt text-primary-foreground icon-sm"></i>
+                  </div>
+                  <span class="text-xs font-semibold text-foreground-strong">knowledge.search</span>
+                </div>
+                <span class="inline-flex items-center gap-1 rounded-sm px-1.5 py-0.5 text-2xs font-medium" style="background: var(--success-soft); color: var(--success);">
+                  <span class="h-1 w-1 rounded-full bg-success"></span>
+                  {t(locale, "features.harness.skills.mock.active")}
+                </span>
+              </div>
+              <p class="text-2xs text-muted-foreground mb-2">{t(locale, "features.harness.skills.mock.activeDesc")}</p>
+              <div class="flex flex-wrap gap-1.5">
+                <span class="inline-flex items-center gap-1 rounded-sm bg-background border border-border px-2 py-0.5 text-2xs text-foreground-muted">
+                  <i class="bx bx-file icon-xs"></i>
+                  file.read
+                </span>
+                <span class="inline-flex items-center gap-1 rounded-sm bg-background border border-border px-2 py-0.5 text-2xs text-foreground-muted">
+                  <i class="bx bx-memory-card icon-xs"></i>
+                  memory.propose
+                </span>
+                <span class="inline-flex items-center gap-1 rounded-sm bg-background border border-border px-2 py-0.5 text-2xs text-foreground-muted">
+                  <i class="bx bx-help-circle icon-xs"></i>
+                  ask.user
+                </span>
+              </div>
+            </div>
+
+            <!-- Available Skills Grid -->
+            <div class="grid grid-cols-2 gap-2">
+              <div class="rounded-md border border-border bg-background p-3">
+                <div class="flex items-center gap-2 mb-1.5">
+                  <div class="flex h-6 w-6 items-center justify-center rounded-sm bg-accent-soft">
+                    <i class="bx bx-file text-accent icon-sm"></i>
+                  </div>
+                  <span class="text-2xs font-medium text-foreground-strong">generate.business-document</span>
+                </div>
+                <p class="text-2xs text-muted-foreground leading-relaxed">{t(locale, "features.harness.skills.mock.publisherDesc")}</p>
+                <div class="mt-2 flex items-center gap-1">
+                  <span class="inline-flex items-center rounded-sm bg-background border border-border px-1.5 py-0.5 text-2xs text-foreground-muted">{t(locale, "features.harness.skills.mock.tools", { count: 2 })}</span>
+                </div>
+              </div>
+
+              <div class="rounded-md border border-border bg-background p-3">
+                <div class="flex items-center gap-2 mb-1.5">
+                  <div class="flex h-6 w-6 items-center justify-center rounded-sm bg-purple-soft">
+                    <i class="bx bx-layer text-purple icon-sm"></i>
+                  </div>
+                  <span class="text-2xs font-medium text-foreground-strong">memory.propose</span>
+                </div>
+                <p class="text-2xs text-muted-foreground leading-relaxed">{t(locale, "features.harness.skills.mock.analystDesc")}</p>
+                <div class="mt-2 flex items-center gap-1">
+                  <span class="inline-flex items-center rounded-sm bg-background border border-border px-1.5 py-0.5 text-2xs text-foreground-muted">{t(locale, "features.harness.skills.mock.tools", { count: 3 })}</span>
+                </div>
+              </div>
+
+              <div class="rounded-md border border-border bg-background p-3">
+                <div class="flex items-center gap-2 mb-1.5">
+                  <div class="flex h-6 w-6 items-center justify-center rounded-sm bg-success-soft">
+                    <i class="bx bx-book-open text-success icon-sm"></i>
+                  </div>
+                  <span class="text-2xs font-medium text-foreground-strong">file.read</span>
+                </div>
+                <p class="text-2xs text-muted-foreground leading-relaxed">{t(locale, "features.harness.skills.mock.qaReviewerDesc")}</p>
+                <div class="mt-2 flex items-center gap-1">
+                  <span class="inline-flex items-center rounded-sm bg-background border border-border px-1.5 py-0.5 text-2xs text-foreground-muted">{t(locale, "features.harness.skills.mock.tools", { count: 2 })}</span>
+                </div>
+              </div>
+
+              <div class="rounded-md border border-border bg-background p-3">
+                <div class="flex items-center gap-2 mb-1.5">
+                  <div class="flex h-6 w-6 items-center justify-center rounded-sm bg-warning-soft">
+                    <i class="bx bx-edit text-warning icon-sm"></i>
+                  </div>
+                  <span class="text-2xs font-medium text-foreground-strong">harness.create-draft</span>
+                </div>
+                <p class="text-2xs text-muted-foreground leading-relaxed">{t(locale, "features.harness.skills.mock.schedulerDesc")}</p>
+                <div class="mt-2 flex items-center gap-1">
+                  <span class="inline-flex items-center rounded-sm bg-background border border-border px-1.5 py-0.5 text-2xs text-foreground-muted">{t(locale, "features.harness.skills.mock.tools", { count: 2 })}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative py-24 sm:py-32">
+    <div class="mx-auto max-w-6xl px-6">
+      <SectionHeader
+        label={t(locale, "features.harness.skills.problem.label")}
+        title={t(locale, "features.harness.skills.problem.title")}
+        description={t(locale, "features.harness.skills.problem.desc")}
+      />
+
+      <div class="mx-auto max-w-2xl" data-aos="fade-up">
+        <div class="rounded-md border border-border bg-panel p-5">
+          <div class="flex items-start gap-3">
+            <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-destructive-soft">
+              <i class="bx bx-error text-destructive icon-2xl"></i>
+            </div>
+            <div>
+              <h3 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, "features.harness.skills.problem.title")}</h3>
+              <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, "features.harness.skills.problem.desc")}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative py-24 sm:py-32 overflow-hidden">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="relative mx-auto max-w-6xl px-6">
+      <SectionHeader
+        title={t(locale, "features.harness.skills.what.title")}
+        description={t(locale, "features.harness.skills.what.desc")}
+      />
+
+      <div class="mx-auto max-w-3xl" data-aos="fade-up">
+        <div class="rounded-lg border border-border bg-panel p-6">
+          <div class="grid gap-4 sm:grid-cols-3">
+            <div class="text-center p-4 rounded-md bg-panel-raised">
+              <i class="bx bx-slider text-primary mb-2 icon-4xl"></i>
+              <p class="text-xs font-semibold text-foreground-strong">{t(locale, "features.harness.skills.how.step1.title")}</p>
+              <p class="text-2xs text-muted-foreground mt-1">{t(locale, "features.harness.skills.how.step1.desc")}</p>
+            </div>
+            <div class="text-center p-4 rounded-md bg-panel-raised">
+              <i class="bx bx-link text-accent mb-2 icon-4xl"></i>
+              <p class="text-xs font-semibold text-foreground-strong">{t(locale, "features.harness.skills.how.step2.title")}</p>
+              <p class="text-2xs text-muted-foreground mt-1">{t(locale, "features.harness.skills.how.step2.desc")}</p>
+            </div>
+            <div class="text-center p-4 rounded-md bg-panel-raised">
+              <i class="bx bx-network-chart text-purple mb-2 icon-4xl"></i>
+              <p class="text-xs font-semibold text-foreground-strong">{t(locale, "features.harness.skills.how.step3.title")}</p>
+              <p class="text-2xs text-muted-foreground mt-1">{t(locale, "features.harness.skills.how.step3.desc")}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative py-24 sm:py-32">
+    <div class="mx-auto max-w-6xl px-6">
+      <SectionHeader
+        title={t(locale, "features.harness.skills.distinction.title")}
+        description={t(locale, "features.harness.skills.distinction.desc")}
+      />
+
+      <div class="mx-auto max-w-3xl" data-aos="fade-up">
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div class="rounded-md border border-border bg-panel p-5">
+            <div class="flex h-9 w-9 items-center justify-center rounded-md bg-accent-soft mb-3">
+              <i class="bx bx-link text-accent icon-xl"></i>
+            </div>
+            <h3 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, "features.infrastructure.connections.title")}</h3>
+            <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, "features.harness.skills.distinction.connectionsDesc")}</p>
+          </div>
+          <div class="rounded-md border border-border bg-panel p-5">
+            <div class="flex h-9 w-9 items-center justify-center rounded-md bg-primary-soft mb-3">
+              <i class="bx bx-slider text-primary icon-xl"></i>
+            </div>
+            <h3 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, "features.harness.skills.title")}</h3>
+            <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, "features.harness.skills.distinction.skillsDesc")}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative py-24 sm:py-32">
+    <div class="mx-auto max-w-6xl px-6">
+      <SectionHeader
+        title={t(locale, "features.harness.skills.how.title")}
+      />
+
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" data-aos="fade-up">
+        {steps.map((step) => (
+          <div class="rounded-md border border-border bg-panel p-5">
+            <span class="text-2xs font-semibold text-primary">{step.num}</span>
+            <h3 class="text-sm font-semibold text-foreground-strong mt-2 mb-1">{t(locale, step.titleKey)}</h3>
+            <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, step.descKey)}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <FeatureCTA
+    locale={locale}
+    title={t(locale, "features.harness.skills.hero.title")}
+    description={t(locale, "features.harness.skills.hero.desc")}
+  />
+
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+</FeaturesLayout>

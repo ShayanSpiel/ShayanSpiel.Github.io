@@ -1,0 +1,29 @@
+---
+import { type Locale, t } from "../../i18n/translations";
+
+export interface Props {
+  name: string;
+  status: "Active" | "Archive";
+  description: string;
+  url: string;
+  locale?: Locale;
+}
+
+const { name, status, description, url, locale = "en" } = Astro.props;
+---
+
+<a href={url} target="_blank" rel="noopener noreferrer" class="group block p-5 rounded-md border border-border bg-panel transition-all duration-150 hover:border-border-strong hover:bg-panel-raised h-full">
+  <div class="flex items-center gap-2 mb-2">
+    <span class:list={[
+      "inline-flex items-center rounded-md px-2 py-0.5 text-2xs font-semibold",
+      status === "Active"
+        ? "bg-success-soft text-success"
+        : "bg-panel-raised text-muted-foreground",
+    ]}>{t(locale, `status.${status.toLowerCase()}`)}</span>
+  </div>
+  <h3 class="text-sm font-semibold text-foreground-strong mb-1.5 group-hover:text-primary transition-colors">{name}</h3>
+  <p class="text-xs text-muted-foreground leading-relaxed">{description}</p>
+  <span class="mt-3 inline-flex items-center gap-1 text-xs text-primary font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+    {t(locale, "product.viewOnGithub")}
+  </span>
+</a>

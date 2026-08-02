@@ -1,0 +1,134 @@
+---
+title: از قوانین اعلانی تا لوپ‌های ایجنتیک
+date: 2026-06-08 03:35:01 +0000
+description: چرا ایجنت‌های LLM نصف قوانین تو رو نادیده می‌گیرن. معماری ورک‌فلو ایجنتیک
+  که پرامپت‌های شکننده رو با لوپ‌های ماشین حالت جایگزین می‌کنه — و واقعاً کار می‌کنه.
+permalink: /agentic-loops/
+category: ai-agents
+tags:
+- ایجنت‌ها، لوپ‌ها و ارزیابی‌ها
+- ایجنت-های-هوش-مصنوعی
+- موتور-محتوا
+- اتوماسیون
+image: /assets/og/agentic-loops.png
+---
+
+import SectionHead from "@/components/posts/SectionHead.astro";
+import ProseCenter from "@/components/posts/ProseCenter.astro";
+import Card from "@/components/posts/Card.astro";
+import Pullquote from "@/components/posts/Pullquote.astro";
+import Takeaway from "@/components/posts/Takeaway.astro";
+import Source from "@/components/posts/Source.astro";
+import PostCta from "@/components/posts/PostCta.astro";
+
+
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='تله' title='هر سیستم AI به یک لوپ نیاز داره' sub='صنعت ۲ ساله که وسواس پرامپت داره. پرامپت‌های بزرگ‌تر. پرامپت‌های ساختاریافته. پرامپت‌های نقش‌محور با ۱۵ پاراگراف «تو یک متخصصی».' />
+
+  <ProseCenter text='سیستم‌هایی که واقعاً کار می‌کنن از الگوی متفاوتی پیروی می‌کنن. از یک لوپ: اقدام کن، مشاهده کن، ارزیابی کن، به‌روزرسانی کن، تکرار کن. این تنها چیزیه که مهمه. نه پرامپت. لوپ.' />
+
+  <div class='grid grid-2'>
+    <Card tag='پرامپت' title='سند ثابت' desc='پرامپت یک سند ثابته. از شکست بازیابی نمی‌شه. اگه مدل خط ۴۷ رو نادیده بگیره، هیچ‌چیز جلوشو نمی‌گیره. خروجی غلطه. تو ساعت‌ها بعد متوجه می‌شی.' icon='circle-x' />
+    <Card tag='لوپ' title='فرآیند پویا' desc='لوپ یک فرآیند پویاست. اولی زیر فشار کانتکست می‌شکنه. دومی ازش رد می‌شه. هر استیت یک دروازه اعتبارسنجی داره.' icon='check-square' />
+  </div>
+
+  <Takeaway text='پرامپت از شکست بازیابی نمی‌شه. لوپ در هر گذار، شکست رو می‌گیره.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='مکانیزم' title='لوپ در عمل چه شکلیه' sub='دو لوپ، یک معماری. هر دو روی همون الگوی اقدام→مشاهده→ارزیابی→به‌روزرسانی→تکرار اجرا می‌شن.' />
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>01</div>
+      <div class='step-body'>
+        <strong>اقدام کن</strong>
+        یک فایل منبع خام رو INGEST کن، موجودیت‌هاش رو ANALYZE کن، با صفحه‌های موجود RECONCILE کن. نیمه اول لوپ.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>02</div>
+      <div class='step-body'>
+        <strong>مشاهده کن</strong>
+        دروازه‌های اعتبارسنجی رو چک کن. صفحه frontmatter داره؟ لینک‌ها کار می‌کنن؟ اولین سیگنال بازخورد.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>03</div>
+      <div class='step-body'>
+        <strong>ارزیابی کن</strong>
+        به خروجی نمره بده. قبول یا رد. نقطه تصمیمی که مشخص می‌کنه لوپ جلو می‌ره یا نه.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>04</div>
+      <div class='step-body'>
+        <strong>به‌روزرسانی کن</strong>
+        صفحه جدید رو بنویس، عمل رو لاگ کن، فایل استیت رو آپدیت کن. حالا سیستم استیت جدید رو منعکس می‌کنه.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>05</div>
+      <div class='step-body'>
+        <strong>تکرار کن</strong>
+        فایل منبع بعدی، یا برگرد به IDLE. لوپ ادامه پیدا می‌کنه.
+      </div>
+    </div>
+  </div>
+
+  ```
+/extract → INGEST → ANALYZE → RECONCILE → INDEX → VALIDATE → IDLE
+/post    → SESSION → STRATEGY → DRAFT → GATES → QUEUE → REVIEW? → PUBLISH → ARCHIVE → ANALYZE → IDLE
+```
+
+  <ProseCenter text='دو لوپ. یک معماری. الگوی اقدام→مشاهده→ارزیابی→به‌روزرسانی→تکرار یکسانه.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='اثبات' title='چرا لوپ از پرامپت بهتره' sub='کوچک‌ترین مثال ممکن از الگوی لوپ که جایگزین الگوی پرامپت می‌شه.' />
+
+  <div class='grid grid-2'>
+    <Card tag='الگوی پرامپت' title='یک قانون رو در طول زمان نگه دار' desc='هرگز برای اشاره‌های گذرا صفحه نساز. فقط وقتی صفحه بساز که یک مفهوم در ۲+ منبع اومده باشه. مدل‌ها توی این کار بدهان.' icon='circle-x' />
+    <Card tag='الگوی لوپ' title='همین الان یک تصمیم رو اجرا کن' desc='قبل از ساخت صفحه: چک کن مفهوم در ۲+ منبع هست → اگه هست، بساز → اگه نیست، چک کن آیا برای یک منبع محوریه → اگه هست، بساز → اگه نیست، رد شو. مدل‌ها توی این کار خوبان.' icon='check-square' />
+  </div>
+
+  <Takeaway text='اولی یک ممنوعیته که مدل باید در طول زمان نگه داره. دومی یک درخت تصمیمه که مدل همین الان اجراش می‌کنه. مدل‌ها توی اولی بدهان و توی دومی خوبان.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='انعطاف‌پذیری' title='کلید انسانی' sub='اینجا چیز دیگه‌ایه که لوپ‌ها ممکنش می‌کنن ولی پرامپت‌ها نه: مداخله مشروط انسانی.' />
+
+  <div class='grid grid-3'>
+    <Card tag='حالت دستی' title='همیشه به من نشون بده' desc='انسان قبل از انتشار هر درفت اون رو بازبینی می‌کنه. لوپ در REVIEW? می‌ایسته و صبر می‌کنه.' icon='user' />
+    <Card tag='آستانه خودکار' title='انتشار اگه کیفیت > ۰.۸۵' desc='وقتی نمره دروازه به‌قدر کافی بالاست، لوپ کامل اجرا می‌شه.' icon='zap' />
+    <Card tag='همیشه خودکار' title='بدون بازبینی انسانی' desc='فقط با انتخاب صریح. لوپ هر بار کامل اجرا می‌شه. دروازه‌ها تنها تور ایمنی هستن.' icon='zap' />
+  </div>
+
+  <ProseCenter text='پرامپت نمی‌تونه این کار رو بکنه. پرامپت نمی‌تونه بگه اگه کیفیت بالای ۰.۸۵ بود، ادامه بده، وگرنه متوقف شو. پرامپت ثابته. لوپ پویاست.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='تغییر عمیق‌تر' title='بینش واقعی' sub='مهندسی پرامپت گذشته‌ست. لوپ‌های ایجنتیک آینده‌ان. اونایی که با ماشین حالت و دروازه‌های اجرا می‌سازن، دارن منتشر می‌کنن.' />
+
+  <div class='grid grid-2'>
+    <Card tag='قبل' title='پرامپت بزرگ‌تر' desc='اضافه کردن قوانین بیشتر به یک سند ثابت. مدل هنوز بعضی‌ها رو نادیده می‌گیره. سیستم هنوز خروجی اشتباه رو بی‌صدا تولید می‌کنه. تیم هنوز ساعت‌ها بعد متوجه می‌شه.' icon='circle-x' />
+    <Card tag='حالا' title='ماشین حالت' desc='۲۰۰ خط کد که استیت‌ها، گذارها و دروازه‌های اعتبارسنجی رو تعریف می‌کنه. مدل یک درخت تصمیم رو اجرا می‌کنه، نه یک قانون حفظ‌شده. هر استیت قابل مشاهده‌ست.' icon='rocket' />
+  </div>
+
+  <ProseCenter text='باور کن، اول پرامپت بزرگ رو نوشتم. ماه‌ها بهش قانون اضافه کردم. روزی که جایگزینش کردم با یک ماشین حالت ۲۰۰ خطی، همون روزی بود که سیستم شروع به کار کرد. مدل عوض نشد. معماری عوض شد.' />
+</section>
+
+<hr class='divider' />
+
+<PostCta takeaway='پرامپت بزرگ‌تر نساز. لوپ بساز.' echo='دو لوپ. ۲۰۰ خط. ۳۰ دروازه. مدل عوض نشد. معماری عوض شد. ریپوی Spiel OS رو کلون کن و خودت ببین.' btnText='کلون کردن ریپوی SpielOS' btnHref='https://github.com/ShayanSpiel/SpielOS' />

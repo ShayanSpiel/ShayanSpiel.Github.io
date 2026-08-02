@@ -1,0 +1,127 @@
+---
+import { SUPABASE } from "../../config";
+import { type Locale, t } from "../../i18n/translations";
+
+export interface Props {
+  locale?: Locale;
+}
+
+const { locale = "en" } = Astro.props;
+const formCopy = {
+  label: t(locale, "waitlist.form.label"),
+  ariaEmail: t(locale, "waitlist.form.ariaEmail"),
+  join: t(locale, "waitlist.form.join"),
+  joining: t(locale, "waitlist.form.joining"),
+  invalid: t(locale, "waitlist.form.invalid"),
+  error: t(locale, "waitlist.form.error"),
+  success: t(locale, "waitlist.form.success"),
+};
+---
+
+<div class="showcase-waitlist-form w-full">
+  <form action={SUPABASE.url} method="POST">
+    <div class="flex flex-col sm:flex-row items-stretch gap-2 w-full">
+      <input
+        type="email"
+        name="email"
+        placeholder={formCopy.label}
+        required
+        class="h-11 w-full rounded-md border border-border bg-input px-3.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring flex-1 min-w-0 transition-colors"
+        aria-label={formCopy.ariaEmail}
+      />
+      <button
+        type="submit"
+        class="showcase-form-submit rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shrink-0 w-full sm:w-auto"
+      >
+        {formCopy.join}
+      </button>
+    </div>
+  </form>
+
+  <div class="showcase-form-error hidden mt-3 items-start gap-2.5 rounded-md border border-[color:color-mix(in_oklab,var(--destructive)_30%,transparent)] bg-destructive-soft px-3.5 py-3 text-xs text-destructive w-full" role="alert">
+    <i class="bx bx-error icon-lg shrink-0 mt-px"></i>
+    <span class="showcase-form-error-text"></span>
+  </div>
+
+  <div class="showcase-form-success hidden mt-3 items-start gap-2.5 rounded-md border border-[color:color-mix(in_oklab,var(--success)_30%,transparent)] bg-success-soft px-3.5 py-3 text-xs text-success w-full" role="status">
+    <i class="bx bx-check-square icon-lg shrink-0 mt-px"></i>
+    <span class="showcase-form-success-text">{formCopy.success}</span>
+  </div>
+</div>
+
+<script is:inline define:vars={{ supabaseUrl: SUPABASE.url, supabaseKey: SUPABASE.anonKey, formCopy, locale }}>
+(function() {
+  document.querySelectorAll('.showcase-waitlist-form').forEach(function(wrapper) {
+    var form = wrapper.querySelector('form');
+    var errorEl = wrapper.querySelector('.showcase-form-error');
+    var errorText = wrapper.querySelector('.showcase-form-error-text');
+    var successEl = wrapper.querySelector('.showcase-form-success');
+    var btn = wrapper.querySelector('.showcase-form-submit');
+
+    function showError(msg) {
+      errorText.textContent = msg;
+      errorEl.classList.remove('hidden');
+      errorEl.classList.add('flex');
+    }
+
+    function hideError() {
+      errorEl.classList.add('hidden');
+      errorEl.classList.remove('flex');
+    }
+
+    function showSuccess() {
+      form.classList.add('hidden');
+      successEl.classList.remove('hidden');
+      successEl.classList.add('flex');
+    }
+
+    function setLoading(loading) {
+      btn.disabled = loading;
+      btn.textContent = loading ? formCopy.joining : formCopy.join;
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      hideError();
+
+      var emailInput = form.querySelector('input[name="email"]');
+      var email = emailInput.value.trim();
+
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showError(formCopy.invalid);
+        emailInput.focus();
+        return;
+      }
+
+      setLoading(true);
+
+      fetch(supabaseUrl + '/rest/v1/waitlist_signups', {
+        method: 'POST',
+        headers: {
+          'apikey': supabaseKey,
+          'Authorization': 'Bearer ' + supabaseKey,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({ email: email, locale: locale })
+      }).then(function(res) {
+        if (res.ok || res.status === 409) {
+          showSuccess();
+        } else {
+          res.json().then(function(data) {
+            var msg = (data && data.message) || formCopy.error;
+            showError(msg);
+            setLoading(false);
+          }).catch(function() {
+            showError(formCopy.error);
+            setLoading(false);
+          });
+        }
+      }).catch(function() {
+        showError(formCopy.error);
+        setLoading(false);
+      });
+    });
+  });
+})();
+</script>

@@ -1,0 +1,324 @@
+---
+title: جنگ AI درباره مدل‌های رایگان نیست؛ مسئله فروپاشی قیمت هوشه
+date: 2026-07-01 09:00:00 +0000
+description: جنگ واقعی AI بین OpenAI و DeepSeek یا بین متن‌باز و متن‌بسته نیست؛ نبرد
+  متر ابر پریمیوم آمریکا با تلاش چین برای فروپاشی قیمت هوشه.
+permalink: /ai-war-price-intelligence/
+category: ai-agents
+tags:
+- بازار AI
+- جنگ قیمت AI
+- قیمت‌گذاری LLM
+- دیپ‌سیک V4
+- AI متن‌باز
+- مدل‌های وزن‌باز
+- Qwen
+- AI چین
+- AI آمریکا
+- ژئوپلیتیک AI
+- زیرساخت AI
+- هزینه‌های اینفرنس
+- مسیریابی مدل
+- هزینه سرمایه AI
+- AI ایجنتیک
+- امنیت AI
+- استخراج
+- اقتصاد AI
+image: /assets/og/ai-war-price-intelligence.png
+---
+
+import SectionHead from "@/components/posts/SectionHead.astro";
+import ProseCenter from "@/components/posts/ProseCenter.astro";
+import Card from "@/components/posts/Card.astro";
+import Pullquote from "@/components/posts/Pullquote.astro";
+import Takeaway from "@/components/posts/Takeaway.astro";
+import Source from "@/components/posts/Source.astro";
+import PostCta from "@/components/posts/PostCta.astro";
+import DataChart from "@/components/posts/DataChart.astro";
+
+
+
+
+<hr class='divider' />
+
+<section class='section' id='thesis'>
+  <SectionHead tag='تز اصلی' title='این جنگ مدل در برابر مدل نیست' sub='جنگ بین استک سرمایه و استک سرمایه‌ست؛ امپراتوری محاسبات در برابر سیاست صنعتی دولت‌ها. یک طرف می‌خواد هوش رو متری بفروشه؛ طرف دیگه می‌خواد متر رو خونین کنه.' />
+
+  <div class='grid grid-3'>
+    <Card tag='۱۰۷×' title='GPT-5.5 در برابر V4-Flash' desc='قیمت توکن خروجی که توی پیش‌نویس ذکر شده: ۳۰ دلار در برابر ۰٫۲۸ دلار به ازای هر میلیون توکن. این تخفیف نیست؛ یه ساختار حاشیه سود کاملاً متفاوته.' icon='zap' />
+    <Card tag='۶۵٪' title='حجم توکن متن‌باز' desc='رویترز به یادداشت Citi اشاره کرده که حجم توکن متن‌باز OpenRouter از ۳۴٪ در ژانویه به ۶۵٪ در ژوئن رسیده.' icon='trending-up' />
+    <Card tag='۷ تریلیون دلار' title='هزینه مراکز داده' desc='مک‌کینزی تخمین می‌زنه هزینه جهانی مراکز داده تا سال ۲۰۳۰ به ۷ تریلیون دلار برسه.' icon='server' />
+  </div>
+
+  <Pullquote text='هوش تبدیل به یه سرویس متری‌شده می‌شه و غرب صاحب متره.' attribution='گوه آمریکایی' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <div class='war-split'>
+    <div class='war-reveal'>
+      <h2>استک آمریکا روی هوش گرون ساخته شده</h2>
+      <p class='prose-center'>اقتصاد AI آمریکا به یه فرض مشخص وابسته‌ست: AI باید گرون، کمیاب، پریمیوم، میزبانی ابری و تحت کنترل چند لابراتوار مرزی باشه.</p>
+      <p class='prose-center'>این فرض پشتیبان ارزش‌گذاری تریلیون دلاری لابراتوارها، هزینه‌های سرمایه‌ای هایپرسکیلرها، تقاضای Nvidia، قفل‌شدن توی ابر، بدهی مراکز داده، قراردادهای سازمانی و این باوره که بهترین هوش باید از یه پلتفرم تحت کنترل آمریکا اجاره بشه.</p>
+    </div>
+    <div class='war-panel war-reveal'>
+      <DataChart
+        label='AI infrastructure spending curve'
+        items={[
+          { label: '2019', value: 80, color: 'muted', display: '$80B' },
+          { label: '2025', value: 383, color: 'info', display: '$383B' },
+          { label: '2026 planned', value: 635, color: 'primary', display: '$635B' },
+        ]}
+        note='Reuters reported Microsoft, Amazon, Alphabet, and Meta planned roughly $635B in 2026 data-center, chip, and AI infrastructure spending, up from $383B the year before and $80B in 2019.'
+      />
+    </div>
+  </div>
+
+  <Takeaway text='این یه چرخه نرم‌افزاری نیست؛ این بندرها، شبکه‌های برق، تراشه‌ها، فب‌ها، نیروگاه‌ها، مراکز داده و اتحادهای حاکمیتی‌ان که نقاب چت‌بات به صورت دارن.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section' id='pricing'>
+  <SectionHead tag='لایه قیمت' title='چین لازم نیست توی همه بنچمارک‌ها ببره' sub='فقط کافیه هوش به‌اندازهٔ کافی خوب رو اون‌قدر ارزون کنه که خریدارها بپرسن چرا هر کاری باید با توکن پریمیوم انجام بشه.' />
+
+  <div class='grid grid-2'>
+    <div class='war-panel war-reveal'>
+      <DataChart
+        label='Cost per 10M output tokens'
+        items={[
+          { label: 'DeepSeek V4-Flash', value: 2.8, color: 'success', display: '$2.80' },
+          { label: 'DeepSeek V4-Pro', value: 8.7, color: 'primary', display: '$8.70' },
+          { label: 'Claude Opus 4.8', value: 250, color: 'warning', display: '$250' },
+          { label: 'GPT-5.5', value: 300, color: 'destructive', display: '$300' },
+        ]}
+        note='Based on prices cited in the article: GPT-5.5 $30/M output, Claude Opus 4.8 $25/M, DeepSeek-V4-Pro $0.87/M, DeepSeek-V4-Flash $0.28/M.'
+      />
+    </div>
+    <div class='war-panel war-reveal'>
+      <DataChart
+        label='Premium multiple vs V4-Flash output'
+        items={[
+          { label: 'V4-Pro', value: 3.1, color: 'primary', display: '3.1×' },
+          { label: 'Claude Opus 4.8', value: 89, color: 'warning', display: '89×' },
+          { label: 'GPT-5.5', value: 107, color: 'destructive', display: '107×' },
+        ]}
+        note='The strategic issue is not a 20% discount. It is a 29x to 107x output-token gap against the premium stack.'
+      />
+    </div>
+  </div>
+
+  <ProseCenter text='اگه یه مدل ۹۰٪ به‌خوبی یه مدل گرون باشه ولی ۱۰٪ قیمتشو داشته باشه، بیشتر ورک‌فلوها به اون ۱۰٪ِ از دست‌رفته کاری ندارن. اقتصاد مدل پریمیوم دقیقاً همین‌جوری مورد حمله قرار می‌گیره: نه با یه ناک‌اوت تماشایی، بلکه با مسیریابی، جایگزینی، تدارکات و توسعه‌دهنده‌هایی که بی‌سروصدا پیش‌فرض‌ها رو عوض می‌کنن.' />
+
+  <table class='data-table'>
+    <thead>
+      <tr><th>لایه</th><th>استک پریمیوم آمریکا</th><th>استک فشار چین</th><th>چرا مهمه</th></tr>
+    </thead>
+    <tbody>
+      <tr class='highlight'><td>قیمت‌گذاری API پرچمدار</td><td>GPT-5.5: $۵ ورودی / $۳۰ خروجی به ازای هر ۱M توکن.</td><td>DeepSeek-V4-Flash: $۰.۱۴ ورودی / $۰.۲۸ خروجی به ازای هر ۱M توکن.</td><td>شکاف هزینه توکن خروجی از ۱۰۰ برابر فراتر می‌ره.</td></tr>
+      <tr class='highlight'><td>مدل سازمانی پریمیوم</td><td>Claude Opus 4.8: $۵ ورودی / $۲۵ خروجی به ازای هر ۱M توکن.</td><td>DeepSeek-V4-Pro: $۰.۴۳۵ ورودی / $۰.۸۷ خروجی به ازای هر ۱M توکن.</td><td>حتی لایه پریمیوم چینی هم به حاشیه سود حمله می‌کنه.</td></tr>
+      <tr><td>استراتژی مدل متن‌باز</td><td>خط‌مشی آمریکا مدل‌های وزن‌باز رو دارایی ژئوپلیتیکی می‌دونه.</td><td>مدل‌های MoE و متراکم وزن‌باز Qwen تحت Apache ۲.۰.</td><td>چین داره قابلیت رو توزیع می‌کنه، نه اینکه فقط API بفروشه.</td></tr>
+      <tr><td>الگوی خرید سازمانی</td><td>مدل‌های پریمیوم برای کارهای سخت.</td><td>مدل‌های ارزون برای کارهای پرحجم.</td><td>مسیریابی قیمت‌گذاری انحصاری رو نابود می‌کنه.</td></tr>
+    </tbody>
+    <caption>مقایسه استراتژیک استک مدل پریمیوم آمریکا با استک فشار قیمت چین.</caption>
+  </table>
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='استفاده از توییت‌ها مهم‌تره' title='سیگنال بازار مسیریابیه' sub='خریدار سازمانی بنچمارک رو عبادت نمی‌کنه؛ خریدار سازمانی ROI رو عبادت می‌کنه.' />
+
+  <div class='war-split'>
+    <div class='war-panel war-reveal'>
+      <DataChart
+        label='OpenRouter token mix'
+        items={[
+          { label: 'Jan', value: 34, color: 'muted', display: '34% open-source' },
+          { label: 'Jun', value: 65, color: 'primary', display: '65% open-source' },
+        ]}
+        note='Reuters cited a Citi note saying open-source token volume on OpenRouter rose from 34% in January to 65% in June.'
+      />
+    </div>
+    <div class='war-panel war-reveal'>
+      <DataChart
+        label='A practical routing stack'
+        items={[
+          { label: 'Bulk tasks', value: 55, color: 'primary', display: '55%' },
+          { label: 'Standard', value: 25, color: 'info', display: '25%' },
+          { label: 'Hard tasks', value: 15, color: 'warning', display: '15%' },
+          { label: 'Critical', value: 5, color: 'destructive', display: '5%' },
+        ]}
+        note='Illustrative workload split: cheap models handle high-volume routine calls, premium U.S. models stay reserved for the hardest or most sensitive work.'
+      />
+    </div>
+  </div>
+
+  <ProseCenter text='وقتی این اتفاق بیفته، لابراتوارهای مرزی دیگه سیستمعامل نیستن؛ تبدیل به متخصص‌های گران‌قیمت می‌شن. تهدید واقعی همینه: نه جایگزینی کامل، بلکه جانشینی جزئی.' />
+
+  <ProseCenter text='جابجایی ۲۰٪ از حجم توکن سازمانی دردناکه؛ ۴۰٪ یعنی بازنویسی پیش‌بینی‌های درآمد؛ ۶۰٪ لابراتوارهای مرزی رو به تأمین‌کننده لوکس تبدیل می‌کنه.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section' id='benchmarks'>
+  <SectionHead tag='بنچمارک‌ها' title='داستان بنچمارک‌ها از همین حالا ناراحت‌کننده‌ست' sub='نکته این نیست که DeepSeek توی هر کاری از GPT یا Claude جلو می‌زنه. نکته بدتره: نیازی به جلو زدن نداره.' />
+
+  <div class='grid grid-2'>
+    <div class='war-panel war-reveal'>
+      <DataChart
+        label='Selected benchmark scores'
+        groups={[
+          { title: 'Codeforces*', items: [
+            { label: 'V4-Pro', value: 3206, color: 'primary' },
+            { label: 'GPT-5.5', value: 3168, color: 'destructive' },
+          ]},
+          { title: 'GPQA Diamond', items: [
+            { label: 'Opus 4.8', value: 94.2, color: 'warning' },
+            { label: 'GPT-5.5', value: 93.6, color: 'destructive' },
+            { label: 'V4', value: 90.1, color: 'primary' },
+          ]},
+          { title: 'MATH-500', items: [
+            { label: 'V4', value: 96.1, color: 'primary' },
+            { label: 'Opus 4.8', value: 94.5, color: 'warning' },
+          ]},
+          { title: 'SWE-bench', items: [
+            { label: 'Opus 4.8', value: 87.6, color: 'warning' },
+            { label: 'V4', value: 80.6, color: 'primary' },
+            { label: 'GPT-5.5', value: 76.4, color: 'destructive' },
+          ]},
+        ]}
+        note='Scores from the existing DeepSeek V4 benchmark set used on this site. Codeforces is normalized to a 0-100 visual scale.'
+      />
+    </div>
+    <div class='war-panel war-reveal'>
+      <DataChart
+        label='Quality vs cost index'
+        items={[
+          { label: 'GLM-5.2', value: 14, color: 'success', display: '~14' },
+          { label: 'DeepSeek V4-Pro', value: 10, color: 'primary', display: '~10' },
+          { label: 'Gemini 3 Pro', value: 4, color: 'info', display: '~4' },
+          { label: 'Claude Opus 4.8', value: 2, color: 'warning', display: '~2' },
+          { label: 'GPT-5.5', value: 1.7, color: 'destructive', display: '~1.7' },
+        ]}
+        note='Illustrative index: average selected benchmark score divided by output cost per million tokens, normalized to GPT-5.5 = 1.'
+      />
+    </div>
+  </div>
+
+  <Pullquote text='یه مدل ارزون که برای ۷۰٪ کارها به‌اندازهٔ کافی خوب باشه، برای حاشیه سود خطرناک‌تر از یه مدل کامله که استفاده ازش همه‌جا خیلی گرونه.' attribution='حمله به حاشیه سود' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='جنگ توزیع' title='متن‌باز خیریه نیست' sub='در AI، وزن‌های باز استانداردها رو پخش می‌کنن، وابستگی توسعه‌دهنده می‌سازن، اصطکاک جابه‌جایی رو کم می‌کنن و اعمال کنترل رو سخت‌تر می‌کنن.' />
+
+  <div class='grid grid-2'>
+    <Card tag='استانداردها' title='API و پیش‌فرض‌ها پخش می‌شن' desc='اینترفیس‌های سازگار با OpenAI و Anthropic اجازه می‌دن مدل‌های ارزون‌تر توی ورک‌فلوهای موجود جا بشن.' icon='globe' />
+    <Card tag='وابستگی' title='توسعه‌دهنده‌ها دورشون می‌سازن' desc='وقتی یه مدل توی استک محلی، CI، ایجنت‌ها و ابزارها جا می‌فته، اصطکاک جابه‌جایی شروع می‌کنه توی جهت مخالف حرکت کنه.' icon='layers' />
+  </div>
+  <div class='grid grid-2 mt-6'>
+    <Card tag='حاکمیت' title='سازمان‌ها می‌تونن خودشون میزبانی کنن' desc='وزن‌های باز به خریدارها اجازه می‌دن با اجرای مدل روی زیرساخت خودشون، از مشکل اعتماد به API میزبانی‌شده عبور کنن.' icon='server' />
+    <Card tag='کنترل' title='گیت‌های ارائه‌دهنده ضعیف می‌شن' desc='لابراتوارهای بسته می‌تونن سوءاستفاده رو رصد کنن و حساب‌ها رو ببندن. وزن‌های باز قدرت رو از ارائه‌دهنده به اپراتور منتقل می‌کنن.' icon='shield' />
+  </div>
+
+  <ProseCenter text='ایجنت‌ها این رو مهم‌تر می‌کنن. ایجنت‌های کدنویسی، ایجنت‌های مرورگر، ایجنت‌های تحقیق، ایجنت‌های پشتیبانی، ایجنت‌های مالی، ایجنت‌های داده و ایجنت‌های کامپلاینس با حلقه‌ها، ابزارها، تلاش‌های مجدد، کانتکست، لاگ‌ها، فایل‌ها و تأییدها توکن می‌سوزونن.' />
+
+  <ProseCenter text='برای همینه که این موضوع مستقیم به [حلقه‌های ایجنتیک](/fa/notes/agentic-loops/) وصل می‌شه: هر چی ورک‌فلوها خودمختارتر بشن، هزینه اینفرنس بیشتر به استراتژی محصول تبدیل می‌شه.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='دفترچه راهنمای صنعتی' title='خورشیدی، باتری، خودروی برقی، فولاد، توکن' sub='AI با پنل خورشیدی یکی نیست؛ اما ریتم استراتژیکش آشناست.' />
+
+  <div class='war-timeline war-reveal'>
+    <div class='war-timeline-item'><div class='war-timeline-num'>۰۱</div><div class='war-timeline-body'><strong>یارانه برای ظرفیت</strong>تأمین مالی دولتی و صبر استراتژیک، ساختِ بیش‌ازحد رو منطقی می‌کنه.</div></div>
+    <div class='war-timeline-item'><div class='war-timeline-num'>۰۲</div><div class='war-timeline-body'><strong>مقیاس تولید</strong>مدل‌ها، APIها، میزبانی، استقرار محلی، ابزارها و وزن‌های باز توزیع رو چند برابر می‌کنن.</div></div>
+    <div class='war-timeline-item'><div class='war-timeline-num'>۰۳</div><div class='war-timeline-body'><strong>ایجاد مازاد عرضه</strong>قابلیت به‌اندازهٔ کافی خوب فراوان می‌شه؛ دفاع از کمیابی سخت‌تر می‌شه.</div></div>
+    <div class='war-timeline-item'><div class='war-timeline-num'>۰۴</div><div class='war-timeline-body'><strong>له کردن حاشیه سود</strong>بازیکن‌های پریمیوم گران‌قیمت به نظر می‌رسن. خریدارها مسیریابی، آربیتراژ و بهینه‌سازی می‌کنن.</div></div>
+    <div class='war-timeline-item'><div class='war-timeline-num'>۰۵</div><div class='war-timeline-body'><strong>تصاحب اکوسیستم</strong>برنده فقط مدل نیست؛ تراشه‌ها، ابر، ایجنت‌ها، پایپ‌لاین‌های داده، استانداردها و لایه‌های استقرار هم هستن.</div></div>
+  </div>
+
+  <Takeaway text='یه مدل استراتژی نیست. یه مدل، سلاحی درون استراتژیه.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='لایه امنیت' title='قابلیت ارزون هزینه حمله رو هم پایین میاره' sub='وجه تاریک مدل‌های باز اینه که همون توزیعی که به سازمان‌ها کمک می‌کنه، می‌تونه به مهاجم‌ها هم کمک کنه.' />
+
+  <div class='grid grid-3'>
+    <Card tag='سازمان' title='حاکمیت' desc='وزن‌های میزبانی‌شده روی زیرساخت خودت می‌تونن بارهای کاری حساس رو توی محیط کنترل‌شده نگه دارن.' icon='lock' />
+    <Card tag='دولت' title='کنترل' desc='دولت‌ها می‌تونن بدون اتکا به یه ارائه‌دهنده API خارجی سفارشی‌سازی، ممیزی، فاین‌تیون و استقرار کنن.' icon='flag' />
+    <Card tag='مهاجم‌ها' title='آزادی' desc='وزن‌های باز رو می‌شه بدون اینکه ارائه‌دهنده ببینتشون کنه دانلود، تغییر، فاین‌تیون و اجرا کرد.' icon='alert-triangle' />
+  </div>
+
+  <ProseCenter text='برای همینه که AI فقط جنگ بازار نیست؛ جنگ امنیتیه. لابراتوارهای بسته می‌تونن دسترسی رو محدود کنن، سوءاستفاده رو رصد کنن، حساب‌ها رو ببندن و جلوی قابلیت‌های خطرناک رو بگیرن. وزن‌های باز اون لایه کنترل رو می‌شکنن.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='حلقه کثیف' title='مدل معلم هم هست' sub='اگه یه رقیب بتونه با یه مدل مرزی گرون، یه مدل ارزون‌تر تربیت کنه که به حاشیه سودش حمله می‌کنه، محصول به یارانه R&D اون رقیب تبدیل می‌شه.' />
+
+  <div class='grid grid-3'>
+    <Card tag='هزینه' title='میلیاردها صرف تربیت مدل مرزی می‌شه' desc='لابراتوار بسته هزینه سرمایه، استعداد، داده، ایمنی و استقرار رو جذب می‌کنه.' icon='dollar-sign' />
+    <Card tag='سرویس' title='API رفتار رو لو می‌ده' desc='مشتری‌ها برای خروجی پول می‌دن. رقیب‌ها ممکنه تلاش کنن همون خروجی رو به داده آموزشی تبدیل کنن.' icon='terminal' />
+    <Card tag='فشرده‌سازی' title='مدل‌های ارزون‌تر زیر قیمت می‌زنن' desc='رفتار استخراج‌شده، قابلیت فشرده، وزن‌های باز، قیمت‌های پایین‌تر و بعد حلقه تکرار می‌شه.' icon='zap' />
+  </div>
+
+  <ProseCenter text='لابراتوارهای مرزی فقط با هم رقابت نمی‌کنن؛ دارن از خروجی‌هاشون به‌عنوان دارایی آموزشی دفاع می‌کنن. مدل فقط محصول نیست؛ مدل معلم هم هست.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='راه‌حل' title='یه مدل متن‌باز آمریکایی استراتژی نیست' sub='یه مدل، سلاحی درون استراتژیه؛ نه کل استراتژی.' />
+
+  <ProseCenter text='آمریکا قطعاً به مدل‌های وزن‌باز قوی نیاز داره. ولی گفتن اینکه این راه‌حله، مثل اینه که بگی راه‌حل از دست‌دادن زنجیره تأمین نیمه‌هادی، ساختن یه تراشه‌ست. نه. کل استک رو لازم داری.' />
+
+  <div class='grid grid-3'>
+    <Card tag='' title='مدل‌ها، تراشه‌ها، فب‌ها، برق' desc='مراکز داده، ارائه‌دهنده‌های اینفرنس و زیرساخت فیزیکی برای اجرا و سرویس مدل‌ها در مقیاس.' icon='server' />
+    <Card tag='' title='لایه‌های مسیریابی، اعتماد، استانداردها' desc='اعتماد سازمانی، پذیرش توسعه‌دهنده، استانداردهای باز و میدل‌وری که مسیریابی رو ممکن می‌کنه.' icon='layers' />
+    <Card tag='' title='تدارکات، اتحادها، سرمایه' desc='تدارکات دولتی، استراتژی صادرات، اتحادها، کنترل هزینه و سرمایه‌ای که بتونه فشرده‌شدن حاشیه سود رو تحمل کنه.' icon='shield' />
+  </div>
+
+  <ProseCenter text='یه مدل متن‌باز آمریکایی این رو حل نمی‌کنه. چون چین به یه مدل حمله نمی‌کنه؛ چین به این فرض حمله می‌کنه که هوش باید گرون باشه.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='نقشه نهایی' title='مالی‌سازی در برابر کالایی‌سازی' sub='این همون تز اصلیه.' />
+
+  <div class='grid grid-2'>
+    <Card tag='ایالات متحده' title='مالی‌سازی هوش' desc='AI مرزی به امپراتوری ابر بعدی تبدیل می‌شه: متری، متمرکز، پریمیوم، کمیاب و کنترل‌شده.' icon='server' />
+    <Card tag='چین' title='کالایی‌سازی هوش' desc='AI نزدیک به مرز به زیرساخت صنعتی ارزون تبدیل می‌شه: در دسترس گسترده، قابل استقرار محلی، قابل سفارشی‌سازی و سخت برای تحریم.' icon='globe' />
+  </div>
+
+  <ProseCenter text='آمریکا می‌خواد با تمرکز مرزی برنده بشه؛ چین می‌خواد با انتشار قابلیت برنده بشه. آمریکا می‌گه بهترین هوش اینجاست، اجاره‌اش کن. چین می‌گه هوش به‌اندازهٔ کافی خوب همه‌جاست، روش بساز.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='منابع' title='منابع' sub='مراجع اولیه و ثانویه پشت این مقاله.' />
+
+  <ul class='sources'>
+    <Source author='DeepSeek' url='https://api-docs.deepseek.com/' title='مستندات و قیمت‌گذاری API DeepSeek' />
+    <Source author='OpenAI' url='https://openai.com/api/pricing/' title='قیمت‌گذاری API OpenAI' />
+    <Source author='Anthropic' url='https://www.anthropic.com/pricing' title='قیمت‌گذاری Anthropic' />
+    <Source author='Qwen' url='https://qwenlm.github.io/' title='خانواده مدل‌های وزن‌باز Qwen' />
+    <Source author='Reuters' url='https://www.reuters.com/' title='گزارش‌های رویترز استفاده‌شده در پیش‌نویس: مسیریابی، هزینه سرمایه، ظرفیت خورشیدی و اتهام‌های استخراج' />
+    <Source author='Brookings' url='https://www.brookings.edu/' title='تحلیل رقابت AI آمریکا و چین' />
+    <Source author='Axios' url='https://www.axios.com/' title='گزارش درباره AI وزن‌باز و نگرانی‌های قابلیت سایبری' />
+    <Source author='McKinsey' url='https://www.mckinsey.com/' title='تخمین هزینه جهانی مراکز داده' />
+  </ul>
+</section>
+
+<hr class='divider' />
+
+<PostCta takeaway='وقتی کیفیت مدل‌ها هم‌سطح می‌شه، قیمت به استراتژی تبدیل می‌شه.' echo='وقتی قیمت می‌ریزه، حاشیه سود می‌ریزه. وقتی حاشیه سود می‌ریزه، ارزش‌گذاری‌ها زیر سؤال می‌رن. وقتی ارزش‌گذاری‌ها زیر سؤال می‌رن، سرمایه‌گذاری سخت‌تر می‌شه. وقتی سرمایه‌گذاری سخت‌تر می‌شه، مرز قابلیت‌ها کند می‌شه. یک طرف لازم نیست توی همه بنچمارک‌ها ازت جلو بزنه؛ فقط کافیه امپراتوری‌ات رو برای نگهداری خیلی گرون کنه.' btnText='تحلیل کامل DeepSeek V4 رو بخون' btnHref='/fa/notes/deepseek-v4-price-war/' />

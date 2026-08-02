@@ -1,0 +1,690 @@
+---
+title: 'انتشار رسمی DeepSeek V4: هر آنچه در ژوئیه از V4 واقعی می‌دانیم'
+date: 2026-07-29 10:00:00 +0000
+description: 'انتشار پایدار رسمی DeepSeek V4 برای اواسط ژوئیه ۲۰۲۶ تأیید شد. قیمت‌گذاری پیک/غیرپیک، افزایش ۸۵٪ سرعت با DSpark، بازنشستگی API قدیمی در ۲۴ ژوئیه. تحلیل کامل.'
+permalink: /deepseek-v4-official-launch/
+category: ai-agents
+tags:
+- deepseek-v4
+- انتشار-رسمی-deepseek-v4
+- deepseek-v4-pro
+- deepseek-v4-flash
+- انتشار-ai
+- قیمت‌گذاری-llm
+- قیمت‌گذاری-پیک-و-غیرپیک
+- وزن-های-باز
+- deepseek
+- مدل-های-ai
+- بنچمارک-ها
+- کدنویسی-ایجنتیک
+- dspark
+- بازنشستگی-api-قدیمی
+- swe-bench
+- codeforces
+- مخلوطی-از-متخصص-ها
+- کانتکست-میلیون-توکنی
+- قیمت‌گذاری-ai-2026
+- مقایسه-llm
+image: /assets/og/deepseek-v4-official-launch.png
+---
+
+import SectionHead from "@/components/posts/SectionHead.astro";
+import ProseCenter from "@/components/posts/ProseCenter.astro";
+import Card from "@/components/posts/Card.astro";
+import Pullquote from "@/components/posts/Pullquote.astro";
+import Takeaway from "@/components/posts/Takeaway.astro";
+import Source from "@/components/posts/Source.astro";
+import PostCta from "@/components/posts/PostCta.astro";
+
+
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='زمان‌بندی' title='از پیش‌نمایش تا رسمی: چه چیزی در ژوئیه تغییر می‌کنه' sub='۲۴ آوریل پیش‌نمایش بود. اواسط ژوئیه، لانچ واقعیه. دو ماه استفاده در تولید، و حالا ارتقا به نسخه پایدار.' />
+
+  <div class='grid grid-3'>
+    <Card tag='۲۴ آوریل' title='پیش‌نمایش منتشر شد' desc='V4-Pro و V4-Flash به‌صورت پیش‌نمایش و تحت لایسنس MIT منتشر شدن. وزن‌های باز، کانتکست ۱ میلیونی و API آماده تولید.' icon='zap' />
+    <Card tag='~۱۵ ژوئیه' title='لانچ رسمی' desc='نسخه پایدار V4 با بهبودهای عملکردی و افزایش کارایی. قیمت‌گذاری پیک/غیرپیک فعال می‌شه.' icon='rocket' />
+    <Card tag='۲۴ ژوئیه' title='بازنشستگی نسخه قدیمی' desc='اندپوینت‌های deepseek-chat و deepseek-reasoner ساعت ۱۵:۵۹ UTC کاملاً بازنشسته می‌شن. بدون تمدید.' icon='alert-triangle' />
+  </div>
+
+  <ProseCenter text='از ۲۴ آوریل، V4-Pro و V4-Flash توی پیش‌نمایش بودن: به اندازه‌ی کافی پایدار برای کار تولیدی، ولی هنوز با برچسب پیش‌نمایش. DeepSeek در ۲۹ ژوئن ۲۰۲۶ تأیید کرد نسخه رسمی اواسط ژوئیه عرضه می‌شه. این یه ریلیز نقطه‌ای نیست؛ نسخه رسمی بهبودهای عملکردی، کارایی بیشتر و یه مدل قیمت‌گذاری جدید میاره که اقتصاد استفاده از API توی ساعات اوج رو عوض می‌کنه.' />
+
+  <Takeaway text='اگه هنوز از deepseek-chat یا deepseek-reasoner استفاده می‌کنی، ۲۴ روز وقت داری تا مهاجرت کنی. این اندپوینت‌ها بعد از ۲۴ ژوئیه دیگه کار نمی‌کنن.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='قیمت‌گذاری' title='قیمت‌گذاری پیک/غیرپیک: دو برابر در ساعات کاری' sub='DeepSeek قیمت‌گذاری بر اساس ساعت شبانه‌روز معرفی می‌کنه. ساعات اوج دو برابر هزینه دارن؛ غیرپیک ثابت می‌مونه.' />
+
+  <table class='data-table'>
+    <thead>
+      <tr>
+        <th>مدل</th>
+        <th class='num'>ورودی غیرپیک</th>
+        <th class='num'>خروجی غیرپیک</th>
+        <th class='num'>ورودی پیک</th>
+        <th class='num'>خروجی پیک</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>DeepSeek V4-Flash</td>
+        <td class='num'>$۰٫۱۴</td>
+        <td class='num'>$۰٫۲۸</td>
+        <td class='num'>$۰٫۲۸</td>
+        <td class='num'>$۰٫۵۶</td>
+      </tr>
+      <tr>
+        <td>DeepSeek V4-Pro</td>
+        <td class='num'>$۰٫۴۳۵</td>
+        <td class='num'>$۰٫۸۷</td>
+        <td class='num'>$۰٫۸۷</td>
+        <td class='num'>$۱٫۷۴</td>
+      </tr>
+      <tr>
+        <td>Claude Opus 4.7</td>
+        <td class='num'>$۵٫۰۰</td>
+        <td class='num'>$۲۵٫۰۰</td>
+        <td class='num'>$۵٫۰۰</td>
+        <td class='num'>$۲۵٫۰۰</td>
+      </tr>
+      <tr>
+        <td>GPT-5.5</td>
+        <td class='num'>$۵٫۰۰</td>
+        <td class='num'>$۳۰٫۰۰</td>
+        <td class='num'>$۵٫۰۰</td>
+        <td class='num'>$۳۰٫۰۰</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ProseCenter text='ساعات اوج: هر روز ۹ صبح تا ۱۲ ظهر و ۲ تا ۶ عصر. حتی با قیمت پیک، خروجی V4-Flash بین ۴۴ تا ۵۳ برابر ارزان‌تر از GPT-5.5 هست.' />
+
+### مقایسه هزینه در پیک و غیرپیک
+
+حتی با دو برابر قیمت، DeepSeek V4 باز هم خیلی ارزون‌تر از رقبای بسته‌ست. مکانیزم پیک/غیرپیک برای مدیریت باره، نه برای گرفتن سود بیشتر.
+
+  <ProseCenter text='DeepSeek می‌گه مکانیزم پیک/غیرپیک برای بهینه‌سازی تخصیص منابع و پایداری بیشتر سرویس طراحی شده. در ساعات اوج (هر روز ۹ صبح تا ۱۲ ظهر و ۲ تا ۶ عصر) قیمت API دو برابر می‌شه. نرخ‌های غیرپیک در سطح فعلی باقی می‌مونن. حتی با قیمت پیک، خروجی V4-Flash (۰٫۵۶ دلار به ازای هر میلیون توکن) ۵۳ برابر ارزان‌تر از GPT-5.5 (۳۰ دلار به ازای هر میلیون توکن) هست.' />
+
+  <ProseCenter text='پیامد استراتژیک: کارهای دسته‌ای، ورکفلوهای آسنکرون و استنتاج‌های شبانه با همون نرخ فعلی اجرا می‌شن. این استفاده تعاملی و بلادرنگ توی ساعات کاریه که قیمت بالاتر رو می‌پردازه. این مدیریت باره، نه گران‌فروشی.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='DSpark' title='DSpark: تولید ۸۵٪ سریع‌تر، حالا فعال' sub='DeepSeek و دانشگاه پکینگ یه فریمورک شتاب‌دهی استنتاج منتشر کردن. سرعت تولید تک‌کاربره ۵۷ تا ۸۵٪ جهش کرده.' />
+
+  <div class='grid grid-2'>
+    <Card tag='V4-Flash' title='۶۰-۸۵٪ سریع‌تر' desc='استقرار DSpark سرعت تولید تک‌کاربره V4-Flash رو ۶۰ تا ۸۵٪ افزایش می‌ده. در سرویس‌های زنده تولید تأیید شده.' icon='zap' />
+    <Card tag='V4-Pro' title='۵۷-۷۸٪ سریع‌تر' desc='V4-Pro بهبود سرعت ۵۷ تا ۷۸٪ رو تجربه می‌کنه. تولچین دیکدینگ حدسی DeepSpec هم همراه با DSpark متن‌باز شده.' icon='zap' />
+  </div>
+
+  <ProseCenter text='در ۲۷ ژوئن، DeepSeek با همکاری دانشگاه پکینگ DSpark — یه فریمورک شتاب‌دهی استنتاج — رو منتشر کرد و همزمان DeepSpec، تولچین فول‌استک دیکدینگ حدسی رو هم متن‌باز کرد. مقاله‌ی تحقیقاتی که خود لیانگ ونفنگ، بنیان‌گذار DeepSeek نوشته، روی مخزن‌های کد عمومی گذاشته شده.' />
+
+  <ProseCenter text='این اولین ریلیز فنی متن‌باز بزرگ DeepSeek بعد از جذب سرمایه‌ی ۶۹ میلیارد دلاریه. بنچمارک‌ها تئوری نیستن: DSpark به‌طور کامل روی سرویس‌های آنلاین مستقر شده و توی تولید اعتبارسنجی شده.' />
+
+  <Takeaway text='نتیجه‌ی DSpark اینه که لانچ ژوئیه سریع‌تر از پیش‌نمایش عرضه می‌شه. این بهبود سرعت استنتاج افزایشی نیست؛ کیفیت تعامل بلادرنگ هر دو مدل رو عوض می‌کنه.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='مشخصات' title='مشخصات کامل مدل‌ها' sub='همه‌چیز تأییدشده از منابع رسمی، کارت‌های مدل Hugging Face و گزارش فنی.' />
+
+  <table class='data-table'>
+    <thead>
+      <tr>
+        <th>مشخصات</th>
+        <th>V4-Pro</th>
+        <th>V4-Flash</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>کل پارامترها</td>
+        <td>۱.۶ تریلیون</td>
+        <td>۲۸۴ میلیارد</td>
+      </tr>
+      <tr>
+        <td>پارامترهای فعال / توکن</td>
+        <td>۴۹ میلیارد</td>
+        <td>۱۳ میلیارد</td>
+      </tr>
+      <tr>
+        <td>توکن‌های پیش‌آموزش</td>
+        <td>۳۳ تریلیون+</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>پنجره کانتکست</td>
+        <td>۱,۰۰۰,۰۰۰ توکن (پیش‌فرض)</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>حداکثر خروجی</td>
+        <td>۳۸۴,۰۰۰ توکن</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>معماری</td>
+        <td colspan='2'>مخلوطی از متخصص‌ها (MoE)، 1 متخصص مشترک + 256 متخصص مسیریابی‌شده، top-k=8</td>
+      </tr>
+      <tr>
+        <td>اتنشن</td>
+        <td colspan='2'>ترکیبی: CSA + HCA (اتنشن اسپارس DeepSeek)</td>
+      </tr>
+      <tr>
+        <td>لایسنس</td>
+        <td colspan='2'>MIT (وزن‌های باز، استفاده تجاری، فاین‌تیون مجاز)</td>
+      </tr>
+      <tr>
+        <td>حالت‌های استدلال</td>
+        <td colspan='2'>Non-think، Think High، Think Max</td>
+      </tr>
+      <tr>
+        <td>سازگاری API</td>
+        <td colspan='2'>فرمت‌های OpenAI ChatCompletions و Anthropic API</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ProseCenter text='مشخصات رسمی از مستندات API و کارت‌های مدل Hugging Face.' />
+
+  <ProseCenter text='متمایزکننده‌ی اصلی: V4 اولین خانواده مدلیه که از پایه حول کانتکست میلیون‌توکنی به‌عنوان پیش‌فرض ساخته شده، نه یه ویژگی که به مدل موجود اضافه شده باشه.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='معماری' title='چه چیزی V4 رو زیر کاپوت متفاوت می‌کنه' sub='سه نوآوری که کانتکست میلیون‌توکنی رو در مقیاس تولید اقتصادی می‌کنن.' />
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>۰۱</div>
+      <div class='step-body'>
+        <strong>اتنشن ترکیبی: CSA + HCA</strong>
+        اتنشن استاندارد پیچیدگی درجه دوم داره. در ۱ میلیون توکن، این غیرقابل تحمل می‌شه. DeepSeek دو مکانیزم رو در هم می‌بافه: اتنشن اسپارس فشرده (CSA) ورودی‌های KV رو ۴ برابر فشرده می‌کنه و بعد یه ایندکس‌کننده برق‌آسا فقط بلوک‌های top-k رو انتخاب می‌کنه. اتنشن به‌شدت فشرده (HCA) ۱۲۸ برابر فشرده‌سازی می‌کنه و روی دنباله فشرده‌شده اتنشن متراکم اجرا می‌کنه. لایه‌ها بین این دو مکانیزم جابه‌جا می‌شن. نتیجه: V4-Pro فقط به ۲۷٪ از FLOPs استنتاج تک‌توکنی و ۱۰٪ از کش KV نسبت به V3.2 نیاز داره. V4-Flash این رو به ۱۰٪ از FLOPs و ۷٪ از کش KV می‌رسونه.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>۰۲</div>
+      <div class='step-body'>
+        <strong>اتصال‌های فرا-هایپر با قید منیفولد (mHC)</strong>
+        اتصال‌های باقیمانده (residual) معمولی یه دلتای بلوکی به نمایش جاری اضافه می‌کنن. وقتی دو نوع اتنشن برای استریم باقیمانده رقابت می‌کنن، سیگنال‌ها می‌تونن انحراف پیدا کنن. mHC به‌جای جمع ساده، از یه قید منیفولد استفاده می‌کنه و ماتریس نگاشت باقیمانده رو از طریق تکرار Sinkhorn-Knopp روی چندوجهی Birkhoff نگاشت می‌ده. این کار نُرم طیفی رو محدود نگه می‌داره و انتشار سیگنال رو در لایه‌های عمیق پایدار نگه می‌داره. تأثیر عملی: mHC آموزش قابل اعتماد در ۱٫۶ تریلیون پارامتر رو ممکن می‌کنه. DeepSeek تنها لابه که مشکل پایداری آموزش رو حل کرده و داره همین رو توی تولید عرضه می‌کنه.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>۰۳</div>
+      <div class='step-body'>
+        <strong>بهینه‌ساز Muon + FP4 QAT در مقیاس فرانتیر</strong>
+        DeepSeek برای آموزش V4، بهینه‌ساز AdamW رو با Muon جایگزین کرد. Muon در مقیاس تریلیون‌پارامتری همگرایی سریع‌تر و پایداری آموزشی بیشتری می‌ده. پارامترهای متخصص MoE با دقت FP4 استفاده می‌شن و بیشتر پارامترهای دیگه با FP8. این اولین آموزش آگاه به کوانتیزاسیون FP4 در مقیاس فرانتیره. هر دو مدل روی بیش از ۳۲ تریلیون توکن پیش‌آموزش دیده‌ان.
+      </div>
+    </div>
+  </div>
+
+  <div class='grid grid-3 mt-6'>
+    <Card tag='۲۷٪' title='صرفه‌جویی در FLOPs' desc='V4-Pro در ۱ میلیون توکن فقط به ۲۷٪ از FLOPs استنتاج تک‌توکنی نسبت به V3.2 نیاز داره.' icon='zap' />
+    <Card tag='۹۳٪' title='کاهش کش KV' desc='V4-Flash فقط ۷٪ از کش KV که V3.2 در ۱ میلیون توکن نیاز داشت استفاده می‌کنه.' icon='zap' />
+    <Card tag='۳۲ تریلیون' title='توکن آموزش‌دیده' desc='هر دو مدل روی بیش از ۳۲ تریلیون توکن متنوع و باکیفیت پیش‌آموزش دیده‌ان.' icon='zap' />
+  </div>
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='بنچمارک‌ها' title='V4 در برابر فرانتیر کجای کاره' sub='بنچمارک‌های پیش‌نمایش قوی بودن. نسخه رسمی باید فاصله‌ها رو بیشتر ببنده. تصویر فعلی اینه:' />
+
+  <table class='data-table'>
+    <thead>
+      <tr>
+        <th>بنچمارک</th>
+        <th class='num'>V4-Pro Max</th>
+        <th class='num'>Claude Opus 4.7</th>
+        <th class='num'>GPT-5.5</th>
+        <th class='num'>Gemini 3.1 Pro</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>SWE-bench Verified</td>
+        <td class='num'>۸۰.۶%</td>
+        <td class='num'>۸۷.۶%</td>
+        <td class='num'>۷۶.۴%</td>
+        <td class='num'>۸۰.۶%</td>
+      </tr>
+      <tr>
+        <td>SWE-bench Pro</td>
+        <td class='num'>۵۵.۴%</td>
+        <td class='num'>۶۴.۳%</td>
+        <td class='num'>۵۸.۶%</td>
+        <td class='num'>۵۴.۲%</td>
+      </tr>
+      <tr>
+        <td>LiveCodeBench</td>
+        <td class='num'>۹۳.۵</td>
+        <td class='num'>۸۸.۸</td>
+        <td class='num'>۹۱.۲</td>
+        <td class='num'>۹۱.۷</td>
+      </tr>
+      <tr>
+        <td>Codeforces Rating</td>
+        <td class='num'>۳۲۰۶</td>
+        <td class='num'>—</td>
+        <td class='num'>۳۱۶۸</td>
+        <td class='num'>۳۰۵۲</td>
+      </tr>
+      <tr>
+        <td>GPQA Diamond</td>
+        <td class='num'>۹۰.۱</td>
+        <td class='num'>۹۴.۲</td>
+        <td class='num'>۹۳.۶</td>
+        <td class='num'>۹۴.۳</td>
+      </tr>
+      <tr>
+        <td>MATH-۵۰۰</td>
+        <td class='num'>۹۶.۱%</td>
+        <td class='num'>۹۴.۵%</td>
+        <td class='num'>—</td>
+        <td class='num'>۹۳.۴%</td>
+      </tr>
+      <tr>
+        <td>Terminal-Bench ۲.۰</td>
+        <td class='num'>۶۷.۹%</td>
+        <td class='num'>۶۹.۴%</td>
+        <td class='num'>۸۲.۷%</td>
+        <td class='num'>۶۸.۵%</td>
+      </tr>
+      <tr>
+        <td>Putnam-۲۰۲۵</td>
+        <td class='num'>۱۲۰/۱۲۰</td>
+        <td class='num'>—</td>
+        <td class='num'>—</td>
+        <td class='num'>—</td>
+      </tr>
+      <tr>
+        <td>MRCR ۱M</td>
+        <td class='num'>۸۳.۵</td>
+        <td class='num'>۹۲.۹</td>
+        <td class='num'>—</td>
+        <td class='num'>۷۶.۳</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ProseCenter text='امتیازهای بنچمارک از گزارش‌های دست اول و ارزیابی‌های مستقل. برای کارهای استدلالی، حالت V4-Pro Max نشون داده شده.' />
+
+  <ProseCenter text='V4 در برنامه‌نویسی رقابتی و ریاضی جلوئه. Claude در کدنویسی دنیای واقعی برتری داره. GPT-5.5 در کارهای ایجنتیک جلوئه. هیچ مدلی به‌تنهایی سلطه نداره.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='ریاضی' title='استدلال ریاضی: جایی که V4 سلطه داره' sub='ریاضیات صوری جاییه که V4 به‌وضوح از بقیه جلو می‌زنه. نمره‌های کامل در جاهایی که رقبا عقب می‌مونن.' />
+
+  <div class='grid grid-2'>
+    <Card tag='Putnam-2025' title='۱۲۰/۱۲۰' desc='نمره کامل با اثبات بی‌نقص، هم‌تراز با Axiom و جلوتر از Aristotle (۱۰۰/۱۲۰) و Seed-1.5-Prover (۱۱۰/۱۲۰). V4 روی سخت‌ترین بنچمارک ریاضیات صوری به نمره کامل می‌رسه.' icon='check-square' />
+    <Card tag='Putnam-200 Pass@8' title='۸۱٫۰' desc='در مقایسه با ۳۵٫۵ برای Seed-2.0-Pro، ۲۶٫۵ برای Gemini-3-Pro و ۲۶٫۵ برای Seed-1.5-Prover. برتری ۲٫۳ برابری نسبت به نزدیک‌ترین رقیب.' icon='check-square' />
+    <Card tag='HMMT 2026 Feb' title='۹۵٫۲' desc='در محدوده GPT-5.4 (۹۷٫۷) و جلوتر از Gemini 3.1 Pro. ریاضی رقابتی در سطح نزدیک به فرانتیر.' icon='check-square' />
+    <Card tag='IMOAnswerBench' title='۸۹٫۸' desc='جلوتر از Gemini 3.1 Pro و نزدیک به GPT-5.4 (۹۱٫۴). استدلال در سطح المپیاد جهانی ریاضی.' icon='check-square' />
+  </div>
+
+  <Takeaway text='برای ورک‌فلوهای ریاضی‌محور، V4-Pro با یک‌نهم هزینه GPT-5.5 نتایج قابل مقایسه‌ای می‌ده. نمره کامل در Putnam سیگناله که قابلیت استدلال صوری به رده جدیدی رسیده.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='کانتکست طولانی' title='۱ میلیون توکن: پیش‌فرض، نه یه قابلیت' sub='هر دو مدل به‌صورت بومی از کانتکست ۱ میلیون توکنی پشتیبانی می‌کنن. هیچ پلن خاصی. هیچ هزینه اضافی. این پیش‌فرضه.' />
+
+  <table class='data-table'>
+    <thead>
+      <tr>
+        <th>بنچمارک کانتکست طولانی</th>
+        <th class='num'>V4-Pro</th>
+        <th class='num'>Claude Opus 4.6</th>
+        <th class='num'>Gemini 3.1 Pro</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>MRCR ۱M (دقت بازیابی)</td>
+        <td class='num'>۸۳.۵</td>
+        <td class='num'>۹۲.۹</td>
+        <td class='num'>۷۶.۳</td>
+      </tr>
+      <tr>
+        <td>CorpusQA ۱M (پاسخ به سوال روی سند واقعی)</td>
+        <td class='num'>۶۲.۰%</td>
+        <td class='num'>۷۱.۷%</td>
+        <td class='num'>۵۳.۸%</td>
+      </tr>
+      <tr>
+        <td>MRCR ۱۲۸K</td>
+        <td class='num'>۹۴%</td>
+        <td class='num'>۹۶%</td>
+        <td class='num'>۸۹%</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ProseCenter text='در ۱ میلیون توکن، V4-Pro تا ۱۲۸ هزار توکن دقت بازیابی ۹۴٪ رو حفظ می‌کنه، در ۵۱۲ هزار توکن ۸۲٪ و در ۱ میلیون توکن همچنان ۶۶٪ می‌مونه. DeepSeek گزارش می‌ده V4-Pro در بنچمارک MRCR از Gemini-3.1-Pro بهتر عمل می‌کنه (۸۳٫۵ در برابر ۷۶٫۳) اما همچنان از Claude Opus 4.6 (۹۲٫۹) عقب‌تره.' />
+
+  <ProseCenter text='در CorpusQA، بنچمارکی که به استفاده واقعی از اسناد طولانی نزدیک‌تره، V4-Pro در ۱ میلیون توکن به ۶۲٫۰٪ می‌رسه و Gemini 3.1 Pro با ۵۳٫۸٪ رو شکست می‌ده. توی پاسخگویی به سوال روی اسناد طولانی، V4-Pro واقعاً با رهبران کانتکست طولانیِ بسته رقابت می‌کنه.' />
+
+  <Takeaway text='تأثیر عملی: لود کردن یه کدبیس کامل توی کانتکست ۱ میلیون توکنی، با Flash فقط ۰٫۱۴ دلار به ازای هر فراخوانی آب می‌خوره. این تفاوت جزئی نیست؛ عوض می‌کنه چی می‌تونی بسازی.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='ایجنتیک' title='قابلیت‌های ایجنتیک: مرز جدید' sub='V4-Pro با Claude Code، OpenClaw و OpenCode یکپارچه شده. این مدل برای ورک‌فلوهای ایجنتیک ساخته شده.' />
+
+  <table class='data-table'>
+    <thead>
+      <tr>
+        <th>بنچمارک ایجنتیک</th>
+        <th class='num'>V4-Pro Max</th>
+        <th class='num'>V4-Flash Max</th>
+        <th class='num'>Claude Opus 4.7</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>SWE-Bench Verified</td>
+        <td class='num'>۸۰.۶%</td>
+        <td class='num'>۷۲.۳%</td>
+        <td class='num'>۸۷.۶%</td>
+      </tr>
+      <tr>
+        <td>SWE-Bench Pro</td>
+        <td class='num'>۵۵.۴%</td>
+        <td class='num'>۴۲.۱%</td>
+        <td class='num'>۶۴.۳%</td>
+      </tr>
+      <tr>
+        <td>Terminal Bench ۲.۰</td>
+        <td class='num'>۶۷.۹%</td>
+        <td class='num'>۵۶.۹%</td>
+        <td class='num'>۶۹.۴%</td>
+      </tr>
+      <tr>
+        <td>MCPAtlas</td>
+        <td class='num'>۷۳.۶</td>
+        <td class='num'>۶۱.۲</td>
+        <td class='num'>۷۳.۸</td>
+      </tr>
+      <tr>
+        <td>Toolathlon</td>
+        <td class='num'>۵۱.۸</td>
+        <td class='num'>۴۳.۷</td>
+        <td class='num'>۴۷.۰</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ProseCenter text='اعداد MCPAtlas و Toolathlon مهمن چون این بنچمارک‌ها یه طیف گسترده از ابزارهای خارجی و سرویس‌های MCP رو ارزیابی می‌کنن. یه امتیاز قوی یعنی مدل فراتر از هر هارنس ایجنت داخلی که DeepSeek موقع RL استفاده کرده، تعمیم پیدا می‌کنه.' />
+
+  <ProseCenter text='برای استفاده ایجنتیک، Pro مدل درسته. برای ورک‌فلوهای چت و استدلال، Flash به اندازه کافی به Pro نزدیکه که نسبت قیمت به کارایی معمولاً به نفعشه. V4-Flash-Max در Terminal Bench 2.0 به ۵۶٫۹٪ می‌رسه؛ ۱۱ واحد عقب‌تر از Pro.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='جامعه' title='پست‌های برتر X، تاپیک‌های Reddit و هیاهوی جامعه' sub='جامعه AI در X، Reddit، HuggingFace و Hacker News واکنش نشون داد. سه تم غالب بود.' />
+
+  <div class='grid grid-2'>
+    <Card tag='X / توییتر' title='اعلامیه رسمی وایرال شد' desc='توئیت رسمی DeepSeek: «پیش‌نمایش DeepSeek-V4 رسماً فعال و متن‌باز شد! به عصر کانتکست ۱ میلیونی مقرون‌به‌صرفه خوش اومدید.» V4-Pro: ۱٫۶ تریلیون کل / ۴۹ میلیارد فعال. V4-Flash: ۲۸۴ میلیارد کل / ۱۳ میلیارد فعال. هزاران ریتوییت و نقل‌قول.' icon='zap' />
+    <Card tag='r/LocalLLaMA' title='موشکافی معماری' desc='تاپیک برتر: «نکته‌ها و بحث درباره معماری DeepSeek V4» — تحلیل اتنشن ترکیبی CSA+HCA، جایگزینی اتصال‌های باقیمانده با mHC و FP4 QAT در مقیاس فرانتیر. جامعه نوآوری‌های معماری رو به‌جای صرفاً تعقیب بنچمارک تحسین کرد.' icon='check-square' />
+    <Card tag='r/DeepSeek' title='بحث‌های IDE و ابزارها' desc='تاپیک‌های متعدد درباره اینکه کدوم IDE ها با V4 Pro بهترین عملکرد رو دارن، یکپارچگی با Claude Code و سازگاری با OpenCode. پشتیبانی از فرمت API انتروپیک، V4 رو به یه جایگزین بی‌واسطه برای ورک‌فلوهای موجود Claude تبدیل کرد.' icon='check-square' />
+    <Card tag='r/SillyTavernAI' title='Flash در برابر Pro در عمل' desc='بحث جامعه: «DeepSeek V4 Flash در برابر Pro: آیا در عمل تفاوت واقعی دارن؟» اجماع: Flash بیشتر موارد استفاده دنیای واقعی رو پوشش می‌ده. Pro برای استدلال عمیق و کارهای کدنویسی پیچیده ارزش داره.' icon='check-square' />
+    <Card tag='Hacker News' title='وزن‌ها، داستان اصلی بودن' desc='HN متوجه شد لینک لانچ به مستندات API به‌روزشده اشاره می‌کنه، نه یه صفحه لانچ درخشان. محتوای واقعی، ۸۶۵ گیگابایت وزن روی Hugging Face بود. داستان این بود که DeepSeek چیزی واقعی و عملیاتی عرضه کرده، نه فقط بازاریابی.' icon='zap' />
+    <Card tag='HuggingFace' title='دانلودهای عظیم و بحث داغ' desc='V4-Pro ظرف چند روز به بیش از ۱۲۳٬۰۰۰ دانلود رسید. جامعه بین «من شوکه شدم» و «من خیلی ناامیدم» دو شقه شد. منتقدها به نبود مولتی‌مدال بومی و بزرگ بودن بیش از حد Flash برای سخت‌افزار مصرفی اشاره کردن.' icon='check-square' />
+    <Card tag='انجمن‌های NVIDIA' title='کانتکست ۱ میلیونی روی DGX Spark' desc='تاپیک «Aiden Recipe»: یه عضو جامعه V4-Flash رو با کانتکست کامل ۱ میلیونی روی دو نود DGX Spark مستقر کرد. دیکد ۳۰-۴۵ توکن بر ثانیه، تأخیر صفر در فیبر، فراخوانی ابزار ۸۹ از ۱۰۰. ستاپ‌های چهارگانه‌ی Spark هم دارن ظاهر می‌شن.' icon='check-square' />
+    <Card tag='صرفه‌جویی هزینه' title='داستان‌های کاهش ۹۹٪ هزینه' desc='«هزینه‌های API ام رو با سوییچ از Claude به DeepSeek ۹۹٪ کم کردم» — نتایج واقعی کاربران که توی انجمن‌ها به اشتراک گذاشته شده. «DeepSeek V4 Pro با ۵٪ هزینه Claude» هم به‌عنوان یه مزیت ساختاری هزینه مطرح شده.' icon='trending-up' />
+  </div>
+
+  <ProseCenter text='واکنش جامعه فقط کامنت نبود؛ پذیرش بود. V4-Pro ظرف چند روز به بیش از ۱۲۳٬۰۰۰ دانلود روی Hugging Face رسید. جامعه NVIDIA DGX Spark استقرارهای ۱ میلیون کانتکستی قابل اجرا در تولید ساختن. داستان‌های کاهش هزینه واقعیان، نه تئوری.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='خبر' title='مقالات خبری برتر و پوشش رسانه‌ای' sub='همه رسانه‌های مهم AI به V4 پرداختن. پوشش روی سه زاویه متمرکز بود: به‌هم‌ریختن قیمت، پیامدهای وزن باز و ریسک ژئوپلیتیک.' />
+
+  <div class='grid grid-2'>
+    <Card tag='Heise Online' title='مدل AI دیپ‌سیک v4' desc='«مدل AI DeepSeek v4: نسل جدید با ۱٫۶ تریلیون پارامتر» — این نشریه فنی آلمانی نوآوری‌های معماری و پتانسیل قیمت‌گذاری رو برجسته کرد و به گزارش‌های بلومبرگ درباره گلوگاه ظرفیت برای مدل Pro اشاره کرد. انتظار می‌ره کلاسترهای جدید Huawei Ascend 950 در نیمه دوم ۲۰۲۶ عرضه بشن.' icon='zap' />
+    <Card tag='وبلاگ Lambda AI' title='منتظرشده‌ترین مدل متن‌باز' desc='«DeepSeek V4: منتظرشده‌ترین مدل متن‌بازی که تا حالا منتشر شده، با آرام‌ترین فرود» — Lambda اشاره کرد معماری V4 ریشه در بیشتر مدل‌های متن‌باز قوی امروز داره. اگه استنتاج ۱۰ برابر ارزان‌تر در تولید دوام بیاره، اقتصاد بازی عوض می‌شه.' icon='zap' />
+    <Card tag='DataCamp' title='قابلیت‌ها، بنچمارک‌ها و مقایسه‌ها' desc='«DeepSeek V4: قابلیت‌ها، بنچمارک‌ها و مقایسه‌ها» — بررسی کامل V4 Pro در برابر Flash، قیمت‌گذاری API و مقایسه رودررو با GPT-5.5 و Opus 4.7. کاهش ۷ تا ۹ برابری هزینه رو یه تغییر پارادایم معرفی کرد.' icon='zap' />
+    <Card tag='Macrostream' title='قیمت‌گذاری پیک/غیرپیک API' desc='«DeepSeek V4 برای لانچ اواسط ژوئیه با فعال شدن قیمت‌گذاری پیک/غیرپیک API آماده می‌شه» — جدول زمانی لانچ ژوئیه و جزئیات قیمت‌گذاری پیک/غیرپیک رو فاش کرد. فریمورک شتاب‌دهی استنتاج DSpark به‌طور کامل مستقر شده.' icon='zap' />
+    <Card tag='BenchLM' title='فرانتیر در آوریل ۲۰۲۶' desc='«DeepSeek V4 Pro در برابر Claude Opus 4.7 در برابر GPT-5.5: فرانتیر در آوریل ۲۰۲۶» — سه پرچمدار فرانتیر در هشت روز. V4-Pro با لایسنس MIT حدود ۹ برابر از GPT-5.5 ارزان‌تر قیمت خروجی داره.' icon='zap' />
+    <Card tag='DEV Community' title='داخلش چیه، چطور مقایسه می‌شه' desc='«DeepSeek V4: داخلش چیه، چطور مقایسه می‌شه و واقعاً کجا برنده می‌شه» — ارزیابی عملی از دیدگاه مهندسی. قیمت تصویر کاملی نیست؛ V4 روی بعضی ورک‌فلوها خوب و روی بعضی‌ها ضعیف عمل می‌کنه.' icon='zap' />
+  </div>
+
+  <ProseCenter text='الگوی پوشش رسانه‌ای ثابته: V4 در قیمت و برنامه‌نویسی رقابتی برنده‌ست، در مهندسی نرم‌افزار دنیای واقعی و کارهای ایجنتیک عقب می‌مونه و لایسنس MIT با وزن‌های باز، معادله خودمیزبانی رو کاملاً عوض می‌کنه.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='بازنشستگی' title='مهلت ۲۴ ژوئیه: بازنشستگی API قدیمی' sub='اگه از deepseek-chat یا deepseek-reasoner استفاده می‌کنی، ۲۴ روز برای مهاجرت وقت داری. بعد از ۲۴ ژوئیه، این اندپوینت‌ها از کار می‌فتن.' />
+
+  <div class='grid grid-2'>
+    <Card tag='مهلت قطعی' title='۲۴ ژوئیه ۲۰۲۶، ساعت ۱۵:۵۹ UTC' desc='بعد از این لحظه، درخواست‌هایی که از deepseek-chat یا deepseek-reasoner استفاده می‌کنن شکست می‌خورن. چنج‌لاگ رسمی DeepSeek می‌گه هر دو نام کاملاً بازنشسته و غیرقابل دسترس می‌شن. تمدیدی اعلام نشده.' icon='alert-triangle' />
+    <Card tag='مسیر مهاجرت' title='به deepseek-v4-pro یا deepseek-v4-flash سوییچ کن' desc='تا قبل از مهلت، نام‌های مستعار قدیمی به‌صورت شفاف به V4-Flash هدایت می‌شن. API سازگاره؛ فقط پارامتر مدل رو عوض کن تا مهاجرت کنی.' icon='check-square' />
+  </div>
+
+  <ProseCenter text='مهاجرت ساده‌ست: پارامتر مدل رو از deepseek-chat به deepseek-v4-flash تغییر بده، یا از deepseek-reasoner به deepseek-v4-pro. آدرس پایه API ثابت می‌مونه و هم فرمت OpenAI ChatCompletions هم فرمت API انتروپیک پشتیبانی می‌شه.' />
+
+  <ProseCenter text='DeepSeek توصیه می‌کنه همین حالا مهاجرت کنی و دوباره تست بگیری، به‌جای اینکه تا ژوئیه صبر کنی. رفتار در مرحله پیش‌نمایش می‌تونه تغییر کنه. مهلت ۲۴ ژوئیه قطعیه.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='امنیت' title='لایه امنیتی و ژئوپلیتیک' sub='محدودیت‌های دولتی، نگرانی‌های محل نگهداری داده، اتهامات استخراج دانش و زاویه خودمیزبانی.' />
+
+  <div class='grid grid-2'>
+    <Card tag='محدودیت‌های دولتی' title='چندین کشور DeepSeek رو محدود کردن' desc='ایتالیا ظرف ۷۲ ساعت DeepSeek رو از فروشگاه‌های اپ حذف کرد. استرالیا، تایوان، کره جنوبی، نیروی دریایی آمریکا و ناسا اون رو محدود کردن. چند ایالت آمریکا هم استفاده از اون روی دستگاه‌های دولتی رو محدود کردن.' icon='alert-triangle' />
+    <Card tag='محل نگهداری داده' title='داده تحت قوانین چین' desc='خط‌مشی حریم خصوصی DeepSeek می‌گه داده کاربران روی سرورهای چین ذخیره می‌شه و تحت قوانین چین اداره می‌شه. ماده ۷ قانون اطلاعات ملی چین از همه سازمان‌ها می‌خواد از عملیات اطلاعات ملی پشتیبانی کنن.' icon='alert-triangle' />
+    <Card tag='استخراج دانش' title='اتهامات حل‌نشده' desc='کاخ سفید بازیگران چینی از جمله DeepSeek رو به کمپین‌های استخراج دانش در مقیاس صنعتی متهم کرد. Anthropic و OpenAI ادعا کردن بیش از ۲۴٬۰۰۰ حساب جعلی و ۱۶ میلیون تعامل وجود داشته. DeepSeek به‌طور عمومی به این‌ها پاسخی نداده.' icon='alert-triangle' />
+    <Card tag='زاویه خودمیزبانی' title='لایسنس MIT معادله رو عوض می‌کنه' desc='لایسنس MIT امکان استفاده تجاری کامل، اصلاح و توزیع مجدد می‌ده. برای انطباق با GDPR، خودمیزبانی روی سرورهای داخل اتحادیه اروپا یعنی داده هرگز به چین نمی‌رسه. مدل وزن‌بازِ خودمیزبان، محصولی متفاوت از API میزبان‌شده‌ست.' icon='check-square' />
+  </div>
+
+  <Takeaway text='سوال این نیست که API میزبان‌شده برای داده‌های تحت نظارت امنه یا نه. نیست. سوال اینه که مدل وزن‌بازِ خودمیزبان معادله رو عوض می‌کنه یا نه. برای خیلی از کاربردها، عوض می‌کنه.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='قیمت‌گذاری' title='تصویر کامل قیمت‌گذاری' sub='هزینه‌های غیرپیک، پیک، کش‌هیت و خودمیزبان. کل تحلیل اقتصادی.' />
+
+  <table class='data-table'>
+    <thead>
+      <tr>
+        <th>مدل</th>
+        <th class='num'>ورودی / میلیون توکن</th>
+        <th class='num'>خروجی / میلیون توکن</th>
+        <th class='num'>ورودی کش‌هیت</th>
+        <th class='num'>کانتکست</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>V4-Flash (غیرپیک)</td>
+        <td class='num'>$۰.۱۴</td>
+        <td class='num'>$۰.۲۸</td>
+        <td class='num'>$۰.۰۰۲۸</td>
+        <td class='num'>۱M</td>
+      </tr>
+      <tr>
+        <td>V4-Flash (پیک)</td>
+        <td class='num'>$۰.۲۸</td>
+        <td class='num'>$۰.۵۶</td>
+        <td class='num'>$۰.۰۰۵۶</td>
+        <td class='num'>۱M</td>
+      </tr>
+      <tr>
+        <td>V4-Pro (غیرپیک)</td>
+        <td class='num'>$۰.۴۳۵</td>
+        <td class='num'>$۰.۸۷</td>
+        <td class='num'>$۰.۰۰۳۶</td>
+        <td class='num'>۱M</td>
+      </tr>
+      <tr>
+        <td>V4-Pro (پیک)</td>
+        <td class='num'>$۰.۸۷</td>
+        <td class='num'>$۱.۷۴</td>
+        <td class='num'>$۰.۰۰۷۲</td>
+        <td class='num'>۱M</td>
+      </tr>
+      <tr>
+        <td>Claude Opus 4.7</td>
+        <td class='num'>$۵.۰۰</td>
+        <td class='num'>$۲۵.۰۰</td>
+        <td class='num'>$۰.۵۰</td>
+        <td class='num'>۱M</td>
+      </tr>
+      <tr>
+        <td>GPT-5.5</td>
+        <td class='num'>$۵.۰۰</td>
+        <td class='num'>$۳۰.۰۰</td>
+        <td class='num'>$۰.۵۰</td>
+        <td class='num'>۱M</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ProseCenter text='قیمت‌گذاری کامل تا ژوئیه ۲۰۲۶. ساعات اوج: هر روز ۹ صبح تا ۱۲ ظهر و ۲ تا ۶ عصر. قیمت‌گذاری کش‌هیت ۹۸٪ کاهش نسبت به کش‌میس ارائه می‌ده.' />
+
+  <ProseCenter text='برای یه ورک‌فلو واقعی: پردازش ۱۰ میلیون توکن خروجی با V4-Flash در غیرپیک ۲٫۸۰ دلار، در پیک ۵٫۶۰ دلار، با V4-Pro در غیرپیک ۳۴٫۸۰ دلار، با Claude Opus 4.7، ۲۵۰ دلار و با GPT-5.5، ۳۰۰ دلار هزینه داره.' />
+
+  <ProseCenter text='قیمت‌گذاری کش‌هیت همون‌جاییه که V4 حتی جلوتر می‌افته. ورودی کش‌هیت V4-Flash ۰٫۰۰۲۸ دلار به ازای هر میلیون توکنه؛ ۹۸٪ کاهش نسبت به کش‌میس. برای ورک‌فلوهای تکراری با پرامپت‌های مشابه، هزینه مؤثر به صفر نزدیک می‌شه.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='ماتریس' title='مقایسه واقعی: کدوم مدل برای کدوم کار' sub='به لیدربورد نگاه نکن؛ به ماتریس کارها نگاه کن. مدل‌های مختلف برای ورک‌فلوهای مختلف.' />
+
+  <table class='data-table'>
+    <thead>
+      <tr>
+        <th>کاربرد</th>
+        <th>بهترین مدل</th>
+        <th>چرا</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>تماس‌های API پرحجم در تولید</td>
+        <td>DeepSeek V4-Flash</td>
+        <td>$۰.۱۴/$۰.۲۸ به ازای هر M توکن در غیرپیک، ۹۷-۱۰۷ برابر ارزان‌تر از GPT-5.5</td>
+      </tr>
+      <tr>
+        <td>کیفیت فرانتیر با بودجه محدود</td>
+        <td>DeepSeek V4-Pro</td>
+        <td>۸۰.۶% در SWE-Bench با هزینه ۱۱ برابر کمتر از Opus</td>
+      </tr>
+      <tr>
+        <td>برنامه‌نویسی رقابتی</td>
+        <td>DeepSeek V4-Pro</td>
+        <td>Codeforces با ریتینگ ۳۲۰۶، بالاترین ریتینگ تاریخ AI</td>
+      </tr>
+      <tr>
+        <td>استدلال ریاضی و STEM</td>
+        <td>DeepSeek V4-Pro</td>
+        <td>MATH-۵۰۰ با ۹۶.۱%، Putnam-۲۰۲۵ با ۱۲۰/۱۲۰</td>
+      </tr>
+      <tr>
+        <td>خودمیزبانی یا استقرار ایزوله (air-gapped)</td>
+        <td>DeepSeek V4-Pro</td>
+        <td>وزن‌های باز با لایسنس MIT، ۸۶۵ گیگابایت</td>
+      </tr>
+      <tr>
+        <td>فاین‌تیون روی داده اختصاصی</td>
+        <td>DeepSeek V4-Pro</td>
+        <td>وزن‌های باز امکان فاین‌تیون کامل و استفاده تجاری رو می‌دن</td>
+      </tr>
+      <tr>
+        <td>کدنویسی ایجنتیک ترمینال‌محور</td>
+        <td>GPT-5.5</td>
+        <td>۸۲.۷% در Terminal-Bench ۲.۰</td>
+      </tr>
+      <tr>
+        <td>بازبینی و ریفکتور PRهای حساس</td>
+        <td>Claude Opus 4.7</td>
+        <td>۸۷.۶% در SWE-bench Verified، قوی‌ترین خودتأییدی</td>
+      </tr>
+      <tr>
+        <td>خودمختاری طولانی + استفاده از کامپیوتر</td>
+        <td>GPT-5.5</td>
+        <td>کامپیوتر یوز بومی، افق کاری خودمختار 7+ ساعته</td>
+      </tr>
+      <tr>
+        <td>گسترده‌ترین اکوسیستم ایجنت</td>
+        <td>GPT-5.5</td>
+        <td>وسیع‌ترین پشتیبانی از فراخوانی ابزار، استاندارد عملی</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='چندمدلی' title='استراتژی چندمدلی' sub='بهترین سازنده‌ها دارن یه لایه مسیریابی می‌سازن. مدل‌های مختلف برای کارهای مختلف.' />
+
+  <div class='grid grid-2'>
+    <Card tag='۶۰-۷۰٪' title='DeepSeek V4-Flash' desc='$۰.۱۴/$۰.۲۸ به ازای هر M توکن. طبقه‌بندی، استخراج، مسیریابی، کارهای پرحجم. اسب‌کار ارزونی که بخش اصلی بار رو می‌کشه.' icon='zap' />
+    <Card tag='۲۰-۲۵٪' title='DeepSeek V4-Pro' desc='$۰.۴۳۵/$۰.۸۷ به ازای هر M توکن. کدنویسی استاندارد، استدلال، پردازش اسناد طولانی. کیفیت فرانتیر با بودجه محدود.' icon='zap' />
+    <Card tag='۵-۱۰٪' title='Claude Opus 4.7' desc='$۵/$۲۵ به ازای هر M توکن. ریفکتورهای پرمخاطره، بازبینی حیاتی، وقتی کیفیت از هزینه مهم‌تره. تور ایمنی.' icon='zap' />
+    <Card tag='۵-۱۰٪' title='GPT-5.5' desc='$۵/$۳۰ به ازای هر M توکن. ورک‌فلوهای ایجنتیک چندساعته، استفاده از کامپیوتر، اجرای خودمختار. موتور کار عمیق.' icon='zap' />
+  </div>
+
+  <ProseCenter text='یه لایه مسیریابی خوب طراحی‌شده که ۶۰-۷۰٪ ترافیک رو به V4-Flash می‌فرسته، کدنویسی رو به V4-Pro یا Opus 4.7 ارتقا می‌ده و برای کارهای ایجنتیک دسکتاپ از GPT-5.5 استفاده می‌کنه، می‌تونه هزینه‌ها رو ۴۰-۶۰٪ نسبت به رویکرد تک‌مدلی کاهش بده و همزمان کیفیت رو در همه انواع کارها حفظ یا بهبود بده.' />
+
+  <Takeaway text='بیشتر کال‌ها روتینن. بعضی کال‌ها کیفیت فرانتیر می‌خوان. تعداد کمی هم عمق خودمختاری لازم دارن. برای توزیع واقعی کارها در تولید بهینه کن.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='چه انتظاری داشته باشیم' title='لانچ رسمی V4 باید چه چیزهایی بیاره' sub='بر اساس اظهارات DeepSeek و الگوی پیش‌نمایش به پایدار، این چیزیه که اواسط ژوئیه تغییر می‌کنه.' />
+
+  <div class='grid grid-2'>
+    <Card tag='' title='بهبود کارایی' desc='DeepSeek تأیید کرد نسخه رسمی «بهبودهای عملکردی بیشتر و افزایش کارایی» ارائه می‌ده. پیش‌نمایش از قبل با مدل‌های فرانتیر رقابتی بود.' icon='zap' />
+    <Card tag='' title='فعال شدن قیمت‌گذاری پیک/غیرپیک' desc='قیمت‌گذاری بر اساس ساعت شبانه‌روز فعال می‌شه. ورک‌فلوهای دسته‌ای و آسنکرون از نرخ‌های غیرپیک سود می‌برن. استفاده بلادرنگ در ساعات کاری قیمت بالاتر رو می‌پردازه.' icon='zap' />
+    <Card tag='' title='شتاب‌دهی استنتاج DSpark' desc='افزایش ۶۰-۸۵٪ سرعت DSpark باید به‌طور کامل یکپارچه بشه. سرعت تولید تک‌کاربره برای هر دو مدل به‌طرز چشمگیری بهبود پیدا می‌کنه.' icon='zap' />
+    <Card tag='' title='بازنشستگی API قدیمی' desc='deepseek-chat و deepseek-reasoner در ۲۴ ژوئیه کاملاً بازنشسته می‌شن. لانچ رسمی مسیر رو برای یه API تمیزِ فقط-V4 باز می‌کنه.' icon='alert-triangle' />
+    <Card tag='' title='نشونه‌های احتمالی مولتی‌مدال' desc='قابلیت‌های بینایی در رابط‌های آزمایشی دیده شدن اما هنوز تأیید نشدن. DeepSeek پشتیبانی مولتی‌مدال برای لانچ رسمی رو تأیید نکرده.' icon='zap' />
+    <Card tag='' title='ظرفیت Huawei Ascend 950' desc='بلومبرگ از گلوگاه ظرفیت برای مدل Pro خبر می‌ده. کلاسترهای جدید Huawei Ascend 950 در نیمه دوم ۲۰۲۶ انتظار می‌ره که کمبود رو کاهش بده و احتمالاً قیمت‌ها رو پایین بیاره.' icon='zap' />
+  </div>
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='منابع' title='منابع' sub='هر ادعایی در این صفحه به یه منبع دست اول یا تأییدشده وصل می‌شه. هیچ عددی از خودمون درنیاوردیم.' />
+
+  <Source text='اعلامیه رسمی DeepSeek درباره پیش‌نمایش V4' />
+  <Source text='DeepSeek (HuggingFace): وزن‌های مدل، کارت‌های مدل و گزارش فنی DeepSeek V4' />
+  <Source text='Macrostream: DeepSeek V4 برای لانچ اواسط ژوئیه با فعال شدن قیمت‌گذاری پیک/غیرپیک API آماده می‌شه' />
+  <Source text='Edgen Tech: نسخه رسمی DeepSeek V4 در ژوئیه با قیمت پیک ۲ برابری عرضه می‌شه' />
+  <Source text='Heise Online: مدل AI DeepSeek v4 — نسل جدید با ۱٫۶ تریلیون پارامتر' />
+  <Source text='Lambda AI: DeepSeek V4 — منتظرشده‌ترین مدل متن‌بازی که تا حالا منتشر شده' />
+  <Source text='DataCamp: DeepSeek V4 — قابلیت‌ها، بنچمارک‌ها و مقایسه‌ها' />
+  <Source text='BenchLM: DeepSeek V4 Pro در برابر Claude Opus 4.7 در برابر GPT-5.5 — فرانتیر در آوریل ۲۰۲۶' />
+  <Source text='Morph LLM: DeepSeek V4 — MoE با ۱٫۶ تریلیون پارامتر، کانتکست ۱ میلیونی، خروجی ۰٫۸۷ دلار به ازای هر میلیون توکن (راهنمای ۲۰۲۶)' />
+  <Source text='r/LocalLLaMA (Reddit): نکته‌ها و بحث درباره معماری DeepSeek V4' />
+  <Source text='انجمن‌های توسعه‌دهندگان NVIDIA: DeepSeek V4 Flash — سشن ۱ میلیون توکنی فعال روی DGX Spark' />
+  <Source text='CodersEra: تاریخ انتشار، قابلیت‌ها و بنچمارک‌های DeepSeek V4 در ۲۰۲۶' />
+
+  <ProseCenter text='آخرین به‌روزرسانی: ۲۹ ژوئیه ۲۰۲۶. قیمت‌ها از مستندات رسمی API دیپ‌سیک. امتیازهای بنچمارک از گزارش‌های دست اول و ارزیابی‌های مستقل. بحث‌های جامعه از Reddit، X، HN و HuggingFace جمع‌آوری شده.' />
+</section>
+
+<hr class='divider' />
+
+<PostCta takeaway='پیش‌نمایش خوب بود؛ نسخه رسمی باید بهتر باشه.' echo='DeepSeek V4 توی آوریل اقتصاد AI رو بازنویسی کرد. لانچ رسمی ژوئیه اون رو دائمی می‌کنه. اگه هنوز برای کارهایی که V4 با ۰٫۲۸ تا ۰٫۸۷ دلار انجام می‌ده، ۲۵ تا ۳۰ دلار به ازای هر میلیون توکن خروجی پرداخت می‌کنی، سوال این نیست که سوییچ کنی یا نه؛ سوال اینه که چقدر سریع می‌تونی مهاجرت کنی.' btnText='ریپوی SpielOS رو کلون کن' btnHref='https://github.com/ShayanSpiel/SpielOS' />

@@ -1,0 +1,127 @@
+---
+import SpielOSLogo from "../SpielOSLogo.astro";
+import { type Locale, t } from "../../i18n/translations";
+import { localizePath } from "../../i18n";
+
+export interface Props {
+  locale?: Locale;
+}
+
+const { locale = "en" } = Astro.props;
+const navLinks = [
+  { label: t(locale, "waitlist.howItWorks.label"), href: "#how-it-works" },
+  { label: t(locale, "waitlist.features.label"), href: "#features" },
+  { label: t(locale, "waitlist.director.label"), href: "#director" },
+];
+---
+
+<nav
+  aria-label={t(locale, "common.navAria")}
+  class:list={[
+    "fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-lg saturate-150 border-b border-border transition-all duration-300",
+    locale === "fa" ? "font-iransansx" : "",
+  ]}
+>
+  <div class="flex items-center justify-between px-6 lg:px-12 h-16">
+    <a href={localizePath("/", locale)} class="flex items-center gap-2.5 relative z-10" aria-label={t(locale, "common.homeAria")}>
+      <SpielOSLogo />
+    </a>
+
+    <div class="hidden md:flex items-center gap-8">
+      {navLinks.map((link) => (
+        <a href={link.href} data-smooth class="text-xs text-muted-foreground hover:text-foreground transition-colors">{link.label}</a>
+      ))}
+    </div>
+
+    <div class="flex items-center gap-3 relative z-10">
+      <a
+        href="#waitlist"
+        data-smooth
+        class="hidden sm:inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-4 h-8 text-xs font-medium hover:brightness-110 active:brightness-95 transition-all"
+      >
+        {t(locale, "nav.joinWaitlist")}
+      </a>
+
+      <button
+        type="button"
+        class="md:hidden flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-panel-raised transition-colors"
+        id="showcase-menu-toggle"
+        aria-label={t(locale, "waitlist.menuToggle")}
+        aria-expanded="false"
+      >
+        <i class="bx bx-menu icon-2xl"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="hidden md:hidden" id="showcase-mobile-menu">
+    <div class="px-6 pb-4 pt-2 border-t border-border space-y-1">
+      {navLinks.map((link) => (
+        <a href={link.href} data-smooth class="block rounded-md px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-panel-raised transition-colors">{link.label}</a>
+      ))}
+      <a
+        href="#waitlist"
+        data-smooth
+        class="block mt-2 rounded-md bg-primary text-primary-foreground px-3 py-2 text-sm text-center font-medium"
+      >
+        {t(locale, "nav.joinWaitlist")}
+      </a>
+    </div>
+  </div>
+</nav>
+<div class="h-16" />
+
+<script is:inline>
+(function() {
+  var toggle = document.getElementById('showcase-menu-toggle');
+  var menu = document.getElementById('showcase-mobile-menu');
+  if (!toggle || !menu) return;
+
+  toggle.addEventListener('click', function() {
+    var expanded = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!expanded));
+    menu.classList.toggle('hidden');
+
+    var icon = toggle.querySelector('i');
+    if (icon) {
+      icon.className = expanded ? 'bx bx-menu' : 'bx bx-x';
+    }
+  });
+
+  menu.querySelectorAll('a').forEach(function(link) {
+    link.addEventListener('click', function() {
+      menu.classList.add('hidden');
+      toggle.setAttribute('aria-expanded', 'false');
+      var icon = toggle.querySelector('i');
+      if (icon) icon.className = 'bx bx-menu';
+    });
+  });
+
+  window.addEventListener('scroll', function() {
+    var nav = document.getElementById('showcase-nav');
+    if (!nav) return;
+    if (window.scrollY > 20) {
+      nav.style.background = 'color-mix(in oklab, var(--background) 90%, transparent)';
+      nav.style.backdropFilter = 'blur(16px) saturate(1.4)';
+      nav.style.borderBottom = '1px solid var(--border)';
+    } else {
+      nav.style.background = 'transparent';
+      nav.style.backdropFilter = 'none';
+      nav.style.borderBottom = '1px solid transparent';
+    }
+  }, { passive: true });
+
+  document.querySelectorAll('[data-smooth]').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      var id = this.getAttribute('href').slice(1);
+      var el = document.getElementById(id);
+      if (el) {
+        var navHeight = 64;
+        var top = el.getBoundingClientRect().top + window.scrollY - navHeight;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      }
+    });
+  });
+})();
+</script>

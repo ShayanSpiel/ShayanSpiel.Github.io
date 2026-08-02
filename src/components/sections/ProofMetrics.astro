@@ -1,0 +1,25 @@
+---
+import { type Locale, t } from "../../i18n/translations";
+
+export interface Props {
+  proof: { value: string; label: string }[];
+  locale?: Locale;
+}
+
+const { proof, locale = "en" } = Astro.props;
+
+const proofLabels: Record<string, string> = {
+  "Black Friday visitors": "proof.blackFriday",
+  "App installs across two seasons": "proof.appInstalls",
+  "Year-over-year revenue growth": "proof.revenueGrowth",
+};
+---
+
+<div class="grid grid-cols-3 gap-4" data-aos="fade-up">
+  {proof.map((item) => (
+    <div class="text-center p-5 rounded-md border border-border bg-panel hover:border-border-strong transition-colors">
+      <div class="text-2xl sm:text-3xl font-bold text-foreground-strong">{item.value}</div>
+      <div class="text-2xs text-muted-foreground mt-1.5 leading-snug">{t(locale, proofLabels[item.label] || item.label)}</div>
+    </div>
+  ))}
+</div>

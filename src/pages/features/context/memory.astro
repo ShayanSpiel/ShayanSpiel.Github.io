@@ -1,0 +1,261 @@
+---
+import FeaturesLayout from "../../../layouts/FeaturesLayout.astro";
+import FeatureHero from "../../../components/features/FeatureHero.astro";
+import FeatureCTA from "../../../components/features/FeatureCTA.astro";
+import SectionHeader from "../../../components/sections/SectionHeader.astro";
+import { SITE } from "../../../config";
+import { type Locale, t } from "../../../i18n/translations";
+import { localizePath } from "../../../i18n";
+
+export interface Props {
+  locale?: Locale;
+}
+
+const { locale = "en" } = Astro.props;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: t(locale, "features.context.memory.pageTitle"),
+  description: t(locale, "features.context.memory.pageDesc"),
+  url: SITE.url + "/features/context/memory/",
+  isPartOf: {
+    "@type": "WebSite",
+    name: SITE.name,
+    url: SITE.url,
+  },
+};
+---
+
+<FeaturesLayout
+  title={t(locale, "features.context.memory.pageTitle")}
+  description={t(locale, "features.context.memory.pageDesc")}
+  locale={locale}
+>
+  <FeatureHero
+    locale={locale}
+    breadcrumbs={[
+      { label: t(locale, "nav.features"), href: "/features/" },
+      { label: t(locale, "features.context.label"), href: "/features/context/" },
+      { label: t(locale, "features.context.memory.label") },
+    ]}
+    label={t(locale, "features.context.memory.label")}
+    title={t(locale, "features.context.memory.hero.title")}
+    description={t(locale, "features.context.memory.hero.desc")}
+  />
+
+  <!-- Real Memory Store UI Mockup -->
+  <section class="relative py-24 sm:py-32 overflow-hidden">
+    <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(var(--foreground) 1px, transparent 1px); background-size: 24px 24px;"></div>
+    <div class="relative mx-auto max-w-6xl px-6">
+      <div class="mx-auto max-w-4xl" data-aos="fade-up">
+        <div class="rounded-lg border border-border bg-panel overflow-hidden shadow-panel">
+          <!-- Window Header -->
+          <div class="flex items-center justify-between px-4 py-3 border-b border-border bg-panel-raised">
+            <div class="flex items-center gap-2">
+              <div class="h-3 w-3 rounded-full bg-destructive/60"></div>
+              <div class="h-3 w-3 rounded-full bg-warning/60"></div>
+              <div class="h-3 w-3 rounded-full bg-success/60"></div>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="inline-flex items-center gap-1 rounded-sm px-1.5 py-0.5 text-2xs font-medium" style="background: var(--purple-soft); color: var(--purple);">
+                <i class="bx bx-data icon-xs"></i>
+                {t(locale, "features.context.memory.mock.window")}
+              </span>
+              <span class="text-2xs text-muted-foreground font-mono">{t(locale, "features.context.memory.mock.items", { count: 47 })}</span>
+            </div>
+          </div>
+
+          <!-- Memory Store Content -->
+          <div class="p-4 space-y-3">
+            <!-- Search & Filters -->
+            <div class="flex items-center gap-2">
+              <div class="flex-1 rounded-md border border-border bg-background px-3 py-2 flex items-center gap-2">
+                <i class="bx bx-search text-muted-foreground icon-sm"></i>
+                <span class="text-xs text-muted-foreground">{t(locale, "features.context.memory.mock.search")}</span>
+              </div>
+              <button type="button" class="inline-flex items-center rounded-sm border border-border bg-panel px-2 py-1 text-2xs font-medium text-foreground-muted">
+                <i class="bx bx-slider icon-xs"></i>
+                {t(locale, "features.context.memory.mock.filter")}
+              </button>
+            </div>
+
+            <!-- Ranked Knowledge Items -->
+            <div class="space-y-1.5">
+              <div class="flex items-center gap-3 rounded-md border border-border bg-background px-3 py-2">
+                <span class="text-2xs font-bold text-primary w-5 text-center">1</span>
+                <div class="flex-1">
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs font-medium text-foreground-strong">{t(locale, "features.context.memory.mock.item1")}</span>
+                    <span class="inline-flex items-center rounded-sm px-1 py-0.5 text-2xs font-medium" style="background: var(--primary-soft); color: var(--primary);">{t(locale, "features.context.memory.mock.confidence", { value: "0.94" })}</span>
+                  </div>
+                  <span class="text-2xs text-muted-foreground">{t(locale, "features.context.memory.mock.item1meta")}</span>
+                </div>
+                <div class="flex items-center gap-1">
+                  <i class="bx bx-trending-up text-success icon-xs"></i>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-3 rounded-md border border-border bg-background px-3 py-2">
+                <span class="text-2xs font-bold text-primary w-5 text-center">2</span>
+                <div class="flex-1">
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs font-medium text-foreground-strong">{t(locale, "features.context.memory.mock.item2")}</span>
+                    <span class="inline-flex items-center rounded-sm px-1 py-0.5 text-2xs font-medium" style="background: var(--success-soft); color: var(--success);">{t(locale, "features.context.memory.mock.confidence", { value: "0.91" })}</span>
+                  </div>
+                  <span class="text-2xs text-muted-foreground">{t(locale, "features.context.memory.mock.item2meta")}</span>
+                </div>
+                <div class="flex items-center gap-1">
+                  <i class="bx bx-time-five text-warning icon-xs"></i>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-3 rounded-md border border-border bg-background px-3 py-2">
+                <span class="text-2xs font-bold text-primary w-5 text-center">3</span>
+                <div class="flex-1">
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs font-medium text-foreground-strong">{t(locale, "features.context.memory.mock.item3")}</span>
+                    <span class="inline-flex items-center rounded-sm px-1 py-0.5 text-2xs font-medium" style="background: var(--warning-soft); color: var(--warning);">{t(locale, "features.context.memory.mock.confidence", { value: "0.78" })}</span>
+                  </div>
+                  <span class="text-2xs text-muted-foreground">{t(locale, "features.context.memory.mock.item3meta")}</span>
+                </div>
+                <div class="flex items-center gap-1">
+                  <i class="bx bx-trending-up text-success icon-xs"></i>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-3 rounded-md border border-border bg-background px-3 py-2">
+                <span class="text-2xs font-bold text-muted-foreground w-5 text-center">4</span>
+                <div class="flex-1">
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs font-medium text-foreground-strong">{t(locale, "features.context.memory.mock.item4")}</span>
+                    <span class="inline-flex items-center rounded-sm px-1 py-0.5 text-2xs font-medium" style="background: var(--info-soft); color: var(--info);">{t(locale, "features.context.memory.mock.confidence", { value: "0.85" })}</span>
+                  </div>
+                  <span class="text-2xs text-muted-foreground">{t(locale, "features.context.memory.mock.item4meta")}</span>
+                </div>
+                <div class="flex items-center gap-1">
+                  <i class="bx bx-time-five text-muted-foreground icon-xs"></i>
+                </div>
+              </div>
+            </div>
+
+            <!-- Memory Stats -->
+            <div class="flex items-center gap-4 pt-2 border-t border-border">
+              <span class="text-2xs text-foreground-muted">{t(locale, "features.context.memory.mock.total", { count: 47 })}</span>
+              <span class="text-2xs text-foreground-muted">{t(locale, "features.context.memory.mock.avg", { value: "0.83" })}</span>
+              <span class="text-2xs text-foreground-muted">{t(locale, "features.context.memory.mock.lastDream")}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative py-24 sm:py-32 overflow-hidden">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="relative mx-auto max-w-6xl px-6">
+      <SectionHeader
+        label={t(locale, "features.context.memory.problem.label")}
+        title={t(locale, "features.context.memory.problem.title")}
+        description={t(locale, "features.context.memory.problem.desc")}
+      />
+
+      <div class="rounded-md border border-border bg-panel p-5 max-w-2xl mx-auto" data-aos="fade-up">
+        <div class="flex h-9 w-9 items-center justify-center rounded-md bg-destructive-soft mb-3">
+          <i class="bx bx-error text-destructive icon-xl"></i>
+        </div>
+        <h3 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, "features.context.memory.problem.title")}</h3>
+        <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, "features.context.memory.problem.desc")}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative py-24 sm:py-32">
+    <div class="mx-auto max-w-6xl px-6">
+      <SectionHeader
+        title={t(locale, "features.context.memory.what.title")}
+        description={t(locale, "features.context.memory.what.desc")}
+      />
+
+      <div class="grid sm:grid-cols-3 gap-6" data-aos="fade-up">
+        <div class="rounded-md border border-border bg-panel p-5">
+          <div class="flex h-9 w-9 items-center justify-center rounded-md bg-primary-soft mb-3">
+            <i class="bx bx-file text-primary icon-xl"></i>
+          </div>
+          <h3 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, "features.context.files.title")}</h3>
+          <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, "features.context.files.desc")}</p>
+        </div>
+        <div class="rounded-md border border-border bg-panel p-5">
+          <div class="flex h-9 w-9 items-center justify-center rounded-md bg-accent-soft mb-3">
+            <i class="bx bx-slider text-accent icon-xl"></i>
+          </div>
+          <h3 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, "features.context.strategy.title")}</h3>
+          <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, "features.context.strategy.desc")}</p>
+        </div>
+        <div class="rounded-md border border-border bg-panel p-5">
+          <div class="flex h-9 w-9 items-center justify-center rounded-md bg-purple-soft mb-3">
+            <i class="bx bx-data text-purple icon-xl"></i>
+          </div>
+          <h3 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, "features.context.memory.title")}</h3>
+          <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, "features.context.memory.desc")}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative py-24 sm:py-32 overflow-hidden">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="relative mx-auto max-w-6xl px-6">
+      <SectionHeader
+        title={t(locale, "features.context.memory.how.title")}
+      />
+
+      <div class="grid sm:grid-cols-4 gap-8" data-aos="fade-up">
+        <div class="text-center">
+          <div class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary-soft text-primary font-bold text-sm mb-4">1</div>
+          <h3 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, "features.context.memory.how.step1.title")}</h3>
+          <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, "features.context.memory.how.step1.desc")}</p>
+        </div>
+        <div class="text-center">
+          <div class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary-soft text-primary font-bold text-sm mb-4">2</div>
+          <h3 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, "features.context.memory.how.step2.title")}</h3>
+          <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, "features.context.memory.how.step2.desc")}</p>
+        </div>
+        <div class="text-center">
+          <div class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary-soft text-primary font-bold text-sm mb-4">3</div>
+          <h3 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, "features.context.memory.how.step3.title")}</h3>
+          <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, "features.context.memory.how.step3.desc")}</p>
+        </div>
+        <div class="text-center">
+          <div class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary-soft text-primary font-bold text-sm mb-4">4</div>
+          <h3 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, "features.context.memory.how.step4.title")}</h3>
+          <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, "features.context.memory.how.step4.desc")}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative py-24 sm:py-32">
+    <div class="mx-auto max-w-6xl px-6">
+      <div class="rounded-md border border-border bg-panel p-8" data-aos="fade-up">
+        <div class="flex items-start gap-4">
+          <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-purple-soft">
+            <i class="bx bx-moon text-purple icon-xl"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-semibold text-foreground-strong mb-2">{t(locale, "features.context.memory.dreaming.title")}</h3>
+            <p class="text-sm text-muted-foreground leading-relaxed">{t(locale, "features.context.memory.dreaming.desc")}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <FeatureCTA
+    locale={locale}
+    title={t(locale, "waitlist.cta.title")}
+    description={t(locale, "waitlist.cta.p")}
+  />
+
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+</FeaturesLayout>
