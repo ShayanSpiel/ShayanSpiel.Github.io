@@ -10,35 +10,25 @@ export interface Props {
 }
 
 const { locale = "en" } = Astro.props;
-const activeTag = Astro.url.searchParams.get("tag") || null;
-const activeCategory = Astro.url.searchParams.get("category") || null;
 
 const allNotes = await getCollection(locale === "fa" ? "notesFa" : "notes");
 const sorted = allNotes.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
-const filtered = sorted.filter((p) => {
-  if (activeCategory && p.data.category !== activeCategory) return false;
-  if (activeTag && !p.data.tags.includes(activeTag)) return false;
-  return true;
-});
 
 const allTags = [...new Set(sorted.flatMap((p) => p.data.tags))].sort();
 const categories = ["journey", "ai-agents"] as const;
-
 const urlPrefix = locale === "fa" ? "/fa/notes" : "/notes";
 
 const collectionJsonLd = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
-  name: activeTag ? `#${activeTag} — ${t(locale, "notes.title")}` : t(locale, "notes.title"),
-  description: activeTag
-    ? `${t(locale, "notes.desc")} Filtered by #${activeTag}.`
-    : t(locale, "notes.desc"),
-  url: `${SITE.url}${localizePath(activeTag ? `/notes/?tag=${encodeURIComponent(activeTag)}` : "/notes/", locale)}`,
+  name: t(locale, "notes.title"),
+  description: t(locale, "notes.desc"),
+  url: `${SITE.url}${localizePath("/notes/", locale)}`,
   isPartOf: { "@id": `${SITE.url}/#website` },
   about: { "@id": `${SITE.url}/#person` },
   mainEntity: {
     "@type": "ItemList",
-    itemListElement: filtered.map((post, i) => ({
+    itemListElement: sorted.map((post, i) => ({
       "@type": "ListItem",
       position: i + 1,
       url: `${SITE.url}${urlPrefix}${post.data.permalink}`,
@@ -57,14 +47,26 @@ const breadcrumbJsonLd = {
     { "@type": "ListItem", position: 2, name: t(locale, "notes.title"), item: `${SITE.url}${localizePath("/notes/", locale)}` },
   ],
 };
+
+const categoryMeta = {
+  journey: {
+    label: t(locale, "notes.categories.journey"),
+    desc: t(locale, "notes.categories.journeyDesc"),
+  },
+  "ai-agents": {
+    label: t(locale, "notes.categories.ai-agents"),
+    desc: t(locale, "notes.categories.aiAgentsDesc"),
+  },
+};
+const categoryMetaJson = JSON.stringify(categoryMeta);
+const noResultsLabel = t(locale, "notes.noResults");
 ---
 
 <Page
-  title={activeTag ? `#${activeTag} — ${t(locale, "notes.title")} — ${AUTHOR.name}` : `${t(locale, "notes.title")} — ${AUTHOR.name}`}
-  description={activeTag ? `${t(locale, "notes.desc")} Filtered by #${activeTag}.` : t(locale, "notes.desc")}
+  title={`${t(locale, "notes.title")} — ${AUTHOR.name}`}
+  description={t(locale, "notes.desc")}
   image="/assets/og/blog.png"
   locale={locale}
-  robots={activeTag || activeCategory ? "noindex, follow" : undefined}
 >
   <section class="py-24 sm:py-32">
     <div class="mx-auto max-w-4xl px-6">
@@ -78,30 +80,37 @@ const breadcrumbJsonLd = {
         </p>
       </div>
 
-      <div class="flex items-center justify-center gap-4 mb-10 text-xs text-muted-foreground">
-        <span><strong class="text-foreground-strong font-semibold">{filtered.length}</strong> {t(locale, "notes.stats.notes")}</span>
+<div class="flex items-center justify-center gap-4 mb-10 text-xs text-muted-foreground">
+        <span><strong id="notes-count" class="text-foreground-strong font-semibold">{sorted.length}</strong> {t(locale, "notes.stats.notes")}</span>
         <span class="text-border-strong" aria-hidden="true">·</span>
         <span><strong class="text-foreground-strong font-semibold">{allTags.length}</strong> {t(locale, "notes.stats.topics")}</span>
         <span class="text-border-strong" aria-hidden="true">·</span>
         <span>{t(locale, "notes.stats.newestFirst")}</span>
       </div>
 
-      <div class="flex flex-wrap items-center justify-center gap-2 mb-10" role="group" aria-label={t(locale, "notes.categories.label")}>
-        <a href={localizePath("/notes/", locale)} class:list={[
-          "inline-flex items-center rounded-md px-4 py-1.5 text-xs font-medium transition-colors",
-          !activeCategory ? "bg-primary text-primary-foreground" : "bg-panel-raised text-muted-foreground hover:text-foreground border border-border",
-        ]}>{t(locale, "notes.categories.all")}</a>
+      <div id="category-filters" class="flex flex-wrap items-center justify-center gap-2 mb-3" role="group" aria-label={t(locale, "notes.categories.label")}>
+        <button type="button" data-category="" class:list={[
+          "inline-flex items-center rounded-md px-4 py-1.5 text-xs font-medium transition-colors cursor-pointer",
+          "bg-primary text-primary-foreground",
+        ]}>{t(locale, "notes.categories.all")}</button>
         {categories.map((cat) => (
-          <a href={localizePath(`/notes/?category=${cat}`, locale)} class:list={[
-            "inline-flex items-center rounded-md px-4 py-1.5 text-xs font-medium transition-colors",
-            activeCategory === cat ? "bg-primary text-primary-foreground" : "bg-panel-raised text-muted-foreground hover:text-foreground border border-border",
-          ]}>{t(locale, `notes.categories.${cat}`)}</a>
+          <button type="button" data-category={cat} class:list={[
+            "inline-flex items-center rounded-md px-4 py-1.5 text-xs font-medium transition-colors cursor-pointer",
+            "bg-panel-raised text-muted-foreground hover:text-foreground border border-border",
+          ]}>{t(locale, `notes.categories.${cat}`)}</button>
         ))}
       </div>
 
-      <div class="post-grid">
-        {filtered.map((post) => (
-          <a href={localizePath(`/notes${post.data.permalink}`, locale)} class="post-card">
+      <p id="category-desc" class="text-center text-xs text-muted-foreground mb-10"></p>
+
+      <div id="notes-grid" class="post-grid">
+        {sorted.map((post) => (
+          <a
+            href={localizePath(`/notes${post.data.permalink}`, locale)}
+            class="post-card"
+            data-category={post.data.category}
+            data-tags={post.data.tags.join("|")}
+          >
             <div class="post-card-date">
               {post.data.date.toLocaleDateString(locale === "fa" ? "fa-IR" : "en-US", { month: "short", day: "numeric", year: "numeric" })}
             </div>
@@ -114,21 +123,23 @@ const breadcrumbJsonLd = {
         ))}
       </div>
 
+      <div id="notes-empty" class="hidden text-center py-10 text-sm text-muted-foreground"></div>
+
       {allTags.length > 0 && (
-        <details class="mt-12" open={!!activeTag} data-aos="fade-up">
+        <details id="tag-filters-details" class="mt-12" data-aos="fade-up">
           <summary class="cursor-pointer text-xs text-muted-foreground hover:text-foreground transition-colors select-none">
             {t(locale, "notes.browseByTopic")} ({allTags.length})
           </summary>
-          <div class="flex flex-wrap gap-2 mt-4">
-            <a href={localizePath("/notes/", locale)} class:list={[
-              "inline-flex items-center rounded-md px-3 py-1 text-2xs font-medium transition-colors",
-              !activeTag ? "bg-primary text-primary-foreground" : "bg-panel-raised text-muted-foreground hover:text-foreground border border-border",
-            ]}>All</a>
+          <div id="tag-filters" class="flex flex-wrap gap-2 mt-4">
+            <button type="button" data-tag="" class:list={[
+              "inline-flex items-center rounded-md px-3 py-1 text-2xs font-medium transition-colors cursor-pointer",
+              "bg-primary text-primary-foreground",
+            ]}>All</button>
             {allTags.map((tag) => (
-              <a href={localizePath(`/notes/?tag=${tag}`, locale)} class:list={[
-                "inline-flex items-center rounded-md px-3 py-1 text-2xs font-medium transition-colors",
-                activeTag === tag ? "bg-primary text-primary-foreground" : "bg-panel-raised text-muted-foreground hover:text-foreground border border-border",
-              ]}>#{tag}</a>
+              <button type="button" data-tag={tag} class:list={[
+                "inline-flex items-center rounded-md px-3 py-1 text-2xs font-medium transition-colors cursor-pointer",
+                "bg-panel-raised text-muted-foreground hover:text-foreground border border-border",
+              ]}>#{tag}</button>
             ))}
           </div>
         </details>
@@ -136,6 +147,108 @@ const breadcrumbJsonLd = {
     </div>
   </section>
 
+  <script is:inline set:html={`
+    (() => {
+      const categoryMeta = ${categoryMetaJson};
+      const noResults = ${JSON.stringify(noResultsLabel)};
+
+      const grid = document.getElementById("notes-grid");
+      if (!grid) return;
+      const cards = Array.from(grid.querySelectorAll(".post-card"));
+      const emptyEl = document.getElementById("notes-empty");
+      const countEl = document.getElementById("notes-count");
+      const descEl = document.getElementById("category-desc");
+
+      const activeClass = ["bg-primary", "text-primary-foreground"];
+      const inactiveClass = ["bg-panel-raised", "text-muted-foreground", "hover:text-foreground", "border", "border-border"];
+
+      let category = "";
+      let tag = "";
+
+      function readParams() {
+        const params = new URLSearchParams(location.search);
+        category = categoryMeta[params.get("category")] ? params.get("category") : "";
+        tag = params.get("tag") || "";
+        if (tag && !cards.some((c) => (c.dataset.tags || "").split("|").includes(tag))) tag = "";
+      }
+
+      function syncButtons() {
+        document.querySelectorAll("#category-filters [data-category]").forEach((btn) => {
+          const value = btn.getAttribute("data-category") || "";
+          const isActive = value === category;
+          btn.classList.remove(...activeClass, ...inactiveClass);
+          btn.classList.add(...(isActive ? activeClass : inactiveClass));
+          btn.setAttribute("aria-pressed", String(isActive));
+        });
+        document.querySelectorAll("#tag-filters [data-tag]").forEach((btn) => {
+          const value = btn.getAttribute("data-tag") || "";
+          const isActive = value === tag;
+          btn.classList.remove(...activeClass, ...inactiveClass);
+          btn.classList.add(...(isActive ? activeClass : inactiveClass));
+          btn.setAttribute("aria-pressed", String(isActive));
+        });
+      }
+
+      function render() {
+        let visible = 0;
+        cards.forEach((card) => {
+          const matchCategory = !category || card.dataset.category === category;
+          const matchTag = !tag || (card.dataset.tags || "").split("|").includes(tag);
+          const show = matchCategory && matchTag;
+          card.classList.toggle("hidden", !show);
+          if (show) visible++;
+        });
+        countEl.textContent = String(visible);
+        if (descEl) {
+          if (category && categoryMeta[category]) {
+            descEl.textContent = categoryMeta[category].desc;
+            descEl.classList.remove("hidden");
+          } else {
+            descEl.textContent = "";
+            descEl.classList.add("hidden");
+          }
+        }
+        if (emptyEl) {
+          const showEmpty = visible === 0;
+          emptyEl.classList.toggle("hidden", !showEmpty);
+          emptyEl.textContent = showEmpty ? noResults : "";
+        }
+        syncButtons();
+      }
+
+      function apply() {
+        readParams();
+        render();
+      }
+
+      document.getElementById("category-filters").addEventListener("click", (e) => {
+        const btn = e.target.closest("[data-category]");
+        if (!btn) return;
+        const url = new URL(location.href);
+        const value = btn.getAttribute("data-category") || "";
+        if (value) url.searchParams.set("category", value);
+        else url.searchParams.delete("category");
+        history.pushState(null, "", url.toString());
+        apply();
+      });
+
+      const tagFilters = document.getElementById("tag-filters");
+      if (tagFilters) tagFilters.addEventListener("click", (e) => {
+        const btn = e.target.closest("[data-tag]");
+        if (!btn) return;
+        const url = new URL(location.href);
+        const value = btn.getAttribute("data-tag") || "";
+        if (value) url.searchParams.set("tag", value);
+        else url.searchParams.delete("tag");
+        history.pushState(null, "", url.toString());
+        apply();
+      });
+
+      window.addEventListener("popstate", apply);
+
+      apply();
+    })();
+  `} />
   <script is:inline type="application/ld+json" set:html={JSON.stringify(collectionJsonLd)} />
   <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
 </Page>

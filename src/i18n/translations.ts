@@ -146,6 +146,7 @@ export const translations: Record<Locale, Translations> = {
     "notes.categories.ai-agents": "AI & Agents",
     "notes.categories.journeyDesc": "Founder stories: the product, the build, the lessons.",
     "notes.categories.aiAgentsDesc": "Harness and AI engineering: agents, context, evals, infrastructure.",
+    "notes.noResults": "No notes match this filter.",
 
     // Contact page
     "contact.label": "Contact",
@@ -1162,6 +1163,7 @@ export const translations: Record<Locale, Translations> = {
     "notes.categories.ai-agents": "AI و ایجنت‌ها",
     "notes.categories.journeyDesc": "داستان‌های فاندر: محصول، ساخت و درس‌ها.",
     "notes.categories.aiAgentsDesc": "مهندسی هارنس و AI: ایجنت‌ها، کانتکست، ارزیابی‌ها و زیرساخت.",
+    "notes.noResults": "هیچ یادداشتی با این فیلتر پیدا نشد.",
 
     // Contact page
     "contact.label": "تماس",
