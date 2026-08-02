@@ -17,7 +17,7 @@
   "scripts": {
     "dev": "astro dev --host 0.0.0.0 --port 4321",
     "preview": "astro preview",
-    "build": "astro build",
+    "build": "astro build && node scripts/postbuild-sitemap.mjs",
     "typecheck": "astro check",
     "seo:check": "node scripts/seo-check.mjs"
   },
