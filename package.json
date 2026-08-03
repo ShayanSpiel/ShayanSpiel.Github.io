@@ -19,10 +19,12 @@
     "preview": "astro preview",
     "build": "astro build && node scripts/postbuild-sitemap.mjs",
     "typecheck": "astro check",
-    "seo:check": "node scripts/seo-check.mjs"
+    "seo:check": "node scripts/seo-check.mjs",
+    "og:generate": "node scripts/generate-og.mjs"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
-    "@types/aos": "^3.0.8"
+    "@types/aos": "^3.0.8",
+    "puppeteer": "^25.4.0"
   }
 }
