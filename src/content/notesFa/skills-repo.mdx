@@ -1,0 +1,176 @@
+---
+title: "با این ۱۰ اسکیل وبسایتت رو به یک هاب تولید محتوا تبدیل کن"
+date: 2026-08-04 10:00:00 +0000
+description: "ویدیو از HTML، نوشتن محتوا، ترجمه فارسی، سئو، آنالیتیکس، سیستم طراحی — ۱۰ اسکیل عملیاتی که هر روز استفاده می‌کنم. ریپوی کامل، اسکریپت‌ها، قالب‌ها."
+permalink: /skills-repo/
+category: journey
+tags:
+- اوپن‌سورس
+- اسکیل‌ها
+- ابزارها
+- سیستم-طراحی
+image: /assets/og/skills-repo.png
+---
+
+import SectionHead from "@/components/posts/SectionHead.astro";
+import ProseCenter from "@/components/posts/ProseCenter.astro";
+import Card from "@/components/posts/Card.astro";
+import Pullquote from "@/components/posts/Pullquote.astro";
+import Takeaway from "@/components/posts/Takeaway.astro";
+import PostCta from "@/components/posts/PostCta.astro";
+
+
+
+<SectionHead tag='چرا' title='یه اتفاق تکراری افتاده بود' sub='هر بار که می‌خواستم یه لندینگ‌پیج بنویسم، یه صفحه رو فارسی کنم، یا از یه انیمیشن HTML ویدیو بسازم، داشتم یکسری کارها رو ذهنی انجام می‌دادم. دانش توی سرم پراکنده بود. باید می‌اومد توی یه سیستم.' />
+
+<ProseCenter text='سه ماه پیش [چک‌لیست کیفیت ترجمه](/notes/translation-glossary/) رو سه بار نوشتم. یه بار برای [لندینگ‌پیج انتظار](/waitlist/)، یه بار برای [داستان فاندر](/founder/)، یه بار برای [صفحه امکانات](/features/). هر بار داشتم از صفر شروع می‌کردم. هر بار یه چیزی رو فراموش می‌کردم.' />
+
+<ProseCenter text='[سئو](/notes/seo-from-architecture/) — hreflang رو هر بار از نو چک می‌کردم. [محتوا](/notes/content-pipeline/) — عبارات ممنوع هر هفته برمی‌گشتن و من یادم می‌رفت کدوما بودن. [آنالیتیکس](/notes/waitlist-supabase/) — معماری رضایت رو هر بار از صفر می‌ساختم. مشکل توانایی نبود. مشکل این بود که داشتم بدون سیستم کار می‌کردم.' />
+
+<ProseCenter text='پس یه سیستم ساختم. ۱۰ اسکیل. هر کدوم یه گردش‌کار کامل: مأموریت، دامنه، قوانین، دستورالعمل گام‌به‌گام، دروازه‌های اعتبارسنجی و قالب خروجی. هر قانون از یه اشتباهی که کردم اومده. هر دروازه از یه شکستی که دیدم.' />
+
+<Takeaway text='پرامپت یه دستور یک‌باره‌ست. اسکیل یه گردش‌کار تکرارپذیره که هر بار بهتر می‌شه.' />
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='چطوری #۱' title='از HTML ویدیو بساز، با API روش نریشن بذار' sub='یه فایل HTML با انیمیشن‌های CSS بنویس. Puppeteer هر فریم رو ضبط می‌کنه. FFmpeg اونا رو MP4 می‌کنه. چهار نسبت تصویر. یه دستور.' />
+
+  <ProseCenter text='این اسکیله که بیشتر از همه استفاده می‌کنم. دیگه از Figma خروجی نمی‌گیرم و Premiere نمی‌برم. انیمیشن‌ها قبلاً توی HTML و CSS سایت هستن. چرا مرورگر رو ضبط نکنم؟' />
+
+  <div class='grid grid-2'>
+    <Card title='ترکیب صحنه' desc='هوک، وعده، امکانات، نحوه کار، CTA. هر صحنه یه بخش تمام‌صفحه با متن‌های پلکانی و افکت‌های پس‌زمینه.' icon='network-chart' href='https://github.com/ShayanSpiel/Skills/tree/main/skills/07-video-creation/templates' linkText='اسکیل رو دالنود کن' />
+    <Card title='خروجی ۴ نسبت تصویر' desc='یه فایل HTML چهار ویدیو تولید می‌کنه: افقی (۱۶:۹)، عمودی (۹:۱۶)، مربعی (۱:۱) و استوری (۴:۵). یه دستور، چهار خروجی.' icon='check-square' href='https://github.com/ShayanSpiel/Skills/blob/main/scripts/render-all.sh' linkText='اسکیل رو دالنود کن' />
+  </div>
+
+  <ProseCenter text='این ویدیوی لانچ هست که با همین ابزار ساختم. هر فریم از HTML رندر شده. هر انیمیشن با CSS کنترل می‌شه:' />
+
+  {/* جایگزین کن وقتی ویدیو رو آپلود کردی */}
+  <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border-radius:10px; border:1px solid var(--border); margin:24px 0;">
+    <video style="position:absolute; top:0; left:0; width:100%; height:100%;" controls preload="metadata" poster="/assets/og/skills-repo.png">
+      <source src="/videos/launch-waitlist-16x9.mp4" type="video/mp4" />
+      مرورگر شما از ویدیو پشتیبانی نمی‌کنه.
+    </video>
+  </div>
+
+  <Takeaway text='بهترین ابزار ویدیو همونیه که قبلاً داری: یه مرورگر.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='چطوری #۲' title='توی ۳ مرحله نصبش کن' sub='Node.js, Puppeteer, FFmpeg. کل استک همینه. بدون After Effects. بدون Premiere. بدون خروجی Figma.' />
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>۰۱</div>
+      <div class='step-body'>
+        <strong>ریپو رو کلون کن</strong>
+        <code>git clone https://github.com/ShayanSpiel/Skills.git</code><br/>
+        ریپو ۱۰ اسکیل، اسکریپت‌های رندر، قالب‌های HTML و canvasهای پرکردنی داره.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>۰۲</div>
+      <div class='step-body'>
+        <strong>وابستگی‌ها رو نصب کن</strong>
+        <code>npm install puppeteer && brew install ffmpeg</code><br/>
+        Puppeteer Chrome بی‌سر دانلود می‌کنه. FFmpeg رمزگذاری رو انجام می‌ده. هر دو رایگانن.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>۰۳</div>
+      <div class='step-body'>
+        <strong>اولین ویدیوت رو بساز</strong>
+        <code>bash scripts/render-all.sh src/video-templates/launch.html 30</code><br/>
+        یه فایل HTML. چهار نسبت تصویر. خروجی توی <code>output/</code> ذخیره می‌شه.
+      </div>
+    </div>
+  </div>
+
+  <ProseCenter text='هر اسکیل از یه الگو پیروی می‌کنه: SKILL.md رو بخون، قالب‌ها رو برای محصولت پر کن، گردش‌کار رو اجرا کن. [راهنمای کامل شخصی‌سازی](https://github.com/ShayanSpiel/Skills/blob/main/docs/customization-guide.md) هر اسکیل رو توضیح می‌ده.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='چطوری ساختیم' title='MiMo 2.5 کد نوشت. من کارگردانی کردم.' sub='کل پایپلاین ویدیو با MiMo 2.5 ساخته شده — همون مدلی که انیمیشن صفحه 404 این سایت رو طراحی کرده.' />
+
+  <ProseCenter text='گردش‌کار این نیست که به AI بگی «ویدیو بساز». گردش‌کار اینه: من صحنه‌ها و زمان‌بندی رو تعریف می‌کنم، MiMo 2.5 کد HTML/CSS رو می‌نویسه، من خروجی رو بررسی می‌کنم، Puppeteer فریم‌ها رو رندر می‌کنه. AI حدس نمی‌زنه ویدیو چه شکلی باشه. من می‌گم. اون کد می‌نویسه. من تأیید می‌کنم.' />
+
+  <ProseCenter text='این [الگوی دروازه‌ها](/notes/gates-not-models/) روی تولید ویدیو پیاده شده. جهت خلاقانه مال من هست. اجرا کار MiMo 2.5 هست. دروازه‌های کیفیت همون ۳۰ بررسی‌ای هستن که روی همه چیز استفاده می‌کنم: هوک می‌خوره، متن خواناست، CTA به صفحه درست وصله، رنگ‌ها از سیستم طراحی هستن.' />
+
+  <div class='grid grid-2'>
+    <Card title='صفحه 404' desc='هر المان — آیکون‌های مداری، رادار، ذرات، متن گلیچ — توسط MiMo 2.5 نوشته شده، با CSS رندر شده، با توکن‌های طراحی اعتبارسنجی شده.' icon='network-chart' href='/404/' linkText='اسکیل رو دالنود کن' />
+    <Card title='ویدیوی لانچ' desc='۶ صحنه، ۳۰ ثانیه، ۴ نسبت تصویر. همون پایپلاین. همون مدل. همون توکن‌های سیستم طراحی. فرمت خروجی متفاوت.' icon='video' href='https://github.com/ShayanSpiel/Skills/tree/main/skills/07-video-creation' linkText='اسکیل رو دالنود کن' />
+  </div>
+
+  <Takeaway text='MiMo 2.5 کد می‌نویسه. من کارگردانی می‌کنم. دروازه‌ها تصمیم می‌گیرن چی بره روی سایت.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='صفحه 404' title='این همون چیزیه که MiMo 2.5 می‌تونه طراحی کنه' sub='/404/ رو باز کن. هر انیمیشن — مدارها، رادار، ذرات، گلیچ — با یه پرامپت توسط MiMo 2.5 نوشته شده با استفاده از توکن‌های طراحی و قراردادهای حرکتی این سایت.' />
+
+  <ProseCenter text='صفحه 404 بهترین نمایش توانایی طراحی MiMo 2.5 هست. از همون متغیرهای CSS بقیه سایت استفاده می‌کنه. همون فونت Outfit. همون پالت Gruvbox Dark. همون توکن‌های border-radius. تنها تفاوت حرکته: CSS keyframes که سرعت مدارها، چرخش رادار، شنای ذرات و افکت‌های گلیچ رو کنترل می‌کنن.' />
+
+  <ProseCenter text='به MiMo 2.5 [توکن‌های سیستم طراحی](/notes/rtl-design-system/)، [کلیدهای انیمیشن](https://github.com/ShayanSpiel/Skills/blob/main/skills/06-design-system/tokens-reference.md) و یه دستور دادم: صفحه 404 رو طوری طراحی کن که حس یه مرکز فرمان AI رو داشته باشه که اتصالش قطع شده. ۴۰۰ خط HTML/CSS/JS نوشت. من بررسی کردم. رفت روی سایت. همون پایپلاین روی هر صفحه دیگه سایت هم کار می‌کنه.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='همه ۱۰ اسکیل' title='کل استک. یه ریپو.' sub='هر اسکیل یه گردش‌کار کامله: مأموریت، دامنه، قوانین اصلی، دستورالعمل گام‌به‌گام، دروازه‌های اعتبارسنجی و قوانین خروجی. همه شخصی‌سازی‌شدنی.' />
+
+  <div class='grid grid-2'>
+    <Card title='ساخت ویدیو' desc='پایپلاین HTML به ویدیو: ضبط فریم با Puppeteer، رمزگذاری FFmpeg، ترکیب صحنه، سیستم انیمیشن CSS، ساعت مجازی و رندر چند نسبت تصویر.' icon='video' href='https://github.com/ShayanSpiel/Skills/tree/main/skills/07-video-creation' linkText='اسکیل رو دالنود کن' />
+    <Card title='نوشتن محتوا (EN)' desc='کار محصول، تجربه فاندر و تصمیم‌های فنی رو به انگلیسی واضح و قانع‌کننده تبدیل کن. شبیه‌سازی ICP، سطوح آگاهی و ۱۱ دروازه کیفیت.' icon='file-text' href='https://github.com/ShayanSpiel/Skills/tree/main/skills/01-content-writing-en' linkText='اسکیل رو دالنود کن' />
+    <Card title='نوشتن محتوا (FA)' desc='کار محصول رو به محتوای طبیعی فارسی تبدیل کن. نه ترجمه — نوشتن اصیل با صدای فاندر ایرانی، قوانین جمله‌بندی و ترکیب‌های طبیعی.' icon='file-text' href='https://github.com/ShayanSpiel/Skills/tree/main/skills/02-content-writing-fa' linkText='اسکیل رو دالنود کن' />
+    <Card title='ترجمه (FA)' desc='متن UX/محصول رو به فارسی زنده و مدرن ترجمه کن. روش ۹ مرحله‌ای، آزمون خواننده بدون کانتکست، ترجمه کامل سند و ۴۴ تست کیفیت.' icon='globe' href='https://github.com/ShayanSpiel/Skills/tree/main/skills/03-translation-fa' linkText='اسکیل رو دالنود کن' />
+  </div>
+
+  <div class='grid grid-2'>
+    <Card title='سئو' desc='خزیدن، ایندکس‌شدن، canonicalization، hreflang، متادیتا، داده‌های ساختاریافته، سایت‌مپ، robots، ریدایرکت‌ها و لینک‌سازی داخلی.' icon='search' href='https://github.com/ShayanSpiel/Skills/tree/main/skills/04-seo' linkText='اسکیل رو دالنود کن' />
+    <Card title='آنالیتیکس' desc='GA4، PostHog، معماری رضایت، دسته‌بندی رویدادها، انتساب، حریم خصوصی، پیاده‌سازی لودر و اعتبارسنجی آنالیتیکس.' icon='data' href='https://github.com/ShayanSpiel/Skills/tree/main/skills/05-analytics' linkText='اسکیل رو دالنود کن' />
+    <Card title='سیستم طراحی' desc='توکن‌های معنایی، متغیرهای CSS، ادغام Tailwind، معماری تم، الگوهای کامپوننت، قراردادهای تعامل و دسترس‌پذیری.' icon='slider' href='https://github.com/ShayanSpiel/Skills/tree/main/skills/06-design-system' linkText='اسکیل رو دالنود کن' />
+    <Card title='معماری محتوا' desc='کالکشن‌های محتوای MDX، کتابخانه کامپوننت‌ها، روتینگ i18n، الگوی thin-wrapper برای محتوای چندزبانه و اعتبارسنجی frontmatter.' icon='layer' href='https://github.com/ShayanSpiel/Skills/tree/main/skills/08-content-architecture' linkText='اسکیل رو دالنود کن' />
+  </div>
+
+  <div class='grid grid-2'>
+    <Card title='روش‌شناسی ICP' desc='چارچوب پروفایل مشتری ایده‌آل: سطوح آگاهی، محرک‌های خرید، نقشه اعتراضات، شبیه‌سازی زمینه خواننده و چک‌لیست اعتبارسنجی.' icon='group' href='https://github.com/ShayanSpiel/Skills/tree/main/skills/09-icp-methodology' linkText='اسکیل رو دالنود کن' />
+    <Card title='تولید OG Image' desc='تولید تصاویر OG با Puppeteer از قالب‌های HTML. ادغام توکن‌های طراحی، رندر دسته‌ای و شخصی‌سازی صفحه‌به‌صفحه.' icon='image' href='https://github.com/ShayanSpiel/Skills/tree/main/skills/10-og-image-generation' linkText='اسکیل رو دالنود کن' />
+  </div>
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='چطوری #۳' title='این اسکیل‌ها رو با ایجنت AI استفاده کن' sub='یه SKILL.md رو توی context LLMت بذار. اسکیل تبدیل می‌شه به گردش‌کار ایجنت. بدون فریمورک اختصاصی.' />
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>۱</div>
+      <div class='step-body'>
+        <strong>اسکیل رو انتخاب کن</strong>
+        SKILL.md رو بخون. هر اسکیل با «این اسکیل رو شخصی‌سازی کن» شروع می‌شه — چی رو برای محصولت عوض کن. [همه ۱۰ تا رو ببین](https://github.com/ShayanSpiel/Skills).
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>۲</div>
+      <div class='step-body'>
+        <strong>قالب‌ها رو پر کن</strong>
+        Canvas ICP، قالب واژه‌نامه، مرجع توکن‌های طراحی، قالب صحنه ویدیو. چارچوب‌های ساختاریافته با مثال، نه داک خالی.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>۳</div>
+      <div class='step-body'>
+        <strong>توی ایجنتت لود کن</strong>
+        SKILL.md رو توی context window LLMت بذار. ایجنت حالا کل گردش‌کار رو داره: مأموریت، قوانین، مراحل اعتبارسنجی. [SpielOS](https://github.com/ShayanSpiel/SpielOS) همینجوری کار می‌کنه — همه عملیات ایجنت از یه اسکیل رد می‌شه.
+      </div>
+    </div>
+  </div>
+</section>
+
+<PostCta takeaway='اینا دمو نیستن. اینا سیستم‌های پشت SpielOS هستن. هر قانون از یه اشتباه اومده. هر دروازه از یه شکست. حالا عمومی شدن.' echo='ریپو رو کلون کن، جزئیات محصولت رو پر کن و شروع کن بفرست.' btnText='ریپوی Skills رو کلون کن' btnHref='https://github.com/ShayanSpiel/Skills' />

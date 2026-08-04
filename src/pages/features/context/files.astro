@@ -24,6 +24,49 @@ const jsonLd = {
     name: SITE.name,
     url: SITE.url,
   },
+  about: {
+    "@type": "SoftwareApplication",
+    name: SITE.name,
+    url: SITE.url,
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Web",
+  },
+};
+
+const howToJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  name: t(locale, "features.context.files.how.title"),
+  description: t(locale, "features.context.files.hero.desc"),
+  url: SITE.url + "/features/context/files/",
+  step: [
+    { position: 1, name: t(locale, "features.context.files.how.step1.title"), text: t(locale, "features.context.files.how.step1.desc") },
+    { position: 2, name: t(locale, "features.context.files.how.step2.title"), text: t(locale, "features.context.files.how.step2.desc") },
+    { position: 3, name: t(locale, "features.context.files.how.step3.title"), text: t(locale, "features.context.files.how.step3.desc") },
+  ].map((s) => ({ "@type": "HowToStep", ...s })),
+};
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: t(locale, "features.context.files.problem.title"),
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: t(locale, "features.context.files.problem.desc"),
+      },
+    },
+    {
+      "@type": "Question",
+      name: t(locale, "features.context.files.what.title"),
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: t(locale, "features.context.files.what.desc"),
+      },
+    },
+  ],
 };
 ---
 
@@ -217,4 +260,6 @@ const jsonLd = {
   />
 
   <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(howToJsonLd)} />
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
 </FeaturesLayout>

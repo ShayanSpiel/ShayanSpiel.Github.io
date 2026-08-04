@@ -1,4 +1,10 @@
 ---
 const { text } = Astro.props as { text: string };
+const html = text
+  .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, label, href) => {
+    const isExternal = href.startsWith("http");
+    const attrs = isExternal ? ' target="_blank" rel="noopener noreferrer"' : "";
+    return `<a href="${href}"${attrs}>${label}</a>`;
+  });
 ---
-<div class="prose-center"><p set:html={text} /></div>
+<div class="prose-center"><p set:html={html} /></div>

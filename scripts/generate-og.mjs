@@ -204,6 +204,7 @@ const PAGES = {
   "spielos-update.png": { title: "SpielOS Update", desc: "Latest updates, features, and improvements to SpielOS.", accent: T.accent },
   "tokens-per-sheep.png": { title: "Tokens Per Sheep", desc: "Token economics and cost optimization for AI workloads.", accent: T.warning },
   "translation-glossary.png": { title: "Translation Glossary", desc: "Building and maintaining a translation glossary for AI systems.", accent: T.purple },
+  "skills-repo.png": { title: "Turn Your Website Into a Content Engine With These 10 Agent Skills", desc: "Video creation from HTML, content writing, Persian translation, SEO, analytics, design systems. Full repo, full scripts, full templates.", accent: T.accent },
   "waitlist-supabase.png": { title: "Waitlist + Supabase", desc: "How I built the SpielOS waitlist with Supabase.", accent: T.accent },
 };
 
@@ -248,7 +249,7 @@ async function generate() {
   });
 
   const page = await browser.newPage();
-  await page.setViewport({ width: 1200, height: 630, deviceScaleFactor: 2 });
+  await page.setViewport({ width: 1200, height: 630, deviceScaleFactor: 1 });
 
   if (!existsSync(OUT_DIR)) mkdirSync(OUT_DIR, { recursive: true });
 

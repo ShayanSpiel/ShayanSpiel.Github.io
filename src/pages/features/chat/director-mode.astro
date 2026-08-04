@@ -31,6 +31,43 @@ const jsonLd = {
     url: SITE.url,
   },
 };
+
+const howToJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  name: t(locale, "features.chat.directorMode.how.title"),
+  description: t(locale, "features.chat.directorMode.hero.desc"),
+  url: SITE.url + "/features/chat/director-mode/",
+  step: steps.map((step) => ({
+    "@type": "HowToStep",
+    position: step.num,
+    name: t(locale, step.titleKey),
+    text: t(locale, step.descKey),
+  })),
+};
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: t(locale, "features.chat.directorMode.problem.title"),
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: t(locale, "features.chat.directorMode.problem.desc"),
+      },
+    },
+    {
+      "@type": "Question",
+      name: t(locale, "features.chat.directorMode.what.title"),
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: t(locale, "features.chat.directorMode.what.desc"),
+      },
+    },
+  ],
+};
 ---
 
 <FeaturesLayout
@@ -280,4 +317,6 @@ const jsonLd = {
   />
 
   <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(howToJsonLd)} />
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
 </FeaturesLayout>

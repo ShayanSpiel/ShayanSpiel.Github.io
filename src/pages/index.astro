@@ -4,6 +4,7 @@ import { getCollection } from "astro:content";
 import { SITE, AUTHOR, FOUNDER, WAITLIST_URL } from "../config";
 import SectionHeader from "../components/sections/SectionHeader.astro";
 import ProofMetrics from "../components/sections/ProofMetrics.astro";
+import JourneyLine from "../components/JourneyLine.astro";
 import { type Locale, t } from "../i18n/translations";
 import { localizePath } from "../i18n";
 
@@ -96,6 +97,8 @@ const breadcrumbJsonLd = {
   image="/assets/og/home.png"
   locale={locale}
 >
+  <JourneyLine />
+
   <!-- Section 1: Founder-led Hero -->
   <section class:list={["relative min-h-[90vh] flex items-center justify-center overflow-hidden", locale === "fa" ? "font-iransansx" : ""]}>
     <div class="absolute inset-0 opacity-[0.03] hero-grid"></div>
@@ -121,13 +124,16 @@ const breadcrumbJsonLd = {
         <p class="text-foreground font-medium">
           {t(locale, "home.hero.p3")}
         </p>
+        <p class="text-sm">
+          {t(locale, "home.hero.subheading")}
+        </p>
       </div>
 
       <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3" data-aos="fade-up">
-        <a href={localizePath(WAITLIST_URL, locale)} class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20">
+        <a href={localizePath("/services/", locale)} class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20">
           {t(locale, "home.hero.cta1")}
         </a>
-        <a href="#avatar" class="inline-flex items-center justify-center rounded-md border border-border bg-panel px-6 h-11 text-sm font-medium hover:bg-panel-raised hover:border-border-strong transition-all">
+        <a href={localizePath(WAITLIST_URL, locale)} class="inline-flex items-center justify-center rounded-md border border-border bg-panel px-6 h-11 text-sm font-medium hover:bg-panel-raised hover:border-border-strong transition-all">
           {t(locale, "home.hero.cta2")}
         </a>
       </div>
@@ -343,7 +349,41 @@ const breadcrumbJsonLd = {
     </div>
   </section>
 
-  <!-- Section 7: Notes -->
+  <!-- Section 7: Services -->
+  <section class="relative py-24 sm:py-32">
+    <div class="mx-auto max-w-6xl px-6">
+      <SectionHeader
+        label={t(locale, "home.services.label")}
+        title={t(locale, "home.services.title")}
+        description={t(locale, "home.services.desc")}
+      />
+
+      <div class="grid sm:grid-cols-2 gap-6" data-aos="fade-up">
+        <div class="rounded-md border border-border bg-panel p-6">
+          <div class="flex h-10 w-10 items-center justify-center rounded-md bg-primary-soft mb-4">
+            <i class="bx bx-group text-primary icon-xl"></i>
+          </div>
+          <h3 class="text-sm font-semibold text-foreground-strong mb-2">{t(locale, "home.services.internal.title")}</h3>
+          <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, "home.services.internal.desc")}</p>
+        </div>
+        <div class="rounded-md border border-border bg-panel p-6">
+          <div class="flex h-10 w-10 items-center justify-center rounded-md bg-accent-soft mb-4">
+            <i class="bx bx-link text-accent icon-xl"></i>
+          </div>
+          <h3 class="text-sm font-semibold text-foreground-strong mb-2">{t(locale, "home.services.customer.title")}</h3>
+          <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, "home.services.customer.desc")}</p>
+        </div>
+      </div>
+
+      <div class="mt-10 text-center" data-aos="fade-up">
+        <a href={localizePath("/services/", locale)} class="inline-flex items-center gap-1.5 text-xs text-primary font-semibold hover:opacity-80 transition-opacity">
+          {t(locale, "home.services.cta")}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 8: Notes -->
   <section class="relative py-24 sm:py-32">
     <div class="mx-auto max-w-6xl px-6">
       <SectionHeader
@@ -375,7 +415,7 @@ const breadcrumbJsonLd = {
     </div>
   </section>
 
-  <!-- Section 8: Final Conversion -->
+  <!-- Section 9: Final Conversion -->
   <section class="relative py-24 sm:py-32 overflow-hidden">
     <div class="absolute inset-0 bg-panel-deep/50"></div>
     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] glow-blob opacity-10"></div>

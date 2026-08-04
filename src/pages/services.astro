@@ -1,0 +1,263 @@
+---
+import Page from "../layouts/Page.astro";
+import { SITE, AUTHOR } from "../config";
+import { type Locale, t } from "../i18n/translations";
+import { localizePath } from "../i18n";
+import SectionHeader from "../components/sections/SectionHeader.astro";
+
+export interface Props {
+  locale?: Locale;
+}
+
+const { locale = "en" } = Astro.props;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: t(locale, "services.pageTitle"),
+  description: t(locale, "services.pageDesc"),
+  url: `${SITE.url}${localizePath("/services/", locale)}`,
+  provider: {
+    "@type": "Person",
+    "@id": `${SITE.url}/#person`,
+    name: AUTHOR.name,
+    url: SITE.url,
+  },
+  areaServed: "Web",
+  serviceType: "AI Agent Implementation",
+};
+
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: `${SITE.url}${localizePath("/", locale)}` },
+    { "@type": "ListItem", position: 2, name: "Services", item: `${SITE.url}${localizePath("/services/", locale)}` },
+  ],
+};
+
+const icpItems = [
+  { icon: "bx-cart", color: "primary", titleKey: "services.icp.item1.title", descKey: "services.icp.item1.desc" },
+  { icon: "bx-briefcase", color: "accent", titleKey: "services.icp.item2.title", descKey: "services.icp.item2.desc" },
+  { icon: "bx-calendar", color: "purple", titleKey: "services.icp.item3.title", descKey: "services.icp.item3.desc" },
+  { icon: "bx-user", color: "success", titleKey: "services.icp.item4.title", descKey: "services.icp.item4.desc" },
+  { icon: "bx-store", color: "warning", titleKey: "services.icp.item5.title", descKey: "services.icp.item5.desc" },
+  { icon: "bx-code-alt", color: "primary", titleKey: "services.icp.item6.title", descKey: "services.icp.item6.desc" },
+];
+
+const internalItems = [
+  t(locale, "services.internal.item1"),
+  t(locale, "services.internal.item2"),
+  t(locale, "services.internal.item3"),
+  t(locale, "services.internal.item4"),
+  t(locale, "services.internal.item5"),
+  t(locale, "services.internal.item6"),
+];
+
+const customerItems = [
+  t(locale, "services.customer.item1"),
+  t(locale, "services.customer.item2"),
+  t(locale, "services.customer.item3"),
+  t(locale, "services.customer.item4"),
+  t(locale, "services.customer.item5"),
+  t(locale, "services.customer.item6"),
+];
+
+const processSteps = [
+  { num: "01", titleKey: "services.process.step1.title", descKey: "services.process.step1.desc" },
+  { num: "02", titleKey: "services.process.step2.title", descKey: "services.process.step2.desc" },
+  { num: "03", titleKey: "services.process.step4.title", descKey: "services.process.step4.desc" },
+  { num: "04", titleKey: "services.process.step5.title", descKey: "services.process.step5.desc" },
+];
+
+const includesItems = [
+  t(locale, "services.includes.item1"),
+  t(locale, "services.includes.item2"),
+  t(locale, "services.includes.item3"),
+  t(locale, "services.includes.item4"),
+  t(locale, "services.includes.item5"),
+  t(locale, "services.includes.item6"),
+  t(locale, "services.includes.item7"),
+  t(locale, "services.includes.item8"),
+];
+---
+
+<Page
+  title={t(locale, "services.pageTitle") + " — " + SITE.name}
+  description={t(locale, "services.pageDesc")}
+  image="/assets/og/home.png"
+  locale={locale}
+>
+  <!-- Hero -->
+  <section class:list={["relative min-h-[70vh] flex items-center justify-center overflow-hidden", locale === "fa" ? "font-iransansx" : ""]}>
+    <div class="absolute inset-0 opacity-[0.03] hero-grid"></div>
+    <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] glow-blob opacity-15"></div>
+
+    <div class="relative z-10 mx-auto max-w-3xl px-6 text-center">
+      <div class="inline-flex items-center gap-2 rounded-full border border-border bg-panel-raised px-3 py-1 mb-8" data-aos="fade-up">
+        <span class="text-2xs text-muted-foreground font-medium">{t(locale, "services.pageTitle")}</span>
+      </div>
+
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground-strong tracking-tight leading-tightest" data-aos="fade-up" set:html={t(locale, "services.hero.title")} />
+
+      <p class="mt-6 text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed" data-aos="fade-up">
+        {t(locale, "services.hero.desc")}
+      </p>
+
+      <div class="mt-10" data-aos="fade-up">
+        <a href={localizePath("/contact/", locale)} class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20">
+          {t(locale, "services.cta.button")}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Who we work with -->
+  <section class="relative py-24 sm:py-32 overflow-hidden">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="relative mx-auto max-w-6xl px-6">
+      <SectionHeader
+        label={t(locale, "services.icp.label")}
+        title={t(locale, "services.icp.title")}
+        description={t(locale, "services.icp.desc")}
+      />
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4" data-aos="fade-up">
+        {icpItems.map((item) => (
+          <div class="rounded-md border border-border bg-panel p-5">
+            <div class={`flex h-9 w-9 items-center justify-center rounded-md bg-${item.color}-soft mb-3`}>
+              <i class={`bx ${item.icon} text-${item.color} icon-xl`}></i>
+            </div>
+            <h3 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, item.titleKey)}</h3>
+            <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, item.descKey)}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- What we solve -->
+  <section class="relative py-24 sm:py-32">
+    <div class="mx-auto max-w-6xl px-6">
+      <SectionHeader
+        label={t(locale, "services.problems.label")}
+        title={t(locale, "services.problems.title")}
+        description={t(locale, "services.problems.desc")}
+      />
+
+      <div class="max-w-2xl mx-auto" data-aos="fade-up">
+        <div class="rounded-md border border-border bg-panel p-6 sm:p-8">
+          <div class="flex items-center gap-2 mb-4">
+            <i class="bx bx-error text-destructive icon-lg"></i>
+            <h3 class="text-sm font-semibold text-foreground-strong">{t(locale, "services.problems.label")}</h3>
+          </div>
+          <ul class="space-y-3 text-xs text-muted-foreground">
+            <li class="flex items-start gap-2"><span class="rtl-flip text-destructive mt-0.5">→</span> {t(locale, "services.problems.item1")}</li>
+            <li class="flex items-start gap-2"><span class="rtl-flip text-destructive mt-0.5">→</span> {t(locale, "services.problems.item2")}</li>
+            <li class="flex items-start gap-2"><span class="rtl-flip text-destructive mt-0.5">→</span> {t(locale, "services.problems.item3")}</li>
+            <li class="flex items-start gap-2"><span class="rtl-flip text-destructive mt-0.5">→</span> {t(locale, "services.problems.item4")}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What we implement -->
+  <section class="relative py-24 sm:py-32 overflow-hidden">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="relative mx-auto max-w-6xl px-6">
+      <div class="grid sm:grid-cols-2 gap-6" data-aos="fade-up">
+        <div class="rounded-md border border-border bg-panel p-6">
+          <div class="flex items-center gap-2 mb-4">
+            <i class="bx bx-group text-primary icon-lg"></i>
+            <h3 class="text-sm font-semibold text-foreground-strong">{t(locale, "services.internal.title")}</h3>
+          </div>
+          <p class="text-xs text-muted-foreground leading-relaxed mb-4">{t(locale, "services.internal.desc")}</p>
+          <ul class="space-y-2 text-xs text-muted-foreground">
+            {internalItems.map((item) => (
+              <li class="flex items-start gap-2"><span class="rtl-flip text-primary mt-0.5">→</span> {item}</li>
+            ))}
+          </ul>
+        </div>
+        <div class="rounded-md border border-border bg-panel p-6">
+          <div class="flex items-center gap-2 mb-4">
+            <i class="bx bx-link text-accent icon-lg"></i>
+            <h3 class="text-sm font-semibold text-foreground-strong">{t(locale, "services.customer.title")}</h3>
+          </div>
+          <p class="text-xs text-muted-foreground leading-relaxed mb-4">{t(locale, "services.customer.desc")}</p>
+          <ul class="space-y-2 text-xs text-muted-foreground">
+            {customerItems.map((item) => (
+              <li class="flex items-start gap-2"><span class="rtl-flip text-accent mt-0.5">→</span> {item}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="relative py-24 sm:py-32">
+    <div class="mx-auto max-w-6xl px-6">
+      <SectionHeader
+        label={t(locale, "services.process.label")}
+        title={t(locale, "services.process.title")}
+        description={t(locale, "services.process.desc")}
+      />
+
+      <div class="mx-auto max-w-4xl" data-aos="fade-up">
+        <div class="grid sm:grid-cols-2 gap-4">
+          {processSteps.map((step) => (
+            <div class="rounded-md border border-border bg-panel p-5">
+              <span class="text-2xs font-semibold text-primary">{step.num}</span>
+              <h3 class="text-sm font-semibold text-foreground-strong mt-2 mb-1">{t(locale, step.titleKey)}</h3>
+              <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, step.descKey)}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What's included -->
+  <section class="relative py-24 sm:py-32 overflow-hidden">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="relative mx-auto max-w-6xl px-6">
+      <SectionHeader
+        label={t(locale, "services.includes.label")}
+        title={t(locale, "services.includes.title")}
+        description={t(locale, "services.includes.desc")}
+      />
+
+      <div class="max-w-2xl mx-auto" data-aos="fade-up">
+        <div class="rounded-md border border-border bg-panel p-6 sm:p-8">
+          <ul class="space-y-3 text-xs text-muted-foreground">
+            {includesItems.map((item) => (
+              <li class="flex items-start gap-2"><span class="rtl-flip text-success mt-0.5">→</span> {item}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="relative py-24 sm:py-32 overflow-hidden">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] glow-blob opacity-10"></div>
+
+    <div class="relative mx-auto max-w-3xl px-6 text-center" data-aos="fade-up">
+      <h2 class="text-3xl sm:text-4xl font-bold text-foreground-strong tracking-tight">
+        {t(locale, "services.cta.title")}
+      </h2>
+      <p class="mt-4 text-sm text-muted-foreground max-w-lg mx-auto">
+        {t(locale, "services.cta.desc")}
+      </p>
+      <a href={localizePath("/contact/", locale)} class="mt-8 inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20">
+        {t(locale, "services.cta.button")}
+      </a>
+    </div>
+  </section>
+
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
+</Page>

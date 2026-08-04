@@ -222,6 +222,11 @@ const breadcrumbJsonLd = {
         <a href={localizePath(WAITLIST_URL, locale)} class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20">
           {t(locale, "founder.why.cta")}
         </a>
+        <div class="mt-4">
+          <a href={localizePath("/services/", locale)} class="inline-flex items-center gap-1.5 text-xs text-primary font-semibold hover:opacity-80 transition-opacity">
+            {t(locale, "founder.services.cta")}
+          </a>
+        </div>
       </div>
     </div>
   </section>

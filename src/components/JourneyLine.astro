@@ -1,0 +1,122 @@
+---
+/**
+ * JourneyLine — scroll-progress line with boxicon icon nodes.
+ * SVG for the path + circles. HTML overlays for icons.
+ * Nodes activate by scroll percentage (no section ID detection).
+ * Hidden on mobile (< lg).
+ */
+
+const SECTIONS = [
+  { id: "hero",     y: 50,  icon: "bx-rocket" },
+  { id: "avatar",   y: 170, icon: "bx-check-square" },
+  { id: "entry",    y: 290, icon: "bx-network-chart" },
+  { id: "why",      y: 410, icon: "bx-group" },
+  { id: "proof",    y: 530, icon: "bx-certification" },
+  { id: "product",  y: 650, icon: "bx-layer" },
+  { id: "services", y: 770, icon: "bx-link" },
+  { id: "notes",    y: 870, icon: "bx-task" },
+  { id: "final",    y: 960, icon: "bx-send" },
+];
+
+const PATH =
+  "M 100 0" +
+  " C 100 25, 75 40, 75 50" +
+  " S 75 85, 75 110" +
+  " C 75 130, 125 145, 125 170" +
+  " S 125 200, 125 230" +
+  " C 125 250, 70 265, 70 290" +
+  " S 70 325, 70 350" +
+  " C 70 370, 130 385, 130 410" +
+  " S 130 445, 130 470" +
+  " C 130 490, 70 505, 70 530" +
+  " S 70 565, 70 590" +
+  " C 70 610, 130 625, 130 650" +
+  " S 130 685, 130 710" +
+  " C 130 730, 75 745, 75 770" +
+  " S 75 800, 75 830" +
+  " C 75 845, 100 855, 100 870" +
+  " S 100 915, 100 960" +
+  " L 100 1000";
+---
+
+<div class="jl-wrap" aria-hidden="true">
+  <svg viewBox="0 0 200 1000" preserveAspectRatio="xMidYMin slice" class="jl-svg">
+    <defs>
+      <linearGradient id="jl-grad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="var(--primary)" stop-opacity="0.05" />
+        <stop offset="20%" stop-color="var(--primary)" stop-opacity="0.25" />
+        <stop offset="100%" stop-color="var(--primary)" stop-opacity="0.9" />
+      </linearGradient>
+      <filter id="jl-glow">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="b" />
+        <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+      </filter>
+    </defs>
+    <path class="jl-track" d={PATH} fill="none" stroke="var(--border)" stroke-width="2" stroke-dasharray="6 6" />
+    <path class="jl-fill" d={PATH} fill="none" stroke="url(#jl-grad)" stroke-width="2" stroke-linecap="round" filter="url(#jl-glow)" />
+    {SECTIONS.map((s) => (
+      <g class="jl-node" data-s={s.id}>
+        <circle class="jl-ping" cx="100" cy={s.y} r="6" />
+        <circle class="jl-dot" cx="100" cy={s.y} r="4" />
+      </g>
+    ))}
+  </svg>
+
+  <div class="jl-icons">
+    {SECTIONS.map((s) => (
+      <div class="jl-icon" data-s={s.id}>
+        <i class={`bx ${s.icon}`}></i>
+      </div>
+    ))}
+  </div>
+</div>
+
+<script is:inline>
+(function () {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  var svg = document.querySelector(".jl-svg");
+  var fill = document.querySelector(".jl-fill");
+  if (!svg || !fill) return;
+
+  var len = fill.getTotalLength();
+  fill.style.strokeDasharray = len;
+  fill.style.strokeDashoffset = len;
+
+  var dots = svg.querySelectorAll(".jl-dot");
+  var nodes = svg.querySelectorAll(".jl-node");
+  var icons = document.querySelectorAll(".jl-icon");
+  var count = nodes.length;
+
+  function tick() {
+    var top = window.pageYOffset || document.documentElement.scrollTop;
+    var docH = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+    var winH = window.innerHeight;
+    var max = docH - winH;
+    if (max <= 0) return;
+
+    var p = Math.min(top / max, 1);
+    fill.style.strokeDashoffset = len * (1 - p);
+
+    for (var i = 0; i < count; i++) {
+      var threshold = i / (count - 1);
+      var active = p >= threshold;
+
+      if (active) {
+        nodes[i].classList.add("on");
+        icons[i].classList.add("active");
+      } else {
+        nodes[i].classList.remove("on");
+        icons[i].classList.remove("active");
+      }
+
+      var r = dots[i].getBoundingClientRect();
+      icons[i].style.left = (r.left + r.width / 2) + "px";
+      icons[i].style.top = (r.top + r.height / 2) + "px";
+    }
+  }
+
+  window.addEventListener("scroll", tick, { passive: true });
+  window.addEventListener("resize", tick, { passive: true });
+  tick();
+})();
+</script>

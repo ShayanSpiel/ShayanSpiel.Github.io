@@ -1,13 +1,19 @@
 ---
 import { t } from "../../i18n/translations";
 import { iconMap } from "../../icons";
-const { tag, title, desc, href, icon, num, variant } = Astro.props as {
-  tag?: string; title: string; desc?: string; href?: string; icon?: string; num?: string; variant?: string;
+const { tag, title, desc, href, icon, num, variant, linkText } = Astro.props as {
+  tag?: string; title: string; desc?: string; href?: string; icon?: string; num?: string; variant?: string; linkText?: string;
 };
 const locale = Astro.url.pathname.startsWith("/fa/") ? "fa" : "en";
 const Tag = href ? 'a' : 'div';
 const attrs: Record<string, string> = {};
-if (href) attrs.href = href;
+if (href) {
+  attrs.href = href;
+  if (href.startsWith("http")) {
+    attrs.target = "_blank";
+    attrs.rel = "noopener noreferrer";
+  }
+}
 
 const boxiconClass = icon ? (iconMap[icon] || `bx-${icon}`) : null;
 ---
@@ -29,7 +35,7 @@ const boxiconClass = icon ? (iconMap[icon] || `bx-${icon}`) : null;
       <>
         <h3 class="card-title">{title}</h3>
         {desc && <p class="card-desc">{desc}</p>}
-        {href && <span class="card-link">{t(locale, "notes.readMore")} <i class="bx bx-right-arrow-alt rtl-flip icon-base"></i></span>}
+        {href && <span class="card-link">{linkText || t(locale, "notes.readMore")} <i class="bx bx-right-arrow-alt rtl-flip icon-base"></i></span>}
       </>
     )}
   </div>

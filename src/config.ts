@@ -102,8 +102,8 @@ export const WAITLIST_URL = "/waitlist/";
 
 export const NAV_LINKS = {
   default: [
-    { label: "SpielOS", href: "/waitlist/" },
     { label: "Features", href: "/features/" },
+    { label: "Services", href: "/services/" },
     { label: "Notes", href: "/notes/" },
     { label: "Founder", href: "/founder/" },
   ],
@@ -118,6 +118,7 @@ export const FOOTER_LINKS = {
   default: [
     { label: "SpielOS", href: "/waitlist/" },
     { label: "Features", href: "/features/" },
+    { label: "Services", href: "/services/" },
     { label: "Notes", href: "/notes/" },
     { label: "Founder", href: "/founder/" },
     { label: "Join waitlist", href: "/waitlist/" },

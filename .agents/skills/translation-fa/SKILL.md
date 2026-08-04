@@ -285,6 +285,40 @@ Reject literal combinations such as:
 
 Rewrite the underlying meaning using Persian expressions that naturally occur together. If you cannot say it naturally in spoken Persian, it does not belong in written Persian either.
 
+### Common translation failures
+
+These are real mistakes from production, not theoretical examples:
+
+**Do not translate compound concepts word-by-word:**
+
+- "Create videos from HTML" → NOT "ویدیو از HTML بساز" (word-for-word)
+- Right: "از HTML ویدیو بساز" (natural Persian word order)
+
+**Do not use meaningless calques:**
+
+- "pipeline" → NOT "خط لول" (literal pipe翻译, meaningless in Persian)
+- Right: "پایپلاین" or "ابزار" or "سیستم" depending on context
+
+**Do not use wrong verb number:**
+
+- "I built" → NOT "ساختیم" (we built)
+- Right: "ساختم" (I built) — match the actual actor
+
+**Do not break natural phrase structure:**
+
+- "Install it. 3 steps." → NOT "نصبش کن. ۳ مرحله." (choppy, unnatural)
+- Right: "توی ۳ مرحله نصبش کن" (one natural sentence)
+
+**Do not use translated terms where a borrowed term is standard:**
+
+- "skill" → NOT "مهارت" (sounds like a government brochure)
+- Right: "اسکیل" (the product term, used consistently)
+
+**Do not mix "ما" (we) and "من" (I) inconsistently:**
+
+- If the founder is speaking as an individual, use "من" and first-person singular verbs
+- "We built this pipeline" in founder voice → "با همین ابزار ساختم" (I built with this tool)
+
 ---
 
 ## Register control

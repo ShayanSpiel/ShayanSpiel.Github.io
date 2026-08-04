@@ -1,0 +1,175 @@
+---
+title: "Every Workflow I Reuse Is a Skill. I Made 10 Public."
+date: 2026-08-04 10:00:00 +0000
+description: "10 production-grade skills I actually use daily: video creation from HTML, content writing, Persian translation, SEO, analytics, design systems, and more. Full repo, full scripts, full templates."
+permalink: /skills-repo/
+category: journey
+tags:
+- Open Source
+- skills
+- tools
+- design-system
+image: /assets/og/skills-repo.png
+---
+
+import SectionHead from "@/components/posts/SectionHead.astro";
+import ProseCenter from "@/components/posts/ProseCenter.astro";
+import Card from "@/components/posts/Card.astro";
+import Pullquote from "@/components/posts/Pullquote.astro";
+import Takeaway from "@/components/posts/Takeaway.astro";
+import PostCta from "@/components/posts/PostCta.astro";
+
+
+
+<SectionHead tag='Why this exists' title='I Was Solving the Same 10 Problems From Memory' sub='Every time I wrote a landing page, translated a section into Persian, or rendered a video, I was reinventing the wheel. The knowledge was in my head. It needed to be in a system anyone can use.' />
+
+<ProseCenter text='Three months ago I wrote the same [translation quality checklist](/notes/translation-glossary/) three separate times. Once for the waitlist, once for the [founder story](/founder/), once for the [features pages](/features/). Each time I "discovered" the same rules about Persian sentence completeness. Each time I forgot half by next week.' />
+
+<ProseCenter text='The same pattern everywhere. [SEO metadata](/notes/seo-from-architecture/) — re-checking hreflang. [Content writing](/notes/content-pipeline/) — re-discovering banned phrases come back. [Analytics](/notes/waitlist-supabase/) — re-implementing consent from scratch. The problem was not capability. It was repetition without a system.' />
+
+<ProseCenter text='So I built one. 10 skills. Each a complete workflow: mission, scope, rules, step-by-step instructions, verification gates, and output templates. Every rule comes from a mistake I made. Every gate comes from a failure I shipped.' />
+
+<Takeaway text='A prompt is a one-time instruction. A skill is a repeatable workflow that gets better every time you use it.' />
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='HOW TO #1' title='Create Videos From HTML. No After Effects.' sub='Write an HTML file with CSS animations. Puppeteer captures each frame. FFmpeg encodes them into MP4. Four aspect ratios. One command.' />
+
+  <ProseCenter text='This is the skill I use most. I stopped exporting from Figma and importing into Premiere. The animations are already in HTML and CSS on the website. Why not just record the browser?' />
+
+  <div class='grid grid-2'>
+    <Card title='Scene composition' desc='Hook, promise, features, how-it-works, CTA. Each scene is a full-screen section with staggered text reveals and background effects.' icon='network-chart' href='https://github.com/ShayanSpiel/Skills/tree/main/skills/07-video-creation/templates' linkText='Get the skill' />
+    <Card title='Multi-aspect rendering' desc='One HTML file produces landscape (16:9), portrait (9:16), square (1:1), and story (4:5) videos. One command, four outputs.' icon='check-square' href='https://github.com/ShayanSpiel/Skills/blob/main/scripts/render-all.sh' linkText='Get the skill' />
+  </div>
+
+  <ProseCenter text='Here is the launch video we built with this pipeline. Every frame rendered from HTML. Every animation controlled by CSS. The virtual clock advances the timeline, Puppeteer screenshots each frame, FFmpeg encodes the result:' />
+
+  <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border-radius:10px; border:1px solid var(--border); margin:24px 0;">
+    <video style="position:absolute; top:0; left:0; width:100%; height:100%;" controls preload="metadata" poster="/videos/spielos-before-after-16x9-voiced-poster.jpg">
+      <source src="/videos/spielos-before-after-16x9-voiced.mp4" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+  </div>
+
+  <Takeaway text='The best video tool is the one you already have: a browser.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='HOW TO #2' title='Install It. 3 Steps.' sub='Node.js, Puppeteer, FFmpeg. That is the entire stack. No After Effects. No Premiere. No Figma export.' />
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>01</div>
+      <div class='step-body'>
+        <strong>Clone the repo</strong>
+        <code>git clone https://github.com/ShayanSpiel/Skills.git</code><br/>
+        The repo has 10 skills, rendering scripts, HTML templates, and fill-in-your-own canvases.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>02</div>
+      <div class='step-body'>
+        <strong>Install dependencies</strong>
+        <code>npm install puppeteer && brew install ffmpeg</code><br/>
+        Puppeteer downloads headless Chrome. FFmpeg handles the encoding. Both are free.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>03</div>
+      <div class='step-body'>
+        <strong>Render your first video</strong>
+        <code>bash scripts/render-all.sh src/video-templates/launch.html 30</code><br/>
+        One HTML file. Four aspect ratios. Output lands in <code>output/</code>.
+      </div>
+    </div>
+  </div>
+
+  <ProseCenter text='Every skill follows the same pattern: read the SKILL.md, fill in the templates for your product, use the workflow. The [full customization guide](https://github.com/ShayanSpiel/Skills/blob/main/docs/customization-guide.md) walks you through adapting every skill.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='How we built this' title='MiMo 2.5 Wrote the Code. I Directed the Work.' sub='This entire video pipeline was built with MiMo 2.5 — the same model that designed the 404 page animation you see on this site.' />
+
+  <ProseCenter text='The workflow is not "prompt AI, get video." The workflow is: I define the scenes and timing, MiMo 2.5 writes the HTML/CSS animation, I review the output, Puppeteer renders the frames. The AI does not guess what the video should look like. I tell it. It writes the code. I verify.' />
+
+  <ProseCenter text='This is the [gates-not-models](/notes/gates-not-models/) pattern applied to video production. The creative direction is mine. The execution is MiMo 2.5. The quality gates are the same 30 checks I use for everything: does the hook land, is the text readable, does the CTA connect to the right page, are the colors from the design system.' />
+
+  <div class='grid grid-2'>
+    <Card title='The 404 page' desc='Every element you see — the orbiting icons, the radar sweep, the particle system, the glitch text — written by MiMo 2.5, rendered by CSS, verified against the design tokens.' icon='network-chart' href='/404/' linkText='Get the skill' />
+    <Card title='The launch video' desc='6 scenes, 30 seconds, 4 aspect ratios. Same pipeline. Same model. Same design system tokens. Different output format.' icon='video' href='https://github.com/ShayanSpiel/Skills/tree/main/skills/07-video-creation' linkText='Get the skill' />
+  </div>
+
+  <Takeaway text='MiMo 2.5 writes the code. I direct the work. The gates decide what ships. That is the workflow.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='The 404 page' title='This Is What MiMo 2.5 Can Design' sub='Open /404/ on this site. Every animation — orbits, radar, particles, glitch — was generated by MiMo 2.5 from a single prompt describing the design tokens and motion contracts.' />
+
+  <ProseCenter text='The 404 page is the best showcase of what MiMo 2.5 can do with design. It uses the exact same CSS custom properties as the rest of the site. The same Outfit font. The same Gruvbox Dark palette. The same border-radius tokens. The only difference is the motion: CSS keyframes driving orbit speeds, radar rotations, particle floats, and glitch effects.' />
+
+  <ProseCenter text='I gave MiMo 2.5 the [design system tokens](/notes/rtl-design-system/), the [animation keyframes](https://github.com/ShayanSpiel/Skills/blob/main/skills/06-design-system/tokens-reference.md), and one instruction: make the 404 page feel like an AI command center that lost connection. It wrote 400 lines of HTML/CSS/JS. I reviewed. It shipped. The same pipeline works for any page on the site.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='All 10 skills' title='The Full Stack. One Repo.' sub='Each skill is a complete workflow: mission, scope, core rules, step-by-step instructions, verification gates, and output rules. All customizable for your product.' />
+
+  <div class='grid grid-2'>
+    <Card title='Video Creation' desc='HTML-to-video pipeline: Puppeteer frame capture, FFmpeg encoding, scene composition, CSS animation system, virtual clock, multi-aspect-ratio rendering.' icon='video' href='https://github.com/ShayanSpiel/Skills/tree/main/skills/07-video-creation' linkText='Get the skill' />
+    <Card title='Content Writing (EN)' desc='Turn product work, founder experience, and technical decisions into clear, persuasive English. ICP simulation, awareness levels, 11 quality gates.' icon='file-text' href='https://github.com/ShayanSpiel/Skills/tree/main/skills/01-content-writing-en' linkText='Get the skill' />
+    <Card title='Content Writing (FA)' desc='Turn product work into natural Persian content. Not translation — original Persian writing with Iranian founder voice, sentence completeness, natural collocations.' icon='file-text' href='https://github.com/ShayanSpiel/Skills/tree/main/skills/02-content-writing-fa' linkText='Get the skill' />
+    <Card title='Translation (FA)' desc='Translate UX/product copy into living modern Persian. 9-step method, zero-context reader test, full-document translation, 44-test quality suite.' icon='globe' href='https://github.com/ShayanSpiel/Skills/tree/main/skills/03-translation-fa' linkText='Get the skill' />
+  </div>
+
+  <div class='grid grid-2'>
+    <Card title='SEO' desc='Crawlability, indexability, canonicalization, hreflang, metadata, structured data, sitemap, robots, redirects, internal linking, search-intent mapping.' icon='search' href='https://github.com/ShayanSpiel/Skills/tree/main/skills/04-seo' linkText='Get the skill' />
+    <Card title='Analytics' desc='GA4, PostHog, consent architecture, event taxonomy, attribution, privacy, loader implementation, analytics verification.' icon='data' href='https://github.com/ShayanSpiel/Skills/tree/main/skills/05-analytics' linkText='Get the skill' />
+    <Card title='Design System' desc='Semantic tokens, CSS custom properties, Tailwind integration, theme architecture, component patterns, interaction contracts, accessibility.' icon='slider' href='https://github.com/ShayanSpiel/Skills/tree/main/skills/06-design-system' linkText='Get the skill' />
+    <Card title='Content Architecture' desc='MDX content collections, component libraries, i18n routing, thin-wrapper pattern for multilingual content, frontmatter validation.' icon='layer' href='https://github.com/ShayanSpiel/Skills/tree/main/skills/08-content-architecture' linkText='Get the skill' />
+  </div>
+
+  <div class='grid grid-2'>
+    <Card title='ICP Methodology' desc='Ideal customer profile framework: awareness levels, buying triggers, objections mapping, reader-context simulation, validation checklist.' icon='group' href='https://github.com/ShayanSpiel/Skills/tree/main/skills/09-icp-methodology' linkText='Get the skill' />
+    <Card title='OG Image Generation' desc='Puppeteer-based OG image rendering from HTML templates. Design token integration, batch rendering, per-page customization.' icon='image' href='https://github.com/ShayanSpiel/Skills/tree/main/skills/10-og-image-generation' linkText='Get the skill' />
+  </div>
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='HOW TO #3' title='Use These Skills With Your AI Agent' sub='Load a SKILL.md into your LLM context. The skill becomes the agent workflow. No custom framework required.' />
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>1</div>
+      <div class='step-body'>
+        <strong>Pick a skill</strong>
+        Read the SKILL.md. Every skill starts with "Customize This Skill" — what to change for your product. [Browse all 10](https://github.com/ShayanSpiel/Skills).
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>2</div>
+      <div class='step-body'>
+        <strong>Fill in the templates</strong>
+        ICP canvas, glossary template, design token reference, video scene template. Structured frameworks with examples, not blank docs.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>3</div>
+      <div class='step-body'>
+        <strong>Load into your agent</strong>
+        Paste the SKILL.md into your LLM context window. The agent now has the full workflow: mission, rules, verification steps. This is how [SpielOS](https://github.com/ShayanSpiel/SpielOS) runs — every agent operation goes through a skill.
+      </div>
+    </div>
+  </div>
+</section>
+
+<PostCta takeaway='These are not demos. These are the systems behind SpielOS. Every rule comes from a mistake. Every gate comes from a failure. Now they are public.' echo='Clone the repo, fill in your product details, and start shipping.' btnText='Clone the Skills repo' btnHref='https://github.com/ShayanSpiel/Skills' />

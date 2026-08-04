@@ -53,6 +53,43 @@ const jsonLd = {
     operatingSystem: "Web",
   },
 };
+
+const howToJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  name: t(locale, "features.infrastructure.providers.how.title"),
+  description: t(locale, "features.infrastructure.providers.hero.desc"),
+  url: SITE.url + "/features/infrastructure/providers/",
+  step: steps.map((step) => ({
+    "@type": "HowToStep",
+    position: parseInt(step.num, 10),
+    name: t(locale, step.titleKey),
+    text: t(locale, step.descKey),
+  })),
+};
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: t(locale, "features.infrastructure.providers.problem.title"),
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: t(locale, "features.infrastructure.providers.problem.desc"),
+      },
+    },
+    {
+      "@type": "Question",
+      name: t(locale, "features.infrastructure.providers.what.title"),
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: t(locale, "features.infrastructure.providers.what.desc"),
+      },
+    },
+  ],
+};
 ---
 
 <FeaturesLayout
@@ -274,4 +311,6 @@ const jsonLd = {
   />
 
   <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(howToJsonLd)} />
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
 </FeaturesLayout>

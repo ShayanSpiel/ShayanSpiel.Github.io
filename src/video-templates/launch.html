@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="gruvbox-dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SpielOS Launch Video</title>
+<style>
+/* ══════════════════════════════════════════════════════════
+   RESET & BASE
+   ══════════════════════════════════════════════════════════ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: #1d2021; }
+
+/* ══════════════════════════════════════════════════════════
+   GRUVBOX DARK TOKENS
+   ══════════════════════════════════════════════════════════ */
+:root {
+  --bg0_h: #1d2021;
+  --bg0: #282828;
+  --bg0_s: #32302f;
+  --bg1: #3c3836;
+  --bg2: #504945;
+  --fg0: #fbf1c7;
+  --fg1: #ebdbb2;
+  --fg3: #bdae93;
+  --fg4: #a89984;
+  --blue: #458588;
+  --green: #98971a;
+  --yellow: #d79921;
+  --red: #cc241d;
+  --purple: #b16286;
+  --aqua: #689d6a;
+
+  --bg: var(--bg0_h);
+  --panel: var(--bg0);
+  --panel-raised: var(--bg0_s);
+  --border: color-mix(in oklab, var(--bg2) 50%, var(--bg0));
+  --fg: var(--fg1);
+  --fg-strong: var(--fg0);
+  --fg-muted: var(--fg4);
+  --primary: var(--blue);
+  --primary-soft: color-mix(in oklab, var(--blue) 20%, transparent);
+  --success: var(--green);
+  --success-soft: color-mix(in oklab, var(--green) 18%, transparent);
+  --warning: var(--yellow);
+  --warning-soft: color-mix(in oklab, var(--yellow) 18%, transparent);
+  --destructive: var(--red);
+  --destructive-soft: color-mix(in oklab, var(--red) 18%, transparent);
+  --accent: var(--aqua);
+  --accent-soft: color-mix(in oklab, var(--aqua) 18%, transparent);
+  --purple: var(--purple);
+  --purple-soft: color-mix(in oklab, var(--purple) 18%, transparent);
+}
+
+/* ══════════════════════════════════════════════════════════
+   FONT
+   ══════════════════════════════════════════════════════════ */
+@font-face {
+  font-family: 'Outfit';
+  src: url('/fonts/Outfit-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-display: swap;
+}
+body {
+  font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+  color: var(--fg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ══════════════════════════════════════════════════════════
+   SCENE SYSTEM
+   ══════════════════════════════════════════════════════════ */
+.scene {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.scene.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ══════════════════════════════════════════════════════════
+   BACKGROUND LAYERS
+   ══════════════════════════════════════════════════════════ */
+.bg-grid {
+  position: absolute; inset: 0;
+  opacity: 0;
+  background-image:
+    linear-gradient(var(--fg) 1px, transparent 1px),
+    linear-gradient(90deg, var(--fg) 1px, transparent 1px);
+  background-size: 64px 64px;
+  transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.bg-grid.show { opacity: 0.035; }
+
+.glow {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(80px);
+}
+.glow-1 {
+  width: 600px; height: 600px;
+  top: 8%; left: -12%;
+  background: var(--primary);
+  opacity: 0;
+  animation: glowDrift 20s ease-in-out infinite;
+}
+.glow-2 {
+  width: 500px; height: 500px;
+  bottom: 5%; right: -10%;
+  background: var(--purple);
+  opacity: 0;
+  animation: glowDrift 28s ease-in-out infinite reverse;
+}
+.glow-3 {
+  width: 300px; height: 300px;
+  top: 50%; left: 20%;
+  background: var(--accent);
+  opacity: 0;
+  animation: glowDrift 24s ease-in-out infinite;
+}
+@keyframes glowDrift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(40px, -25px) scale(1.08); }
+  66% { transform: translate(-30px, 20px) scale(0.95); }
+}
+
+/* Scanlines */
+.scanlines::before {
+  content: "";
+  position: absolute; inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg, transparent 0 2px, rgba(255,255,255,0.012) 2px 4px);
+  z-index: 200;
+}
+
+/* ══════════════════════════════════════════════════════════
+   TEXT REVEAL SYSTEM
+   ══════════════════════════════════════════════════════════ */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  filter: blur(4px);
+  transition:
+    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.show {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+.reveal-fast {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-fast.show { opacity: 1; transform: translateY(0); }
+
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.92);
+  filter: blur(6px);
+  transition:
+    opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-scale.show {
+  opacity: 1;
+  transform: scale(1);
+  filter: blur(0);
+}
+
+/* Stagger delays via CSS */
+.delay-1 { transition-delay: 0.08s; }
+.delay-2 { transition-delay: 0.16s; }
+.delay-3 { transition-delay: 0.24s; }
+.delay-4 { transition-delay: 0.32s; }
+.delay-5 { transition-delay: 0.40s; }
+.delay-6 { transition-delay: 0.48s; }
+.delay-7 { transition-delay: 0.56s; }
+.delay-8 { transition-delay: 0.64s; }
+
+/* ══════════════════════════════════════════════════════════
+   SCENE 1 — HOOK (Problem statement)
+   ══════════════════════════════════════════════════════════ */
+.hook {
+  text-align: center;
+  z-index: 10;
+  padding: 0 8%;
+}
+.hook-label {
+  font-size: clamp(0.65rem, 1.2vw, 0.8rem);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 1.5rem;
+}
+.hook-line {
+  font-size: clamp(1.8rem, 4.5vw, 3.2rem);
+  font-weight: 700;
+  color: var(--fg-strong);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+.hook-line .muted { color: var(--fg-muted); }
+.hook-sub {
+  font-size: clamp(0.9rem, 1.8vw, 1.15rem);
+  color: var(--fg-muted);
+  margin-top: 1.5rem;
+  line-height: 1.6;
+  max-width: 540px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ══════════════════════════════════════════════════════════
+   SCENE 2 — PROMISE (What if they could?)
+   ══════════════════════════════════════════════════════════ */
+.promise {
+  text-align: center;
+  z-index: 10;
+  padding: 0 8%;
+}
+.promise-line {
+  font-size: clamp(2rem, 5vw, 3.8rem);
+  font-weight: 800;
+  color: var(--fg-strong);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+.promise-line .accent { color: var(--primary); }
+.promise-sub {
+  font-size: clamp(0.85rem, 1.6vw, 1.05rem);
+  color: var(--fg-muted);
+  margin-top: 1.2rem;
+  line-height: 1.6;
+}
+
+/* ══════════════════════════════════════════════════════════
+   SCENE 3 — FOUR PILLARS
+   ══════════════════════════════════════════════════════════ */
+.pillars {
+  z-index: 10;
+  width: 88%;
+  max-width: 960px;
+  text-align: center;
+}
+.pillars-label {
+  font-size: clamp(0.6rem, 1.1vw, 0.75rem);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 0.8rem;
+}
+.pillars-title {
+  font-size: clamp(1.5rem, 3.5vw, 2.4rem);
+  font-weight: 700;
+  color: var(--fg-strong);
+  letter-spacing: -0.02em;
+  margin-bottom: 2.5rem;
+}
+.pillars-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+.pillar {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel);
+  padding: 20px 14px;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(20px) scale(0.95);
+  transition:
+    opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.3s ease;
+}
+.pillar.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.pillar:hover { border-color: var(--border-strong); }
+.pillar-icon {
+  width: 44px; height: 44px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px;
+  font-size: 20px;
+}
+.pillar-name {
+  font-size: clamp(0.8rem, 1.4vw, 0.95rem);
+  font-weight: 600;
+  color: var(--fg-strong);
+  margin-bottom: 4px;
+}
+.pillar-desc {
+  font-size: clamp(0.65rem, 1.1vw, 0.75rem);
+  color: var(--fg-muted);
+  line-height: 1.5;
+}
+
+/* ══════════════════════════════════════════════════════════
+   SCENE 4 — DIRECTOR MODE
+   ══════════════════════════════════════════════════════════ */
+.director {
+  z-index: 10;
+  width: 88%;
+  max-width: 720px;
+  text-align: center;
+}
+.director-label {
+  font-size: clamp(0.6rem, 1.1vw, 0.75rem);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--purple);
+  margin-bottom: 0.8rem;
+}
+.director-title {
+  font-size: clamp(1.5rem, 3.5vw, 2.4rem);
+  font-weight: 700;
+  color: var(--fg-strong);
+  letter-spacing: -0.02em;
+  margin-bottom: 0.6rem;
+}
+.director-sub {
+  font-size: clamp(0.8rem, 1.4vw, 1rem);
+  color: var(--fg-muted);
+  margin-bottom: 2rem;
+  line-height: 1.5;
+}
+
+.director-panel {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel);
+  overflow: hidden;
+  text-align: left;
+  opacity: 0;
+  transform: translateY(20px) scale(0.97);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.director-panel.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.dp-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.dp-header-icon {
+  width: 30px; height: 30px;
+  border-radius: 6px;
+  background: var(--purple-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--purple);
+  font-size: 15px;
+}
+.dp-header-text h3 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--fg-strong);
+}
+.dp-header-text p {
+  font-size: 10px;
+  color: var(--fg-muted);
+}
+.dp-steps { padding: 16px; }
+.dp-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  opacity: 0;
+  transform: translateX(-12px);
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  margin-bottom: 12px;
+}
+.dp-step:last-child { margin-bottom: 0; }
+.dp-step.show { opacity: 1; transform: translateX(0); }
+.dp-step-icon {
+  width: 26px; height: 26px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.dp-step-icon.done { background: var(--panel-raised); color: var(--fg-muted); opacity: 0.5; }
+.dp-step-icon.pending { background: var(--primary-soft); color: var(--primary); }
+.dp-step-info { flex: 1; min-width: 0; }
+.dp-step-role {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--fg-strong);
+}
+.dp-step-action {
+  font-size: 10px;
+  color: var(--fg-muted);
+  margin-top: 1px;
+}
+.dp-step-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 3px;
+  font-size: 9px;
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.dp-step-status.running { background: var(--success-soft); color: var(--success); }
+.dp-step-status.waiting { background: var(--warning-soft); color: var(--warning); }
+.dp-status-dot {
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.dp-eval {
+  margin-top: 6px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  overflow: hidden;
+}
+.dp-eval-header {
+  padding: 5px 8px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 9px;
+}
+.dp-eval-header span:first-child { font-weight: 500; color: var(--fg); }
+.dp-eval-score {
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 9px;
+}
+.dp-eval-score.pass { background: var(--success-soft); color: var(--success); }
+.dp-eval-rules { padding: 6px 8px; }
+.dp-eval-rule {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 9px;
+  color: var(--fg);
+  margin-bottom: 2px;
+}
+.dp-eval-rule:last-child { margin-bottom: 0; }
+
+/* ══════════════════════════════════════════════════════════
+   SCENE 5 — HOW IT WORKS (4 steps)
+   ══════════════════════════════════════════════════════════ */
+.how {
+  z-index: 10;
+  width: 88%;
+  max-width: 880px;
+  text-align: center;
+}
+.how-label {
+  font-size: clamp(0.6rem, 1.1vw, 0.75rem);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 0.8rem;
+}
+.how-title {
+  font-size: clamp(1.4rem, 3.2vw, 2.2rem);
+  font-weight: 700;
+  color: var(--fg-strong);
+  letter-spacing: -0.02em;
+  margin-bottom: 2rem;
+}
+.how-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.how-step {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel);
+  padding: 18px 12px;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.how-step.show { opacity: 1; transform: translateY(0); }
+.how-step-num {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 10px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.how-step-title {
+  font-size: clamp(0.7rem, 1.2vw, 0.85rem);
+  font-weight: 600;
+  color: var(--fg-strong);
+  margin-bottom: 4px;
+}
+.how-step-desc {
+  font-size: clamp(0.6rem, 1vw, 0.7rem);
+  color: var(--fg-muted);
+  line-height: 1.4;
+}
+
+/* ══════════════════════════════════════════════════════════
+   SCENE 6 — CTA
+   ══════════════════════════════════════════════════════════ */
+.cta {
+  z-index: 10;
+  text-align: center;
+}
+.cta-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--panel);
+  font-size: clamp(0.6rem, 1vw, 0.75rem);
+  font-weight: 500;
+  color: var(--fg-muted);
+  margin-bottom: 1.5rem;
+}
+.cta-badge-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--success);
+  animation: pulseDot 2s ease-in-out infinite;
+}
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.cta-title {
+  font-size: clamp(2.2rem, 5.5vw, 4rem);
+  font-weight: 800;
+  color: var(--fg-strong);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+.cta-title .accent { color: var(--primary); }
+.cta-sub {
+  font-size: clamp(0.85rem, 1.6vw, 1.05rem);
+  color: var(--fg-muted);
+  margin-top: 1rem;
+  line-height: 1.5;
+}
+.cta-url {
+  margin-top: 2rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  border: 1px solid var(--primary);
+  border-radius: 8px;
+  background: var(--primary-soft);
+  font-family: 'Outfit', monospace;
+  font-size: clamp(0.9rem, 1.8vw, 1.15rem);
+  font-weight: 600;
+  color: var(--fg-strong);
+}
+.cta-url .prompt { color: var(--primary); font-weight: 700; }
+
+/* ══════════════════════════════════════════════════════════
+   PARTICLES
+   ══════════════════════════════════════════════════════════ */
+.particle {
+  position: absolute;
+  border-radius: 9999px;
+  pointer-events: none;
+  opacity: 0;
+}
+@keyframes particleFloat {
+  0% { transform: translateY(0) scale(1); opacity: 0; }
+  10% { opacity: 0.8; }
+  90% { opacity: 0.8; }
+  100% { transform: translateY(-55vh) scale(0.5); opacity: 0; }
+}
+</style>
+</head>
+<body class="scanlines">
+
+<!-- Background -->
+<div class="bg-grid" id="bg-grid"></div>
+<div class="glow glow-1" id="glow-1"></div>
+<div class="glow glow-2" id="glow-2"></div>
+<div class="glow glow-3" id="glow-3"></div>
+<div id="particles" style="position:absolute;inset:0;pointer-events:none;z-index:1;"></div>
+
+<!-- ═══════ SCENE 1: HOOK (0-5s) ═══════ -->
+<div class="scene" id="s-hook">
+  <div class="hook">
+    <div class="hook-label reveal" id="hook-label">The Problem</div>
+    <div class="hook-line reveal delay-1" id="hook-line1">
+      Your company is using AI.
+    </div>
+    <div class="hook-line reveal delay-2" id="hook-line2" style="margin-top: 0.3em;">
+      <span class="muted">It just isn't working as a team.</span>
+    </div>
+    <div class="hook-sub reveal delay-3" id="hook-sub">
+      Tools are disconnected. Prompts are repeated. Nobody owns the work.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ SCENE 2: PROMISE (5-9s) ═══════ -->
+<div class="scene" id="s-promise">
+  <div class="promise">
+    <div class="promise-line reveal" id="promise1">
+      What if your AI employees
+    </div>
+    <div class="promise-line reveal delay-1" id="promise2" style="margin-top: 0.15em;">
+      could work <span class="accent">like a real team</span>?
+    </div>
+    <div class="promise-sub reveal delay-2" id="promise-sub">
+      Define roles. Write instructions. Connect tools. Watch them execute.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ SCENE 3: FOUR PILLARS (9-15s) ═══════ -->
+<div class="scene" id="s-pillars">
+  <div class="pillars">
+    <div class="pillars-label reveal" id="pillars-label">The Building Blocks</div>
+    <div class="pillars-title reveal delay-1" id="pillars-title">Everything you need to build an AI team</div>
+    <div class="pillars-grid">
+      <div class="pillar" id="p-0">
+        <div class="pillar-icon" style="background: var(--primary-soft); color: var(--primary);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="pillar-name">Roles</div>
+        <div class="pillar-desc">Define AI employees with personalities and rules</div>
+      </div>
+      <div class="pillar" id="p-1">
+        <div class="pillar-icon" style="background: var(--accent-soft); color: var(--accent);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        </div>
+        <div class="pillar-name">Skills</div>
+        <div class="pillar-desc">Composable abilities wrapping APIs and tools</div>
+      </div>
+      <div class="pillar" id="p-2">
+        <div class="pillar-icon" style="background: var(--warning-soft); color: var(--warning);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14,2 14,8 20,8"/><path d="M9 15l2 2 4-4"/></svg>
+        </div>
+        <div class="pillar-name">Evals</div>
+        <div class="pillar-desc">Quality gates that review output against standards</div>
+      </div>
+      <div class="pillar" id="p-3">
+        <div class="pillar-icon" style="background: var(--purple-soft); color: var(--purple);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h4l3-9 4 18 3-9h4"/></svg>
+        </div>
+        <div class="pillar-name">Workflows</div>
+        <div class="pillar-desc">Multi-agent pipelines from prompt to publish</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ SCENE 4: DIRECTOR MODE (15-21s) ═══════ -->
+<div class="scene" id="s-director">
+  <div class="director">
+    <div class="director-label reveal" id="dir-label">Director Mode</div>
+    <div class="director-title reveal delay-1" id="dir-title">Be the director. <span style="color: var(--fg-muted)">Or don't.</span></div>
+    <div class="director-sub reveal delay-2" id="dir-sub">Step in when you want control. Step back when you trust your team.</div>
+    <div class="director-panel" id="dir-panel">
+      <div class="dp-header">
+        <div class="dp-header-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a4 4 0 0 1 4 4c0 1.5-.8 2.8-2 3.4V12h3a3 3 0 0 1 3 3v1a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-1a3 3 0 0 1 3-3h3V9.4A4 4 0 0 1 12 2z"/></svg></div>
+        <div class="dp-header-text">
+          <h3>Content Pipeline</h3>
+          <p>5 roles in sequence</p>
+        </div>
+      </div>
+      <div class="dp-steps">
+        <div class="dp-step" id="ds-0">
+          <div class="dp-step-icon done"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a4 4 0 0 1 4 4c0 1.5-.8 2.8-2 3.4V12h3a3 3 0 0 1 3 3v1a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-1a3 3 0 0 1 3-3h3V9.4A4 4 0 0 1 12 2z"/></svg></div>
+          <div class="dp-step-info">
+            <div class="dp-step-role">Content Strategist</div>
+            <div class="dp-step-action">Generated content brief for Q2 campaign</div>
+          </div>
+          <span class="dp-step-status running"><span class="dp-status-dot"></span> Done</span>
+        </div>
+        <div class="dp-step" id="ds-1">
+          <div class="dp-step-icon pending"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+          <div class="dp-step-info">
+            <div class="dp-step-role">You</div>
+            <div class="dp-step-action">Review & approve</div>
+          </div>
+          <span class="dp-step-status waiting"><span class="dp-status-dot"></span> Waiting</span>
+        </div>
+        <div class="dp-step" id="ds-2">
+          <div class="dp-step-icon done"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14,2 14,8 20,8"/></svg></div>
+          <div class="dp-step-info">
+            <div class="dp-step-role">SEO Writer</div>
+            <div class="dp-step-action">Drafted 1,200-word blog post</div>
+          </div>
+          <span class="dp-step-status running"><span class="dp-status-dot"></span> Done</span>
+        </div>
+        <div class="dp-step" id="ds-3">
+          <div class="dp-step-icon done"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><path d="M9 15l2 2 4-4"/></svg></div>
+          <div class="dp-step-info">
+            <div class="dp-step-role">QA Reviewer</div>
+            <div class="dp-step-action">Evaluation passed</div>
+          </div>
+          <div class="dp-eval">
+            <div class="dp-eval-header">
+              <span>Eval Results</span>
+              <span class="dp-eval-score pass">84% Pass</span>
+            </div>
+            <div class="dp-eval-rules">
+              <div class="dp-eval-rule"><span style="color:var(--success)">✓</span> Brand voice</div>
+              <div class="dp-eval-rule"><span style="color:var(--success)">✓</span> SEO keywords</div>
+              <div class="dp-eval-rule"><span style="color:var(--success)">✓</span> Min 1000 words</div>
+            </div>
+          </div>
+        </div>
+        <div class="dp-step" id="ds-4">
+          <div class="dp-step-icon done"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13"/><path d="M22 2 15 22 11 13 2 9z"/></svg></div>
+          <div class="dp-step-info">
+            <div class="dp-step-role">Publisher</div>
+            <div class="dp-step-action">Published to 6 platforms</div>
+          </div>
+          <span class="dp-step-status running"><span class="dp-status-dot"></span> Done</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ SCENE 5: HOW IT WORKS (21-26s) ═══════ -->
+<div class="scene" id="s-how">
+  <div class="how">
+    <div class="how-label reveal" id="how-label">How It Works</div>
+    <div class="how-title reveal delay-1" id="how-title">Four steps to your AI department</div>
+    <div class="how-steps">
+      <div class="how-step" id="hs-0">
+        <div class="how-step-num" style="background: var(--primary-soft); color: var(--primary);">01</div>
+        <div class="how-step-title">Create the role</div>
+        <div class="how-step-desc">Define the job, personality, and decision rules</div>
+      </div>
+      <div class="how-step" id="hs-1">
+        <div class="how-step-num" style="background: var(--accent-soft); color: var(--accent);">02</div>
+        <div class="how-step-title">Give instructions</div>
+        <div class="how-step-desc">Connect Google, Notion, Slack, or any tool</div>
+      </div>
+      <div class="how-step" id="hs-2">
+        <div class="how-step-num" style="background: var(--warning-soft); color: var(--warning);">03</div>
+        <div class="how-step-title">Set quality standards</div>
+        <div class="how-step-desc">Drop QA checkpoints into any workflow</div>
+      </div>
+      <div class="how-step" id="hs-3">
+        <div class="how-step-num" style="background: var(--purple-soft); color: var(--purple);">04</div>
+        <div class="how-step-title">Connect into workflows</div>
+        <div class="how-step-desc">Chain roles into multi-step pipelines</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ SCENE 6: CTA (26-30s) ═══════ -->
+<div class="scene" id="s-cta">
+  <div class="cta">
+    <div class="cta-badge reveal" id="cta-badge">
+      <span class="cta-badge-dot"></span>
+      Pre-launch — joining early
+    </div>
+    <div class="cta-title reveal delay-1" id="cta-title">Your AI team is <span class="accent">waiting</span></div>
+    <div class="cta-sub reveal delay-2" id="cta-sub">Hire your first role in under 2 minutes.</div>
+    <div class="cta-url reveal delay-3" id="cta-url">
+      <span class="prompt">$</span> spielos.xyz/waitlist
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ INLINE SVG ICONS ═══════ -->
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   VIRTUAL CLOCK
+   ══════════════════════════════════════════════════════════ */
+window.__t = 0;
+window.__fps = 30;
+window.__duration = 30;
+window.__setFrame = function(frame, fps) {
+  window.__fps = fps || 30;
+  window.__t = frame / window.__fps;
+};
+
+/* ── Helpers ── */
+function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+function activateScene(id) {
+  document.querySelectorAll('.scene').forEach(function(s) {
+    s.classList.toggle('active', s.id === id);
+  });
+}
+
+/* ── Particles ── */
+var particleContainer = document.getElementById('particles');
+var pColors = ['var(--primary)', 'var(--accent)', 'var(--purple)', 'var(--warning)'];
+var pEls = [];
+for (var i = 0; i < 18; i++) {
+  var d = document.createElement('span');
+  d.className = 'particle';
+  var sz = 2 + Math.random() * 3;
+  d.style.width = sz + 'px';
+  d.style.height = sz + 'px';
+  d.style.left = (Math.random() * 100) + '%';
+  d.style.bottom = (-5 + Math.random() * 20) + '%';
+  d.style.background = pColors[Math.floor(Math.random() * pColors.length)];
+  d.style.animationDuration = (8 + Math.random() * 10) + 's';
+  d.style.animationDelay = (Math.random() * 8) + 's';
+  d.style.animation = 'particleFloat ' + d.style.animationDuration + ' ease-in infinite';
+  d.style.animationDelay = d.style.animationDelay;
+  particleContainer.appendChild(d);
+  pEls.push(d);
+}
+
+/* ══════════════════════════════════════════════════════════
+   TIMELINE
+
+   0.0 - 5.0s  : Hook — "Your company is using AI. It just isn't working as a team."
+   5.0 - 9.0s  : Promise — "What if your AI employees could work like a real team?"
+   9.0 - 15.0s : Four pillars — Roles, Skills, Evals, Workflows
+   15.0 - 21.0s: Director mode — "Be the director. Or don't."
+   21.0 - 26.0s: How it works — 4 steps
+   26.0 - 30.0s: CTA — "Your AI team is waiting"
+   ══════════════════════════════════════════════════════════ */
+
+function tick() {
+  var t = window.__t;
+
+  /* ── Background ── */
+  document.getElementById('bg-grid').classList.toggle('show', t > 0.5);
+  var g1 = document.getElementById('glow-1');
+  var g2 = document.getElementById('glow-2');
+  var g3 = document.getElementById('glow-3');
+  if (g1) g1.style.opacity = t > 0.5 ? clamp((t - 0.5) * 0.15, 0, 0.18) : 0;
+  if (g2) g2.style.opacity = t > 0.8 ? clamp((t - 0.8) * 0.12, 0, 0.15) : 0;
+  if (g3) g3.style.opacity = t > 1.0 ? clamp((t - 1.0) * 0.1, 0, 0.12) : 0;
+
+  /* ── Particles ── */
+  pEls.forEach(function(el) { el.style.animationPlayState = t > 1 ? 'running' : 'paused'; });
+
+  /* ═══ SCENE 1: HOOK (0 - 5s) ═══ */
+  if (t < 5.2) {
+    activateScene('s-hook');
+    toggle('hook-label', t > 0.8);
+    toggle('hook-line1', t > 1.4);
+    toggle('hook-line2', t > 2.0);
+    toggle('hook-sub', t > 2.8);
+  }
+
+  /* ═══ SCENE 2: PROMISE (5 - 9s) ═══ */
+  if (t >= 4.8 && t < 9.2) {
+    activateScene('s-promise');
+    toggle('promise1', t > 5.3);
+    toggle('promise2', t > 5.9);
+    toggle('promise-sub', t > 6.7);
+  }
+
+  /* ═══ SCENE 3: PILLARS (9 - 15s) ═══ */
+  if (t >= 8.8 && t < 15.2) {
+    activateScene('s-pillars');
+    toggle('pillars-label', t > 9.2);
+    toggle('pillars-title', t > 9.6);
+    for (var i = 0; i < 4; i++) {
+      toggle('p-' + i, t > 10.2 + i * 0.4);
+    }
+  }
+
+  /* ═══ SCENE 4: DIRECTOR (15 - 21s) ═══ */
+  if (t >= 14.8 && t < 21.2) {
+    activateScene('s-director');
+    toggle('dir-label', t > 15.2);
+    toggle('dir-title', t > 15.6);
+    toggle('dir-sub', t > 16.1);
+    toggle('dir-panel', t > 16.8);
+    for (var j = 0; j < 5; j++) {
+      toggle('ds-' + j, t > 17.4 + j * 0.55);
+    }
+  }
+
+  /* ═══ SCENE 5: HOW (21 - 26s) ═══ */
+  if (t >= 20.8 && t < 26.2) {
+    activateScene('s-how');
+    toggle('how-label', t > 21.2);
+    toggle('how-title', t > 21.6);
+    for (var k = 0; k < 4; k++) {
+      toggle('hs-' + k, t > 22.2 + k * 0.35);
+    }
+  }
+
+  /* ═══ SCENE 6: CTA (26 - 30s) ═══ */
+  if (t >= 25.8) {
+    activateScene('s-cta');
+    toggle('cta-badge', t > 26.3);
+    toggle('cta-title', t > 26.8);
+    toggle('cta-sub', t > 27.4);
+    toggle('cta-url', t > 28.0);
+  }
+
+  requestAnimationFrame(tick);
+}
+
+function toggle(id, show) {
+  var el = document.getElementById(id);
+  if (el) el.classList.toggle('show', show);
+}
+
+tick();
+</script>
+</body>
+</html>
