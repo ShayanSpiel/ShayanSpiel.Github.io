@@ -401,13 +401,13 @@ pathFill.style.strokeDasharray=pathLen;
 pathFill.style.strokeDashoffset=pathLen;
 
 /*
-  15s timeline (matched to natural speech at 1.277x):
-  0-2.3s   : Hook
-  2.3-6.4s : Pain cards
-  6.4-8.4s : Promise
-  8.4-10.8s: Pillars
-  10.8-12.6s: Director
-  12.6-15s : CTA
+  15s timeline (am_michael voice at 1.425x):
+  0-2.34s  : Hook
+  2.34-6.49s: Pain cards
+  6.49-8.56s: Promise
+  8.56-10.88s: Pillars
+  10.88-12.60s: Director
+  12.60-15s : CTA
 */
 function tick(){
   var t=window.__t;
@@ -426,19 +426,19 @@ function tick(){
   pathFill.style.strokeDashoffset=pathLen*(1-eased);
 
   /* Stations appear as line reaches them */
-  var stationTimes=[0.2,2.3,6.4,8.4,10.8,12.6];
+  var stationTimes=[0.2,2.34,6.49,8.56,10.88,12.60];
   for(var s=0;s<6;s++){
     var stEl=document.getElementById('st'+(s+1));
     if(stEl)stEl.classList.toggle('show',t>=stationTimes[s]+0.3);
   }
 
   /* Scenes */
-  if(t<2.3){act('s1');tog('hi1',t>0.2);tog('h1',t>0.4);tog('h2',t>0.9);tog('h3',t>1.4);tog('h4',t>2.0)}
-  if(t>=2.3&&t<6.4){act('s2');for(var i=0;i<5;i++)tog('pi'+i,t>2.6+i*0.4)}
-  if(t>=6.4&&t<8.4){act('s3');tog('pri1',t>6.5);tog('pr1',t>6.7);tog('pr2',t>7.2);tog('pr3',t>7.8)}
-  if(t>=8.4&&t<10.8){act('s4');tog('pl0',t>8.4);for(var j=1;j<=4;j++)tog('pl'+j,t>8.7+j*0.25)}
-  if(t>=10.8&&t<12.6){act('s5');tog('di1',t>10.8);tog('d1',t>11.0);tog('d2',t>11.3);tog('d3',t>11.6)}
-  if(t>=12.6){act('s6');tog('ct0',t>=12.6);tog('ct1',t>=12.75);tog('ct2',t>=12.95)}
+  if(t<2.34){act('s1');tog('hi1',t>0.2);tog('h1',t>0.4);tog('h2',t>0.9);tog('h3',t>1.4);tog('h4',t>2.0)}
+  if(t>=2.34&&t<6.49){act('s2');for(var i=0;i<5;i++)tog('pi'+i,t>2.64+i*0.4)}
+  if(t>=6.49&&t<8.56){act('s3');tog('pri1',t>6.59);tog('pr1',t>6.79);tog('pr2',t>7.29);tog('pr3',t>7.89)}
+  if(t>=8.56&&t<10.88){act('s4');tog('pl0',t>8.56);for(var j=1;j<=4;j++)tog('pl'+j,t>8.86+j*0.25)}
+  if(t>=10.88&&t<12.60){act('s5');tog('di1',t>10.88);tog('d1',t>11.08);tog('d2',t>11.38);tog('d3',t>11.68)}
+  if(t>=12.60){act('s6');tog('ct0',t>=12.60);tog('ct1',t>=12.75);tog('ct2',t>=12.95)}
 
   requestAnimationFrame(tick);
 }

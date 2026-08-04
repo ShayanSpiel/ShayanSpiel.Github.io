@@ -208,12 +208,12 @@ var pc=document.getElementById('particles'),pC=['var(--primary)','var(--accent)'
 for(var i=0;i<14;i++){var d=document.createElement('span');d.className='particle';var sz=2+Math.random()*3;d.style.cssText='width:'+sz+'px;height:'+sz+'px;left:'+(Math.random()*100)+'%;bottom:'+(Math.random()*15)+'%;background:'+pC[i%4]+';animation:pfloat '+(8+Math.random()*10)+'s ease-in infinite;animation-delay:'+(Math.random()*8)+'s';pc.appendChild(d);pE.push(d)}
 
 /*
-  15s timeline (matched to natural speech at 1.167x):
-  0-3.0s   : Hook
-  3.0-8.4s : Build steps
-  8.4-10.4s: "Live"
-  10.4-12.4s: Director
-  12.4-15s : CTA
+  15s timeline (am_michael voice at 1.335x):
+  0-3.10s  : Hook
+  3.10-8.41s: Build steps
+  8.41-10.52s: "Live"
+  10.52-12.44s: Director
+  12.44-15s : CTA
 */
 function tick(){
   var t=window.__t;
@@ -223,11 +223,11 @@ function tick(){
   if(g2)g2.style.opacity=t>7.5?Math.min((t-7.5)*0.12,0.15):0;
   pE.forEach(function(e){e.style.animationPlayState=t>7?'running':'paused'});
 
-  if(t<3.0){act('s1');tog('h1',t>0.3);tog('h2',t>0.8)}
-  if(t>=3.0&&t<8.4){act('s2');for(var i=0;i<4;i++)tog('bs'+i,t>3.3+i*0.8)}
-  if(t>=8.4&&t<10.4){act('s3');tog('l1',t>8.5);tog('l2',t>8.9)}
-  if(t>=10.4&&t<12.4){act('s4');tog('dc1',t>10.5);tog('dc-0',t>10.9);tog('dc-1',t>11.4)}
-  if(t>=12.4){act('s5');tog('ct0',t>=12.4);tog('ct1',t>=12.55);tog('ct2',t>=12.75)}
+  if(t<3.10){act('s1');tog('h1',t>0.3);tog('h2',t>0.8)}
+  if(t>=3.10&&t<8.41){act('s2');for(var i=0;i<4;i++)tog('bs'+i,t>3.40+i*0.8)}
+  if(t>=8.41&&t<10.52){act('s3');tog('l1',t>8.51);tog('l2',t>8.91)}
+  if(t>=10.52&&t<12.44){act('s4');tog('dc1',t>10.62);tog('dc-0',t>11.02);tog('dc-1',t>11.52)}
+  if(t>=12.44){act('s5');tog('ct0',t>=12.44);tog('ct1',t>=12.59);tog('ct2',t>=12.79)}
 
   requestAnimationFrame(tick);
 }
