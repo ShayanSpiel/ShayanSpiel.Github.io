@@ -83,6 +83,9 @@ const PATH =
   var icons = document.querySelectorAll(".jl-icon");
   var count = icons.length;
 
+  /* hide icons until boxicon font is ready */
+  for (var i = 0; i < count; i++) icons[i].style.visibility = "hidden";
+
   function tick() {
     var top = window.pageYOffset || document.documentElement.scrollTop;
     var docH = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
@@ -102,6 +105,15 @@ const PATH =
       icons[i].style.left = (r.left + r.width / 2) + "px";
       icons[i].style.top = (r.top + r.height / 2) + "px";
     }
+  }
+
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () {
+      for (var i = 0; i < count; i++) icons[i].style.visibility = "";
+      tick();
+    });
+  } else {
+    for (var i = 0; i < count; i++) icons[i].style.visibility = "";
   }
 
   window.addEventListener("scroll", tick, { passive: true });
