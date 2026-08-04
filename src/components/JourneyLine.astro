@@ -1,21 +1,21 @@
 ---
 /**
- * JourneyLine — scroll-progress line with boxicon icon nodes.
- * SVG for the path + circles. HTML overlays for icons.
- * Nodes activate by scroll percentage (no section ID detection).
+ * JourneyLine — scroll-progress line with colored boxicon nodes.
+ * SVG path only. HTML icons positioned by JS on scroll.
+ * Nodes activate by scroll percentage.
  * Hidden on mobile (< lg).
  */
 
 const SECTIONS = [
-  { id: "hero",     y: 50,  icon: "bx-rocket" },
-  { id: "avatar",   y: 170, icon: "bx-check-square" },
-  { id: "entry",    y: 290, icon: "bx-network-chart" },
-  { id: "why",      y: 410, icon: "bx-group" },
-  { id: "proof",    y: 530, icon: "bx-certification" },
-  { id: "product",  y: 650, icon: "bx-layer" },
-  { id: "services", y: 770, icon: "bx-link" },
-  { id: "notes",    y: 870, icon: "bx-task" },
-  { id: "final",    y: 960, icon: "bx-send" },
+  { id: "hero",     y: 50,  icon: "bx-bullseye",       color: "primary" },
+  { id: "avatar",   y: 170, icon: "bx-badge-check",    color: "success" },
+  { id: "entry",    y: 290, icon: "bx-network-chart",  color: "primary" },
+  { id: "why",      y: 410, icon: "bx-trending-up",    color: "success" },
+  { id: "proof",    y: 530, icon: "bx-bar-chart-alt-2", color: "accent" },
+  { id: "product",  y: 650, icon: "bx-layer",          color: "purple" },
+  { id: "services", y: 770, icon: "bx-cog",            color: "accent" },
+  { id: "notes",    y: 870, icon: "bx-book",           color: "primary" },
+  { id: "final",    y: 960, icon: "bx-rocket",         color: "primary" },
 ];
 
 const PATH =
@@ -55,16 +55,13 @@ const PATH =
     <path class="jl-track" d={PATH} fill="none" stroke="var(--border)" stroke-width="2" stroke-dasharray="6 6" />
     <path class="jl-fill" d={PATH} fill="none" stroke="url(#jl-grad)" stroke-width="2" stroke-linecap="round" filter="url(#jl-glow)" />
     {SECTIONS.map((s) => (
-      <g class="jl-node" data-s={s.id}>
-        <circle class="jl-ping" cx="100" cy={s.y} r="6" />
-        <circle class="jl-dot" cx="100" cy={s.y} r="4" />
-      </g>
+      <circle class="jl-anchor" cx="100" cy={s.y} r="1" />
     ))}
   </svg>
 
   <div class="jl-icons">
     {SECTIONS.map((s) => (
-      <div class="jl-icon" data-s={s.id}>
+      <div class:list={["jl-icon", `jl-${s.color}`]} data-s={s.id}>
         <i class={`bx ${s.icon}`}></i>
       </div>
     ))}
@@ -82,10 +79,9 @@ const PATH =
   fill.style.strokeDasharray = len;
   fill.style.strokeDashoffset = len;
 
-  var dots = svg.querySelectorAll(".jl-dot");
-  var nodes = svg.querySelectorAll(".jl-node");
+  var anchors = svg.querySelectorAll(".jl-anchor");
   var icons = document.querySelectorAll(".jl-icon");
-  var count = nodes.length;
+  var count = icons.length;
 
   function tick() {
     var top = window.pageYOffset || document.documentElement.scrollTop;
@@ -99,17 +95,10 @@ const PATH =
 
     for (var i = 0; i < count; i++) {
       var threshold = i / (count - 1);
-      var active = p >= threshold;
+      if (p >= threshold) icons[i].classList.add("active");
+      else icons[i].classList.remove("active");
 
-      if (active) {
-        nodes[i].classList.add("on");
-        icons[i].classList.add("active");
-      } else {
-        nodes[i].classList.remove("on");
-        icons[i].classList.remove("active");
-      }
-
-      var r = dots[i].getBoundingClientRect();
+      var r = anchors[i].getBoundingClientRect();
       icons[i].style.left = (r.left + r.width / 2) + "px";
       icons[i].style.top = (r.top + r.height / 2) + "px";
     }
