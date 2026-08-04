@@ -125,10 +125,14 @@ const ctaLink = cta || { label: t(locale, "nav.joinWaitlist"), href: "/waitlist/
 
 <style>
   #site-nav[data-scrolled="true"] {
-    background-color: var(--background);
+    background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(24px) saturate(1.5);
     -webkit-backdrop-filter: blur(24px) saturate(1.5);
     border-bottom-color: var(--border);
     box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.04);
+  }
+
+  :root[data-theme*="light"] #site-nav[data-scrolled="true"] {
+    background: rgba(255, 255, 255, 0.7);
   }
 </style>
