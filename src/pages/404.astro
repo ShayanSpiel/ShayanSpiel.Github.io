@@ -371,7 +371,7 @@ const hrefs = {
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 22px;
+      font-size: var(--font-size-xl);
       border-radius: 9999px;
       background: var(--background-deep);
       border: 1px solid var(--border);
@@ -420,12 +420,12 @@ const hrefs = {
     .log-line.show { opacity: 1; transform: translateY(0); }
     .log-line .log-prompt { color: var(--primary); font-weight: 600; }
     .log-line .log-cmd { color: var(--foreground-strong); }
-    .log-line .log-icon { display: inline-flex; font-size: 13px; }
+    .log-line .log-icon { display: inline-flex; font-size: var(--font-size-xs); }
     .log-line .log-name { color: var(--foreground-strong); font-weight: 600; }
     .log-line .log-arrow { color: var(--muted-foreground); }
     .log-line .log-action { color: var(--muted-foreground); }
     .log-line .log-dots { color: var(--muted-foreground); }
-    .log-line .log-result { margin-left: auto; font-size: 13px; font-weight: 700; }
+    .log-line .log-result { margin-left: auto; font-size: var(--font-size-xs); font-weight: 700; }
     .log-line .log-result.ok { color: var(--success); }
     .log-line .log-result.miss { color: var(--destructive); }
     .log-line .log-error { color: var(--destructive); font-weight: 600; letter-spacing: 0.02em; }

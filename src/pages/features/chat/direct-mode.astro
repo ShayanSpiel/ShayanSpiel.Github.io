@@ -20,19 +20,6 @@ const steps = [
   { num: 4, titleKey: "features.chat.directMode.how.step4.title", descKey: "features.chat.directMode.how.step4.desc" },
 ];
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebPage",
-  name: t(locale, "features.chat.directMode.pageTitle"),
-  description: t(locale, "features.chat.directMode.pageDesc"),
-  url: SITE.url + "/features/chat/direct-mode/",
-  isPartOf: {
-    "@type": "WebSite",
-    name: SITE.name,
-    url: SITE.url,
-  },
-};
-
 const howToJsonLd = {
   "@context": "https://schema.org",
   "@type": "HowTo",
@@ -327,7 +314,6 @@ const faqJsonLd = {
     description={t(locale, "features.chat.directMode.cta.desc")}
   />
 
-  <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   <script is:inline type="application/ld+json" set:html={JSON.stringify(howToJsonLd)} />
   <script is:inline type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
 </FeaturesLayout>

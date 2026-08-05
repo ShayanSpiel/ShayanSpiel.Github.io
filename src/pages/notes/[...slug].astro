@@ -46,10 +46,6 @@ const jsonLd = {
   mainEntityOfPage: articleUrl,
   ...(tags.length > 0 && { keywords: tags.join(", ") }),
   ...(tags.length > 0 && { articleSection: tags[0] }),
-  speakable: {
-    "@type": "SpeakableSpecification",
-    cssSelector: [".post-content p", ".post-content h2", ".post-content h3"],
-  },
 };
 
 const breadcrumbJsonLd = {

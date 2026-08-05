@@ -32,25 +32,6 @@ const layers = [
   },
 ];
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebPage",
-  name: t(locale, "features.infrastructure.pageTitle"),
-  description: t(locale, "features.infrastructure.pageDesc"),
-  url: SITE.url + "/features/infrastructure/",
-  isPartOf: {
-    "@type": "WebSite",
-    name: SITE.name,
-    url: SITE.url,
-  },
-  about: {
-    "@type": "SoftwareApplication",
-    name: SITE.name,
-    url: SITE.url,
-    applicationCategory: "BusinessApplication",
-    operatingSystem: "Web",
-  },
-};
 ---
 
 <FeaturesLayout
@@ -214,6 +195,4 @@ const jsonLd = {
     title={t(locale, "features.related.title")}
     description={t(locale, "features.infrastructure.hero.desc")}
   />
-
-  <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 </FeaturesLayout>

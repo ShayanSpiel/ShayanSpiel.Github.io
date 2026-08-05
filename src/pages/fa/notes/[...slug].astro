@@ -17,7 +17,6 @@ interface Props {
 }
 
 const { note, locale } = Astro.props;
-const noteAsEn = note as unknown as CollectionEntry<"notes">;
 ---
 
-<NotePage note={noteAsEn} locale={locale} />
+<NotePage note={note} locale={locale} />

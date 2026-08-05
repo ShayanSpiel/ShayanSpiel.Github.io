@@ -69,19 +69,6 @@ const softwareJsonLd = {
   publisher: { "@id": `${SITE.url}/#organization` },
 };
 
-const itemListJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "ItemList",
-  name: "Latest Notes from SpielOS",
-  itemListElement: latestNotes.map((note, i) => ({
-    "@type": "ListItem",
-    position: i + 1,
-    url: `${SITE.url}${localizePath(`/notes${note.data.permalink}`, locale)}`,
-    name: note.data.title,
-    datePublished: note.data.date.toISOString(),
-  })),
-};
-
 const breadcrumbJsonLd = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
@@ -436,6 +423,5 @@ const breadcrumbJsonLd = {
   <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   <script is:inline type="application/ld+json" set:html={JSON.stringify(websiteJsonLd)} />
   <script is:inline type="application/ld+json" set:html={JSON.stringify(softwareJsonLd)} />
-  <script is:inline type="application/ld+json" set:html={JSON.stringify(itemListJsonLd)} />
   <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
 </Page>

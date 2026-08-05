@@ -6,7 +6,7 @@
   --background-deep: var(--mono-light-bg2);
   --panel: var(--mono-light-bg0_h);
   --panel-raised: var(--mono-light-bg0_s);
-  --panel-strong: var(--mono-light-bg0);
+  --panel-strong: var(--mono-light-bg1);
   --panel-deep: var(--mono-light-bg2);
   --input: var(--mono-light-bg0_h);
   --hover: color-mix(in oklab, var(--mono-light-fg1) 5%, var(--mono-light-bg0_h));
@@ -37,7 +37,7 @@
   --purple: var(--mono-light-purple);
   --purple-soft: color-mix(in oklab, var(--mono-light-purple) 15%, transparent);
 
-  --code-block: var(--mono-light-bg0);
+  --code-block: var(--mono-light-bg1);
 
   --shadow-panel: 0 1px 0 color-mix(in oklab, var(--mono-light-fg0) 8%, transparent);
   --shadow-popover: 0 8px 24px color-mix(in oklab, var(--mono-light-bg3) 20%, transparent);

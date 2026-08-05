@@ -18,7 +18,7 @@
   --muted-foreground: var(--discord-light-fg4);
 
   --primary: var(--discord-light-blue);
-  --primary-foreground: #ffffff;
+  --primary-foreground: var(--discord-light-bg0_h);
   --primary-soft: color-mix(in oklab, var(--discord-light-blue) 15%, transparent);
 
   --success: var(--discord-light-green);
@@ -34,7 +34,7 @@
   --purple: var(--discord-light-purple);
   --purple-soft: color-mix(in oklab, var(--discord-light-purple) 15%, transparent);
 
-  --code-block: var(--discord-light-bg0);
+  --code-block: var(--discord-light-bg1);
 
   --shadow-panel: 0 1px 0 color-mix(in oklab, var(--discord-light-fg0) 8%, transparent);
   --shadow-popover: 0 8px 24px color-mix(in oklab, var(--discord-light-bg3) 20%, transparent);

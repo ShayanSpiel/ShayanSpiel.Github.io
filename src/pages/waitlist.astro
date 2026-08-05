@@ -19,24 +19,6 @@ const { locale = "en" } = Astro.props;
 const title = t(locale, "waitlist.title");
 const description = t(locale, "waitlist.desc");
 
-const softwareJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  name: SITE.name,
-  url: SITE.url,
-  description: SITE.description,
-  applicationCategory: "BusinessApplication",
-  operatingSystem: "Web",
-  offers: {
-    "@type": "Offer",
-    price: "0",
-    priceCurrency: "USD",
-    availability: "https://schema.org/PreOrder",
-  },
-  author: { "@id": `${SITE.url}/#person` },
-  publisher: { "@id": `${SITE.url}/#organization` },
-};
-
 const breadcrumbJsonLd = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
@@ -61,6 +43,5 @@ const breadcrumbJsonLd = {
   </div>
   <Footer slot="footer" showThemeToggle locale={locale} />
 
-  <script is:inline type="application/ld+json" set:html={JSON.stringify(softwareJsonLd)} />
   <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
 </BaseLayout>

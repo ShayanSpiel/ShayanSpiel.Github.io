@@ -58,7 +58,7 @@ const realPages = pages.filter(isRealPage);
 for (const page of realPages) {
   const html = readFileSync(page, "utf8");
   const rel = page.replace(dist, "");
-  const isNote = /\/notes\//.test(rel) && !rel.endsWith("/notes/index.html") && !rel.endsWith("/notes/") && rel.endsWith("/index.html") && rel.includes("/notes/") && !rel.startsWith("/fa/notes/");
+  const isNote = /\/notes\//.test(rel) && !rel.endsWith("/notes/index.html") && !rel.endsWith("/notes/") && rel.endsWith("/index.html");
   const isFa = rel.startsWith("/fa/");
 
   check(/<title>[^<]{5,120}<\/title>/.test(html), "  missing/invalid <title>", rel);
@@ -91,7 +91,7 @@ for (const page of realPages) {
   });
 
   // Readability for note articles (EN + FA)
-  if (isNote || (isFa && rel.includes("/notes/") && rel.endsWith("/index.html") && !rel.endsWith("/notes/index.html"))) {
+  if (isNote) {
     const lens = sentenceLengths(html);
     const avg = lens.length ? lens.reduce((a, b) => a + b, 0) / lens.length : 0;
     check(avg <= 28, `  avg sentence length ${avg.toFixed(1)} words (>28)`, rel);
@@ -100,11 +100,11 @@ for (const page of realPages) {
 
 // Schema coverage expectations per route
 const expectSchema = {
-  "/index.html": ["Person", "WebSite", "SoftwareApplication", "ItemList", "BreadcrumbList"],
-  "/fa/index.html": ["Person", "WebSite", "SoftwareApplication", "ItemList", "BreadcrumbList"],
+  "/index.html": ["Person", "WebSite", "SoftwareApplication", "BreadcrumbList"],
+  "/fa/index.html": ["Person", "WebSite", "SoftwareApplication", "BreadcrumbList"],
   "/founder/index.html": ["Person", "BreadcrumbList"],
-  "/about/index.html": ["AboutPage", "BreadcrumbList"],
-  "/contact/index.html": ["ContactPage", "BreadcrumbList"],
+  "/about/index.html": ["BreadcrumbList"],
+  "/contact/index.html": ["BreadcrumbList"],
   "/notes/index.html": ["CollectionPage", "BreadcrumbList"],
   "/fa/notes/index.html": ["CollectionPage", "BreadcrumbList"],
 };

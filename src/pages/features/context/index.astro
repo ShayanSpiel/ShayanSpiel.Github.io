@@ -13,18 +13,6 @@ export interface Props {
 
 const { locale = "en" } = Astro.props;
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebPage",
-  name: t(locale, "features.context.pageTitle"),
-  description: t(locale, "features.context.pageDesc"),
-  url: SITE.url + "/features/context/",
-  isPartOf: {
-    "@type": "WebSite",
-    name: SITE.name,
-    url: SITE.url,
-  },
-};
 ---
 
 <FeaturesLayout
@@ -239,6 +227,4 @@ const jsonLd = {
     title={t(locale, "waitlist.cta.title")}
     description={t(locale, "waitlist.cta.p")}
   />
-
-  <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 </FeaturesLayout>

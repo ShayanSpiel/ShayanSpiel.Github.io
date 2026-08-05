@@ -21,7 +21,6 @@ export default defineConfig({
         if (page.includes('/404')) return false;
         const path = new URL(page).pathname;
         // Exclude thin placeholder pages
-        if (path === '/guides/' || path === '/fa/guides/') return false;
         if (path === '/use-cases/' || path === '/fa/use-cases/') return false;
         // Exclude /posts/ redirect stubs (301 to /notes/)
         if (path === '/posts/' || path.startsWith('/posts/')) return false;

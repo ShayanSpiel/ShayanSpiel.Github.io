@@ -34,18 +34,6 @@ const modes = [
 
 const sharedItems = t(locale, "features.chat.shared.items").split(" · ");
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebPage",
-  name: t(locale, "features.chat.pageTitle"),
-  description: t(locale, "features.chat.pageDesc"),
-  url: SITE.url + "/features/chat/",
-  isPartOf: {
-    "@type": "WebSite",
-    name: SITE.name,
-    url: SITE.url,
-  },
-};
 ---
 
 <FeaturesLayout
@@ -223,6 +211,4 @@ const jsonLd = {
     title={t(locale, "features.chat.cta.title")}
     description={t(locale, "features.chat.cta.desc")}
   />
-
-  <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 </FeaturesLayout>

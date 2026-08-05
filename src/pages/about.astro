@@ -10,28 +10,6 @@ export interface Props {
 
 const { locale = "en" } = Astro.props;
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "AboutPage",
-  name: "About SpielOS",
-  description: "SpielOS is a platform for building AI employees and departments.",
-  url: SITE.url + "/about/",
-  isPartOf: { "@id": `${SITE.url}/#website` },
-  about: {
-    "@type": "Organization",
-    "@id": `${SITE.url}/#organization`,
-    name: SITE.name,
-    url: SITE.url,
-    description: SITE.description,
-    founder: {
-      "@type": "Person",
-      "@id": `${SITE.url}/#person`,
-      name: AUTHOR.name,
-      url: SITE.url + "/founder/",
-    },
-  },
-};
-
 const breadcrumbJsonLd = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
@@ -89,6 +67,5 @@ const breadcrumbJsonLd = {
     </div>
   </section>
 
-  <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
 </Page>

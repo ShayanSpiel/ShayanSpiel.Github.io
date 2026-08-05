@@ -20,29 +20,6 @@ const formCopy = {
   submit: t(locale, "contact.submit"),
 };
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "ContactPage",
-  name: t(locale, "contact.title"),
-  description: t(locale, "contact.desc"),
-  url: `${SITE.url}${localizePath("/contact/", locale)}`,
-  inLanguage: locale === "fa" ? "fa" : "en",
-  isPartOf: { "@id": `${SITE.url}/#website` },
-  mainEntity: {
-    "@type": "Organization",
-    "@id": `${SITE.url}/#organization`,
-    name: SITE.name,
-    url: SITE.url,
-    contactPoint: {
-      "@type": "ContactPoint",
-      contactType: "customer support",
-      email: AUTHOR.email,
-      url: `${SITE.url}/contact/`,
-      availableLanguage: ["English", "Persian"],
-    },
-  },
-};
-
 const breadcrumbJsonLd = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
@@ -129,6 +106,5 @@ const breadcrumbJsonLd = {
     </div>
   </section>
 
-  <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
 </Page>

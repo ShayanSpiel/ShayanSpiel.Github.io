@@ -22,11 +22,11 @@ const iconSize = size === "sm" ? "var(--font-size-base)" : "var(--font-size-lg)"
 )}
 {show.includes("rss") && (
   <a href="/feed.xml" class="text-muted-foreground hover:text-foreground transition-colors" aria-label="RSS">
-    <i class="bx bx-rss" style={`font-size: ${iconSize};`}></i>
+    <i class="bx bx-rss icon-sm"></i>
   </a>
 )}
 {show.includes("email") && (
   <a href={`mailto:${AUTHOR.email}`} class="text-muted-foreground hover:text-foreground transition-colors" aria-label="Email">
-    <i class="bx bx-envelope" style={`font-size: ${iconSize};`}></i>
+    <i class="bx bx-envelope icon-sm"></i>
   </a>
 )}

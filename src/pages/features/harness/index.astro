@@ -44,25 +44,6 @@ const blocks = [
   },
 ];
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebPage",
-  name: t(locale, "features.harness.pageTitle"),
-  description: t(locale, "features.harness.pageDesc"),
-  url: SITE.url + "/features/harness/",
-  isPartOf: {
-    "@type": "WebSite",
-    name: SITE.name,
-    url: SITE.url,
-  },
-  about: {
-    "@type": "SoftwareApplication",
-    name: SITE.name,
-    url: SITE.url,
-    applicationCategory: "BusinessApplication",
-    operatingSystem: "Web",
-  },
-};
 ---
 
 <FeaturesLayout
@@ -282,6 +263,4 @@ const jsonLd = {
     title={t(locale, "features.harness.hero.title")}
     description={t(locale, "features.harness.hero.desc")}
   />
-
-  <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 </FeaturesLayout>

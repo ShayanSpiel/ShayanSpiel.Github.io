@@ -11,25 +11,6 @@ export interface Props {
 
 const { locale = "en" } = Astro.props;
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebPage",
-  name: t(locale, "useCases.pageTitle"),
-  description: t(locale, "useCases.pageDesc"),
-  url: SITE.url + "/use-cases/",
-  isPartOf: {
-    "@type": "WebSite",
-    name: SITE.name,
-    url: SITE.url,
-  },
-  about: {
-    "@type": "SoftwareApplication",
-    name: SITE.name,
-    url: SITE.url,
-    applicationCategory: "BusinessApplication",
-    operatingSystem: "Web",
-  },
-};
 ---
 
   <Page
@@ -37,7 +18,6 @@ const jsonLd = {
     description={t(locale, "useCases.pageDesc")}
     image="/assets/og/use-cases.png"
     locale={locale}
-    robots="noindex"
   >
   <FeatureHero
     locale={locale}
@@ -63,6 +43,4 @@ const jsonLd = {
     title={t(locale, "useCases.hero.title")}
     description={t(locale, "useCases.hero.desc")}
   />
-
-  <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 </Page>

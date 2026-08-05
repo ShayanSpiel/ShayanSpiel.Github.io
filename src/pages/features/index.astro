@@ -69,25 +69,6 @@ const howItWorksSteps = [
   { num: "04", titleKey: "features.howItWorks.step4.title", descKey: "features.howItWorks.step4.desc" },
 ];
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebPage",
-  name: t(locale, "features.pageTitle"),
-  description: t(locale, "features.pageDesc"),
-  url: SITE.url + "/features/",
-  isPartOf: {
-    "@type": "WebSite",
-    name: SITE.name,
-    url: SITE.url,
-  },
-  about: {
-    "@type": "SoftwareApplication",
-    name: SITE.name,
-    url: SITE.url,
-    applicationCategory: "BusinessApplication",
-    operatingSystem: "Web",
-  },
-};
 ---
 
 <FeaturesLayout
@@ -226,6 +207,4 @@ const jsonLd = {
     title={t(locale, "features.related.title")}
     description={t(locale, "features.hero.desc")}
   />
-
-  <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 </FeaturesLayout>

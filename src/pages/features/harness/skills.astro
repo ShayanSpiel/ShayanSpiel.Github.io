@@ -30,26 +30,6 @@ const steps = [
   },
 ];
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebPage",
-  name: t(locale, "features.harness.skills.pageTitle"),
-  description: t(locale, "features.harness.skills.pageDesc"),
-  url: SITE.url + "/features/harness/skills/",
-  isPartOf: {
-    "@type": "WebSite",
-    name: SITE.name,
-    url: SITE.url,
-  },
-  about: {
-    "@type": "SoftwareApplication",
-    name: SITE.name,
-    url: SITE.url,
-    applicationCategory: "BusinessApplication",
-    operatingSystem: "Web",
-  },
-};
-
 const howToJsonLd = {
   "@context": "https://schema.org",
   "@type": "HowTo",
@@ -323,7 +303,6 @@ const faqJsonLd = {
     description={t(locale, "features.harness.skills.hero.desc")}
   />
 
-  <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   <script is:inline type="application/ld+json" set:html={JSON.stringify(howToJsonLd)} />
   <script is:inline type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
 </FeaturesLayout>

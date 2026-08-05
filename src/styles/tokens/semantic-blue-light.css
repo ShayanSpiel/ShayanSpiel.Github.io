@@ -34,7 +34,7 @@
   --purple: var(--blue-light-purple);
   --purple-soft: color-mix(in oklab, var(--blue-light-purple) 15%, transparent);
 
-  --code-block: var(--blue-light-bg0);
+  --code-block: var(--blue-light-bg1);
 
   --shadow-panel: 0 1px 0 color-mix(in oklab, var(--blue-light-fg0) 8%, transparent);
   --shadow-popover: 0 8px 24px color-mix(in oklab, var(--blue-light-bg3) 20%, transparent);

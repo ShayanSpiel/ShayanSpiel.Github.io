@@ -1,14 +1,14 @@
 [data-theme="gruvbox-light"] {
-  --background: var(--gruvbox-light-bg0_s);
-  --background-deep: var(--gruvbox-light-bg0);
-  --panel: var(--gruvbox-light-bg0);
-  --panel-raised: var(--gruvbox-light-bg0_h);
-  --panel-strong: var(--gruvbox-light-bg0_h);
+  --background: var(--gruvbox-light-bg0);
+  --background-deep: var(--gruvbox-light-bg0_s);
+  --panel: var(--gruvbox-light-bg0_h);
+  --panel-raised: var(--gruvbox-light-bg0_s);
+  --panel-strong: var(--gruvbox-light-bg1);
   --panel-deep: var(--gruvbox-light-bg0);
   --input: var(--gruvbox-light-bg0_h);
-  --hover: color-mix(in oklab, var(--gruvbox-light-fg1) 6%, var(--gruvbox-light-bg0));
-  --selected: color-mix(in oklab, var(--gruvbox-light-blue) 12%, var(--gruvbox-light-bg0_h));
-  --border: color-mix(in oklab, var(--gruvbox-light-bg2) 58%, var(--gruvbox-light-bg0));
+  --hover: color-mix(in oklab, var(--gruvbox-light-fg1) 5%, var(--gruvbox-light-bg0_h));
+  --selected: color-mix(in oklab, var(--gruvbox-light-blue) 10%, var(--gruvbox-light-bg0_s));
+  --border: color-mix(in oklab, var(--gruvbox-light-bg2) 68%, var(--gruvbox-light-bg0_h));
   --border-strong: var(--gruvbox-light-bg2);
   --ring: var(--gruvbox-light-blue);
 
@@ -34,7 +34,7 @@
   --purple: var(--gruvbox-light-purple);
   --purple-soft: color-mix(in oklab, var(--gruvbox-light-purple) 15%, transparent);
 
-  --code-block: var(--gruvbox-light-bg0);
+  --code-block: var(--gruvbox-light-bg1);
 
   --shadow-panel: 0 1px 0 color-mix(in oklab, var(--gruvbox-light-fg0) 8%, transparent);
   --shadow-popover: 0 8px 24px color-mix(in oklab, var(--gruvbox-light-bg3) 20%, transparent);

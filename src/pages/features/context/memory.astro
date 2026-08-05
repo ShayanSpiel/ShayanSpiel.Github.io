@@ -13,26 +13,6 @@ export interface Props {
 
 const { locale = "en" } = Astro.props;
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebPage",
-  name: t(locale, "features.context.memory.pageTitle"),
-  description: t(locale, "features.context.memory.pageDesc"),
-  url: SITE.url + "/features/context/memory/",
-  isPartOf: {
-    "@type": "WebSite",
-    name: SITE.name,
-    url: SITE.url,
-  },
-  about: {
-    "@type": "SoftwareApplication",
-    name: SITE.name,
-    url: SITE.url,
-    applicationCategory: "BusinessApplication",
-    operatingSystem: "Web",
-  },
-};
-
 const howToJsonLd = {
   "@context": "https://schema.org",
   "@type": "HowTo",
@@ -301,7 +281,6 @@ const faqJsonLd = {
     description={t(locale, "waitlist.cta.p")}
   />
 
-  <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   <script is:inline type="application/ld+json" set:html={JSON.stringify(howToJsonLd)} />
   <script is:inline type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
 </FeaturesLayout>

@@ -55,7 +55,6 @@ All homepage CTAs link to `/waitlist/`.
 | `/features/infrastructure/providers/` | `src/pages/features/infrastructure/providers.astro` | Providers — model and LLM selection (EN) |
 | `/features/infrastructure/connections/` | `src/pages/features/infrastructure/connections.astro` | Connections — MCP, OAuth, API integrations (EN) |
 | `/use-cases/` | `src/pages/use-cases/index.astro` | Use cases hub (EN) |
-| `/guides/` | `src/pages/guides/index.astro` | Guides hub (EN) |
 | `/shayan/` | `src/pages/shayan.astro` | 301 redirect to `/founder/` |
 | `/posts/` | `src/pages/posts/index.astro` | 301 redirect to `/notes/` |
 
@@ -191,14 +190,38 @@ Usage pattern — use icon size utility classes, NOT inline `style="font-size:..
 
 **Zero hardcoding.** All colors, spacing, radii come from CSS custom properties.
 
+### Source of truth
+
+Tokens mirror `packages/design-system/src/tokens/` in the SpielOS repo
+(`~/Desktop/projects/spielos`). When they change upstream, copy the palette
+and `semantic-*.css` files into `src/styles/tokens/`, then re-add the
+website-only `--panel-deep` extension (the app has no alternating-section
+surface). The RTL font override in `index.css` keeps IRANSansX (not Vazirmatn).
+
+### Brand mark
+
+Official mark: diamond glyph on a rounded tile (`src/components/SpielOSLogo.astro`,
+mirrors the `BrandMark` primitive). The tile follows the active theme
+(`bg-panel-raised`), the glyph inherits `currentColor`
+(`text-foreground-strong`). Standalone assets (favicon, OG images) use the
+static palette: tile `#282828`, glyph `#ebdbb2`.
+
 ### Semantic color tokens
 
 | Token | Use |
 |---|---|
 | `--background` | Page background |
+| `--background-deep` | Recessed edge or shell depth |
 | `--panel` | Card/section background |
 | `--panel-raised` | Elevated card background |
 | `--panel-strong` | Strong panel background |
+| `--panel-deep` | Website-only alternating-section surface |
+| `--input` | Editable control interior |
+| `--hover` | Hover surface |
+| `--selected` | Selected surface |
+| `--border` | Default borders |
+| `--border-strong` | Emphasized borders |
+| `--ring` | Theme focus ring color |
 | `--foreground` | Body text |
 | `--foreground-strong` | Headings, strong text |
 | `--foreground-muted` | Subtle text |
@@ -206,8 +229,6 @@ Usage pattern — use icon size utility classes, NOT inline `style="font-size:..
 | `--primary` | Brand/accent color |
 | `--primary-soft` | Primary at 20% opacity |
 | `--primary-foreground` | Text on primary |
-| `--border` | Default borders |
-| `--border-strong` | Emphasized borders |
 | `--success` | Success states |
 | `--success-soft` | Success at 20% |
 | `--warning` | Warning states |
@@ -220,6 +241,17 @@ Usage pattern — use icon size utility classes, NOT inline `style="font-size:..
 | `--purple-soft` | Purple at 20% |
 | `--info` | Info states |
 | `--info-soft` | Info at 20% |
+| `--code-block` | Code block background |
+
+### Structural tokens
+
+- Motion: `--duration-fast` (120ms), `--duration` (160ms), `--duration-slow` (240ms), `--ease`
+- Direction: `--bidi-sign` (+1 LTR, -1 RTL)
+- Interaction: `--focus-border`, `--focus-ring` (derived from `--ring`), `--disabled-surface`, `--disabled-border`, `--disabled-foreground`
+- Surfaces: `--skeleton-bg`, `--overlay-bg`, glass tokens (`--glass-bg`, `--glass-bg-strong`, `--glass-border`, `--glass-border-strong`, `--glass-blur`, `--glass-blur-strong`, `--glass-shadow`, `--glass-shadow-hover`)
+- Shadows: `--shadow-panel`, `--shadow-popover`
+- Provider identity: `--provider-*` (theme-independent brand colors)
+- Dark themes use `--code-block: <palette>_bg0_h`; light themes use `<palette>_bg1`
 
 ### Border radius tokens
 

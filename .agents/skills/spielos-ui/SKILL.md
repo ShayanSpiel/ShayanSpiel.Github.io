@@ -7,19 +7,39 @@ description: Preserve and polish the SpielOS interface through its semantic toke
 
 Polish the existing product without reskinning it. Move repeated decisions upward into tokens and primitives, then verify their consumers and states.
 
+## Source of truth
+
+The design system lives in the SpielOS repo (`~/Desktop/projects/spielos`):
+
+1. `packages/design-system/src/tokens/` — raw palettes + semantic mappings (`index.css`, `semantic-*.css`).
+2. `packages/design-system/src/tokens/brand.ts` — brand mark geometry and static favicon palette (tile `#282828`, glyph `#ebdbb2`).
+3. `packages/design-system/src/components/` — shared primitives (`BrandMark`, `Button`, `Icon`, etc.).
+4. `docs/design-system.md` and `docs/interaction-design.md` — composition contracts.
+
+The website mirrors the token files in `src/styles/tokens/` and must stay in sync. When tokens change upstream, copy the `semantic-*.css` and palette files, then re-add the website-only `--panel-deep` extension (the app has no alternating-section surface). The RTL font override in `index.css` keeps IRANSansX (not Vazirmatn) on this site.
+
 ## Before editing UI
 
 Read these files:
 
-1. `docs/design-system.md` — tokens, hierarchy, surfaces, typography, icons, rules
-2. `docs/interaction-design.md` — selection, creation, loading, feedback, motion, accessibility
-3. `docs/ui-quality-process.md` — migration order, change budget, done criteria
-
-For chat/execution UI, also read:
-- `docs/ui-workbench.md`
-- `docs/langgraph-runtime.md`
+1. `~/Desktop/projects/spielos/docs/design-system.md` — tokens, hierarchy, surfaces, typography, icons, rules
+2. `~/Desktop/projects/spielos/docs/interaction-design.md` — selection, creation, loading, feedback, motion, accessibility
+3. `src/styles/tokens/` — the website's theme mappings (10 themes)
+4. `src/styles/base.css`, `src/styles/global.css` — site-level styles and RTL overrides
+5. `src/components/SpielOSLogo.astro` — website logo (mirrors `BrandMark`)
 
 Treat `packages/design-system` as authoritative. If code and docs disagree, fix the highest shared owner.
+
+## Token contract
+
+- Structural: radius (`sm/md/lg/xl/pill`), motion (`fast/default/slow` + `--ease`), typography, `--bidi-sign` (±1 by direction), `--focus-border`/`--focus-ring`, `--disabled-surface`/`--disabled-border`/`--disabled-foreground`, `--skeleton-bg`, `--overlay-bg`, glass tokens (`--glass-*`), provider brand colors (`--provider-*`).
+- Semantic colors (per theme): canvas (`--background`, `--background-deep`), surfaces (`--panel`, `--panel-raised`, `--panel-strong`, `--panel-deep` [website extension], `--input`), interaction (`--hover`, `--selected`, `--border`, `--border-strong`, `--ring`), text (`--foreground`, `--foreground-strong`, `--foreground-muted`, `--muted-foreground`), product (`--primary`, `--primary-foreground`, `--primary-soft`), status (`--success`, `--warning`, `--destructive`, `--info`, `--accent`, `--purple` + soft variants), code (`--code-block`), shadows (`--shadow-panel`, `--shadow-popover`).
+- Never hardcode raw hex/rgb in page code. Theme differences come from token mapping, never component branches.
+- Dark themes use `--code-block: <palette>_bg0_h`; light themes use `<palette>_bg1`.
+
+## Brand mark
+
+The logo is the official diamond mark (`BRAND_MARK_PATH` geometry) on a rounded tile. In-app and on the website, the tile follows the active theme (`bg-panel-raised`) and the glyph inherits `currentColor` (`text-foreground-strong`). Standalone assets (favicon, OG images) use the static palette from `brand.ts`: tile `#282828`, glyph `#ebdbb2`. Do not restate the shape or colors elsewhere; `SpielOSLogo.astro` and `src/og-templates/og-base.html` are the website owners.
 
 ## Workflow
 

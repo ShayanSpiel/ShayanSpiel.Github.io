@@ -284,7 +284,7 @@ button:disabled {
 input[type="number"]::-webkit-inner-spin-button {
   opacity: 0.5;
   background: var(--panel);
-  border-left: 1px solid var(--border);
+  border-inline-start: 1px solid var(--border);
   cursor: pointer;
 }
 
@@ -296,7 +296,7 @@ input[type="number"]::-webkit-inner-spin-button:hover {
 @keyframes spiel-drawer-in {
   from {
     opacity: 0;
-    transform: translateX(var(--motion-distance-sm));
+    transform: translateX(calc(var(--motion-distance-sm) * var(--bidi-sign)));
   }
   to {
     opacity: 1;
@@ -311,7 +311,7 @@ input[type="number"]::-webkit-inner-spin-button:hover {
   }
   to {
     opacity: 0;
-    transform: translateX(var(--motion-distance-sm));
+    transform: translateX(calc(var(--motion-distance-sm) * var(--bidi-sign)));
   }
 }
 

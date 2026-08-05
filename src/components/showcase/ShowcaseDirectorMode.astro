@@ -72,7 +72,7 @@ const autoSteps = [
                   <div class="p-2 space-y-1">
                     {step.eval.rules.map((r) => (
                       <div class="flex items-center gap-1.5 text-3xs">
-                        <span style={r.passed ? "color: var(--success); font-size: var(--font-size-3xs);" : "color: var(--destructive); font-size: var(--font-size-3xs);"}><Icon name={r.passed ? "check-square" : "x-square"} size={10} /></span>
+                        <span class={r.passed ? "text-success text-3xs" : "text-destructive text-3xs"}><Icon name={r.passed ? "check-square" : "x-square"} size={10} /></span>
                         <span class="text-foreground">{r.label}</span>
                       </div>
                     ))}

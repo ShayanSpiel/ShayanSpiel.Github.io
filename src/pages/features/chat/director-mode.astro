@@ -19,19 +19,6 @@ const steps = [
   { num: 4, titleKey: "features.chat.directorMode.how.step4.title", descKey: "features.chat.directorMode.how.step4.desc" },
 ];
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebPage",
-  name: t(locale, "features.chat.directorMode.pageTitle"),
-  description: t(locale, "features.chat.directorMode.pageDesc"),
-  url: SITE.url + "/features/chat/director-mode/",
-  isPartOf: {
-    "@type": "WebSite",
-    name: SITE.name,
-    url: SITE.url,
-  },
-};
-
 const howToJsonLd = {
   "@context": "https://schema.org",
   "@type": "HowTo",
@@ -316,7 +303,6 @@ const faqJsonLd = {
     description={t(locale, "features.chat.directorMode.cta.desc")}
   />
 
-  <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   <script is:inline type="application/ld+json" set:html={JSON.stringify(howToJsonLd)} />
   <script is:inline type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
 </FeaturesLayout>

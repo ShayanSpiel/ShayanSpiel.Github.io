@@ -136,11 +136,13 @@ src/
 
 ## Design system
 
-All styling uses semantic CSS custom properties. No hardcoded colors.
+All styling uses semantic CSS custom properties. No hardcoded colors. Token files in `src/styles/tokens/` mirror the SpielOS design system (`packages/design-system/src/tokens/` in `~/Desktop/projects/spielos`) plus the website-only `--panel-deep` extension.
 
-Key tokens: `--background`, `--panel`, `--foreground`, `--primary`, `--border`, `--success`, `--warning`, `--destructive`.
+Key tokens: `--background`, `--background-deep`, `--panel`, `--panel-raised`, `--panel-strong`, `--panel-deep`, `--input`, `--hover`, `--selected`, `--foreground`, `--primary`, `--border`, `--ring`, `--success`, `--warning`, `--destructive`, `--accent`, `--purple`, `--code-block`, plus focus/disabled/glass/provider structural tokens.
 
 Border radius: `--radius-sm` (4px) → `--radius-md` (6px) → `--radius-lg` (10px) → `--radius-xl` (14px) → `--radius-pill` (999px).
+
+Brand mark: diamond glyph on a rounded tile (`src/components/SpielOSLogo.astro`). The tile follows the active theme (`bg-panel-raised`), the glyph inherits `currentColor`. Standalone assets (favicon, OG images) use the static palette: tile `#282828`, glyph `#ebdbb2`.
 
 Icon size utilities (in `global.css`): `icon-xs` (10px), `icon-sm` (12px), `icon-md` (14px), `icon-base` (16px), `icon-lg` (18px), `icon-xl` (20px), `icon-2xl` (22px), `icon-3xl` (24px).
 
