@@ -7,6 +7,15 @@ export default {
   content: ["./src/**/*.{astro,tsx,ts,html,mdx}"],
   theme: {
     extend: {
+      animation: {
+        "bounce-subtle": "bounce-subtle 0.6s ease-in-out infinite",
+      },
+      keyframes: {
+        "bounce-subtle": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-3px)" },
+        },
+      },
       colors: {
         background: "var(--background)",
         "background-deep": "var(--background-deep)",

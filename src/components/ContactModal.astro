@@ -1,0 +1,178 @@
+---
+import { FORMS, AUTHOR, SOCIAL } from "../config";
+import { ICONS } from "../lib/icons";
+import { type Locale, t } from "../i18n/translations";
+
+export interface Props {
+  locale?: Locale;
+  id?: string;
+}
+
+const { locale = "en", id = "contact-modal" } = Astro.props;
+
+const formCopy = {
+  name: t(locale, "contact.name"),
+  namePlaceholder: t(locale, "contact.namePlaceholder"),
+  email: t(locale, "contact.email"),
+  emailPlaceholder: t(locale, "contact.emailPlaceholder"),
+  message: t(locale, "contact.message"),
+  messagePlaceholder: t(locale, "contact.messagePlaceholder"),
+  submit: t(locale, "contact.submit"),
+};
+---
+
+<div id={id} class="brief-modal-overlay" role="dialog" aria-modal="true" aria-label={t(locale, "contact.title")} hidden>
+  <div class="brief-modal max-w-lg">
+    <div class="brief-modal-header">
+      <div class="flex items-center gap-3">
+        <div class="flex h-9 w-9 items-center justify-center rounded-md bg-primary-soft">
+          <i class="bx bx-envelope text-primary icon-lg"></i>
+        </div>
+        <div>
+          <h2 class="text-lg font-bold text-foreground-strong">{t(locale, "contact.title")}</h2>
+          <p class="text-xs text-muted-foreground">{t(locale, "contact.desc")}</p>
+        </div>
+      </div>
+      <button class="close-contact-modal flex h-8 w-8 items-center justify-center rounded-md hover:bg-panel-raised transition-colors text-muted-foreground hover:text-foreground" aria-label="Close">
+        <i class="bx bx-x icon-lg"></i>
+      </button>
+    </div>
+
+    <div class="brief-modal-body">
+      <form class="contact-modal-form space-y-5">
+        <input type="hidden" name="_captcha" value="false" />
+        <input type="hidden" name="_subject" value="SpielOS Contact Form" />
+        <div>
+          <label for={`${id}-name`} class="block text-xs font-medium text-foreground-strong mb-1.5">{formCopy.name}</label>
+          <input type="text" id={`${id}-name`} name="name" required placeholder={formCopy.namePlaceholder} class="w-full h-11 rounded-md border border-border bg-input px-3.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-colors" />
+        </div>
+        <div>
+          <label for={`${id}-email`} class="block text-xs font-medium text-foreground-strong mb-1.5">{formCopy.email}</label>
+          <input type="email" id={`${id}-email`} name="email" required placeholder={formCopy.emailPlaceholder} class="w-full h-11 rounded-md border border-border bg-input px-3.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-colors" />
+        </div>
+        <div>
+          <label for={`${id}-message`} class="block text-xs font-medium text-foreground-strong mb-1.5">{formCopy.message}</label>
+          <textarea id={`${id}-message`} name="message" rows="4" required placeholder={formCopy.messagePlaceholder} class="w-full rounded-md border border-border bg-input px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-y min-h-[100px] transition-colors"></textarea>
+        </div>
+
+        <button type="submit" class="contact-submit-btn w-full rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2">
+          <span class="contact-submit-text">{formCopy.submit}</span>
+          <i class="contact-submit-spinner bx bx-loader icon-base bx-spin" style="display:none;"></i>
+        </button>
+
+        <div class="contact-form-error hidden rounded-md bg-destructive-soft border border-destructive/20 p-3 text-xs text-destructive"></div>
+      </form>
+
+      <div class="contact-success-state hidden text-center py-6">
+        <div class="flex h-14 w-14 items-center justify-center rounded-full bg-success-soft mx-auto mb-6">
+          <i class="bx bx-check-square text-success text-2xl"></i>
+        </div>
+        <h3 class="text-xl font-bold text-foreground-strong">{t(locale, "contact.thanks.title")}</h3>
+        <p class="mt-2 text-sm text-muted-foreground max-w-md mx-auto">{t(locale, "contact.thanks.desc")}</p>
+        <button type="button" class="contact-send-another mt-6 inline-flex items-center justify-center rounded-md border border-border bg-panel px-6 h-11 text-sm font-medium hover:bg-panel-raised hover:border-border-strong transition-all">
+          {t(locale, "contact.thanks.back")}
+        </button>
+      </div>
+
+      <div class="mt-5 pt-5 border-t border-border">
+        <p class="text-xs text-muted-foreground text-center mb-3">{t(locale, "contact.orEmail")} <a href={`mailto:${AUTHOR.email}`} class="text-primary hover:opacity-80 transition-opacity">{AUTHOR.email}</a></p>
+        <div class="flex items-center justify-center gap-3">
+          <a href={SOCIAL.x} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 rounded-md border border-border bg-panel-raised px-4 h-9 text-xs font-medium hover:bg-panel-strong hover:border-border-strong transition-all" set:html={ICONS.x + " " + t(locale, "contact.dmX")} />
+          <a href={SOCIAL.linkedin} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 rounded-md border border-border bg-panel-raised px-4 h-9 text-xs font-medium hover:bg-panel-strong hover:border-border-strong transition-all" set:html={ICONS.linkedin + " " + t(locale, "contact.dmLinkedin")} />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline define:vars={{ modalId: id, formEndpoint: FORMS.contact }}>
+(function() {
+  var modal = document.getElementById(modalId);
+  if (!modal) return;
+
+  var closeBtn = modal.querySelector('.close-contact-modal');
+  var form = modal.querySelector('.contact-modal-form');
+  var btn = modal.querySelector('.contact-submit-btn');
+  var text = modal.querySelector('.contact-submit-text');
+  var spinner = modal.querySelector('.contact-submit-spinner');
+  var errorEl = modal.querySelector('.contact-form-error');
+  var successState = modal.querySelector('.contact-success-state');
+  var sendAnother = modal.querySelector('.contact-send-another');
+
+  if (!form || !btn || !text || !spinner || !errorEl || !successState) return;
+
+  var originalText = text.textContent;
+
+  function openModal() {
+    modal.removeAttribute('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    modal.setAttribute('hidden', '');
+    document.body.style.overflow = '';
+  }
+
+  if (closeBtn) closeBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', function(e) {
+    if (e.target === modal) closeModal();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && !modal.hasAttribute('hidden')) closeModal();
+  });
+
+  document.querySelectorAll('[data-open-contact-modal]').forEach(function(trigger) {
+    trigger.addEventListener('click', function(e) {
+      e.preventDefault();
+      openModal();
+    });
+  });
+
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    errorEl.classList.add('hidden');
+    btn.disabled = true;
+    btn.classList.add('opacity-70', 'cursor-not-allowed');
+    text.textContent = originalText.replace('...', '') + '...';
+    spinner.style.display = '';
+
+    var formData = new FormData(form);
+    var data = {};
+    formData.forEach(function(value, key) { data[key] = value; });
+
+    try {
+      var response = await fetch(formEndpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      if (response.ok) {
+        form.classList.add('hidden');
+        successState.classList.remove('hidden');
+      } else {
+        throw new Error('Submission failed');
+      }
+    } catch (err) {
+      errorEl.textContent = 'Something went wrong. Please try again or email us directly.';
+      errorEl.classList.remove('hidden');
+      btn.disabled = false;
+      btn.classList.remove('opacity-70', 'cursor-not-allowed');
+      text.textContent = originalText;
+      spinner.style.display = 'none';
+    }
+  });
+
+  if (sendAnother) {
+    sendAnother.addEventListener('click', function() {
+      form.reset();
+      form.classList.remove('hidden');
+      successState.classList.add('hidden');
+      errorEl.classList.add('hidden');
+    });
+  }
+
+  window.openContactModal = openModal;
+  window.closeContactModal = closeModal;
+})();
+</script>
