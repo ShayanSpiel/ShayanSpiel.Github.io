@@ -345,70 +345,85 @@ const examplesJson = locale === "fa" ? EX_FA : EX_EN;
       var setIdx = 0;
       var slots = modal.querySelectorAll(".brief-slot[data-bracket]");
       var total = slots.length;
+      var DUR = 300;
 
-      function fadeSlot(el, toOpacity, dur, cb) {
-        var from = parseFloat(getComputedStyle(el).opacity);
-        var start = performance.now();
+      function fadeAll(to, dur, cb) {
+        var starts = [];
+        for (var i = 0; i < total; i++) starts.push(parseFloat(getComputedStyle(slots[i]).opacity));
+        var t0 = performance.now();
         function tick(now) {
-          var p = Math.min((now - start) / dur, 1);
-          el.style.opacity = from + (toOpacity - from) * p;
+          var p = Math.min((now - t0) / dur, 1);
+          for (var i = 0; i < total; i++) {
+            slots[i].style.opacity = starts[i] + (to - starts[i]) * p;
+          }
           if (p < 1) requestAnimationFrame(tick);
           else if (cb) cb();
         }
         requestAnimationFrame(tick);
       }
 
-      function setAndFadeIn(el, text, cb) {
-        el.textContent = text;
-        el.style.opacity = "0";
-        requestAnimationFrame(function () {
-          requestAnimationFrame(function () {
-            fadeSlot(el, 1, 350, cb);
-          });
-        });
+      function setTexts(arr) {
+        for (var i = 0; i < total; i++) slots[i].textContent = arr[i];
       }
 
-      function showLabels(cb) {
-        var i = 0;
-        function next() {
-          if (i < total) {
-            fadeSlot(slots[i], 0, 250, function () {
-              setAndFadeIn(slots[i], labels[i], function () { i++; next(); });
-            });
-          } else if (cb) cb();
-        }
-        next();
-      }
-
-      function fillExample(cb) {
-        var i = 0;
-        function next() {
-          if (i < total) {
-            fadeSlot(slots[i], 0, 250, function () {
-              setAndFadeIn(slots[i], "[" + examples[setIdx][i] + "]", function () {
-                i++;
-                setTimeout(next, 600);
+      function fillOne(idx, cb) {
+        var el = slots[idx];
+        var from = parseFloat(getComputedStyle(el).opacity);
+        var t0 = performance.now();
+        function tick(now) {
+          var p = Math.min((now - t0) / DUR, 1);
+          el.style.opacity = from + (0 - from) * p;
+          if (p < 1) requestAnimationFrame(tick);
+          else {
+            el.textContent = "[" + examples[setIdx][idx] + "]";
+            el.style.opacity = "0";
+            requestAnimationFrame(function () {
+              requestAnimationFrame(function () {
+                var t1 = performance.now();
+                function tick2(now) {
+                  var p2 = Math.min((now - t1) / DUR, 1);
+                  el.style.opacity = p2;
+                  if (p2 < 1) requestAnimationFrame(tick2);
+                  else if (cb) cb();
+                }
+                requestAnimationFrame(tick2);
               });
             });
-          } else if (cb) cb();
+          }
+        }
+        requestAnimationFrame(tick);
+      }
+
+      function fillAll(cb) {
+        var i = 0;
+        function next() {
+          if (i < total) fillOne(i++, function () { setTimeout(next, 500); });
+          else if (cb) cb();
         }
         next();
+      }
+
+      function resetAll(cb) {
+        fadeAll(0, DUR, function () {
+          setTexts(labels);
+          fadeAll(1, DUR, cb);
+        });
       }
 
       function loop() {
         setTimeout(function () {
-          fillExample(function () {
+          fillAll(function () {
             setTimeout(function () {
-              showLabels(function () {
+              resetAll(function () {
                 setIdx = (setIdx + 1) % examples.length;
                 loop();
               });
             }, 3000);
           });
-        }, 2000);
+        }, 3500);
       }
 
-      setTimeout(loop, 3500);
+      loop();
     }
   })();
   </script>
