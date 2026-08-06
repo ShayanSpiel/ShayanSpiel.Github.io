@@ -998,7 +998,7 @@ export const translations: Record<Locale, Translations> = {
     // Services page
     "services.pageTitle": "AI Agent Implementation",
     "services.pageDesc": "We turn repetitive business workflows into tested AI systems, measured against your current output, quality, and operating cost.",
-    "services.hero.title": "2× Your Output at Half the Cost,<br /> <span style='color:var(--accent)'>One Workflow at a Time.</span>",
+    "services.hero.title": "2× Your Output at Half the Cost,<br /><span class=\"text-primary\">One Workflow at a Time.</span>",
     "services.hero.desc": "We turn repetitive business workflows into tested AI systems, measured against your current output, quality, and operating cost.",
     "services.whatYouGet.label": "What you will get",
     "services.whatYouGet.title": "Start with a FREE 30-minute workflow assessment",
@@ -2069,7 +2069,7 @@ export const translations: Record<Locale, Translations> = {
     // Services page
     "services.pageTitle": "پیاده‌سازی ایجنت AI",
     "services.pageDesc": "ما ورک‌فلوهای تکراری کسب‌وکار رو به سیستم‌های AI تست‌شده تبدیل می‌کنیم — خروجی، کیفیت و هزینه عملیاتی فعلی شما ملاک ارزیابی‌مون می‌شه.",
-    "services.hero.title": "دوبرابر خروجی، نصف هزینه،<br /> <span style='color:var(--accent)'>یک ورک‌فلو در هر مرحله.</span>",
+    "services.hero.title": "دوبرابر خروجی، نصف هزینه،<br /><span class=\"text-primary\">یک ورک‌فلو در هر مرحله.</span>",
     "services.hero.desc": "ما ورک‌فلوهای تکراری کسب‌وکار رو به سیستم‌های AI تست‌شده تبدیل می‌کنیم — خروجی، کیفیت و هزینه عملیاتی فعلی شما ملاک ارزیابی‌مون می‌شه.",
     "services.whatYouGet.label": "چی دریافت می‌کنید",
     "services.whatYouGet.title": "با یه ارزیابی رایگان ۳۰ دقیقه‌ای ورک‌فلو شروع کنید",
