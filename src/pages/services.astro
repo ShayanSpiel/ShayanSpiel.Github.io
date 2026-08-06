@@ -261,8 +261,8 @@ const examplesJson = locale === "fa" ? EX_FA : EX_EN;
           <h3 class="text-xs font-semibold text-primary uppercase tracking-wider mb-5">{t(locale, "services.brief.section1")}</h3>
           <div class="brief-pipeline">
             <div class="pipeline-track">
-              <svg viewBox="0 0 820 2" preserveAspectRatio="none" class="pipeline-svg" aria-hidden="true">
-                <line x1="0" y1="1" x2="820" y2="1" stroke="var(--primary)" stroke-width="2" stroke-dasharray="6 4" />
+              <svg viewBox="0 0 100 100" preserveAspectRatio="none" class="pipeline-svg" aria-hidden="true">
+                <path d="M 0 50 C 5 50, 12 28, 16.7 28 C 22 28, 28 72, 33.3 72 C 38 72, 45 50, 50 50 C 55 50, 60 28, 66.7 28 C 72 28, 78 72, 83.3 72 C 88 72, 95 50, 100 50" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" />
               </svg>
             </div>
             <div class="pipeline-nodes">
@@ -352,11 +352,11 @@ const examplesJson = locale === "fa" ? EX_FA : EX_EN;
         if (!el) { callback(); return; }
         el.classList.add("is-fading");
         setTimeout(function () {
-          el.textContent = examples[setIdx][idx];
+          el.textContent = "[" + examples[setIdx][idx] + "]";
           el.classList.remove("is-fading");
           el.classList.add("is-active");
           callback();
-        }, 300);
+        }, 400);
       }
 
       function resetAll(callback) {
@@ -369,27 +369,29 @@ const examplesJson = locale === "fa" ? EX_FA : EX_EN;
             el.textContent = labels[i];
           });
           callback();
-        }, 300);
+        }, 400);
       }
 
       function nextStep() {
         if (step < total) {
           fillBracket(step, function () {
             step++;
-            setTimeout(nextStep, 800);
+            setTimeout(nextStep, 1200);
           });
         } else {
           setTimeout(function () {
-            setIdx = (setIdx + 1) % examples.length;
-            step = 0;
             resetAll(function () {
-              setTimeout(nextStep, 600);
+              setTimeout(function () {
+                setIdx = (setIdx + 1) % examples.length;
+                step = 0;
+                nextStep();
+              }, 2000);
             });
-          }, 2500);
+          }, 3000);
         }
       }
 
-      setTimeout(nextStep, 1500);
+      setTimeout(nextStep, 3500);
     }
   })();
   </script>
