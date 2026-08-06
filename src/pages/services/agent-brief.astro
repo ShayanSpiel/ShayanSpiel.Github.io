@@ -77,7 +77,7 @@ const examplesJson = locale === "fa" ? EX_FA : EX_EN;
         <div class="brief-pipeline" data-aos="fade-up">
           <div class="pipeline-track">
             <svg viewBox="0 0 100 100" preserveAspectRatio="none" class="pipeline-svg" aria-hidden="true">
-              <path d="M 0 50 C 4 18, 12.7 18, 16.7 50 C 20.7 82, 29.3 82, 33.3 50 C 37.3 18, 46 18, 50 50 C 54 82, 62.7 82, 66.7 50 C 70.7 18, 79.3 18, 83.3 50 C 87.3 82, 96 82, 100 50" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" vector-effect="non-scaling-stroke" />
+              <path d="M 3 50 C 8 18, 14 18, 19 50 C 24 82, 29 82, 34 50 C 39 18, 45 18, 50 50 C 55 82, 61 82, 66 50 C 71 18, 77 18, 81 50 C 86 82, 92 82, 97 50" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" vector-effect="non-scaling-stroke" />
             </svg>
           </div>
           <div class="pipeline-nodes">
@@ -134,56 +134,72 @@ const examplesJson = locale === "fa" ? EX_FA : EX_EN;
     var examples = JSON.parse(examplesJson);
     var labels = ["[input]", "[source]", "[job]", "[output]", "[interface]", "[knowledge and memory]", "[rules and approvals]", "[measurable criteria]"];
     var setIdx = 0;
-    var step = 0;
     var slots = document.querySelectorAll(".brief-slot[data-bracket]");
     var total = slots.length;
 
-    function fillBracket(idx, callback) {
-      var el = slots[idx];
-      if (!el) { callback(); return; }
-      el.classList.add("is-fading");
-      setTimeout(function () {
-        el.textContent = "[" + examples[setIdx][idx] + "]";
-        el.classList.remove("is-fading");
-        el.classList.add("is-active");
-        callback();
-      }, 400);
-    }
-
-    function resetAll(callback) {
-      slots.forEach(function (el) {
-        el.classList.add("is-fading");
-        el.classList.remove("is-active");
-      });
-      setTimeout(function () {
-        slots.forEach(function (el, i) {
-          el.textContent = labels[i];
-          el.classList.remove("is-fading");
-        });
-        callback();
-      }, 400);
-    }
-
-    function nextStep() {
-      if (step < total) {
-        fillBracket(step, function () {
-          step++;
-          setTimeout(nextStep, 1200);
-        });
-      } else {
-        setTimeout(function () {
-          resetAll(function () {
-            setTimeout(function () {
-              setIdx = (setIdx + 1) % examples.length;
-              step = 0;
-              nextStep();
-            }, 2000);
-          });
-        }, 3000);
+    function fadeSlot(el, toOpacity, dur, cb) {
+      var from = parseFloat(getComputedStyle(el).opacity);
+      var start = performance.now();
+      function tick(now) {
+        var p = Math.min((now - start) / dur, 1);
+        el.style.opacity = from + (toOpacity - from) * p;
+        if (p < 1) requestAnimationFrame(tick);
+        else if (cb) cb();
       }
+      requestAnimationFrame(tick);
     }
 
-    setTimeout(nextStep, 3500);
+    function setAndFadeIn(el, text, cb) {
+      el.textContent = text;
+      el.style.opacity = "0";
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          fadeSlot(el, 1, 350, cb);
+        });
+      });
+    }
+
+    function showLabels(cb) {
+      var i = 0;
+      function next() {
+        if (i < total) {
+          fadeSlot(slots[i], 0, 250, function () {
+            setAndFadeIn(slots[i], labels[i], function () { i++; next(); });
+          });
+        } else if (cb) cb();
+      }
+      next();
+    }
+
+    function fillExample(cb) {
+      var i = 0;
+      function next() {
+        if (i < total) {
+          fadeSlot(slots[i], 0, 250, function () {
+            setAndFadeIn(slots[i], "[" + examples[setIdx][i] + "]", function () {
+              i++;
+              setTimeout(next, 600);
+            });
+          });
+        } else if (cb) cb();
+      }
+      next();
+    }
+
+    function loop() {
+      setTimeout(function () {
+        fillExample(function () {
+          setTimeout(function () {
+            showLabels(function () {
+              setIdx = (setIdx + 1) % examples.length;
+              loop();
+            });
+          }, 3000);
+        });
+      }, 2000);
+    }
+
+    setTimeout(loop, 3500);
   })();
   </script>
 </Page>
