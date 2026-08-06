@@ -1,0 +1,168 @@
+---
+import Page from "../../layouts/Page.astro";
+import { SITE } from "../../config";
+import { type Locale, t } from "../../i18n/translations";
+import { localizePath } from "../../i18n";
+import SpielOSLogo from "../../components/SpielOSLogo.astro";
+
+export interface Props {
+  locale?: Locale;
+}
+
+const { locale = "en" } = Astro.props;
+
+const PIPELINE_NODES = [
+  { id: "goal",     x: 65,  y: 32, icon: "bx-bullseye",        colorClass: "node-goal" },
+  { id: "inputs",   x: 180, y: 46, icon: "bx-file",            colorClass: "" },
+  { id: "outputs",  x: 295, y: 20, icon: "bx-export",          colorClass: "" },
+  { id: "interface",x: 410, y: 44, icon: "bx-layout",          colorClass: "" },
+  { id: "memory",   x: 525, y: 22, icon: "bx-data",            colorClass: "" },
+  { id: "rules",    x: 640, y: 42, icon: "bx-shield-quarter",  colorClass: "" },
+  { id: "success",  x: 755, y: 32, icon: "bx-rocket",          colorClass: "node-success" },
+];
+
+const PIPELINE_PATH =
+  "M 65 32 C 95 32, 140 46, 180 46 C 220 46, 250 20, 295 20 C 340 20, 365 44, 410 44 C 455 44, 480 22, 525 22 C 570 22, 595 42, 640 42 C 685 42, 720 32, 755 32";
+
+const BRIEF_TABLE = [
+  { icon: "bx-bullseye",        nameKey: "services.brief.step1.name", descKey: "services.brief.step1.desc" },
+  { icon: "bx-file",            nameKey: "services.brief.step2.name", descKey: "services.brief.step2.desc" },
+  { icon: "bx-export",          nameKey: "services.brief.step3.name", descKey: "services.brief.step3.desc" },
+  { icon: "bx-layout",          nameKey: "services.brief.step4.name", descKey: "services.brief.step4.desc" },
+  { icon: "bx-data",            nameKey: "services.brief.step5.name", descKey: "services.brief.step5.desc" },
+  { icon: "bx-shield-quarter",  nameKey: "services.brief.step6.name", descKey: "services.brief.step6.desc" },
+  { icon: "bx-rocket",          nameKey: "services.brief.step7.name", descKey: "services.brief.step7.desc" },
+];
+
+const EX_EN = JSON.stringify([
+  { a: ["support request message", "customer"], b: ["categorize and draft a reply", "response draft", "Slack channel"], c: ["customer history", "escalation policies", "response time < 2 min"] },
+  { a: ["screenshot", "QA team"], b: ["extract errors and file a bug", "bug ticket", "Jira board"], c: ["codebase context", "severity classification", "reproduction steps captured"] },
+  { a: ["contract PDF", "legal department"], b: ["extract key dates and obligations", "structured summary", "Notion page"], c: ["past contract terms", "compliance checklist", "all deadlines identified"] },
+]);
+const EX_FA = JSON.stringify([
+  { a: ["پیام درخواست پشتیبانی", "مشتری"], b: ["دسته‌بندی و پاسخ اولیه", "پیش‌نویس پاسخ", "کانال Slack"], c: ["تاریخچه مشتری", "سیاست‌های ارجاع", "زمان پاسخ کمتر از ۲ دقیقه"] },
+  { a: ["اسکرین‌شات", "تیم QA"], b: ["استخراج خطاها و ثبت باگ", "تیکت باگ", "تخته Jira"], c: ["زمینه کدپایگاه", "طبقه‌بندی شدت", "مراحل بازتولید ثبت شده"] },
+  { a: ["قرارداد PDF", "بخش حقوقی"], b: ["استخراج تاریخ‌ها و تعهدات", "خلاصه ساختاریافته", "صفحه Notion"], c: ["شرایط قراردادهای قبلی", "چک‌لیست انطباق", "تمام مهلت‌ها شناسایی شده"] },
+]);
+const examplesJson = locale === "fa" ? EX_FA : EX_EN;
+---
+
+<Page
+  title={t(locale, "services.brief.title") + " — " + SITE.name}
+  description={t(locale, "services.brief.subtitle")}
+  image="/assets/og/home.png"
+  locale={locale}
+>
+  <section class="py-24 sm:py-32">
+    <div class="mx-auto max-w-3xl px-6">
+      <div class="mb-10">
+        <a href={localizePath("/services/", locale)} class="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors mb-6">
+          <i class="bx bx-chevron-left icon-base rtl:rotate-180"></i>
+          {t(locale, "services.pageTitle")}
+        </a>
+
+        <div class="flex items-center gap-3 mb-4">
+          <div class="flex h-10 w-10 items-center justify-center rounded-md bg-primary-soft">
+            <i class="bx bx-file text-primary icon-xl"></i>
+          </div>
+          <div>
+            <h1 class="text-2xl sm:text-3xl font-bold text-foreground-strong tracking-tight">{t(locale, "services.brief.title")}</h1>
+          </div>
+        </div>
+        <p class="text-sm text-muted-foreground">{t(locale, "services.brief.subtitle")}</p>
+      </div>
+
+      <div class="h-px bg-border mb-10"></div>
+
+      <!-- 1. The Brief Framework — horizontal node-line -->
+      <div class="mb-14">
+        <h2 class="text-xs font-semibold text-primary uppercase tracking-wider mb-6">{t(locale, "services.brief.section1")}</h2>
+        <div class="brief-pipeline" data-aos="fade-up">
+          <div class="pipeline-track">
+            <svg viewBox="0 0 820 68" preserveAspectRatio="none" class="pipeline-svg" aria-hidden="true">
+              <defs>
+                <linearGradient id="bp-grad" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="var(--primary)" stop-opacity="0.15" />
+                  <stop offset="50%" stop-color="var(--primary)" stop-opacity="0.5" />
+                  <stop offset="100%" stop-color="var(--success)" stop-opacity="0.5" />
+                </linearGradient>
+              </defs>
+              <path d={PIPELINE_PATH} fill="none" stroke="var(--border)" stroke-width="2" stroke-dasharray="6 4" />
+              <path d={PIPELINE_PATH} fill="none" stroke="url(#bp-grad)" stroke-width="2" stroke-linecap="round" />
+            </svg>
+          </div>
+          <div class="pipeline-nodes">
+            {PIPELINE_NODES.map((n, i) => (
+              <div class:list={["pipeline-node", n.colorClass]}>
+                <div class="pipeline-icon">
+                  <i class={`bx ${n.icon}`}></i>
+                </div>
+                <span class="pipeline-label">{t(locale, `services.brief.step${i + 1}.name`)}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Core Agent Statement — animated slots -->
+      <div class="mb-14">
+        <h2 class="text-xs font-semibold text-primary uppercase tracking-wider mb-4">{t(locale, "services.brief.section2")}</h2>
+        <div class="rounded-md border border-border bg-panel p-6 sm:p-8">
+          <p class="text-sm sm:text-base text-foreground leading-relaxed" set:html={t(locale, "services.brief.statement")} />
+        </div>
+      </div>
+
+      <!-- 3. What We Define Together -->
+      <div class="mb-14">
+        <h2 class="text-xs font-semibold text-primary uppercase tracking-wider mb-4">{t(locale, "services.brief.section3")}</h2>
+        <div class="rounded-md border border-border bg-panel overflow-hidden">
+          {BRIEF_TABLE.map((row, i) => (
+            <div class="brief-table-row">
+              <span class="text-3xs font-bold text-primary w-4 text-right">{i + 1}</span>
+              <div class="flex h-7 w-7 items-center justify-center rounded bg-panel-raised shrink-0">
+                <i class={`bx ${row.icon} text-foreground-muted icon-base`}></i>
+              </div>
+              <span class="text-xs font-semibold text-foreground-strong w-20 shrink-0">{t(locale, row.nameKey)}</span>
+              <span class="text-xs text-muted-foreground">{t(locale, row.descKey)}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="h-px bg-border mb-8"></div>
+
+      <!-- Footer -->
+      <div class="flex items-center gap-3">
+        <SpielOSLogo size="sm" />
+        <span class="text-xs text-muted-foreground">{t(locale, "services.brief.footer")}</span>
+      </div>
+    </div>
+  </section>
+
+  <script is:inline define:vars={{ examplesJson }}>
+  (function () {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    var examples = JSON.parse(examplesJson);
+    var current = 0;
+    var groups = ["a", "b", "c"];
+
+    function cycle() {
+      current = (current + 1) % examples.length;
+      groups.forEach(function (g, gi) {
+        setTimeout(function () {
+          var slots = document.querySelectorAll('[data-group="' + g + '"]');
+          slots.forEach(function (el, i) {
+            el.classList.add("is-fading");
+            setTimeout(function () {
+              el.textContent = examples[current][g][i];
+              el.classList.remove("is-fading");
+            }, 350);
+          });
+        }, gi * 450);
+      });
+    }
+
+    setInterval(cycle, 4000);
+  })();
+  </script>
+</Page>
