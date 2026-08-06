@@ -256,25 +256,26 @@ const examplesJson = locale === "fa" ? EX_FA : EX_EN;
       </div>
 
       <div class="brief-modal-body">
-        <!-- 1. The Brief Framework — horizontal node-line -->
+        <!-- 1. The Brief Framework -->
         <div class="mb-8">
           <h3 class="text-xs font-semibold text-primary uppercase tracking-wider mb-5">{t(locale, "services.brief.section1")}</h3>
-          <div class="brief-pipeline">
-            <div class="pipeline-track">
-              <svg viewBox="0 0 100 100" preserveAspectRatio="none" class="pipeline-svg" aria-hidden="true">
-                <path d="M 4 50 C 7 20, 16 20, 19 50 C 22 80, 31 80, 34 50 C 37 20, 47 20, 50 50 C 53 80, 63 80, 66 50 C 69 20, 78 20, 81 50 C 84 80, 93 80, 96 50" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" vector-effect="non-scaling-stroke" />
-              </svg>
-            </div>
-            <div class="pipeline-nodes">
-              {PIPELINE_NODES.map((n, i) => (
-                <div class:list={["pipeline-node", n.colorClass]}>
-                  <div class="pipeline-icon">
+          <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+            {PIPELINE_NODES.map((n, i) => (
+              <Fragment>
+                <div class="flex items-center gap-2">
+                  <div class:list={["pipeline-icon", n.colorClass]}>
                     <i class={`bx ${n.icon}`}></i>
                   </div>
-                  <span class="pipeline-label">{t(locale, `services.brief.step${i + 1}.name`)}</span>
+                  <span class="pipeline-label">
+                    <span class="inline-flex items-center justify-center w-4 h-4 rounded-sm bg-primary text-primary-foreground text-3xs font-bold mr-1">{i + 1}</span>
+                    {t(locale, `services.brief.step${i + 1}.name`)}
+                  </span>
                 </div>
-              ))}
-            </div>
+                {i < PIPELINE_NODES.length - 1 && (
+                  <i class="bx bx-arrow-right text-muted-foreground icon-lg rtl:rotate-180"></i>
+                )}
+              </Fragment>
+            ))}
           </div>
         </div>
 
