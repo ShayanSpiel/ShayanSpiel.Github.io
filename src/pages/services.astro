@@ -47,17 +47,14 @@ const icpItems = [
 ];
 
 const PIPELINE_NODES = [
-  { id: "goal",     x: 65,  y: 32, icon: "bx-bullseye",        colorClass: "node-goal" },
-  { id: "inputs",   x: 180, y: 46, icon: "bx-file",            colorClass: "" },
-  { id: "outputs",  x: 295, y: 20, icon: "bx-export",          colorClass: "" },
-  { id: "interface",x: 410, y: 44, icon: "bx-layout",          colorClass: "" },
-  { id: "memory",   x: 525, y: 22, icon: "bx-data",            colorClass: "" },
-  { id: "rules",    x: 640, y: 42, icon: "bx-shield-quarter",  colorClass: "" },
-  { id: "success",  x: 755, y: 32, icon: "bx-rocket",          colorClass: "node-success" },
+  { icon: "bx-bullseye",        colorClass: "node-goal" },
+  { icon: "bx-file",            colorClass: "" },
+  { icon: "bx-export",          colorClass: "" },
+  { icon: "bx-layout",          colorClass: "" },
+  { icon: "bx-data",            colorClass: "" },
+  { icon: "bx-shield-quarter",  colorClass: "" },
+  { icon: "bx-rocket",          colorClass: "node-success" },
 ];
-
-const PIPELINE_PATH =
-  "M 65 32 C 95 32, 140 46, 180 46 C 220 46, 250 20, 295 20 C 340 20, 365 44, 410 44 C 455 44, 480 22, 525 22 C 570 22, 595 42, 640 42 C 685 42, 720 32, 755 32";
 
 const BRIEF_TABLE = [
   { icon: "bx-bullseye",        nameKey: "services.brief.step1.name", descKey: "services.brief.step1.desc" },
@@ -70,14 +67,14 @@ const BRIEF_TABLE = [
 ];
 
 const EX_EN = JSON.stringify([
-  { a: ["support request message", "customer"], b: ["categorize and draft a reply", "response draft", "Slack channel"], c: ["customer history", "escalation policies", "response time < 2 min"] },
-  { a: ["screenshot", "QA team"], b: ["extract errors and file a bug", "bug ticket", "Jira board"], c: ["codebase context", "severity classification", "reproduction steps captured"] },
-  { a: ["contract PDF", "legal department"], b: ["extract key dates and obligations", "structured summary", "Notion page"], c: ["past contract terms", "compliance checklist", "all deadlines identified"] },
+  { 0: "support request message", 1: "customer", 2: "categorize and draft a reply", 3: "response draft", 4: "Slack channel", 5: "customer history", 6: "escalation policies", 7: "response time < 2 min" },
+  { 0: "screenshot", 1: "QA team", 2: "extract errors and file a bug", 3: "bug ticket", 4: "Jira board", 5: "codebase context", 6: "severity classification", 7: "reproduction steps captured" },
+  { 0: "contract PDF", 1: "legal department", 2: "extract key dates and obligations", 3: "structured summary", 4: "Notion page", 5: "past contract terms", 6: "compliance checklist", 7: "all deadlines identified" },
 ]);
 const EX_FA = JSON.stringify([
-  { a: ["پیام درخواست پشتیبانی", "مشتری"], b: ["دسته‌بندی و پاسخ اولیه", "پیش‌نویس پاسخ", "کانال Slack"], c: ["تاریخچه مشتری", "سیاست‌های ارجاع", "زمان پاسخ کمتر از ۲ دقیقه"] },
-  { a: ["اسکرین‌شات", "تیم QA"], b: ["استخراج خطاها و ثبت باگ", "تیکت باگ", "تخته Jira"], c: ["زمینه کدپایگاه", "طبقه‌بندی شدت", "مراحل بازتولید ثبت شده"] },
-  { a: ["قرارداد PDF", "بخش حقوقی"], b: ["استخراج تاریخ‌ها و تعهدات", "خلاصه ساختاریافته", "صفحه Notion"], c: ["شرایط قراردادهای قبلی", "چک‌لیست انطباق", "تمام مهلت‌ها شناسایی شده"] },
+  { 0: "پیام درخواست پشتیبانی", 1: "مشتری", 2: "دسته‌بندی و پاسخ اولیه", 3: "پیش‌نویس پاسخ", 4: "کانال Slack", 5: "تاریخچه مشتری", 6: "سیاست‌های ارجاع", 7: "زمان پاسخ کمتر از ۲ دقیقه" },
+  { 0: "اسکرین‌شات", 1: "تیم QA", 2: "استخراج خطاها و ثبت باگ", 3: "تیکت باگ", 4: "تخته Jira", 5: "زمینه کدپایگاه", 6: "طبقه‌بندی شدت", 7: "مراحل بازتولید ثبت شده" },
+  { 0: "قرارداد PDF", 1: "بخش حقوقی", 2: "استخراج تاریخ‌ها و تعهدات", 3: "خلاصه ساختاریافته", 4: "صفحه Notion", 5: "شرایط قراردادهای قبلی", 6: "چک‌لیست انطباق", 7: "تمام مهلت‌ها شناسایی شده" },
 ]);
 const examplesJson = locale === "fa" ? EX_FA : EX_EN;
 
@@ -264,16 +261,8 @@ const examplesJson = locale === "fa" ? EX_FA : EX_EN;
           <h3 class="text-xs font-semibold text-primary uppercase tracking-wider mb-5">{t(locale, "services.brief.section1")}</h3>
           <div class="brief-pipeline">
             <div class="pipeline-track">
-              <svg viewBox="0 0 820 68" preserveAspectRatio="none" class="pipeline-svg" aria-hidden="true">
-                <defs>
-                  <linearGradient id="bp-grad-m" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stop-color="var(--primary)" stop-opacity="0.15" />
-                    <stop offset="50%" stop-color="var(--primary)" stop-opacity="0.5" />
-                    <stop offset="100%" stop-color="var(--success)" stop-opacity="0.5" />
-                  </linearGradient>
-                </defs>
-                <path d={PIPELINE_PATH} fill="none" stroke="var(--border)" stroke-width="2" stroke-dasharray="6 4" />
-                <path d={PIPELINE_PATH} fill="none" stroke="url(#bp-grad-m)" stroke-width="2" stroke-linecap="round" />
+              <svg viewBox="0 0 820 2" preserveAspectRatio="none" class="pipeline-svg" aria-hidden="true">
+                <line x1="0" y1="1" x2="820" y2="1" stroke="var(--primary)" stroke-width="2" stroke-dasharray="6 4" />
               </svg>
             </div>
             <div class="pipeline-nodes">
@@ -352,26 +341,55 @@ const examplesJson = locale === "fa" ? EX_FA : EX_EN;
 
     if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       var examples = JSON.parse(examplesJson);
-      var current = 0;
-      var groups = ["a", "b", "c"];
+      var labels = ["[input]", "[source]", "[job]", "[output]", "[interface]", "[knowledge and memory]", "[rules and approvals]", "[measurable criteria]"];
+      var setIdx = 0;
+      var step = 0;
+      var slots = modal.querySelectorAll(".brief-slot[data-bracket]");
+      var total = slots.length;
 
-      function cycle() {
-        current = (current + 1) % examples.length;
-        groups.forEach(function (g, gi) {
-          setTimeout(function () {
-            var slots = modal.querySelectorAll('[data-group="' + g + '"]');
-            slots.forEach(function (el, i) {
-              el.classList.add("is-fading");
-              setTimeout(function () {
-                el.textContent = examples[current][g][i];
-                el.classList.remove("is-fading");
-              }, 350);
-            });
-          }, gi * 450);
-        });
+      function fillBracket(idx, callback) {
+        var el = slots[idx];
+        if (!el) { callback(); return; }
+        el.classList.add("is-fading");
+        setTimeout(function () {
+          el.textContent = examples[setIdx][idx];
+          el.classList.remove("is-fading");
+          el.classList.add("is-active");
+          callback();
+        }, 300);
       }
 
-      setInterval(cycle, 4000);
+      function resetAll(callback) {
+        slots.forEach(function (el) {
+          el.classList.add("is-fading");
+          el.classList.remove("is-active");
+        });
+        setTimeout(function () {
+          slots.forEach(function (el, i) {
+            el.textContent = labels[i];
+          });
+          callback();
+        }, 300);
+      }
+
+      function nextStep() {
+        if (step < total) {
+          fillBracket(step, function () {
+            step++;
+            setTimeout(nextStep, 800);
+          });
+        } else {
+          setTimeout(function () {
+            setIdx = (setIdx + 1) % examples.length;
+            step = 0;
+            resetAll(function () {
+              setTimeout(nextStep, 600);
+            });
+          }, 2500);
+        }
+      }
+
+      setTimeout(nextStep, 1500);
     }
   })();
   </script>
