@@ -742,8 +742,10 @@ i[class*=" bxs-"] {
   [dir="rtl"] .xl\:rtl\:text-start {
     text-align: start;
   }
-  
+
   [dir="rtl"] .xl\:rtl\:text-end {
     text-align: end;
   }
 }
+
+

@@ -45,41 +45,6 @@ const icpItems = [
   { icon: "bx-code-alt", color: "primary", titleKey: "services.icp.item6.title", descKey: "services.icp.item6.desc" },
 ];
 
-const internalItems = [
-  t(locale, "services.internal.item1"),
-  t(locale, "services.internal.item2"),
-  t(locale, "services.internal.item3"),
-  t(locale, "services.internal.item4"),
-  t(locale, "services.internal.item5"),
-  t(locale, "services.internal.item6"),
-];
-
-const customerItems = [
-  t(locale, "services.customer.item1"),
-  t(locale, "services.customer.item2"),
-  t(locale, "services.customer.item3"),
-  t(locale, "services.customer.item4"),
-  t(locale, "services.customer.item5"),
-  t(locale, "services.customer.item6"),
-];
-
-const processSteps = [
-  { num: "01", titleKey: "services.process.step1.title", descKey: "services.process.step1.desc" },
-  { num: "02", titleKey: "services.process.step2.title", descKey: "services.process.step2.desc" },
-  { num: "03", titleKey: "services.process.step4.title", descKey: "services.process.step4.desc" },
-  { num: "04", titleKey: "services.process.step5.title", descKey: "services.process.step5.desc" },
-];
-
-const includesItems = [
-  t(locale, "services.includes.item1"),
-  t(locale, "services.includes.item2"),
-  t(locale, "services.includes.item3"),
-  t(locale, "services.includes.item4"),
-  t(locale, "services.includes.item5"),
-  t(locale, "services.includes.item6"),
-  t(locale, "services.includes.item7"),
-  t(locale, "services.includes.item8"),
-];
 ---
 
 <Page
@@ -112,10 +77,46 @@ const includesItems = [
     </div>
   </section>
 
-  <!-- Who we work with -->
+  <!-- What you will get -->
   <section class="relative py-24 sm:py-32 overflow-hidden">
     <div class="absolute inset-0 bg-panel-deep/50"></div>
     <div class="relative mx-auto max-w-6xl px-6">
+      <SectionHeader
+        label={t(locale, "services.whatYouGet.label")}
+        title={t(locale, "services.whatYouGet.title")}
+        description={t(locale, "services.whatYouGet.desc")}
+      />
+
+      <div class="mx-auto max-w-4xl" data-aos="fade-up">
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="rounded-md border border-border bg-panel p-5">
+            <span class="text-2xs font-semibold text-primary">01</span>
+            <h3 class="text-sm font-semibold text-foreground-strong mt-2 mb-1">{t(locale, "services.process.audit.title")}</h3>
+            <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, "services.process.audit.desc")}</p>
+          </div>
+          <div class="rounded-md border border-border bg-panel p-5">
+            <span class="text-2xs font-semibold text-primary">02</span>
+            <h3 class="text-sm font-semibold text-foreground-strong mt-2 mb-1">{t(locale, "services.process.design.title")}</h3>
+            <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, "services.process.design.desc")}</p>
+          </div>
+          <div class="rounded-md border border-border bg-panel p-5">
+            <span class="text-2xs font-semibold text-primary">03</span>
+            <h3 class="text-sm font-semibold text-foreground-strong mt-2 mb-1">{t(locale, "services.process.testing.title")}</h3>
+            <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, "services.process.testing.desc")}</p>
+          </div>
+          <div class="rounded-md border border-border bg-panel p-5">
+            <span class="text-2xs font-semibold text-primary">04</span>
+            <h3 class="text-sm font-semibold text-foreground-strong mt-2 mb-1">{t(locale, "services.process.deployment.title")}</h3>
+            <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, "services.process.deployment.desc")}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Who we work with -->
+  <section class="relative py-24 sm:py-32">
+    <div class="mx-auto max-w-6xl px-6">
       <SectionHeader
         label={t(locale, "services.icp.label")}
         title={t(locale, "services.icp.title")}
@@ -137,8 +138,9 @@ const includesItems = [
   </section>
 
   <!-- What we solve -->
-  <section class="relative py-24 sm:py-32">
-    <div class="mx-auto max-w-6xl px-6">
+  <section class="relative py-24 sm:py-32 overflow-hidden">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="relative mx-auto max-w-6xl px-6">
       <SectionHeader
         label={t(locale, "services.problems.label")}
         title={t(locale, "services.problems.title")}
@@ -156,84 +158,6 @@ const includesItems = [
             <li class="flex items-start gap-2"><span class="rtl-flip text-destructive mt-0.5">→</span> {t(locale, "services.problems.item2")}</li>
             <li class="flex items-start gap-2"><span class="rtl-flip text-destructive mt-0.5">→</span> {t(locale, "services.problems.item3")}</li>
             <li class="flex items-start gap-2"><span class="rtl-flip text-destructive mt-0.5">→</span> {t(locale, "services.problems.item4")}</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- What we implement -->
-  <section class="relative py-24 sm:py-32 overflow-hidden">
-    <div class="absolute inset-0 bg-panel-deep/50"></div>
-    <div class="relative mx-auto max-w-6xl px-6">
-      <div class="grid sm:grid-cols-2 gap-6" data-aos="fade-up">
-        <div class="rounded-md border border-border bg-panel p-6">
-          <div class="flex items-center gap-2 mb-4">
-            <i class="bx bx-group text-primary icon-lg"></i>
-            <h3 class="text-sm font-semibold text-foreground-strong">{t(locale, "services.internal.title")}</h3>
-          </div>
-          <p class="text-xs text-muted-foreground leading-relaxed mb-4">{t(locale, "services.internal.desc")}</p>
-          <ul class="space-y-2 text-xs text-muted-foreground">
-            {internalItems.map((item) => (
-              <li class="flex items-start gap-2"><span class="rtl-flip text-primary mt-0.5">→</span> {item}</li>
-            ))}
-          </ul>
-        </div>
-        <div class="rounded-md border border-border bg-panel p-6">
-          <div class="flex items-center gap-2 mb-4">
-            <i class="bx bx-link text-accent icon-lg"></i>
-            <h3 class="text-sm font-semibold text-foreground-strong">{t(locale, "services.customer.title")}</h3>
-          </div>
-          <p class="text-xs text-muted-foreground leading-relaxed mb-4">{t(locale, "services.customer.desc")}</p>
-          <ul class="space-y-2 text-xs text-muted-foreground">
-            {customerItems.map((item) => (
-              <li class="flex items-start gap-2"><span class="rtl-flip text-accent mt-0.5">→</span> {item}</li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- How it works -->
-  <section class="relative py-24 sm:py-32">
-    <div class="mx-auto max-w-6xl px-6">
-      <SectionHeader
-        label={t(locale, "services.process.label")}
-        title={t(locale, "services.process.title")}
-        description={t(locale, "services.process.desc")}
-      />
-
-      <div class="mx-auto max-w-4xl" data-aos="fade-up">
-        <div class="grid sm:grid-cols-2 gap-4">
-          {processSteps.map((step) => (
-            <div class="rounded-md border border-border bg-panel p-5">
-              <span class="text-2xs font-semibold text-primary">{step.num}</span>
-              <h3 class="text-sm font-semibold text-foreground-strong mt-2 mb-1">{t(locale, step.titleKey)}</h3>
-              <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, step.descKey)}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- What's included -->
-  <section class="relative py-24 sm:py-32 overflow-hidden">
-    <div class="absolute inset-0 bg-panel-deep/50"></div>
-    <div class="relative mx-auto max-w-6xl px-6">
-      <SectionHeader
-        label={t(locale, "services.includes.label")}
-        title={t(locale, "services.includes.title")}
-        description={t(locale, "services.includes.desc")}
-      />
-
-      <div class="max-w-2xl mx-auto" data-aos="fade-up">
-        <div class="rounded-md border border-border bg-panel p-6 sm:p-8">
-          <ul class="space-y-3 text-xs text-muted-foreground">
-            {includesItems.map((item) => (
-              <li class="flex items-start gap-2"><span class="rtl-flip text-success mt-0.5">→</span> {item}</li>
-            ))}
           </ul>
         </div>
       </div>
