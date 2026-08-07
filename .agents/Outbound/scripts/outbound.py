@@ -281,6 +281,9 @@ def cmd_send(limit: int, lang_filter=None, tier_filter=None, retry_failed=False)
         if not to_send:
             print("No failed sends to retry (all failed leads are already sent or not in the list).")
             return
+        retry_ids = {c["lead_id"] for c in to_send}
+        log["failed"] = [f for f in log.get("failed", []) if f.get("lead_id") not in retry_ids]
+        save_sent_log(log)
         print(f"Retrying {len(to_send)} failed sends from sent_log.json...")
     else:
         unsent = [c for c in contacts if not already_sent(c["lead_id"], log)]
@@ -464,6 +467,7 @@ def main():
     parser.add_argument("--limit", type=int, default=None, help="Max emails to send")
     parser.add_argument("--lang", default=None, help="Language filter (en|fa or English|Persian)")
     parser.add_argument("--tier", default=None, help="Tier filter (A, B, C)")
+    parser.add_argument("--retry-failed", action="store_true", help="send: retry the failed[] entries first")
     parser.add_argument("--force", action="store_true", help="metrics: bypass the schedule check")
     parser.add_argument("--quiet", action="store_true", help="metrics: one-line output (cron-friendly)")
     parser.add_argument("--json", action="store_true", help="review: JSON summary output")
