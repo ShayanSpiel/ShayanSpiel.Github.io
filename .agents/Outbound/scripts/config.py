@@ -37,7 +37,9 @@ MAILGUN_DOMAIN = os.environ.get("MAILGUN_DOMAIN", "").strip()
 SMTP_HOST = os.environ.get("SMTP_HOST", "").strip()
 SMTP_PORT = int(os.environ.get("SMTP_PORT", "587"))
 SMTP_USER = os.environ.get("SMTP_USER", "").strip()
-SMTP_PASS = os.environ.get("SMTP_PASS", "").strip()
+SMTP_PASS = os.environ.get("SMTP_PASS", "")
+CF_API_TOKEN = os.environ.get("CF_API_TOKEN", "")
+CF_ACCOUNT_ID = os.environ.get("CF_ACCOUNT_ID", "").strip()
 SMTP_TLS = os.environ.get("SMTP_TLS", "true").strip().lower() in ("1", "true", "yes")
 
 # ── Sender identity ────────────────────────────────────────────────────────────

@@ -7,7 +7,8 @@ provider selected by env vars (resend | sendgrid | mailgun | smtp).
 Usage:
   python3 outbound.py stats                       # Database stats
   python3 outbound.py dry-run [--lang en|fa] [--tier A] [--limit 5]
-  python3 outbound.py send --limit 10 [--lang en] [--tier A]
+  python3 outbound.py send --limit 10 [--lang en] [--tier A] [--retry-failed]
+  python3 outbound.py send --retry-failed                 # re-send failed[] entries
   python3 outbound.py metrics [--force] [--quiet] # Email Data: pull provider status (scheduled)
   python3 outbound.py review [--json]           # Goal check vs reply-rate goal + next action
   python3 outbound.py record-reply <email|lead_id> [--note "..."]  # log a reply from the inbox
@@ -269,12 +270,21 @@ def cmd_dry_run(lang_filter=None, tier_filter=None, limit=None):
     print(f"{'='*60}\n")
 
 
-def cmd_send(limit: int, lang_filter=None, tier_filter=None):
+def cmd_send(limit: int, lang_filter=None, tier_filter=None, retry_failed=False):
     contacts = read_contacts(lang_filter=lang_filter, tier_filter=tier_filter)
     log = load_sent_log()
+    by_id = {c["lead_id"]: c for c in contacts}
 
-    unsent = [c for c in contacts if not already_sent(c["lead_id"], log)]
-    to_send = unsent[:limit]
+    if retry_failed:
+        failed_leads = [f["lead_id"] for f in log.get("failed", [])]
+        to_send = [by_id[l] for l in failed_leads if l in by_id and not already_sent(l, log)]
+        if not to_send:
+            print("No failed sends to retry (all failed leads are already sent or not in the list).")
+            return
+        print(f"Retrying {len(to_send)} failed sends from sent_log.json...")
+    else:
+        unsent = [c for c in contacts if not already_sent(c["lead_id"], log)]
+        to_send = unsent[:limit]
 
     if not to_send:
         print("No contacts to send to (all filtered or already sent).")
@@ -471,10 +481,10 @@ def main():
     elif args.command == "dry-run":
         cmd_dry_run(lang_filter=lang, tier_filter=args.tier, limit=args.limit or 5)
     elif args.command == "send":
-        if not args.limit:
-            print("ERROR: --limit is required for send. Example: send --limit 10")
+        if not args.limit and not args.retry_failed:
+            print("ERROR: --limit is required for send (or use --retry-failed). Example: send --limit 10")
             sys.exit(1)
-        cmd_send(limit=args.limit, lang_filter=lang, tier_filter=args.tier)
+        cmd_send(limit=args.limit, lang_filter=lang, tier_filter=args.tier, retry_failed=args.retry_failed)
     elif args.command == "metrics":
         cmd_metrics(force=args.force, quiet=args.quiet)
     elif args.command == "review":
