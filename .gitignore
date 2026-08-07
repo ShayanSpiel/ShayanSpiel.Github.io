@@ -16,4 +16,12 @@ Thumbs.db
 *~
 
 # Logs
-*.logSkills/
+*.log
+Skills/
+.agents/Outbound/.env
+
+# Outbound: PII and runtime data stay local
+.agents/Outbound/scripts/__pycache__/
+.agents/Outbound/scripts/sent_log.json
+.agents/Outbound/scripts/metrics.json
+.agents/Outbound/scripts/ip_cache.json

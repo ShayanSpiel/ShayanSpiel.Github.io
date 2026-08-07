@@ -1027,6 +1027,14 @@ export const translations: Record<Locale, Translations> = {
     "services.brief.step7.name": "Success",
     "services.brief.step7.desc": "How will performance be measured?",
     "services.brief.close": "Close",
+    "services.brief.contact.title": "Get your FREE Agent Brief",
+    "services.brief.contact.desc": "Send me your minimum business information, and a desired workflow, so I can audit it and get in touch with you.",
+    "services.brief.contact.business": "Business Information",
+    "services.brief.contact.businessPlaceholder": "What you do, your website, or one workflow you want me to audit for you.",
+    "services.brief.contact.submit": "Let's Audit my Workflow Now",
+    "services.brief.contact.confirm.title": "Brief received",
+    "services.brief.contact.confirm.desc": "Thanks for sending your details. I will audit the workflow and get back to you with your agent brief.",
+    "services.brief.contact.confirm.back": "Send another",
 
     "services.whatYouGet.label": "What you will get",
     "services.whatYouGet.title": "Turn The Agent Brief to a Working System",
@@ -1106,7 +1114,7 @@ export const translations: Record<Locale, Translations> = {
     "services.includes.item8": "Post-launch optimisation",
     "services.cta.title": "Cut repetitive work, save costs,<br /> increase output.",
     "services.cta.desc": "Tell us about one bottleneck. We will show you what an agent system can do.",
-    "services.cta.button": "I'm Ready to Go AI-First",
+    "services.cta.button": "Get your FREE Agent Brief",
 
     // Use Cases
     "useCases.pageTitle": "AI Agent Use Cases",
@@ -2126,6 +2134,14 @@ export const translations: Record<Locale, Translations> = {
     "services.brief.step7.name": "موفقیت",
     "services.brief.step7.desc": "عملکرد چطور اندازه‌گیری می‌شه؟",
     "services.brief.close": "بستن",
+    "services.brief.contact.title": "بریف رایگان ایجنتت رو بگیر",
+    "services.brief.contact.desc": "حداقل اطلاعات کسب‌وکارت و یه ورک‌فلوی که می‌خوای رو برام بفرست تا حسابرسیش کنم و باهات تماس بگیرم.",
+    "services.brief.contact.business": "اطلاعات کسب‌وکار",
+    "services.brief.contact.businessPlaceholder": "کاری که می‌کنی، وبسایتت، یا یه ورک‌فلو که می‌خوای برات حسابرسی کنم.",
+    "services.brief.contact.submit": "همین حالا ورک‌فلوم رو حسابرسی کن",
+    "services.brief.contact.confirm.title": "بریف دریافت شد",
+    "services.brief.contact.confirm.desc": "ممنون که جزئیاتت رو فرستادی. ورک‌فلو رو حسابرسی می‌کنم و بریف ایجنتت رو بهت می‌دم.",
+    "services.brief.contact.confirm.back": "فرستادن دوباره",
 
     "services.whatYouGet.label": "چی دریافت می‌کنید",
     "services.whatYouGet.title": "تبدیل Agent Brief به یه سیستم کاری",
@@ -2204,7 +2220,7 @@ export const translations: Record<Locale, Translations> = {
     "services.includes.item8": "بهینه‌سازی پس از راه‌اندازی",
     "services.cta.title": "کار تکراری رو کم کن، هزینه رو ذخیره کن،<br /> خروجی رو زیاد کن.",
     "services.cta.desc": "یه گلوگاه رو بهمون معرفی کنید. نشون می‌دیم یه سیستم ایجنت چیکار می‌تونه بکنه.",
-    "services.cta.button": "آماده‌ام اولِ کار با AI باشم",
+    "services.cta.button": "بریف رایگانت رو بگیر",
   },
 };
 

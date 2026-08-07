@@ -15,22 +15,22 @@ const formCopy = {
   namePlaceholder: t(locale, "contact.namePlaceholder"),
   email: t(locale, "contact.email"),
   emailPlaceholder: t(locale, "contact.emailPlaceholder"),
-  message: t(locale, "contact.message"),
-  messagePlaceholder: t(locale, "contact.messagePlaceholder"),
-  submit: t(locale, "contact.submit"),
+  business: t(locale, "services.brief.contact.business"),
+  businessPlaceholder: t(locale, "services.brief.contact.businessPlaceholder"),
+  submit: t(locale, "services.brief.contact.submit"),
 };
 ---
 
-<div id={id} class="brief-modal-overlay" role="dialog" aria-modal="true" aria-label={t(locale, "contact.title")} hidden>
+<div id={id} class="brief-modal-overlay" role="dialog" aria-modal="true" aria-label={t(locale, "services.brief.contact.title")} hidden>
   <div class="brief-modal max-w-lg">
     <div class="brief-modal-header">
       <div class="flex items-center gap-3">
         <div class="flex h-9 w-9 items-center justify-center rounded-md bg-primary-soft">
-          <i class="bx bx-envelope text-primary icon-lg"></i>
+          <i class="bx bx-file text-primary icon-lg"></i>
         </div>
         <div>
-          <h2 class="text-lg font-bold text-foreground-strong">{t(locale, "contact.title")}</h2>
-          <p class="text-xs text-muted-foreground">{t(locale, "contact.desc")}</p>
+          <h2 class="text-lg font-bold text-foreground-strong">{t(locale, "services.brief.contact.title")}</h2>
+          <p class="text-xs text-muted-foreground">{t(locale, "services.brief.contact.desc")}</p>
         </div>
       </div>
       <button class="close-contact-modal flex h-8 w-8 items-center justify-center rounded-md hover:bg-panel-raised transition-colors text-muted-foreground hover:text-foreground" aria-label="Close">
@@ -41,7 +41,7 @@ const formCopy = {
     <div class="brief-modal-body">
       <form class="contact-modal-form space-y-5">
         <input type="hidden" name="_captcha" value="false" />
-        <input type="hidden" name="_subject" value="SpielOS Contact Form" />
+        <input type="hidden" name="_subject" value="SpielOS Agent Brief Request" />
         <div>
           <label for={`${id}-name`} class="block text-xs font-medium text-foreground-strong mb-1.5">{formCopy.name}</label>
           <input type="text" id={`${id}-name`} name="name" required placeholder={formCopy.namePlaceholder} class="w-full h-11 rounded-md border border-border bg-input px-3.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-colors" />
@@ -51,8 +51,8 @@ const formCopy = {
           <input type="email" id={`${id}-email`} name="email" required placeholder={formCopy.emailPlaceholder} class="w-full h-11 rounded-md border border-border bg-input px-3.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-colors" />
         </div>
         <div>
-          <label for={`${id}-message`} class="block text-xs font-medium text-foreground-strong mb-1.5">{formCopy.message}</label>
-          <textarea id={`${id}-message`} name="message" rows="4" required placeholder={formCopy.messagePlaceholder} class="w-full rounded-md border border-border bg-input px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-y min-h-[100px] transition-colors"></textarea>
+          <label for={`${id}-business`} class="block text-xs font-medium text-foreground-strong mb-1.5">{formCopy.business}</label>
+          <textarea id={`${id}-business`} name="businessInfo" rows="4" required placeholder={formCopy.businessPlaceholder} class="w-full rounded-md border border-border bg-input px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-y min-h-[100px] transition-colors"></textarea>
         </div>
 
         <button type="submit" class="contact-submit-btn w-full rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2">
@@ -67,10 +67,10 @@ const formCopy = {
         <div class="flex h-14 w-14 items-center justify-center rounded-full bg-success-soft mx-auto mb-6">
           <i class="bx bx-check-square text-success text-2xl"></i>
         </div>
-        <h3 class="text-xl font-bold text-foreground-strong">{t(locale, "contact.thanks.title")}</h3>
-        <p class="mt-2 text-sm text-muted-foreground max-w-md mx-auto">{t(locale, "contact.thanks.desc")}</p>
+        <h3 class="text-xl font-bold text-foreground-strong">{t(locale, "services.brief.contact.confirm.title")}</h3>
+        <p class="mt-2 text-sm text-muted-foreground max-w-md mx-auto">{t(locale, "services.brief.contact.confirm.desc")}</p>
         <button type="button" class="contact-send-another mt-6 inline-flex items-center justify-center rounded-md border border-border bg-panel px-6 h-11 text-sm font-medium hover:bg-panel-raised hover:border-border-strong transition-all">
-          {t(locale, "contact.thanks.back")}
+          {t(locale, "services.brief.contact.confirm.back")}
         </button>
       </div>
 

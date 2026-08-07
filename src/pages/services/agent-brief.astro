@@ -3,7 +3,7 @@ import Page from "../../layouts/Page.astro";
 import { SITE } from "../../config";
 import { type Locale, t } from "../../i18n/translations";
 import { localizePath } from "../../i18n";
-import SpielOSLogo from "../../components/SpielOSLogo.astro";
+import ContactModal from "../../components/ContactModal.astro";
 
 export interface Props {
   locale?: Locale;
@@ -58,13 +58,16 @@ const examplesJson = locale === "fa" ? EX_FA : EX_EN;
           {t(locale, "services.pageTitle")}
         </a>
 
-        <div class="flex items-center gap-3 mb-4">
-          <div class="flex h-10 w-10 items-center justify-center rounded-md bg-primary-soft">
-            <i class="bx bx-file text-primary icon-xl"></i>
-          </div>
-          <div>
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+          <div class="flex items-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-md bg-primary-soft">
+              <i class="bx bx-file text-primary icon-xl"></i>
+            </div>
             <h1 class="text-2xl sm:text-3xl font-bold text-foreground-strong tracking-tight">{t(locale, "services.brief.title")}</h1>
           </div>
+          <button data-open-contact-modal type="button" class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-5 h-10 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20 cursor-pointer shrink-0">
+            {t(locale, "services.cta.button")}
+          </button>
         </div>
         <p class="text-sm text-muted-foreground">{t(locale, "services.brief.subtitle")}</p>
       </div>
@@ -115,16 +118,26 @@ const examplesJson = locale === "fa" ? EX_FA : EX_EN;
           ))}
         </div>
       </div>
-
-      <div class="h-px bg-border mb-8"></div>
-
-      <!-- Footer -->
-      <div class="flex items-center gap-3">
-        <SpielOSLogo size="sm" />
-        <span class="text-xs text-muted-foreground">{t(locale, "services.brief.footer")}</span>
-      </div>
     </div>
   </section>
+
+  <!-- CTA -->
+  <section class="relative py-24 sm:py-32 overflow-hidden">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] glow-blob opacity-10"></div>
+
+    <div class="relative mx-auto max-w-3xl px-6 text-center" data-aos="fade-up">
+      <h2 class="text-3xl sm:text-4xl font-bold text-foreground-strong tracking-tight" set:html={t(locale, "services.cta.title")} />
+      <p class="mt-4 text-sm text-muted-foreground max-w-lg mx-auto">
+        {t(locale, "services.cta.desc")}
+      </p>
+      <button data-open-contact-modal type="button" class="mt-8 inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20 cursor-pointer">
+        {t(locale, "services.cta.button")}
+      </button>
+    </div>
+  </section>
+
+  <ContactModal locale={locale} />
 
   <script is:inline define:vars={{ examplesJson }}>
   (function () {
