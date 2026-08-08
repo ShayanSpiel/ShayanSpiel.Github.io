@@ -50,28 +50,23 @@ X: {SIGNATURE_X}
 TEMPLATES = {
     "English": [
         {
-            "label": "scarcity-handpicked",
-            "subject": "I picked {company} for a free brief",
+            "label": "recruitment-workflow",
+            "subject": "One staffing workflow",
             "body_html": """\
-<p>Hi {first_name},</p>
-<p>This week I'm giving away 3 free pilot briefs, and I hand-picked {company} for one.</p>
-<p>As {title} in a {segment} business, you see it daily: the sourcing, follow-ups, and handoffs between tools eat hours that should go into revenue.</p>
-<p>Each pilot is a one-page <a href="https://spielos.xyz/services/agent-brief/" style="color:#111111;">Agent Brief</a>: one workflow mapped end to end, what automation would look like, and the expected ROI. You keep it whether or not we ever work together.</p>
-<p>If you want the brief, reply "map" and I'll handle the rest.</p>
+<p>Hi {company} team,</p>
+<p>{company} staffs {segment} roles for {country} clients, and the coordination runs through a specific loop: candidate shortlists, interview summaries, onboarding follow-ups.</p>
+<p>I build supervised AI employees that carry that loop, one workflow at a time, with a person approving each step.</p>
+<p>Is the shortlist stage still done by hand, or have you systemized it? If it is still manual, I'd be happy to map it with you.</p>
 <p>Best,<br>Shayan</p>
 {SIGNATURE_HTML}""",
             "body_text": """\
-Hi {first_name},
+Hi {company} team,
 
-This week I'm giving away 3 free pilot briefs, and I hand-picked {company} for one.
+{company} staffs {country} roles for clients, and the coordination overhead lives in one chain: candidate shortlists, interview summaries, feedback follow-ups.
 
-As {title} in a {segment} business, you see it daily: the sourcing, follow-ups, and handoffs between tools eat hours that should go into revenue.
+I build supervised AI employees that carry that loop, one workflow at a time, with a person approving each step.
 
-Each brief is a one-page Agent Brief: one workflow mapped end to end, what automation would look like, and the expected ROI. You keep it either way.
-
-See the brief format: https://spielos.xyz/services/agent-brief/
-
-If you want it, reply "map" and I'll handle the rest.
+Is the shortlist stage still done by hand, or have you systemized it? If it is still manual, I'd be happy to map it with you.
 
 Best,
 Shayan
@@ -79,25 +74,23 @@ Shayan
 {SIGNATURE_TEXT}""",
         },
         {
-            "label": "curiosity-gap",
-            "subject": "A question about a day at {company}",
+            "label": "agency-delivery",
+            "subject": "Delivery loop cost",
             "body_html": """\
-<p>Hi {first_name},</p>
-<p>What's the one workflow at {company} you'd hand off if you could? For most {segment} businesses it's the repetitive work between tools: sourcing, follow-ups, reporting.</p>
-<p>This week I'm giving 3 free pilot briefs, and I'd like {company} to be one of them. Each brief is a one-page <a href="https://spielos.xyz/services/agent-brief/" style="color:#111111;">Agent Brief</a>: the workflow mapped today, the automated version, and the measurable result. No strings, you keep it either way.</p>
-<p>Reply "map" and I'll send the details.</p>
+<p>Hi {company} team,</p>
+<p>{company} runs a client-delivery flow around {segment} work in {country}, and the classic cost is in the handoffs: brief to research to drafts to QA to reporting.</p>
+<p>I build supervised AI employees that carry that flow, with a person approving each step.</p>
+<p>Which stage is still manual: first drafts, or the client reporting? If either is, I'd be happy to map that one stage with you.</p>
 <p>Best,<br>Shayan</p>
 {SIGNATURE_HTML}""",
             "body_text": """\
-Hi {first_name},
+Hi {company},
 
-What's the one workflow at {company} you'd hand off if you could? For most {segment} businesses it's the sourcing or follow-up between tools.
+{company} is a client-delivery business in {country}, and the classic cost sits in the handoffs: brief to research to drafts to QA to reporting.
 
-This week I'm giving 3 free pilot briefs, and I'd like {company} to be one of them. Each brief is a one-page Agent Brief: the workflow mapped today, the automated version, and the result. No strings attached.
+I build supervised AI employees that carry that flow, with a person approving each step.
 
-See the brief format: https://spielos.xyz/services/agent-brief/
-
-Reply "map" and I'll send the details.
+Which stage is still manual: first drafts, or the client reporting? If either is, I'd gladly map that one stage with you.
 
 Best,
 Shayan
@@ -105,25 +98,47 @@ Shayan
 {SIGNATURE_TEXT}""",
         },
         {
-            "label": "pilot-window",
-            "subject": "3 slots this week, {company} gets one",
+            "label": "saas-ops",
+            "subject": "Support ops at {company}",
             "body_html": """\
-<p>Hi {first_name},</p>
-<p>This week I'm doing 3 free pilot briefs, and I kept a slot for {company}.</p>
-<p>One brief is one page: <a href="https://spielos.xyz/services/agent-brief/" style="color:#111111;">an Agent Brief</a> that maps one repetitive workflow, what automation looks like, and the ROI you could expect. Yours to keep regardless.</p>
-<p>Reply "map" and I'll hold the slot for {company}.</p>
+<p>Hi {company} team,</p>
+<p>{company} is a SaaS business, and most of them share the same bottleneck: incoming customer feedback and support requests triaged by hand and routed between people.</p>
+<p>I build supervised AI employees for that loop: classify the request, draft the response, escalate the exceptions.</p>
+<p>Is triage still manual for {company}, or do you already run it through a system? If it is manual, I'd be happy to map it.</p>
 <p>Best,<br>Shayan</p>
 {SIGNATURE_HTML}""",
             "body_text": """\
-Hi {first_name},
+Hi {company},
 
-This week I'm doing 3 free pilot briefs, and I kept a slot for {company}.
+{company} is a SaaS business, and most SaaS teams share the same bottleneck: support and product feedback triaged by hand and routed between people.
 
-One brief is one page: the workflow mapped, the automation shape, and the expected ROI. Yours to keep regardless.
+I build supervised AI employees for that loop: classify, draft, escalate.
 
-See the brief format: https://spielos.xyz/services/agent-brief/
+Is triage still manual at {company}, or do you run it through a system? If it is manual, I'd be happy to map it.
 
-Reply "map" and I'll hold the slot.
+Best,
+Shayan
+
+{SIGNATURE_TEXT}""",
+        },
+        {
+            "label": "generic-workflow",
+            "subject": "One workflow at {company}",
+            "body_html": """\
+<p>Hi {company} team,</p>
+<p>Every scaling business has one repetitive workflow that eats the week: the follow-ups, the handoffs, the reporting between tools.</p>
+<p>I build supervised AI employees that carry one such workflow end to end, with a person approving each step.</p>
+<p>Which workflow at {company} is the most manual right now? If it is still manual, I'd be happy to map it with you.</p>
+<p>Best,<br>Shayan</p>
+{SIGNATURE_HTML}""",
+            "body_text": """\
+Hi {company},
+
+Every scaling business has one repetitive workflow that eats the week: the follow-ups, the handoffs, the reporting between tools.
+
+I build supervised AI employees that carry one such workflow end to end, with a person approving each step.
+
+Which workflow at {company} is the most manual right now? If it is still manual, I'd be happy to map it with you.
 
 Best,
 Shayan

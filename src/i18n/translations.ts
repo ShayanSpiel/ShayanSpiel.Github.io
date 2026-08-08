@@ -11,6 +11,7 @@ export const translations: Record<Locale, Translations> = {
     "nav.founder": "Founder",
     "nav.contact": "Contact",
     "nav.joinWaitlist": "Join waitlist",
+    "nav.agentBriefing": "Agent Briefing",
     "nav.features": "Features",
     "nav.services": "Services",
 
@@ -86,7 +87,7 @@ export const translations: Record<Locale, Translations> = {
     "home.section7.desc": "I document what breaks, what survives, and what I learn while building SpielOS: context failures, orchestration decisions, long-running execution, evaluation, product mistakes, and agent architecture.",
     "home.section7.link": "Read the notes →",
     "home.section8.title": "Start with one part of your company.",
-    "home.section8.desc": "SpielOS is currently in pre-launch. Join the waitlist to follow the build and get early access to creating your first AI department.",
+    "home.section8.desc": "Start with a free 30-minute workflow assessment. We turn one repetitive process into a clear Agent Brief, and you keep the brief whether or not we work together.",
     "home.section8.cta": "Join the SpielOS waitlist",
 
     // Homepage services section
@@ -207,6 +208,9 @@ export const translations: Record<Locale, Translations> = {
     "common.navAria": "Main navigation",
     "common.homeAria": "SpielOS, Home",
     "common.themeToggle": "Toggle theme",
+    "analytics.consent.description": "Allow anonymous analytics so I can see whether the Agent Briefing funnel is working. No form details are tracked.",
+    "analytics.consent.accept": "Allow analytics",
+    "analytics.consent.reject": "No thanks",
     "nav.home": "Home",
     "founder.byline": "By {name}, founder of SpielOS",
     "notes.tagsAria": "Post tags",
@@ -425,7 +429,7 @@ export const translations: Record<Locale, Translations> = {
     "features.pageDesc": "The complete SpielOS architecture: Chat, Context, Harness, and Infrastructure.",
     "features.hero.title": "The complete<br /> AI employee platform.",
     "features.hero.desc": "SpielOS is built on four layers: Chat is how work is directed. Context is what agents know. The Harness defines who acts and how work moves. Infrastructure provides the models and external tools.",
-    "features.hero.cta": "Join the waitlist",
+    "features.hero.cta": "Get your FREE Agent Briefing",
     "features.layers.label": "Architecture",
     "features.layers.title": "Four layers, one system.",
     "features.layers.desc": "Every feature in SpielOS belongs to one of four system layers. Together, they form a complete platform for building and running AI employees.",
@@ -1027,7 +1031,7 @@ export const translations: Record<Locale, Translations> = {
     "services.brief.step7.name": "Success",
     "services.brief.step7.desc": "How will performance be measured?",
     "services.brief.close": "Close",
-    "services.brief.contact.title": "Get your FREE Agent Brief",
+    "services.brief.contact.title": "Get your FREE Agent Briefing",
     "services.brief.contact.desc": "Send me your minimum business information, and a desired workflow, so I can audit it and get in touch with you.",
     "services.brief.contact.business": "Business Information",
     "services.brief.contact.businessPlaceholder": "What you do, your website, or one workflow you want me to audit for you.",
@@ -1114,7 +1118,7 @@ export const translations: Record<Locale, Translations> = {
     "services.includes.item8": "Post-launch optimisation",
     "services.cta.title": "Cut repetitive work, save costs,<br /> increase output.",
     "services.cta.desc": "Tell us about one bottleneck. We will show you what an agent system can do.",
-    "services.cta.button": "Get your FREE Agent Brief",
+    "services.cta.button": "Get your FREE Agent Briefing",
 
     // Use Cases
     "useCases.pageTitle": "AI Agent Use Cases",
@@ -1162,6 +1166,7 @@ export const translations: Record<Locale, Translations> = {
     "nav.founder": "فاندر",
     "nav.contact": "تماس",
     "nav.joinWaitlist": "به لیست انتظار بپیوند",
+    "nav.agentBriefing": "بریف رایگان ایجنت",
     "nav.features": "امکانات",
     "nav.services": "خدمات",
 
@@ -1237,7 +1242,7 @@ export const translations: Record<Locale, Translations> = {
     "home.section7.desc": "موقع ساخت SpielOS هر چیزی که خراب می‌شه، جواب می‌ده یا بهم یاد می‌ده رو مستند می‌کنم: خطاهای کانتکست، تصمیم‌های ارکستریشن، اجرای طولانی‌مدت، ارزیابی، اشتباه‌های محصول و معماری ایجنتیک.",
     "home.section7.link": "یادداشت‌ها رو بخون ←",
     "home.section8.title": "با یه بخش از شرکتت شروع کن.",
-    "home.section8.desc": "SpielOS هنوز عمومی نشده. به لیست انتظار بپیوند تا ساختش رو دنبال کنی و اولین دپارتمان AI خودت رو زودتر از بقیه بسازی.",
+    "home.section8.desc": "با یک ارزیابی رایگان ۳۰ دقیقه‌ای شروع کن. یک فرایند تکراری رو به یک Agent Brief واضح تبدیل می‌کنیم و چه با هم کار کنیم چه نه، بریف برای خودت می‌مونه.",
     "home.section8.cta": "به لیست انتظار بپیوند",
 
     // Homepage services section
@@ -1356,6 +1361,9 @@ export const translations: Record<Locale, Translations> = {
     "common.navAria": "ناوبری اصلی",
     "common.homeAria": "SpielOS، خانه",
     "common.themeToggle": "تغییر تم",
+    "analytics.consent.description": "با فعال‌کردن آنالیتیکس ناشناس، کمک می‌کنی بفهمم مسیر بریف ایجنت درست کار می‌کنه یا نه. اطلاعات فرم‌ها ردیابی نمی‌شن.",
+    "analytics.consent.accept": "فعال‌کردن آنالیتیکس",
+    "analytics.consent.reject": "نه، ممنون",
     "common.backToHome": "برگشت به خانه",
     "common.skipToContent": "رفتن به محتوا",
     "nav.home": "خانه",
@@ -1493,7 +1501,7 @@ export const translations: Record<Locale, Translations> = {
     "features.pageDesc": "معماری کامل SpielOS: چت، کانتکست، هارنس و زیرساخت.",
     "features.hero.title": "پلتفرم کامل<br /> کارمندهای AI.",
     "features.hero.desc": "SpielOS روی چهار لایه ساخته شده: چت، نحوه‌ی هدایت کاره. کانتکست، چیزیه که ایجنت‌ها می‌دونن. هارنس مشخص می‌کنه چه کسی کار رو انجام می‌ده و کار بینشون چطور جلو می‌ره. زیرساخت هم مدل‌ها و ابزارهای خارجی رو تأمین می‌کنه.",
-    "features.hero.cta": "عضو لیست انتظار شو",
+    "features.hero.cta": "بریف رایگان ایجنتت رو بگیر",
     "features.layers.label": "معماری",
     "features.layers.title": "چهار لایه، یه سیستم.",
     "features.layers.desc": "هر ویژگی در SpielOS به یکی از چهار لایه سیستم تعلق داره. با هم یه پلتفرم کامل برای ساختن و اجرای کارمندهای AI می‌سازن.",
@@ -2220,7 +2228,7 @@ export const translations: Record<Locale, Translations> = {
     "services.includes.item8": "بهینه‌سازی پس از راه‌اندازی",
     "services.cta.title": "کار تکراری رو کم کن، هزینه رو ذخیره کن،<br /> خروجی رو زیاد کن.",
     "services.cta.desc": "یه گلوگاه رو بهمون معرفی کنید. نشون می‌دیم یه سیستم ایجنت چیکار می‌تونه بکنه.",
-    "services.cta.button": "بریف رایگانت رو بگیر",
+    "services.cta.button": "بریف رایگان ایجنتت رو بگیر",
   },
 };
 

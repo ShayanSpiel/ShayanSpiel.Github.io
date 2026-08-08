@@ -20,6 +20,14 @@ thin FA wrapper (matches all other FA pages).
 
 All homepage CTAs link to `/waitlist/`.
 
+## Strategy — single source of truth
+
+`.agents/spielos-icp.md` is the canonical Ideal Customer Profile (buyer, exclusions,
+positioning idea). Every skill, outbound rule, lead score, and piece of site copy
+follows it. Never restate or redefine the ICP in another file — reference it.
+The outbound engine implements it via `.agents/Outbound/spielos-icp.md` (execution
+details only).
+
 ## Routes
 
 | Route | File | Purpose |

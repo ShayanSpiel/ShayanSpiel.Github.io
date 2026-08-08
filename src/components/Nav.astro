@@ -1,6 +1,6 @@
 ---
 import SpielOSLogo from "./SpielOSLogo.astro";
-import { NAV_LINKS } from "../config";
+import { NAV_LINKS, AGENT_BRIEFING_PATH } from "../config";
 import { type Locale, t } from "../i18n/translations";
 import { localizePath } from "../i18n";
 
@@ -16,7 +16,7 @@ const navLinks = links || NAV_LINKS.default.map(link => ({
   href: localizePath(link.href, locale),
   label: t(locale, `nav.${link.label.toLowerCase().replace(/\s+/g, '')}`) || link.label,
 }));
-const ctaLink = cta || { label: t(locale, "nav.joinWaitlist"), href: "/waitlist/" };
+const ctaLink = cta || { label: t(locale, "services.cta.button"), href: AGENT_BRIEFING_PATH };
 ---
 
 <nav
@@ -38,14 +38,6 @@ const ctaLink = cta || { label: t(locale, "nav.joinWaitlist"), href: "/waitlist/
       {navLinks.map((link) => (
         <a href={link.href} class="text-xs text-muted-foreground hover:text-foreground transition-colors">{link.label}</a>
       ))}
-      <a
-        href={localizePath("/contact/", locale)}
-        class="flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-panel-raised transition-colors"
-        title={t(locale, "nav.contact")}
-        aria-label={t(locale, "nav.contact")}
-      >
-        <i class="bx bx-envelope icon-lg"></i>
-      </a>
     </div>
 
     <div class="flex items-center gap-3 relative z-10 shrink-0">

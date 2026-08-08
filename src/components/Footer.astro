@@ -18,7 +18,7 @@ const { variant = "default", links, showThemeToggle = variant === "showcase", sh
 
 const footerLinks = links || (variant === "showcase" ? FOOTER_LINKS.showcase : FOOTER_LINKS.default.map(link => {
   const key = link.label.toLowerCase().replace(/\s+/g, '');
-  const translationKey = key === 'joinwaitlist' ? 'nav.joinWaitlist' : `nav.${key}`;
+  const translationKey = key === 'joinwaitlist' ? 'nav.joinWaitlist' : key === 'agentbriefing' ? 'services.cta.button' : `nav.${key}`;
   return {
     href: localizePath(link.href, locale),
     label: t(locale, translationKey) || link.label,

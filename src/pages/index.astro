@@ -1,7 +1,7 @@
 ---
 import Page from "../layouts/Page.astro";
 import { getCollection } from "astro:content";
-import { SITE, AUTHOR, FOUNDER, WAITLIST_URL } from "../config";
+import { SITE, AUTHOR, FOUNDER, AGENT_BRIEFING_PATH } from "../config";
 import SectionHeader from "../components/sections/SectionHeader.astro";
 import ProofMetrics from "../components/sections/ProofMetrics.astro";
 import JourneyLine from "../components/JourneyLine.astro";
@@ -117,10 +117,10 @@ const breadcrumbJsonLd = {
       </div>
 
       <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3" data-aos="fade-up">
-        <a href={localizePath("/services/", locale)} class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20">
-          {t(locale, "home.hero.cta1")}
+        <a href={localizePath(AGENT_BRIEFING_PATH, locale)} class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20">
+          {t(locale, "services.cta.button")}
         </a>
-        <a href={localizePath(WAITLIST_URL, locale)} class="inline-flex items-center justify-center rounded-md border border-border bg-panel px-6 h-11 text-sm font-medium hover:bg-panel-raised hover:border-border-strong transition-all">
+        <a href={localizePath("/features/", locale)} class="inline-flex items-center justify-center rounded-md border border-border bg-panel px-6 h-11 text-sm font-medium hover:bg-panel-raised hover:border-border-strong transition-all">
           {t(locale, "home.hero.cta2")}
         </a>
       </div>
@@ -218,8 +218,8 @@ const breadcrumbJsonLd = {
       </div>
 
       <div class="mt-10 text-center" data-aos="fade-up">
-        <a href={localizePath(WAITLIST_URL, locale)} class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20">
-          {t(locale, "home.section3.cta")}
+        <a href={localizePath(AGENT_BRIEFING_PATH, locale)} class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20">
+          {t(locale, "services.cta.button")}
         </a>
       </div>
     </div>
@@ -329,8 +329,8 @@ const breadcrumbJsonLd = {
       </div>
 
       <div class="mt-10 text-center" data-aos="fade-up">
-        <a href={localizePath(WAITLIST_URL, locale)} class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20">
-          {t(locale, "home.section6.cta")}
+        <a href={localizePath(AGENT_BRIEFING_PATH, locale)} class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20">
+          {t(locale, "services.cta.button")}
         </a>
       </div>
     </div>
@@ -414,8 +414,8 @@ const breadcrumbJsonLd = {
       <p class="mt-4 text-sm text-muted-foreground max-w-lg mx-auto">
         {t(locale, "home.section8.desc")}
       </p>
-      <a href={localizePath(WAITLIST_URL, locale)} class="mt-8 inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20">
-        {t(locale, "home.section8.cta")}
+      <a href={localizePath(AGENT_BRIEFING_PATH, locale)} class="mt-8 inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20">
+        {t(locale, "services.cta.button")}
       </a>
     </div>
   </section>

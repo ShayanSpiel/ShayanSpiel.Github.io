@@ -4,7 +4,7 @@ import FeatureHero from "../../components/features/FeatureHero.astro";
 import FeatureCTA from "../../components/features/FeatureCTA.astro";
 import { type Locale, t } from "../../i18n/translations";
 import { localizePath } from "../../i18n";
-import { SITE, WAITLIST_URL } from "../../config";
+import { SITE, AGENT_BRIEFING_PATH } from "../../config";
 
 export interface Props {
   locale?: Locale;
@@ -83,8 +83,8 @@ const howItWorksSteps = [
     title={t(locale, "features.hero.title")}
     description={t(locale, "features.hero.desc")}
     cta={{
-      label: t(locale, "features.hero.cta"),
-      href: localizePath(WAITLIST_URL, locale),
+      label: t(locale, "services.cta.button"),
+      href: localizePath(AGENT_BRIEFING_PATH, locale),
     }}
   />
 

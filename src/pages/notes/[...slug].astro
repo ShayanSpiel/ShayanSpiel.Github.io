@@ -13,6 +13,11 @@ export async function getStaticPaths() {
   }));
 }
 
+interface Props {
+  note: CollectionEntry<"notes"> | CollectionEntry<"notesFa">;
+  locale: Locale;
+}
+
 const { note, locale } = Astro.props;
 const { Content } = await note.render();
 const { title, description, date, tags, image } = note.data;

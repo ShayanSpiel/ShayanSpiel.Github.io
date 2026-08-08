@@ -15,7 +15,7 @@ This is not a translation skill. It creates original English content. The source
 
 Before writing, read:
 
-- `../spielos-icp.md` — the single source of truth for the customer profile, awareness levels, buying triggers, objections, and product promise
+- `../../spielos-icp.md` — the single source of truth for the customer profile, exclusions, and positioning idea. Never restate the ICP in this file; read it from the source.
 
 The ICP is identical in English and Persian. The behavioral profile does not change with language. Only the linguistic and cultural expression changes.
 
@@ -23,9 +23,9 @@ The ICP is identical in English and Persian. The behavioral profile does not cha
 
 ## ICP summary (operational)
 
-The primary customer is a technical or product-minded founder of an early-stage startup, already using AI models and tools, who wants to build coordinated AI employees and departments — not another chatbot.
+The primary buyer is the owner, CEO, COO, or senior operator of an established online business or service provider ($1M–$25M+ revenue) with real customers, a working funnel, and high-volume repetitive knowledge-work done by hand — intake, delivery, support, reporting, scheduling, triage.
 
-They know their AI usage is fragmented. They have scattered prompts, disconnected tools, and agents that can chat but cannot reliably execute. They want roles, skills, workflows, memory, approvals, and evaluations in one system.
+They are not technical. They do not build harnesses and they do not care about agent architecture. They care about labor cost, throughput, delivery speed, and errors in the repetitive work their team does manually.
 
 They are skeptical of generic AI claims. They want to see real work, real tradeoffs, and real constraints.
 

@@ -40,7 +40,7 @@ This skill does NOT own:
 2. `src/config.ts` — `SITE`, `AUTHOR`, `FOUNDER`, `SEO`, `SOCIAL`, `ANALYTICS`
 3. `src/layouts/BaseLayout.astro` — global head: meta, OG, hreflang, canonical, Search Console, Organization schema
 4. `src/i18n/translations.ts` — all user-facing strings via `t(locale, key)`
-5. `spielos-icp.md` — canonical Ideal Customer Profile
+5. `../../spielos-icp.md` — canonical Ideal Customer Profile
 6. `.agents/skills/copywriting-en/SKILL.md` — English copy quality
 7. `.agents/skills/copywriting-fa/SKILL.md` — Persian copy quality
 8. `.agents/skills/translation-fa/SKILL.md` — Persian translation quality

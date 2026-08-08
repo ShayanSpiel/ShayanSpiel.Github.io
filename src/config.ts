@@ -99,11 +99,12 @@ export const FORMS = {
 };
 
 export const WAITLIST_URL = "/waitlist/";
+export const AGENT_BRIEFING_PATH = "/services/#agent-briefing";
 
 export const NAV_LINKS = {
   default: [
-    { label: "Features", href: "/features/" },
     { label: "Services", href: "/services/" },
+    { label: "Features", href: "/features/" },
     { label: "Notes", href: "/notes/" },
     { label: "Founder", href: "/founder/" },
   ],
@@ -116,12 +117,11 @@ export const NAV_LINKS = {
 
 export const FOOTER_LINKS = {
   default: [
-    { label: "SpielOS", href: "/waitlist/" },
-    { label: "Features", href: "/features/" },
+    { label: "Agent Briefing", href: AGENT_BRIEFING_PATH },
     { label: "Services", href: "/services/" },
+    { label: "Features", href: "/features/" },
     { label: "Notes", href: "/notes/" },
     { label: "Founder", href: "/founder/" },
-    { label: "Join waitlist", href: "/waitlist/" },
   ],
   showcase: [
     { label: "Privacy", href: "#" },

@@ -4,7 +4,7 @@
 
 | File | Path | Purpose |
 |---|---|---|
-| SpielOS ICP | `.agents/skills/spielos-icp.md` | Single source of truth for customer profile (shared by EN and FA) |
+| SpielOS ICP | `.agents/spielos-icp.md` | Single source of truth for customer profile (shared by EN and FA) |
 | Persian glossary | `.agents/skills/translation-fa/persian-glossary.md` | Terminology source of truth |
 | Translation skill | `.agents/skills/translation-fa/SKILL.md` | Localization and Persian-writing system |
 | English copywriting | `.agents/skills/copywriting-en/SKILL.md` | EN content creation from work sessions |
@@ -90,20 +90,29 @@ Each example includes: source material, ICP segment and awareness level, weak ou
 ## Architecture
 
 ```
-.agents/skills/
-├── spielos-icp.md                    ← ICP (shared truth)
-├── translation-fa/
-│   ├── SKILL.md                      ← Translation/localization system
-│   ├── persian-glossary.md           ← Terminology
-│   ├── quality-test-suite.md         ← 44 test cases
-│   └── CHANGE-REPORT.md              ← This file
-├── copywriting-en/
-│   └── SKILL.md                      ← English content creation
-└── copywriting-fa/
-    └── SKILL.md                      ← Persian content creation
+.agents/
+├── spielos-icp.md                    ← ICP (canonical, shared truth)
+├── skills/
+│   ├── translation-fa/
+│   │   ├── SKILL.md                  ← Translation/localization system
+│   │   ├── persian-glossary.md       ← Terminology
+│   │   ├── quality-test-suite.md     ← 44 test cases
+│   │   └── CHANGE-REPORT.md          ← This file
+│   ├── copywriting-en/
+│   │   └── SKILL.md                  ← English content creation
+│   └── copywriting-fa/
+│       └── SKILL.md                  ← Persian content creation
+└── Outbound/
+    └── spielos-icp.md                ← Outbound execution (implements canonical)
 ```
 
-All skills reference `spielos-icp.md`. The ICP is not duplicated in any skill file — it is read from the single source of truth.
+All skills reference `../../spielos-icp.md` (canonical, top-level). The ICP is not duplicated in any skill file — it is read from the single source of truth.
+
+## v3 update (2026-08-08)
+
+- ICP moved from `.agents/skills/spielos-icp.md` to `.agents/spielos-icp.md` (canonical, top level).
+- ICP replaced: primary buyer is now the owner/CEO/COO/senior operator of an established online business or service provider ($1M–$25M+ revenue) with repetitive knowledge-work — not the technical-founder ICP.
+- All reference paths updated; the technical-founder ICP is superseded.
 
 ## Failure modes covered
 

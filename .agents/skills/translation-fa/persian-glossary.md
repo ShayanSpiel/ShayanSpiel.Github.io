@@ -4,7 +4,7 @@ Single source of truth for all Persian terminology in SpielOS. Every translation
 
 ## Reference
 
-- `../spielos-icp.md` — the single source of truth for the customer profile (shared with copywriting skills). The ICP determines what the reader already knows and which terms need explanation.
+- `../../spielos-icp.md` — the single source of truth for the customer profile (shared with copywriting skills). The ICP determines what the reader already knows and which terms need explanation.
 
 ---
 
@@ -84,14 +84,14 @@ These terms are natural for technical readers but must not appear automatically 
 ### هارنس (harness)
 
 - **When appropriate:** Technical architecture copy, developer documentation, product deep-dives.
-- **ICP:** Technical builders, developers, engineers.
+- **ICP:** Not the primary buyer — business owners and operators are non-technical. Technical documentation only; always explain before use.
 - **Needs explanation:** Yes, for general founders. Explain as «سیستمی که ایجنت‌ها رو مدیریت و اجرا می‌کنه».
 - **Simpler alternative for non-technical readers:** سیستم مدیریت ایجنت، or simply describe what it does.
 
 ### ارکستریشن (orchestration)
 
 - **When appropriate:** Technical architecture copy describing multi-agent coordination.
-- **ICP:** Technical builders.
+- **ICP:** Technical documentation only — never for the primary buyer.
 - **Needs explanation:** Yes, for general founders.
 - **Simpler alternative:** هماهنگ‌کردن چند ایجنت برای انجام یک کار.
 
@@ -106,63 +106,63 @@ General founder copy:
 ### کانتکست (context)
 
 - **When appropriate:** Technical copy, product documentation, developer-facing material.
-- **ICP:** Technical builders.
+- **ICP:** Technical documentation only — never for the primary buyer.
 - **Needs explanation:** For general readers, clarify what context means in this product.
 - **Simpler alternative:** اطلاعات و دانشی که ایجنت برای انجام کارش نیاز داره.
 
 ### پایپ‌لاین (pipeline)
 
 - **When appropriate:** Technical copy, workflow documentation.
-- **ICP:** Technical builders.
+- **ICP:** Technical documentation only — never for the primary buyer.
 - **Needs explanation:** Yes, for non-technical readers.
 - **Simpler alternative:** مسیر اجرای کار، زنجیره‌ای از مراحل.
 
 ### هند‌آف / Handoff
 
 - **When appropriate:** Technical copy, workflow documentation.
-- **ICP:** Technical builders.
+- **ICP:** Technical documentation only — never for the primary buyer.
 - **Needs explanation:** Yes, for non-technical readers.
 - **Simpler alternative:** انتقال کار بین ایجنت‌ها یا بین ایجنت و انسان.
 
 ### پrovایدر / Provider
 
 - **When appropriate:** Technical copy, settings, configuration pages.
-- **ICP:** Technical builders.
+- **ICP:** Technical documentation only — never for the primary buyer.
 - **Needs explanation:** Not usually — the word is familiar enough in tech contexts.
 - **Simpler alternative:** ارائه‌دهنده مدل (when needed).
 
 ### روتینگ / Routing
 
 - **When appropriate:** Technical architecture copy.
-- **ICP:** Technical builders.
+- **ICP:** Technical documentation only — never for the primary buyer.
 - **Needs explanation:** Yes, for general readers.
 - **Simpler alternative:** انتخاب مسیر مناسب برای هر درخواست.
 
 ### ویزر / Wrapper
 
 - **When appropriate:** Technical documentation, API docs.
-- **ICP:** Technical builders.
+- **ICP:** Technical documentation only — never for the primary buyer.
 - **Needs explanation:** Yes, for general readers.
 - **Simpler alternative:** لایه‌ی اتصال، ابزار اتصال.
 
 ### لوکال / Locale
 
 - **When appropriate:** Technical copy about i18n, developer documentation.
-- **ICP:** Technical builders.
+- **ICP:** Technical documentation only — never for the primary buyer.
 - **Needs explanation:** Not usually — familiar in tech.
 - **Simpler alternative:** زبان و منطقه.
 
 ### تاکسونومی / Taxonomy
 
 - **When appropriate:** Technical architecture copy, information architecture discussions.
-- **ICP:** Technical builders.
+- **ICP:** Technical documentation only — never for the primary buyer.
 - **Needs explanation:** Yes, for general readers.
 - **Simpler alternative:** ساختار دسته‌بندی.
 
 ### رول / Role (technical compound)
 
 - **When appropriate:** Only in deeply technical copy where distinguishing the concept from the product label «نقش» would confuse readers.
-- **ICP:** Technical builders.
+- **ICP:** Technical documentation only — never for the primary buyer.
 - **Needs explanation:** Rarely needed — prefer نقش.
 - **Simpler alternative:** نقش.
 
@@ -170,7 +170,7 @@ General founder copy:
 
 Before using any term from this category, ask: **Does the reader need the term, or do they need the meaning?**
 
-For non-technical founders, explain first. Only introduce the term where it adds precision:
+For the primary buyer (non-technical owners and operators), explain first. Only introduce the term where it adds precision:
 
 > چند ایجنت رو طوری به هم وصل کن که هرکدوم بخشی از کار رو انجام بدن. این همون ارکستریشن ورک‌فلوئه.
 

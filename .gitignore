@@ -25,3 +25,11 @@ Skills/
 .agents/Outbound/scripts/sent_log.json
 .agents/Outbound/scripts/metrics.json
 .agents/Outbound/scripts/ip_cache.json
+# Outbound experiment memory: PII + hypotheses, kept local
+.agents/Outbound/experiments/
+
+# Python bytecode + runtime artifacts
+**/__pycache__/
+*.pyc
+*.pid
+*.out

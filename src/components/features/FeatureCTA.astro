@@ -1,7 +1,7 @@
 ---
 import { type Locale, t } from "../../i18n/translations";
 import { localizePath } from "../../i18n";
-import { WAITLIST_URL } from "../../config";
+import { AGENT_BRIEFING_PATH } from "../../config";
 
 export interface Props {
   locale?: Locale;
@@ -12,8 +12,8 @@ export interface Props {
 }
 
 const { locale = "en", title, description, ctaLabel, ctaHref } = Astro.props;
-const href = ctaHref || localizePath(WAITLIST_URL, locale);
-const label = ctaLabel || t(locale, "nav.joinWaitlist");
+const href = ctaHref || localizePath(AGENT_BRIEFING_PATH, locale);
+const label = ctaLabel || t(locale, "services.cta.button");
 ---
 
 <section class="relative py-24 sm:py-32 overflow-hidden">

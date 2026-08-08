@@ -25,7 +25,7 @@ The result must never sound like:
 Before translating, read:
 
 - `persian-glossary.md` — the single source of truth for all terminology
-- `../spielos-icp.md` — the single source of truth for the customer profile (shared with copywriting skills)
+- `../../spielos-icp.md` — the single source of truth for the customer profile (shared with copywriting skills)
 - `../copywriting-fa/SKILL.md` — when the task involves creating content from work sessions, not translating existing copy
 
 ---
@@ -362,7 +362,7 @@ A technically correct word is not automatically good copy.
 
 Before using terms such as هارنس، ارکستریشن، کانتکست or پایپ‌لاین, ask whether the reader needs the term or the meaning.
 
-For non-technical founders, first explain what happens:
+For non-technical owners and operators, first explain what happens:
 
 > چند ایجنت رو طوری به هم وصل کن که هرکدوم بخشی از کار رو انجام بدن.
 

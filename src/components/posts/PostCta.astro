@@ -1,5 +1,5 @@
 ---
-import { WAITLIST_URL } from "../../config";
+import { AGENT_BRIEFING_PATH } from "../../config";
 import { t } from "../../i18n/translations";
 
 const { takeaway, echo, btnText, btnHref } = Astro.props as {
@@ -12,8 +12,8 @@ const { takeaway, echo, btnText, btnHref } = Astro.props as {
 const isFa = Astro.url.pathname.startsWith("/fa/");
 const locale = isFa ? "fa" : "en";
 
-const href = btnHref || (isFa ? "/fa/waitlist/" : WAITLIST_URL);
-const label = btnText || t(locale, "postCta.joinWaitlist");
+const href = btnHref || (isFa ? `/fa${AGENT_BRIEFING_PATH}` : AGENT_BRIEFING_PATH);
+const label = btnText || t(locale, "services.cta.button");
 const icon = btnHref ? "bx-link-external" : "bx-right-arrow-alt";
 ---
 

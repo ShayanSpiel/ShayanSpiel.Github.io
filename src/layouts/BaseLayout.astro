@@ -123,14 +123,19 @@ const lang = locale === "fa" ? "fa" : "en";
 
     <!-- GA4: queue commands before gtag.js loads -->
     <script is:inline define:vars={{ gaId: ANALYTICS.googleAnalyticsId, gaDebug: ANALYTICS.debug }}>
+      window.__spielosAnalyticsConsent = (function(){
+        try { return localStorage.getItem('spielos.analytics-consent') === 'accepted'; } catch(e) { return false; }
+      })();
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', gaId, {
-        send_page_view: true,
-        cookie_flags: 'SameSite=None;Secure',
-        debug_mode: gaDebug
-      });
+      if(window.__spielosAnalyticsConsent){
+        gtag('js', new Date());
+        gtag('config', gaId, {
+          send_page_view: true,
+          cookie_flags: 'SameSite=None;Secure',
+          debug_mode: gaDebug
+        });
+      }
     </script>
 
     <!-- Organization schema: global brand identity for every page -->
@@ -163,6 +168,14 @@ const lang = locale === "fa" ? "fa" : "en";
     </main>
     <slot name="footer" />
 
+    <div id="analytics-consent" class="fixed bottom-4 start-4 end-4 sm:start-auto sm:max-w-md z-[60] rounded-lg border border-border bg-panel-raised p-4 shadow-popover" hidden>
+      <p class="text-xs text-foreground leading-relaxed">{t(locale, "analytics.consent.description")}</p>
+      <div class="mt-3 flex items-center justify-end gap-2">
+        <button type="button" id="analytics-reject" class="rounded-md border border-border bg-panel px-3 h-8 text-xs font-medium hover:bg-panel-strong transition-colors">{t(locale, "analytics.consent.reject")}</button>
+        <button type="button" id="analytics-accept" class="rounded-md bg-primary text-primary-foreground px-3 h-8 text-xs font-semibold hover:brightness-110 transition-all">{t(locale, "analytics.consent.accept")}</button>
+      </div>
+    </div>
+
     <script>
       import AOS from "aos";
       AOS.init({ duration: 550, easing: "ease-out-cubic", once: true, offset: 60 });
@@ -189,7 +202,10 @@ const lang = locale === "fa" ? "fa" : "en";
     <!-- Deferred: load gtag.js + initialize PostHog -->
     <script is:inline define:vars={{ gaId: ANALYTICS.googleAnalyticsId, phKey: ANALYTICS.posthogApiKey, phHost: ANALYTICS.posthogApiHost }}>
       (function(){
+        var started = false;
         function loadAnalytics(){
+          if(started || !window.__spielosAnalyticsConsent) return;
+          started = true;
           /* Load GA4 via gtag.js — head script already queued config into dataLayer */
           var s=document.createElement('script');
           s.async=1;
@@ -197,11 +213,11 @@ const lang = locale === "fa" ? "fa" : "en";
           document.head.appendChild(s);
           var tries = 0;
           function initPostHog(){
+            if(!window.__spielosAnalyticsConsent) return;
             if(typeof posthog!=='undefined' && typeof posthog.init==='function'){
               posthog.init(phKey,{
                 api_host: phHost,
-                person_profiles: 'always',
-                disable_session_recording: true
+                person_profiles: 'identified_only'
               });
             }else{
               tries++;
@@ -210,6 +226,9 @@ const lang = locale === "fa" ? "fa" : "en";
           }
           setTimeout(initPostHog, 500);
         }
+        document.addEventListener('spielos:analytics-consent', function(e){
+          if(e.detail && e.detail.accepted) loadAnalytics();
+        });
         'requestIdleCallback' in window
           ? requestIdleCallback(loadAnalytics, {timeout: 2000})
           : setTimeout(loadAnalytics, 2000);
@@ -222,12 +241,14 @@ const lang = locale === "fa" ? "fa" : "en";
         'use strict';
 
         function track(eventName, params){
+          if(!window.__spielosAnalyticsConsent) return;
           params = params || {};
           if(typeof gtag === 'function'){ gtag('event', eventName, params); }
           if(typeof posthog !== 'undefined' && posthog && typeof posthog.capture === 'function'){
             posthog.capture(eventName, params);
           }
         }
+        window.spielosTrack = track;
 
         function getPage(){
           return window.location.pathname + window.location.search;
@@ -301,12 +322,12 @@ const lang = locale === "fa" ? "fa" : "en";
           var link = el.tagName === 'A' ? el : el.closest('a');
           if(link){
             var href = link.getAttribute('href') || '';
-            if(href.indexOf('/waitlist') !== -1 || href.indexOf('/fa/waitlist') !== -1){
+            if(href.indexOf('/services/') !== -1 && href.indexOf('agent-briefing') !== -1){
               track('cta_clicked', {
                 page: getPage(),
                 device: getDevice(),
                 locale: getLocale(),
-                cta_type: 'waitlist',
+                cta_type: 'agent_briefing',
                 link_text: (link.textContent || '').trim().substring(0, 100)
               });
             }
@@ -344,12 +365,12 @@ const lang = locale === "fa" ? "fa" : "en";
           var btn = el.tagName === 'BUTTON' ? el : el.closest('button');
           if(btn){
             var classes = btn.className || '';
-            if(classes.indexOf('bg-primary') !== -1){
+            if(btn.hasAttribute('data-open-contact-modal') || classes.indexOf('bg-primary') !== -1){
               track('cta_clicked', {
                 page: getPage(),
                 device: getDevice(),
                 locale: getLocale(),
-                cta_type: 'primary',
+                cta_type: btn.hasAttribute('data-open-contact-modal') ? 'agent_briefing' : 'primary',
                 link_text: (btn.textContent || '').trim().substring(0, 100)
               });
             }
@@ -401,6 +422,27 @@ const lang = locale === "fa" ? "fa" : "en";
         }else{
           observeWaitlistResult();
         }
+      })();
+    </script>
+
+    <script is:inline>
+      (function(){
+        var banner = document.getElementById('analytics-consent');
+        var accept = document.getElementById('analytics-accept');
+        var reject = document.getElementById('analytics-reject');
+        if(!banner || !accept || !reject) return;
+        var key = 'spielos.analytics-consent';
+        var current = null;
+        try { current = localStorage.getItem(key); } catch(e) {}
+        if(!current) banner.removeAttribute('hidden');
+        function setConsent(value){
+          try { localStorage.setItem(key, value); } catch(e) {}
+          window.__spielosAnalyticsConsent = value === 'accepted';
+          banner.setAttribute('hidden', '');
+          document.dispatchEvent(new CustomEvent('spielos:analytics-consent', { detail: { accepted: value === 'accepted' } }));
+        }
+        accept.addEventListener('click', function(){ setConsent('accepted'); });
+        reject.addEventListener('click', function(){ setConsent('rejected'); });
       })();
     </script>
   </body>

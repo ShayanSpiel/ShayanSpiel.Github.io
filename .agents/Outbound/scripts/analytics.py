@@ -241,7 +241,12 @@ def _rec(metrics: dict, lead_id: str) -> dict:
 
 
 def _reply_ids(metrics: dict) -> set:
-    return {r["lead_id"] for r in metrics.get("replies", []) if r.get("kind") != "auto"}
+    """Real replies only: kind 'reply' counts toward the goal; kind 'auto'
+    (out-of-office) never counts; our own tests never count (variant starts
+    with 'TEST', e.g. loop tests recorded via record-reply)."""
+    return {r["lead_id"] for r in metrics.get("replies", [])
+            if r.get("kind") == "reply"
+            and not str(r.get("variant", "")).upper().startswith("TEST")}
 
 
 def aggregate(log: dict, metrics: dict) -> dict:

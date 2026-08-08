@@ -1,7 +1,7 @@
 ---
 import Page from "../layouts/Page.astro";
 import SocialIcons from "../components/SocialIcons.astro";
-import { SITE, AUTHOR, FOUNDER, WAITLIST_URL } from "../config";
+import { SITE, AUTHOR, FOUNDER, AGENT_BRIEFING_PATH } from "../config";
 import { localizePath } from "../i18n";
 import SectionHeader from "../components/sections/SectionHeader.astro";
 import ProofMetrics from "../components/sections/ProofMetrics.astro";
@@ -219,8 +219,8 @@ const breadcrumbJsonLd = {
       </div>
 
       <div class="text-center" data-aos="fade-up">
-        <a href={localizePath(WAITLIST_URL, locale)} class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20">
-          {t(locale, "founder.why.cta")}
+        <a href={localizePath(AGENT_BRIEFING_PATH, locale)} class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20">
+          {t(locale, "services.cta.button")}
         </a>
         <div class="mt-4">
           <a href={localizePath("/services/", locale)} class="inline-flex items-center gap-1.5 text-xs text-primary font-semibold hover:opacity-80 transition-opacity">

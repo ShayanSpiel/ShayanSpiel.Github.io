@@ -61,7 +61,7 @@ BaseLayout loads analytics in this order:
 
 - `debug_mode` must be `false` in production. Only enable for local development or explicit debugging sessions.
 - `person_profiles` defaults to `'identified_only'`. Use `'always'` only when a documented requirement justifies anonymous person profiles (e.g., funnel analysis on unauthenticated traffic).
-- `disable_session_recording` must be `true`. Do not set `autocapture` or `capture_pageview` to false — pageviews and autocapture must stay on.
+- Session recording is enabled (do not set `disable_session_recording`). Do not set `autocapture` or `capture_pageview` to false — pageviews, autocapture, and session replay must stay on.
 - Do not initialize analytics in a way that violates the configured consent state.
 
 ### Loader integrity

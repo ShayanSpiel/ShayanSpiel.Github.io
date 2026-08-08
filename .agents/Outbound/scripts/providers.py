@@ -44,6 +44,7 @@ import os
 import smtplib
 import socket
 import struct
+import threading
 import time
 import urllib.error
 import urllib.parse
@@ -59,6 +60,9 @@ from config import (
     SENDGRID_API_KEY,
     MAILGUN_API_KEY,
     MAILGUN_DOMAIN,
+    POSTMARK_API_TOKEN,
+    POSTMARK_DOMAIN,
+    BREVO_API_KEY,
     SMTP_HOST,
     SMTP_PORT,
     SMTP_USER,
@@ -67,6 +71,8 @@ from config import (
     FROM_EMAIL,
     FROM_NAME,
 )
+from config import SEND_PROVIDERS as _CFG_SEND_PROVIDERS
+import config as _cfg_module
 
 _UA = "SpielOS-Outbound/1.1"
 
@@ -74,6 +80,7 @@ _CAPABILITIES = {
     "resend": {"status": True, "list_sent": True, "received": True},
     "mailgun": {"status": True, "list_sent": True, "received": False},
     "sendgrid": {"status": False, "list_sent": False, "received": False},
+    "postmark": {"status": False, "list_sent": False, "received": True},
     "smtp": {"status": False, "list_sent": False, "received": False},
 }
 
@@ -97,7 +104,7 @@ _real_getaddrinfo = socket.getaddrinfo
 
 def _remember_ips(host: str) -> None:
     try:
-        ips = [r[4][0] for r in _real_getaddrinfo(host, 443, socket.AF_INET)]
+        ips = _dns_fallback(host) or _cached_ips(host)
         if not ips:
             return
         cache = {}
@@ -132,11 +139,12 @@ def _dns_skip_name(data: bytes, offset: int) -> int:
     return offset
 
 
-def _dns_query(ns: str, host: str, timeout: float = 3.0) -> list:
-    """Resolve A records for host against a single nameserver (stdlib-only)."""
+def _dns_query(ns: str, host: str, timeout: float = 3.0, qtype: int = 1) -> list:
+    """Resolve records for host against a single nameserver (stdlib-only).
+    qtype: 1 = A, 15 = MX. MX returns ('priority', 'exchange') tuples."""
     qname = b"".join(bytes([len(p)]) + p.encode() for p in host.split(".")) + b"\x00"
     tid = os.urandom(2)
-    packet = tid + b"\x01\x00\x00\x01\x00\x00\x00\x00\x00\x00" + qname + b"\x00\x01\x00\x01"
+    packet = tid + b"\x01\x00\x00\x01\x00\x00\x00\x00\x00\x00" + qname + bytes([0, qtype]) + b"\x00\x01"
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.settimeout(timeout)
     try:
@@ -152,7 +160,7 @@ def _dns_query(ns: str, host: str, timeout: float = 3.0) -> list:
     if not ancount:
         return []
     offset = _dns_skip_name(data, 12) + 4
-    ips = []
+    out = []
     for _ in range(ancount):
         if offset + 10 > len(data):
             break
@@ -161,10 +169,61 @@ def _dns_query(ns: str, host: str, timeout: float = 3.0) -> list:
             break
         rtype, _rclass, _ttl, rdlen = struct.unpack(">HHIH", data[offset:offset + 10])
         offset += 10
-        if rtype == 1 and rdlen == 4 and offset + 4 <= len(data):
-            ips.append(".".join(str(b) for b in data[offset:offset + 4]))
+        if rtype == qtype and qtype == 1 and rdlen == 4 and offset + 4 <= len(data):
+            out.append(".".join(str(b) for b in data[offset:offset + 4]))
+        elif rtype == qtype and qtype == 15:
+            pref = struct.unpack(">H", data[offset:offset + 2])[0]
+            # walk the exchange name with compression-pointer following
+            parts = []
+            p = offset + 2
+            visited = set()
+            while p < len(data):
+                ln = data[p]
+                if ln == 0:
+                    p += 1
+                    break
+                if ln & 0xC0 == 0xC0:
+                    if p in visited:
+                        break
+                    visited.add(p)
+                    p = ((ln & 0x3F) << 8) | data[p + 1]
+                    continue
+                parts.append(data[p + 1:p + 1 + ln].decode("ascii", "ignore"))
+                p += 1 + ln
+            out.append((pref, ".".join(parts).lower()))
         offset += rdlen
-    return ips
+    return out
+
+
+def dns_mx(host: str) -> list:
+    """Best-effort MX records for a domain (fresh query + cached fallback).
+    Returns sorted [(priority, exchange)]; [] when the domain has no MX."""
+    host = (host or "").strip().lower().lstrip(".")
+    if not host:
+        return []
+    for ns in _NS_LIST():
+        mx = _dns_query(ns, host, qtype=15)
+        if mx:
+            return sorted(mx, key=lambda t: t[0])
+    return []
+
+
+def dns_has_mx(host: str) -> bool:
+    return bool(dns_mx(host))
+
+
+def _NS_LIST() -> list:
+    nameservers = ["1.1.1.1", "8.8.8.8", "9.9.9.9"]
+    try:
+        for line in open("/etc/resolv.conf"):
+            parts = line.split()
+            if len(parts) >= 2 and parts[0] == "nameserver":
+                ns = parts[1]
+                if ns not in nameservers:
+                    nameservers.append(ns)
+    except OSError:
+        pass
+    return nameservers
 
 
 def _dns_fallback(host: str) -> list:
@@ -187,22 +246,111 @@ def _dns_fallback(host: str) -> list:
     return []
 
 
-def _resolve_dns(host: str) -> list:
-    """System resolver first, raw-DNS fallback second."""
+def _dns_fresh(host: str) -> list:
+    """Raw-DNS answer (bounded, ~3s per server). Never touches the OS resolver,
+    which can hang without bound when the system DNS stack is dead."""
+    return _dns_fallback(host)
+
+
+def _dns_broken() -> bool:
     try:
-        return [r[4][0] for r in _real_getaddrinfo(host, 443, socket.AF_INET)]
+        if IP_CACHE_PATH.exists():
+            return bool(json.loads(IP_CACHE_PATH.read_text()).get("system_dns_broken"))
     except Exception:
-        ips = _dns_fallback(host)
-        if ips:
-            try:
-                cache = {}
-                if IP_CACHE_PATH.exists():
-                    cache = json.loads(IP_CACHE_PATH.read_text())
-                cache[host] = ips
-                IP_CACHE_PATH.write_text(json.dumps(cache, indent=2))
-            except Exception:
-                pass
-        return ips
+        pass
+    return False
+
+
+def _mark_dns_broken(broken: bool = True) -> None:
+    try:
+        cache = {}
+        if IP_CACHE_PATH.exists():
+            cache = json.loads(IP_CACHE_PATH.read_text())
+        cache["system_dns_broken"] = bool(broken)
+        IP_CACHE_PATH.write_text(json.dumps(cache, indent=2))
+    except Exception:
+        pass
+
+
+def _system_resolve_bounded(host: str, cap: float = 15.0) -> list:
+    """socket.getaddrinfo cannot be timed out, so probe the system resolver in
+    a daemon thread with a hard cap. Returns [] if it hangs past the cap."""
+    box = {}
+
+    def _run():
+        try:
+            box["ips"] = [r[4][0] for r in _real_getaddrinfo(host, 443, socket.AF_INET)]
+        except Exception:
+            box["ips"] = []
+
+    t = threading.Thread(target=_run, daemon=True)
+    t.start()
+    t.join(cap)
+    return box.get("ips", []) if not t.is_alive() else []
+
+
+def _try_ips(url: str, headers: dict, payload, method: str, host: str) -> dict:
+    """Attempt the request via fresh raw-DNS IPs (then the cache). Bounded:
+    raw DNS caps at ~3s/server, HTTP at 30s, and the system resolver is never
+    consulted. Returns a result dict on success, None when the transport fails."""
+    ips = _dns_fresh(host) or _cached_ips(host)
+    if not ips:
+        return None
+    last = None
+    for ip in ips:
+        try:
+            r = _request_once(url, headers, payload, method, host_ip=ip)
+            if not r.get("error"):
+                return r
+            last = r
+            if r.get("status") in (401, 403, 404):
+                return r
+        except _TransportError:
+            continue
+    return last
+
+
+def _open(url: str, method: str = "GET", payload=None, headers: dict = None, retries: int = 3) -> dict:
+    """Deterministic transport: raw-DNS-resolved IPs first. If the raw-DNS IPs
+    all fail, one bounded probe of the system resolver (cap 15s) adds its IPs.
+    The system resolver is never allowed to hang the caller, but a failed raw
+    attempt does NOT permanently skip it — every call gets one bounded probe."""
+    host = urllib.parse.urlparse(url).hostname or ""
+    headers = headers or {}
+    last = None
+    for attempt in range(retries):
+        r = _try_ips(url, headers, payload, method, host)
+        if r is not None:
+            return r
+        sys_ips = _system_resolve_bounded(host)
+        if sys_ips:
+            extra = [ip for ip in sys_ips if ip not in (_dns_fresh(host) or [])]
+            if extra:
+                r = _try_ips_list(url, headers, payload, method, host, extra)
+                if r is not None:
+                    _mark_dns_broken(False)
+                    return r
+        if not sys_ips:
+            _mark_dns_broken(True)
+        last = r
+        if attempt < retries - 1:
+            time.sleep(2 * (attempt + 1))
+    return last or {"error": True, "status": 0, "message": "unknown transport failure"}
+
+
+def _try_ips_list(url: str, headers: dict, payload, method: str, host: str, ips: list) -> dict:
+    last = None
+    for ip in ips:
+        try:
+            r = _request_once(url, headers, payload, method, host_ip=ip)
+            if not r.get("error"):
+                return r
+            last = r
+            if r.get("status") in (401, 403, 404):
+                return r
+        except _TransportError:
+            continue
+    return last
 
 
 def _patched_getaddrinfo(ip: str):
@@ -237,6 +385,11 @@ def _request_once(url: str, headers: dict, payload=None, method: str = "GET", ho
             msg_id = resp.headers.get("X-Message-Id")
             if msg_id:
                 result["id"] = msg_id
+            # Brevo returns {"messageId": ...} in the body, not "id" — without
+            # this mapping every Brevo send logged an empty provider_id and
+            # the log could not be trusted.
+            if "id" not in result and "messageId" in result:
+                result["id"] = result["messageId"]
             if "id" not in result and not body:
                 result["id"] = f"{EMAIL_PROVIDER}:{resp.status}"
             return result
@@ -249,51 +402,20 @@ def _request_once(url: str, headers: dict, payload=None, method: str = "GET", ho
             socket.getaddrinfo = orig
 
 
-def _open(url: str, method: str = "GET", payload=None, headers: dict = None, retries: int = 3) -> dict:
-    host = urllib.parse.urlparse(url).hostname or ""
-    headers = headers or {}
-    last = None
-    for attempt in range(retries):
-        try:
-            r = _request_once(url, headers, payload, method)
-            if not r.get("error"):
-                _remember_ips(host)
-                return r
-            last = r
-            # Auth/permission/not-found: retrying will not help.
-            if r.get("status") in (401, 403, 404):
-                return r
-        except _TransportError as e:
-            last = {"error": True, "status": 0, "message": str(e)}
-            # DNS broken (empty OS resolver after VPN drops)? Resolve the host
-            # ourselves and connect to the IP directly (correct Host/SNI kept).
-            # Fresh resolution first — cached IPs can go stale (dead anycast
-            # node) and block sends/metrics until the cache is refreshed.
-            ips = _resolve_dns(host) or _cached_ips(host)
-            for ip in ips:
-                try:
-                    r = _request_once(url, headers, payload, method, host_ip=ip)
-                    if not r.get("error"):
-                        _remember_ips(host)
-                        return r
-                    if r.get("status") in (401, 403, 404):
-                        return r
-                except _TransportError:
-                    continue
-        if attempt < retries - 1:
-            time.sleep(2 * (attempt + 1))
-    return last or {"error": True, "status": 0, "message": "unknown transport failure"}
-
-
 # ── Sending ──────────────────────────────────────────────────────────────────
 
 def _from() -> str:
     return f"{FROM_NAME} <{FROM_EMAIL}>"
 
 
+def _from_for(provider: str) -> str:
+    email = _cfg_module.PROVIDER_FROM_EMAILS.get(provider, FROM_EMAIL)
+    return f"{FROM_NAME} <{email}>"
+
+
 def _send_resend(to_email: str, subject: str, html: str, text: str, reply_to: str) -> dict:
     payload = {
-        "from": _from(),
+        "from": _from_for("resend"),
         "to": to_email,
         "subject": subject,
         "html": html,
@@ -331,7 +453,7 @@ def _send_sendgrid(to_email: str, subject: str, html: str, text: str, reply_to: 
 
 def _send_mailgun(to_email: str, subject: str, html: str, text: str, reply_to: str) -> dict:
     data = {
-        "from": _from(),
+        "from": _from_for("mailgun"),
         "to": to_email,
         "subject": subject,
         "text": text,
@@ -345,6 +467,49 @@ def _send_mailgun(to_email: str, subject: str, html: str, text: str, reply_to: s
         method="POST",
         payload=urllib.parse.urlencode(data).encode("utf-8"),
         headers={"Authorization": f"Basic {token}", "Content-Type": "application/x-www-form-urlencoded"},
+    )
+
+
+def _send_postmark(to_email: str, subject: str, html: str, text: str, reply_to: str) -> dict:
+    payload = {
+        "From": _from_for("postmark"),
+        "To": to_email,
+        "Subject": subject,
+        "TextBody": text,
+        "HtmlBody": html,
+    }
+    if reply_to:
+        payload["ReplyTo"] = reply_to
+    return _open(
+        "https://api.postmarkapp.com/email",
+        method="POST",
+        payload=json.dumps(payload).encode("utf-8"),
+        headers={
+            "X-Postmark-Server-Token": POSTMARK_API_TOKEN,
+            "Content-Type": "application/json",
+        },
+    )
+
+
+def _send_brevo(to_email: str, subject: str, html: str, text: str, reply_to: str) -> dict:
+    """Brevo (free tier: 300/day) — API v3 SMTP send. The sender address must
+    be verified in the Brevo dashboard (their SPF/DKIM records), so the From
+    comes from PROVIDER_FROM_EMAILS -> "brevo" (defaults to FROM_EMAIL)."""
+    payload = {
+        "sender": {"email": _from_for("brevo").rsplit(">", 1)[0].split("<", 1)[-1].strip(),
+                   "name": FROM_NAME},
+        "to": [{"email": to_email}],
+        "subject": subject,
+        "htmlContent": html,
+        "textContent": text,
+    }
+    if reply_to:
+        payload["replyTo"] = {"email": reply_to}
+    return _open(
+        "https://api.brevo.com/v3/smtp/email",
+        method="POST",
+        payload=json.dumps(payload).encode("utf-8"),
+        headers={"api-key": BREVO_API_KEY, "Content-Type": "application/json"},
     )
 
 
@@ -370,16 +535,110 @@ def _send_smtp(to_email: str, subject: str, html: str, text: str, reply_to: str)
         return {"error": True, "status": 0, "message": str(e)}
 
 
+_SEND_HANDLERS = {
+    "resend": _send_resend,
+    "sendgrid": _send_sendgrid,
+    "mailgun": _send_mailgun,
+    "postmark": _send_postmark,
+    "brevo": _send_brevo,
+    "smtp": _send_smtp,
+}
+
+
+_BREVO_PROBE_CACHE = {"at": 0.0, "ok": None, "msg": ""}
+_BREVO_PROBE_TTL = 300.0
+
+
+def _brevo_probe() -> tuple:
+    """Lazy probe of the Brevo key (GET /v3/account, 5-min cache). Brevo
+    accounts can lock API access to allowlisted IPs (401 "unrecognised IP");
+    while locked the provider is excluded from rotation instead of burning
+    50-email blocks on failures. The moment the owner allows the IP, the
+    probe passes and brevo auto-joins the rotation."""
+    now = time.time()
+    if now - _BREVO_PROBE_CACHE["at"] < _BREVO_PROBE_TTL:
+        return _BREVO_PROBE_CACHE["ok"], _BREVO_PROBE_CACHE["msg"]
+    r = _open("https://api.brevo.com/v3/account",
+              headers={"api-key": BREVO_API_KEY})
+    ok = not r.get("error")
+    msg = str(r.get("message", ""))[:120] if r.get("error") else "ok"
+    _BREVO_PROBE_CACHE.update({"at": now, "ok": ok, "msg": msg})
+    return ok, msg
+
+
+def available_providers() -> list:
+    """Providers with usable credentials, in configured order. brevo is gated
+    on a live key probe (IP-allowlist)."""
+    ready = []
+    for p in _CFG_SEND_PROVIDERS:
+        key = {
+            "resend": (RESEND_API_KEY or "").strip(),
+            "sendgrid": (SENDGRID_API_KEY or "").strip(),
+            "mailgun": (MAILGUN_API_KEY or "").strip() and (MAILGUN_DOMAIN or "").strip(),
+            "postmark": (POSTMARK_API_TOKEN or "").strip() and (POSTMARK_DOMAIN or "").strip(),
+            "smtp": (SMTP_HOST or "").strip(),
+        }.get(p, "")
+        if p == "brevo":
+            ok, msg = _brevo_probe()
+            if not (BREVO_API_KEY or "").strip():
+                continue
+            if not ok:
+                print(f"[providers] brevo probe failed ({msg}); keeping brevo out of rotation", flush=True)
+                continue
+        elif not key:
+            continue
+        ready.append(p)
+    return ready or ([EMAIL_PROVIDER] if EMAIL_PROVIDER else [])
+
+
+def send_email_via(provider: str, to_email: str, subject: str, html: str, text: str, reply_to: str = "") -> dict:
+    handler = _SEND_HANDLERS.get(provider)
+    if not handler:
+        return {"error": True, "status": 0, "message": f"unknown provider: {provider}"}
+    return handler(to_email, subject, html, text, reply_to)
+
+
 def send_email(to_email: str, subject: str, html: str, text: str, reply_to: str = "") -> dict:
-    if EMAIL_PROVIDER == "resend":
-        return _send_resend(to_email, subject, html, text, reply_to)
-    if EMAIL_PROVIDER == "sendgrid":
-        return _send_sendgrid(to_email, subject, html, text, reply_to)
-    if EMAIL_PROVIDER == "mailgun":
-        return _send_mailgun(to_email, subject, html, text, reply_to)
-    if EMAIL_PROVIDER == "smtp":
-        return _send_smtp(to_email, subject, html, text, reply_to)
-    return {"error": True, "status": 0, "message": f"unknown provider: {EMAIL_PROVIDER}"}
+    return send_email_via(EMAIL_PROVIDER, to_email, subject, html, text, reply_to)
+
+
+def pick_provider(sent_log: dict, exclude=()) -> str:
+    """Deterministic provider pick for one send: the configured provider with
+    the most daily headroom (used < cap); ties go to configured order.
+    Providers with >=2 transport failures today are skipped (a dead
+    VPN/filtered host must not stall the machine); they auto-return the next
+    UTC day. It is a tuple."""
+    from datetime import datetime, timezone
+    import collections
+    day = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    usage = collections.Counter()
+    for s in sent_log.get("sent", []):
+        ts = str(s.get("timestamp") or "")
+        if ts[:10] == day:
+            usage[s.get("provider") or EMAIL_PROVIDER] += 1
+    failing = collections.Counter()
+    for f in sent_log.get("failed", []):
+        ts = str(f.get("timestamp") or "")
+        if not ts[:10] == day:
+            continue
+        if not str(f.get("error", "")).startswith("send exceeded"):
+            failing[f.get("provider") or "?"] += 1
+    banned = {p for p in failing if failing[p] >= 2} | set(exclude)
+    best, best_ratio = None, -1.0
+    for p in available_providers():
+        cap = _cfg_module.PROVIDER_DAILY_CAPS.get(p, 100)
+        used = usage.get(p, 0)
+        if used >= cap:
+            continue
+        if p in banned:
+            continue
+        ratio = used / cap
+        if ratio > best_ratio:
+            best, best_ratio = p, ratio
+    if best is None:
+        best = [p for p in available_providers() if p not in banned]
+        best = (best or available_providers())[0]
+    return best
 
 
 # ── Email Data (analytics) ───────────────────────────────────────────────────
@@ -505,6 +764,21 @@ def cf_upsert_cname(zone_id, name, content, proxied=False):
         _cf_api("DELETE", f"/zones/{zone_id}/dns_records/{rec['id']}")
     return _cf_api("POST", f"/zones/{zone_id}/dns_records", {
         "type": "CNAME", "name": name, "content": content, "proxied": proxied, "ttl": 1
+    })
+
+
+def cf_upsert_txt(zone_id, name, content):
+    """Idempotent TXT upsert (for SPF/DKIM verification records)."""
+    existing = _cf_api("GET", f"/zones/{zone_id}/dns_records?name={name}&type=TXT")
+    if existing.get("error"):
+        return existing
+    for rec in existing.get("result", []):
+        if rec.get("content", "") == content:
+            return {"success": True, "ok": True, "record": f"{name} TXT (unchanged)"}
+    for rec in existing.get("result", []):
+        _cf_api("DELETE", f"/zones/{zone_id}/dns_records/{rec['id']}")
+    return _cf_api("POST", f"/zones/{zone_id}/dns_records", {
+        "type": "TXT", "name": name, "content": content, "ttl": 1
     })
 
 def cf_set_tracking(domain, subdomain="links"):

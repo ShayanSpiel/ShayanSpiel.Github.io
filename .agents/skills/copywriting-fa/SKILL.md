@@ -17,7 +17,7 @@ A work session is evidence, not the article. The reader's problem determines the
 
 Before writing, read:
 
-- `../spielos-icp.md` — the single source of truth for the customer profile, awareness levels, buying triggers, objections, and product promise
+- `../../spielos-icp.md` — the single source of truth for the customer profile, exclusions, and positioning idea. Never restate the ICP in this file; read it from the source.
 - `../translation-fa/persian-glossary.md` — the single source of truth for all terminology
 - `../translation-fa/SKILL.md` — for sentence-level Persian quality rules, voice, register, and validation
 
@@ -27,13 +27,13 @@ The ICP is identical in English and Persian. The behavioral profile does not cha
 
 ## ICP summary (operational)
 
-The primary customer is a technical or product-minded founder of an early-stage startup, already using AI models and tools, who wants to build coordinated AI employees and departments — not another chatbot.
+The primary buyer is the owner, CEO, COO, or senior operator of an established online business or service provider ($1M–$25M+ revenue) with real customers, a working funnel, and high-volume repetitive knowledge-work done by hand — intake, delivery, support, reporting, scheduling, triage.
 
-They know their AI usage is fragmented. They have scattered prompts, disconnected tools, and agents that can chat but cannot reliably execute. They want roles, skills, workflows, memory, approvals, and evaluations in one system.
+They are not technical. They do not build harnesses and they do not care about agent architecture. They care about labor cost, throughput, delivery speed, and errors in the repetitive work their team does manually.
 
 They are skeptical of generic AI claims. They want to see real work, real tradeoffs, and real constraints.
 
-In Persian: بنیان‌گذار فنی یا محصولی یه استارتاپ کوچیکه که الان از مدل‌ها و ابزارهای AI استفاده می‌کنه ولی سیستم منسجمی دورشون نداره. می‌خواد کارمندها و دپارتمان‌های AI بسازه — نه یه چت‌بات دیگه.
+In Persian: صاحب یا مدیر یک کسب‌وکار آنلاین مستقر با مشتری واقعیه که کارهای تکراری زیادی رو هنوز دستی انجام می‌ده. فنی نیست؛ به معماری ایجنت اهمیت نمی‌ده. به هزینه نیرو، سرعت تحویل و خطاهای کار دستی اهمیت می‌ده.
 
 ---
 

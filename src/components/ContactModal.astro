@@ -124,12 +124,14 @@ const formCopy = {
   document.querySelectorAll('[data-open-contact-modal]').forEach(function(trigger) {
     trigger.addEventListener('click', function(e) {
       e.preventDefault();
+      if (typeof window.spielosTrack === 'function') window.spielosTrack('agent_briefing_form_start', { page: window.location.pathname, locale: document.documentElement.lang || 'en' });
       openModal();
     });
   });
 
   form.addEventListener('submit', async function(e) {
     e.preventDefault();
+    if (typeof window.spielosTrack === 'function') window.spielosTrack('agent_briefing_form_submit', { page: window.location.pathname, locale: document.documentElement.lang || 'en' });
     errorEl.classList.add('hidden');
     btn.disabled = true;
     btn.classList.add('opacity-70', 'cursor-not-allowed');
@@ -150,6 +152,7 @@ const formCopy = {
       if (response.ok) {
         form.classList.add('hidden');
         successState.classList.remove('hidden');
+        if (typeof window.spielosTrack === 'function') window.spielosTrack('agent_briefing_form_success', { page: window.location.pathname, locale: document.documentElement.lang || 'en' });
       } else {
         throw new Error('Submission failed');
       }
@@ -160,6 +163,7 @@ const formCopy = {
       btn.classList.remove('opacity-70', 'cursor-not-allowed');
       text.textContent = originalText;
       spinner.style.display = 'none';
+      if (typeof window.spielosTrack === 'function') window.spielosTrack('agent_briefing_form_error', { page: window.location.pathname, locale: document.documentElement.lang || 'en' });
     }
   });
 

@@ -23,6 +23,7 @@ Config:
 
 import argparse
 import json
+import os
 import sys
 import time
 from datetime import datetime, timezone
@@ -94,8 +95,12 @@ def load_sent_log() -> dict:
 
 
 def save_sent_log(log: dict):
-    with open(config.SENT_LOG_PATH, "w") as f:
+    """Atomic write (tmp + rename) — a stale batch child must never leave a
+    torn file behind for the next reader."""
+    tmp = config.SENT_LOG_PATH.with_suffix(".json.tmp")
+    with open(tmp, "w") as f:
         json.dump(log, f, indent=2, default=str)
+    os.replace(tmp, config.SENT_LOG_PATH)
 
 
 def already_sent(lead_id: str, log: dict) -> bool:
@@ -270,10 +275,67 @@ def cmd_dry_run(lang_filter=None, tier_filter=None, limit=None):
     print(f"{'='*60}\n")
 
 
+def sent_today(log: dict, now=None) -> int:
+    """Count sent entries whose timestamp is on the same UTC day as now."""
+    now = now or datetime.now(timezone.utc)
+    day = now.strftime("%Y-%m-%d")
+    return sum(1 for s in log.get("sent", []) if str(s.get("timestamp", "")).startswith(day))
+
+
+def daily_cap(now=None) -> tuple:
+    """Deterministic daily send cap: warmup ramp by account age, hard-capped by
+    the sum of the enabled providers' free-plan daily limits. Returns (cap, phase).
+
+    Account age = days since the first logged send (sent_log.json).
+    Phase ceilings are env-driven (WARMUP/RAMP/STEADY); the REAL ceiling is
+    PROVIDER_DAILY_TOTAL (resend 100 + mailgun 100 + brevo 300 = 500/day once
+    brevo is wired; sendgrid +100 when keyed). Halting is per-provider + the
+    bounce/spam/delivery safety nets in analytics.py.
+    """
+    now = now or datetime.now(timezone.utc)
+    log = load_sent_log()
+    sent = log.get("sent", [])
+    if not sent:
+        cap = min(config.WARMUP_DAILY_CAP, config.PROVIDER_DAILY_TOTAL)
+        return cap, f"warmup (<={cap}/day, no history)"
+    first = _parse_ts(sent[0].get("timestamp"))
+    if first is None:
+        cap = min(config.WARMUP_DAILY_CAP, config.PROVIDER_DAILY_TOTAL)
+        return cap, f"warmup (<={cap}/day)"
+    age_days = (now - first).total_seconds() / 86400.0
+    if age_days <= 14:
+        cap = min(config.WARMUP_DAILY_CAP, config.PROVIDER_DAILY_TOTAL)
+        phase = f"warmup day {age_days:.0f}/14 (<={cap}/day)"
+    elif age_days <= 28:
+        cap = min(config.RAMP_DAILY_CAP, config.PROVIDER_DAILY_TOTAL)
+        phase = f"ramp day {age_days:.0f}/28 (<={cap}/day)"
+    else:
+        cap = min(config.STEADY_DAILY_CAP, config.PROVIDER_DAILY_TOTAL)
+        phase = f"steady (<={cap}/day, provider hard caps)"
+    return cap, phase
+
+
+def _parse_ts(value):
+    if not value:
+        return None
+    try:
+        return datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    except ValueError:
+        return None
+
+
 def cmd_send(limit: int, lang_filter=None, tier_filter=None, retry_failed=False):
     contacts = read_contacts(lang_filter=lang_filter, tier_filter=tier_filter)
     log = load_sent_log()
     by_id = {c["lead_id"]: c for c in contacts}
+
+    cap, phase = daily_cap()
+    used_today = sent_today(log)
+    remaining_today = cap - used_today
+    if remaining_today <= 0:
+        print(f"❌ Daily send cap reached ({used_today}/{cap} today, phase: {phase}).")
+        print(f"   Next batch may run after midnight UTC, or raise WARMUP_DAILY_CAP after warmup.")
+        return
 
     if retry_failed:
         failed_leads = [f["lead_id"] for f in log.get("failed", [])]
@@ -287,7 +349,10 @@ def cmd_send(limit: int, lang_filter=None, tier_filter=None, retry_failed=False)
         print(f"Retrying {len(to_send)} failed sends from sent_log.json...")
     else:
         unsent = [c for c in contacts if not already_sent(c["lead_id"], log)]
-        to_send = unsent[:limit]
+        batch = min(limit or config.BATCH_SIZE, config.BATCH_SIZE, remaining_today)
+        to_send = unsent[:batch]
+        if len(unsent) > batch:
+            print(f"  (queue has {len(unsent)} unsent; sending batch of {batch} per cap {phase})")
 
     if not to_send:
         print("No contacts to send to (all filtered or already sent).")
@@ -301,6 +366,7 @@ def cmd_send(limit: int, lang_filter=None, tier_filter=None, retry_failed=False)
     print(f"\n{'='*60}")
     print(f"  SENDING {len(to_send)} EMAILS via {config.EMAIL_PROVIDER}")
     print(f"  Rate: 1 email every {config.THROTTLE_SECONDS}s")
+    print(f"  Daily cap: {used_today + len(to_send)}/{cap} after this batch ({phase})")
     print(f"  Variant rotation: every {config.VARIANT_ROTATE} emails")
     if config.REPLY_TO:
         print(f"  Reply-To: {config.REPLY_TO} (replies auto-detected by `metrics`)")
@@ -323,6 +389,11 @@ def cmd_send(limit: int, lang_filter=None, tier_filter=None, retry_failed=False)
 
         if result.get("error"):
             print(f"❌ FAILED — {result.get('message', 'unknown')}")
+            err_msg = str(result.get("message", ""))
+            if "daily_quota_exceeded" in err_msg or "monthly_quota_exceeded" in err_msg or result.get("status") == 429:
+                print("\n❌ Provider quota exceeded (429). Stopping the batch — do not send again "
+                      "until the quota resets (daily at UTC midnight, monthly on plan renewal).")
+                break
             log.setdefault("failed", []).append({
                 "lead_id": c["lead_id"],
                 "email": c["email"],
@@ -455,13 +526,56 @@ def cmd_replies():
     print(f"{'='*60}\n")
 
 
+# ── Experiment memory (the hourly feedback loop) ─────────────────────────────
+
+def cmd_experiment(text: str = ""):
+    """Append an entry to experiments/experiment_log.json: the hypothesis, the
+    real current metrics (auto-attached), the send caps in force, and what the
+    next batch should tweak. Called once per batch hour, before the next batch."""
+    import analytics as _a
+    log = load_sent_log()
+    metrics = _a.load_metrics()
+    t = _a.aggregate(log, metrics)
+    cap, phase = daily_cap()
+    entry = {
+        "id": datetime.now(timezone.utc).strftime("EXP-%Y%m%d-%H%M"),
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "provider": config.EMAIL_PROVIDER,
+        "cap": {"daily_cap": cap, "phase": phase, "sent_today": sent_today(log)},
+        "metrics": {
+            "sent": t["sent"], "delivered": t["delivered"], "delivered_rate": round(t["delivered_rate"], 4),
+            "opened": t["opened"], "open_rate": round(t["open_rate"], 4),
+            "clicked": t["clicked"], "click_rate": round(t["click_rate"], 4),
+            "replied": t["replied"], "reply_rate": round(t["reply_rate"], 4),
+            "bounced": t["bounced"], "complained": t["complained"],
+            "unverified": t["unknown"], "denied": t["denied"], "unresolved": t["unresolved"],
+        },
+        "by_variant": {v: {k: d[k] for k in ("sent", "open_rate", "reply_rate")}
+                       for v, d in _a.by_variant(log, metrics).items()},
+        "hypothesis": text,
+    }
+    config.EXPERIMENTS_DIR.mkdir(parents=True, exist_ok=True)
+    path = config.EXPERIMENTS_DIR / "experiment_log.json"
+    entries = []
+    if path.exists():
+        try:
+            entries = json.loads(path.read_text())
+        except Exception:
+            entries = []
+    entries.append(entry)
+    path.write_text(json.dumps(entries, indent=2, default=str))
+    print(f"✅ Experiment entry {entry['id']} appended to {path}")
+    print(f"   reply {t['reply_rate']*100:.1f}% · open {t['open_rate']*100:.1f}% · "
+          f"delivered {t['delivered_rate']*100:.1f}% · sent {t['sent']}")
+
+
 # ── CLI ────────────────────────────────────────────────────────────────────────
 
 def main():
     parser = argparse.ArgumentParser(description="SpielOS Outbound Email Automation")
     parser.add_argument(
         "command",
-        choices=["stats", "dry-run", "send", "metrics", "review", "record-reply", "replies"],
+        choices=["stats", "dry-run", "send", "metrics", "review", "record-reply", "replies", "experiment"],
         help="Action to perform",
     )
     parser.add_argument("--limit", type=int, default=None, help="Max emails to send")
@@ -472,6 +586,7 @@ def main():
     parser.add_argument("--quiet", action="store_true", help="metrics: one-line output (cron-friendly)")
     parser.add_argument("--json", action="store_true", help="review: JSON summary output")
     parser.add_argument("--note", default=None, help="record-reply: note about the reply")
+    parser.add_argument("--text", default=None, help="experiment: hypothesis / tweak note for the log")
     parser.add_argument("identifier", nargs="?", default=None, help="record-reply: email or lead_id")
     args = parser.parse_args()
 
@@ -485,10 +600,13 @@ def main():
     elif args.command == "dry-run":
         cmd_dry_run(lang_filter=lang, tier_filter=args.tier, limit=args.limit or 5)
     elif args.command == "send":
+        # English-first policy (2026-08-08): batches default to the English
+        # list; Persian requires an explicit --lang fa until its copy quality
+        # passes review.
+        send_lang = lang or "English"
         if not args.limit and not args.retry_failed:
-            print("ERROR: --limit is required for send (or use --retry-failed). Example: send --limit 10")
-            sys.exit(1)
-        cmd_send(limit=args.limit, lang_filter=lang, tier_filter=args.tier, retry_failed=args.retry_failed)
+            print(f"Defaulting to a batch of {config.BATCH_SIZE} (--limit to override), language: {send_lang}")
+        cmd_send(limit=args.limit, lang_filter=send_lang, tier_filter=args.tier, retry_failed=args.retry_failed)
     elif args.command == "metrics":
         cmd_metrics(force=args.force, quiet=args.quiet)
     elif args.command == "review":
@@ -501,6 +619,8 @@ def main():
         cmd_record_reply(args.identifier, note=args.note)
     elif args.command == "replies":
         cmd_replies()
+    elif args.command == "experiment":
+        cmd_experiment(text=args.text or "")
 
 
 if __name__ == "__main__":
