@@ -256,7 +256,8 @@ Titles should be understandable without reading the article.
 
 Use direct, specific actions:
 
-- Join the waitlist
+- Start a project
+- Talk through your workflow
 - See how it works
 - Read the founder story
 - Start building

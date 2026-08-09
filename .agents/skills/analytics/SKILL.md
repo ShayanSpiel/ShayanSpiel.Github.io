@@ -5,7 +5,7 @@ description: Implement, review, and preserve SpielOS analytics: GA4, PostHog, Se
 
 # SpielOS Analytics
 
-SpielOS is a static Astro site (SSG) served at `https://spielos.xyz` with a Persian (`fa`, RTL) mirror under `/fa/`. Analytics must respect user consent, never block rendering, and produce accurate event data across both locales.
+SpielOS is a static Astro site (SSG) served at `https://spielos.xyz` with a Persian (`fa`, RTL) mirror under `/fa/`. Analytics must respect user consent, never block rendering, and produce accurate buyer and lead-conversion data across both locales.
 
 ## Scope
 
@@ -103,10 +103,11 @@ Events fire to both gtag and PostHog via a single `track()` helper defined in Ba
 
 | Event | Parameters | Description |
 |---|---|---|
-| `waitlist_form_submit` | — | Form submitted |
-| `waitlist_form_success` | — | Form submission succeeded |
-| `waitlist_form_error` | `error` | Form submission failed |
-| `cta_clicked` | `cta_type`: waitlist \| primary | CTA button clicked |
+| `lead_form_start` | `form_type` | Lead form opened |
+| `lead_form_submit` | `form_type` | Lead form submitted |
+| `lead_form_success` | `form_type` | Lead form submission succeeded |
+| `lead_form_error` | `form_type` | Lead form submission failed |
+| `cta_clicked` | `cta_type`: service_assessment \| primary | CTA button clicked |
 | `social_clicked` | `platform` | Social link clicked |
 | `outbound_link` | `url`, `link_text` | Outbound link clicked |
 | `scroll_depth` | `depth`: 25 \| 50 \| 75 \| 100 | Scroll milestone reached |

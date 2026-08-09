@@ -15,7 +15,6 @@ const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const ROOT = resolve(__dirname, "..");
 const TEMPLATE = join(ROOT, "src/og-templates/og-base.html");
 const OUT_DIR = join(ROOT, "public/assets/og");
-const FONT_PATH = join(ROOT, "src/assets/fonts/outfit-latin.woff2");
 
 /* ── Design system tokens (Gruvbox Dark) ── */
 const T = {
@@ -238,7 +237,7 @@ function startServer() {
 /* ── Main ── */
 async function generate() {
   const templateHtml = readFileSync(TEMPLATE, "utf-8");
-  const { server, port, url: baseUrl } = await startServer();
+  const { server, url: baseUrl } = await startServer();
   console.log(`  Server: ${baseUrl}`);
 
   const CHROME_PATH = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";

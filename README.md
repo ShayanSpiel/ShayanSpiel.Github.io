@@ -1,10 +1,10 @@
 # SpielOS Website
 
-Founder-led pre-launch website for [SpielOS](https://spielos.xyz). English + Persian (RTL) with full i18n.
+Founder-led buyer and lead-conversion website for [SpielOS](https://spielos.xyz). English + Persian (RTL) with full i18n.
 
 ## What it does
 
-Connects Shayan Spiel's experience and product history to why SpielOS exists, with the waitlist as the single conversion destination.
+Connects Shayan Spiel's experience and product history to why SpielOS exists, then converts qualified visitors through implementation, Agent Brief, and contact flows.
 
 ## Tech stack
 
@@ -27,7 +27,9 @@ Connects Shayan Spiel's experience and product history to why SpielOS exists, wi
 | `/notes/` | Notes index (EN) |
 | `/notes/[slug]/` | Individual note pages (EN) |
 | `/contact/` | Business contact form (EN) |
-| `/waitlist/` | Product landing + waitlist (EN, protected) |
+| `/waitlist/` | Legacy product landing + waitlist (EN, protected) |
+| `/services/` | Buyer-facing AI implementation offer (EN) |
+| `/services/agent-brief/` | Agent Brief experience (EN) |
 | `/about/` | SpielOS about page (EN) |
 | `/features/` | Features hub — four-layer architecture (EN) |
 | `/features/chat/` | Chat hub — execution modes (EN) |
@@ -46,7 +48,6 @@ Connects Shayan Spiel's experience and product history to why SpielOS exists, wi
 | `/features/infrastructure/providers/` | Providers — model and LLM selection (EN) |
 | `/features/infrastructure/connections/` | Connections — MCP, OAuth, API integrations (EN) |
 | `/use-cases/` | Use cases hub (noindex, placeholder) |
-| `/guides/` | Guides hub (noindex, placeholder) |
 | `/fa/*` | All FA wrappers (thin wrappers passing `locale="fa"`) |
 | `/shayan/` | 301 redirect to `/founder/` |
 | `/posts/` | 301 redirect to `/notes/` |
@@ -114,7 +115,7 @@ src/
       FeatureCTA.astro
       FeatureLayer.astro
       Breadcrumbs.astro
-    showcase/            # Waitlist page components (protected)
+    showcase/            # Legacy waitlist page components (protected)
   layouts/
     BaseLayout.astro     # Root HTML layout (SEO, fonts, analytics)
     Page.astro           # Standard page wrapper
@@ -129,9 +130,11 @@ src/
     fonts/               # Local font files (Outfit, JetBrains Mono, IRANSansX)
   icons.ts               # Icon registry (boxicons map + validation)
 .agents/
-  skills/
-    translation-fa/      # Persian translation skill
-    spielos-ui/          # UI polish skill
+  skills/                # The only active skill system
+  spielos-icp.md         # Canonical ICP for site and outreach
+
+docs/
+  site-architecture.md   # Current conversion, routes, and ownership model
 ```
 
 ## Design system
@@ -173,7 +176,7 @@ Notes live in `src/content/notes/` (EN) and `src/content/notesFa/` (FA) as MDX f
 - RSS feed at `/feed.xml`
 - XML sitemap at `/sitemap.xml`
 - `robots.txt` with AI crawler policies
-- `noindex` on placeholder pages (guides, use-cases, 404)
+- `noindex` on placeholder, archived, transactional, and 404 pages
 
 ## Performance
 

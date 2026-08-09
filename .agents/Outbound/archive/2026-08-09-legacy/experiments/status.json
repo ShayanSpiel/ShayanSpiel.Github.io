@@ -1,0 +1,26 @@
+{
+  "updated_at": "2026-08-09 12:32 UTC",
+  "event": "batch-done",
+  "headline": "Batch auto-2026-08-09-b01: 0 sent, 0 failed \u2014 child exited -9",
+  "detail": "49 in batch, 1 skipped by content guard",
+  "last_email_at": "2026-08-09T12:32:56.869310+00:00",
+  "metrics": {
+    "sent_total": 251,
+    "sent_today": 8,
+    "failed": 17,
+    "delivered_rate": 0.8486,
+    "open_rate": 0.4554,
+    "click_rate": 0.0563,
+    "reply_rate": 0.0,
+    "bounce_rate": 0.0478,
+    "spam_rate": 0.004,
+    "unresolved": 2,
+    "providers": {
+      "resend": "ok",
+      "mailgun": "fail: {'error': True, 'status': 0, 'message': 'unknown transport f",
+      "postmark": "ok (pending account approval)",
+      "brevo": "ok",
+      "emailoctopus": "key valid \u2014 marketing ESP, NO transactional send (campaigns only)"
+    }
+  }
+}

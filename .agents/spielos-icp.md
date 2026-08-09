@@ -60,7 +60,7 @@ bullet below is never a target, regardless of score:
 - Behavioral profile is identical in English and Persian. The Persian market is served
   through the site's FA mirror; it is the same buyer, not a different one.
 - Outbound execution details (target countries, verification tiers, lead flow, scoring)
-  live in `.agents/Outbound/spielos-icp.md`, which implements this profile and nothing
+  live in `.agents/Outreach/spielos-icp.md`, which implements this profile and nothing
   more.
 - The site's published copy must always speak to this buyer: an operator solving
   repetitive work for an established business — never a technical founder building a

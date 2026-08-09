@@ -8,7 +8,7 @@
  * always serves: a `urlset` when only one chunk exists, else a `sitemapindex`
  * listing every chunk. Noindex pages are excluded. Exit 0 = ok, exit 1 = broken sitemap found.
  */
-import { readFileSync, readdirSync, copyFileSync, writeFileSync, statSync } from "fs";
+import { readFileSync, readdirSync, writeFileSync, statSync } from "fs";
 import { join, extname } from "path";
 
 const dist = join(process.cwd(), "dist");
@@ -25,12 +25,16 @@ function collectHtml(dir) {
   return out;
 }
 
+function routeUrlFromHtml(htmlFile) {
+  const rel = htmlFile.replace(dist, "").replace(/\/index\.html$/, "/");
+  return `${base}${rel || "/"}`;
+}
+
 const noindexUrls = new Set();
 for (const htmlFile of collectHtml(dist)) {
   const html = readFileSync(htmlFile, "utf8");
   if (/<meta name="robots"[^>]*content="[^"]*noindex/.test(html)) {
-    const rel = htmlFile.replace(dist, "");
-    noindexUrls.add(`${base}${rel}`);
+    noindexUrls.add(routeUrlFromHtml(htmlFile));
   }
 }
 

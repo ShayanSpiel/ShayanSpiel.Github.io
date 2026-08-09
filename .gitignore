@@ -21,12 +21,12 @@ Skills/
 .agents/Outbound/.env
 
 # Outbound: PII and runtime data stay local
-.agents/Outbound/scripts/__pycache__/
-.agents/Outbound/scripts/sent_log.json
-.agents/Outbound/scripts/metrics.json
-.agents/Outbound/scripts/ip_cache.json
-# Outbound experiment memory: PII + hypotheses, kept local
-.agents/Outbound/experiments/
+.agents/Outbound/.env
+
+# Engine runtime: PII + state stay local
+.agents/Outreach/data/
+.agents/Outreach/reports/
+.agents/Outreach/logs/
 
 # Python bytecode + runtime artifacts
 **/__pycache__/

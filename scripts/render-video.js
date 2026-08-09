@@ -139,7 +139,7 @@ function startServer() {
 
 /* ── Render ── */
 async function render() {
-  const { server, port, url: baseUrl } = await startServer();
+  const { server, url: baseUrl } = await startServer();
   console.log(`  Local server: ${baseUrl}`);
 
   const CHROME_PATH = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";

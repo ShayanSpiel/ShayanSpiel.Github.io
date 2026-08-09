@@ -12,6 +12,7 @@ import { join, extname } from "path";
 const dist = join(process.cwd(), "dist");
 const issues = [];
 let okCount = 0;
+const SITE = "https://spielos.xyz";
 
 const check = (cond, label, page = "") => {
   if (cond) okCount++;
@@ -26,6 +27,16 @@ function collectHtml(dir) {
     else if (extname(p) === ".html") out.push(p);
   }
   return out;
+}
+
+function routeFromFile(file) {
+  const rel = file.replace(dist, "").replace(/\/index\.html$/, "/");
+  if (rel === "/404.html") return "/404/";
+  return rel || "/";
+}
+
+function meta(html, pattern) {
+  return html.match(pattern)?.[1]?.trim() || "";
 }
 
 const isRealPage = (path) => {
@@ -54,12 +65,14 @@ function sentenceLengths(html) {
 
 const pages = collectHtml(dist);
 const realPages = pages.filter(isRealPage);
+const routeSet = new Set(realPages.map(routeFromFile));
+const pageMeta = new Map();
+const noindexRoutes = new Set();
 
 for (const page of realPages) {
   const html = readFileSync(page, "utf8");
   const rel = page.replace(dist, "");
   const isNote = /\/notes\//.test(rel) && !rel.endsWith("/notes/index.html") && !rel.endsWith("/notes/") && rel.endsWith("/index.html");
-  const isFa = rel.startsWith("/fa/");
 
   check(/<title>[^<]{5,120}<\/title>/.test(html), "  missing/invalid <title>", rel);
   check(/<meta name="description"[^>]*content="[^"]{10,}/.test(html), "  missing/invalid description", rel);
@@ -73,6 +86,20 @@ for (const page of realPages) {
   check(/<link rel="alternate" hreflang="en"/.test(html), "  missing hreflang en", rel);
   check(/<link rel="alternate" hreflang="fa"/.test(html), "  missing hreflang fa", rel);
   check(/<link rel="alternate" hreflang="x-default"/.test(html), "  missing hreflang x-default", rel);
+
+  const route = routeFromFile(page);
+  const title = meta(html, /<title>([^<]+)<\/title>/i);
+  const description = meta(html, /<meta name="description"[^>]*content="([^"]*)"/i);
+  const canonical = meta(html, /<link rel="canonical"[^>]*href="([^"]+)"/i);
+  const robots = meta(html, /<meta name="robots"[^>]*content="([^"]*)"/i);
+  pageMeta.set(route, { html, title, description, canonical, robots });
+  if (robots.includes("noindex")) noindexRoutes.add(route);
+
+  check(canonical.startsWith(SITE), "  canonical is not an absolute site URL", rel);
+  if (canonical.startsWith(SITE) && !robots.includes("noindex")) {
+    const canonicalPath = new URL(canonical).pathname;
+    check(routeSet.has(canonicalPath), `  canonical target is not a built page: ${canonicalPath}`, rel);
+  }
 
   // Analytics
   check(/google-site-verification/.test(html), "  missing Search Console", rel);
@@ -95,6 +122,66 @@ for (const page of realPages) {
     const lens = sentenceLengths(html);
     const avg = lens.length ? lens.reduce((a, b) => a + b, 0) / lens.length : 0;
     check(avg <= 28, `  avg sentence length ${avg.toFixed(1)} words (>28)`, rel);
+  }
+}
+
+function checkUnique(field, label) {
+  const seen = new Map();
+  for (const [route, values] of pageMeta) {
+    if (!values[field] || values.robots.includes("noindex")) continue;
+    const routes = seen.get(values[field]) || [];
+    routes.push(route);
+    seen.set(values[field], routes);
+  }
+  for (const [value, routes] of seen) {
+    if (routes.length > 1) issues.push(`  duplicate ${label} (${JSON.stringify(value)}): ${routes.join(", ")}`);
+  }
+}
+
+checkUnique("title", "title");
+checkUnique("description", "description");
+
+for (const [route, values] of pageMeta) {
+  if (values.robots.includes("noindex")) continue;
+  const alternateMap = new Map();
+  for (const match of values.html.matchAll(/<link rel="alternate" hreflang="([^"]+)" href="([^"]+)"/g)) {
+    alternateMap.set(match[1], match[2]);
+  }
+  for (const [lang, href] of alternateMap) {
+    if (!href.startsWith(SITE)) {
+      issues.push(`  ${route} hreflang ${lang} is not an absolute site URL`);
+      continue;
+    }
+    const targetRoute = new URL(href).pathname;
+    const target = pageMeta.get(targetRoute);
+    if (!target) {
+      issues.push(`  ${route} hreflang ${lang} target is not a built page: ${targetRoute}`);
+      continue;
+    }
+    if (target.robots.includes("noindex")) issues.push(`  ${route} hreflang ${lang} points to noindex page: ${targetRoute}`);
+  }
+}
+
+const sitemap = exists(join(dist, "sitemap.xml")) ? readFileSync(join(dist, "sitemap.xml"), "utf8") : "";
+check(Boolean(sitemap), "  missing sitemap.xml");
+for (const match of sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)) {
+  const url = match[1];
+  if (!url.startsWith(SITE)) {
+    issues.push(`  sitemap URL has wrong host: ${url}`);
+    continue;
+  }
+  const route = new URL(url).pathname;
+  check(!noindexRoutes.has(route), `  sitemap contains noindex route: ${route}`);
+  check(routeSet.has(route), `  sitemap contains route that is not a built page: ${route}`);
+}
+
+for (const [route, values] of pageMeta) {
+  if (values.robots.includes("noindex")) continue;
+  for (const match of values.html.matchAll(/href="(\/[^"#?]*)[^" ]*"/g)) {
+    const href = match[1];
+    if (href.startsWith("/assets/") || href.startsWith("/_astro/") || href === "/feed.xml" || href === "/robots.txt" || href === "/humans.txt" || href === "/site.webmanifest" || href.endsWith(".xml")) continue;
+    const targetRoute = href.endsWith("/") ? href : `${href}/`;
+    if (!routeSet.has(targetRoute)) issues.push(`  ${route} links to missing internal route: ${href}`);
   }
 }
 

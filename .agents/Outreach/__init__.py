@@ -1,7 +1,10 @@
-"""Shared, channel-neutral outreach orchestration primitives."""
+"""The channel-neutral outreach engine.
 
-from .models import Action, Lead, LeadState, WorkflowGoal
-from .store import OutreachStore
-from .workflow import OutreachLoop
+`python3 -m Outreach once` advances the goal-driven loop. The loop is
+domain-free; workflow bundles (workflows/email is the first) provide the
+domain behavior through the Workflow contract.
+"""
 
-__all__ = ["Action", "Lead", "LeadState", "WorkflowGoal", "OutreachStore", "OutreachLoop"]
+from . import engine, models, store, workflows
+
+__all__ = ["engine", "models", "store", "workflows"]

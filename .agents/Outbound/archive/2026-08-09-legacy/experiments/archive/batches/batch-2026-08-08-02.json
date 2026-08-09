@@ -1,0 +1,30 @@
+{
+ "batch": "BATCH-2026-08-08-02",
+ "hypothesis": "Template sends with fake scarcity returned 0 replies in 37 sends (user's own test was the only reply). 2026 benchmarks (ReachIQ May-2026, Instantly Jan-2026): deep per-prospect personalization replies 9.6% vs 1.8% token personalization; emails under 80 words win. Hypothesis: operative-fact personalization + one specific question + zero scarcity lifts single-touch reply rate toward 10-30%. Tweak RB2: no external links anywhere in the body (Resend insight). ",
+ "emails": [
+  {
+   "lead_id": "EN-030",
+   "subject": "Handoffs at Binary",
+   "body_html": "<p>Hi James,</p>\n<p>Binary has been humanizing technology for Australian businesses since 2008. From Angular apps to eCommerce builds.</p>\n<p>For a consultancy your size, the cost is in the handoffs: brief to research to task creation to QA to client reporting.</p>\n<p>I build supervised AI employees that run that flow, with a human approving each step.</p>\n<p>Which stage eats most of your week: turning briefs into tasks, or client reporting? Reply with the one word.</p>\n<p>Best,<br>Shayan</p>\n{SIGNATURE_HTML}",
+   "body_text": "Hi James,\n\nBinary has been humanizing technology for Australian businesses since 2008. From Angular apps to eCommerce builds.\n\nFor a consultancy your size, the cost is in the handoffs: brief to research to task creation to QA to client reporting.\n\nI build supervised AI employees that run that flow, with a human approving each step.\n\nWhich stage eats most of your day: turning briefs into tasks, or client reporting? Reply with the one word.\n\nBest,\nShayan\n\n{SIGNATURE_TEXT}"
+  },
+  {
+   "lead_id": "EN-043",
+   "subject": "Your in-house delivery",
+   "body_html": "<p>Hi Krutarth,</p>\n<p>Telsa Media runs SEO, PPC and web design fully in-house. Rare in London, and a big reason clients stay.</p>\n<p>In-house delivery means every brief, draft and QA lands on your own calendar. That's where margins leak.</p>\n<p>I build supervised AI employees that carry that client-delivery loop: brief, research, drafts, QA, reporting.</p>\n<p>What's your most manual step: first drafts or reporting? Reply with the one word.</p>\n<p>Best,<br>Shayan</p>\n{SIGNATURE_HTML}",
+   "body_text": "Hi Krutarth,\n\nTelsa Media runs SEO, PPC and web design fully in-house. Rare in London, and a big reason clients stay.\n\nIn-house delivery means every brief, draft and QA lands on your own calendar. That's where margins leak.\n\nI build supervised AI employees that carry that client-delivery loop: brief, research, drafts, QA, reporting.\n\nWhat's your most manual step: first drafts or reporting? Reply with the one word.\n\nBest,\nShayan\n\n{SIGNATURE_TEXT}"
+  },
+  {
+   "lead_id": "EN-001",
+   "subject": "Feedback triage at Capfora",
+   "body_html": "<p>Hi Capfora team,</p>\n<p>Congrats on the CODiE finalist nod. Field intelligence that turns event conversations into CRM-ready records is a workflow we understand deeply.</p>\n<p>I build supervised AI employees for internal ops: classifying incoming product feedback, drafting support responses, escalating edge cases to the right owner.</p>\n<p>Is there an ops or product owner I should share a one-page workflow map with? Happy to route it there.</p>\n<p>Best,<br>Shayan</p>\n{SIGNATURE_HTML}",
+   "body_text": "Hi Capfora team,\n\nCongrats on the CODiE finalist nod. Field intelligence that turns event conversations into CRM-ready records is a workflow we understand deeply.\n\nI build supervised AI employees for internal ops: classifying incoming product feedback, drafting support responses, escalating edge cases to the right owner.\n\nIs there an ops or product owner I should share a one-page workflow map with? Happy to route it there.\n\nBest,\nShayan\n\n{SIGNATURE_TEXT}"
+  },
+  {
+   "lead_id": "EN-084",
+   "subject": "One plan, one owner",
+   "body_html": "<p>Hi SaaS Consult team,</p>\n<p>'One plan, one owner.' Your fractional CMO model lives or dies on how well the moving parts (your team, specialist partners, the client's) stay coordinated against that plan.</p>\n<p>I build supervised AI employees that carry coordination loops like that: status pulls, handoffs, client-facing updates, flagging drift early.</p>\n<p>Which workflow would you trust an agent to run first: reporting pulls or status follow-ups? A one-liner reply is enough.</p>\n<p>Best,<br>Shayan</p>\n{SIGNATURE_HTML}",
+   "body_text": "Hi SaaS Consult team,\n\n'One plan, one owner.' Your fractional CMO model succeeds or fails on how well the moving parts (your team, specialist partners, the client's) stay coordinated against that plan.\n\nI build supervised AI employees that carry coordination loops like that: status pulls, handoffs, client-facing updates, flagging drift early.\n\nWhich workflow would you trust an agent to run first: reporting pulls or status follow-ups? A one-liner reply is enough.\n\nBest,\nShayan\n\n{SIGNATURE_TEXT}"
+  }
+ ]
+}

@@ -19,6 +19,8 @@
     "preview": "astro preview",
     "build": "astro build && node scripts/postbuild-sitemap.mjs",
     "typecheck": "astro check",
+    "lint": "npm run typecheck && node scripts/architecture-check.mjs",
+    "test": "npm run build && node --test test/site.test.mjs",
     "seo:check": "node scripts/seo-check.mjs",
     "og:generate": "node scripts/generate-og.mjs"
   },

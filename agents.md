@@ -2,8 +2,11 @@
 
 ## What this site is
 
-This is Shayan Spiel's personal founder website and the public face of SpielOS.
-One commercial objective: send qualified visitors to the SpielOS waitlist.
+This is Shayan Spiel's founder-led buyer and lead-conversion website for SpielOS.
+The commercial objective is to turn qualified visitors into implementation leads
+and product buyers through the services, Agent Brief, and contact flows.
+The waitlist remains a protected legacy product route and is not the site's
+primary conversion path.
 
 ## Protected scope
 
@@ -18,15 +21,18 @@ key namespace. Never add hardcoded English text to showcase components; always
 route through `t(locale, "waitlist.*")`. `src/pages/fa/waitlist.astro` is the
 thin FA wrapper (matches all other FA pages).
 
-All homepage CTAs link to `/waitlist/`.
+The navbar CTA points to `/services/`. The Agent Brief section and page remain
+the existing assessment experience; do not replace them with a generic CTA
+page. The legacy waitlist is not a default CTA.
 
 ## Strategy — single source of truth
 
 `.agents/spielos-icp.md` is the canonical Ideal Customer Profile (buyer, exclusions,
 positioning idea). Every skill, outbound rule, lead score, and piece of site copy
 follows it. Never restate or redefine the ICP in another file — reference it.
-The outbound engine implements it via `.agents/Outbound/spielos-icp.md` (execution
-details only).
+The outbound engine (`.agents/Outreach/`) implements it via
+`.agents/Outreach/spielos-icp.md` (execution details only); the campaign data
+(master xlsx, `.env`) stays in `.agents/Outbound/`.
 
 ## Routes
 
@@ -37,6 +43,8 @@ details only).
 | `/notes/` | `src/pages/notes/index.astro` | Notes index (EN) |
 | `/notes/[slug]/` | `src/pages/notes/[...slug].astro` | Individual note pages (EN) |
 | `/contact/` | `src/pages/contact.astro` | Business contact form (EN) |
+| `/services/` | `src/pages/services.astro` | Buyer-facing AI implementation offer (EN) |
+| `/services/agent-brief/` | `src/pages/services/agent-brief.astro` | Agent Brief experience (EN) |
 | `/waitlist/` | `src/pages/waitlist.astro` | Product landing + waitlist (locale-aware) |
 | `/about/` | `src/pages/about.astro` | SpielOS about page (EN) |
 | `/fa/` | `src/pages/fa/index.astro` | Homepage (FA) |
@@ -63,12 +71,15 @@ details only).
 | `/features/infrastructure/providers/` | `src/pages/features/infrastructure/providers.astro` | Providers — model and LLM selection (EN) |
 | `/features/infrastructure/connections/` | `src/pages/features/infrastructure/connections.astro` | Connections — MCP, OAuth, API integrations (EN) |
 | `/use-cases/` | `src/pages/use-cases/index.astro` | Use cases hub (EN) |
+| `/spielos-v1/` | `src/pages/spielos-v1.astro` | Archived legacy product page (`noindex`) |
 | `/shayan/` | `src/pages/shayan.astro` | 301 redirect to `/founder/` |
 | `/posts/` | `src/pages/posts/index.astro` | 301 redirect to `/notes/` |
 
 FA wrappers exist for all routes under `/fa/` following the thin-wrapper pattern.
 
-Do not add: pricing, services, enterprise, marketplace, solutions, consulting, templates, teams.
+Do not add: pricing, enterprise, marketplace, solutions, consulting, templates,
+teams, or unrelated lead magnets. Services and implementation pages are part of
+the current buyer-conversion architecture.
 
 ## i18n architecture
 
@@ -115,14 +126,17 @@ Persian headings use heavier font-weight (h1=800, h2=700, h3+=600) via `[dir="rt
 - hreflang alternate tags for EN/FA pages
 - Persian meta descriptions (`SITE.descriptionFa`)
 - `og:locale` set to `fa_IR` for FA pages
-- Canonical URLs point to EN versions
+- Canonical URLs self-reference each locale version
 
 ## Navigation
 
 Single source of truth: `src/config.ts` → `NAV_LINKS`.
 
-Default nav: SpielOS → `/waitlist/`, Notes → `/notes/`, Founder → `/founder/`, Contact → `/contact/`.
-CTA button: "Join waitlist" → `/waitlist/`.
+Default nav: Services → `/services/`, Features → `/features/`, Notes → `/notes/`,
+Founder → `/founder/`, Contact → `/contact/`.
+Primary navbar CTA: Services → `/services/`.
+The Agent Brief experience remains at `/services/agent-brief/` and in the
+services page.
 
 Showcase nav (waitlist page only): anchor links to page sections.
 
@@ -130,7 +144,7 @@ Showcase nav (waitlist page only): anchor links to page sections.
 
 Single source of truth: `src/config.ts` → `FOOTER_LINKS`.
 
-Default footer: SpielOS, Notes, Founder, Join waitlist.
+Default footer: SpielOS, Services, Agent Briefing, Features, Notes, Founder, Contact.
 Social icons: X, GitHub.
 Copyright: dynamic year, "SpielOS is independently built by Shayan Spiel."
 
@@ -418,7 +432,16 @@ Theme toggle in footer cycles through all themes.
 
 ## Agent skills
 
-Located in `.agents/skills/`:
+The only active skill system is `.agents/skills/`. Do not create a second skill
+tree or copy skills into the repository root. Current skills are:
 
-- `translation-fa/SKILL.md` — Persian translation quality rules, terminology, voice, UX surface guidelines
-- `spielos-ui/SKILL.md` — UI polish workflow, token hierarchy, state contracts, verification
+- `analytics` — consent, attribution, GA4, PostHog, and conversion events
+- `copywriting-en` / `copywriting-fa` — buyer-focused content creation
+- `outbound-email` / `outreach-engine` — lead discovery, qualification, and outreach
+- `seo` — crawlability, metadata, schemas, sitemap, and internal linking
+- `spielos-ui` — tokens, components, accessibility, and visual contracts
+- `translation-fa` — Persian localization and terminology
+- `video-creation` — HTML-to-video production
+
+The canonical ICP is `.agents/spielos-icp.md`. The website conversion model is
+documented in `docs/site-architecture.md`.

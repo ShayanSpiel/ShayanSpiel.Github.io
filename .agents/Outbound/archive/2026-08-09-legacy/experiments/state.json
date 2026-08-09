@@ -1,0 +1,437 @@
+{
+  "version": 1,
+  "meta": {
+    "goal": {
+      "name": "reply rate",
+      "metric": "reply_rate",
+      "target": 0.3
+    },
+    "supporting_kpis": [
+      {
+        "name": "delivered rate",
+        "metric": "delivered_rate",
+        "target": 0.99
+      },
+      {
+        "name": "open rate",
+        "metric": "open_rate",
+        "target": 0.5
+      },
+      {
+        "name": "click rate",
+        "metric": "click_rate",
+        "target": 0.05
+      }
+    ],
+    "guardrails": [
+      {
+        "name": "bounce rate",
+        "metric": "bounce_rate",
+        "max": 0.02
+      },
+      {
+        "name": "spam rate",
+        "metric": "spam_rate",
+        "max": 0.0008
+      }
+    ]
+  },
+  "variables": {
+    "subject_patterns": {},
+    "cohort_filters": {
+      "min_tier": "plausible"
+    },
+    "providers": [
+      "resend",
+      "mailgun",
+      "brevo"
+    ],
+    "notes": {
+      "cohort_filters": "2026-08-09T11:40Z \u2014 restored after the all-time-vs-window mismatch was fixed: the gate (48h window + suppression + override) is the single guardrail authority; min_tier=plausible while the gate is OK.",
+      "list_status": "2026-08-08T12:30+00:00 \u2014 verified pool exhausted: 233 contacts, 172 unverified (73%), 106 sent, 0 unsent verified with allowed recommendation. skip_unverified=true leaves nothing to send. ACTION: supply new verified leads (or verify the 52 unsent 'Ready to personalized' unverified leads).",
+      "providers": "2026-08-08T13:07Z \u2014 resend, mailgun, brevo all verified live with real sends. postmark pending account approval (412 same-domain rule); sendgrid has no API key; smtp not configured.",
+      "credentials": "2026-08-08T13:20Z \u2014 keys received: EMAILOCTOPUS_API_KEY (valid; marketing ESP, no transactional send \u2014 cannot join rotation), POSTMARK_API_TOKEN (a84154f2.. is account-level per API; f16b9bc8.. invalid as server token \u2014 need real Server token from dashboard), POSTMARK_ACCOUNT_TOKEN saved. All in .env + PROVIDER-REGISTRY.md. postmark still pending account approval (412)."
+    }
+  },
+  "knowledge": {
+    "cohort_unverified": {
+      "tried": [
+        {
+          "at": "2026-08-08T12:29:30.177284+00:00",
+          "from": null,
+          "to": null,
+          "target_metric": "reply_rate",
+          "before": 0.0,
+          "after": 0.0,
+          "verdict": "inconclusive"
+        },
+        {
+          "at": "2026-08-09T11:40:21.716712+00:00",
+          "from": null,
+          "to": "cohort_unverified (skip_unverified=true)",
+          "target_metric": "reply_rate",
+          "before": 0.0,
+          "after": 0.0,
+          "verdict": "inconclusive"
+        }
+      ],
+      "verdict": "inconclusive"
+    },
+    "subject": {
+      "tried": [
+        {
+          "at": "2026-08-09T11:37:54.697085+00:00",
+          "from": null,
+          "to": "subject",
+          "target_metric": "reply_rate",
+          "before": 0.0,
+          "after": 0.0,
+          "verdict": "inconclusive"
+        }
+      ],
+      "verdict": "inconclusive"
+    },
+    "providers": {
+      "tried": [
+        {
+          "at": "2026-08-09T11:41:18.312308+00:00",
+          "from": null,
+          "to": "providers",
+          "target_metric": "reply_rate",
+          "before": 0.0,
+          "after": 0.0,
+          "verdict": "inconclusive"
+        },
+        {
+          "at": "2026-08-09T11:42:00.975996+00:00",
+          "from": null,
+          "to": "providers",
+          "target_metric": "reply_rate",
+          "before": 0.0,
+          "after": 0.0,
+          "verdict": "inconclusive"
+        }
+      ],
+      "verdict": "inconclusive"
+    },
+    "cta": {
+      "tried": [
+        {
+          "at": "2026-08-09T12:32:56.838048+00:00",
+          "from": null,
+          "to": "cta",
+          "target_metric": "reply_rate",
+          "before": 0.0,
+          "after": 0.0,
+          "verdict": "inconclusive"
+        }
+      ],
+      "verdict": "inconclusive"
+    }
+  },
+  "batches": [
+    {
+      "id": "CYC-20260808-1217",
+      "batch": "seed-baseline",
+      "at": "2026-08-08T12:17:12.721700+00:00",
+      "metrics": {
+        "sent": 106,
+        "delivered": 43,
+        "opened": 10,
+        "clicked": 3,
+        "replied": 0,
+        "delivered_rate": 0.4056603773584906,
+        "open_rate": 0.23255813953488372,
+        "click_rate": 0.06976744186046512,
+        "reply_rate": 0.0,
+        "bounce_rate": 0.0,
+        "spam_rate": 0.0,
+        "unknown": 0,
+        "denied": 0,
+        "unresolved": 0
+      },
+      "sent_today": 63,
+      "cap": 200,
+      "weakest": {
+        "stage": "guardrail",
+        "detail": "delivered rate",
+        "variable": "providers",
+        "actionable": true
+      },
+      "lever": "providers",
+      "variable": "providers",
+      "from": null,
+      "to": null,
+      "target_metric": "reply_rate",
+      "hypothesis": null,
+      "problems": []
+    },
+    {
+      "id": "CYC-20260808-1225",
+      "batch": "seed-baseline",
+      "at": "2026-08-08T12:25:03.246511+00:00",
+      "metrics": {
+        "sent": 106,
+        "delivered": 92,
+        "opened": 26,
+        "clicked": 6,
+        "replied": 0,
+        "delivered_rate": 0.8679245283018868,
+        "open_rate": 0.2826086956521739,
+        "click_rate": 0.06521739130434782,
+        "reply_rate": 0.0,
+        "bounce_rate": 0.09433962264150944,
+        "spam_rate": 0.0,
+        "unknown": 0,
+        "denied": 0,
+        "unresolved": 2
+      },
+      "sent_today": 63,
+      "cap": 200,
+      "weakest": {
+        "stage": "guardrail",
+        "detail": "bounce rate",
+        "variable": "cohort_unverified",
+        "actionable": true
+      },
+      "lever": "cohort_unverified",
+      "variable": "cohort_unverified",
+      "from": null,
+      "to": null,
+      "target_metric": "reply_rate",
+      "hypothesis": null,
+      "problems": [
+        "2 unresolved ids \u2014 no queryable provider id"
+      ]
+    },
+    {
+      "id": "CYC-20260808-1229",
+      "batch": "verify-gate",
+      "at": "2026-08-08T12:29:30.178719+00:00",
+      "metrics": {
+        "sent": 106,
+        "delivered": 92,
+        "opened": 26,
+        "clicked": 6,
+        "replied": 0,
+        "delivered_rate": 0.8679245283018868,
+        "open_rate": 0.2826086956521739,
+        "click_rate": 0.06521739130434782,
+        "reply_rate": 0.0,
+        "bounce_rate": 0.09433962264150944,
+        "spam_rate": 0.0,
+        "unknown": 0,
+        "denied": 0,
+        "unresolved": 2
+      },
+      "sent_today": 63,
+      "cap": 200,
+      "weakest": {
+        "stage": "open",
+        "detail": "open rate 28.3% < 80%",
+        "variable": "subject",
+        "actionable": true
+      },
+      "lever": "subject",
+      "variable": "subject",
+      "from": null,
+      "to": "subject",
+      "target_metric": "reply_rate",
+      "hypothesis": "subject: rotate active bank per segment (recruitment-workflow: Staffing loop at {company} -> Recruiting ops at {company} ; agency-delivery: Delivery loop at {company} -> Client work at {company} ; saas-ops: Support loop at {company} -> Inbox triage at {company}) so open rate improves; reason: repetitive subjects suppress opens",
+      "problems": [
+        "2 unresolved ids \u2014 no queryable provider id"
+      ]
+    },
+    {
+      "id": "CYC-20260809-1137",
+      "batch": "manual",
+      "at": "2026-08-09T11:37:54.698182+00:00",
+      "metrics": {
+        "sent": 244,
+        "delivered": 205,
+        "opened": 95,
+        "clicked": 11,
+        "replied": 0,
+        "delivered_rate": 0.8401639344262295,
+        "open_rate": 0.4634146341463415,
+        "click_rate": 0.05365853658536585,
+        "reply_rate": 0.0,
+        "bounce_rate": 0.04918032786885246,
+        "spam_rate": 0.004098360655737705,
+        "unknown": 0,
+        "denied": 0,
+        "unresolved": 2
+      },
+      "sent_today": 1,
+      "cap": 200,
+      "weakest": {
+        "stage": "guardrail",
+        "detail": "bounce rate",
+        "variable": "cohort_unverified",
+        "actionable": true
+      },
+      "lever": "cohort_unverified",
+      "variable": "cohort_unverified",
+      "from": null,
+      "to": "cohort_unverified (skip_unverified=true)",
+      "target_metric": "reply_rate",
+      "hypothesis": "cohort: skip 'Publicly listed; not deliverability-verified' emails; reason: 9/10 bounces are unverified role addresses, bounces suppress opens and replies",
+      "problems": [
+        "2 unresolved ids \u2014 no queryable provider id"
+      ]
+    },
+    {
+      "id": "CYC-20260809-1140",
+      "batch": "manual",
+      "at": "2026-08-09T11:40:21.717541+00:00",
+      "metrics": {
+        "sent": 244,
+        "delivered": 205,
+        "opened": 95,
+        "clicked": 11,
+        "replied": 0,
+        "delivered_rate": 0.8401639344262295,
+        "open_rate": 0.4634146341463415,
+        "click_rate": 0.05365853658536585,
+        "reply_rate": 0.0,
+        "bounce_rate": 0.04918032786885246,
+        "spam_rate": 0.004098360655737705,
+        "unknown": 0,
+        "denied": 0,
+        "unresolved": 2
+      },
+      "sent_today": 1,
+      "cap": 200,
+      "weakest": {
+        "stage": "guardrail",
+        "detail": "delivered rate",
+        "variable": "providers",
+        "actionable": true
+      },
+      "lever": "providers",
+      "variable": "providers",
+      "from": null,
+      "to": "providers",
+      "target_metric": "reply_rate",
+      "hypothesis": null,
+      "problems": [
+        "2 unresolved ids \u2014 no queryable provider id"
+      ]
+    },
+    {
+      "id": "CYC-20260809-1141",
+      "batch": "manual",
+      "at": "2026-08-09T11:41:18.313160+00:00",
+      "metrics": {
+        "sent": 244,
+        "delivered": 205,
+        "opened": 95,
+        "clicked": 11,
+        "replied": 0,
+        "delivered_rate": 0.8401639344262295,
+        "open_rate": 0.4634146341463415,
+        "click_rate": 0.05365853658536585,
+        "reply_rate": 0.0,
+        "bounce_rate": 0.04918032786885246,
+        "spam_rate": 0.004098360655737705,
+        "unknown": 0,
+        "denied": 0,
+        "unresolved": 2
+      },
+      "sent_today": 1,
+      "cap": 200,
+      "weakest": {
+        "stage": "guardrail",
+        "detail": "delivered rate",
+        "variable": "providers",
+        "actionable": true
+      },
+      "lever": "providers",
+      "variable": "providers",
+      "from": null,
+      "to": "providers",
+      "target_metric": "reply_rate",
+      "hypothesis": null,
+      "problems": [
+        "2 unresolved ids \u2014 no queryable provider id"
+      ]
+    },
+    {
+      "id": "CYC-20260809-1142",
+      "batch": "manual",
+      "at": "2026-08-09T11:42:00.976902+00:00",
+      "metrics": {
+        "sent": 244,
+        "delivered": 205,
+        "opened": 95,
+        "clicked": 11,
+        "replied": 0,
+        "delivered_rate": 0.8401639344262295,
+        "open_rate": 0.4634146341463415,
+        "click_rate": 0.05365853658536585,
+        "reply_rate": 0.0,
+        "bounce_rate": 0.04918032786885246,
+        "spam_rate": 0.004098360655737705,
+        "unknown": 0,
+        "denied": 0,
+        "unresolved": 2
+      },
+      "sent_today": 1,
+      "cap": 200,
+      "weakest": {
+        "stage": "reply",
+        "detail": "opens fine but reply 0.0% < 30%",
+        "variable": "cta",
+        "actionable": true
+      },
+      "lever": "cta",
+      "variable": "cta",
+      "from": null,
+      "to": "cta",
+      "target_metric": "reply_rate",
+      "hypothesis": "cta: shorten question so reply costs ~10s; reason: opens fine but reply rate is the gap",
+      "problems": [
+        "2 unresolved ids \u2014 no queryable provider id"
+      ]
+    },
+    {
+      "id": "CYC-20260809-1232",
+      "batch": "auto-2026-08-09-b01",
+      "at": "2026-08-09T12:32:56.839742+00:00",
+      "metrics": {
+        "sent": 251,
+        "delivered": 213,
+        "opened": 97,
+        "clicked": 12,
+        "replied": 0,
+        "delivered_rate": 0.848605577689243,
+        "open_rate": 0.45539906103286387,
+        "click_rate": 0.056338028169014086,
+        "reply_rate": 0.0,
+        "bounce_rate": 0.04780876494023904,
+        "spam_rate": 0.00398406374501992,
+        "unknown": 0,
+        "denied": 0,
+        "unresolved": 2
+      },
+      "sent_today": 8,
+      "cap": 300,
+      "weakest": {
+        "stage": "reply",
+        "detail": "opens fine but reply 0.0% < 30%",
+        "variable": "cta",
+        "actionable": true
+      },
+      "lever": "cta",
+      "variable": "cta",
+      "from": null,
+      "to": "cta",
+      "target_metric": "reply_rate",
+      "hypothesis": "cta: shorten question so reply costs ~10s; reason: opens fine but reply rate is the gap",
+      "problems": [
+        "2 unresolved ids \u2014 no queryable provider id"
+      ]
+    }
+  ],
+  "updated_at": "2026-08-09T12:32:56.839752+00:00"
+}

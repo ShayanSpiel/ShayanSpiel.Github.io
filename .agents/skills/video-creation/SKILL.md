@@ -14,9 +14,9 @@ Create videos from HTML templates by rendering CSS animations frame-by-frame wit
 Owns: Video creation, HTML-to-video rendering, scene composition, CSS animation system, virtual clock, multi-aspect-ratio rendering, batch generation, TTS narration, audio mixing, poster generation.
 
 Does NOT own:
-- Design tokens → see `skills/06-design-system/`
-- Analytics tracking → see `skills/05-analytics/`
-- Content writing → see `skills/01-content-writing-en/`
+- Design tokens → see `../spielos-ui/SKILL.md`
+- Analytics tracking → see `../analytics/SKILL.md`
+- Content writing → see `../copywriting-en/SKILL.md`
 
 ## Reference files
 
@@ -158,7 +158,7 @@ Pain:    "Employees using AI separately. Repeated prompts. Disconnected tools."
 Promise: "What if they could work like a real team?"
 Pillars: "Roles. Skills. Evals. Workflows."
 Director: "Be the director. Or don't."
-CTA:     "spielos dot xyz forward slash waitlist"
+CTA:     "spielos dot xyz forward slash services"
 ```
 
 **Scenario C (Build It)**:
@@ -167,7 +167,7 @@ Hook:    "What if your AI employees could work like a real team?"
 Build:   "Hire a role. Give instructions and tools. Set quality standards. Connect into workflows."
 Live:    "Your AI department is live."
 Director: "Director mode. You choose."
-CTA:     "spielos dot xyz forward slash waitlist"
+CTA:     "spielos dot xyz forward slash services"
 ```
 
 ### Combine with delays

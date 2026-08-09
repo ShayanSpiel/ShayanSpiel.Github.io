@@ -1,0 +1,13 @@
+{
+  "block_size": 50,
+  "throttle_seconds": 150,
+  "gate_spam_override_until": "2026-08-10T17:08:00+00:00",
+  "experiment": "reply-rate-r3: single-arm research-first \u2014 EN per-lead hook+pain + FA ladder tail; goal reply >= 30%; block 50 @ 150s; spam override active (1 complaint EN-130, sender suppressed, expires 2026-08-10T17:08Z)",
+  "approval": {
+    "experiment": "reply-rate-r3: single-arm research-first \u2014 EN per-lead hook+pain + FA ladder tail; goal reply >= 30%; block 50 @ 150s; spam override active (1 complaint EN-130, sender suppressed, expires 2026-08-10T17:08Z)",
+    "approved": true,
+    "by": "orchestrator",
+    "at": "2026-08-09T11:26:36.123155+00:00",
+    "note": "preview QA'd: real names/roles, segment workflows, rotating subjects, domain-dedupe enforced; EN-080 generic opener flagged (company_hook fallback) \u2014 acceptable, honest copy"
+  }
+}

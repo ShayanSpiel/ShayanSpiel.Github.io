@@ -1,0 +1,34 @@
+{
+  "batch": "auto-2026-08-08-b02",
+  "hypothesis": "research-first: per-lead hook + pain hypothesis, supervised AI employees, conditional close",
+  "emails": [
+    {
+      "lead_id": "EN-1155",
+      "subject": "Recruiting ops at SimWest Engineering Recruit",
+      "body_html": "<p>Hi Stephen, I saw you are Founder &amp; Director at SimWest Engineering Recruitment.</p>\n<p>Your kind of operation runs a manual engineering screening stage, with every machinery and manufacturing search personally managed by the founder.</p>\n<p>I build supervised AI employees that carry that loop, one workflow at a time, with a person approving each step.</p>\n<p>Is the shortlist stage still done by hand, or have you systemized it? If it is still manual, I&#x27;d be happy to map it with you.</p>\n<p>Best,<br>Shayan</p>\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin-top:24px;border-top:1px solid #e5e5e5;padding-top:16px;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.5;color:#333333;\">\n  <tr>\n    <td style=\"padding-right:12px;vertical-align:middle;\">\n      <img src=\"https://spielos.xyz/assets/avatars/avatar.jpg\" alt=\"Shayan Spiel\" width=\"48\" height=\"48\" style=\"border-radius:50%;display:block;\" />\n    </td>\n    <td style=\"vertical-align:middle;\">\n      <div style=\"font-size:14px;font-weight:bold;color:#111111;\">Shayan Spiel</div>\n      <div style=\"color:#555555;\">Founder of SpielOS · Agent Harness Architect</div>\n      <div style=\"margin-top:4px;\">\n        <a href=\"https://linkedin.com/in/shayantawabi\" style=\"color:#0a66c2;text-decoration:none;\">LinkedIn</a>\n        &nbsp;&middot;&nbsp;\n        <a href=\"https://x.com/ShayanSpiel\" style=\"color:#111111;text-decoration:none;\">X</a>\n        &nbsp;&middot;&nbsp;\n        <a href=\"https://spielos.xyz/services/?utm_source=outbound-email&utm_medium=email&utm_campaign=outbound-sig\" style=\"color:#333333;text-decoration:none;\">spielos.xyz/services</a>\n      </div>\n    </td>\n  </tr>\n</table>",
+      "body_text": "Hi Stephen, I saw you are Founder & Director at SimWest Engineering Recruitment.\n\nYour kind of operation runs a manual engineering screening stage, with every machinery and manufacturing search personally managed by the founder.\n\nI build supervised AI employees that carry that loop, one workflow at a time, with a person approving each step.\n\nIs the shortlist stage still done by hand, or have you systemized it? If it is still manual, I'd be happy to map it with you.\n\nBest,\nShayan\n\nShayan Spiel\nFounder of SpielOS · Agent Harness Architect\nLinkedIn: https://linkedin.com/in/shayantawabi\nX: https://x.com/ShayanSpiel\nhttps://spielos.xyz/services/?utm_source=outbound-email&utm_medium=email&utm_campaign=outbound-sig",
+      "features": {
+        "source": "Company website",
+        "country": "United Kingdom",
+        "segment": "Recruitment & staffing",
+        "verified": "Publicly listed; not deliverability-verified",
+        "email_type": "personal",
+        "title": "Founder & Director"
+      }
+    },
+    {
+      "lead_id": "EN-1156",
+      "subject": "Screening loop at RGB Network",
+      "body_html": "<p>Hi Chris, I saw you are Managing Director at RGB Network.</p>\n<p>Your kind of operation runs a manual built environment pipeline, with candidate and client updates tracked across individual consultant inboxes.</p>\n<p>I build supervised AI employees that carry that loop, one workflow at a time, with a person approving each step.</p>\n<p>Is the shortlist stage still done by hand, or have you systemized it? If it is still manual, I&#x27;d be happy to map it with you.</p>\n<p>Best,<br>Shayan</p>\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin-top:24px;border-top:1px solid #e5e5e5;padding-top:16px;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.5;color:#333333;\">\n  <tr>\n    <td style=\"padding-right:12px;vertical-align:middle;\">\n      <img src=\"https://spielos.xyz/assets/avatars/avatar.jpg\" alt=\"Shayan Spiel\" width=\"48\" height=\"48\" style=\"border-radius:50%;display:block;\" />\n    </td>\n    <td style=\"vertical-align:middle;\">\n      <div style=\"font-size:14px;font-weight:bold;color:#111111;\">Shayan Spiel</div>\n      <div style=\"color:#555555;\">Founder of SpielOS · Agent Harness Architect</div>\n      <div style=\"margin-top:4px;\">\n        <a href=\"https://linkedin.com/in/shayantawabi\" style=\"color:#0a66c2;text-decoration:none;\">LinkedIn</a>\n        &nbsp;&middot;&nbsp;\n        <a href=\"https://x.com/ShayanSpiel\" style=\"color:#111111;text-decoration:none;\">X</a>\n        &nbsp;&middot;&nbsp;\n        <a href=\"https://spielos.xyz/services/?utm_source=outbound-email&utm_medium=email&utm_campaign=outbound-sig\" style=\"color:#333333;text-decoration:none;\">spielos.xyz/services</a>\n      </div>\n    </td>\n  </tr>\n</table>",
+      "body_text": "Hi Chris, I saw you are Managing Director at RGB Network.\n\nYour kind of operation runs a manual built environment pipeline, with candidate and client updates tracked across individual consultant inboxes.\n\nI build supervised AI employees that carry that loop, one workflow at a time, with a person approving each step.\n\nIs the shortlist stage still done by hand, or have you systemized it? If it is still manual, I'd be happy to map it with you.\n\nBest,\nShayan\n\nShayan Spiel\nFounder of SpielOS · Agent Harness Architect\nLinkedIn: https://linkedin.com/in/shayantawabi\nX: https://x.com/ShayanSpiel\nhttps://spielos.xyz/services/?utm_source=outbound-email&utm_medium=email&utm_campaign=outbound-sig",
+      "features": {
+        "source": "Company website",
+        "country": "United Kingdom",
+        "segment": "Recruitment & staffing",
+        "verified": "Publicly listed; not deliverability-verified",
+        "email_type": "personal",
+        "title": "Managing Director"
+      }
+    }
+  ]
+}

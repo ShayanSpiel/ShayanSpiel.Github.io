@@ -130,7 +130,7 @@ Ensure every referenced entity is defined in the page's JSON-LD graph or include
 | Note article `/notes/[slug]/` | BlogPosting, BreadcrumbList | `src/pages/notes/[...slug].astro` |
 | Contact `/contact/` | BreadcrumbList | `src/pages/contact.astro` |
 | Features hub + subpages | BreadcrumbList (auto in FeaturesLayout) | `src/pages/features/**` |
-| Use-cases, Guides | BreadcrumbList when page is indexable | `src/pages/use-cases`, `src/pages/guides` |
+| Use-cases | BreadcrumbList when page is indexable | `src/pages/use-cases` |
 
 ### Schema rules
 
@@ -219,7 +219,7 @@ Verify:
 - No orphan indexable pages
 - Important pages receive contextual internal links
 - Anchor text describes the destination naturally
-- Notes link to relevant features, guides, use cases, and other notes
+- Notes link to relevant features, use cases, services, and other notes
 - Feature and use-case pages link back to relevant notes where useful
 - English links stay in English routes and Persian links stay in `/fa/`
 - No hardcoded English anchor text appears on Persian pages
