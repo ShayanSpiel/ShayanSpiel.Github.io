@@ -148,7 +148,7 @@ def execute(ctx, batch: dict, dry: bool = False) -> dict:
                 "batch": batch_id, "subject": e["subject"],
                 "provider": config.EMAIL_PROVIDER, "provider_id": str(pri),
                 "resend_id": str(pri), "deduped": True,
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 **{f"feat_{k}": v for k, v in feat.items()},
             })
             outbound.save_sent_log(log)
@@ -187,7 +187,7 @@ def execute(ctx, batch: dict, dry: bool = False) -> dict:
             log.setdefault("failed", []).append({
                 "lead_id": c["lead_id"], "email": c["email"], "company": c["company"],
                 "provider": provider, "error": result.get("message", "unknown"),
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
             })
             fail_count += 1
             ctx.store.record_action(c["lead_id"], "email", "send_email", "failed",
@@ -195,14 +195,14 @@ def execute(ctx, batch: dict, dry: bool = False) -> dict:
         else:
             for f in log.get("failed", []):
                 if isinstance(f, dict) and f.get("lead_id") == c["lead_id"] and not f.get("resolved_at"):
-                    f["resolved_at"] = datetime.utcnow().isoformat()
+                    f["resolved_at"] = datetime.now(timezone.utc).isoformat()
             log.setdefault("sent", []).append({
                 "lead_id": c["lead_id"], "email": c["email"], "company": c["company"],
                 "contact_name": c["contact_name"], "variant": "researched-personal",
                 "batch": batch_id, "subject": e["subject"],
                 "provider": provider, "provider_id": result.get("id"),
                 "resend_id": result.get("id"),
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 **{f"feat_{k}": v for k, v in feat.items()},
             })
             outbound.save_sent_log(log)
