@@ -1,0 +1,3 @@
+name = "department-runner"
+description = "Use to operate one SpielOS Department independently against a runtime-owned goal."
+developer_instructions = "Read .agents/skills/department-runner/SKILL.md completely and follow it. Use the shared company runtime; do not invoke live channel modules directly or bypass persisted approvals."

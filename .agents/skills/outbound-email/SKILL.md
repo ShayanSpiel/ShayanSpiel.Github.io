@@ -34,10 +34,10 @@ Three parts, one loop:
 
 1. **Content**: research-first, one-person voice, personal cold emails (and DMs) that read like a specific human wrote them to one specific human.
 2. **Sending**: the Outbound Department reads the master lead list
-   (`.agents/Outbound/`) and acts through guarded provider adapters.
-3. **Email Data**: the feedback loop. The engine pulls provider status for every sent email, scores the funnel against the persisted goal's metric and target, and produces a verdict plus one proposed next action. Each run then parks until the user asks the Director to start that next run.
+   (`.spielos/data/outbound/`) and acts through guarded provider adapters.
+3. **Email Data**: the feedback loop. The Department pulls provider status for every sent email, scores the funnel against the persisted goal's metric and target, and produces a verdict plus one proposed next action. Each run then parks until the user asks the Director to start that next run.
 
-Use this skill for any SpielOS outbound email, DM, or follow-up, and for operating the sending engine.
+Use this skill for any SpielOS outbound email, DM, or follow-up, and for operating the Outbound Department.
 
 ---
 
@@ -156,9 +156,9 @@ Example shape:
   workflows/social.py        # social prospect and DM evidence validation
   strategy.md                # execution details; references company ICP
   assets/                    # approved channel templates
-.agents/Outbound/            # operational campaign inputs
-  .env                       # secrets + config (gitignored) — copy from .env.example
-  spielos_master_…xlsx       # lead database (EMAIL_LIST_PATH)
+.spielos/.env                # secrets + local config (gitignored)
+.spielos/data/outbound/      # operational campaign inputs (gitignored)
+  leads.xlsx                 # lead database (EMAIL_LIST_PATH)
 .spielos/state/outbound/      # ignored ledgers and domain data
 .spielos/artifacts/outbound/  # previews and reports
 ```
@@ -235,4 +235,4 @@ Bounce events auto-suppress in the master; a bounced address never re-enters
 the queue.
 
 Lead file flow: staging drops → bounded lead-research workflow → master workbook
-(`.agents/Outbound/`). Sources are tagged for cohort diagnosis.
+(`.spielos/data/outbound/leads.xlsx`). Sources are tagged for cohort diagnosis.

@@ -4,7 +4,7 @@ Codex and OpenCode manifests are client adapters. These records are the stable
 company identities that Departments reference in durable workflow requests.
 """
 
-from ..models import AgentSpec
+from ..runtime.models import AgentSpec
 
 
 AGENTS = {
@@ -19,7 +19,7 @@ AGENTS = {
         AgentSpec(
             id="social-researcher",
             description="Researches qualified LinkedIn and X prospects and recent public signals without bulk messaging.",
-            skill_ids=("outbound-email", "outreach-engine"),
+            skill_ids=("outbound-email", "outbound"),
             permissions=("read_public_sources", "write_social_evidence"),
             produces=("social_prospect", "social_signal"),
         ),

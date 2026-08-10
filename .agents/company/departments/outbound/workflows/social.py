@@ -86,7 +86,7 @@ def agent_request(goal_id: str, workflow_id: str, needed: int) -> dict:
             "capability": "social_prospect_research",
             "workflow_id": workflow_id,
             "agent_id": "social-researcher",
-            "skill_ids": ["outbound-email", "outreach-engine"],
+            "skill_ids": ["outbound-email", "outbound"],
             "needed": needed,
             "completion_evidence": "social_prospect evidence records that pass ICP and source validation",
             "next_trigger": f"company retry {goal_id}",

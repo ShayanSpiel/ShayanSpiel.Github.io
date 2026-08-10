@@ -8,22 +8,29 @@ routing, durable run supervision, evidence judgment, approvals, and outcome repo
 It must identify itself accordingly and route unrelated implementation to
 Build/default mode unless the user attaches that work to a company goal.
 
-For business goals and engine orchestration, use `.agents/company/` as the
+For business goals and company orchestration, use `.agents/company/` as the
 durable authority and `.agents/skills/director/SKILL.md` as the operating
 procedure. The public loop is only GOAL → OBSERVE → DECIDE → ACT → EVALUATE.
 Stage, internal step, run status, and goal status are independent. The runtime
-owns every goal. Departments supply domain behavior through thin engine
-adapters and may run directly or as child goals of the Director. Workflows and
+owns every goal. Departments supply domain behavior through colocated
+`department.py` handlers and may run directly or as child goals of the Director. Workflows and
 agents never own another loop. Never bypass runtime approvals or infer
 live-execution permission from a chat request.
 
 Runs are first-class and typed: business experiment, execution, diagnostic,
 system improvement, evaluation, or controlled system test. Preserve hypothesis,
-engine version, config snapshot, controlled/changed variables, evidence
+owner version, config snapshot, controlled/changed variables, evidence
 validity, decisions, evaluation, and resume links. Never learn business lessons
-from technical-only, contaminated, or invalid evidence. Department or engine code changes
+from technical-only, contaminated, or invalid evidence. Department or runtime code changes
 must be separate bounded system-improvement goals with allowed files and actual
 acceptance-test evidence.
+
+The universal company vocabulary is exactly Goal, Department, Workflow, Agent,
+Skill, Connection, and Artifact. Do not introduce Engine, Tool, Port, or
+ContentPackage as an additional public layer. `ContentPackage` is only an
+Artifact manifest. The complete authority, layout, and OpenCode command surface
+are documented once in `.agents/company/README.md`; other READMEs link to it
+instead of restating the architecture.
 
 ## What this site is
 
@@ -57,7 +64,8 @@ positioning idea). Every skill, outbound rule, lead score, and piece of site cop
 follows it. Never restate or redefine the ICP in another file — reference it.
 The Outbound Department implements it via
 `.agents/company/departments/outbound/strategy.md` (execution details only); the campaign data
-(master xlsx, `.env`) stays in `.agents/Outbound/`.
+(master xlsx, `.env`) stays local under `.spielos/data/outbound/` and
+`.spielos/.env`; both are gitignored.
 
 Company-wide positioning, voice, and measurement rules live beside the ICP in
 `.agents/company/strategy/`. Approved reusable facts and proof live in
@@ -468,7 +476,8 @@ tree or copy skills into the repository root. Current skills are:
 
 - `analytics` — consent, attribution, GA4, PostHog, and conversion events
 - `copywriting-en` / `copywriting-fa` — buyer-focused content creation
-- `outbound-email` / `outreach-engine` — lead discovery, qualification, and outreach
+- `outbound-email` / `outbound` — lead discovery, qualification, and outreach
+- `director` / `department-runner` / `system-improvement` — company operation
 - `seo` — crawlability, metadata, schemas, sitemap, and internal linking
 - `spielos-ui` — tokens, components, accessibility, and visual contracts
 - `translation-fa` — Persian localization and terminology

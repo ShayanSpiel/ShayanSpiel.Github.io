@@ -1,6 +1,0 @@
-interface:
-  display_name: "Outreach Engine"
-  short_description: "Goal-driven, policy-safe outreach loops"
-  default_prompt: "Use $outreach-engine to design or operate a qualified outreach workflow with separate discovery, sending, and measurement loops."
-policy:
-  allow_implicit_invocation: true

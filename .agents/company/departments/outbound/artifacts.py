@@ -85,5 +85,5 @@ class Artifacts:
 
     def log(self, line: str) -> None:
         ts = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
-        with open(self.logs_dir / "engine.log", "a") as f:
+        with open(self.logs_dir / "department.log", "a") as f:
             f.write(f"{ts}  {line}\n")

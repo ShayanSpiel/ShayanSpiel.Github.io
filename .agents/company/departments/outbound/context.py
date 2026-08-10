@@ -1,4 +1,4 @@
-"""Engine context: the bundle of substrate every step receives.
+"""Outbound context: the bundle of substrate every workflow step receives.
 
 The loop passes this one object around. It holds the STATE (store), the
 human-written CONTROL (control.json), the active WORKFLOW bundle, and the

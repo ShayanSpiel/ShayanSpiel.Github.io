@@ -1,3 +1,3 @@
-from .registry import connections
+from .registry import connection, connections
 
-__all__ = ["connections"]
+__all__ = ["connection", "connections"]

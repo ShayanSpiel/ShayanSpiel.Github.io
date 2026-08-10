@@ -1,7 +1,6 @@
-# SpielOS Company Runtime
+# SpielOS Company Harness
 
-Durable operating layer for business goals. Codex, OpenCode, and humans are
-clients of the same state; no chat session owns the truth.
+SpielOS runs the company through one durable loop:
 
 ```text
 GOAL -> OBSERVE -> DECIDE -> ACT -> EVALUATE
@@ -9,100 +8,118 @@ GOAL -> OBSERVE -> DECIDE -> ACT -> EVALUATE
           +----------------------------+
 ```
 
-Every runtime engine/Department adapter implements the four stages. `stage`, internal `step`, and
-`run_status` are independent. Waiting and approval are statuses, not stages.
+The runtime owns every Goal, transition, approval, run, status, and evidence
+record. A Department supplies business behavior; it never creates another loop.
+Codex, OpenCode, and humans are clients of the same persisted state.
 
-## One-minute map
+## Universal vocabulary
 
-- `models.py` — stable engine contract.
-- `runtime.py` — transitions, leases, approvals and state authority.
-- `runner.py` — automatic due/evidence/parent continuation.
-- `service.py` — repository-local background runner lifecycle.
-- `store.py` — SQLite goals, cycles, events, memory, approvals and leases.
-- `engines/` — thin runtime adapters for the Director and Departments.
-- `departments/` — business workflows, policies, domain adapters, and assets.
-- `tools/` — stable operations such as publish, query, and render.
-- `connections/` — replaceable Buffer, blog, PostHog, and Search Console adapters.
-- `strategy/` — company-wide ICP, positioning, voice, and measurement authority.
-- `assets/` — approved reusable company inputs.
-- `agents/` — canonical bounded executor identities.
-- `/.spielos/state/` — ignored runtime data, never source code.
-- `.agents/skills/director/` — conversational operating procedure.
+| Word | Meaning | Example |
+|---|---|---|
+| Goal | Measurable outcome owned by the runtime | Reach 30% qualified reply rate |
+| Department | Durable business capability | Outbound, Content, Design, Analytics, SEO |
+| Workflow | Repeatable playbook inside a Department | Email outreach, article, keyword research |
+| Agent | Bounded executor for Workflow steps | Lead Researcher, Publisher |
+| Skill | Reusable method an Agent follows | Copywriting, SEO, video creation |
+| Connection | Access to an external or local system | Buffer, PostHog, Search Console, website |
+| Artifact | Output or evidence produced by a run | Draft, report, graphic, video, receipt |
 
-Run from the repository root:
+`ContentPackage` is an Artifact manifest that groups one brief with its related
+post, article, graphic, video, evidence, and publication receipts. It is not a
+new architectural layer. It lives at
+`.spielos/artifacts/{goal}/{run}/content-package.json`.
 
-```sh
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=.agents python3 -B -m company engines
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=.agents python3 -B -m company catalog
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=.agents python3 -B -m company goal create --name "Get replies" --engine outbound \
-  --metric reply_rate --operator ge --target 0.30 \
-  --config '{"workflow":"email-outreach","execution_mode":"dry_run","evidence_window_hours":48}'
+## Structure
+
+```text
+.agents/company/
+  runtime/                 one loop, persistence, supervision, controls
+  strategy/                ICP, positioning, voice, measurement
+  assets/                  approved reusable facts, proof, brand references
+  departments/
+    outbound/              lead research, email, social research, DMs
+    content/               packages, posts, articles, publishing
+    design/                graphics, renditions, video, templates
+    analytics/             scorecards, funnels, CRO
+    seo/                   keywords, briefs, audits, improvements
+  connections/             host-first Connection declarations
+  agents/                  bounded executor identities
+
+.agents/skills/            reusable methods
+.spielos/.env              private credentials (ignored)
+.spielos/data/             private operational inputs (ignored)
+.spielos/state/            durable runtime state (ignored)
+.spielos/artifacts/        generated run outputs (ignored)
+public/                    intentionally published website assets
 ```
 
-The production Departments are Outbound, Content, Design, Analytics, and SEO.
-Director and System Improvement are control engines; `email` remains only as a
-compatibility ID for persisted historical goals.
+Each Department keeps its runtime implementation in `department.py`, its
+Workflows beside it, and its channel templates inside its own folder. There is
+no separate public adapter or Tool layer.
 
-`ContentPackage` is a run artifact grouping one brief and its coordinated
-deliverables. It is not an extra Department, engine, workflow, agent, or skill.
+## Five OpenCode commands
 
-For a company goal, create a `director` goal and engine goals whose `--parent`
-is that goal ID. Any child remains directly runnable with `once CHILD_GOAL_ID`.
-Child transitions wake a waiting parent automatically. Approvals and evidence
-commands continue the current goal tree; they do not require a second manual
-`once`. Evaluation completes and parks the run. `company next GOAL_ID` is the
-only operation that accepts the proposed experiment and creates another run.
+| Command | Meaning |
+|---|---|
+| `/start [request or goal]` | Create, resume, or continue one Goal |
+| `/stop [goal]` | Persistently stop automation; optionally pause one Goal |
+| `/status [goal]` | Show outcomes, evidence, approvals, and blockers |
+| `/approve <goal>` | Approve exactly one displayed parked action |
+| `/help` | Explain this vocabulary and command surface |
 
-Outbound email has no execution default: a persisted goal must explicitly select
-`dry_run` or `live`, and execution always parks for approval first.
+Escape cancels the current OpenCode response. `/stop` is different: its plugin
+hook immediately disables durable company automation, preventing idle hooks or
+background supervision from starting more work. `/start` enables it again.
 
-Live email runs poll provider evidence while their evidence window is open.
-Use `observer_interval_seconds` to set the cadence. Controlled inbox tests must
-declare `reply_capture: manual_inbox` or `reply_capture: resend_inbound`.
-`resend_inbound` refuses to send unless `REPLY_TO` is configured; that address
-must belong to a Resend receiving-enabled domain. Provider delivery/open/bounce
-events and matched inbound replies are persisted as run evidence, deduplicated
-by provider event or received-email ID. Manual evidence never satisfies an
-automatic-capture test.
+## Connections
 
-## Typed runs and self-improvement
+Workflows declare logical Connections. Interactive work uses the active Codex
+app/plugin or OpenCode MCP first. A direct API implementation is added only when
+the Workflow must run unattended without a chat host. Today direct email
+delivery is retained for unattended Outbound; Buffer, PostHog, Search Console,
+and website publishing are host-resolved.
 
-The four-stage runtime is shared by six run types: `business_experiment`,
-`execution`, `diagnostic`, `system_improvement`, `evaluation`, and
-`system_test`. Every run pins its hypothesis, engine version, configuration,
-controlled/changed variables, evidence validity, decisions, and evaluation.
+Connection credentials use the single example contract at
+`.agents/company/.env.example`. Real values live only in `.spielos/.env`.
+Outbound lead data lives only in `.spielos/data/outbound/`.
 
-When infrastructure invalidates an experiment, mark the evidence contaminated
-and create a bounded `system_improvement` child. That child requires approval,
-allowed files, acceptance commands, and a target engine version. Successful
-validation returns control to the originating run without changing its business
-variables.
+## Runtime commands
 
-Use `change_kind: create_engine`, `from_version: new`, and `engine_spec` to
-commission a new engine through the same bounded system-improvement path.
+The Director and OpenCode commands call one portable internal CLI:
 
-## Active loop and reporting
+```sh
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=.agents python3 -B -m company departments
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=.agents python3 -B -m company catalog
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=.agents python3 -B -m company status
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=.agents python3 -B -m company runner status
+```
 
-`company runner start` launches a repository-local worker whose PID and log live
-under `.spielos/state/`. It advances idle runs, resumes due waiting runs,
-processes approved actions, and wakes Director parents when children change.
-Hard approvals, event-only evidence waits, blockers, failures, and completed
-runs remain parked. The runner never silently creates the next experiment.
+Create a Department goal with `--owner`, for example:
 
-Approval, evaluation, blocker, failure, and terminal reports enter the durable
-notification outbox. Codex/OpenCode read this outbox and acknowledge a notice
-only after communicating it. External evidence still requires an adapter: for
-example, inbox reply capture must record a `reply` event before the runner can
-evaluate it.
+```sh
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=.agents python3 -B -m company goal create \
+  --name "Research 10 qualified prospects" --owner outbound \
+  --metric qualified_social_leads --operator ge --target 10 \
+  --config '{"workflow":"social-lead-research","required_count":10}'
+```
 
-OpenCode loads `.opencode/plugins/spielos-notifications.ts`. While an OpenCode
-session is open, the hook performs safe runner ticks, watches the same durable
-outbox, shows a toast, and wakes the Director in the active session. If OpenCode
-is closed, nothing is lost; pending notifications are delivered when it opens.
-Codex uses its scheduled Director heartbeat against the same outbox.
+Internal CLI operations such as `runner tick`, `change complete`, evidence
+recording, and notification acknowledgement are runtime plumbing. They are not
+additional user-facing concepts or slash commands.
 
-Outbound email runs require a complete eligible queue for their configured `batch_size`.
-A shortfall emits a typed `action_required` notification with the exact number
-of qualified, researched leads needed. The Director coordinates lead research,
-verifies the queue evidence, and retries the same run without changing its
-business hypothesis.
+## Safety and system improvement
+
+Live external actions always park for approval. Generated material is not
+business evidence. Technical-only, contaminated, or invalid evidence cannot
+support a market conclusion.
+
+Runtime or Department changes use one bounded `system_improvement` Goal with:
+
+- `owner_id`, current and target version;
+- problem and allowed files;
+- exact acceptance commands;
+- `change_kind: repair` or `create_department`;
+- a `department_spec` when creating a Department.
+
+The executor edits only approved files, records actual test evidence, and never
+marks deployment unless deployment happened.

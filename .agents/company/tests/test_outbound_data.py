@@ -1,4 +1,4 @@
-"""STATE substrate tests: engine_state, batches, knowledge, actions."""
+"""Outbound state substrate tests: workflow state, batches, knowledge, actions."""
 
 import tempfile
 import unittest
@@ -11,7 +11,7 @@ from company.departments.outbound.data import OutboundStore
 class StoreTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
-        self.store = OutboundStore(Path(self.tmp.name) / "engine.sqlite")
+        self.store = OutboundStore(Path(self.tmp.name) / "outbound.sqlite")
 
     def tearDown(self):
         self.store.close()

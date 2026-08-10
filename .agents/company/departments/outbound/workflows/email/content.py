@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Outbound email content banks (subject/body/CTA variants per segment).
 
-The engine can only touch copy through these banks: a lever change is a
+The Department can only touch copy through these banks: a lever change is a
 one-key JSON edit (data/content_variables.json), never a code rewrite.
 Banks live in data, defaults below are re-seeded when a bank is empty.
 """

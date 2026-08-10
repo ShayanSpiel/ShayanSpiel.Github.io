@@ -26,7 +26,7 @@ def make_ctx():
     outbound.save_sent_log({"sent": [], "failed": []})
     with open(config.METRICS_PATH, "w") as f:
         json.dump({"emails": {}, "replies": []}, f)
-    store = OutboundStore(tmp / "engine.sqlite")
+    store = OutboundStore(tmp / "outbound.sqlite")
     return tmp, store, Control(tmp / "control.json")
 
 

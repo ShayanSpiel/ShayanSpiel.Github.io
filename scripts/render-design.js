@@ -24,6 +24,7 @@ function validate() {
     const css = readFileSync(join(DESIGN_ROOT, "system/production.css"), "utf8");
     if (!html.includes("production.css")) failures.push("template does not use the production design system");
     if (!html.includes("GOAL") || !html.includes("EVALUATE")) failures.push("template does not show the canonical loop");
+    if (html.includes("Tools stay stable")) failures.push("template uses the retired Tool vocabulary");
     if (!css.includes("src/styles/tokens/index.css")) failures.push("production CSS does not import canonical tokens");
     const presets = JSON.parse(readFileSync(PRESETS_FILE, "utf8"));
     if (Object.keys(presets).length < 6) failures.push("fewer than six channel presets");

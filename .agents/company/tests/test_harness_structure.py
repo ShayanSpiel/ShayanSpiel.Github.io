@@ -2,9 +2,9 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from company.catalog import catalog
 from company.departments.outbound.workflows import social
-from company.runtime import Runtime
+from company.runtime.catalog import catalog
+from company.runtime.loop import Runtime
 
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -13,12 +13,11 @@ ROOT = Path(__file__).resolve().parents[3]
 class CatalogTests(unittest.TestCase):
     def test_catalog_has_one_loop_and_resolvable_composition(self):
         value = catalog()
-        self.assertEqual(value["runtime"]["loop"], ["GOAL", "OBSERVE", "DECIDE", "ACT", "EVALUATE"])
+        self.assertEqual(value["runtime"]["loop"],
+                         ["GOAL", "OBSERVE", "DECIDE", "ACT", "EVALUATE"])
         departments = {item["id"]: item for item in value["departments"]}
-        self.assertTrue(departments["outbound"]["production_ready"])
-        self.assertNotIn("outbound", {item["id"] for item in value["compatibility_engines"]})
-        for department_id in ("content", "design", "analytics", "seo"):
-            self.assertTrue(departments[department_id]["production_ready"])
+        self.assertEqual({"outbound", "content", "design", "analytics", "seo"},
+                         set(departments))
         agents = {item["id"] for item in value["agents"]}
         skills = {item["id"] for item in value["skills"]}
         for department in departments.values():
@@ -26,12 +25,20 @@ class CatalogTests(unittest.TestCase):
                 self.assertTrue(set(workflow["agents"]).issubset(agents))
                 self.assertTrue(set(workflow["skills"]).issubset(skills))
 
-    def test_canonical_strategy_and_video_assets_exist(self):
+    def test_lean_layout_has_one_authority_and_no_duplicate_layers(self):
+        self.assertTrue((ROOT / ".agents/company/README.md").is_file())
         self.assertTrue((ROOT / ".agents/company/strategy/icp.md").is_file())
-        template_root = ROOT / ".agents/company/departments/design/templates/video"
-        self.assertTrue((template_root / "scenario-b.html").is_file())
-        self.assertTrue((template_root / "scenario-c.html").is_file())
+        self.assertFalse((ROOT / ".agents/company/engines").exists())
+        self.assertFalse((ROOT / ".agents/company/tools").exists())
+        self.assertFalse((ROOT / ".agents/Outbound").exists())
         self.assertFalse((ROOT / ".agents/Outreach").exists())
+        commands = {path.stem for path in (ROOT / ".opencode/commands").glob("*.md")}
+        self.assertEqual({"start", "stop", "status", "approve", "help"}, commands)
+
+    def test_canonical_video_templates_stay_with_design(self):
+        root = ROOT / ".agents/company/departments/design/templates/video"
+        self.assertTrue((root / "scenario-b.html").is_file())
+        self.assertTrue((root / "scenario-c.html").is_file())
 
 
 class SocialWorkflowTests(unittest.TestCase):
@@ -47,8 +54,7 @@ class SocialWorkflowTests(unittest.TestCase):
 
     def test_social_prospect_requires_icp_research_and_sources(self):
         self.assertIsNotNone(social.normalize_prospect(self.prospect))
-        invalid = {**self.prospect, "source_urls": []}
-        self.assertIsNone(social.normalize_prospect(invalid))
+        self.assertIsNone(social.normalize_prospect({**self.prospect, "source_urls": []}))
 
     def test_dm_must_link_to_research_and_fit_channel(self):
         prospect = social.normalize_prospect(self.prospect)
@@ -61,7 +67,7 @@ class SocialWorkflowTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             runtime = Runtime(Path(tmp) / "company.sqlite")
             goal = runtime.create_goal(
-                name="Research one social prospect", engine_id="outbound",
+                name="Research one social prospect", owner_id="outbound",
                 metric="qualified_social_leads", operator="ge", target=1,
                 deadline=None, config={"workflow": "social-lead-research", "required_count": 1},
                 goal_id="goal-social-test", run_type="system_test",

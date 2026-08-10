@@ -29,7 +29,7 @@ Finland · Ireland · Saudi Arabia · Qatar.
 | Publicly listed; not deliverability-verified | Real MX, non-disposable; may open/click (proven); probe pending | 2 |
 | Bounced; suppressed | Provider bounce event, or L1 fail (syntax/disposable/no-MX) | NEVER |
 
-The engine never sends to the bottom tier. Bounce events auto-downgrade
+The Department never sends to the bottom tier. Bounce events auto-downgrade
 (sync-bounces); L2 probing upgrades in idle time.
 
 ## Scoring (deterministic, in scripts/leads.py)

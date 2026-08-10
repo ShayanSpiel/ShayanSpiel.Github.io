@@ -5,7 +5,7 @@ machine checkpoints; REVIEW is handled by the company runtime.
 
 Row shape (persisted in the store): {id, workflow, phase, batch (payload),
 intervention, preview_path, artifact_path, report_path, created_at,
-updated_at}. The workflow bundle sees only the payload; the engine owns
+updated_at}. The workflow sees only the payload; the Department owns
 the row.
 """
 

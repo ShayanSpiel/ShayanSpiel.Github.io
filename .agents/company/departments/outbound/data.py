@@ -3,8 +3,8 @@
 The company runtime owns lifecycle state. This store preserves Outbound domain
 records, prepared batches, and historical campaign knowledge:
 
-  engine_state — phase, current batch/snapshot/intervention references,
-                 batch cycle counter, evidence deadline, hold reason
+  workflow_state — phase, current batch/snapshot/intervention references,
+                   batch cycle counter, evidence deadline, hold reason
   batches      — one row per prepared batch (artifact refs, metrics, verdict)
   knowledge    — per-variable experiment history (verdicts, trials)
   actions      — append-only per-lead action ledger (channel-neutral)
@@ -13,8 +13,8 @@ records, prepared batches, and historical campaign knowledge:
                  email bundle keeps its own master list — see
                  workflows/email/outbound.py)
 
-Human-written state (goal spec, approvals, knobs) lives in data/control.json
-(engine/control.py): the owner edits JSON, the machine writes SQLite.
+Human-written state (goal spec, approvals, knobs) lives in control.json: the
+owner edits JSON, the machine writes SQLite.
 """
 
 import json
@@ -39,6 +39,14 @@ class OutboundStore:
         self._migrate()
 
     def _migrate(self) -> None:
+        # v5 vocabulary migration. Preserve every existing Outbound state row.
+        tables = {
+            row[0] for row in self.db.execute(
+                "SELECT name FROM sqlite_master WHERE type='table'"
+            ).fetchall()
+        }
+        if "engine_state" in tables and "workflow_state" not in tables:
+            self.db.execute("ALTER TABLE engine_state RENAME TO workflow_state")
         self.db.executescript(
             """
             CREATE TABLE IF NOT EXISTS leads (
@@ -80,7 +88,7 @@ class OutboundStore:
                 queue_target INTEGER NOT NULL,
                 enabled INTEGER NOT NULL DEFAULT 1
             );
-            CREATE TABLE IF NOT EXISTS engine_state (
+            CREATE TABLE IF NOT EXISTS workflow_state (
                 key TEXT PRIMARY KEY,
                 value TEXT
             );
@@ -114,7 +122,7 @@ class OutboundStore:
 
     def get_state(self, key: str, default: Any = None) -> Any:
         row = self.db.execute(
-            "SELECT value FROM engine_state WHERE key=?", (key,)).fetchone()
+            "SELECT value FROM workflow_state WHERE key=?", (key,)).fetchone()
         if row is None:
             return default
         try:
@@ -125,7 +133,7 @@ class OutboundStore:
     def set_state(self, key: str, value: Any) -> None:
         payload = json.dumps(value, default=str)
         self.db.execute(
-            """INSERT INTO engine_state(key, value) VALUES(?,?)
+            """INSERT INTO workflow_state(key, value) VALUES(?,?)
                ON CONFLICT(key) DO UPDATE SET value=excluded.value""",
             (key, payload))
         self.db.commit()

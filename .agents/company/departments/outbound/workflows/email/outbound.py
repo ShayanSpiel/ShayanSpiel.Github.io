@@ -7,7 +7,7 @@ This is the email bundle's data layer: the loop never calls it directly —
 only through the workflow bundle (observer/decider/actor/evaluator).
 
 Runtime data lives in .spielos/state/outbound/ (sent.json, metrics.json); the
-master lead database stays in .agents/Outbound/.
+master lead database stays in .spielos/data/outbound/.
 """
 
 import json

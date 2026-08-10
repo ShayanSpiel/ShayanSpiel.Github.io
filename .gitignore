@@ -18,10 +18,9 @@ Thumbs.db
 # Logs
 *.log
 
-# Outbound: PII and runtime data stay local
-.agents/Outbound/.env
-
-# Company runtime: PII + state stay local
+# Company runtime: credentials, private inputs, state, and generated work stay local
+.spielos/.env
+.spielos/data/
 .spielos/state/
 .spielos/artifacts/
 

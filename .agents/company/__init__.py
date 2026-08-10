@@ -1,6 +1,5 @@
-"""SpielOS company runtime: durable goals, engines, and orchestration."""
+"""SpielOS company harness: durable goals, Departments, and one loop."""
 
-from .models import EvidenceValidity, GoalStatus, RunStatus, RunType, Stage
-from .runtime import Runtime
+from .runtime import EvidenceValidity, GoalStatus, RunStatus, RunType, Stage, Runtime
 
 __all__ = ["EvidenceValidity", "GoalStatus", "RunStatus", "RunType", "Stage", "Runtime"]

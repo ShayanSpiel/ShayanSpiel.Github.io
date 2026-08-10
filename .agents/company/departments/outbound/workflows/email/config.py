@@ -2,8 +2,8 @@
 """
 SpielOS Outbound — configuration.
 
-Everything is driven by environment variables (see .env.example).
-The .env file lives at .agents/Outbound/.env and is gitignored.
+Everything is driven by environment variables (see `.agents/company/.env.example`).
+The one private company env file lives at `.spielos/.env` and is ignored.
 """
 
 import os
@@ -13,18 +13,17 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).parent.resolve()
 AGENTS_DIR = SCRIPT_DIR.parents[4]
 PROJECT_ROOT = AGENTS_DIR.parent
-# .agents/Outbound — the campaign directory (leads/, master xlsx, .env)
-_env_outbound = (os.environ.get("OUTBOUND_DIR") or "").strip()
-OUTBOUND_DIR = Path(_env_outbound).expanduser() if _env_outbound else \
-    AGENTS_DIR / "Outbound"
+DATA_DIR = Path(os.environ.get(
+    "SPIELOS_DATA_DIR", PROJECT_ROOT / ".spielos" / "data" / "outbound")).expanduser()
+ENV_PATH = Path(os.environ.get(
+    "SPIELOS_ENV_FILE", PROJECT_ROOT / ".spielos" / ".env")).expanduser()
 # Machine runtime state belongs to the company harness, never source packages.
 RUNTIME_DIR = Path(os.environ.get("OUTBOUND_RUNTIME_DIR", PROJECT_ROOT / ".spielos" / "state" / "outbound"))
 
 
 def load_env() -> None:
-    env_path = OUTBOUND_DIR / ".env"
-    if env_path.exists():
-        for line in env_path.read_text().splitlines():
+    if ENV_PATH.exists():
+        for line in ENV_PATH.read_text().splitlines():
             line = line.strip()
             if not line or line.startswith("#") or "=" not in line:
                 continue
@@ -78,14 +77,14 @@ SIGNATURE_SERVICES = os.environ.get(
 ).strip()
 
 # ── Data ───────────────────────────────────────────────────────────────────────
-def _resolve_path(value: str, default: str, base: Path = OUTBOUND_DIR) -> Path:
+def _resolve_path(value: str, default: str, base: Path = DATA_DIR) -> Path:
     p = Path(os.environ.get(value, default)).expanduser()
     return p if p.is_absolute() else base / p
 
 
 DATABASE_PATH = _resolve_path(
     "EMAIL_LIST_PATH",
-    "spielos_master_outreach_database_updated_2026-08-06.xlsx",
+    "leads.xlsx",
 )
 SENT_LOG_PATH = _resolve_path("SENT_LOG_PATH", "sent.json", base=RUNTIME_DIR)
 CONTENT_PATH = _resolve_path("CONTENT_PATH", "content_variables.json", base=RUNTIME_DIR)
@@ -119,7 +118,7 @@ def validate() -> None:
     if missing:
         raise SystemExit(
             f"ERROR: {missing} not set for provider '{EMAIL_PROVIDER}'. "
-            f"Add it to {OUTBOUND_DIR / '.env'} (see .env.example)."
+            f"Add it to {ENV_PATH} (see .agents/company/.env.example)."
         )
 
     if not DATABASE_PATH.exists():
@@ -217,7 +216,7 @@ MIN_TOTAL_SAMPLE = int(os.environ.get("MIN_TOTAL_SAMPLE", "10"))
 MIN_VARIANT_SAMPLE = int(os.environ.get("MIN_VARIANT_SAMPLE", "5"))
 
 # ── Goals ─────────────────────────────────────────────────────────────────────
-# Single source of truth for the goal engine (strategy.py). Each entry:
+# Single source of truth for workflow targets (strategy.py). Each entry:
 #   name, metric (key in analytics.aggregate), target, kind ("floor" = higher
 #   is better; "ceiling" = lower is better), stage, severity, action text.
 # Add a goal here (or via GOAL_*/MAX_* env vars) and the loop will enforce it.

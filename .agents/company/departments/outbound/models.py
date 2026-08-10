@@ -2,7 +2,7 @@
 
 Domain-free: nothing here knows about email, content, or any channel. The
 loop vocabulary (Phase) and the workflow vocabulary (Lead, Action, Goal)
-live in one place so the engine and its bundles never disagree.
+live in one place so the Department and its workflows never disagree.
 """
 
 from dataclasses import dataclass, field

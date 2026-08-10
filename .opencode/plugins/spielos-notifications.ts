@@ -17,14 +17,17 @@ export const SpielOSNotifications: Plugin = async ({ client, directory, $ }) => 
     PYTHONDONTWRITEBYTECODE: "1",
     PYTHONPATH: ".agents",
   })
-  let sessionID: string | undefined
   let checking = false
   const prompted = new Map<string, number>()
 
   const check = async () => {
-    if (!sessionID || checking) return
+    if (checking) return
     checking = true
     try {
+      const status = JSON.parse(
+        await shell`python3 -B -m company runner status`.text(),
+      ) as { enabled?: boolean }
+      if (status.enabled === false) return
       await shell`python3 -B -m company runner tick`.quiet().nothrow()
       const raw = await shell`python3 -B -m company notifications list --status pending --limit 100`.text()
       const pending = (JSON.parse(raw) as Array<{ id: string; kind: string }>).filter(
@@ -50,22 +53,6 @@ export const SpielOSNotifications: Plugin = async ({ client, directory, $ }) => 
           duration: 8000,
         },
       })
-      await client.session.promptAsync({
-        path: { id: sessionID },
-        query: { directory },
-        body: {
-          agent: "director",
-          parts: [{
-            type: "text",
-            synthetic: true,
-            text:
-              `SpielOS runtime notification trigger. Deliver pending notification(s) ${ids.join(", ")} ` +
-              "in business language. Include goal, run result, evidence, proposed next experiment, " +
-              "next trigger, and required user action. Acknowledge each notification only after it " +
-              "has been communicated. Do not create or start another run without user approval.",
-          }],
-        },
-      })
     } catch {
       // The durable outbox remains pending; the next idle check retries safely.
     } finally {
@@ -79,12 +66,15 @@ export const SpielOSNotifications: Plugin = async ({ client, directory, $ }) => 
     dispose: async () => clearInterval(timer),
     event: async ({ event }) => {
       if (event.type === "session.idle") {
-        sessionID = event.properties.sessionID
         await check()
       }
     },
-    "chat.message": async (input) => {
-      sessionID = input.sessionID
+    "command.execute.before": async (input) => {
+      if (input.command === "stop") {
+        await shell`python3 -B -m company runner stop`.quiet()
+      } else if (input.command === "start") {
+        await shell`python3 -B -m company runner enable`.quiet()
+      }
     },
   }
 }

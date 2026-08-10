@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Outbound email report data for company-runtime evaluation artifacts.
 
-The engine's report module renders the generic sections (batch, sends,
+The Department's report workflow renders the generic sections (batch, sends,
 hypothesis vs goal) and asks the workflow bundle for the domain picture:
 campaign totals, per-provider counts, one random example email (for
 research/content quality checks), guardrails on the 48h window, and the

@@ -5,11 +5,11 @@ import json
 import sys
 from pathlib import Path
 
-from .models import GoalStatus
-from .registry import engines
-from .runner import Runner
-from .runtime import Runtime
-from .service import RunnerService
+from .runtime.models import GoalStatus
+from .runtime.registry import departments
+from .runtime.runner import Runner
+from .runtime.loop import Runtime
+from .runtime.service import RunnerService
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DB = PROJECT_ROOT / ".spielos" / "state" / "company.sqlite"
@@ -19,13 +19,13 @@ def build_parser():
     parser = argparse.ArgumentParser(prog="python3 -m company")
     parser.add_argument("--db", default=str(DEFAULT_DB))
     commands = parser.add_subparsers(dest="command", required=True)
-    commands.add_parser("engines")
+    commands.add_parser("departments")
     commands.add_parser("catalog")
     goal = commands.add_parser("goal")
     goals = goal.add_subparsers(dest="goal_command", required=True)
     create = goals.add_parser("create")
     create.add_argument("--name", required=True)
-    create.add_argument("--engine", required=True)
+    create.add_argument("--owner", required=True)
     create.add_argument("--metric", required=True)
     create.add_argument("--operator", choices=("ge", "gt", "eq", "le", "lt"), default="ge")
     create.add_argument("--target", required=True)
@@ -65,6 +65,7 @@ def build_parser():
     tick = runner_commands.add_parser("tick"); tick.add_argument("goal_id", nargs="?"); tick.add_argument("--max-advances", type=int, default=100)
     watch = runner_commands.add_parser("watch"); watch.add_argument("goal_id", nargs="?"); watch.add_argument("--interval", type=float, default=2.0); watch.add_argument("--max-ticks", type=int)
     start = runner_commands.add_parser("start"); start.add_argument("--interval", type=float, default=2.0)
+    runner_commands.add_parser("enable")
     runner_commands.add_parser("stop")
     runner_commands.add_parser("status")
     notifications = commands.add_parser("notifications")
@@ -85,13 +86,12 @@ def main(argv=None):
     args = build_parser().parse_args(argv)
     runtime = Runtime(args.db)
     try:
-        if args.command == "engines":
+        if args.command == "departments":
             output = [{"id": key, "version": value.version, "description": value.description,
-                       "deprecated": bool(getattr(value, "deprecated", False)),
                        "goal_schema": value.goal_schema}
-                      for key, value in engines().items()]
+                      for key, value in departments().items()]
         elif args.command == "catalog":
-            from .catalog import catalog
+            from .runtime.catalog import catalog
             output = catalog()
         elif args.command == "goal" and args.goal_command == "create":
             config = json.loads(args.config)
@@ -100,7 +100,7 @@ def main(argv=None):
             changed = json.loads(args.changed)
             if not isinstance(config, dict):
                 raise ValueError("--config must be a JSON object")
-            output = runtime.create_goal(name=args.name, engine_id=args.engine, metric=args.metric,
+            output = runtime.create_goal(name=args.name, owner_id=args.owner, metric=args.metric,
                 operator=args.operator, target=scalar(args.target), deadline=args.deadline,
                 parent_id=args.parent, config=config, goal_id=args.id, run_type=args.run_type,
                 hypothesis=hypothesis or None, controlled_variables=controlled, changed_variables=changed,
@@ -156,6 +156,8 @@ def main(argv=None):
                     output = service.start(args.interval)
                 elif args.runner_command == "stop":
                     output = service.stop()
+                elif args.runner_command == "enable":
+                    output = service.enable()
                 else:
                     output = service.status()
         elif args.command == "notifications":
@@ -166,7 +168,7 @@ def main(argv=None):
         else:
             state = runtime.status(args.goal_id)
             output = {**state, "events": runtime.store.events(args.goal_id, args.events),
-                      "memory": runtime.store.memories(state["goal"]["engine_id"], args.goal_id)}
+                      "memory": runtime.store.memories(state["goal"]["owner_id"], args.goal_id)}
             if not args.json:
                 print(render_report(output))
                 return 0
@@ -188,7 +190,7 @@ def render_report(state):
     lines = [f"# Goal report: {goal['name']}", "",
              f"- Goal: `{goal['metric']} {goal['operator']} {goal['target']}`",
              f"- Goal status: `{goal['goal_status']}`",
-             f"- Run: `{evaluated_run['id']}` · `{evaluated_run['run_type']}` · engine `{evaluated_run['engine_id']}@{evaluated_run['engine_version']}`",
+             f"- Run: `{evaluated_run['id']}` · `{evaluated_run['run_type']}` · owner `{evaluated_run['owner_id']}@{evaluated_run['owner_version']}`",
              f"- Runtime: `{cycle['stage']}.{cycle['step']}` · `{cycle['run_status']}`",
              f"- Evidence validity: `{evaluated_run['evidence_validity']}`"]
     if evaluated_run.get("contamination_reason"):

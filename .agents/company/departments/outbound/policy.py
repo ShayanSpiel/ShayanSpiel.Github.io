@@ -1,6 +1,6 @@
 """Outbound deterministic policy veto boundary.
 
-The engine enforces policy but never defines it — the workflow bundle owns
+The Department enforces policy but never defines it — the workflow owns
 the rules (workflows/email/policy_rules.py). Two enforcement points:
 
   soft — OBSERVE includes the gate verdict in the snapshot; DECIDE never

@@ -1,6 +1,6 @@
 # Outbound email provider registry
 
-Every provider credential lives in `.agents/Outbound/.env` (gitignored —
+Every provider credential lives in `.spielos/.env` (gitignored —
 never committed). This file is the receipt: which env var holds which key,
 and the live status. If `.env` is ever lost, re-paste the values into these
 variables.
@@ -11,7 +11,7 @@ variables.
 | Mailgun | `MAILGUN_API_KEY`, `MAILGUN_DOMAIN` (mg.spielos.xyz) | ✅ LIVE — sending | Transactional + status reads |
 | Brevo | `BREVO_API_KEY` | ✅ LIVE — sending | Transactional + status reads (IP allowlist must keep this server's IP) |
 | Postmark | `POSTMARK_API_TOKEN` (server), `POSTMARK_ACCOUNT_TOKEN` (account), `POSTMARK_DOMAIN` (pm.spielos.xyz) | ⏸ Account PENDING APPROVAL; token situation unresolved — see notes below | Transactional + status reads |
-| EmailOctopus | `EMAILOCTOPUS_API_KEY` | ⚠ Key valid — **not usable for this engine**: marketing ESP, campaign/list-based, NO transactional send API | Broadcast campaigns only |
+| EmailOctopus | `EMAILOCTOPUS_API_KEY` | ⚠ Key valid — **not usable for this workflow**: marketing ESP, campaign/list-based, NO transactional send API | Broadcast campaigns only |
 | SendGrid | `SENDGRID_API_KEY` (missing) | 🔴 No key | — |
 | SMTP/Gmail | `SMTP_HOST`, `SMTP_USER`, `SMTP_PASS` | 🔴 Not configured; would break the metrics loop (no status reads) | Last-resort only |
 
@@ -34,7 +34,7 @@ next UTC day. Per-provider daily caps: `PROVIDER_DAILY_CAPS` in `.env`
   (Servers → "My First Server" → API Tokens) + account approval.
 
 ## How to replace a key
-1. Edit `.agents/Outbound/.env` (never `.env.example`, never commit).
+1. Edit `.spielos/.env` (never `.env.example`, never commit).
 2. Verify the Department catalog and persisted goal with `company catalog`
    and `company status GOAL_ID` through the repository runtime command.
 3. There is no channel daemon to restart; each company-runtime step reloads
