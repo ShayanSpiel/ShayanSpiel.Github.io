@@ -1,0 +1,6 @@
+interface:
+  display_name: "Engine Runner"
+  short_description: "Run one business engine against a goal"
+  default_prompt: "Use $engine-runner to run one engine independently and report its persisted state."
+policy:
+  allow_implicit_invocation: true

@@ -116,26 +116,14 @@ const lang = locale === "fa" ? "fa" : "en";
       })();
     </script>
 
-    <!-- PostHog stub: creates window.posthog array interface and auto-loads library -->
-    <script is:inline define:vars={{ phKey: ANALYTICS.posthogApiKey, phHost: ANALYTICS.posthogApiHost }}>
-      !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("head")[0]).appendChild(p);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
-    </script>
-
-    <!-- GA4: queue commands before gtag.js loads -->
+    <!-- Consent defaults are queued before either analytics library is loaded. -->
     <script is:inline define:vars={{ gaId: ANALYTICS.googleAnalyticsId, gaDebug: ANALYTICS.debug }}>
       window.__spielosAnalyticsConsent = (function(){
         try { return localStorage.getItem('spielos.analytics-consent') === 'accepted'; } catch(e) { return false; }
       })();
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
-      if(window.__spielosAnalyticsConsent){
-        gtag('js', new Date());
-        gtag('config', gaId, {
-          send_page_view: true,
-          cookie_flags: 'SameSite=None;Secure',
-          debug_mode: gaDebug
-        });
-      }
+      gtag('consent', 'default', { analytics_storage: 'denied', ad_storage: 'denied', wait_for_update: 500 });
     </script>
 
     <!-- Organization schema: global brand identity for every page -->
@@ -206,25 +194,16 @@ const lang = locale === "fa" ? "fa" : "en";
         function loadAnalytics(){
           if(started || !window.__spielosAnalyticsConsent) return;
           started = true;
-          /* Load GA4 via gtag.js — head script already queued config into dataLayer */
+          gtag('consent', 'update', { analytics_storage: 'granted' });
+          gtag('js', new Date());
+          gtag('config', gaId, { send_page_view: true, cookie_flags: 'SameSite=None;Secure' });
           var s=document.createElement('script');
           s.async=1;
           s.src='https://www.googletagmanager.com/gtag/js?id='+gaId;
           document.head.appendChild(s);
-          var tries = 0;
-          function initPostHog(){
-            if(!window.__spielosAnalyticsConsent) return;
-            if(typeof posthog!=='undefined' && typeof posthog.init==='function'){
-              posthog.init(phKey,{
-                api_host: phHost,
-                person_profiles: 'identified_only'
-              });
-            }else{
-              tries++;
-              if(tries < 50){setTimeout(initPostHog,100);}
-            }
-          }
-          setTimeout(initPostHog, 500);
+          /* The PostHog loader is created only after consent. */
+          !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("head")[0]).appendChild(p);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+          posthog.init(phKey,{ api_host: phHost, person_profiles: 'identified_only' });
         }
         document.addEventListener('spielos:analytics-consent', function(e){
           if(e.detail && e.detail.accepted) loadAnalytics();
@@ -265,18 +244,23 @@ const lang = locale === "fa" ? "fa" : "en";
           return document.documentElement.lang || 'en';
         }
 
-        /* ---- Waitlist form submission tracking ---- */
+        /* ---- Lead form funnel tracking ---- */
+        var startedForms = new WeakSet();
+        document.addEventListener('focusin', function(e){
+          var form = e.target && e.target.closest ? e.target.closest('form') : null;
+          if(form && !startedForms.has(form)){
+            startedForms.add(form);
+            track('lead_form_start', { page: getPage(), device: getDevice(), locale: getLocale(), form_type: form.closest('.showcase-waitlist-form') ? 'waitlist' : 'contact' });
+          }
+        });
         document.addEventListener('submit', function(e){
           var form = e.target;
           if(form && form.closest && form.closest('.showcase-waitlist-form')){
-            var f = form.closest('.showcase-waitlist-form').querySelector('form') || form;
-            var emailInput = f.querySelector('input[name="email"]');
-            var email = emailInput ? emailInput.value.trim() : '';
-            track('waitlist_form_submit', {
+            track('lead_form_submit', {
               page: getPage(),
               device: getDevice(),
               locale: getLocale(),
-              email_provided: !!email
+              form_type: 'waitlist'
             });
           }
         }, true);
@@ -293,20 +277,19 @@ const lang = locale === "fa" ? "fa" : "en";
                !successEl.classList.contains('hidden') &&
                successEl.classList.contains('flex')){
               seenSuccess = true;
-              track('waitlist_form_success', {
-                page: getPage(), device: getDevice(), locale: getLocale()
+              track('lead_form_success', {
+                page: getPage(), device: getDevice(), locale: getLocale(), form_type: 'waitlist'
               });
             }
             if(errorEl && !seenError &&
                !errorEl.classList.contains('hidden') &&
                errorEl.classList.contains('flex')){
               seenError = true;
-              var errorText = errorEl.querySelector('.showcase-form-error-text');
-              track('waitlist_form_error', {
+              track('lead_form_error', {
                 page: getPage(),
                 device: getDevice(),
                 locale: getLocale(),
-                error_message: errorText ? errorText.textContent.trim() : ''
+                form_type: 'waitlist'
               });
             }
           });

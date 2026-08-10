@@ -17,16 +17,13 @@ Thumbs.db
 
 # Logs
 *.log
-Skills/
-.agents/Outbound/.env
 
 # Outbound: PII and runtime data stay local
 .agents/Outbound/.env
 
-# Engine runtime: PII + state stay local
-.agents/Outreach/data/
-.agents/Outreach/reports/
-.agents/Outreach/logs/
+# Company runtime: PII + state stay local
+.spielos/state/
+.spielos/artifacts/
 
 # Python bytecode + runtime artifacts
 **/__pycache__/

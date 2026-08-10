@@ -22,13 +22,14 @@
 
 import puppeteer from "puppeteer";
 import { execSync } from "child_process";
-import { mkdirSync, rmSync, existsSync, readFileSync } from "fs";
+import { mkdirSync, rmSync, existsSync, readFileSync, statSync } from "fs";
 import { join, resolve } from "path";
 import { fileURLToPath } from "url";
 import { createServer } from "http";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const ROOT = resolve(__dirname, "..");
+const TEMPLATE_ROOT = join(ROOT, ".agents/company/departments/design/templates/video");
 
 /* ── Aspect ratios ── */
 const ASPECTS = {
@@ -45,7 +46,8 @@ const SCENARIOS = {
 };
 
 /* ── CLI args ── */
-const scenarioKey = process.argv[2] || "b";
+const checkOnly = process.argv[2] === "--check";
+const scenarioKey = checkOnly ? "b" : (process.argv[2] || "b");
 const aspectKey = process.argv[3] || "landscape";
 const fps = parseInt(process.argv[4] || "30", 10);
 const customOutput = process.argv[5];
@@ -64,11 +66,32 @@ const { file: scenarioFile, name: scenarioName } = SCENARIOS[scenarioKey];
 const durationSec = 15;
 const totalFrames = fps * durationSec;
 
-const animFile = join(ROOT, "src/video-templates", scenarioFile);
+const animFile = join(TEMPLATE_ROOT, scenarioFile);
 const framesDir = join(ROOT, `public/videos/frames-${label}`);
 const outputFile = customOutput
   ? resolve(customOutput)
   : join(ROOT, `public/videos/spielos-${scenarioName}-${label}.mp4`);
+
+if (checkOnly) {
+  const failures = [];
+  for (const [key, scenario] of Object.entries(SCENARIOS)) {
+    const path = join(TEMPLATE_ROOT, scenario.file);
+    if (!existsSync(path)) {
+      failures.push(`${key}: missing ${path}`);
+      continue;
+    }
+    const source = readFileSync(path, "utf8");
+    for (const required of ["window.__setFrame", "boxicons.min.css", "<html", "</html>"]) {
+      if (!source.includes(required)) failures.push(`${key}: template missing ${required}`);
+    }
+  }
+  if (failures.length) {
+    console.error(failures.join("\n"));
+    process.exit(1);
+  }
+  console.log(`Video templates OK: ${Object.keys(SCENARIOS).join(", ")}`);
+  process.exit(0);
+}
 
 /* ── Verify FFmpeg ── */
 try {
@@ -159,7 +182,7 @@ async function render() {
   const page = await browser.newPage();
   await page.setViewport({ width, height, deviceScaleFactor: 1 });
 
-  const templateUrl = `${baseUrl}/src/video-templates/${scenarioFile}`;
+  const templateUrl = `${baseUrl}/.agents/company/departments/design/templates/video/${scenarioFile}`;
   console.log(`  Loading: ${templateUrl}`);
   await page.goto(templateUrl, { waitUntil: "networkidle0", timeout: 30000 });
   await page.evaluate(() => document.fonts.ready);
@@ -225,7 +248,7 @@ async function render() {
   console.log("  Cleaning up frames...");
   rmSync(framesDir, { recursive: true });
 
-  const sizeBytes = parseInt(execSync(`ls -la "${outputFile}" | awk '{print $5}'`).toString().trim(), 10);
+  const sizeBytes = statSync(outputFile).size;
   const sizeMB = (sizeBytes / 1024 / 1024).toFixed(1);
   console.log(`\n  Done! ${outputFile} (${sizeMB} MB)\n`);
 }

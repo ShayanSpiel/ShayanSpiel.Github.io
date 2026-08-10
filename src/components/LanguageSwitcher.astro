@@ -8,7 +8,6 @@ export interface Props {
 
 const { locale = "en" } = Astro.props;
 const switchPath = getSwitchLocaleUrl(Astro.url.pathname, locale);
-const switchLocale = locale === "en" ? "fa" : "en";
 const switchLabel = locale === "en" ? t(locale, "common.switchToFa") : t(locale, "common.switchToEn");
 ---
 
@@ -17,5 +16,5 @@ const switchLabel = locale === "en" ? t(locale, "common.switchToFa") : t(locale,
   class="language-switcher flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-panel-raised transition-colors"
   aria-label={switchLabel}
 >
-  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></svg>
+  <i class="bx bx-world icon-lg" aria-hidden="true"></i>
 </a>

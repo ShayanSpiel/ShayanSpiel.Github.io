@@ -99,7 +99,8 @@ export const FORMS = {
 };
 
 export const WAITLIST_URL = "/waitlist/";
-export const AGENT_BRIEFING_PATH = "/services/";
+export const SERVICES_PATH = "/services/";
+export const AGENT_BRIEFING_PATH = "/services/#agent-briefing";
 
 export const NAV_LINKS = {
   default: [

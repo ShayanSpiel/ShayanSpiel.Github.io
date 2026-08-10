@@ -15,7 +15,7 @@ This is not a translation skill. It creates original English content. The source
 
 Before writing, read:
 
-- `../../spielos-icp.md` — the single source of truth for the customer profile, exclusions, and positioning idea. Never restate the ICP in this file; read it from the source.
+- `../../company/strategy/icp.md` — the single source of truth for the customer profile, exclusions, and positioning idea. Never restate the ICP in this file; read it from the source.
 
 The ICP is identical in English and Persian. The behavioral profile does not change with language. Only the linguistic and cultural expression changes.
 

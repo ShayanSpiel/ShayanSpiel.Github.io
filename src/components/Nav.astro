@@ -1,6 +1,6 @@
 ---
 import SpielOSLogo from "./SpielOSLogo.astro";
-import { NAV_LINKS, AGENT_BRIEFING_PATH } from "../config";
+import { NAV_LINKS, SERVICES_PATH } from "../config";
 import { type Locale, t } from "../i18n/translations";
 import { localizePath } from "../i18n";
 
@@ -16,7 +16,7 @@ const navLinks = links || NAV_LINKS.default.map(link => ({
   href: localizePath(link.href, locale),
   label: t(locale, `nav.${link.label.toLowerCase().replace(/\s+/g, '')}`) || link.label,
 }));
-const ctaLink = cta || { label: t(locale, "services.cta.button"), href: AGENT_BRIEFING_PATH };
+const ctaLink = cta || { label: t(locale, "services.cta.button"), href: SERVICES_PATH };
 ---
 
 <nav

@@ -22,8 +22,8 @@ Does NOT own:
 
 Before creating videos, read:
 
-- `src/video-templates/scenario-b.html` — Before/After template (reference)
-- `src/video-templates/scenario-c.html` — Build It template (reference)
+- `.agents/company/departments/design/templates/video/scenario-b.html` — Before/After template
+- `.agents/company/departments/design/templates/video/scenario-c.html` — Build It template
 - `scripts/render-video.js` — Puppeteer + FFmpeg renderer
 - `public/videos/audio/music-ambient.mp3` — Background music
 
@@ -226,6 +226,7 @@ node scripts/render-video.js b landscape 30
 node scripts/render-video.js b portrait 30
 node scripts/render-video.js c landscape 30
 node scripts/render-video.js c portrait 30
+node scripts/render-video.js --check
 ```
 
 ### Merge audio into video

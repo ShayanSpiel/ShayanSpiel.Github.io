@@ -4,7 +4,7 @@ Single source of truth for all Persian terminology in SpielOS. Every translation
 
 ## Reference
 
-- `../../spielos-icp.md` — the single source of truth for the customer profile (shared with copywriting skills). The ICP determines what the reader already knows and which terms need explanation.
+- `../../company/strategy/icp.md` — the single source of truth for the customer profile (shared with copywriting skills). The ICP determines what the reader already knows and which terms need explanation.
 
 ---
 

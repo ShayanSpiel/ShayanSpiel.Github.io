@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<!-- Canonical Design Department source template; rendered outputs live in run artifacts or public/videos. -->
+<html lang="en" data-theme="gruvbox-dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SpielOS — Before / After</title>
+<link rel="stylesheet" href="/.agents/company/departments/design/system/production.css">
+<link rel="stylesheet" href="/node_modules/boxicons/css/boxicons.min.css">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--background); }
+
+:root {
+  --bg0_h: var(--background); --bg0: var(--panel); --bg0_s: var(--panel-raised); --bg1: var(--panel-strong);
+  --bg2: var(--border-strong); --fg0: var(--foreground-strong); --fg1: var(--foreground); --fg3: var(--foreground-muted); --fg4: var(--muted-foreground);
+  --blue: var(--primary); --green: var(--success); --yellow: var(--warning); --red: var(--destructive);
+  --aqua: var(--accent);
+  --font: var(--font-sans); --mono: var(--font-mono);
+}
+
+/* Boxicons — load glyph mappings from CSS, font from local file */
+@font-face { font-family: "boxicons"; font-weight: 400; font-style: normal; font-display: swap; src: url("/public/assets/fonts/boxicons.woff2") format("woff2"); }
+@font-face { font-family: "boxicons"; font-weight: 700; font-style: normal; font-display: swap; src: url("/public/assets/fonts/boxicons.woff2") format("woff2"); }
+.bx { font-family: "boxicons" !important; font-style: normal; font-weight: normal; font-variant: normal; text-transform: none; line-height: 1; -webkit-font-smoothing: antialiased; }
+
+body { font-family: var(--font); color: var(--fg1); -webkit-font-smoothing: antialiased; }
+
+/* ═══ SCENE SYSTEM ═══ */
+.scene {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none; z-index: 10;
+}
+.scene.active { opacity: 1; pointer-events: auto; }
+
+/* ═══ BACKGROUND ═══ */
+.bg-grid {
+  position: absolute; inset: 0; opacity: 0;
+  background-image: linear-gradient(var(--fg1) 1px, transparent 1px), linear-gradient(90deg, var(--fg1) 1px, transparent 1px);
+  background-size: 64px 64px;
+  transition: opacity 1s ease;
+}
+.bg-grid.show { opacity: 0.03; }
+.glow { position: absolute; border-radius: 50%; pointer-events: none; filter: blur(100px); }
+.glow-1 { width: 50vw; height: 50vw; top: 5%; left: -10%; background: var(--blue); opacity: 0; animation: drift 20s ease-in-out infinite; }
+.glow-2 { width: 40vw; height: 40vw; bottom: 5%; right: -8%; background: var(--purple); opacity: 0; animation: drift 28s ease-in-out infinite reverse; }
+@keyframes drift { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(40px,-25px) scale(1.08); } 66% { transform: translate(-30px,20px) scale(0.95); } }
+
+/* ═══ JOURNEY LINE ═══ */
+.journey-svg {
+  position: absolute; inset: 0; width: 100%; height: 100%; z-index: 5; pointer-events: none;
+}
+.journey-path {
+  fill: none; stroke: var(--fg3); stroke-width: 2; stroke-linecap: round;
+  stroke-dasharray: 10 8;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+.journey-path.show { opacity: 0.5; }
+.journey-path-fill {
+  fill: none; stroke: var(--blue); stroke-width: 2.5; stroke-linecap: round;
+  stroke-dasharray: var(--path-len); stroke-dashoffset: var(--path-len);
+  transition: stroke-dashoffset 0.1s linear;
+}
+.journey-station {
+  opacity: 0; transform-origin: center; transform: scale(0);
+  transition: opacity 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.journey-station.show { opacity: 1; transform: scale(1); }
+.station-ring {
+  fill: none; stroke: var(--blue); stroke-width: 2; opacity: 0;
+  transform-origin: center;
+}
+.station-ring.show { opacity: 1; animation: ringPulse 2s ease-in-out infinite; }
+@keyframes ringPulse { 0%,100% { r: 14; opacity: 0.6; } 50% { r: 20; opacity: 0; } }
+
+/* ═══ TEXT REVEAL ═══ */
+.r { opacity: 0; transform: translateY(24px); filter: blur(4px); transition: opacity 0.6s cubic-bezier(0.16,1,0.3,1), transform 0.6s cubic-bezier(0.16,1,0.3,1), filter 0.4s cubic-bezier(0.16,1,0.3,1); }
+.r.show { opacity: 1; transform: translateY(0); filter: blur(0); }
+.d1 { transition-delay: 0.08s; } .d2 { transition-delay: 0.16s; } .d3 { transition-delay: 0.24s; } .d4 { transition-delay: 0.32s; }
+
+/* ═══ SCENE 1 — HOOK (0-3.5s) ═══ */
+.hook { text-align: center; padding: 0 8%; z-index: 10; }
+.hook-line { display: block; }
+.hook-main {
+  font-size: clamp(3rem, 8vw, 5.5rem);
+  font-weight: 800; color: var(--fg0);
+  line-height: 1.1; letter-spacing: -0.03em;
+}
+.hook-sub {
+  font-size: clamp(1.1rem, 2.2vw, 1.5rem);
+  color: var(--fg4); margin-top: 1.2rem; line-height: 1.5; font-weight: 400;
+}
+.hook-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: clamp(48px, 6vw, 72px); height: clamp(48px, 6vw, 72px);
+  border-radius: 12px; background: rgba(204,36,29,0.15);
+  color: var(--red); font-size: clamp(24px, 3vw, 36px);
+  margin-bottom: 1.5rem;
+  opacity: 0; transform: scale(0.5) rotate(-10deg);
+  transition: opacity 0.5s cubic-bezier(0.34,1.56,0.64,1), transform 0.5s cubic-bezier(0.34,1.56,0.64,1);
+}
+.hook-icon.show { opacity: 1; transform: scale(1) rotate(0deg); }
+
+/* ═══ SCENE 2 — PAIN (3.5-6.5s) ═══ */
+.pain { z-index: 10; width: 90%; max-width: 900px; text-align: center; }
+.pain-items { display: flex; flex-direction: column; gap: clamp(10px, 2vw, 18px); align-items: center; }
+.pain-item {
+  display: flex; align-items: center; gap: clamp(14px, 2vw, 24px);
+  width: 100%; max-width: 720px;
+  padding: clamp(14px, 2vw, 22px) clamp(18px, 2.5vw, 32px);
+  border-radius: 12px; background: rgba(204,36,29,0.08);
+  border: 1px solid rgba(204,36,29,0.2);
+  opacity: 0; transform: translateX(-20px);
+  transition: opacity 0.45s cubic-bezier(0.16,1,0.3,1), transform 0.45s cubic-bezier(0.16,1,0.3,1);
+}
+.pain-item.show { opacity: 1; transform: translateX(0); }
+.pain-icon {
+  width: clamp(36px, 5vw, 52px); height: clamp(36px, 5vw, 52px); border-radius: 10px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  font-size: clamp(18px, 2.5vw, 26px);
+  background: rgba(204,36,29,0.15); color: var(--red);
+}
+.pain-text {
+  font-size: clamp(1rem, 2vw, 1.4rem); color: var(--fg0); font-weight: 600;
+  text-align: left; line-height: 1.3;
+}
+
+/* ═══ SCENE 3 — PROMISE (6.5-9s) ═══ */
+.promise { z-index: 10; text-align: center; padding: 0 8%; }
+.promise-main {
+  font-size: clamp(3.2rem, 9vw, 6rem);
+  font-weight: 800; color: var(--fg0);
+  letter-spacing: -0.04em; line-height: 1.05;
+}
+.promise-main .accent { color: var(--blue); }
+.promise-sub {
+  font-size: clamp(1rem, 2vw, 1.4rem);
+  color: var(--fg4); margin-top: 1rem; font-weight: 400;
+}
+.promise-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: clamp(60px, 8vw, 96px); height: clamp(60px, 8vw, 96px);
+  border-radius: 50%; background: rgba(69,133,136,0.15);
+  color: var(--blue); font-size: clamp(30px, 4vw, 48px);
+  margin-bottom: 1.5rem;
+  opacity: 0; transform: scale(0.5);
+  transition: opacity 0.5s cubic-bezier(0.34,1.56,0.64,1), transform 0.5s cubic-bezier(0.34,1.56,0.64,1);
+}
+.promise-icon.show { opacity: 1; transform: scale(1); }
+
+/* ═══ SCENE 4 — PILLARS (9-11.5s) ═══ */
+.pillars { z-index: 10; width: 90%; max-width: 960px; text-align: center; }
+.pillars-label {
+  font-size: clamp(0.8rem, 1.4vw, 1rem); font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.15em; color: var(--fg4);
+  margin-bottom: clamp(14px, 2.5vw, 24px);
+}
+.pillars-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(10px, 1.5vw, 18px); }
+.pillar {
+  border: 1px solid rgba(69,133,136,0.2); border-radius: 12px;
+  background: rgba(69,133,136,0.06); padding: clamp(18px, 2.5vw, 32px) clamp(10px, 1.2vw, 16px);
+  text-align: center;
+  opacity: 0; transform: translateY(16px) scale(0.95);
+  transition: opacity 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1);
+}
+.pillar.show { opacity: 1; transform: translateY(0) scale(1); }
+.pillar-icon {
+  width: clamp(44px, 6vw, 64px); height: clamp(44px, 6vw, 64px); border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto clamp(8px, 1.2vw, 14px); font-size: clamp(22px, 3vw, 32px);
+}
+.pillar-name {
+  font-size: clamp(0.9rem, 1.6vw, 1.15rem); font-weight: 700; color: var(--fg0);
+  line-height: 1.2;
+}
+.pillar-desc {
+  font-size: clamp(0.7rem, 1.1vw, 0.85rem); color: var(--fg4); margin-top: 4px;
+  line-height: 1.3;
+}
+
+/* ═══ SCENE 5 — DIRECTOR (11.5-13s) ═══ */
+.director { z-index: 10; text-align: center; padding: 0 8%; }
+.director-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: clamp(64px, 8vw, 96px); height: clamp(64px, 8vw, 96px);
+  border-radius: 50%; background: rgba(152,151,26,0.15);
+  color: var(--green); font-size: clamp(32px, 4vw, 48px);
+  margin-bottom: 1.5rem;
+  opacity: 0; transform: scale(0.5);
+  transition: opacity 0.5s cubic-bezier(0.34,1.56,0.64,1), transform 0.5s cubic-bezier(0.34,1.56,0.64,1);
+}
+.director-icon.show { opacity: 1; transform: scale(1); }
+.director-main {
+  font-size: clamp(2.8rem, 7vw, 5rem);
+  font-weight: 800; color: var(--fg0);
+  letter-spacing: -0.03em; line-height: 1.1;
+}
+.director-main .muted { color: var(--fg4); font-weight: 400; }
+.director-sub {
+  font-size: clamp(1rem, 2vw, 1.35rem);
+  color: var(--fg4); margin-top: 0.8rem; font-weight: 400;
+}
+
+/* ═══ SCENE 6 — CTA (13-15s) ═══ */
+.cta { z-index: 10; text-align: center; }
+.cta-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 20px; border: 1px solid rgba(152,151,26,0.3); border-radius: 999px;
+  background: rgba(152,151,26,0.08); font-size: clamp(0.8rem, 1.3vw, 1rem);
+  font-weight: 500; color: var(--fg4); margin-bottom: 1.5rem;
+}
+.cta-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+.cta-title {
+  font-size: clamp(3rem, 8vw, 5.5rem);
+  font-weight: 800; color: var(--fg0);
+  letter-spacing: -0.04em; line-height: 1.05;
+}
+.cta-title .accent { color: var(--blue); }
+.cta-url {
+  margin-top: 1.5rem; display: inline-flex; align-items: center; gap: 12px;
+  padding: clamp(12px, 2vw, 18px) clamp(24px, 3.5vw, 40px);
+  border: 1px solid var(--blue); border-radius: 12px;
+  background: rgba(69,133,136,0.1);
+  font-family: var(--mono); font-size: clamp(1rem, 2vw, 1.35rem);
+  font-weight: 600; color: var(--fg0);
+}
+.cta-url .p { color: var(--blue); font-weight: 700; }
+
+/* ═══ PARTICLES ═══ */
+.particle { position: absolute; border-radius: 9999px; pointer-events: none; opacity: 0; }
+@keyframes pfloat { 0%{transform:translateY(0) scale(1);opacity:0} 10%{opacity:.5} 90%{opacity:.5} 100%{transform:translateY(-55vh) scale(.4);opacity:0} }
+
+/* ═══ RESPONSIVE — PORTRAIT ═══ */
+@media (orientation: portrait) {
+  .journey-svg { transform: scale(1.8) translateY(-15%); }
+  .hook-main { font-size: clamp(2.2rem, 10vw, 4rem); }
+  .hook-sub { font-size: clamp(0.9rem, 3vw, 1.3rem); }
+  .pain-items { gap: 8px; }
+  .pain-item { max-width: 95%; padding: 10px 14px; }
+  .pain-icon { width: 30px; height: 30px; font-size: 15px; }
+  .pain-text { font-size: 0.9rem; }
+  .promise-main { font-size: clamp(2.4rem, 10vw, 4.5rem); }
+  .promise-sub { font-size: clamp(0.9rem, 3vw, 1.2rem); }
+  .pillars-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .pillar { padding: 14px 8px; }
+  .pillar-name { font-size: 0.85rem; }
+  .pillar-desc { font-size: 0.7rem; }
+  .director-main { font-size: clamp(2rem, 9vw, 3.5rem); }
+  .cta-title { font-size: clamp(2.2rem, 10vw, 4rem); }
+  .cta-url { font-size: clamp(0.9rem, 3vw, 1.2rem); }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-grid" id="bg-grid"></div>
+<div class="glow glow-1" id="glow-1"></div>
+<div class="glow glow-2" id="glow-2"></div>
+<div id="particles" style="position:absolute;inset:0;pointer-events:none;z-index:1;"></div>
+
+<!-- ═══ JOURNEY LINE SVG ═══ -->
+<svg class="journey-svg" id="journey-svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <filter id="glow-blue">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <!-- Dotted background path -->
+  <path id="journey-bg" class="journey-path"
+    d="M120,540 C280,280 420,780 620,420 C820,60 960,820 1140,380 C1320,100 1500,720 1680,540 L1800,540" />
+  <!-- Animated fill path -->
+  <path id="journey-fill" class="journey-path-fill"
+    d="M120,540 C280,280 420,780 620,420 C820,60 960,820 1140,380 C1320,100 1500,720 1680,540 L1800,540" />
+
+  <!-- Station dots only — icons rendered as HTML overlays -->
+  <g class="journey-station" id="st1" transform="translate(120,540)"><circle class="station-ring" cx="0" cy="0" r="14"/><circle r="7" fill="#cc241d"/></g>
+  <g class="journey-station" id="st2" transform="translate(620,420)"><circle class="station-ring" cx="0" cy="0" r="14"/><circle r="7" fill="#cc241d"/></g>
+  <g class="journey-station" id="st3" transform="translate(1140,380)"><circle class="station-ring" cx="0" cy="0" r="14"/><circle r="7" fill="#458588"/></g>
+  <g class="journey-station" id="st4" transform="translate(1400,460)"><circle class="station-ring" cx="0" cy="0" r="14"/><circle r="7" fill="#458588"/></g>
+  <g class="journey-station" id="st5" transform="translate(1600,540)"><circle class="station-ring" cx="0" cy="0" r="14"/><circle r="7" fill="#98971a"/></g>
+  <g class="journey-station" id="st6" transform="translate(1800,540)"><circle class="station-ring" cx="0" cy="0" r="14"/><circle r="7" fill="#458588"/></g>
+</svg>
+
+<!-- S1: HOOK -->
+<div class="scene" id="s1">
+  <div class="hook">
+    <div class="hook-icon r" id="hi1"><i class="bx bx-error"></i></div>
+    <div class="hook-main r" id="h1"><span class="hook-line">Your AI tools</span></div>
+    <div class="hook-main r d1" id="h2"><span class="hook-line" style="color:var(--red)">aren't working</span></div>
+    <div class="hook-main r d2" id="h3"><span class="hook-line">as a team.</span></div>
+    <div class="hook-sub r d3" id="h4">Prompts repeated. Context lost. Nobody owns the work.</div>
+  </div>
+</div>
+
+<!-- S2: PAIN -->
+<div class="scene" id="s2">
+  <div class="pain">
+    <div class="pain-items">
+      <div class="pain-item" id="pi0">
+        <div class="pain-icon"><i class="bx bx-group"></i></div>
+        <div class="pain-text">Employees using AI separately</div>
+      </div>
+      <div class="pain-item" id="pi1">
+        <div class="pain-icon"><i class="bx bx-copy"></i></div>
+        <div class="pain-text">Repeated prompts, copied context</div>
+      </div>
+      <div class="pain-item" id="pi2">
+        <div class="pain-icon"><i class="bx bx-unlink"></i></div>
+        <div class="pain-text">Disconnected tools</div>
+      </div>
+      <div class="pain-item" id="pi3">
+        <div class="pain-icon"><i class="bx bx-bot"></i></div>
+        <div class="pain-text">One assistant doing everything</div>
+      </div>
+      <div class="pain-item" id="pi4">
+        <div class="pain-icon"><i class="bx bx-error"></i></div>
+        <div class="pain-text">No quality review</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- S3: PROMISE -->
+<div class="scene" id="s3">
+  <div class="promise">
+    <div class="promise-icon r" id="pri1"><i class="bx bx-check-circle"></i></div>
+    <div class="promise-main r" id="pr1">What if they could</div>
+    <div class="promise-main r d1" id="pr2"><span class="accent">work like a real team?</span></div>
+    <div class="promise-sub r d2" id="pr3">SpielOS gives every role its own agent, context, and tools.</div>
+  </div>
+</div>
+
+<!-- S4: PILLARS -->
+<div class="scene" id="s4">
+  <div class="pillars">
+    <div class="pillars-label r" id="pl0">The four layers</div>
+    <div class="pillars-grid">
+      <div class="pillar" id="pl1">
+        <div class="pillar-icon" style="background:rgba(69,133,136,0.15);color:var(--blue)"><i class="bx bx-group"></i></div>
+        <div class="pillar-name">Roles</div>
+        <div class="pillar-desc">AI employees with identity</div>
+      </div>
+      <div class="pillar" id="pl2">
+        <div class="pillar-icon" style="background:rgba(104,157,106,0.15);color:var(--aqua)"><i class="bx bx-slider"></i></div>
+        <div class="pillar-name">Skills</div>
+        <div class="pillar-desc">Reusable capabilities</div>
+      </div>
+      <div class="pillar" id="pl3">
+        <div class="pillar-icon" style="background:rgba(215,153,33,0.15);color:var(--yellow)"><i class="bx bx-check-square"></i></div>
+        <div class="pillar-name">Evals</div>
+        <div class="pillar-desc">Quality control</div>
+      </div>
+      <div class="pillar" id="pl4">
+        <div class="pillar-icon" style="background:rgba(177,98,134,0.15);color:var(--purple)"><i class="bx bx-network-chart"></i></div>
+        <div class="pillar-name">Workflows</div>
+        <div class="pillar-desc">Multi-agent pipelines</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- S5: DIRECTOR -->
+<div class="scene" id="s5">
+  <div class="director">
+    <div class="director-icon r" id="di1"><i class="bx bx-slider"></i></div>
+    <div class="director-main r" id="d1">Be the director.</div>
+    <div class="director-main r d1" id="d2"><span class="muted">Or don't.</span></div>
+    <div class="director-sub r d2" id="d3">Step in when you want. Step back when you trust.</div>
+  </div>
+</div>
+
+<!-- S6: CTA -->
+<div class="scene" id="s6">
+  <div class="cta">
+    <div class="cta-badge r" id="ct0"><span class="cta-dot"></span> Pre-launch — joining early</div>
+    <div class="cta-title r d1" id="ct1">Your AI team is <span class="accent">waiting</span></div>
+    <div class="cta-url r d2" id="ct2"><span class="p">$</span> spielos.xyz/waitlist</div>
+  </div>
+</div>
+
+<script>
+window.__t=0;window.__fps=30;window.__duration=15;
+window.__setFrame=function(f,fps){window.__fps=fps||30;window.__t=f/window.__fps};
+
+function act(id){document.querySelectorAll('.scene').forEach(function(s){s.classList.toggle('active',s.id===id)})}
+function tog(id,v){var e=document.getElementById(id);if(e)e.classList.toggle('show',v)}
+
+/* Particles */
+var pc=document.getElementById('particles'),pC=['var(--blue)','var(--aqua)','var(--purple)','var(--yellow)'],pE=[];
+for(var i=0;i<12;i++){var d=document.createElement('span');d.className='particle';var sz=2+Math.random()*3;d.style.cssText='width:'+sz+'px;height:'+sz+'px;left:'+(Math.random()*100)+'%;bottom:'+(Math.random()*15)+'%;background:'+pC[i%4]+';animation:pfloat '+(8+Math.random()*10)+'s ease-in infinite;animation-delay:'+(Math.random()*8)+'s';pc.appendChild(d);pE.push(d)}
+
+/* Journey line setup */
+var pathFill=document.getElementById('journey-fill');
+var pathBg=document.getElementById('journey-bg');
+var pathLen=pathFill.getTotalLength();
+pathFill.style.setProperty('--path-len',pathLen);
+pathFill.style.strokeDasharray=pathLen;
+pathFill.style.strokeDashoffset=pathLen;
+
+/*
+  15s timeline (am_michael voice at 1.425x):
+  0-2.34s  : Hook
+  2.34-6.49s: Pain cards
+  6.49-8.56s: Promise
+  8.56-10.88s: Pillars
+  10.88-12.60s: Director
+  12.60-15s : CTA
+*/
+function tick(){
+  var t=window.__t;
+
+  /* Background */
+  document.getElementById('bg-grid').classList.toggle('show',t>0.3);
+  var g1=document.getElementById('glow-1'),g2=document.getElementById('glow-2');
+  if(g1)g1.style.opacity=t>6?Math.min((t-6)*0.15,0.18):0;
+  if(g2)g2.style.opacity=t>6.5?Math.min((t-6.5)*0.12,0.15):0;
+  pE.forEach(function(e){e.style.animationPlayState=t>6?'running':'paused'});
+
+  /* Journey line draw (0-15s continuously) */
+  var progress=Math.min(t/14,1);
+  var eased=1-Math.pow(1-progress,3);
+  pathBg.classList.toggle('show',t>0.3);
+  pathFill.style.strokeDashoffset=pathLen*(1-eased);
+
+  /* Stations appear as line reaches them */
+  var stationTimes=[0.2,2.34,6.49,8.56,10.88,12.60];
+  for(var s=0;s<6;s++){
+    var stEl=document.getElementById('st'+(s+1));
+    if(stEl)stEl.classList.toggle('show',t>=stationTimes[s]+0.3);
+  }
+
+  /* Scenes */
+  if(t<2.34){act('s1');tog('hi1',t>0.2);tog('h1',t>0.4);tog('h2',t>0.9);tog('h3',t>1.4);tog('h4',t>2.0)}
+  if(t>=2.34&&t<6.49){act('s2');for(var i=0;i<5;i++)tog('pi'+i,t>2.64+i*0.4)}
+  if(t>=6.49&&t<8.56){act('s3');tog('pri1',t>6.59);tog('pr1',t>6.79);tog('pr2',t>7.29);tog('pr3',t>7.89)}
+  if(t>=8.56&&t<10.88){act('s4');tog('pl0',t>8.56);for(var j=1;j<=4;j++)tog('pl'+j,t>8.86+j*0.25)}
+  if(t>=10.88&&t<12.60){act('s5');tog('di1',t>10.88);tog('d1',t>11.08);tog('d2',t>11.38);tog('d3',t>11.68)}
+  if(t>=12.60){act('s6');tog('ct0',t>=12.60);tog('ct1',t>=12.75);tog('ct2',t>=12.95)}
+
+  requestAnimationFrame(tick);
+}
+tick();
+</script>
+</body>
+</html>

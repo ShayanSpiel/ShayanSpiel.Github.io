@@ -1338,7 +1338,7 @@ export const translations: Record<Locale, Translations> = {
 
     // About page
     "about.label": "درباره",
-    "about.title": "SpielOS",
+    "about.title": "درباره‌ی SpielOS",
     "about.desc": "کارمندهای AI بساز، نه فقط چت‌بات. نقش‌ها رو مشخص کن، مهارت‌ها رو وصل کن و از همون روز اول دپارتمان‌های خودمختار اجرا کن.",
     "about.p1": "SpielOS یه پلتفرم متن‌باز ارکستریشن AI هست که بهت اجازه می‌ده کارمندهای AI استخدام کنی، آموزش بدی و مدیریت کنی. هر نقش یه شخصیت، قوانین، ابزار و اختیار داره. اون‌ها رو به ورک‌فلوها وصل کن، دروازه‌های کیفیت اضافه کن و بذار اجرا کنن — و وقتی لازمه، خودت وسط کار باشی.",
     "about.founder.label": "فاندر",
@@ -2118,7 +2118,7 @@ export const translations: Record<Locale, Translations> = {
     "services.startNow.desc": "یه فرآیند تکراری رو به یه Agent Brief واضح تبدیل می‌کنیم. اگه ورک‌فلو فرصت اتوماسیون خوبی داشته باشه، کل سیستم رو طراحی، بساز، تست و استقرار می‌دیم.",
     "services.startNow.cta": "قالب Agent Brief رو ببین",
     "services.startNow.briefFooter": "چه با هم کار کنیم چه نکنیم، بریف مال شماست.",
-    "services.brief.title": "Agent Brief",
+    "services.brief.title": "بریف ایجنت",
     "services.brief.subtitle": "تحویلی کشف برای اولین ورک‌فلوی AI شما",
     "services.brief.section1": "چارچوب بریف",
     "services.brief.section2": "بیانیه اصلی ایجنت",

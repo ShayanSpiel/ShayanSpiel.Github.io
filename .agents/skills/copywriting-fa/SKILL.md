@@ -17,7 +17,7 @@ A work session is evidence, not the article. The reader's problem determines the
 
 Before writing, read:
 
-- `../../spielos-icp.md` — the single source of truth for the customer profile, exclusions, and positioning idea. Never restate the ICP in this file; read it from the source.
+- `../../company/strategy/icp.md` — the single source of truth for the customer profile, exclusions, and positioning idea. Never restate the ICP in this file; read it from the source.
 - `../translation-fa/persian-glossary.md` — the single source of truth for all terminology
 - `../translation-fa/SKILL.md` — for sentence-level Persian quality rules, voice, register, and validation
 

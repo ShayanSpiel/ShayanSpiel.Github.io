@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en" data-theme="gruvbox-dark">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SpielOS company harness</title>
+  <link rel="stylesheet" href="/.agents/company/departments/design/system/production.css">
+  <link rel="stylesheet" href="/node_modules/boxicons/css/boxicons.min.css">
+  <style>
+    body { container-type: size; display: grid; place-items: center; }
+    .canvas { position: relative; width: 100%; height: 100%; padding: 7cqh 7cqw; display: grid; grid-template-rows: auto 1fr auto; gap: 4cqh; background: radial-gradient(circle at 80% 10%, var(--primary-soft), transparent 35%), var(--background); }
+    .grid { position: absolute; inset: 0; opacity: .055; background-image: linear-gradient(var(--foreground) 1px, transparent 1px), linear-gradient(90deg, var(--foreground) 1px, transparent 1px); background-size: 5cqw 5cqw; }
+    header, main, footer { position: relative; z-index: 1; }
+    .eyebrow { color: var(--primary); font: 600 clamp(13px, 2.1cqw, 30px)/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; }
+    h1 { max-width: 15ch; margin: 1.5cqh 0 0; color: var(--foreground-strong); font-size: clamp(38px, 7cqw, 108px); line-height: .95; letter-spacing: -.045em; }
+    main { display: grid; grid-template-columns: minmax(0, .72fr) minmax(0, 1.28fr); align-items: center; gap: 4cqw; }
+    .loop { border: 1px solid var(--border-strong); border-radius: var(--radius-xl); background: var(--glass-bg-strong); padding: 3cqw; box-shadow: var(--shadow-panel); }
+    .loop-label { color: var(--muted-foreground); font: 600 clamp(11px, 1.5cqw, 22px)/1.2 var(--font-mono); letter-spacing: .1em; }
+    .loop-flow { margin-top: 2cqh; color: var(--foreground-strong); font-size: clamp(19px, 3cqw, 45px); font-weight: 700; line-height: 1.45; }
+    .loop-flow span { color: var(--primary); }
+    .departments { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2cqw; }
+    .department { display: flex; gap: 1.2cqw; align-items: center; min-height: 8cqh; padding: 1.5cqw; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--panel); }
+    .department:first-child { grid-column: 1 / -1; }
+    .icon { display: grid; place-items: center; width: 4.2cqw; height: 4.2cqw; min-width: 34px; min-height: 34px; border-radius: var(--radius-md); background: var(--primary-soft); color: var(--primary); font-size: clamp(18px, 2.4cqw, 36px); }
+    .department strong { display: block; color: var(--foreground-strong); font-size: clamp(15px, 2cqw, 30px); }
+    .department small { color: var(--muted-foreground); font-size: clamp(10px, 1.2cqw, 18px); }
+    footer { display: flex; align-items: center; justify-content: space-between; color: var(--muted-foreground); font: 500 clamp(11px, 1.5cqw, 22px)/1 var(--font-mono); }
+    .brand { color: var(--foreground-strong); font-family: var(--font-sans); font-weight: 700; }
+    @container (aspect-ratio < 4/5) { .canvas { padding: 6cqh 8cqw; } main { grid-template-columns: 1fr; align-content: center; } .departments { grid-template-columns: 1fr; } .department:first-child { grid-column: auto; } .loop { padding: 4cqw; } }
+  </style>
+</head>
+<body><div class="canvas"><div class="grid"></div><header><div class="eyebrow">The company is the product</div><h1>One loop. Lego-block Departments.</h1></header><main><div class="loop"><div class="loop-label">DIRECTOR RUNTIME</div><div class="loop-flow">GOAL <span>→</span> OBSERVE <span>→</span> DECIDE <span>→</span> ACT <span>→</span> EVALUATE</div></div><div class="departments"><div class="department"><i class="bx bx-network-chart icon"></i><div><strong>Outbound</strong><small>Find → research → reach</small></div></div><div class="department"><i class="bx bx-edit icon"></i><div><strong>Content</strong><small>Evidence → package → publish</small></div></div><div class="department"><i class="bx bx-palette icon"></i><div><strong>Design</strong><small>Tokens → renditions → QA</small></div></div><div class="department"><i class="bx bx-data icon"></i><div><strong>Analytics</strong><small>Funnel → diagnosis → learning</small></div></div><div class="department"><i class="bx bx-search-alt icon"></i><div><strong>SEO</strong><small>Demand → improve → measure</small></div></div></div></main><footer><span class="brand">◆ SpielOS</span><span>Tools stay stable · Connections swap</span></footer></div></body>
+</html>

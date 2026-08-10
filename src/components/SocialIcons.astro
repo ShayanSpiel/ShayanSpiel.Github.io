@@ -1,6 +1,5 @@
 ---
 import { SOCIAL, AUTHOR } from "../config";
-import { ICONS } from "../lib/icons";
 
 export interface Props {
   size?: "sm" | "md";
@@ -8,17 +7,17 @@ export interface Props {
 }
 
 const { size = "sm", show = ["x", "linkedin", "github"] } = Astro.props;
-const iconSize = size === "sm" ? "var(--font-size-base)" : "var(--font-size-lg)";
+const iconClass = size === "sm" ? "icon-base" : "icon-lg";
 ---
 
 {show.includes("x") && (
-  <a href={SOCIAL.x} target="_blank" rel="noopener noreferrer me" class="text-muted-foreground hover:text-foreground transition-colors" aria-label="X" set:html={ICONS.x} />
+  <a href={SOCIAL.x} target="_blank" rel="noopener noreferrer me" class="text-muted-foreground hover:text-foreground transition-colors" aria-label="X"><i class={`bx bxl-twitter ${iconClass}`} aria-hidden="true"></i></a>
 )}
 {show.includes("linkedin") && (
-  <a href={SOCIAL.linkedin} target="_blank" rel="noopener noreferrer me" class="text-muted-foreground hover:text-foreground transition-colors" aria-label="LinkedIn" set:html={ICONS.linkedin} />
+  <a href={SOCIAL.linkedin} target="_blank" rel="noopener noreferrer me" class="text-muted-foreground hover:text-foreground transition-colors" aria-label="LinkedIn"><i class={`bx bxl-linkedin-square ${iconClass}`} aria-hidden="true"></i></a>
 )}
 {show.includes("github") && (
-  <a href={SOCIAL.github} target="_blank" rel="noopener noreferrer me" class="text-muted-foreground hover:text-foreground transition-colors" aria-label="GitHub" set:html={ICONS.github} />
+  <a href={SOCIAL.github} target="_blank" rel="noopener noreferrer me" class="text-muted-foreground hover:text-foreground transition-colors" aria-label="GitHub"><i class={`bx bxl-github ${iconClass}`} aria-hidden="true"></i></a>
 )}
 {show.includes("rss") && (
   <a href="/feed.xml" class="text-muted-foreground hover:text-foreground transition-colors" aria-label="RSS">

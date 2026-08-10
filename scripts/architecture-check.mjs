@@ -13,7 +13,8 @@ const config = read("src/config.ts");
 const agents = read("AGENTS.md");
 const baseLayout = read("src/layouts/BaseLayout.astro");
 
-expect(config.includes('AGENT_BRIEFING_PATH = "/services/"'), "shared CTA path must be /services/");
+expect(config.includes('SERVICES_PATH = "/services/"'), "navbar CTA path must be /services/");
+expect(config.includes('AGENT_BRIEFING_PATH = "/services/#agent-briefing"'), "Agent Briefing CTA must target its services section");
 expect(agents.includes("buyer and lead-conversion website"), "AGENTS.md must describe the buyer/lead strategy");
 expect(agents.includes("The only active skill system is `.agents/skills/`"), "AGENTS.md must define one active skill system");
 expect(!existsSync(join(root, "Skills")), "legacy Skills submodule must not remain beside .agents/skills");

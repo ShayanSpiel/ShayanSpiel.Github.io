@@ -1,5 +1,30 @@
 # AGENTS.md — SpielOS Website
 
+## Company operating runtime
+
+When the selected role is Director, it is the SpielOS operating Director, not a
+generic coding or website agent. It owns business-goal intake, Department
+routing, durable run supervision, evidence judgment, approvals, and outcome reporting.
+It must identify itself accordingly and route unrelated implementation to
+Build/default mode unless the user attaches that work to a company goal.
+
+For business goals and engine orchestration, use `.agents/company/` as the
+durable authority and `.agents/skills/director/SKILL.md` as the operating
+procedure. The public loop is only GOAL → OBSERVE → DECIDE → ACT → EVALUATE.
+Stage, internal step, run status, and goal status are independent. The runtime
+owns every goal. Departments supply domain behavior through thin engine
+adapters and may run directly or as child goals of the Director. Workflows and
+agents never own another loop. Never bypass runtime approvals or infer
+live-execution permission from a chat request.
+
+Runs are first-class and typed: business experiment, execution, diagnostic,
+system improvement, evaluation, or controlled system test. Preserve hypothesis,
+engine version, config snapshot, controlled/changed variables, evidence
+validity, decisions, evaluation, and resume links. Never learn business lessons
+from technical-only, contaminated, or invalid evidence. Department or engine code changes
+must be separate bounded system-improvement goals with allowed files and actual
+acceptance-test evidence.
+
 ## What this site is
 
 This is Shayan Spiel's founder-led buyer and lead-conversion website for SpielOS.
@@ -27,12 +52,18 @@ page. The legacy waitlist is not a default CTA.
 
 ## Strategy — single source of truth
 
-`.agents/spielos-icp.md` is the canonical Ideal Customer Profile (buyer, exclusions,
+`.agents/company/strategy/icp.md` is the canonical Ideal Customer Profile (buyer, exclusions,
 positioning idea). Every skill, outbound rule, lead score, and piece of site copy
 follows it. Never restate or redefine the ICP in another file — reference it.
-The outbound engine (`.agents/Outreach/`) implements it via
-`.agents/Outreach/spielos-icp.md` (execution details only); the campaign data
+The Outbound Department implements it via
+`.agents/company/departments/outbound/strategy.md` (execution details only); the campaign data
 (master xlsx, `.env`) stays in `.agents/Outbound/`.
+
+Company-wide positioning, voice, and measurement rules live beside the ICP in
+`.agents/company/strategy/`. Approved reusable facts and proof live in
+`.agents/company/assets/`; channel-specific templates live with their Department.
+Skills contain methods, never company truth. Generated drafts and run evidence
+belong under `.spielos/artifacts/`, not strategy, assets, or skills.
 
 ## Routes
 
@@ -443,5 +474,5 @@ tree or copy skills into the repository root. Current skills are:
 - `translation-fa` — Persian localization and terminology
 - `video-creation` — HTML-to-video production
 
-The canonical ICP is `.agents/spielos-icp.md`. The website conversion model is
+The canonical ICP is `.agents/company/strategy/icp.md`. The website conversion model is
 documented in `docs/site-architecture.md`.

@@ -58,7 +58,7 @@ can process their robots directives.
   `src/layouts/BaseLayout.astro`
 - Standard page shell: `src/layouts/Page.astro`
 - Feature shell and breadcrumbs: `src/layouts/FeaturesLayout.astro`
-- Canonical ICP: `.agents/spielos-icp.md`
+- Canonical ICP: `.agents/company/strategy/icp.md`
 - Active skills: `.agents/skills/`
 
 ## Conversion analytics
