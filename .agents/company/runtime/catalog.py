@@ -47,7 +47,7 @@ def catalog():
     } for _, item in sorted(installed_departments().items())]
     return {
         "runtime": {
-            "version": "5.0.0",
+            "version": "5.1.0",
             "loop": ["GOAL", "OBSERVE", "DECIDE", "ACT", "EVALUATE"],
             "controls": ["director", "system-improvement"],
             "goal_authority": ".spielos/state/company.sqlite",

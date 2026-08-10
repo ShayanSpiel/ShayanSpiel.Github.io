@@ -47,7 +47,16 @@ def build_parser():
     show = goals.add_parser("show"); show.add_argument("goal_id")
     once = commands.add_parser("once"); once.add_argument("goal_id")
     next_run = commands.add_parser("next"); next_run.add_argument("goal_id")
-    status = commands.add_parser("status"); status.add_argument("goal_id", nargs="?")
+    status = commands.add_parser("status")
+    status.add_argument("goal_id", nargs="?")
+    status.add_argument("--history", action="store_true",
+                        help="show bounded terminal-goal history")
+    status.add_argument("--limit", type=int, default=5,
+                        help="number of recent history records (1-100)")
+    status.add_argument("--raw", action="store_true",
+                        help="show the complete stored payload for explicit audit work")
+    status.add_argument("--json", action="store_true",
+                        help="render the compact projection as JSON")
     approve = commands.add_parser("approve"); approve.add_argument("goal_id"); approve.add_argument("--note", default="")
     for name in ("pause", "resume", "abandon"):
         item = commands.add_parser(name); item.add_argument("goal_id")
@@ -107,7 +116,7 @@ def main(argv=None):
                 evidence_validity=args.validity, parent_run_id=args.parent_run,
                 triggered_by_run_id=args.triggered_by, resume_run_id=args.resume_run)
         elif args.command == "goal" and args.goal_command == "list":
-            output = runtime.list_goals()
+            output = runtime.store.goal_summaries(limit=100)
         elif args.command == "goal":
             output = runtime.status(args.goal_id)
         elif args.command == "once":
@@ -117,7 +126,24 @@ def main(argv=None):
             Runner(runtime).tick(args.goal_id)
             output = runtime.status(args.goal_id)
         elif args.command == "status":
-            output = runtime.status(args.goal_id) if args.goal_id else runtime.list_goals()
+            if args.goal_id and args.history:
+                raise ValueError("status accepts either GOAL_ID or --history, not both")
+            if args.raw:
+                output = runtime.status(args.goal_id) if args.goal_id else runtime.list_goals()
+            elif args.goal_id:
+                output = runtime.goal_summary(args.goal_id)
+            elif args.history:
+                output = runtime.goal_history(args.limit)
+            else:
+                service = RunnerService(PROJECT_ROOT, Path(args.db)).status()
+                output = runtime.company_snapshot(args.limit)
+                output["automation"] = {
+                    "enabled": service["enabled"], "running": service["running"],
+                    "pid": service["pid"],
+                }
+            if not args.raw and not args.json:
+                print(render_status(output, history=args.history))
+                return 0
         elif args.command == "approve":
             runtime.approve(args.goal_id, args.note)
             Runner(runtime).tick(args.goal_id)
@@ -216,6 +242,76 @@ def render_report(state):
         lines += ["", "## Required action", "Review and approve the prepared action."]
         if preview:
             lines.append(f"Preview: `{preview}`")
+    return "\n".join(lines) + "\n"
+
+
+def _goal_line(item):
+    return (f"- {item['name']} (`{item['id']}`) · {item['owner_id']} · "
+            f"{item['goal_status']} / {item['run_status']} · "
+            f"{item['stage']}.{item['step']}")
+
+
+def render_status(value, history=False):
+    """Human-first status output that stays small as the audit ledger grows."""
+
+    if isinstance(value, list):
+        lines = ["# Goal history", ""]
+        lines.extend(_goal_line(item) for item in value)
+        return "\n".join(lines + (["", "No matching history."] if not value else [])) + "\n"
+    if "goal" in value:
+        item = value["goal"]
+        lines = [f"# {item['name']}", "",
+                 f"- Goal: `{item['id']}`",
+                 f"- Owner: `{item['owner_id']}`",
+                 f"- Outcome: `{item['metric']} {item['operator']} {item['target']}`",
+                 f"- Goal status: `{item['goal_status']}`",
+                 f"- Current run: `{item['run_id']}` · `{item['run_type']}` · `{item['run_status']}`",
+                 f"- Runtime: `{item['stage']}.{item['step']}`",
+                 f"- Evidence: `{item['evidence_count']}` item(s) · validity `{item['evidence_validity']}`",
+                 f"- Updated: `{item['runtime_updated_at']}`"]
+        if item.get("verdict"):
+            lines.append(f"- Latest evaluation: `{item['verdict']}` · goal met `{item['goal_met']}`")
+        if value["attention"]:
+            lines += ["", "## Needs attention"]
+            for attention in value["attention"]:
+                required = attention.get("required_user_action") or attention.get("message") or "Review"
+                lines.append(f"- `{attention['kind']}`: {required}")
+        elif value["unread_results"]:
+            lines += ["", "## Unread result",
+                      f"- `{value['unread_results'][0]['kind']}` is ready to report."]
+        else:
+            lines += ["", "No action required."]
+        return "\n".join(lines) + "\n"
+
+    automation = value["automation"]
+    label = "running" if automation["enabled"] and automation["running"] else (
+        "enabled, runner stopped" if automation["enabled"] else "stopped")
+    lines = ["# SpielOS company", "", f"Automation: **{label}**", ""]
+    attention = value["attention"]
+    lines.append(f"## Needs attention ({len(attention)})")
+    if attention:
+        for item in attention:
+            required = item.get("required_user_action") or item.get("message") or "Review"
+            lines.append(f"- `{item['kind']}` · {item['name']} (`{item['goal_id']}`): {required}")
+    else:
+        lines.append("- Nothing requires action.")
+    active = value["active_goals"]
+    lines += ["", f"## Active goals ({len(active)})"]
+    lines.extend(_goal_line(item) for item in active) if active else lines.append("- None.")
+    if value["paused_goals"]:
+        lines += ["", f"## Paused ({len(value['paused_goals'])})"]
+        lines.extend(_goal_line(item) for item in value["paused_goals"])
+    if value["unread_results"]:
+        lines += ["", f"## Unread results ({len(value['unread_results'])})"]
+        lines.extend(f"- `{item['kind']}` · {item['name']} (`{item['goal_id']}`)"
+                     for item in value["unread_results"])
+    recent = value["recent_results"]
+    lines += ["", f"## Recent results ({len(recent)})"]
+    lines.extend(_goal_line(item) for item in recent) if recent else lines.append("- None.")
+    counts = value["counts"]
+    terminal = counts["achieved"] + counts["abandoned"] + counts["expired"]
+    lines += ["", f"History: {terminal} terminal goal(s), {counts['total']} total. ",
+              "Use `company status --history --limit N` for more or `--raw` for the full audit payload."]
     return "\n".join(lines) + "\n"
 
 

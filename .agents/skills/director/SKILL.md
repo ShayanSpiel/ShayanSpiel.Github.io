@@ -63,7 +63,12 @@ command separators, `head`, `tail`, or shell post-processing; those escape the
 Director's narrow OpenCode permission and turn a safe state read into a generic
 shell request.
 
-1. Inspect `status` before operational work.
+1. Inspect the compact `status` projection before operational work. Treat it as
+   authoritative when internally consistent. Use `status GOAL_ID` for one
+   compact drill-down, `status --history --limit N` for bounded history, and
+   `status --raw` only for explicit audit work or a real inconsistency. Never
+   reconstruct routine state from saved shell-output files. This retrieval
+   discipline does not limit investigation or delegation when genuinely needed.
 2. Create one Director goal only when coordinating multiple Departments or
    child goals is useful. Production-ready Departments may run independently.
 3. Ensure `runner status` is running for an active operational goal; use

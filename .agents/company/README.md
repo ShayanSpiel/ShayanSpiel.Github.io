@@ -63,7 +63,7 @@ no separate public adapter or Tool layer.
 |---|---|
 | `/start [request or goal]` | Create, resume, or continue one Goal |
 | `/stop [goal]` | Persistently stop automation; optionally pause one Goal |
-| `/status [goal]` | Show outcomes, evidence, approvals, and blockers |
+| `/status [goal]` | Show the compact Company Snapshot or one Goal |
 | `/approve <goal>` | Approve exactly one displayed parked action |
 | `/help` | Explain this vocabulary and command surface |
 
@@ -91,8 +91,18 @@ The Director and OpenCode commands call one portable internal CLI:
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=.agents python3 -B -m company departments
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=.agents python3 -B -m company catalog
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=.agents python3 -B -m company status
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=.agents python3 -B -m company status GOAL_ID
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=.agents python3 -B -m company status --history --limit 10
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=.agents python3 -B -m company runner status
 ```
+
+The default status is a bounded Company Snapshot: automation, genuine active
+attention, active and paused Goals, unread results, recent terminal results,
+and counts. It never embeds configurations, observations, evidence bodies, or
+historical task payloads. `status GOAL_ID` is a compact single-Goal projection.
+`status --raw` is the explicit full-audit escape hatch. Terminal Goals are
+closed transactionally, so they cannot remain operationally blocked or awaiting
+approval even though their complete audit history remains in SQLite.
 
 Create a Department goal with `--owner`, for example:
 

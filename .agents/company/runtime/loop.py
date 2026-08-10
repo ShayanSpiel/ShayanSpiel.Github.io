@@ -134,6 +134,7 @@ class Runtime:
         contamination = result.evaluation.get("contamination_reason") if result.evaluation else None
         self.store.update_run(cycle["id"], status=result.run_status.value,
                               validity=validity, contamination_reason=contamination)
+        self.store.resolve_actionable_notifications(goal.id, cycle["id"])
         self.store.event(goal.id, cycle["id"], f"{stage.value.lower()}.{result.step}", {
             "status": result.run_status.value, "next_stage": next_stage.value,
             "message": result.message, "payload": result.payload})
@@ -213,7 +214,10 @@ class Runtime:
         return self.status(goal_id)
 
     def set_goal_status(self, goal_id: str, status: GoalStatus) -> dict:
+        previous = self.store.goal(goal_id)["goal_status"]
         self.store.set_goal_status(goal_id, status.value)
+        if status is GoalStatus.ACTIVE and previous in TERMINAL:
+            self.store.new_cycle(goal_id)
         self.store.event(goal_id, self.store.cycle(goal_id)["id"], f"goal.{status.value}", {})
         return self.status(goal_id)
 
@@ -223,6 +227,7 @@ class Runtime:
             raise RuntimeError(f"retry requires blocked or failed status (current: {cycle['run_status']})")
         self.store.update_cycle(cycle["id"], stage="OBSERVE", step="collect",
                                 run_status="idle", resume_at=None, data={})
+        self.store.resolve_actionable_notifications(goal_id, cycle["id"])
         self.store.event(goal_id, cycle["id"], "run.retried", {})
         return self.status(goal_id)
 
@@ -317,6 +322,34 @@ class Runtime:
 
     def list_goals(self) -> list[dict]:
         return [{"goal": goal, "cycle": self.store.cycle(goal["id"])} for goal in self.store.goals()]
+
+    def goal_summary(self, goal_id: str) -> dict:
+        rows = self.store.goal_summaries(goal_id=goal_id, limit=1)
+        if not rows:
+            raise KeyError(f"unknown goal: {goal_id}")
+        return {
+            "goal": rows[0],
+            "attention": [item for item in self.store.attention(100)
+                          if item["goal_id"] == goal_id],
+            "unread_results": [item for item in self.store.unread_results(100)
+                               if item["goal_id"] == goal_id],
+        }
+
+    def company_snapshot(self, recent_limit: int = 5) -> dict:
+        """Small current-state projection; immutable history remains in SQLite."""
+
+        return {
+            "counts": self.store.goal_counts(),
+            "attention": self.store.attention(10),
+            "active_goals": self.store.goal_summaries(statuses=("active",), limit=20),
+            "paused_goals": self.store.goal_summaries(statuses=("paused",), limit=10),
+            "unread_results": self.store.unread_results(5),
+            "recent_results": self.store.goal_summaries(
+                statuses=TERMINAL, limit=recent_limit),
+        }
+
+    def goal_history(self, limit: int = 10) -> list[dict]:
+        return self.store.goal_summaries(statuses=TERMINAL, limit=limit)
 
     def _state_signature(self, goal_id: str):
         goal = self.store.goal(goal_id)

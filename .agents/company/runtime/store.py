@@ -10,6 +10,11 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Iterator
 
+TERMINAL_GOAL_STATUSES = ("achieved", "abandoned", "expired")
+ACTIONABLE_NOTIFICATION_KINDS = (
+    "approval_required", "action_required", "blocked", "failed",
+)
+
 
 def now() -> str:
     return datetime.now(timezone.utc).isoformat()
@@ -137,6 +142,8 @@ class Store:
                 SELECT c.id,c.goal_id,'execution',NULL,NULL,g.owner_id,'unversioned',NULL,
                        g.config_json,'{}','{}','business',NULL,NULL,c.run_status,c.created_at,c.updated_at
                 FROM cycles c JOIN goals g ON g.id=c.goal_id""")
+            self._repair_terminal_states(con)
+            self._repair_attention_states(con)
 
     @staticmethod
     def _migrate_v5(con: sqlite3.Connection) -> None:
@@ -161,6 +168,46 @@ class Store:
             columns = {row[1] for row in con.execute(f"PRAGMA table_info({table})")}
             if old in columns and new not in columns:
                 con.execute(f"ALTER TABLE {table} RENAME COLUMN {old} TO {new}")
+
+    @staticmethod
+    def _repair_terminal_states(con: sqlite3.Connection) -> None:
+        """Make terminal goals non-actionable while preserving their audit data."""
+
+        placeholders = ",".join("?" for _ in TERMINAL_GOAL_STATUSES)
+        con.execute(f"""UPDATE cycles SET run_status='completed',resume_at=NULL
+            WHERE id IN (
+                SELECT c.id FROM cycles c JOIN goals g ON g.id=c.goal_id
+                WHERE g.goal_status IN ({placeholders})
+                  AND c.sequence=(SELECT MAX(c2.sequence) FROM cycles c2 WHERE c2.goal_id=g.id)
+            ) AND run_status!='completed'""", TERMINAL_GOAL_STATUSES)
+        con.execute(f"""UPDATE runs SET status='completed'
+            WHERE id IN (
+                SELECT c.id FROM cycles c JOIN goals g ON g.id=c.goal_id
+                WHERE g.goal_status IN ({placeholders})
+                  AND c.sequence=(SELECT MAX(c2.sequence) FROM cycles c2 WHERE c2.goal_id=g.id)
+            ) AND status!='completed'""", TERMINAL_GOAL_STATUSES)
+        terminal_marks = ",".join("?" for _ in TERMINAL_GOAL_STATUSES)
+        action_marks = ",".join("?" for _ in ACTIONABLE_NOTIFICATION_KINDS)
+        con.execute(f"""UPDATE notifications SET status='delivered',delivered_at=COALESCE(delivered_at,?)
+            WHERE status='pending' AND kind IN ({action_marks})
+              AND goal_id IN (SELECT id FROM goals WHERE goal_status IN ({terminal_marks}))""",
+                    (now(), *ACTIONABLE_NOTIFICATION_KINDS, *TERMINAL_GOAL_STATUSES))
+
+    @staticmethod
+    def _repair_attention_states(con: sqlite3.Connection) -> None:
+        """Keep only attention that matches the run's current suspension."""
+
+        marks = ",".join("?" for _ in ACTIONABLE_NOTIFICATION_KINDS)
+        con.execute(f"""UPDATE notifications AS n
+            SET status='delivered',delivered_at=COALESCE(delivered_at,?)
+            WHERE n.status='pending' AND n.kind IN ({marks}) AND NOT EXISTS (
+                SELECT 1 FROM goals g JOIN cycles c ON c.id=n.run_id
+                WHERE g.id=n.goal_id AND g.goal_status='active' AND (
+                    (c.run_status='awaiting_approval' AND n.kind='approval_required') OR
+                    (c.run_status='blocked' AND n.kind IN ('blocked','action_required')) OR
+                    (c.run_status='failed' AND n.kind='failed')
+                )
+            )""", (now(), *ACTIONABLE_NOTIFICATION_KINDS))
 
     @staticmethod
     def _decode(row: sqlite3.Row | None) -> dict[str, Any] | None:
@@ -232,6 +279,88 @@ class Store:
             else:
                 rows = con.execute("SELECT * FROM goals WHERE parent_id=? ORDER BY created_at", (parent_id,)).fetchall()
         return [self._decode(r) for r in rows]
+
+    def goal_summaries(self, *, statuses: tuple[str, ...] | None = None,
+                       limit: int = 20, goal_id: str | None = None) -> list[dict]:
+        """Return bounded operational projections, never stored payload bodies."""
+
+        clauses, parameters = [], []
+        if statuses:
+            clauses.append(f"g.goal_status IN ({','.join('?' for _ in statuses)})")
+            parameters.extend(statuses)
+        if goal_id:
+            clauses.append("g.id=?")
+            parameters.append(goal_id)
+        where = f"WHERE {' AND '.join(clauses)}" if clauses else ""
+        parameters.append(max(1, min(int(limit), 100)))
+        with self.connect() as con:
+            rows = con.execute(f"""SELECT
+                    g.id,g.name,g.owner_id,g.metric,g.operator,g.target_json,g.deadline,
+                    g.parent_id,g.goal_status,g.created_at,g.updated_at,
+                    c.id AS run_id,c.sequence,c.stage,c.step,c.run_status,c.resume_at,
+                    c.updated_at AS runtime_updated_at,r.run_type,r.evidence_validity,
+                    (SELECT COUNT(*) FROM evidence ev WHERE ev.run_id=c.id) AS evidence_count,
+                    (SELECT verdict FROM evaluations e WHERE e.goal_id=g.id
+                        ORDER BY e.created_at DESC LIMIT 1) AS verdict,
+                    (SELECT goal_met FROM evaluations e WHERE e.goal_id=g.id
+                        ORDER BY e.created_at DESC LIMIT 1) AS goal_met
+                FROM goals g
+                JOIN cycles c ON c.goal_id=g.id AND c.sequence=(
+                    SELECT MAX(c2.sequence) FROM cycles c2 WHERE c2.goal_id=g.id)
+                JOIN runs r ON r.id=c.id
+                {where}
+                ORDER BY g.updated_at DESC,g.id DESC LIMIT ?""", parameters).fetchall()
+        values = []
+        for row in rows:
+            item = dict(row)
+            item["target"] = self._normalize(json.loads(item.pop("target_json")))
+            if item.get("goal_met") is not None:
+                item["goal_met"] = bool(item["goal_met"])
+            values.append(item)
+        return values
+
+    def goal_counts(self) -> dict[str, int]:
+        with self.connect() as con:
+            rows = con.execute(
+                "SELECT goal_status,COUNT(*) AS count FROM goals GROUP BY goal_status"
+            ).fetchall()
+        values = {status: 0 for status in (
+            "proposed", "active", "paused", "achieved", "abandoned", "expired")}
+        values.update({row["goal_status"]: row["count"] for row in rows})
+        values["total"] = sum(row["count"] for row in rows)
+        return values
+
+    def attention(self, limit: int = 10) -> list[dict]:
+        """Return only unresolved notifications belonging to active goals."""
+
+        marks = ",".join("?" for _ in ACTIONABLE_NOTIFICATION_KINDS)
+        with self.connect() as con:
+            rows = con.execute(f"""SELECT n.id,n.goal_id,n.run_id,n.kind,n.created_at,
+                    n.payload_json,g.name,g.owner_id,c.stage,c.step,c.run_status
+                FROM notifications n JOIN goals g ON g.id=n.goal_id
+                JOIN cycles c ON c.id=n.run_id
+                WHERE n.status='pending' AND g.goal_status='active' AND n.kind IN ({marks})
+                ORDER BY n.created_at,n.id LIMIT ?""",
+                (*ACTIONABLE_NOTIFICATION_KINDS, max(1, min(int(limit), 100)))).fetchall()
+        values = []
+        for row in rows:
+            item = dict(row)
+            payload = self._normalize(json.loads(item.pop("payload_json")))
+            item["message"] = (payload.get("result") or {}).get("message")
+            item["required_user_action"] = payload.get("required_user_action")
+            values.append(item)
+        return values
+
+    def unread_results(self, limit: int = 5) -> list[dict]:
+        with self.connect() as con:
+            rows = con.execute("""SELECT n.id,n.goal_id,n.run_id,n.kind,n.created_at,
+                    g.name,g.owner_id,g.goal_status
+                FROM notifications n JOIN goals g ON g.id=n.goal_id
+                WHERE n.status='pending' AND n.kind IN (
+                    'run_completed','goal_achieved','goal_abandoned','goal_expired')
+                ORDER BY n.created_at DESC,n.id DESC LIMIT ?""",
+                (max(1, min(int(limit), 100)),)).fetchall()
+        return [dict(row) for row in rows]
 
     def cycle(self, goal_id: str) -> dict:
         with self.connect() as con:
@@ -402,7 +531,19 @@ class Store:
 
     def set_goal_status(self, goal_id: str, status: str) -> None:
         with self.connect() as con:
-            con.execute("UPDATE goals SET goal_status=?,updated_at=? WHERE id=?", (status, now(), goal_id))
+            stamp = now()
+            con.execute("UPDATE goals SET goal_status=?,updated_at=? WHERE id=?", (status, stamp, goal_id))
+            if status in TERMINAL_GOAL_STATUSES:
+                con.execute("""UPDATE cycles SET run_status='completed',resume_at=NULL,updated_at=?
+                    WHERE goal_id=? AND sequence=(SELECT MAX(sequence) FROM cycles WHERE goal_id=?)""",
+                    (stamp, goal_id, goal_id))
+                con.execute("""UPDATE runs SET status='completed',updated_at=? WHERE id=(
+                    SELECT id FROM cycles WHERE goal_id=? ORDER BY sequence DESC LIMIT 1)""",
+                    (stamp, goal_id))
+                marks = ",".join("?" for _ in ACTIONABLE_NOTIFICATION_KINDS)
+                con.execute(f"""UPDATE notifications SET status='delivered',delivered_at=?
+                    WHERE goal_id=? AND status='pending' AND kind IN ({marks})""",
+                    (stamp, goal_id, *ACTIONABLE_NOTIFICATION_KINDS))
 
     def event(self, goal_id: str, cycle_id: str | None, kind: str, payload: dict) -> None:
         with self.connect() as con:
@@ -419,6 +560,16 @@ class Store:
             row = con.execute("""SELECT * FROM notifications
                 WHERE goal_id=? AND run_id=? AND kind=?""", (goal_id, run_id, kind)).fetchone()
         return self._decode(row)
+
+    def resolve_actionable_notifications(self, goal_id: str, run_id: str) -> None:
+        """Close attention items when the run has moved to a new state."""
+
+        marks = ",".join("?" for _ in ACTIONABLE_NOTIFICATION_KINDS)
+        stamp = now()
+        with self.connect() as con:
+            con.execute(f"""UPDATE notifications SET status='delivered',delivered_at=?
+                WHERE goal_id=? AND run_id=? AND status='pending' AND kind IN ({marks})""",
+                (stamp, goal_id, run_id, *ACTIONABLE_NOTIFICATION_KINDS))
 
     def notifications(self, status: str | None = None, limit: int = 100) -> list[dict]:
         with self.connect() as con:
@@ -462,6 +613,7 @@ class Store:
                 ON CONFLICT(goal_id,cycle_id,approval_key) DO UPDATE SET status=excluded.status,note=excluded.note,updated_at=excluded.updated_at""",
                 (goal_id, cycle_id, key, "approved", note, now()))
         self.event(goal_id, cycle_id, "approval.granted", {"key": key, "note": note})
+        self.resolve_actionable_notifications(goal_id, cycle_id)
 
     def approval(self, goal_id: str, cycle_id: str, key: str) -> str | None:
         with self.connect() as con:

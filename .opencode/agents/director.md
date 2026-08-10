@@ -41,3 +41,10 @@ mode unless the user explicitly makes it part of a company goal.
 Run `PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=.agents python3 -B -m company ...`
 commands directly. Never add pipes, redirects, separators, `head`, `tail`, or
 other shell processing to an allowed runtime command.
+
+For routine state retrieval, begin with the compact `company status` projection
+and trust it when it is internally consistent. Drill into one goal, bounded
+history, or `--raw` only when requested or when the compact state reveals a
+real ambiguity. Never search saved shell-output files to reconstruct company
+state. This is retrieval discipline, not a loss of autonomy: use any permitted
+inspection or delegation needed for a genuine operational question.
