@@ -1,13 +1,13 @@
 {
   "current_run": {
-    "created_at": "2026-08-10T14:42:53.503744+00:00",
-    "goal_id": "goal-email-campaign-20260810",
-    "goal_name": "Resume daily English outbound to 30% reply rate",
-    "owner_id": "outbound",
-    "run_id": "run-7f4669930e",
-    "run_status": "waiting",
-    "stage": "EVALUATE",
-    "updated_at": "2026-08-11T16:38:20.304537+00:00"
+    "created_at": "2026-08-11T12:55:10.766804+00:00",
+    "goal_id": "goal-2e74521235",
+    "goal_name": "Update spielos-ui skill: ops-page patterns, chip radius rule, live-status pattern",
+    "owner_id": "system-improvement",
+    "run_id": "run-d3e52d5c20",
+    "run_status": "blocked",
+    "stage": "ACT",
+    "updated_at": "2026-08-11T16:49:29.015896+00:00"
   },
   "heartbeat": {
     "goal_id": "goal-email-campaign-20260810",
@@ -17,15 +17,15 @@
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-11T16:38:20.304537+00:00"
+    "updated_at": "2026-08-11T16:47:37.729188+00:00"
   },
-  "last_activity_at": "2026-08-11T16:46:27.017049+00:00",
-  "last_sync_at": "2026-08-11T16:46:27.024712+00:00",
+  "last_activity_at": "2026-08-11T16:49:29.015896+00:00",
+  "last_sync_at": "2026-08-11T16:49:29.023044+00:00",
   "state": "running",
   "totals": {
-    "approvals": 35,
+    "approvals": 36,
     "decisions": 64,
-    "evidence": 412,
+    "evidence": 413,
     "goals_abandoned": 6,
     "goals_achieved": 31,
     "goals_active": 7,
