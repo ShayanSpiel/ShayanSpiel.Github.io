@@ -32,13 +32,13 @@ test("canonical sitemap excludes noindex routes", () => {
   }
 });
 
-test("live page builds with hero markers, heartbeat, split timeline, and live status", () => {
+test("live page builds with hero markers, merged status, split timeline, and live status", () => {
   const live = read("live");
   const faLive = read("fa/live");
 
   // Hero and section markers
   assert.match(live, /id="live-hero"/);
-  assert.match(live, /id="live-heartbeat"/);
+  assert.match(live, /id="live-status-root"/);
   assert.match(live, /id="live-stats"/);
   assert.match(live, /id="live-timeline"/);
   assert.match(live, /id="live-howto"/);
@@ -47,17 +47,27 @@ test("live page builds with hero markers, heartbeat, split timeline, and live st
   // Structured data: ItemList of recent goals
   assert.match(live, /"@type":"ItemList"/);
 
-  // Brand logo renders inside the h1 (diamond mark on a panel tile)
+  // Brand logo tile renders inside the h1 next to the running headline
   const h1 = (live.match(/<h1[^>]*>[\s\S]*?<\/h1>/) || [""])[0];
   assert.match(h1, /bg-panel-raised/);
   assert.match(h1, /<svg/);
+  assert.match(h1, /SpielOS is now running SpielOS!/);
+
+  // Hero description: this page is the LIVE operations log (EN page)
+  assert.match(live, /LIVE operations log/);
+
+  // The loop box is full-width and carries its marker
+  assert.match(live, /data-live-loop/);
 
   const snapshot = JSON.parse(readFileSync(join(root, "src/data/live-goals.json"), "utf8"));
   assert.ok(snapshot.goals.length >= 15, "snapshot must hold at least 15 goals");
 
-  // Heartbeat card markers: the active business goal from the snapshot
-  assert.match(live, /data-heartbeat-state="(running|resting)"/);
+  // Merged status card: state + heartbeat markers, clickable to the timeline
+  assert.match(live, /data-live-state="(running|resting)"/);
+  assert.match(live, /data-live-state-label/);
+  assert.match(live, /id="live-status-root"[^>]*href="#live-timeline"/);
   assert.match(live, /bx-bullseye/);
+  assert.match(live, /data-heartbeat-state="(running|resting)"/);
   assert.match(live, /data-heartbeat-goal/);
   assert.match(live, /data-heartbeat-metric/);
   assert.match(live, /data-heartbeat-stage/);
@@ -66,10 +76,14 @@ test("live page builds with hero markers, heartbeat, split timeline, and live st
     assert.match(
       live,
       new RegExp(`data-heartbeat-goal="${escapeRegExp(heartbeat.goal_name)}"`),
-      "heartbeat card must show the active business goal name"
+      "status card must show the active business goal name"
     );
     assert.match(live, new RegExp(`data-heartbeat-stage="${escapeRegExp(heartbeat.stage || "")}"`));
-    assert.match(live, /animate-pulse motion-reduce:animate-none/);
+    assert.match(live, /data-heartbeat-state="running"/);
+    assert.match(live, /live-hb-icon/, "running status card keeps the heartbeat icon");
+  } else {
+    assert.match(live, /data-heartbeat-state="resting"/);
+    assert.match(live, /live-status-resting/);
   }
 
   // Two timeline sections: business + improvement, each with its own limit

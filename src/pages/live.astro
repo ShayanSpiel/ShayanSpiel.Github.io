@@ -7,6 +7,7 @@ import SectionHeader from "../components/sections/SectionHeader.astro";
 import SpielOSLogo from "../components/SpielOSLogo.astro";
 import LiveStats, { type LiveTotals } from "../components/live/LiveStats.astro";
 import LiveTimeline, { type LiveGoal } from "../components/live/LiveTimeline.astro";
+import LiveStatus, { type Heartbeat } from "../components/live/LiveStatus.astro";
 import snapshot from "../data/live-goals.json";
 
 export interface Props {
@@ -15,31 +16,9 @@ export interface Props {
 
 const { locale = "en" } = Astro.props;
 
-interface CurrentRun {
-  run_id: string;
-  goal_id: string;
-  goal_name: string;
-  owner_id: string;
-  stage?: string | null;
-  run_status?: string | null;
-  created_at: string;
-  updated_at: string;
-}
-
-interface Heartbeat {
-  goal_id: string;
-  goal_name: string;
-  metric: string;
-  operator: string;
-  target: number | boolean | string;
-  stage?: string | null;
-  run_status?: string | null;
-  updated_at: string;
-}
-
 interface RuntimeState {
   state: "running" | "resting";
-  current_run: CurrentRun | null;
+  current_run: unknown;
   heartbeat: Heartbeat | null;
   last_activity_at: string | null;
   last_sync_at: string;
@@ -61,7 +40,6 @@ const runtimeState: RuntimeState = data.runtime_state ?? {
   last_sync_at: "",
 };
 const liveState = runtimeState.state;
-const currentRun = runtimeState.current_run;
 const heartbeat: Heartbeat | null = runtimeState.heartbeat ?? null;
 
 // Readable heartbeat target: i18n metric label, operator symbol (ge/le/eq ->
@@ -134,9 +112,7 @@ const liveI18n = {
   daysAgo: t(locale, "live.time.daysAgo"),
   running: t(locale, "live.state.running"),
   resting: t(locale, "live.state.resting"),
-  currentRun: t(locale, "live.state.currentRun"),
   lastActivity: t(locale, "live.state.lastActivity"),
-  heartbeatResting: t(locale, "live.heartbeat.resting"),
   metricLabels: METRIC_LABELS,
   metricFormat: t(locale, "live.entry.metric"),
 };
@@ -176,23 +152,24 @@ const howTo = [
       <div class="mx-auto max-w-4xl text-center" data-aos="fade-up">
         <span class="text-2xs font-semibold uppercase tracking-widest text-primary">{t(locale, "live.hero.badge")}</span>
         <h1 class="mt-3 flex items-center justify-center gap-3 text-4xl font-bold tracking-tight text-foreground-strong sm:text-5xl">
-          <SpielOSLogo size="md" textClass="text-4xl font-bold tracking-tight text-foreground-strong sm:text-5xl" />
-          <span set:html={t(locale, "live.hero.title")}></span>
+          <SpielOSLogo
+            markOnly
+            boxClass="flex h-9 w-9 shrink-0 items-center justify-center rounded-sm bg-panel-raised text-foreground-strong sm:h-12 sm:w-12"
+          />
+          <span>{t(locale, "live.hero.title")}</span>
         </h1>
         <p class="mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">{t(locale, "live.hero.desc")}</p>
 
-        <!-- Live Running/Resting status -->
-        <div class="mt-6 flex flex-wrap items-center justify-center gap-x-4 gap-y-2" data-aos="fade-up" data-aos-delay="50">
-          <span id="live-state-chip" class="inline-flex items-center gap-1.5 rounded-sm border border-border bg-panel px-3 py-1.5 text-xs font-medium" data-live-state={liveState}>
-            <i id="live-state-icon" class:list={["bx", liveState === "running" ? "bx-run text-primary animate-pulse motion-reduce:animate-none" : "bx-time-five text-muted-foreground", "icon-base"]} aria-hidden="true"></i>
-            <span id="live-state-label" data-live-state-label>{t(locale, liveState === "running" ? "live.state.running" : "live.state.resting")}</span>
-          </span>
-          <span id="live-current-run" class:list={["inline-block max-w-[24rem] truncate text-xs text-muted-foreground", !(liveState === "running" && currentRun) && "hidden"]}>
-            {t(locale, "live.state.currentRun", { name: currentRun?.goal_name ?? "" })}
-          </span>
-          <span id="live-last-activity" class:list={["text-xs text-muted-foreground", !runtimeState.last_activity_at && "hidden"]}>
-            {lastActivityText}
-          </span>
+        <!-- Merged live status + heartbeat: running/resting state, the goal in
+             flight and its metric target. The whole card links to the timeline. -->
+        <div class="mx-auto mt-8 max-w-4xl" data-aos="fade-up" data-aos-delay="50">
+          <LiveStatus
+            locale={locale}
+            state={liveState}
+            heartbeat={heartbeat}
+            heartbeatText={heartbeatText}
+            lastActivityText={lastActivityText}
+          />
         </div>
       </div>
 
@@ -209,8 +186,8 @@ const howTo = [
         ))}
       </div>
 
-      <!-- The loop + evidence model -->
-      <div class="mx-auto mt-10 max-w-3xl rounded-md border border-border bg-panel p-5" data-aos="fade-up" data-aos-delay="150">
+      <!-- The loop + evidence model (full width, aligned with the cards grid) -->
+      <div class="mt-10 w-full rounded-md border border-border bg-panel p-5" data-aos="fade-up" data-aos-delay="150" data-live-loop>
         <p class="mb-4 text-center text-2xs font-semibold uppercase tracking-widest text-muted-foreground">{t(locale, "live.hero.loop.title")}</p>
         <div class="flex flex-wrap items-center justify-center gap-2">
           {loopSteps.map((step, i) => (
@@ -224,39 +201,6 @@ const howTo = [
           ))}
         </div>
         <p class="mt-4 text-center text-xs leading-relaxed text-muted-foreground">{t(locale, "live.hero.evidence")}</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Heartbeat: the business goal currently in flight -->
-  <section id="live-heartbeat" class="relative py-16 sm:py-20">
-    <div class="mx-auto max-w-6xl px-6">
-      <div
-        id="live-heartbeat-card"
-        class="rounded-md border border-border bg-panel p-5 sm:p-6"
-        data-aos="fade-up"
-        data-heartbeat-state={heartbeat ? "running" : "resting"}
-      >
-        <div class="flex flex-wrap items-center gap-x-5 gap-y-4">
-          <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-primary-soft">
-            <i class="bx bx-bullseye text-primary icon-xl" aria-hidden="true"></i>
-          </div>
-          <div class="min-w-0 flex-1">
-            <p class="text-2xs font-semibold uppercase tracking-widest text-primary">{t(locale, "live.heartbeat.label")}</p>
-            <h2 class="mt-1 text-sm font-semibold leading-snug text-foreground-strong" data-heartbeat-goal={heartbeat?.goal_name ?? ""}>{heartbeat?.goal_name ?? ""}</h2>
-            <p class="mt-1 font-mono text-xs text-muted-foreground" data-heartbeat-metric={heartbeat ? heartbeatText(heartbeat) : ""}>{heartbeat ? heartbeatText(heartbeat) : ""}</p>
-            <p id="live-heartbeat-resting" class:list={["mt-1 text-xs leading-relaxed text-muted-foreground", heartbeat && "hidden"]}>
-              {t(locale, "live.heartbeat.resting")}
-            </p>
-          </div>
-          <div
-            id="live-heartbeat-chip"
-            class:list={["inline-flex items-center gap-1.5 rounded-sm border border-border bg-panel px-3 py-1.5 text-xs font-medium", !heartbeat && "hidden"]}
-          >
-            <i class="bx bx-run text-primary animate-pulse motion-reduce:animate-none icon-base" aria-hidden="true"></i>
-            <span data-heartbeat-stage={heartbeat?.stage ?? ""}>{heartbeat?.stage ?? ""}</span>
-          </div>
-        </div>
       </div>
     </div>
   </section>
@@ -326,26 +270,26 @@ const howTo = [
   <!-- Client-side strings for the /live-state.json poller -->
   <script is:inline type="application/json" id="live-state-i18n" set:html={JSON.stringify(liveI18n)}></script>
 
-  <!-- Live state polling: fetch /live-state.json every 30s, update the chip,
-       last-activity line and stat numbers in place. Silent on any error. -->
+  <!-- Live state polling: fetch /live-state.json every 30s, update the merged
+       status card (state, heartbeat goal/target/stage, resting visibility, last
+       activity) and stat numbers in place. Silent on any error. -->
   <script is:inline>
     (function () {
       var root = document.documentElement;
       var isFa = root.lang === "fa";
       var FA_DIGITS = "۰۱۲۳۴۵۶۷۸۹";
-      var chip = document.getElementById("live-state-chip");
-      var iconEl = document.getElementById("live-state-icon");
-      var labelEl = document.getElementById("live-state-label");
-      var runEl = document.getElementById("live-current-run");
-      var activityEl = document.getElementById("live-last-activity");
-      var hbCard = document.getElementById("live-heartbeat-card");
-      var hbGoalEl = hbCard ? hbCard.querySelector("[data-heartbeat-goal]") : null;
-      var hbMetricEl = hbCard ? hbCard.querySelector("[data-heartbeat-metric]") : null;
-      var hbStageEl = hbCard ? hbCard.querySelector("[data-heartbeat-stage]") : null;
-      var hbRestingEl = document.getElementById("live-heartbeat-resting");
-      var hbChip = document.getElementById("live-heartbeat-chip");
+      var statusRoot = document.getElementById("live-status-root");
+      var statusTile = statusRoot ? statusRoot.querySelector(".live-hb-tile") : null;
+      var stateIconEl = document.getElementById("live-status-state-icon");
+      var stateLabelEl = document.getElementById("live-status-state-label-text");
+      var hbGoalEl = statusRoot ? statusRoot.querySelector("[data-heartbeat-goal]") : null;
+      var hbMetricEl = statusRoot ? statusRoot.querySelector("[data-heartbeat-metric]") : null;
+      var hbStageEl = statusRoot ? statusRoot.querySelector("[data-heartbeat-stage]") : null;
+      var hbStageWrap = document.getElementById("live-status-stage");
+      var restingEl = document.getElementById("live-status-resting");
+      var activityEl = document.getElementById("live-status-activity");
       var i18nEl = document.getElementById("live-state-i18n");
-      if (!chip || !i18nEl) return;
+      if (!statusRoot || !i18nEl) return;
       var I18N = {};
       try {
         I18N = JSON.parse(i18nEl.textContent || "{}") || {};
@@ -381,41 +325,43 @@ const howTo = [
           .replace("{target}", target);
       }
 
-      function applyHeartbeat(hb) {
-        if (!hbCard) return;
+      function applyState(data) {
+        var running = data.state === "running";
+        var hb = data.heartbeat || null;
+        statusRoot.setAttribute("data-live-state", data.state);
+        statusRoot.setAttribute("data-heartbeat-state", hb ? "running" : "resting");
+        statusRoot.classList.toggle("live-state-running", !!hb);
+        statusRoot.classList.toggle("live-state-resting", !hb);
+        if (statusTile) {
+          statusTile.classList.toggle("bg-success-soft", !!hb);
+          statusTile.classList.toggle("text-success", !!hb);
+          statusTile.classList.toggle("bg-destructive-soft", !hb);
+          statusTile.classList.toggle("text-destructive", !hb);
+        }
+        if (stateIconEl) {
+          stateIconEl.className = "bx " + (running ? "bx-run text-primary" : "bx-time-five text-muted-foreground") + " icon-sm";
+        }
+        if (stateLabelEl) stateLabelEl.textContent = running ? I18N.running : I18N.resting;
         if (hb && hb.goal_name) {
-          hbCard.setAttribute("data-heartbeat-state", "running");
           if (hbGoalEl) hbGoalEl.textContent = hb.goal_name;
           if (hbMetricEl) hbMetricEl.textContent = heartbeatTarget(hb);
           if (hbStageEl) hbStageEl.textContent = hb.stage || "";
-          if (hbRestingEl) hbRestingEl.classList.add("hidden");
-          if (hbChip) hbChip.classList.remove("hidden");
+          if (hbStageWrap) hbStageWrap.classList.remove("hidden");
+          if (restingEl) restingEl.classList.add("hidden");
         } else {
-          hbCard.setAttribute("data-heartbeat-state", "resting");
           if (hbGoalEl) hbGoalEl.textContent = "";
           if (hbMetricEl) hbMetricEl.textContent = "";
           if (hbStageEl) hbStageEl.textContent = "";
-          if (hbRestingEl) hbRestingEl.classList.remove("hidden");
-          if (hbChip) hbChip.classList.add("hidden");
+          if (hbStageWrap) hbStageWrap.classList.add("hidden");
+          if (restingEl) restingEl.classList.remove("hidden");
         }
-      }
-
-      function applyState(data) {
-        var running = data.state === "running";
-        chip.setAttribute("data-live-state", data.state);
-        labelEl.textContent = running ? I18N.running : I18N.resting;
-        iconEl.className = "bx " + (running ? "bx-run text-primary animate-pulse motion-reduce:animate-none" : "bx-time-five text-muted-foreground") + " icon-base";
-        if (runEl) {
-          if (running && data.current_run && data.current_run.goal_name) {
-            runEl.textContent = (I18N.currentRun || "{name}").replace("{name}", data.current_run.goal_name);
-            runEl.classList.remove("hidden");
+        if (activityEl) {
+          if (data.last_activity_at) {
+            activityEl.textContent = (I18N.lastActivity || "{time}").replace("{time}", relTime(data.last_activity_at));
+            activityEl.classList.remove("hidden");
           } else {
-            runEl.classList.add("hidden");
+            activityEl.classList.add("hidden");
           }
-        }
-        applyHeartbeat(data.heartbeat || null);
-        if (activityEl && data.last_activity_at) {
-          activityEl.textContent = (I18N.lastActivity || "{time}").replace("{time}", relTime(data.last_activity_at));
         }
         if (data.totals) {
           var statKeys = ["goals_total", "goals_active", "goals_achieved", "goals_abandoned", "runs", "evidence", "decisions", "approvals", "hypotheses", "memory_claims"];

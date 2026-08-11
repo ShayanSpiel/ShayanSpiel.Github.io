@@ -140,7 +140,7 @@ const statusPills = [
         data-filter-status={pill.value}
         aria-pressed={i === 0 ? "true" : "false"}
       >
-        {t(locale, pill.labelKey)} <span class="opacity-80">({num(pill.count)})</span>
+        {t(locale, pill.labelKey)} <span class="live-count opacity-80">({num(pill.count)})</span>
       </button>
     ))}
   </div>
@@ -152,7 +152,7 @@ const statusPills = [
         <div class="mb-4">
           <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
             <h2 class="text-lg font-bold tracking-tight text-foreground-strong">{t(locale, section.titleKey)}</h2>
-            <span class="text-2xs font-medium text-muted-foreground">{t(locale, section.countKey, { count: num(section.entries.length) })}</span>
+            <span class="live-count text-2xs font-medium text-muted-foreground">{t(locale, section.countKey, { count: num(section.entries.length) })}</span>
           </div>
           <p class="mt-1 max-w-2xl text-xs leading-relaxed text-muted-foreground">{t(locale, section.subtitleKey)}</p>
         </div>
@@ -172,7 +172,7 @@ const statusPills = [
                 data-type={section.type}
                 data-status={status}
               >
-                <i class:list={["absolute -start-2.5 top-0", node.icon, node.color, "icon-sm"]} aria-hidden="true"></i>
+                <i class:list={["absolute -start-2 top-0", node.icon, node.color, "icon-lg"]} aria-hidden="true"></i>
                 <div class="rounded-md border border-border bg-panel p-5 transition-all hover:border-border-strong hover:bg-panel-raised">
                   <div class="flex flex-wrap items-start gap-x-3 gap-y-2">
                     <div class:list={["flex h-6 w-6 shrink-0 items-center justify-center rounded-sm", typeTile[section.type]]}>
@@ -254,6 +254,62 @@ const statusPills = [
   .live-entry--hidden {
     display: none;
   }
+
+  /* Count badges (filter chips + section headers) pop on filter changes.
+     Transforms need an inline-block/blockified box, so pin the display. */
+  .live-count {
+    display: inline-block;
+  }
+  .live-count-pop {
+    animation: live-count-pop 240ms var(--ease);
+  }
+  @keyframes live-count-pop {
+    0% {
+      transform: scale(1);
+    }
+    40% {
+      transform: scale(1.18);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  /* Newly visible entries fade + slide in with a short stagger. */
+  .live-entry--in {
+    animation: live-entry-in 240ms ease-out both;
+  }
+  @keyframes live-entry-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Show more fades out after revealing the remaining entries. */
+  .live-showmore-out {
+    animation: live-fade-out 200ms ease-out both;
+  }
+  @keyframes live-fade-out {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .live-entry--in,
+    .live-count-pop,
+    .live-showmore-out {
+      animation: none !important;
+    }
+  }
 </style>
 
 <script>
@@ -264,6 +320,7 @@ const statusPills = [
     var INLINE: Record<string, number> = { business: 10, improvement: 5 };
     var filterStatus = "all";
     var revealed: Record<string, boolean> = { business: false, improvement: false };
+    var firstApply = true;
 
     var sections = Array.prototype.slice.call(root.querySelectorAll("[data-live-section]")).map(function (sec: Element) {
       var type = sec.getAttribute("data-live-section") || "";
@@ -279,14 +336,47 @@ const statusPills = [
       return true;
     }
 
+    function popCounts(): void {
+      var counts = root.querySelectorAll(".live-count");
+      for (var i = 0; i < counts.length; i++) {
+        var el = counts[i] as HTMLElement;
+        el.classList.remove("live-count-pop");
+        void el.offsetWidth; // restart the animation
+        el.classList.add("live-count-pop");
+      }
+    }
+
     function apply(): void {
+      var newlyVisible: Element[] = [];
       sections.forEach(function (sec) {
         sec.entries.forEach(function (el: Element, i: number) {
           var visible = matches(el) && (revealed[sec.type] || filterStatus !== "all" || i < INLINE[sec.type]);
+          var wasVisible = !el.classList.contains("live-entry--hidden");
           el.classList.toggle("live-entry--hidden", !visible);
+          if (visible && !wasVisible) newlyVisible.push(el);
         });
-        if (sec.showMore) sec.showMore.classList.toggle("hidden", revealed[sec.type]);
       });
+      // The initial server render already applied the inline counts: do not
+      // animate entries on first load.
+      if (firstApply) {
+        firstApply = false;
+        return;
+      }
+      // Stagger newly visible entries (25-35ms apart, capped so the delay
+      // never grows past ~360ms), then pop every count badge.
+      var capped = Math.min(newlyVisible.length, 12);
+      for (var k = 0; k < capped; k++) {
+        (function (el: Element, delayMs: number) {
+          var item = el as HTMLElement;
+          item.classList.add("live-entry--in");
+          item.style.animationDelay = delayMs + "ms";
+          item.addEventListener("animationend", function () {
+            item.classList.remove("live-entry--in");
+            item.style.animationDelay = "";
+          }, { once: true });
+        })(newlyVisible[k], k * 30);
+      }
+      popCounts();
     }
 
     function selectStatus(value: string, btn: Element): void {
@@ -316,6 +406,17 @@ const statusPills = [
         sec.showMore.addEventListener("click", function () {
           revealed[sec.type] = true;
           apply();
+          // Fade the button out, then hide it. Under reduced motion the
+          // animation never runs, so hide it immediately instead.
+          var btn = sec.showMore as HTMLElement;
+          if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            btn.classList.add("hidden");
+          } else {
+            btn.classList.add("live-showmore-out");
+            window.setTimeout(function () {
+              btn.classList.add("hidden");
+            }, 260);
+          }
         });
       }
     });
