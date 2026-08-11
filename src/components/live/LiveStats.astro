@@ -1,0 +1,56 @@
+---
+import { type Locale, t } from "../../i18n/translations";
+
+export interface LiveTotals {
+  goals_total: number;
+  goals_active: number;
+  goals_achieved: number;
+  goals_abandoned: number;
+  runs: number;
+  evidence: number;
+  decisions: number;
+  approvals: number;
+  hypotheses: number;
+  memory_claims: number;
+}
+
+export interface Props {
+  locale?: Locale;
+  totals: LiveTotals;
+}
+
+const { locale = "en", totals } = Astro.props;
+
+const faDigits = "۰۱۲۳۴۵۶۷۸۹";
+const num = (n: number): string =>
+  locale === "fa" ? String(n).replace(/\d/g, (d) => faDigits[Number(d)]) : String(n);
+
+const stats = [
+  { value: totals.goals_total, labelKey: "live.stats.goalsTotal", icon: "bx-bullseye", color: "primary" },
+  { value: totals.goals_active, labelKey: "live.stats.active", icon: "bx-time-five", color: "warning" },
+  { value: totals.goals_achieved, labelKey: "live.stats.achieved", icon: "bx-check-square", color: "success" },
+  { value: totals.goals_abandoned, labelKey: "live.stats.abandoned", icon: "bx-error", color: "destructive" },
+  { value: totals.runs, labelKey: "live.stats.runs", icon: "bx-run", color: "accent" },
+  { value: totals.evidence, labelKey: "live.stats.evidence", icon: "bx-file", color: "purple" },
+  { value: totals.decisions, labelKey: "live.stats.decisions", icon: "bx-task", color: "accent" },
+  { value: totals.approvals, labelKey: "live.stats.approvals", icon: "bx-check-shield", color: "success" },
+  { value: totals.hypotheses, labelKey: "live.stats.hypotheses", icon: "bx-bulb", color: "warning" },
+  { value: totals.memory_claims, labelKey: "live.stats.memoryClaims", icon: "bx-brain", color: "purple" },
+];
+---
+
+<div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5" data-aos="fade-up">
+  {stats.map((s) => (
+    <div
+      class="rounded-md border border-border bg-panel p-5 transition-all hover:border-border-strong hover:bg-panel-raised"
+      data-aos="fade-up"
+      data-aos-delay={String(stats.indexOf(s) * 40)}
+    >
+      <div class:list={["mb-3 flex h-9 w-9 items-center justify-center rounded-md bg-" + s.color + "-soft"]}>
+        <i class:list={["bx", s.icon, "text-" + s.color, "icon-xl"]} aria-hidden="true"></i>
+      </div>
+      <div class="text-2xl font-bold text-foreground-strong">{num(s.value)}</div>
+      <p class="mt-0.5 text-xs text-muted-foreground">{t(locale, s.labelKey)}</p>
+    </div>
+  ))}
+</div>

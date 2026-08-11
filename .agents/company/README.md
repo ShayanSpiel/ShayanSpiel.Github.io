@@ -133,3 +133,13 @@ Runtime or Department changes use one bounded `system_improvement` Goal with:
 
 The executor edits only approved files, records actual test evidence, and never
 marks deployment unless deployment happened.
+
+## OpenCode permission policy
+
+Company agents run with free-run shell permissions in OpenCode (V2
+`permissions` rules in `.opencode/agents/*.md`). The Director and Department
+executors never edit repository files; `system-improvement` is the only editing
+agent and is bounded by its persisted goal. OpenCode-level prompting is thereby
+limited to OpenCode defaults (`.env` reads, external directories); the runtime's
+parked approvals are the single gate for live external and customer-facing
+actions. Do not reintroduce per-command `ask` rules for company agents.

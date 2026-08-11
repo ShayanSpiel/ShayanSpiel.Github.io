@@ -8,11 +8,20 @@ skip with a reason. The segment-observation fallback that produced generic
 copy is DELETED: unprepared leads never reach an inbox, and validators
 (validators.py) mechanically reject any artifact that still contains a
 segment-generic observation sentence.
+
+OFFER (owner direction 2026-08-10): the harness IS the offer and IS the
+company — positioning is "building agentic companies and departments". The
+retired "supervised AI employees" offer line is replaced by four A/B variants
+(OFFER_VARIANTS), rotated per lead with the VARIANT_ROTATE cadence and tagged
+in the composed email features so reply-rate A/B is measurable per variant.
+validators.py mechanically bans the retired phrase so it can never ship again
+from any render path.
 """
 
 import html as html_mod
 import re
 
+from . import config
 from . import content as content_bank
 from . import outbound
 from .templates import SIGNATURE_HTML, SIGNATURE_TEXT
@@ -42,6 +51,33 @@ FORBIDDEN_OBSERVATIONS = (
     "every scaling business has one repetitive workflow",
     "staffs {segment} roles for {country} clients",
 )
+
+# Retired offer phrasing (owner direction 2026-08-10: the harness IS the
+# offer and IS the company). VALIDATE bans these mechanically from every
+# render so the old "supervised AI employees" line can never ship again,
+# from STRICT compose or the legacy template ladder.
+FORBIDDEN_OFFER_PHRASES = (
+    "supervised ai employees",
+)
+
+# Owner direction 2026-08-10 offer variants — the company line is "building
+# agentic companies and departments", one workflow at a time, supervised by
+# the buyer's people. Rotated per lead and tagged as offer-1..offer-4 in the
+# composed email features so reply-rate A/B is measurable.
+OFFER_VARIANTS = (
+    "I build agentic companies - {company} loop carried end to end by supervised AI agents, with your people approving each step.",
+    "SpielOS is an agentic department that runs on its own harness; I build the same supervised agent departments for companies like {company}.",
+    "I build agentic departments: your ops workflow running as supervised agents, a person in the loop on every step.",
+    "I build agentic companies and departments. One workflow at a time, supervised by your team, starting with the most manual loop at {company}.",
+)
+
+
+def offer_variant_index(seq: int) -> int:
+    """Deterministic per-lead A/B index, same cadence as outbound.pick_variant
+    (variants[(seq // VARIANT_ROTATE) % len(variants)]): the offer flips every
+    VARIANT_ROTATE leads so reply-rate A/B is measurable per variant."""
+    return (seq // config.VARIANT_ROTATE) % len(OFFER_VARIANTS)
+
 
 _HOOK_PERSON = re.compile(r"(?:Reference|Address)\s+(.+?)(?:'s role as|\s+by name)")
 _HOOK_ROLE = re.compile(r"'s role as\s+(.+?)(?:\s+and one observable|\.)")
@@ -138,6 +174,9 @@ def compose_researched(contact: dict, label: str, seq: int = 0) -> dict | None:
     hook = _hook_fields(contact)
     first = outbound.get_first_name(contact) or "there"
     company = contact["company"]
+    idx = offer_variant_index(seq)
+    offer = OFFER_VARIANTS[idx].format(company=company)
+    offer_variant = f"offer-{idx + 1}"
 
     if hook["person"] and hook["role"]:
         opener = f"Hi {first}, I saw you are {hook['role']} at {company}."
@@ -164,7 +203,7 @@ def compose_researched(contact: dict, label: str, seq: int = 0) -> dict | None:
     html = (
         f"<p>{html_mod.escape(opener)}</p>\n"
         f"<p>{html_mod.escape(observation)}.</p>\n"
-        "<p>I build supervised AI employees that carry that loop, one workflow at a time, with a person approving each step.</p>\n"
+        f"<p>{html_mod.escape(offer)}</p>\n"
         f"<p>{html_mod.escape(q)} {html_mod.escape(close)}</p>\n"
         "<p>Best,<br>Shayan</p>\n"
         "{SIGNATURE_HTML}"
@@ -172,12 +211,13 @@ def compose_researched(contact: dict, label: str, seq: int = 0) -> dict | None:
     text = (
         f"{opener}\n\n"
         f"{observation}.\n\n"
-        "I build supervised AI employees that carry that loop, one workflow at a time, with a person approving each step.\n\n"
+        f"{offer}\n\n"
         f"{q} {close}\n\n"
         "Best,\nShayan\n\n"
         "{SIGNATURE_TEXT}"
     )
-    return {"subject": subject, "body_html": html, "body_text": text}
+    return {"subject": subject, "body_html": html, "body_text": text,
+            "variant": offer_variant}
 
 
 def render_checked(contact: dict, seq: int = 0) -> tuple:
@@ -241,16 +281,22 @@ def _email_type(email: str) -> str:
 
 def pick_queue(cohort_filters: dict | None = None) -> list:
     """Ordered, deduped send queue from the master database. Filters come
-    from the owner's control knobs (min_tier, skip_unverified); the queue
-    never lowers the ICP bar — it only deepens or shallowens by tier."""
+    from the owner's control knobs (min_tier, skip_unverified, language); the
+    queue never lowers the ICP bar — it only deepens or shallowens by tier.
+    cohort_filters.language (e.g. "English") restricts the queue to contacts
+    whose language matches case-insensitively — Persian is postponed, so the
+    campaign passes language="English" and no Persian email can send."""
     filters = cohort_filters or {}
     min_tier = str(filters.get("min_tier") or "plausible").lower()
     skip_unverified = bool(filters.get("skip_unverified"))
+    lang_filter = str(filters.get("language") or "").strip()
     contacts = outbound.read_contacts()
     log_data = outbound.load_sent_log()
 
     queued = []
     for c in contacts:
+        if lang_filter and str(c.get("language") or "").strip().lower() != lang_filter.lower():
+            continue
         if outbound.already_sent(c["lead_id"], log_data):
             continue
         if c["send_recommendation"] not in ALLOWED_RECS:
@@ -303,6 +349,7 @@ def build_batch_emails(batch_id: str, leads: list, hypothesis: str) -> dict:
                 "verified": c.get("email_status") or "",
                 "email_type": _email_type(c.get("email") or ""),
                 "title": c.get("title") or "",
+                "variant": f"offer-{offer_variant_index(i) + 1}",
             },
         })
     return {"emails": emails, "skipped": skipped}

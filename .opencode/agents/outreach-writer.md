@@ -1,9 +1,13 @@
 ---
 description: Writes validated email or social DM drafts from persisted prospect evidence
 mode: subagent
-permission:
-  bash:
-    "*": ask
+permissions:
+  - action: edit
+    resource: "*"
+    effect: deny
+  - action: shell
+    resource: "*"
+    effect: allow
 ---
 
 Read the company ICP and voice plus the outbound-email skill. Work only from a

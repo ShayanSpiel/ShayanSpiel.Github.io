@@ -27,3 +27,42 @@ test("canonical sitemap excludes noindex routes", () => {
     assert.doesNotMatch(sitemap, new RegExp(`https:\\/\\/spielos\\.xyz${route.replaceAll("/", "\\/")}`));
   }
 });
+
+test("live page builds with hero markers and first-20 entries inline", () => {
+  const live = read("live");
+  const faLive = read("fa/live");
+
+  // Hero and section markers
+  assert.match(live, /id="live-hero"/);
+  assert.match(live, /id="live-stats"/);
+  assert.match(live, /id="live-timeline"/);
+  assert.match(live, /id="live-howto"/);
+  assert.match(live, /id="live-cta"/);
+
+  // Structured data: ItemList of recent goals
+  assert.match(live, /"@type":"ItemList"/);
+
+  // Timeline entries are inline in the static HTML — first 20 guaranteed,
+  // the full snapshot rendered server-side for progressive enhancement.
+  const snapshot = JSON.parse(readFileSync(join(root, "src/data/live-goals.json"), "utf8"));
+  assert.ok(snapshot.goals.length >= 20, "snapshot must hold at least 20 goals");
+  const inlineEntries = (live.match(/data-goal-id="/g) || []).length;
+  assert.equal(inlineEntries, snapshot.goals.length);
+  for (const goal of snapshot.goals.slice(0, 20)) {
+    assert.match(live, new RegExp(goal.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+  }
+
+  // Filters render with counts
+  assert.match(live, /data-filter-type="business"/);
+  assert.match(live, /data-filter-status="abandoned"/);
+
+  // FA wrapper builds as a thin RTL page
+  assert.match(faLive, /<html lang="fa" dir="rtl"/);
+  assert.match(faLive, /id="live-hero"/);
+});
+
+test("sitemap contains the live timeline pages", () => {
+  const sitemap = readFileSync(join(dist, "sitemap.xml"), "utf8");
+  assert.match(sitemap, /https:\/\/spielos\.xyz\/live\//);
+  assert.match(sitemap, /https:\/\/spielos\.xyz\/fa\/live\//);
+});

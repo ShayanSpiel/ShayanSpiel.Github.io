@@ -1,3 +1,4 @@
+import importlib.util
 import sqlite3
 import tempfile
 import unittest
@@ -501,8 +502,11 @@ class DirectorIdentityContractTests(unittest.TestCase):
         self.assertIn("You are the operating Director of SpielOS", prompt)
         self.assertIn("must never introduce yourself as a coding or website assistant", prompt)
         self.assertIn("reports do not require a new goal", prompt)
-        self.assertIn("edit: false", prompt)
-        self.assertIn("write: false", prompt)
+        self.assertIn("permissions:", prompt)
+        self.assertIn("- action: edit", prompt)
+        self.assertIn("effect: deny", prompt)
+        self.assertIn("- action: shell", prompt)
+        self.assertIn("effect: allow", prompt)
 
     def test_codex_director_has_same_identity_boundary(self):
         root = Path(__file__).resolve().parents[3]
@@ -523,10 +527,11 @@ class DirectorIdentityContractTests(unittest.TestCase):
     def test_system_improvement_groups_safe_permissions(self):
         root = Path(__file__).resolve().parents[3]
         prompt = (root / ".opencode/agents/system-improvement.md").read_text()
-        self.assertIn("edit: allow", prompt)
-        self.assertIn("external_directory: deny", prompt)
-        self.assertIn('"npm test*": allow', prompt)
-        self.assertIn('"*": ask', prompt)
+        self.assertIn("permissions:", prompt)
+        self.assertIn("- action: edit", prompt)
+        self.assertIn("effect: allow", prompt)
+        self.assertIn("- action: external_directory", prompt)
+        self.assertIn("effect: ask", prompt)
 
 
 class RuntimeControlTests(unittest.TestCase):
@@ -559,6 +564,67 @@ class RuntimeControlTests(unittest.TestCase):
             goal = store.goal("legacy")
             self.assertEqual("outbound", goal["owner_id"])
             self.assertNotIn("engine_id", goal)
+
+
+class LiveTimelineSyncTests(unittest.TestCase):
+    """The /live snapshot hook: fires on every persisted transition, and its
+    sync output is deterministic and idempotent (no mtime churn)."""
+
+    def test_snapshot_hook_fires_on_recorded_transition(self):
+        with tempfile.TemporaryDirectory() as directory:
+            runtime = Runtime(Path(directory) / "state.sqlite",
+                              {"immediate_test": ImmediateHandler()})
+            goal = runtime.create_goal(name="Snapshot hook", owner_id="immediate_test",
+                                       metric="done", operator="eq", target=True, config={})
+            calls = []
+            fake = SimpleNamespace(
+                sync_live=lambda db, out, quiet: calls.append((db, out, quiet)) or {})
+            with patch("company.runtime.loop._load_live_sync", return_value=fake):
+                result = runtime.once(goal["id"])
+            self.assertEqual(result["goal"]["goal_status"], "achieved")
+            # ImmediateHandler advances OBSERVE -> DECIDE -> ACT -> EVALUATE,
+            # so exactly four recorded transitions must each trigger the sync.
+            self.assertEqual(len(calls), 4)
+            for db, out, quiet in calls:
+                self.assertEqual(db, ".spielos/state/company.sqlite")
+                self.assertEqual(out, "src/data/live-goals.json")
+                self.assertTrue(quiet)
+
+    def test_hook_tolerates_missing_script_and_locked_db(self):
+        with tempfile.TemporaryDirectory() as directory:
+            runtime = Runtime(Path(directory) / "state.sqlite",
+                              {"immediate_test": ImmediateHandler()})
+            with patch("company.runtime.loop._load_live_sync", return_value=None):
+                goal = runtime.create_goal(name="Tolerant hook", owner_id="immediate_test",
+                                           metric="done", operator="eq", target=True, config={})
+                result = runtime.once(goal["id"])  # missing script: skip, no raise
+            self.assertEqual(result["goal"]["goal_status"], "achieved")
+
+            broken = SimpleNamespace(sync_live=lambda db, out, quiet: (_ for _ in ()).throw(
+                RuntimeError("database is locked")))
+            with patch("company.runtime.loop._load_live_sync", return_value=broken):
+                goal = runtime.create_goal(name="Locked hook", owner_id="immediate_test",
+                                           metric="done", operator="eq", target=True, config={})
+                result = runtime.once(goal["id"])  # locked DB: warn, no raise
+            self.assertEqual(result["goal"]["goal_status"], "achieved")
+
+    def test_sync_output_is_idempotent_without_mtime_churn(self):
+        root = Path(__file__).resolve().parents[3]
+        script = root / "scripts" / "sync-live-timeline.py"
+        spec = importlib.util.spec_from_file_location("live_sync_under_test", script)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        with tempfile.TemporaryDirectory() as directory:
+            db = Path(directory) / "company.sqlite"
+            out = Path(directory) / "live-goals.json"
+            store = Store(db)
+            store.create_goal(name="Snapshot goal", owner_id="immediate_test",
+                              metric="done", operator="eq", target=True)
+            first = module.sync_live(str(db), str(out), quiet=True)
+            first_mtime_ns = out.stat().st_mtime_ns
+            second = module.sync_live(str(db), str(out), quiet=True)
+            self.assertEqual(first, second)
+            self.assertEqual(first_mtime_ns, out.stat().st_mtime_ns)
 
 
 if __name__ == "__main__":

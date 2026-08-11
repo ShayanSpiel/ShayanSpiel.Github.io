@@ -18,6 +18,7 @@ A work session is evidence, not the article. The reader's problem determines the
 Before writing, read:
 
 - `../../company/strategy/icp.md` — the single source of truth for the customer profile, exclusions, and positioning idea. Never restate the ICP in this file; read it from the source.
+- `../../company/strategy/voice.md` — the company voice and canonical One Idea Hierarchy.
 - `../translation-fa/persian-glossary.md` — the single source of truth for all terminology
 - `../translation-fa/SKILL.md` — for sentence-level Persian quality rules, voice, register, and validation
 
@@ -235,6 +236,23 @@ Now the reader has a concrete situation to react to.
 
 ---
 
+## One Idea Hierarchy
+
+Before drafting, lock three levels:
+
+1. **Company promise connection** — identify how the topic relates to more
+   output, lower operating cost, or improving one workflow at a time.
+2. **Topic-specific idea** — choose one problem, mechanism, objection, lesson,
+   proof point, or outcome for this Persian asset. Different articles and
+   formats may explain different topics.
+3. **Asset execution** — write one natural Persian title and one coherent
+   argument. Every example, section, visual cue, and CTA serves that topic.
+
+If the reader remembers one idea, decide what it should be and why an Iranian
+founder would care. State it clearly, then expand. Do not force a literal
+translation of the English title, and do not repeat the company promise as
+every headline.
+
 ## Titles
 
 Titles must communicate one clear tension, problem, result, or lesson.
@@ -420,6 +438,8 @@ Reject the content if any answer is no:
 - Could this copy belong to any generic AI startup?
 - Does the CTA naturally follow from the article?
 - Has unsupported marketing language been removed?
+- Does the asset communicate one topic-specific idea connected naturally to the company promise?
+- Do the Persian title, argument, evidence, and CTA all serve that same idea?
 
 ---
 

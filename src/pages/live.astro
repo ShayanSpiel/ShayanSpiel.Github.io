@@ -1,0 +1,173 @@
+---
+import Page from "../layouts/Page.astro";
+import { SITE } from "../config";
+import { type Locale, t } from "../i18n/translations";
+import { localizePath } from "../i18n";
+import SectionHeader from "../components/sections/SectionHeader.astro";
+import LiveStats, { type LiveTotals } from "../components/live/LiveStats.astro";
+import LiveTimeline, { type LiveGoal } from "../components/live/LiveTimeline.astro";
+import snapshot from "../data/live-goals.json";
+
+export interface Props {
+  locale?: Locale;
+}
+
+const { locale = "en" } = Astro.props;
+
+const data = snapshot as unknown as {
+  totals: LiveTotals;
+  goals: LiveGoal[];
+};
+const totals = data.totals;
+const goals = data.goals;
+
+const recentGoals = [...goals]
+  .sort((a, b) => b.updated_at.localeCompare(a.updated_at))
+  .slice(0, 10);
+
+const itemListJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: t(locale, "live.pageTitle"),
+  description: t(locale, "live.pageDesc"),
+  url: `${SITE.url}${localizePath("/live/", locale)}`,
+  numberOfItems: recentGoals.length,
+  itemListElement: recentGoals.map((goal, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    name: goal.name,
+  })),
+};
+
+const vocab = [
+  { icon: "bx-bullseye", color: "primary", titleKey: "live.vocab.goal.title", descKey: "live.vocab.goal.desc" },
+  { icon: "bx-group", color: "accent", titleKey: "live.vocab.department.title", descKey: "live.vocab.department.desc" },
+  { icon: "bx-run", color: "purple", titleKey: "live.vocab.run.title", descKey: "live.vocab.run.desc" },
+  { icon: "bx-slider", color: "warning", titleKey: "live.vocab.improvement.title", descKey: "live.vocab.improvement.desc" },
+];
+
+const loopSteps = [
+  { labelKey: "live.hero.loop.goal", icon: "bx-bullseye" },
+  { labelKey: "live.hero.loop.observe", icon: "bx-search" },
+  { labelKey: "live.hero.loop.decide", icon: "bx-task" },
+  { labelKey: "live.hero.loop.act", icon: "bx-rocket" },
+  { labelKey: "live.hero.loop.evaluate", icon: "bx-line-chart" },
+];
+
+const howTo = [
+  { icon: "bx-bullseye", color: "primary", titleKey: "live.howto.goal.title", descKey: "live.howto.goal.desc" },
+  { icon: "bx-revision", color: "accent", titleKey: "live.howto.run.title", descKey: "live.howto.run.desc" },
+  { icon: "bx-slider", color: "purple", titleKey: "live.howto.improvement.title", descKey: "live.howto.improvement.desc" },
+  { icon: "bx-file", color: "success", titleKey: "live.howto.evidence.title", descKey: "live.howto.evidence.desc" },
+];
+---
+
+<Page
+  title={t(locale, "live.pageTitle")}
+  description={t(locale, "live.pageDesc")}
+  locale={locale}
+>
+  <!-- Hero: the live operations log -->
+  <section id="live-hero" class="relative overflow-hidden py-24 sm:py-32">
+    <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(var(--foreground) 1px, transparent 1px); background-size: 24px 24px;"></div>
+    <div class="relative mx-auto max-w-6xl px-6">
+      <div class="mx-auto max-w-4xl text-center" data-aos="fade-up">
+        <span class="text-2xs font-semibold uppercase tracking-widest text-primary">{t(locale, "live.hero.badge")}</span>
+        <h1 class="mt-3 text-4xl font-bold tracking-tight text-foreground-strong sm:text-5xl" set:html={t(locale, "live.hero.title")}></h1>
+        <p class="mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">{t(locale, "live.hero.desc")}</p>
+      </div>
+
+      <!-- Plain-language vocabulary -->
+      <div class="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-4" data-aos="fade-up" data-aos-delay="100">
+        {vocab.map((v) => (
+          <div class="rounded-md border border-border bg-panel p-5 transition-all hover:border-border-strong hover:bg-panel-raised">
+            <div class:list={["mb-3 flex h-9 w-9 items-center justify-center rounded-md bg-" + v.color + "-soft"]}>
+              <i class:list={["bx", v.icon, "text-" + v.color, "icon-xl"]} aria-hidden="true"></i>
+            </div>
+            <h2 class="mb-1 text-sm font-semibold text-foreground-strong">{t(locale, v.titleKey)}</h2>
+            <p class="text-xs leading-relaxed text-muted-foreground">{t(locale, v.descKey)}</p>
+          </div>
+        ))}
+      </div>
+
+      <!-- The loop + evidence model -->
+      <div class="mx-auto mt-10 max-w-3xl rounded-md border border-border bg-panel p-5" data-aos="fade-up" data-aos-delay="150">
+        <p class="mb-4 text-center text-2xs font-semibold uppercase tracking-widest text-muted-foreground">{t(locale, "live.hero.loop.title")}</p>
+        <div class="flex flex-wrap items-center justify-center gap-2">
+          {loopSteps.map((step, i) => (
+            <>
+              <span class="inline-flex items-center gap-1.5 rounded-sm bg-primary-soft px-2.5 py-1 text-2xs font-semibold text-primary">
+                <i class:list={["bx", step.icon, "icon-sm"]} aria-hidden="true"></i>
+                {t(locale, step.labelKey)}
+              </span>
+              {i < loopSteps.length - 1 && <i class="bx bx-chevron-right rtl-flip text-muted-foreground icon-md" aria-hidden="true"></i>}
+            </>
+          ))}
+        </div>
+        <p class="mt-4 text-center text-xs leading-relaxed text-muted-foreground">{t(locale, "live.hero.evidence")}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats strip -->
+  <section id="live-stats" class="relative py-24 sm:py-32">
+    <div class="mx-auto max-w-6xl px-6">
+      <SectionHeader
+        label={t(locale, "live.stats.label")}
+        title={t(locale, "live.stats.title")}
+      />
+      <LiveStats locale={locale} totals={totals} />
+    </div>
+  </section>
+
+  <!-- Timeline -->
+  <section id="live-timeline" class="relative py-24 sm:py-32">
+    <div class="mx-auto max-w-4xl px-6">
+      <SectionHeader
+        label={t(locale, "live.filters.label")}
+        title={t(locale, "live.filters.title")}
+        description={t(locale, "live.filters.desc")}
+      />
+      <LiveTimeline locale={locale} goals={goals} />
+    </div>
+  </section>
+
+  <!-- How to read this log -->
+  <section id="live-howto" class="relative overflow-hidden py-24 sm:py-32">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="relative mx-auto max-w-6xl px-6">
+      <SectionHeader
+        label={t(locale, "live.howto.label")}
+        title={t(locale, "live.howto.title")}
+        description={t(locale, "live.howto.desc")}
+      />
+      <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" data-aos="fade-up" data-aos-delay="100">
+        {howTo.map((card) => (
+          <div class="rounded-md border border-border bg-panel p-5 transition-all hover:border-border-strong hover:bg-panel-raised">
+            <div class:list={["mb-3 flex h-9 w-9 items-center justify-center rounded-md bg-" + card.color + "-soft"]}>
+              <i class:list={["bx", card.icon, "text-" + card.color, "icon-xl"]} aria-hidden="true"></i>
+            </div>
+            <h3 class="mb-1 text-sm font-semibold text-foreground-strong">{t(locale, card.titleKey)}</h3>
+            <p class="text-xs leading-relaxed text-muted-foreground">{t(locale, card.descKey)}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="live-cta" class="relative py-24 sm:py-32">
+    <div class="mx-auto max-w-3xl px-6 text-center" data-aos="fade-up">
+      <h2 class="text-3xl font-bold tracking-tight text-foreground-strong sm:text-4xl">{t(locale, "live.cta.title")}</h2>
+      <p class="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground">{t(locale, "live.cta.desc")}</p>
+      <a
+        href={localizePath("/services/", locale)}
+        class="mt-8 inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground transition-all hover:brightness-110 active:brightness-95"
+      >
+        {t(locale, "live.cta.button")}
+      </a>
+    </div>
+  </section>
+
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(itemListJsonLd)} />
+</Page>

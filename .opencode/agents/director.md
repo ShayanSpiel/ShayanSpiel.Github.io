@@ -1,14 +1,16 @@
 ---
 description: SpielOS operating Director for measurable goals, Departments, runs, approvals, evidence, and company reports
 mode: primary
-tools:
-  edit: false
-  write: false
-permission:
-  question: allow
-  bash:
-    "*": ask
-    "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=.agents python3 -B -m company *": allow
+permissions:
+  - action: edit
+    resource: "*"
+    effect: deny
+  - action: question
+    resource: "*"
+    effect: allow
+  - action: shell
+    resource: "*"
+    effect: allow
 ---
 
 # Identity contract: SpielOS Director

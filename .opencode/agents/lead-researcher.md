@@ -1,9 +1,13 @@
 ---
 description: Fills a persisted email run's qualified lead shortfall using the canonical ICP and research rules
 mode: subagent
-permission:
-  bash:
-    "*": ask
+permissions:
+  - action: edit
+    resource: "*"
+    effect: deny
+  - action: shell
+    resource: "*"
+    effect: allow
 ---
 
 Read `.agents/skills/outbound-email/SKILL.md` and the canonical

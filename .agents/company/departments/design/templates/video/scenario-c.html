@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SpielOS — Build It</title>
 <link rel="stylesheet" href="/.agents/company/departments/design/system/production.css">
+<link rel="stylesheet" href="/.agents/company/departments/design/templates/video/brand-motion.css">
 <link rel="stylesheet" href="/node_modules/boxicons/css/boxicons.min.css">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -18,9 +19,8 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--back
   --bg: var(--background); --fg: var(--foreground); --font: var(--font-sans); --mono: var(--font-mono);
 }
 
-@font-face { font-family: "Outfit"; font-weight: 100 900; font-display: swap; src: url("/public/assets/fonts/outfit-latin.woff2") format("woff2"); }
-@font-face { font-family: "JetBrains Mono"; font-weight: 400 600; font-display: swap; src: url("/public/assets/fonts/jetbrains-latin.woff2") format("woff2"); }
-@font-face { font-family: "boxicons"; font-weight: 400; font-display: swap; src: url("/public/assets/fonts/boxicons.woff2") format("woff2"); }
+/* Fonts (Outfit / JetBrains Mono / boxicons) and tokens come from the
+   production design system (production.css), exactly like the website. */
 i.bx, i.bxl, i.bxs { font-family: "boxicons" !important; font-style: normal; font-weight: normal; font-variant: normal; text-transform: none; line-height: 1; -webkit-font-smoothing: antialiased; }
 
 body { font-family: var(--font); color: var(--fg); -webkit-font-smoothing: antialiased; }
@@ -35,6 +35,9 @@ body { font-family: var(--font); color: var(--fg); -webkit-font-smoothing: antia
 .glow-2 { width:500px; height:500px; bottom:5%; right:-10%; background:var(--purple); opacity:0; animation:drift 28s ease-in-out infinite reverse; }
 @keyframes drift { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(40px,-25px) scale(1.08)} 66%{transform:translate(-30px,20px) scale(0.95)} }
 .scanlines::before { content:""; position:absolute; inset:0; pointer-events:none; background:repeating-linear-gradient(0deg,transparent 0 2px,rgba(255,255,255,0.012) 2px 4px); z-index:200; }
+
+/* The same flat goal line is the visual signature across SpielOS motion;
+   the shared journey/goal/footer styles live in brand-motion.css. */
 
 .r { opacity:0; transform:translateY(20px); filter:blur(3px); transition: opacity 0.6s cubic-bezier(0.16,1,0.3,1), transform 0.6s cubic-bezier(0.16,1,0.3,1), filter 0.4s cubic-bezier(0.16,1,0.3,1); }
 .r.show { opacity:1; transform:translateY(0); filter:blur(0); }
@@ -104,6 +107,29 @@ body { font-family: var(--font); color: var(--fg); -webkit-font-smoothing: antia
 
 .particle { position:absolute; border-radius:9999px; pointer-events:none; opacity:0; }
 @keyframes pfloat{0%{transform:translateY(0) scale(1);opacity:0}10%{opacity:.6}90%{opacity:.6}100%{transform:translateY(-55vh) scale(.5);opacity:0}}
+@media (orientation:portrait) {
+  .journey-portrait .journey-path { stroke-width:4; stroke-dasharray:18 14; }
+  .journey-portrait .journey-path-fill { stroke-width:5; }
+  .hook { width:94%; padding:0; }
+  .hook-main { font-size:clamp(4rem,10vw,6rem); line-height:1.02; letter-spacing:-.045em; }
+  .build { width:92%; max-width:none; }
+  .build-list { gap:18px; }
+  .build-step { padding:22px 24px; gap:18px; }
+  .build-num { width:48px; height:48px; font-size:18px; }
+  .build-title { font-size:1.4rem; }
+  .build-desc { font-size:1.05rem; }
+  .build-icon { width:46px; height:46px; font-size:22px; }
+  .live { width:94%; padding:0; }
+  .live-main { font-size:clamp(4rem,10vw,6rem); line-height:1.02; }
+  .director { width:92%; max-width:none; }
+  .dir-card { padding:30px 20px; }
+  .dir-card-title { font-size:1.35rem; }
+  .dir-card-desc { font-size:1rem; }
+  .cta { width:94%; }
+  .cta-badge { font-size:1.1rem; padding:12px 24px; }
+  .cta-title { max-width:11ch; margin-inline:auto; font-size:clamp(4rem,10vw,6rem); line-height:1.02; }
+  .cta-url { font-size:clamp(1.25rem,3vw,1.6rem); padding:18px 30px; }
+}
 </style>
 </head>
 <body class="scanlines">
@@ -112,6 +138,35 @@ body { font-family: var(--font); color: var(--fg); -webkit-font-smoothing: antia
 <div class="glow glow-1" id="glow-1"></div>
 <div class="glow glow-2" id="glow-2"></div>
 <div id="particles" style="position:absolute;inset:0;pointer-events:none;z-index:1;"></div>
+
+<svg class="journey-svg journey-landscape" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+  <path id="journey-bg" class="journey-path" d="M120,540 C280,280 420,780 620,420 C820,60 960,820 1140,380 C1320,100 1500,720 1680,540 L1800,540"/>
+  <path id="journey-fill" class="journey-path-fill" d="M120,540 C280,280 420,780 620,420 C820,60 960,820 1140,380 C1320,100 1500,720 1680,540 L1800,540"/>
+  <!-- Station nodes are placed ON the path by the tick at each scene's
+       measured start fraction; the ring fires its one-shot hit when the
+       line reaches the node. -->
+  <g class="journey-station" id="st1" transform="translate(120,540)"><g class="station-scale"><circle class="station-ring" cx="0" cy="0" r="14"/><circle r="7" fill="#458588"/></g></g>
+  <g class="journey-station" id="st2" transform="translate(620,420)"><g class="station-scale"><circle class="station-ring" cx="0" cy="0" r="14"/><circle r="7" fill="#98971a"/></g></g>
+  <g class="journey-station" id="st3" transform="translate(1140,380)"><g class="station-scale"><circle class="station-ring" cx="0" cy="0" r="14"/><circle r="7" fill="#b16286"/></g></g>
+  <g class="journey-station" id="st4" transform="translate(1500,600)"><g class="station-scale"><circle class="station-ring" cx="0" cy="0" r="14"/><circle r="7" fill="#d79921"/></g></g>
+  <g class="journey-goal" id="journey-goal" transform="translate(1800,540)">
+    <g class="goal-mark"><circle class="goal-ring" r="28"/><circle class="goal-ring-inner" r="16"/><circle class="goal-core" r="5"/></g>
+  </g>
+</svg>
+
+<svg class="journey-svg journey-portrait" viewBox="0 0 1080 1920" preserveAspectRatio="none" aria-hidden="true">
+  <path id="portrait-journey-bg" class="journey-path" d="M-180,1080 C80,590 270,1390 480,830 C670,300 760,1450 980,960"/>
+  <path id="portrait-journey-fill" class="journey-path-fill" d="M-180,1080 C80,590 270,1390 480,830 C670,300 760,1450 980,960"/>
+  <g class="journey-station" id="pst1" transform="translate(-180,1080)"><g class="station-scale"><circle class="station-ring" cx="0" cy="0" r="14"/><circle r="7" fill="#458588"/></g></g>
+  <g class="journey-station" id="pst2" transform="translate(480,830)"><g class="station-scale"><circle class="station-ring" cx="0" cy="0" r="14"/><circle r="7" fill="#98971a"/></g></g>
+  <g class="journey-station" id="pst3" transform="translate(760,650)"><g class="station-scale"><circle class="station-ring" cx="0" cy="0" r="14"/><circle r="7" fill="#b16286"/></g></g>
+  <g class="journey-station" id="pst4" transform="translate(920,900)"><g class="station-scale"><circle class="station-ring" cx="0" cy="0" r="14"/><circle r="7" fill="#d79921"/></g></g>
+  <g class="journey-goal" id="portrait-goal" transform="translate(980,960)">
+    <circle class="goal-ring" r="46"/><circle class="goal-ring-inner" r="27"/><circle class="goal-core" r="8"/>
+  </g>
+</svg>
+
+<div class="video-brand-footer"><span class="brand-lockup"><img src="/public/assets/favicons/favicon.svg" alt="">spielos.xyz</span></div>
 
 <!-- S1: HOOK -->
 <div class="scene" id="s1">
@@ -179,9 +234,9 @@ body { font-family: var(--font); color: var(--fg); -webkit-font-smoothing: antia
 <!-- S5: CTA -->
 <div class="scene" id="s5">
   <div class="cta">
-    <div class="cta-badge r" id="ct0"><span class="cta-dot"></span> Pre-launch — joining early</div>
-    <div class="cta-title r d1" id="ct1">Your AI team is <span class="accent">waiting</span></div>
-    <div class="cta-url r d2" id="ct2"><span class="p">$</span> spielos.xyz/waitlist</div>
+    <div class="cta-badge r" id="ct0"><span class="cta-dot"></span> AI agent implementation</div>
+    <div class="cta-title r d1" id="ct1">Build your first <span class="accent">AI department.</span></div>
+    <div class="cta-url r d2" id="ct2"><span class="p">$</span> spielos.xyz/services</div>
   </div>
 </div>
 
@@ -189,33 +244,116 @@ body { font-family: var(--font); color: var(--fg); -webkit-font-smoothing: antia
 window.__t=0;window.__fps=30;window.__duration=15;
 window.__setFrame=function(f,fps){window.__fps=fps||30;window.__t=f/window.__fps};
 
+/* Measured scene schedule (owner contract №2: speech first, then scenes).
+   Loaded from narration.json, written by scripts/tts-gemini.js from the real
+   spoken clip durations. Until the schedule arrives the frame stays dark;
+   a hardcoded window is never used. */
+window.__timing=null;
+window.__timingError=false;
+fetch('/.agents/company/departments/design/templates/video/narration.json')
+  .then(function(r){return r.json()})
+  .then(function(d){
+    var tm=(d.scene_timing&&d.scene_timing.c)||null;
+    if(tm&&tm.voice&&tm.scenes&&tm.scenes.length) window.__timing=tm; else window.__timingError=true;
+  })
+  .catch(function(){window.__timingError=true});
+
 function act(id){document.querySelectorAll('.scene').forEach(function(s){s.classList.toggle('active',s.id===id)})}
 function tog(id,v){var e=document.getElementById(id);if(e)e.classList.toggle('show',v)}
 
 var pc=document.getElementById('particles'),pC=['var(--primary)','var(--accent)','var(--purple)','var(--warning)'],pE=[];
 for(var i=0;i<14;i++){var d=document.createElement('span');d.className='particle';var sz=2+Math.random()*3;d.style.cssText='width:'+sz+'px;height:'+sz+'px;left:'+(Math.random()*100)+'%;bottom:'+(Math.random()*15)+'%;background:'+pC[i%4]+';animation:pfloat '+(8+Math.random()*10)+'s ease-in infinite;animation-delay:'+(Math.random()*8)+'s';pc.appendChild(d);pE.push(d)}
 
-/*
-  15s timeline (am_michael voice at 1.335x):
-  0-3.10s  : Hook
-  3.10-8.41s: Build steps
-  8.41-10.52s: "Live"
-  10.52-12.44s: Director
-  12.44-15s : CTA
-*/
+var pathFill=document.getElementById('journey-fill');
+var pathBg=document.getElementById('journey-bg');
+var pathLen=pathFill.getTotalLength();
+pathFill.style.setProperty('--path-len',pathLen);
+pathFill.style.strokeDasharray=pathLen;
+pathFill.style.strokeDashoffset=pathLen;
+var portraitFill=document.getElementById('portrait-journey-fill');
+var portraitBg=document.getElementById('portrait-journey-bg');
+var portraitLen=portraitFill.getTotalLength();
+portraitFill.style.setProperty('--path-len',portraitLen);
+portraitFill.style.strokeDasharray=portraitLen;
+portraitFill.style.strokeDashoffset=portraitLen;
+
+/* Stations ride the path: landscape st1..st4 ↔ scenes 1..4 (build→cta),
+   goal at the line end; portrait pst1..pst4 mirror them. Each node is placed
+   at path.getPointAtLength(sceneStartFraction * len) once the schedule is
+   known, so a station can never sit off the line. */
+var stationDefs=[
+  {land:'st1',port:'pst1',scene:1,color:'#458588'},
+  {land:'st2',port:'pst2',scene:2,color:'#98971a'},
+  {land:'st3',port:'pst3',scene:3,color:'#b16286'},
+  {land:'st4',port:'pst4',scene:4,color:'#d79921'}
+];
+var lineEnd=14,placed=false,fired={};
+
+function placeStations(){
+  var sc=window.__timing.scenes;
+  lineEnd=sc[sc.length-1].end;
+  stationDefs.forEach(function(sd){
+    var frac=Math.min(sc[sd.scene].start/lineEnd,1);
+    var lp=pathFill.getPointAtLength(frac*pathLen);
+    document.getElementById(sd.land).setAttribute('transform','translate('+lp.x.toFixed(1)+','+lp.y.toFixed(1)+')');
+    var pp=portraitFill.getPointAtLength(frac*portraitLen);
+    document.getElementById(sd.port).setAttribute('transform','translate('+pp.x.toFixed(1)+','+pp.y.toFixed(1)+')');
+    sd.frac=frac;
+  });
+  placed=true;
+}
+
 function tick(){
   var t=window.__t;
+  if(!window.__timing){ requestAnimationFrame(tick); return; }
+  if(!placed) placeStations();
+  var sc=window.__timing.scenes;
+
   document.getElementById('bg-grid').classList.toggle('show',t>0.3);
   var g1=document.getElementById('glow-1'),g2=document.getElementById('glow-2');
   if(g1)g1.style.opacity=t>7?Math.min((t-7)*0.15,0.18):0;
   if(g2)g2.style.opacity=t>7.5?Math.min((t-7.5)*0.12,0.15):0;
   pE.forEach(function(e){e.style.animationPlayState=t>7?'running':'paused'});
 
-  if(t<3.10){act('s1');tog('h1',t>0.3);tog('h2',t>0.8)}
-  if(t>=3.10&&t<8.41){act('s2');for(var i=0;i<4;i++)tog('bs'+i,t>3.40+i*0.8)}
-  if(t>=8.41&&t<10.52){act('s3');tog('l1',t>8.51);tog('l2',t>8.91)}
-  if(t>=10.52&&t<12.44){act('s4');tog('dc1',t>10.62);tog('dc-0',t>11.02);tog('dc-1',t>11.52)}
-  if(t>=12.44){act('s5');tog('ct0',t>=12.44);tog('ct1',t>=12.59);tog('ct2',t>=12.79)}
+  /* Journey line draw — linear progress so the line reaches each node
+     exactly at that scene's measured start. */
+  var progress=Math.min(t/lineEnd,1);
+  pathBg.classList.toggle('show',t>.3);
+  pathFill.style.strokeDashoffset=pathLen*(1-progress);
+  portraitBg.classList.toggle('show',t>.3);
+  portraitFill.style.strokeDashoffset=portraitLen*(1-progress);
+
+  /* Stations: pop in and fire the ONE-SHOT hit exactly when the line
+     reaches the node (subtle flash, never an infinite ring). */
+  stationDefs.forEach(function(sd){
+    if(!fired[sd.land]&&progress>=sd.frac){
+      fired[sd.land]=true;
+      var el=document.getElementById(sd.land);
+      el.classList.add('show');
+      var ring=el.querySelector('.station-ring');
+      if(ring)ring.classList.add('hit');
+      var pel=document.getElementById(sd.port);
+      pel.classList.add('show');
+      var pring=pel.querySelector('.station-ring');
+      if(pring)pring.classList.add('hit');
+    }
+  });
+  var goalReached=progress>=1;
+  document.getElementById('journey-goal').classList.toggle('show',goalReached);
+  document.getElementById('portrait-goal').classList.toggle('show',goalReached);
+
+  /* Scenes — windows from the measured schedule; the last scene holds to 15s. */
+  var idx=-1;
+  for(var i=0;i<sc.length;i++){
+    if(t>=sc[i].start&&(i===sc.length-1||t<sc[i+1].start)){idx=i;break;}
+  }
+  var s0=idx>=0?sc[idx].start:0;
+  if(idx===0){act('s1');tog('h1',t>s0+0.25);tog('h2',t>s0+0.7)}
+  if(idx===1){act('s2');for(var i=0;i<4;i++)tog('bs'+i,t>s0+0.25+i*0.55)}
+  if(idx===2){act('s3');tog('l1',t>s0+0.2);tog('l2',t>s0+0.6)}
+  if(idx===3){act('s4');tog('dc1',t>s0+0.2);tog('dc-0',t>s0+0.55);tog('dc-1',t>s0+1.05)}
+  if(idx===4){act('s5');tog('ct0',t>s0+0.05);tog('ct1',t>s0+0.2);tog('ct2',t>s0+0.45)}
+  if(idx<0)act('none');
 
   requestAnimationFrame(tick);
 }

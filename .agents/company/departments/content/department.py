@@ -7,20 +7,20 @@ from ...runtime.models import Department, GoalStatus, RunStatus, Stage, StageRes
 
 class ContentDepartment(EvidenceDepartment, Department):
     id = department_id = "content"
-    version = "1.0.0"
-    description = "Turns company evidence into coordinated content packages and publishes approved deliverables."
+    version = "1.1.0"
+    description = "Turns company evidence into focused content that connects one topic-specific idea to the company promise."
     agent_ids = ("content-strategist", "content-writer", "publisher")
     production_ready = True
     workflows = (
-        WorkflowSpec("content-package", "Coordinate one evidence-backed idea across formats.",
-                     ("evidence", "brief", "produce", "review", "package"),
+        WorkflowSpec("content-package", "Coordinate one evidence-backed topic idea across formats.",
+                     ("evidence", "idea_lock", "brief", "produce", "review", "package"),
                      ("content-strategist", "content-writer"), ("copywriting-en", "copywriting-fa"),
                      (), ("company_evidence", "content_package"), ()),
-        WorkflowSpec("social-post", "Create a platform-native post from approved evidence.",
-                     ("brief", "draft", "edit", "approve"), ("content-writer",),
+        WorkflowSpec("social-post", "Create a one-idea platform-native post from approved evidence.",
+                     ("idea_lock", "brief", "draft", "edit", "approve"), ("content-writer",),
                      ("copywriting-en", "copywriting-fa"), (), ("content_draft",), ()),
-        WorkflowSpec("article", "Create an evidence-backed search-aware article.",
-                     ("brief", "draft", "edit", "seo_review", "approve"), ("content-writer", "seo-operator"),
+        WorkflowSpec("article", "Create one evidence-backed, search-aware argument.",
+                     ("idea_lock", "brief", "draft", "edit", "seo_review", "approve"), ("content-writer", "seo-operator"),
                      ("copywriting-en", "seo"), (), ("article_draft", "seo_brief"), ()),
         WorkflowSpec("publish", "Publish or schedule an approved package through a Connection.",
                      ("select", "validate", "approve", "dispatch", "verify"), ("publisher",), (),

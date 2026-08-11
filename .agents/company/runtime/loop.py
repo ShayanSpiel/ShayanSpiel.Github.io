@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import importlib.util
+import logging
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
@@ -13,6 +15,33 @@ from .store import Store
 TERMINAL = {"achieved", "abandoned", "expired"}
 SUSPENDED = {RunStatus.WAITING, RunStatus.AWAITING_APPROVAL, RunStatus.BLOCKED,
              RunStatus.FAILED, RunStatus.COMPLETED}
+
+logger = logging.getLogger("company.runtime.loop")
+
+# Best-effort /live snapshot sync after every persisted transition. The
+# runner's cwd is the repo root, so these are repo-root-relative paths.
+LIVE_SYNC_SCRIPT = "scripts/sync-live-timeline.py"
+LIVE_SYNC_DB = ".spielos/state/company.sqlite"
+LIVE_SYNC_OUT = "src/data/live-goals.json"
+
+
+def _load_live_sync():
+    """Import scripts/sync-live-timeline.py; None (with a warning) when unavailable."""
+    script = Path(LIVE_SYNC_SCRIPT)
+    if not script.is_file():
+        logger.warning("live timeline sync skipped: %s not found", LIVE_SYNC_SCRIPT)
+        return None
+    try:
+        spec = importlib.util.spec_from_file_location("company_runtime_live_sync", script)
+        if spec is None or spec.loader is None:
+            logger.warning("live timeline sync skipped: could not resolve %s", LIVE_SYNC_SCRIPT)
+            return None
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        return module
+    except Exception as exc:  # pragma: no cover - defensive; never breaks the loop
+        logger.warning("live timeline sync skipped: could not load %s: %s", LIVE_SYNC_SCRIPT, exc)
+        return None
 
 
 class Runtime:
@@ -98,6 +127,7 @@ class Runtime:
             if Stage(cycle["stage"]) is Stage.EVALUATE and result.run_status is RunStatus.IDLE:
                 result.run_status = RunStatus.COMPLETED
             self._persist(goal, cycle, result)
+            self._sync_live_snapshot()
             current = self.store.cycle(goal_id)
             if result.run_status in SUSPENDED or self.store.goal(goal_id)["goal_status"] in TERMINAL:
                 return self.status(goal_id)
@@ -164,6 +194,21 @@ class Runtime:
         elif stage is Stage.EVALUATE and result.run_status is RunStatus.COMPLETED:
             self.store.notify(goal.id, cycle["id"], "run_completed",
                               self._notification_payload(goal, cycle, result, next_stage))
+
+    def _sync_live_snapshot(self):
+        """Regenerate the committed /live snapshot after a persisted transition.
+
+        Best-effort: a missing script or database, or a locked database, only
+        logs a warning. Never raises and never touches the sqlite write path —
+        the sync script opens the database read-only (mode=ro, busy_timeout).
+        """
+        module = _load_live_sync()
+        if module is None:
+            return
+        try:
+            module.sync_live(LIVE_SYNC_DB, LIVE_SYNC_OUT, quiet=True)
+        except Exception as exc:  # pragma: no cover - defensive; never breaks the loop
+            logger.warning("live timeline sync skipped (non-fatal): %s", exc)
 
     def _notification_payload(self, goal, cycle, result, next_stage):
         evaluation = result.evaluation or {}

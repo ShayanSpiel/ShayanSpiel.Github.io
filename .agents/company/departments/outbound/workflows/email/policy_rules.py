@@ -70,10 +70,23 @@ def evaluate(snapshot: dict, control_knobs: dict | None = None) -> dict:
     # bounce doesn't already explain it (never double-report). A window
     # with zero sends has no rate to judge — a fresh campaign must start.
     if totals.get("sent", 0) > 0 and not any(b["name"] == "bounce rate" for b in breaches):
+        # Provider-accepted sends awaiting a final event (sent/delivery_delayed)
+        # are not failures: count them as delivered-equivalent for this rate.
+        # Real bounces/complaints still depress the rate and keep the gate honest.
+        pending = totals.get("pending", 0)
+        # Suppressed-bounce parity (2026-08-11): when every window bounce is
+        # already remediated in the master, exclude them from the judged
+        # population so they do not double-block the gate via this rule.
+        suppressed = 0
+        if totals.get("bounced", 0) and snapshot.get("bounced_emails") \
+                and not _unsuppressed(snapshot["bounced_emails"]):
+            suppressed = totals["bounced"]
+        denom = max(totals.get("sent", 0) - suppressed, 1)
+        effective = (totals.get("delivered", 0) + pending) / denom
         unverified = totals.get("unknown", 0) + totals.get("denied", 0) + totals.get("unresolved", 0)
-        if unverified < max(5, totals.get("sent", 0) * 0.1) and totals.get("delivered_rate", 1.0) < 0.99:
+        if unverified < max(5, totals.get("sent", 0) * 0.1) and effective < 0.99:
             breaches.append({"name": "delivered rate", "metric": "delivered_rate",
-                             "current": totals["delivered_rate"], "max": 0.99})
+                             "current": effective, "max": 0.99})
 
     noisy_data = (totals.get("unknown", 0) + totals.get("denied", 0)
                   + totals.get("unresolved", 0)) >= max(5, totals.get("sent", 0) * 0.1)

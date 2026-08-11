@@ -6,19 +6,19 @@ from ...runtime.models import Department, WorkflowSpec
 
 class DesignDepartment(EvidenceDepartment, Department):
     id = department_id = "design"
-    version = "1.0.0"
-    description = "Produces token-aligned graphics, banners, article visuals, and videos in verified channel sizes."
+    version = "1.1.1"
+    description = "Produces flat, token-aligned one-idea graphics and videos with the SpielOS goal-line signature."
     agent_ids = ("designer", "video-producer")
     production_ready = True
     workflows = (
-        WorkflowSpec("social-visual", "Render a platform-ready social graphic.",
-                     ("brief", "compose", "render", "qa"), ("designer",), ("spielos-ui",), (),
+        WorkflowSpec("social-visual", "Render a focused platform-ready social graphic.",
+                     ("idea_lock", "brief", "compose", "render", "qa"), ("designer",), ("spielos-ui",), (),
                      ("design_brief", "render_report"), ()),
         WorkflowSpec("rendition-pack", "Render one design in every registered size.",
                      ("compose", "render_sizes", "visual_qa", "package"), ("designer",), ("spielos-ui",), (),
                      ("render_report",), ()),
-        WorkflowSpec("video-render", "Render and verify a design-system-aligned video.",
-                     ("brief", "script", "animate", "render", "qa"), ("video-producer",),
+        WorkflowSpec("video-render", "Render and verify a focused design-system-aligned video.",
+                     ("idea_lock", "brief", "script", "animate", "render", "audio_mix", "qa"), ("video-producer",),
                      ("video-creation", "spielos-ui"), (), ("video_render", "render_report"), ()),
     )
     goal_schema = {"metrics": ["approved_designs", "rendition_count", "video_renders"],

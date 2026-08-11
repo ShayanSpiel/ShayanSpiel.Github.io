@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SpielOS — Before / After</title>
 <link rel="stylesheet" href="/.agents/company/departments/design/system/production.css">
+<link rel="stylesheet" href="/.agents/company/departments/design/templates/video/brand-motion.css">
 <link rel="stylesheet" href="/node_modules/boxicons/css/boxicons.min.css">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -19,9 +20,8 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--back
   --font: var(--font-sans); --mono: var(--font-mono);
 }
 
-/* Boxicons — load glyph mappings from CSS, font from local file */
-@font-face { font-family: "boxicons"; font-weight: 400; font-style: normal; font-display: swap; src: url("/public/assets/fonts/boxicons.woff2") format("woff2"); }
-@font-face { font-family: "boxicons"; font-weight: 700; font-style: normal; font-display: swap; src: url("/public/assets/fonts/boxicons.woff2") format("woff2"); }
+/* Fonts (Outfit / JetBrains Mono / boxicons) and tokens come from the
+   production design system (production.css), exactly like the website. */
 .bx { font-family: "boxicons" !important; font-style: normal; font-weight: normal; font-variant: normal; text-transform: none; line-height: 1; -webkit-font-smoothing: antialiased; }
 
 body { font-family: var(--font); color: var(--fg1); -webkit-font-smoothing: antialiased; }
@@ -47,40 +47,17 @@ body { font-family: var(--font); color: var(--fg1); -webkit-font-smoothing: anti
 .glow-2 { width: 40vw; height: 40vw; bottom: 5%; right: -8%; background: var(--purple); opacity: 0; animation: drift 28s ease-in-out infinite reverse; }
 @keyframes drift { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(40px,-25px) scale(1.08); } 66% { transform: translate(-30px,20px) scale(0.95); } }
 
-/* ═══ JOURNEY LINE ═══ */
-.journey-svg {
-  position: absolute; inset: 0; width: 100%; height: 100%; z-index: 5; pointer-events: none;
-}
-.journey-path {
-  fill: none; stroke: var(--fg3); stroke-width: 2; stroke-linecap: round;
-  stroke-dasharray: 10 8;
-  opacity: 0;
-  transition: opacity 0.8s ease;
-}
-.journey-path.show { opacity: 0.5; }
-.journey-path-fill {
-  fill: none; stroke: var(--blue); stroke-width: 2.5; stroke-linecap: round;
-  stroke-dasharray: var(--path-len); stroke-dashoffset: var(--path-len);
-  transition: stroke-dashoffset 0.1s linear;
-}
-.journey-station {
-  opacity: 0; transform-origin: center; transform: scale(0);
-  transition: opacity 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-.journey-station.show { opacity: 1; transform: scale(1); }
-.station-ring {
-  fill: none; stroke: var(--blue); stroke-width: 2; opacity: 0;
-  transform-origin: center;
-}
-.station-ring.show { opacity: 1; animation: ringPulse 2s ease-in-out infinite; }
-@keyframes ringPulse { 0%,100% { r: 14; opacity: 0.6; } 50% { r: 20; opacity: 0; } }
+/* ═══ JOURNEY LINE — shared motion layer lives in brand-motion.css ═══
+   Stations are placed ON the path by the tick (path.getPointAtLength) and
+   fire a ONE-SHOT node hit flash when the line reaches them. No infinite
+   ring animation lives here (owner contract №4). */
 
 /* ═══ TEXT REVEAL ═══ */
 .r { opacity: 0; transform: translateY(24px); filter: blur(4px); transition: opacity 0.6s cubic-bezier(0.16,1,0.3,1), transform 0.6s cubic-bezier(0.16,1,0.3,1), filter 0.4s cubic-bezier(0.16,1,0.3,1); }
 .r.show { opacity: 1; transform: translateY(0); filter: blur(0); }
 .d1 { transition-delay: 0.08s; } .d2 { transition-delay: 0.16s; } .d3 { transition-delay: 0.24s; } .d4 { transition-delay: 0.32s; }
 
-/* ═══ SCENE 1 — HOOK (0-3.5s) ═══ */
+/* ═══ SCENE 1 — HOOK (window from measured scene_timing) ═══ */
 .hook { text-align: center; padding: 0 8%; z-index: 10; }
 .hook-line { display: block; }
 .hook-main {
@@ -103,7 +80,7 @@ body { font-family: var(--font); color: var(--fg1); -webkit-font-smoothing: anti
 }
 .hook-icon.show { opacity: 1; transform: scale(1) rotate(0deg); }
 
-/* ═══ SCENE 2 — PAIN (3.5-6.5s) ═══ */
+/* ═══ SCENE 2 — PAIN (window from measured scene_timing) ═══ */
 .pain { z-index: 10; width: 90%; max-width: 900px; text-align: center; }
 .pain-items { display: flex; flex-direction: column; gap: clamp(10px, 2vw, 18px); align-items: center; }
 .pain-item {
@@ -127,7 +104,7 @@ body { font-family: var(--font); color: var(--fg1); -webkit-font-smoothing: anti
   text-align: left; line-height: 1.3;
 }
 
-/* ═══ SCENE 3 — PROMISE (6.5-9s) ═══ */
+/* ═══ SCENE 3 — PROMISE (window from measured scene_timing) ═══ */
 .promise { z-index: 10; text-align: center; padding: 0 8%; }
 .promise-main {
   font-size: clamp(3.2rem, 9vw, 6rem);
@@ -150,7 +127,7 @@ body { font-family: var(--font); color: var(--fg1); -webkit-font-smoothing: anti
 }
 .promise-icon.show { opacity: 1; transform: scale(1); }
 
-/* ═══ SCENE 4 — PILLARS (9-11.5s) ═══ */
+/* ═══ SCENE 4 — PILLARS (window from measured scene_timing) ═══ */
 .pillars { z-index: 10; width: 90%; max-width: 960px; text-align: center; }
 .pillars-label {
   font-size: clamp(0.8rem, 1.4vw, 1rem); font-weight: 600;
@@ -180,7 +157,7 @@ body { font-family: var(--font); color: var(--fg1); -webkit-font-smoothing: anti
   line-height: 1.3;
 }
 
-/* ═══ SCENE 5 — DIRECTOR (11.5-13s) ═══ */
+/* ═══ SCENE 5 — DIRECTOR (window from measured scene_timing) ═══ */
 .director { z-index: 10; text-align: center; padding: 0 8%; }
 .director-icon {
   display: inline-flex; align-items: center; justify-content: center;
@@ -203,7 +180,7 @@ body { font-family: var(--font); color: var(--fg1); -webkit-font-smoothing: anti
   color: var(--fg4); margin-top: 0.8rem; font-weight: 400;
 }
 
-/* ═══ SCENE 6 — CTA (13-15s) ═══ */
+/* ═══ SCENE 6 — CTA (window from measured scene_timing) ═══ */
 .cta { z-index: 10; text-align: center; }
 .cta-badge {
   display: inline-flex; align-items: center; gap: 8px;
@@ -219,6 +196,7 @@ body { font-family: var(--font); color: var(--fg1); -webkit-font-smoothing: anti
   letter-spacing: -0.04em; line-height: 1.05;
 }
 .cta-title .accent { color: var(--blue); }
+.cta-line { display: block; }
 .cta-url {
   margin-top: 1.5rem; display: inline-flex; align-items: center; gap: 12px;
   padding: clamp(12px, 2vw, 18px) clamp(24px, 3.5vw, 40px);
@@ -235,22 +213,33 @@ body { font-family: var(--font); color: var(--fg1); -webkit-font-smoothing: anti
 
 /* ═══ RESPONSIVE — PORTRAIT ═══ */
 @media (orientation: portrait) {
-  .journey-svg { transform: scale(1.8) translateY(-15%); }
-  .hook-main { font-size: clamp(2.2rem, 10vw, 4rem); }
-  .hook-sub { font-size: clamp(0.9rem, 3vw, 1.3rem); }
-  .pain-items { gap: 8px; }
-  .pain-item { max-width: 95%; padding: 10px 14px; }
-  .pain-icon { width: 30px; height: 30px; font-size: 15px; }
-  .pain-text { font-size: 0.9rem; }
-  .promise-main { font-size: clamp(2.4rem, 10vw, 4.5rem); }
-  .promise-sub { font-size: clamp(0.9rem, 3vw, 1.2rem); }
-  .pillars-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-  .pillar { padding: 14px 8px; }
-  .pillar-name { font-size: 0.85rem; }
-  .pillar-desc { font-size: 0.7rem; }
-  .director-main { font-size: clamp(2rem, 9vw, 3.5rem); }
-  .cta-title { font-size: clamp(2.2rem, 10vw, 4rem); }
-  .cta-url { font-size: clamp(0.9rem, 3vw, 1.2rem); }
+  .journey-portrait .journey-path { stroke-width: 7; stroke-dasharray: 24 19; }
+  .journey-portrait .journey-path-fill { stroke-width: 8; }
+  .hook { width: 92%; padding: 0; }
+  .hook-main { font-size: clamp(6.5rem, 13vw, 8.75rem); line-height: .92; letter-spacing: -.055em; }
+  .hook-sub { max-width: 27ch; margin: 2rem auto 0; font-size: 2rem; line-height: 1.35; }
+  .hook-icon { width: 96px; height: 96px; font-size: 46px; margin-bottom: 2rem; }
+  .pain { width: 92%; }
+  .pain-items { gap: 18px; }
+  .pain-item { max-width: 92%; padding: 22px 26px; }
+  .pain-icon { width: 48px; height: 48px; font-size: 24px; }
+  .pain-text { font-size: 1.35rem; }
+  .promise { width: 94%; padding: 0; }
+  .promise-main { font-size: clamp(6rem, 12vw, 8rem); line-height: .94; }
+  .promise-sub { max-width: 32ch; margin-inline: auto; font-size: 1.45rem; }
+  .pillars { width: 92%; }
+  .pillars-label { font-size: 1.1rem; }
+  .pillars-grid { grid-template-columns: repeat(2, 1fr); gap: 18px; }
+  .pillar { padding: 28px 18px; }
+  .pillar-name { font-size: 1.3rem; }
+  .pillar-desc { font-size: 1rem; }
+  .director { width: 92%; padding: 0; }
+  .director-main { font-size: clamp(5.75rem, 11vw, 7.5rem); line-height: .96; }
+  .director-sub { font-size: 1.4rem; }
+  .cta { width: 92%; }
+  .cta-badge { font-size: 1.4rem; padding: 14px 28px; margin-bottom: 2rem; }
+  .cta-title { margin-inline: auto; font-size: clamp(6rem, 12vw, 8rem); line-height: .94; }
+  .cta-url { margin-top: 2.25rem; font-size: 1.75rem; padding: 20px 34px; }
 }
 </style>
 </head>
@@ -262,7 +251,7 @@ body { font-family: var(--font); color: var(--fg1); -webkit-font-smoothing: anti
 <div id="particles" style="position:absolute;inset:0;pointer-events:none;z-index:1;"></div>
 
 <!-- ═══ JOURNEY LINE SVG ═══ -->
-<svg class="journey-svg" id="journey-svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid meet">
+<svg class="journey-svg journey-landscape" id="journey-svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid meet">
   <defs>
     <filter id="glow-blue">
       <feGaussianBlur stdDeviation="3" result="blur"/>
@@ -276,14 +265,37 @@ body { font-family: var(--font); color: var(--fg1); -webkit-font-smoothing: anti
   <path id="journey-fill" class="journey-path-fill"
     d="M120,540 C280,280 420,780 620,420 C820,60 960,820 1140,380 C1320,100 1500,720 1680,540 L1800,540" />
 
-  <!-- Station dots only — icons rendered as HTML overlays -->
-  <g class="journey-station" id="st1" transform="translate(120,540)"><circle class="station-ring" cx="0" cy="0" r="14"/><circle r="7" fill="#cc241d"/></g>
-  <g class="journey-station" id="st2" transform="translate(620,420)"><circle class="station-ring" cx="0" cy="0" r="14"/><circle r="7" fill="#cc241d"/></g>
-  <g class="journey-station" id="st3" transform="translate(1140,380)"><circle class="station-ring" cx="0" cy="0" r="14"/><circle r="7" fill="#458588"/></g>
-  <g class="journey-station" id="st4" transform="translate(1400,460)"><circle class="station-ring" cx="0" cy="0" r="14"/><circle r="7" fill="#458588"/></g>
-  <g class="journey-station" id="st5" transform="translate(1600,540)"><circle class="station-ring" cx="0" cy="0" r="14"/><circle r="7" fill="#98971a"/></g>
-  <g class="journey-station" id="st6" transform="translate(1800,540)"><circle class="station-ring" cx="0" cy="0" r="14"/><circle r="7" fill="#458588"/></g>
+  <!-- Station nodes — placed ON the path by the tick (getPointAtLength at
+       each scene's measured start fraction). The inner .station-scale wrapper
+       carries the pop-in transform so the outer translate attribute set by
+       the tick is preserved. The ring fires its one-shot hit when the line
+       reaches the node. -->
+  <g class="journey-station" id="st1" transform="translate(120,540)"><g class="station-scale"><circle class="station-ring" cx="0" cy="0" r="14"/><circle r="7" fill="#cc241d"/></g></g>
+  <g class="journey-station" id="st2" transform="translate(620,420)"><g class="station-scale"><circle class="station-ring" cx="0" cy="0" r="14"/><circle r="7" fill="#cc241d"/></g></g>
+  <g class="journey-station" id="st3" transform="translate(1140,380)"><g class="station-scale"><circle class="station-ring" cx="0" cy="0" r="14"/><circle r="7" fill="#458588"/></g></g>
+  <g class="journey-station" id="st4" transform="translate(1400,460)"><g class="station-scale"><circle class="station-ring" cx="0" cy="0" r="14"/><circle r="7" fill="#458588"/></g></g>
+  <g class="journey-station" id="st5" transform="translate(1600,540)"><g class="station-scale"><circle class="station-ring" cx="0" cy="0" r="14"/><circle r="7" fill="#98971a"/></g></g>
+  <g class="journey-goal" id="st6" transform="translate(1800,540)" aria-label="Goal reached">
+    <g class="goal-mark"><circle class="goal-ring" cx="0" cy="0" r="28"/>
+    <circle class="goal-ring-inner" cx="0" cy="0" r="16"/>
+    <circle class="goal-core" cx="0" cy="0" r="5"/></g>
+  </g>
 </svg>
+
+<svg class="journey-svg journey-portrait" viewBox="0 0 1080 1920" preserveAspectRatio="none" aria-hidden="true">
+  <path id="portrait-journey-bg" class="journey-path" d="M-260,1180 C-20,430 250,1540 520,760 C720,150 820,1450 980,820"/>
+  <path id="portrait-journey-fill" class="journey-path-fill" d="M-260,1180 C-20,430 250,1540 520,760 C720,150 820,1450 980,820"/>
+  <g class="journey-station" id="pst1" transform="translate(-260,1180)"><g class="station-scale"><circle class="station-ring" cx="0" cy="0" r="14"/><circle r="7" fill="#cc241d"/></g></g>
+  <g class="journey-station" id="pst2" transform="translate(520,760)"><g class="station-scale"><circle class="station-ring" cx="0" cy="0" r="14"/><circle r="7" fill="#cc241d"/></g></g>
+  <g class="journey-station" id="pst3" transform="translate(760,520)"><g class="station-scale"><circle class="station-ring" cx="0" cy="0" r="14"/><circle r="7" fill="#458588"/></g></g>
+  <g class="journey-station" id="pst4" transform="translate(880,700)"><g class="station-scale"><circle class="station-ring" cx="0" cy="0" r="14"/><circle r="7" fill="#458588"/></g></g>
+  <g class="journey-station" id="pst5" transform="translate(940,770)"><g class="station-scale"><circle class="station-ring" cx="0" cy="0" r="14"/><circle r="7" fill="#98971a"/></g></g>
+  <g class="journey-goal" id="portrait-goal" transform="translate(980,820)">
+    <circle class="goal-ring" r="56"/><circle class="goal-ring-inner" r="33"/><circle class="goal-core" r="10"/>
+  </g>
+</svg>
+
+<div class="video-brand-footer"><span class="brand-lockup"><img src="/public/assets/favicons/favicon.svg" alt="">spielos.xyz</span></div>
 
 <!-- S1: HOOK -->
 <div class="scene" id="s1">
@@ -327,7 +339,7 @@ body { font-family: var(--font); color: var(--fg1); -webkit-font-smoothing: anti
 <!-- S3: PROMISE -->
 <div class="scene" id="s3">
   <div class="promise">
-    <div class="promise-icon r" id="pri1"><i class="bx bx-check-circle"></i></div>
+    <div class="promise-icon r" id="pri1"><i class="bx bx-check-square"></i></div>
     <div class="promise-main r" id="pr1">What if they could</div>
     <div class="promise-main r d1" id="pr2"><span class="accent">work like a real team?</span></div>
     <div class="promise-sub r d2" id="pr3">SpielOS gives every role its own agent, context, and tools.</div>
@@ -376,15 +388,30 @@ body { font-family: var(--font); color: var(--fg1); -webkit-font-smoothing: anti
 <!-- S6: CTA -->
 <div class="scene" id="s6">
   <div class="cta">
-    <div class="cta-badge r" id="ct0"><span class="cta-dot"></span> Pre-launch — joining early</div>
-    <div class="cta-title r d1" id="ct1">Your AI team is <span class="accent">waiting</span></div>
-    <div class="cta-url r d2" id="ct2"><span class="p">$</span> spielos.xyz/waitlist</div>
+    <div class="cta-badge r" id="ct0"><span class="cta-dot"></span> AI agent implementation</div>
+    <div class="cta-title r d1" id="ct1"><span class="cta-line">Make your AI tools</span><span class="cta-line accent">work as a team.</span></div>
+    <div class="cta-url r d2" id="ct2"><span class="p">$</span> spielos.xyz/services</div>
   </div>
 </div>
 
 <script>
 window.__t=0;window.__fps=30;window.__duration=15;
 window.__setFrame=function(f,fps){window.__fps=fps||30;window.__t=f/window.__fps};
+
+/* Measured scene schedule (owner contract №2: speech first, then scenes).
+   Loaded from narration.json, which scripts/tts-gemini.js writes from the
+   real spoken clip durations. Until the schedule arrives the frame stays
+   dark, so a render can never start on a guessed window; a hardcoded window
+   is never used. */
+window.__timing=null;
+window.__timingError=false;
+fetch('/.agents/company/departments/design/templates/video/narration.json')
+  .then(function(r){return r.json()})
+  .then(function(d){
+    var tm=(d.scene_timing&&d.scene_timing.b)||null;
+    if(tm&&tm.voice&&tm.scenes&&tm.scenes.length) window.__timing=tm; else window.__timingError=true;
+  })
+  .catch(function(){window.__timingError=true});
 
 function act(id){document.querySelectorAll('.scene').forEach(function(s){s.classList.toggle('active',s.id===id)})}
 function tog(id,v){var e=document.getElementById(id);if(e)e.classList.toggle('show',v)}
@@ -400,18 +427,45 @@ var pathLen=pathFill.getTotalLength();
 pathFill.style.setProperty('--path-len',pathLen);
 pathFill.style.strokeDasharray=pathLen;
 pathFill.style.strokeDashoffset=pathLen;
+var portraitFill=document.getElementById('portrait-journey-fill');
+var portraitBg=document.getElementById('portrait-journey-bg');
+var portraitLen=portraitFill.getTotalLength();
+portraitFill.style.setProperty('--path-len',portraitLen);
+portraitFill.style.strokeDasharray=portraitLen;
+portraitFill.style.strokeDashoffset=portraitLen;
 
-/*
-  15s timeline (am_michael voice at 1.425x):
-  0-2.34s  : Hook
-  2.34-6.49s: Pain cards
-  6.49-8.56s: Promise
-  8.56-10.88s: Pillars
-  10.88-12.60s: Director
-  12.60-15s : CTA
-*/
+/* Stations ride the path: landscape st1..st5 ↔ scenes 1..5 (pain→cta), goal
+   at the line end; portrait pst1..pst5 mirror them. Each node is placed at
+   path.getPointAtLength(sceneStartFraction * len) once the schedule is
+   known, so a station can never sit off the line. */
+var stationDefs=[
+  {land:'st1',port:'pst1',scene:1,color:'#cc241d'},
+  {land:'st2',port:'pst2',scene:2,color:'#cc241d'},
+  {land:'st3',port:'pst3',scene:3,color:'#458588'},
+  {land:'st4',port:'pst4',scene:4,color:'#458588'},
+  {land:'st5',port:'pst5',scene:5,color:'#98971a'}
+];
+var lineEnd=14,placed=false,fired={};
+
+function placeStations(){
+  var sc=window.__timing.scenes;
+  lineEnd=sc[sc.length-1].end;
+  stationDefs.forEach(function(sd){
+    var frac=Math.min(sc[sd.scene].start/lineEnd,1);
+    var lp=pathFill.getPointAtLength(frac*pathLen);
+    document.getElementById(sd.land).setAttribute('transform','translate('+lp.x.toFixed(1)+','+lp.y.toFixed(1)+')');
+    var pp=portraitFill.getPointAtLength(frac*portraitLen);
+    document.getElementById(sd.port).setAttribute('transform','translate('+pp.x.toFixed(1)+','+pp.y.toFixed(1)+')');
+    sd.frac=frac;
+  });
+  placed=true;
+}
+
 function tick(){
   var t=window.__t;
+  if(!window.__timing){ requestAnimationFrame(tick); return; }
+  if(!placed) placeStations();
+  var sc=window.__timing.scenes;
 
   /* Background */
   document.getElementById('bg-grid').classList.toggle('show',t>0.3);
@@ -420,26 +474,46 @@ function tick(){
   if(g2)g2.style.opacity=t>6.5?Math.min((t-6.5)*0.12,0.15):0;
   pE.forEach(function(e){e.style.animationPlayState=t>6?'running':'paused'});
 
-  /* Journey line draw (0-15s continuously) */
-  var progress=Math.min(t/14,1);
-  var eased=1-Math.pow(1-progress,3);
+  /* Journey line draw — linear progress so the line reaches each node
+     exactly at that scene's measured start. */
+  var progress=Math.min(t/lineEnd,1);
   pathBg.classList.toggle('show',t>0.3);
-  pathFill.style.strokeDashoffset=pathLen*(1-eased);
+  pathFill.style.strokeDashoffset=pathLen*(1-progress);
+  portraitBg.classList.toggle('show',t>0.3);
+  portraitFill.style.strokeDashoffset=portraitLen*(1-progress);
 
-  /* Stations appear as line reaches them */
-  var stationTimes=[0.2,2.34,6.49,8.56,10.88,12.60];
-  for(var s=0;s<6;s++){
-    var stEl=document.getElementById('st'+(s+1));
-    if(stEl)stEl.classList.toggle('show',t>=stationTimes[s]+0.3);
+  /* Stations: pop in and fire the ONE-SHOT hit exactly when the line
+     reaches the node (subtle flash, never an infinite ring). */
+  stationDefs.forEach(function(sd){
+    if(!fired[sd.land]&&progress>=sd.frac){
+      fired[sd.land]=true;
+      var el=document.getElementById(sd.land);
+      el.classList.add('show');
+      var ring=el.querySelector('.station-ring');
+      if(ring)ring.classList.add('hit');
+      var pel=document.getElementById(sd.port);
+      pel.classList.add('show');
+      var pring=pel.querySelector('.station-ring');
+      if(pring)pring.classList.add('hit');
+    }
+  });
+  var goalReached=progress>=1;
+  document.getElementById('st6').classList.toggle('show',goalReached);
+  document.getElementById('portrait-goal').classList.toggle('show',goalReached);
+
+  /* Scenes — windows from the measured schedule; the last scene holds to 15s. */
+  var idx=-1;
+  for(var i=0;i<sc.length;i++){
+    if(t>=sc[i].start&&(i===sc.length-1||t<sc[i+1].start)){idx=i;break;}
   }
-
-  /* Scenes */
-  if(t<2.34){act('s1');tog('hi1',t>0.2);tog('h1',t>0.4);tog('h2',t>0.9);tog('h3',t>1.4);tog('h4',t>2.0)}
-  if(t>=2.34&&t<6.49){act('s2');for(var i=0;i<5;i++)tog('pi'+i,t>2.64+i*0.4)}
-  if(t>=6.49&&t<8.56){act('s3');tog('pri1',t>6.59);tog('pr1',t>6.79);tog('pr2',t>7.29);tog('pr3',t>7.89)}
-  if(t>=8.56&&t<10.88){act('s4');tog('pl0',t>8.56);for(var j=1;j<=4;j++)tog('pl'+j,t>8.86+j*0.25)}
-  if(t>=10.88&&t<12.60){act('s5');tog('di1',t>10.88);tog('d1',t>11.08);tog('d2',t>11.38);tog('d3',t>11.68)}
-  if(t>=12.60){act('s6');tog('ct0',t>=12.60);tog('ct1',t>=12.75);tog('ct2',t>=12.95)}
+  var s0=idx>=0?sc[idx].start:0;
+  if(idx===0){act('s1');tog('hi1',t>s0+0.12);tog('h1',t>s0+0.25);tog('h2',t>s0+0.55);tog('h3',t>s0+0.85);tog('h4',t>s0+1.2)}
+  if(idx===1){act('s2');for(var k=0;k<5;k++)tog('pi'+k,t>s0+0.25+k*0.35)}
+  if(idx===2){act('s3');tog('pri1',t>s0+0.15);tog('pr1',t>s0+0.35);tog('pr2',t>s0+0.8);tog('pr3',t>s0+1.25)}
+  if(idx===3){act('s4');tog('pl0',t>s0+0.1);for(var j=1;j<=4;j++)tog('pl'+j,t>s0+0.35+j*0.22)}
+  if(idx===4){act('s5');tog('di1',t>s0+0.15);tog('d1',t>s0+0.35);tog('d2',t>s0+0.65);tog('d3',t>s0+0.95)}
+  if(idx===5){act('s6');tog('ct0',t>s0+0.05);tog('ct1',t>s0+0.2);tog('ct2',t>s0+0.45)}
+  if(idx<0)act('none');
 
   requestAnimationFrame(tick);
 }

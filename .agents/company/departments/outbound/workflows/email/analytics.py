@@ -332,12 +332,15 @@ def aggregate(log: dict, metrics: dict) -> dict:
         "sent": len(sent),
         "delivered": 0, "bounced": 0, "complained": 0,
         "opened": 0, "clicked": 0, "unresolved": 0, "unknown": 0, "denied": 0,
-        "replied": 0, "auto": auto_count,
+        "pending": 0, "replied": 0, "auto": auto_count,
     }
+    _PENDING = {"sent", "delivery_delayed"}
     for s in sent:
         status = str(_rec(metrics, s["lead_id"]).get("status") or "")
         if status in _DELIVERED:
             counts["delivered"] += 1
+        if status in _PENDING:
+            counts["pending"] += 1
         if status == "bounced":
             counts["bounced"] += 1
         if status == "complained":

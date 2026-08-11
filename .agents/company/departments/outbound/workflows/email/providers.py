@@ -39,6 +39,8 @@ provider host IPs so a flaky VPN / broken DNS can be bypassed on later calls
 """
 
 import base64
+import email
+import imaplib
 import json
 import os
 import smtplib
@@ -49,9 +51,11 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
+from email.header import decode_header
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from email.utils import parseaddr
 
 from .config import (
     EMAIL_PROVIDER,
@@ -81,7 +85,7 @@ _CAPABILITIES = {
     "mailgun": {"status": True, "list_sent": True, "received": False},
     "brevo": {"status": True, "list_sent": False, "received": False},
     "sendgrid": {"status": False, "list_sent": False, "received": False},
-    "postmark": {"status": False, "list_sent": False, "received": True},
+    "postmark": {"status": True, "list_sent": False, "received": True},
     "smtp": {"status": False, "list_sent": False, "received": False},
 }
 
@@ -95,7 +99,12 @@ def cap_list_sent() -> bool:
 
 
 def cap_received(provider: str = "") -> bool:
+    explicit = bool(str(provider).strip())
     provider = (provider or EMAIL_PROVIDER or "").strip().lower()
+    if provider == "gmail_imap":
+        return bool(_cfg_module.GMAIL_IMAP_USER and _cfg_module.GMAIL_IMAP_APP_PASSWORD)
+    if not explicit and _cfg_module.REPLY_CAPTURE == "gmail_imap" and provider == EMAIL_PROVIDER.strip().lower():
+        return bool(_cfg_module.GMAIL_IMAP_USER and _cfg_module.GMAIL_IMAP_APP_PASSWORD)
     return _CAPABILITIES.get(provider, {}).get("received", False)
 
 
@@ -766,8 +775,16 @@ def list_sent_emails() -> dict:
 
 
 def list_received_emails(provider: str = "") -> dict:
-    """Received emails, used to auto-detect replies (Resend receiving)."""
+    """Received emails, used to auto-detect replies. With
+    REPLY_CAPTURE=gmail_imap the sweep reads the founder Gmail inbox over
+    IMAP (unified capture, owner direction 2026-08-10) — same data shape as
+    the Resend receiving API so analytics.sync_replies works unchanged."""
+    explicit = bool(str(provider).strip())
     provider = (provider or EMAIL_PROVIDER or "").strip().lower()
+    if provider == "gmail_imap":
+        return _list_gmail_imap()
+    if not explicit and _cfg_module.REPLY_CAPTURE == "gmail_imap" and provider == EMAIL_PROVIDER.strip().lower():
+        return _list_gmail_imap()
     if provider == "resend":
         return _open("https://api.resend.com/emails/receiving", headers={"Authorization": f"Bearer {RESEND_API_KEY}"})
     return {"error": True, "status": 0, "message": f"{provider} has no received-email listing API"}
@@ -798,6 +815,124 @@ def receiving_domain_status(address: str, provider: str = "") -> dict:
     return {"ready": ready, "domain": domain, "status": match.get("status"),
             "receiving": capabilities.get("receiving"),
             "reason": None if ready else f"{domain} is not verified with Resend receiving enabled"}
+
+
+# ── Unified Gmail reply capture (owner direction 2026-08-10) ────────────────
+# Every send sets Reply-To: replies@spielos.xyz; Cloudflare Email Routing
+# forwards that address to the founder inbox (66shayan@gmail.com); these
+# functions read that inbox over IMAP so reply-rate evidence is automatic.
+# No receiving domain, no plan upgrade, no MX changes.
+
+def gmail_imap_status() -> dict:
+    """Readiness probe: credentials present and IMAP login + INBOX select
+    succeed. Same shape as receiving_domain_status for the ACT guardrail."""
+    user = _cfg_module.GMAIL_IMAP_USER
+    if not user or not _cfg_module.GMAIL_IMAP_APP_PASSWORD:
+        return {"ready": False, "domain": "gmail_inbox",
+                "reason": "GMAIL_IMAP_USER / GMAIL_IMAP_APP_PASSWORD are not configured"}
+    try:
+        conn = imaplib.IMAP4_SSL("imap.gmail.com", 993, timeout=20)
+    except Exception as exc:
+        return {"ready": False, "domain": "gmail_inbox", "reason": f"Gmail IMAP connect failed: {exc}"}
+    try:
+        conn.login(user, _cfg_module.GMAIL_IMAP_APP_PASSWORD)
+        conn.select("INBOX")
+        return {"ready": True, "domain": "gmail_inbox", "status": "verified",
+                "receiving": "enabled", "reason": None}
+    except Exception as exc:
+        return {"ready": False, "domain": "gmail_inbox", "reason": f"Gmail IMAP login failed: {exc}"}
+    finally:
+        try:
+            conn.logout()
+        except Exception:
+            pass
+
+
+def _list_gmail_imap() -> dict:
+    """Poll the founder Gmail inbox for replies. Data shape matches the
+    Resend receiving API: {"data": [{"id", "from", "subject", "message_id",
+    "created_at", "text", "to", "in_reply_to"}]}."""
+    user = _cfg_module.GMAIL_IMAP_USER
+    if not user or not _cfg_module.GMAIL_IMAP_APP_PASSWORD:
+        return {"error": True, "status": 0, "message": "GMAIL_IMAP credentials not configured"}
+    since = (datetime.now(timezone.utc) - timedelta(hours=_cfg_module.REPLY_LOOKBACK_HOURS)).strftime("%d-%b-%Y")
+    try:
+        conn = imaplib.IMAP4_SSL("imap.gmail.com", 993, timeout=30)
+    except Exception as exc:
+        return {"error": True, "status": 0, "message": f"Gmail IMAP connect failed: {exc}"}
+    try:
+        conn.login(user, _cfg_module.GMAIL_IMAP_APP_PASSWORD)
+        conn.select("INBOX")
+        typ, data = conn.search(None, f'(SINCE {since})')
+        items = []
+        for num in (data[0] or b"").split():
+            try:
+                typ2, msg_data = conn.fetch(num, "(RFC822)")
+            except Exception:
+                continue
+            if typ2 != "OK" or not msg_data or not msg_data[0]:
+                continue
+            raw = msg_data[0][1]
+            try:
+                msg = email.message_from_bytes(raw)
+            except Exception:
+                continue
+            msg_id = str(msg.get("Message-ID") or "").strip() or f"gmail-{num.decode()}"
+            sender = parseaddr(str(msg.get("From") or ""))[1].strip().lower()
+            subject = _decode_mime_header(str(msg.get("Subject") or ""))
+            items.append({
+                "id": f"gmail-{msg_id}",
+                "from": sender or str(msg.get("From") or ""),
+                "subject": subject,
+                "message_id": msg_id,
+                "created_at": _parse_email_date(str(msg.get("Date") or "")),
+                "text": _gmail_body_text(msg),
+                "to": str(msg.get("To") or ""),
+                "in_reply_to": str(msg.get("In-Reply-To") or ""),
+            })
+        return {"data": items, "provider": "gmail_imap"}
+    except Exception as exc:
+        return {"error": True, "status": 0, "message": f"Gmail IMAP sweep failed: {exc}"}
+    finally:
+        try:
+            conn.logout()
+        except Exception:
+            pass
+
+
+def _decode_mime_header(value: str) -> str:
+    parts = decode_header(value)
+    out = []
+    for chunk, enc in parts:
+        try:
+            out.append(chunk.decode(enc or "utf-8", errors="replace") if isinstance(chunk, bytes) else str(chunk))
+        except Exception:
+            out.append(str(chunk))
+    return "".join(out).strip()
+
+
+def _gmail_body_text(msg) -> str:
+    if msg.is_multipart():
+        for part in msg.walk():
+            if part.get_content_type() == "text/plain":
+                payload = part.get_payload(decode=True)
+                if payload:
+                    charset = part.get_content_charset() or "utf-8"
+                    try:
+                        return payload.decode(charset, errors="replace")
+                    except LookupError:
+                        return payload.decode("utf-8", errors="replace")
+        return ""
+    payload = msg.get_payload(decode=True)
+    return payload.decode("utf-8", errors="replace") if payload else ""
+
+
+def _parse_email_date(value: str) -> str:
+    try:
+        dt = email.utils.parsedate_to_datetime(value)
+        return dt.astimezone(timezone.utc).isoformat()
+    except Exception:
+        return datetime.now(timezone.utc).isoformat()
 
 
 # ── Cloudflare DNS helpers ────────────────────────────────────────────────────

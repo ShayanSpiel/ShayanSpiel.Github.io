@@ -18,6 +18,22 @@ replace it with a generic CTA page.
 The general fallback is `/contact/`. `/waitlist/` is a protected legacy product
 route and must not be used as the default site CTA.
 
+## One Idea Hierarchy
+
+The website follows the company-wide hierarchy in
+`.agents/company/strategy/voice.md`:
+
+1. The company promise anchors the funnel: pursue 2× output at half the
+   operating cost, one workflow at a time.
+2. Each route or funnel step chooses one topic-specific idea appropriate to its
+   job: a problem, mechanism, objection, proof point, lesson, or outcome.
+3. Each page executes that topic with one clear title and one argument. Sections
+   may expand, explain, and prove it, but they must not compete with it.
+
+Feature pages, notes, and videos do not repeat the services headline by rote.
+They explain different parts of the same commercial story and lead naturally
+to the next relevant step.
+
 ## Audience path
 
 ```text

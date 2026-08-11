@@ -123,6 +123,7 @@ export const FOOTER_LINKS = {
     { label: "Features", href: "/features/" },
     { label: "Notes", href: "/notes/" },
     { label: "Founder", href: "/founder/" },
+    { label: "Live", href: "/live/" },
   ],
   showcase: [
     { label: "Privacy", href: "#" },

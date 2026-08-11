@@ -57,6 +57,9 @@ SMTP_TLS = os.environ.get("SMTP_TLS", "true").strip().lower() in ("1", "true", "
 # ── Sender identity ────────────────────────────────────────────────────────────
 FROM_EMAIL = os.environ.get("EMAIL_FROM", "shayan@spielos.xyz").strip()
 FROM_NAME = os.environ.get("EMAIL_FROM_NAME", "Shayan Spiel").strip()
+# Owner inbox: every captured human reply is forwarded here once
+# (forward-on-capture in email_workflow.py).
+OWNER_EMAIL = os.environ.get("OWNER_EMAIL", "shayan@spielos.xyz").strip()
 # Per-provider From address: each provider must send from a domain it has
 # verified (FKIM/SPF). Falling back to FROM_EMAIL only for the default provider.
 PROVIDER_FROM_EMAILS = {}
@@ -182,7 +185,7 @@ for _pair in os.environ.get("PROVIDER_DAILY_CAPS", "").split(","):
 PROVIDER_DAILY_CAPS.setdefault("resend", 100)
 PROVIDER_DAILY_CAPS.setdefault("sendgrid", 100)
 PROVIDER_DAILY_CAPS.setdefault("mailgun", 100)
-PROVIDER_DAILY_CAPS.setdefault("postmark", 100)   # free trial: one-time 100 total
+PROVIDER_DAILY_CAPS.setdefault("postmark", 400)   # owner-approved 2026-08-10: 400/day
 PROVIDER_DAILY_CAPS.setdefault("brevo", 300)
 PROVIDER_DAILY_CAPS.setdefault("smtp", 200)
 # Total daily ceiling from the enabled providers' free caps (topped up
@@ -201,6 +204,15 @@ PROVIDER_DAILY_TOTAL = sum(
 # `metrics` run. Leave empty for no Reply-To (replies land in the From
 # inbox and are recorded with `record-reply`).
 REPLY_TO = os.environ.get("REPLY_TO", "").strip()
+# Unified reply capture (owner direction 2026-08-10): every send sets
+# Reply-To: replies@spielos.xyz; Cloudflare Email Routing forwards that
+# address to the founder inbox; REPLY_CAPTURE=gmail_imap makes the runtime
+# read that Gmail inbox over IMAP (no receiving domain, no plan upgrade).
+REPLY_CAPTURE = os.environ.get("REPLY_CAPTURE", "").strip().lower()
+GMAIL_IMAP_USER = os.environ.get("GMAIL_IMAP_USER", "").strip()
+GMAIL_IMAP_APP_PASSWORD = os.environ.get("GMAIL_IMAP_APP_PASSWORD", "").strip()
+# How far back the Gmail reply sweep looks (hours).
+REPLY_LOOKBACK_HOURS = float(os.environ.get("REPLY_LOOKBACK_HOURS", "96") or 96)
 # Comma-separated subject markers that identify auto-replies (out-of-office,
 # etc.) — recorded but excluded from the reply-rate goal.
 AUTO_REPLY_KEYWORDS = os.environ.get(

@@ -16,6 +16,7 @@ This is not a translation skill. It creates original English content. The source
 Before writing, read:
 
 - `../../company/strategy/icp.md` — the single source of truth for the customer profile, exclusions, and positioning idea. Never restate the ICP in this file; read it from the source.
+- `../../company/strategy/voice.md` — the company voice and canonical One Idea Hierarchy.
 
 The ICP is identical in English and Persian. The behavioral profile does not change with language. Only the linguistic and cultural expression changes.
 
@@ -232,6 +233,23 @@ Do not force this structure when another format is more appropriate.
 
 ---
 
+## One Idea Hierarchy
+
+Lock the hierarchy before drafting:
+
+1. **Company promise connection** — name how this topic relates to greater
+   output, lower operating cost, or improving one workflow at a time.
+2. **Topic-specific idea** — choose one problem, mechanism, objection, lesson,
+   proof point, or outcome for this asset. Different articles and formats may
+   choose different topics.
+3. **Asset execution** — write one clear title and one coherent argument. Every
+   example, section, visual cue, and CTA must support that topic idea.
+
+Ask: if the reader remembers only one idea, what should it be, why should they
+care, and what is the most appealing title that remains fully supported? Lead
+with that idea, then expand. Remove competing benefits and side arguments.
+Do not mechanically repeat the company promise as every title.
+
 ## Titles
 
 Titles must communicate one clear tension, problem, result, or lesson.
@@ -301,6 +319,8 @@ Reject and rewrite unless:
 - The copy could not belong unchanged to any AI startup
 - The CTA follows from the argument
 - The work session has been transformed rather than summarized
+- The asset communicates one topic-specific idea that connects naturally to the company promise
+- The title, argument, evidence, and CTA all serve that same idea
 
 ---
 

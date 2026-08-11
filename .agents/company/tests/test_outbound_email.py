@@ -358,3 +358,243 @@ class ReportTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class GmailCaptureTests(unittest.TestCase):
+    """Unified Gmail reply capture (owner direction 2026-08-10): parsing,
+    provider resolution, and sync_replies matching. Hermetic — no network."""
+
+    @staticmethod
+    def _raw_message(subject="Re: Agentic ops at Acme UK", sender="owner@acme-uk.com",
+                     msg_id="<gmailtest123@acme-uk.com>", date="Mon, 10 Aug 2026 09:00:00 +0000",
+                     body="Yes, let's talk. Best, Jane"):
+        import email as email_mod
+        msg = email_mod.message.EmailMessage()
+        msg["From"] = f"Jane Doe <{sender}>"
+        msg["To"] = "replies@spielos.xyz"
+        msg["Subject"] = subject
+        msg["Message-ID"] = msg_id
+        msg["Date"] = date
+        msg["In-Reply-To"] = "<sent-msg-1@resend>"
+        msg.set_content(body)
+        return msg.as_bytes()
+
+    def test_parse_email_date_utc(self):
+        from company.departments.outbound.workflows.email import providers
+        iso = providers._parse_email_date("Mon, 10 Aug 2026 09:00:00 +0000")
+        self.assertTrue(iso.startswith("2026-08-10T09:00:00"))
+
+    def test_decode_mime_header_encoded(self):
+        from company.departments.outbound.workflows.email import providers
+        raw = "=?utf-8?B?UmU6IEFnZW50aWMgb3BzIGF0IEFjbWU=?="
+        self.assertEqual(providers._decode_mime_header(raw), "Re: Agentic ops at Acme")
+
+    def test_body_text_multipart(self):
+        from company.departments.outbound.workflows.email import providers
+        raw = self._raw_message()
+        from email import message_from_bytes as mfb
+        msg = mfb(raw)
+        self.assertIn("let's talk", providers._gmail_body_text(msg))
+
+    def test_list_received_emails_resolves_gmail(self):
+        from company.departments.outbound.workflows.email import providers
+        cfg = providers._cfg_module
+        fake = {"data": [{"id": "gmail-<gmailtest123@acme-uk.com>", "from": "owner@acme-uk.com",
+                          "subject": "Re: Agentic ops at Acme UK", "message_id": "<gmailtest123@acme-uk.com>",
+                          "created_at": "2026-08-10T09:00:00+00:00", "text": "Yes, let's talk."}]}
+        with unittest.mock.patch.object(cfg, "REPLY_CAPTURE", "gmail_imap"), \
+             unittest.mock.patch.object(cfg, "GMAIL_IMAP_USER", "66shayan@gmail.com"), \
+             unittest.mock.patch.object(cfg, "GMAIL_IMAP_APP_PASSWORD", "app-pass"), \
+             unittest.mock.patch.object(providers, "_list_gmail_imap", return_value=fake):
+            self.assertTrue(providers.cap_received())
+            self.assertEqual(providers.list_received_emails(), fake)
+
+    def test_sync_replies_records_gmail_reply_and_auto(self):
+        import json as _json
+        from company.departments.outbound.workflows.email import analytics, providers
+        tmp = Path(tempfile.mkdtemp())
+        config.METRICS_PATH = tmp / "metrics.json"
+        with open(config.METRICS_PATH, "w") as f:
+            _json.dump({"emails": {}, "replies": []}, f)
+        sent = {"sent": [{"lead_id": "EN-100", "email": "owner@acme-uk.com",
+                          "company": "Acme UK", "subject": "Agentic ops at Acme UK",
+                          "variant": "offer-1"}]}
+        listing = {"data": [
+            {"id": "gmail-<one@acme-uk.com>", "from": "owner@acme-uk.com",
+             "subject": "Re: Agentic ops at Acme UK", "message_id": "<one@acme-uk.com>",
+             "created_at": "2026-08-10T09:00:00+00:00"},
+            {"id": "gmail-<two@acme-uk.com>", "from": "owner@acme-uk.com",
+             "subject": "Out of office: away until Friday", "message_id": "<two@acme-uk.com>",
+             "created_at": "2026-08-10T09:05:00+00:00"},
+        ]}
+        with unittest.mock.patch.object(providers, "cap_received", return_value=True), \
+             unittest.mock.patch.object(providers, "list_received_emails", return_value=listing):
+            metrics = {"emails": {}, "replies": []}
+            added = analytics.sync_replies(sent, metrics)
+        self.assertEqual(added, 2)
+        kinds = {r["received_id"]: r["kind"] for r in metrics["replies"]}
+        self.assertEqual(kinds["gmail-<one@acme-uk.com>"], "reply")
+        self.assertEqual(kinds["gmail-<two@acme-uk.com>"], "auto")
+        self.assertEqual(metrics["replies"][0]["lead_id"], "EN-100")
+        self.assertEqual(metrics["replies"][0]["email"], "owner@acme-uk.com")
+
+    def test_sync_replies_dedupes_by_received_id(self):
+        import json as _json
+        from company.departments.outbound.workflows.email import analytics, providers
+        tmp = Path(tempfile.mkdtemp())
+        config.METRICS_PATH = tmp / "metrics.json"
+        sent = {"sent": [{"lead_id": "EN-100", "email": "owner@acme-uk.com",
+                          "company": "Acme UK", "subject": "Agentic ops at Acme UK",
+                          "variant": "offer-1"}]}
+        listing = {"data": [
+            {"id": "gmail-<one@acme-uk.com>", "from": "owner@acme-uk.com",
+             "subject": "Re: Agentic ops at Acme UK", "message_id": "<one@acme-uk.com>",
+             "created_at": "2026-08-10T09:00:00+00:00"},
+        ]}
+        with unittest.mock.patch.object(providers, "cap_received", return_value=True), \
+             unittest.mock.patch.object(providers, "list_received_emails", return_value=listing):
+            metrics = {"emails": {}, "replies": []}
+            analytics.sync_replies(sent, metrics)
+            second = analytics.sync_replies(sent, metrics)
+        self.assertEqual(second, 0)
+        self.assertEqual(len(metrics["replies"]), 1)
+
+    def test_gmail_imap_status_requires_credentials(self):
+        from company.departments.outbound.workflows.email import providers
+        cfg = providers._cfg_module
+        with unittest.mock.patch.object(cfg, "GMAIL_IMAP_USER", ""), \
+             unittest.mock.patch.object(cfg, "GMAIL_IMAP_APP_PASSWORD", ""):
+            status = providers.gmail_imap_status()
+        self.assertFalse(status["ready"])
+        self.assertIn("not configured", status["reason"])
+
+
+class PendingStatusGateTests(unittest.TestCase):
+    """Delivery gate semantics (owner direction 2026-08-10): provider-accepted
+    pending sends (sent/delivery_delayed) are not failures; real losses still
+    breach. Hermetic — no network."""
+
+    def test_pending_does_not_breach_delivered_rate(self):
+        snap = {"window_totals": {"bounce_rate": 0.0, "spam_rate": 0.0,
+                                  "sent": 73, "delivered": 70, "pending": 3,
+                                  "unknown": 0, "denied": 0, "unresolved": 0},
+                "meta": {"guardrails": [
+                    {"name": "bounce rate", "metric": "bounce_rate", "max": 0.02},
+                    {"name": "spam rate", "metric": "spam_rate", "max": 0.0008}]}}
+        r = policy_rules.evaluate(snap)
+        self.assertTrue(r["ok"], r)
+
+    def test_real_losses_still_breach_delivered_rate(self):
+        snap = {"window_totals": {"bounce_rate": 0.0, "spam_rate": 0.0,
+                                  "sent": 73, "delivered": 68, "pending": 3,
+                                  "unknown": 0, "denied": 0, "unresolved": 0},
+                "meta": {"guardrails": [
+                    {"name": "bounce rate", "metric": "bounce_rate", "max": 0.02},
+                    {"name": "spam rate", "metric": "spam_rate", "max": 0.0008}]}}
+        r = policy_rules.evaluate(snap)
+        self.assertFalse(r["ok"])
+        self.assertEqual(r["breaches"][0]["name"], "delivered rate")
+        self.assertAlmostEqual(r["breaches"][0]["current"], 71 / 73, places=3)
+
+    def test_aggregate_counts_pending(self):
+        from company.departments.outbound.workflows.email import analytics
+        log = {"sent": [
+            {"lead_id": "L1", "email": "a@x.com", "timestamp": "2026-08-10T10:00:00"},
+            {"lead_id": "L2", "email": "b@x.com", "timestamp": "2026-08-10T10:01:00"},
+            {"lead_id": "L3", "email": "c@x.com", "timestamp": "2026-08-10T10:02:00"},
+        ]}
+        metrics = {"emails": {
+            "L1": {"status": "delivered"},
+            "L2": {"status": "sent"},
+            "L3": {"status": "delivery_delayed"},
+        }, "replies": []}
+        agg = analytics.aggregate(log, metrics)
+        self.assertEqual(agg["delivered"], 1)
+        self.assertEqual(agg["pending"], 2)
+
+
+class IdempotentExecuteTests(unittest.TestCase):
+    """Bounded repair 2026-08-10: concurrent executors must not strand a
+    batch. already_sent leads are skipped (deduped), not fatal. Hermetic."""
+
+    def _execute(self, sent_log, batch_leads, contacts):
+        from company.departments.outbound.workflows.email import actor, outbound as ob, config
+        sent_calls = []
+        with unittest.mock.patch.object(ob, "load_sent_log", return_value=sent_log), \
+                unittest.mock.patch.object(ob, "save_sent_log", lambda log: None), \
+                unittest.mock.patch.object(ob, "read_contacts", return_value=contacts), \
+                unittest.mock.patch.object(actor, "_provider_sent_id", return_value=None), \
+                unittest.mock.patch.object(actor, "_send_with_cap",
+                                           side_effect=lambda *a, **k: sent_calls.append(a[1]) or {"id": "m1"}), \
+                unittest.mock.patch.object(config, "THROTTLE_SECONDS", 0), \
+                unittest.mock.patch.object(actor.providers, "pick_provider", return_value="resend"):
+            _, store, _ = make_ctx()
+            ctx = type("Ctx", (), {"store": store})()
+            batch = {"id": "B1", "emails": batch_leads}
+            result = actor.execute(ctx, batch, dry=False)
+        return result, sent_calls
+
+    def test_mixed_batch_sends_remainder(self):
+        log = {"sent": [{"lead_id": "L1", "email": "a@x.com"}], "failed": []}
+        contacts = [
+            {"lead_id": "L1", "email": "a@x.com", "company": "A", "contact_name": "Ann"},
+            {"lead_id": "L2", "email": "b@x.com", "company": "B", "contact_name": "Bob"},
+        ]
+        leads = [
+            {"lead_id": "L1", "subject": "s1", "body_html": "h", "body_text": "t", "features": {}},
+            {"lead_id": "L2", "subject": "s2", "body_html": "h", "body_text": "t", "features": {}},
+        ]
+        result, sent_calls = self._execute(log, leads, contacts)
+        self.assertEqual(result["sent"], 1)
+        self.assertEqual(result["deduped"], 1)
+        self.assertEqual(result["failed"], 0)
+        self.assertEqual(sent_calls, ["b@x.com"])
+
+    def test_all_already_sent_is_not_a_failure(self):
+        log = {"sent": [{"lead_id": "L1", "email": "a@x.com"},
+                        {"lead_id": "L2", "email": "b@x.com"}], "failed": []}
+        contacts = [
+            {"lead_id": "L1", "email": "a@x.com", "company": "A", "contact_name": "Ann"},
+            {"lead_id": "L2", "email": "b@x.com", "company": "B", "contact_name": "Bob"},
+        ]
+        leads = [
+            {"lead_id": "L1", "subject": "s1", "body_html": "h", "body_text": "t", "features": {}},
+            {"lead_id": "L2", "subject": "s2", "body_html": "h", "body_text": "t", "features": {}},
+        ]
+        result, sent_calls = self._execute(log, leads, contacts)
+        self.assertEqual(result["sent"], 0)
+        self.assertEqual(result["deduped"], 2)
+        self.assertIn("nothing to send", result["note"])
+        self.assertEqual(sent_calls, [])
+
+
+class SuppressedDeliveredRateTests(unittest.TestCase):
+    """2026-08-11: suppressed window bounces leave the judged population
+    for the delivered-rate rule too. Hermetic."""
+
+    def _snap(self, **window):
+        snap = {"window_totals": window, "meta": {"guardrails": [
+            {"name": "bounce rate", "metric": "bounce_rate", "max": 0.02},
+            {"name": "spam rate", "metric": "spam_rate", "max": 0.0008}]}}
+        return snap
+
+    def test_all_suppressed_bounces_do_not_block_delivered_rate(self):
+        with unittest.mock.patch.object(outbound, "read_contacts", return_value=[
+                {"email": "bad@x.com", "email_status": "Bounced; suppressed"}]):
+            snap = self._snap(sent=37, delivered=28, bounced=5, pending=4,
+                              bounce_rate=0.135, spam_rate=0.0,
+                              unknown=0, denied=0, unresolved=0)
+            snap["bounced_emails"] = ["bad@x.com"]
+            r = policy_rules.evaluate(snap)
+        self.assertTrue(r["ok"], r)
+
+    def test_unsuppressed_bounce_still_blocks_delivered_rate(self):
+        with unittest.mock.patch.object(outbound, "read_contacts", return_value=[
+                {"email": "bad@x.com", "email_status": ""}]):
+            snap = self._snap(sent=37, delivered=28, bounced=5, pending=4,
+                              bounce_rate=0.135, spam_rate=0.0,
+                              unknown=0, denied=0, unresolved=0)
+            snap["bounced_emails"] = ["bad@x.com"]
+            r = policy_rules.evaluate(snap)
+        self.assertFalse(r["ok"])
+        self.assertEqual(r["breaches"][0]["name"], "bounce rate")

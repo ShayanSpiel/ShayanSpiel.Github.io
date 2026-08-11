@@ -11,7 +11,7 @@ the batch for owner attention.
 
 import re
 
-from .compose import FORBIDDEN_OBSERVATIONS
+from .compose import FORBIDDEN_OBSERVATIONS, FORBIDDEN_OFFER_PHRASES
 from .templates import SIGNATURE_HTML, SIGNATURE_TEXT
 
 
@@ -36,6 +36,11 @@ def validate(ctx, batch: dict) -> list:
             if obs in lower:
                 issues.append({"lead_id": lead_id, "code": "segment_fallback",
                                "message": f"segment-generic observation detected: {obs!r}",
+                               "skippable": True})
+        for phrase in FORBIDDEN_OFFER_PHRASES:
+            if phrase in lower:
+                issues.append({"lead_id": lead_id, "code": "retired_offer",
+                               "message": f"retired offer phrase detected: {phrase!r}",
                                "skippable": True})
 
         words = len(body_text.split())

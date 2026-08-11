@@ -1,0 +1,70 @@
+{
+  "provider": "gemini",
+  "model": "gemini-2.5-flash-preview-tts",
+  "message_hierarchy": {
+    "company_promise": "Help an established business pursue roughly 2x the output at half the operating cost, one workflow at a time.",
+    "rule": "Choose one topic-specific idea per video. Every title, scene, narration line, and CTA must support it and connect naturally to the company promise without repeating the same headline mechanically.",
+    "scenario_b_topic": "Disconnected AI tools need one operating system before they can work as a team.",
+    "scenario_c_topic": "A real AI department is built by defining roles, context, standards, and workflows."
+  },
+  "voice_direction": "Synthesize the spoken transcript only. A deep, grounded adult male narrator with restrained confidence and a warm humanistic cadence. Speak at a natural conversational pace — flowing, not rushed, no dead air — and land the final URL clearly.",
+  "voice_selection": "Charon",
+  "mix": {
+    "narration_lufs": -16,
+    "true_peak_dbtp": -1,
+    "deliverable": "48kHz AAC",
+    "music": "none"
+  },
+  "scene_timing": {
+    "b": {
+      "voice": null,
+      "generated_at": null,
+      "scenes": [
+        { "scene": "hook", "start": 0, "end": 0 },
+        { "scene": "pain", "start": 0, "end": 0 },
+        { "scene": "promise", "start": 0, "end": 0 },
+        { "scene": "pillars", "start": 0, "end": 0 },
+        { "scene": "director", "start": 0, "end": 0 },
+        { "scene": "cta", "start": 0, "end": 0 }
+      ]
+    },
+    "c": {
+      "voice": null,
+      "generated_at": null,
+      "scenes": [
+        { "scene": "hook", "start": 0, "end": 0 },
+        { "scene": "build", "start": 0, "end": 0 },
+        { "scene": "live", "start": 0, "end": 0 },
+        { "scene": "director", "start": 0, "end": 0 },
+        { "scene": "cta", "start": 0, "end": 0 }
+      ]
+    }
+  },
+  "quality_gates": [
+    "The video communicates one topic-specific idea connected to the company promise.",
+    "Every clip in BOTH scenarios uses the exact same pinned prebuilt voice (voice_selection) — no mixed generations or auditions.",
+    "Each line plays in full: scene timing is derived from measured spoken clip durations, never from fixed windows that trim mid-sentence.",
+    "Each line earns a visual change; no narration merely restates on-screen copy.",
+    "The final audio is narration-only: no music bed in the mix or in the spec.",
+    "The spoken URL is human-readable, not read as punctuation.",
+    "The final file contains both video and audio streams.",
+    "Final mix is checked on headphones and phone speaker."
+  ],
+  "scenarios": {
+    "b": [
+      "Your AI tools work alone.",
+      "Prompts vanish.",
+      "Give AI work a system.",
+      "Roles, skills, evals, workflows.",
+      "Set the goal. The system moves.",
+      "Direct the work. spielos dot xyz slash services."
+    ],
+    "c": [
+      "What if your AI team worked together?",
+      "Hire roles, give context, set standards.",
+      "Your AI department is live.",
+      "Set the goal. You decide.",
+      "Build it. spielos dot xyz slash services."
+    ]
+  }
+}

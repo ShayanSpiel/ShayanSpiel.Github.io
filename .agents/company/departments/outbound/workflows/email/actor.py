@@ -111,17 +111,24 @@ def execute(ctx, batch: dict, dry: bool = False) -> dict:
         return {"sent": 0, "failed": 0, "deduped": 0,
                 "note": f"batch would exceed daily cap ({used_today} + {len(emails)} > {cap})"}
 
+    kept = []
+    pre_deduped = 0
     for e in emails:
         c = by_id.get(e["lead_id"])
         if c is None:
             return {"sent": 0, "failed": 0, "deduped": 0,
                     "note": f"lead_id {e['lead_id']} not found in the contact list"}
         if outbound.already_sent(e["lead_id"], log):
-            return {"sent": 0, "failed": 0, "deduped": 0,
-                    "note": f"lead_id {e['lead_id']} is already in the sent log — refusing duplicate"}
+            pre_deduped += 1
+            continue
         if not e.get("subject") or not e.get("body_html") or not e.get("body_text"):
             return {"sent": 0, "failed": 0, "deduped": 0,
                     "note": f"lead_id {e['lead_id']}: subject/body_html/body_text all required"}
+        kept.append(e)
+    emails = kept
+    if pre_deduped and not emails:
+        return {"sent": 0, "failed": 0, "deduped": pre_deduped,
+                "note": "entire batch already in the sent log — nothing to send"}
 
     if dry:
         return {"sent": 0, "failed": 0, "deduped": 0,
@@ -129,7 +136,7 @@ def execute(ctx, batch: dict, dry: bool = False) -> dict:
 
     sent_count = 0
     fail_count = 0
-    deduped_count = 0
+    deduped_count = pre_deduped
     excluded = set()
 
     for i, e in enumerate(emails):

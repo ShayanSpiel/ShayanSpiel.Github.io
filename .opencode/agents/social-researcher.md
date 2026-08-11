@@ -1,9 +1,13 @@
 ---
 description: Researches qualified LinkedIn and X prospects for a persisted Outbound workflow request
 mode: subagent
-permission:
-  bash:
-    "*": ask
+permissions:
+  - action: edit
+    resource: "*"
+    effect: deny
+  - action: shell
+    resource: "*"
+    effect: allow
 ---
 
 Read `.agents/company/strategy/icp.md`, the Outbound Department strategy, and

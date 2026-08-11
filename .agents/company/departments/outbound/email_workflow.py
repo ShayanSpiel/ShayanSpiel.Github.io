@@ -34,7 +34,7 @@ class EmailWorkflow(GoalHandler):
             "audience_type": {"enum": ["business", "test_inbox"]},
             "test_recipients": {"type": "array", "required_when": {"audience_type": "test_inbox"}},
             "throttle_seconds": {"type": "number", "required_when": {"execution_mode": "live"}},
-            "reply_capture": {"enum": ["manual_inbox", "resend_inbound"],
+            "reply_capture": {"enum": ["manual_inbox", "resend_inbound", "gmail_inbox"],
                               "required_when": {"audience_type": "test_inbox"}},
             "observer_interval_seconds": {"type": "number", "description": "Provider polling cadence while evidence is open"},
         },
@@ -110,7 +110,7 @@ class EmailWorkflow(GoalHandler):
         mode = ctx.goal.config.get("execution_mode")
         capture = _capture_mode(ctx.goal.config)
         if mode == "live" and ctx.goal.metric in {"reply_rate", "positive_reply_rate"}:
-            if "reply_capture" not in ctx.goal.config or capture not in {"manual_inbox", "resend_inbound"}:
+            if "reply_capture" not in ctx.goal.config or capture not in {"manual_inbox", "resend_inbound", "gmail_inbox"}:
                 return _capture_setup_required(ctx, "Select an explicit reply evidence source")
             if capture == "resend_inbound":
                 from .workflows.email import config as email_config, providers
@@ -286,6 +286,15 @@ class EmailWorkflow(GoalHandler):
             if not readiness.get("ready"):
                 return _capture_setup_required(
                     ctx, readiness.get("reason") or "Automatic reply capture is not ready", readiness)
+        if capture == "gmail_inbox":
+            if not email_config.REPLY_TO:
+                return StageResult("guardrail", {**previous, "error": "gmail_inbox requires REPLY_TO on the captured address"},
+                                   RunStatus.BLOCKED, Stage.ACT,
+                                   message="Automatic reply capture is not configured")
+            readiness = providers.gmail_imap_status()
+            if not readiness.get("ready"):
+                return _capture_setup_required(
+                    ctx, readiness.get("reason") or "Gmail IMAP capture is not ready", readiness)
         results, evidence = [], []
         provider = ctx.goal.config.get("provider")
         for index, recipient in enumerate(previous["recipients"]):
@@ -441,12 +450,14 @@ def _observe_test_provider(ctx, action_result):
                              "provider_id": provider_id, "provider_event": event}})
         known_events.add(key)
 
-    if (action_result.get("reply_capture") or _capture_mode(ctx.goal.config)) != "resend_inbound":
+    capture = action_result.get("reply_capture") or _capture_mode(ctx.goal.config)
+    if capture not in {"resend_inbound", "gmail_inbox"}:
         return observed
     provider = (ctx.goal.config.get("provider") or providers.EMAIL_PROVIDER or "").strip().lower()
-    if not providers.cap_received(provider):
+    list_provider = "gmail_imap" if capture == "gmail_inbox" else provider
+    if not providers.cap_received(list_provider):
         return observed
-    listing = providers.list_received_emails(provider=provider)
+    listing = providers.list_received_emails(provider=list_provider)
     if listing.get("error"):
         return observed
     recipients = {str(item.get("recipient") or "").strip().lower() for item in sent_items}
@@ -461,7 +472,7 @@ def _observe_test_provider(ctx, action_result):
             continue
         auto = analytics._is_auto_reply(subject)
         observed.append({"kind": "email_auto_reply" if auto else "reply",
-                         "source": "resend_inbound", "validity": "technical_only",
+                         "source": capture, "validity": "technical_only",
                          "payload": {"recipient": sender, "received_id": received_id,
                                      "provider": provider, "subject": subject,
                                      "received_at": received.get("created_at")}})
@@ -485,8 +496,8 @@ def _capture_setup_required(ctx, reason, readiness=None):
                            "capability": "inbound_email_setup",
                            "owner": "director",
                            "required_user_action": (
-                               "Configure a verified receiving subdomain and Reply-To, then retry this run"),
-                           "completion_evidence": "provider confirms receiving=enabled for the Reply-To domain",
+                               "Configure reply capture (receiving-enabled domain or Gmail IMAP credentials) and Reply-To, then retry this run"),
+                           "completion_evidence": "reply capture readiness probe passes (Gmail IMAP login OK or receiving-enabled domain)",
                            "next_trigger": f"company retry {ctx.goal.id}",
                            "payload": payload,
                        })
