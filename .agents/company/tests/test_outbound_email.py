@@ -6,6 +6,7 @@ import sys
 import tempfile
 import unittest
 import unittest.mock
+from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -598,3 +599,440 @@ class SuppressedDeliveredRateTests(unittest.TestCase):
             r = policy_rules.evaluate(snap)
         self.assertFalse(r["ok"])
         self.assertEqual(r["breaches"][0]["name"], "bounce rate")
+
+
+class ReplyTruthReconcileTests(unittest.TestCase):
+    """Bounded repair 2026-08-11 (change-326f0c32e6, goal-reply-truth-20260811):
+    header-aware auto-reply detection with stored classification inputs,
+    per-lead dedupe reconciliation, and inbox-truth metrics. The reply fixture
+    is the LIVE ledger (.spielos/state/outbound/metrics.json) verbatim."""
+
+    LIVE_REPLIES = [
+        {"received_id": None, "lead_id": "TEST-loop-001", "email": "xhayan@gmail.com",
+         "company": "Test", "variant": "Test", "subject": "SpielOS outbound loop test",
+         "message_id": None, "received_at": None,
+         "recorded_at": "2026-08-07T19:45:08.453097+00:00",
+         "kind": "reply", "note": "user reply to loop test"},
+        {"received_id": "gmail-<CA+Y0w+cMpwH53Lar+dNUhSe-Yo832N=JAY8bfTX3ZYv6sWi=fA@mail.gmail.com>",
+         "lead_id": "TEST-loop-001", "email": "xhayan@gmail.com", "company": "Test",
+         "variant": "Test", "subject": "Re: SpielOS outbound loop test",
+         "message_id": "<CA+Y0w+cMpwH53Lar+dNUhSe-Yo832N=JAY8bfTX3ZYv6sWi=fA@mail.gmail.com>",
+         "received_at": "2026-08-07T19:42:33+00:00",
+         "recorded_at": "2026-08-10T17:19:12.442354+00:00",
+         "kind": "reply", "note": ""},
+        {"received_id": "gmail-<aa02f018e7cf443d991a47ee13f7606b@CWLP123MB6411.GBRP123.PROD.OUTLOOK.COM>",
+         "lead_id": "EN-1152", "email": "jay.plant@wentworthjames.co.uk",
+         "company": "Wentworth James Group", "variant": "researched-personal",
+         "subject": "Automatic reply: Recruiting ops at Wentworth James Group",
+         "message_id": "<aa02f018e7cf443d991a47ee13f7606b@CWLP123MB6411.GBRP123.PROD.OUTLOOK.COM>",
+         "received_at": "2026-08-09T12:24:33+00:00",
+         "recorded_at": "2026-08-10T17:19:12.442470+00:00",
+         "kind": "auto", "note": "Jay Plant / Wentworth James Group — OOO auto-reply 2026-08-09: "
+         "'out of office with limited access, returning Monday 2026-08-10'. Accounts queries -> "
+         "accounts@wentworthjames.co.uk (role inbox, out of policy). Deliverability CONFIRMED by "
+         "OOO reply; master status upgraded to Verified.",
+         "subclass": "out-of-office"},
+        {"received_id": "gmail-<26c91a6e846f485abb5890f30b5f3678@LO2P123MB5480.GBRP123.PROD.OUTLOOK.COM>",
+         "lead_id": "EN-1153", "email": "jweeden@vr-group.co.uk",
+         "company": "VR Group", "variant": "researched-personal",
+         "subject": "Automatic reply: Screening loop at VR Group",
+         "message_id": "<26c91a6e846f485abb5890f30b5f3678@LO2P123MB5480.GBRP123.PROD.OUTLOOK.COM>",
+         "received_at": "2026-08-09T12:27:06+00:00",
+         "recorded_at": "2026-08-10T17:19:12.442482+00:00",
+         "kind": "auto", "note": "Jack Weeden / VR Group — OOO auto-reply 2026-08-09: 'away on leave, "
+         "no email access'. Urgent -> Josh Barlow 07508 535621 / jbarlow@vr-group.co.uk (confirmed "
+         "Group Candidate Manager on vr-group.co.uk/about). Deliverability CONFIRMED by OOO reply; "
+         "master status upgraded to Verified.",
+         "subclass": "out-of-office"},
+        {"received_id": "gmail-<CA+Y0w+fzCSbC6Gks_hSva4Wz2u2jpLx00GfJgYpcx2HagZGyMQ@mail.gmail.com>",
+         "lead_id": "TEST-loop-001", "email": "xhayan@gmail.com", "company": "Test",
+         "variant": "Test", "subject": "Re: SpielOS loop test 617052",
+         "message_id": "<CA+Y0w+fzCSbC6Gks_hSva4Wz2u2jpLx00GfJgYpcx2HagZGyMQ@mail.gmail.com>",
+         "received_at": "2026-08-10T00:21:12+00:00",
+         "recorded_at": "2026-08-10T17:19:12.442504+00:00",
+         "kind": "reply", "note": ""},
+        {"received_id": "gmail-<msmuuj62.b570adbe-95d2-46d2-9330-4c2d63d1e7bc@we.are.superhuman.com>",
+         "lead_id": "EN-1157", "email": "rhys@sigmarecruitment.co.uk",
+         "company": "Sigma Recruitment", "variant": "researched-personal",
+         "subject": "Re: Staffing loop at Sigma Recruitment",
+         "message_id": "<msmuuj62.b570adbe-95d2-46d2-9330-4c2d63d1e7bc@we.are.superhuman.com>",
+         "received_at": "2026-08-10T06:34:02+00:00",
+         "recorded_at": "2026-08-10T17:19:12.442514+00:00",
+         "kind": "reply", "note": ""},
+        {"received_id": "gmail-<CABmWERz6j4fH1HjJWPwiF74y+m0hremvUUeTL-qMtbjtvTtLZg@mail.gmail.com>",
+         "lead_id": "AP-7d1096", "email": "tony@webkatalyst.com",
+         "company": "Web Katalyst", "variant": "researched-personal",
+         "subject": "Re: Delivery loop cost",
+         "message_id": "<CABmWERz6j4fH1HjJWPwiF74y+m0hremvUUeTL-qMtbjtvTtLZg@mail.gmail.com>",
+         "received_at": "2026-08-10T10:10:12+00:00",
+         "recorded_at": "2026-08-10T17:19:12.442526+00:00",
+         "kind": "auto",
+         "note": "Owner confirmed 2026-08-11: bot/away auto-reply (out of office), NOT a real reply"},
+        {"lead_id": "AP-7d1096", "company": "Web Katalyst", "kind": "reply",
+         "outcome": "rejected",
+         "reason": "Not looking to bring in an external solution for this workflow at the moment — "
+                   "pass for now",
+         "note": "Owner-forwarded real reply 2026-08-11 (separate from earlier bot/away auto event). "
+                 "Company type owner-confirmed: software agency. Rejection class R1: external-solution "
+                 "readiness / in-house capability.",
+         "subject": "Re: Web Katalyst client-delivery flow",
+         "received_at": "2026-08-11T00:00:00"},
+        {"received_id": "gmail-<CWXP265MB3191F6660D3E788F0E4C330BF5DD2@CWXP265MB3191.GBRP265.PROD.OUTLOOK.COM>",
+         "lead_id": "EN-1157", "email": "rhys@sigmarecruitment.co.uk",
+         "company": "Sigma Recruitment", "variant": "researched-personal",
+         "subject": "Staffing loop at Sigma Recruitment",
+         "message_id": "<CWXP265MB3191F6660D3E788F0E4C330BF5DD2@CWXP265MB3191.GBRP265.PROD.OUTLOOK.COM>",
+         "received_at": "2026-08-11T00:33:25+00:00",
+         "recorded_at": "2026-08-11T00:35:58.225223+00:00",
+         "kind": "reply", "note": ""},
+    ]
+
+    def _fixture_metrics(self):
+        return {"emails": {}, "replies": [dict(r) for r in self.LIVE_REPLIES]}
+
+    def test_classify_reply_kind_reliable_signals(self):
+        from company.departments.outbound.workflows.email import analytics
+        # OOO prefix (Outlook convention) is a strong auto signal
+        self.assertEqual(analytics.classify_reply_kind(
+            "Automatic reply: Recruiting ops at Wentworth James Group"), "auto")
+        # Auto-Submitted header (RFC 3834) beats an ordinary Re: subject
+        self.assertEqual(analytics.classify_reply_kind(
+            "Re: Staffing loop", auto_submitted="auto-replied"), "auto")
+        # X-Autoreply header is a strong auto signal
+        self.assertEqual(analytics.classify_reply_kind(
+            "Re: Staffing loop", x_autoreply="yes"), "auto")
+        # Configured keyword list still works
+        self.assertEqual(analytics.classify_reply_kind(
+            "Out of office: away until Friday"), "auto")
+        # Ordinary Re: defaults to reply unless a strong signal says auto
+        self.assertEqual(analytics.classify_reply_kind("Re: Delivery loop cost"), "reply")
+        self.assertEqual(analytics.classify_reply_kind(
+            "Re: Staffing loop", auto_submitted="no"), "reply")
+
+    def test_gmail_record_extracts_autoreply_headers(self):
+        import email as email_mod
+        from company.departments.outbound.workflows.email import providers
+        msg = email_mod.message.EmailMessage()
+        msg["From"] = "Jay Plant <jay.plant@wentworthjames.co.uk>"
+        msg["To"] = "replies@spielos.xyz"
+        msg["Subject"] = "Re: Recruiting ops"
+        msg["Message-ID"] = "<m1@outlook.com>"
+        msg["Date"] = "Mon, 10 Aug 2026 09:00:00 +0000"
+        msg["Auto-Submitted"] = "auto-replied"
+        msg["X-Autoreply"] = "yes"
+        msg.set_content("I am away until Friday.")
+        rec = providers._gmail_message_record(msg, b"1")
+        self.assertEqual(rec["auto_submitted"], "auto-replied")
+        self.assertEqual(rec["x_autoreply"], "yes")
+        self.assertTrue(rec["id"].startswith("gmail-"))
+
+    def test_sync_replies_stores_inputs_and_classifies_by_headers(self):
+        import json as _json
+        from company.departments.outbound.workflows.email import analytics, providers
+        tmp = Path(tempfile.mkdtemp())
+        config.METRICS_PATH = tmp / "metrics.json"
+        with open(config.METRICS_PATH, "w") as f:
+            _json.dump({"emails": {}, "replies": []}, f)
+        sent = {"sent": [{"lead_id": "EN-1200", "email": "jay@acme.co.uk",
+                          "company": "Acme", "subject": "Recruiting ops",
+                          "variant": "offer-1"}]}
+        listing = {"data": [
+            {"id": "gmail-<h1@acme.co.uk>", "from": "jay@acme.co.uk",
+             "subject": "Re: Recruiting ops", "message_id": "<h1@acme.co.uk>",
+             "created_at": "2026-08-10T09:00:00+00:00",
+             "auto_submitted": "auto-replied", "x_autoreply": ""},
+            {"id": "gmail-<h2@acme.co.uk>", "from": "jay@acme.co.uk",
+             "subject": "Re: Recruiting ops", "message_id": "<h2@acme.co.uk>",
+             "created_at": "2026-08-10T09:05:00+00:00",
+             "auto_submitted": "", "x_autoreply": ""},
+        ]}
+        with unittest.mock.patch.object(providers, "cap_received", return_value=True), \
+             unittest.mock.patch.object(providers, "list_received_emails", return_value=listing):
+            metrics = {"emails": {}, "replies": []}
+            analytics.sync_replies(sent, metrics)
+        by_id = {r["received_id"]: r for r in metrics["replies"]}
+        self.assertEqual(by_id["gmail-<h1@acme.co.uk>"]["kind"], "auto")
+        self.assertEqual(by_id["gmail-<h1@acme.co.uk>"]["auto_submitted"], "auto-replied")
+        self.assertEqual(by_id["gmail-<h2@acme.co.uk>"]["kind"], "reply")
+        self.assertEqual(by_id["gmail-<h2@acme.co.uk>"]["from"], "jay@acme.co.uk")
+
+    def test_recheck_live_fixture(self):
+        from company.departments.outbound.workflows.email import analytics
+        metrics = self._fixture_metrics()
+        report = analytics.recheck_replies(metrics, dry_run=True)
+        # Dry-run must not mutate the ledger
+        self.assertEqual(len(metrics["replies"]), 9)
+        self.assertEqual(report["records_before"], 9)
+        self.assertEqual(report["records_after"], 5)
+        # AP-7d1096 "Re: Delivery loop cost" reclassifies auto -> reply
+        self.assertTrue(any(
+            item["lead_id"] == "AP-7d1096"
+            and item["subject"] == "Re: Delivery loop cost"
+            and item["old"] == "auto" and item["new"] == "reply"
+            for item in report["reclassified"]), report["reclassified"])
+        # EN-1157's two capture records collapse to one reply
+        en1157 = [item for item in report["collapsed"] if item["lead_id"] == "EN-1157"]
+        self.assertEqual(len(en1157), 1)
+        self.assertEqual(en1157[0]["kept"]["kind"], "reply")
+        self.assertEqual(len(en1157[0]["removed"]), 1)
+
+        # Apply for real and verify the reconciled ledger
+        report = analytics.recheck_replies(metrics, dry_run=False)
+        by_lead = {}
+        for r in metrics["replies"]:
+            by_lead.setdefault(r["lead_id"], []).append(r)
+        self.assertEqual(report["records_after"], 5)
+        self.assertEqual(len(metrics["replies"]), 5)
+        # EN-1152 / EN-1153 stay auto
+        self.assertEqual([r["kind"] for r in by_lead["EN-1152"]], ["auto"])
+        self.assertEqual([r["kind"] for r in by_lead["EN-1153"]], ["auto"])
+        # EN-1157 collapses to exactly one reply
+        self.assertEqual(len(by_lead["EN-1157"]), 1)
+        self.assertEqual(by_lead["EN-1157"][0]["kind"], "reply")
+        # AP-7d1096 keeps one reply record (newest kept, metadata merged)
+        self.assertEqual(len(by_lead["AP-7d1096"]), 1)
+        self.assertEqual(by_lead["AP-7d1096"][0]["kind"], "reply")
+        self.assertEqual(len(by_lead["TEST-loop-001"]), 1)
+
+        # Idempotent: a second pass reports no changes
+        again = analytics.recheck_replies(metrics, dry_run=False)
+        self.assertEqual(again["records_after"], 5)
+        self.assertEqual(again["reclassified"], [])
+        self.assertEqual(again["collapsed"], [])
+
+        # Aggregate: replied=2 (windowed sends — goal metric unchanged), auto=2
+        log = {"sent": [
+            {"lead_id": "EN-1157", "email": "rhys@sigmarecruitment.co.uk"},
+            {"lead_id": "AP-7d1096", "email": "tony@webkatalyst.com"},
+        ]}
+        agg = analytics.aggregate(log, metrics)
+        self.assertEqual(agg["replied"], 2)
+        self.assertEqual(agg["auto"], 2)
+        # Inbox truth: replies received in the 48h window regardless of send
+        agg = analytics.aggregate(
+            log, metrics, now=datetime(2026, 8, 11, 12, 0, tzinfo=timezone.utc))
+        self.assertEqual(agg["replies_received"], 2)
+
+    def test_replies_received_inbox_truth_independent_of_send(self):
+        """A reply received inside the window counts even when its send is
+        older than the window (inbox truth vs window attribution)."""
+        from company.departments.outbound.workflows.email import analytics
+        metrics = {"emails": {}, "replies": [
+            {"lead_id": "EN-2000", "email": "old@acme.co.uk", "variant": "offer-1",
+             "subject": "Re: Old send", "received_at": "2026-08-10T08:00:00+00:00",
+             "kind": "reply", "recorded_at": "2026-08-10T08:00:00+00:00"},
+            {"lead_id": "EN-2001", "email": "auto@acme.co.uk", "variant": "offer-1",
+             "subject": "Automatic reply: Ops", "received_at": "2026-08-10T08:05:00+00:00",
+             "kind": "auto", "recorded_at": "2026-08-10T08:05:00+00:00"},
+            {"lead_id": "EN-2002", "email": "oldtest@acme.co.uk", "variant": "TEST-a",
+             "subject": "Re: Loop", "received_at": "2026-08-10T08:10:00+00:00",
+             "kind": "reply", "recorded_at": "2026-08-10T08:10:00+00:00"},
+        ]}
+        # send log has NO windowed sends for these leads
+        log = {"sent": [
+            {"lead_id": "EN-3000", "email": "unrelated@acme.co.uk",
+             "timestamp": "2026-08-11T10:00:00"},
+        ]}
+        agg = analytics.aggregate(
+            log, metrics, now=datetime(2026, 8, 11, 12, 0, tzinfo=timezone.utc))
+        self.assertEqual(agg["replied"], 0)              # window attribution unchanged
+        self.assertEqual(agg["replies_received"], 1)     # inbox truth: 1 human reply
+        self.assertEqual(agg["auto"], 1)                 # auto not counted as reply
+        self.assertIn("replies_received", agg)
+
+
+class ReplyTombstoneTests(unittest.TestCase):
+    """Bounded repair 2026-08-11 (change-b28800611b, goal-recheck-tombstones-20260811):
+    the recheck persists every received_id it collapses
+    (metrics.collapsed_received_ids) and the live sweep path skips tombstoned
+    ids BEFORE recording. Tombstones survive repeated sweeps and repeated
+    rechecks (idempotent, no unbounded growth); genuinely new messages with
+    fresh ids are still recorded. Classification, window semantics, and the
+    3.3.0/3.3.1 display tolerance are unchanged. Hermetic — no network."""
+
+    # The three received_ids the live recheck collapsed at ~13:28Z on
+    # 2026-08-11 and that the 13:33:36Z sweep re-added (growing the ledger
+    # 5 -> 8). These are the ids the tombstone list must hold.
+    COLLAPSED_IDS = [
+        "gmail-<CA+Y0w+cMpwH53Lar+dNUhSe-Yo832N=JAY8bfTX3ZYv6sWi=fA@mail.gmail.com>",
+        "gmail-<msmuuj62.b570adbe-95d2-46d2-9330-4c2d63d1e7bc@we.are.superhuman.com>",
+        "gmail-<CABmWERz6j4fH1HjJWPwiF74y+m0hremvUUeTL-qMtbjtvTtLZg@mail.gmail.com>",
+    ]
+
+    @staticmethod
+    def _listing(*ids):
+        return {"data": [
+            {"id": eid, "from": "owner@acme-uk.com", "subject": "Re: Agentic ops at Acme UK",
+             "message_id": eid[len("gmail-"):] if eid.startswith("gmail-") else eid,
+             "created_at": "2026-08-11T13:33:36+00:00"}
+            for eid in ids
+        ]}
+
+    @staticmethod
+    def _sent():
+        return {"sent": [{"lead_id": "EN-2000", "email": "owner@acme-uk.com",
+                          "company": "Acme UK", "subject": "Agentic ops at Acme UK",
+                          "variant": "offer-1"}]}
+
+    def test_sync_skips_collapsed_id_reappearing_in_sweep_listing(self):
+        """(a) A fixture where a collapsed received_id reappears in a sweep
+        listing is skipped — the ledger stays collapsed and the tombstone list
+        is untouched (the live path never writes tombstones)."""
+        import json as _json
+        from company.departments.outbound.workflows.email import analytics, providers
+        tmp = Path(tempfile.mkdtemp())
+        config.METRICS_PATH = tmp / "metrics.json"
+        kept = {"received_id": "gmail-<fresh@mail.gmail.com>", "lead_id": "EN-2000",
+                "email": "owner@acme-uk.com", "company": "Acme UK", "variant": "offer-1",
+                "subject": "Re: Agentic ops at Acme UK",
+                "message_id": "<fresh@mail.gmail.com>",
+                "received_at": "2026-08-11T10:00:00+00:00",
+                "recorded_at": "2026-08-11T10:05:00+00:00", "kind": "reply", "note": ""}
+        with open(config.METRICS_PATH, "w") as f:
+            _json.dump({"emails": {}, "replies": [kept],
+                        "collapsed_received_ids": list(self.COLLAPSED_IDS)}, f)
+        # The 13:33:36Z-style sweep listing re-presents ALL three collapsed ids
+        listing = self._listing(*self.COLLAPSED_IDS)
+        with unittest.mock.patch.object(providers, "cap_received", return_value=True), \
+             unittest.mock.patch.object(providers, "list_received_emails", return_value=listing):
+            metrics = analytics.load_metrics()
+            added = analytics.sync_replies(self._sent(), metrics)
+        self.assertEqual(added, 0)
+        self.assertEqual(len(metrics["replies"]), 1)
+        self.assertEqual(metrics["replies"][0]["received_id"], "gmail-<fresh@mail.gmail.com>")
+        # Tombstones untouched on the live path: same ids, same order, no growth
+        self.assertEqual(metrics["collapsed_received_ids"], list(self.COLLAPSED_IDS))
+
+    def test_recheck_twice_identical_ledger_and_tombstones(self):
+        """(b) Running the recheck twice on the live 9-record fixture produces
+        an identical ledger AND an identical tombstone list; the second pass
+        adds no tombstones (no unbounded growth)."""
+        import json as _json
+        from company.departments.outbound.workflows.email import analytics
+        metrics = {"emails": {}, "replies": [dict(r) for r in ReplyTruthReconcileTests.LIVE_REPLIES]}
+        first = analytics.recheck_replies(metrics, dry_run=False)
+        ledger_after_first = _json.dumps(metrics["replies"], sort_keys=True)
+        tombstones_after_first = list(metrics.get("collapsed_received_ids") or [])
+        self.assertEqual(first["records_after"], 5)
+        # Exactly the three collapsed ids — the ones the sweep re-added live
+        self.assertEqual(sorted(tombstones_after_first), sorted(self.COLLAPSED_IDS))
+
+        second = analytics.recheck_replies(metrics, dry_run=False)
+        self.assertEqual(_json.dumps(metrics["replies"], sort_keys=True), ledger_after_first)
+        self.assertEqual(list(metrics.get("collapsed_received_ids") or []), tombstones_after_first)
+        self.assertEqual(second["tombstones_added"], [])
+        self.assertEqual(second["collapsed"], [])
+        self.assertEqual(second["tombstones_before"], 3)
+        self.assertEqual(second["tombstones_total"], 3)
+
+    def test_new_message_with_fresh_id_still_recorded(self):
+        """(c) A genuinely new message with a fresh received_id is still
+        recorded even when the same sweep listing also carries tombstoned
+        ids — tombstones suppress only the collapsed messages."""
+        import json as _json
+        from company.departments.outbound.workflows.email import analytics, providers
+        tmp = Path(tempfile.mkdtemp())
+        config.METRICS_PATH = tmp / "metrics.json"
+        with open(config.METRICS_PATH, "w") as f:
+            _json.dump({"emails": {}, "replies": [],
+                        "collapsed_received_ids": list(self.COLLAPSED_IDS)}, f)
+        fresh = "gmail-<brand-new@mail.gmail.com>"
+        listing = self._listing(*self.COLLAPSED_IDS, fresh)
+        with unittest.mock.patch.object(providers, "cap_received", return_value=True), \
+             unittest.mock.patch.object(providers, "list_received_emails", return_value=listing):
+            metrics = analytics.load_metrics()
+            added = analytics.sync_replies(self._sent(), metrics)
+        self.assertEqual(added, 1)
+        self.assertEqual([r["received_id"] for r in metrics["replies"]], [fresh])
+        self.assertEqual(metrics["collapsed_received_ids"], list(self.COLLAPSED_IDS))
+
+
+class ReplyDisplayToleranceTests(unittest.TestCase):
+    """Bounded repair 2026-08-11 (change-d1459e3624, goal-replies-display-20260811):
+    the `replies` listing must render ANY stored record shape (merged records
+    may lack recorded_at/email) and the recheck merge must preserve identity
+    fields (email, contact_name, company) across collapsed records. Display/
+    merge robustness only — classification and window semantics unchanged."""
+
+    def test_replies_renders_merged_record_missing_recorded_at_and_email(self):
+        """A merged record with recorded_at=null and email=null (the live
+        AP-7d1096 shape) renders without crashing and prints the fallbacks:
+        received_at for the timestamp, sent-log lead email for the address."""
+        import contextlib
+        import io
+        from company.departments.outbound.workflows.email import analytics, cli, outbound
+        tmp = Path(tempfile.mkdtemp())
+        config.METRICS_PATH = tmp / "metrics.json"
+        config.SENT_LOG_PATH = tmp / "sent.json"
+        merged = {"received_id": None, "lead_id": "AP-7d1096", "email": None,
+                  "company": "Web Katalyst", "variant": "researched-personal",
+                  "subject": "Re: Web Katalyst client-delivery flow",
+                  "received_at": "2026-08-11T00:00:00+00:00", "recorded_at": None,
+                  "kind": "reply", "note": ""}
+        with open(config.METRICS_PATH, "w") as f:
+            json.dump({"emails": {}, "replies": [merged]}, f)
+        outbound.save_sent_log({"sent": [
+            {"lead_id": "AP-7d1096", "email": "tony@webkatalyst.com",
+             "contact_name": "Tony Turquet", "company": "Web Katalyst"},
+        ]})
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            cli.replies()  # must not raise KeyError
+        out = buf.getvalue()
+        self.assertIn("REPLIES (1)", out)
+        # recorded_at missing -> received_at fallback rendered
+        self.assertIn("2026-08-11T00:00", out)
+        # email missing -> lead email from the sent log rendered
+        self.assertIn("tony@webkatalyst.com", out)
+
+    def test_replies_renders_record_with_only_lead_id_no_timestamps(self):
+        """Even a record with no timestamps and no sent-log match renders
+        (lead_id and '?' fallbacks) instead of crashing."""
+        import contextlib
+        import io
+        from company.departments.outbound.workflows.email import analytics, cli, outbound
+        tmp = Path(tempfile.mkdtemp())
+        config.METRICS_PATH = tmp / "metrics.json"
+        config.SENT_LOG_PATH = tmp / "sent.json"
+        bare = {"lead_id": "AP-0000", "kind": "reply"}
+        with open(config.METRICS_PATH, "w") as f:
+            json.dump({"emails": {}, "replies": [bare]}, f)
+        outbound.save_sent_log({"sent": []})
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            cli.replies()
+        out = buf.getvalue()
+        self.assertIn("AP-0000", out)
+        self.assertIn("?", out)
+
+    def test_recheck_merge_backfills_identity_from_oldest_in_group(self):
+        """Collapsing a per-lead group keeps the newest record and backfills
+        identity fields (email, contact_name) it lacks from the other record;
+        fields the newest DOES carry win (newest-wins rule)."""
+        from company.departments.outbound.workflows.email import analytics
+        oldest = {"received_id": "gmail-<o1@example.com>", "lead_id": "AP-9x",
+                  "email": "old@example.com", "contact_name": "Old Name",
+                  "company": "OldCo", "variant": "researched-personal",
+                  "subject": "Re: Old capture", "message_id": "<o1@example.com>",
+                  "received_at": "2026-08-10T00:00:00+00:00",
+                  "recorded_at": "2026-08-10T01:00:00+00:00", "kind": "reply",
+                  "note": ""}
+        newest = {"received_id": "gmail-<n1@example.com>", "lead_id": "AP-9x",
+                  "email": None, "company": "NewCo", "variant": "researched-personal",
+                  "subject": "Re: Web Katalyst client-delivery flow",
+                  "message_id": "<n1@example.com>",
+                  "received_at": "2026-08-11T00:00:00+00:00", "recorded_at": None,
+                  "kind": "reply", "note": ""}
+        metrics = {"emails": {}, "replies": [dict(oldest), dict(newest)]}
+        report = analytics.recheck_replies(metrics, dry_run=False)
+        self.assertEqual(report["records_after"], 1)
+        self.assertEqual(len(metrics["replies"]), 1)
+        kept = metrics["replies"][0]
+        # Newest record is kept (received_at 2026-08-11 beats 2026-08-10)
+        self.assertEqual(kept["subject"], "Re: Web Katalyst client-delivery flow")
+        self.assertEqual(kept["received_id"], "gmail-<n1@example.com>")
+        # Identity the newest lacks is backfilled from the group (oldest)
+        self.assertEqual(kept["email"], "old@example.com")
+        self.assertEqual(kept["contact_name"], "Old Name")
+        # Identity the newest carries wins (newest-wins rule)
+        self.assertEqual(kept["company"], "NewCo")

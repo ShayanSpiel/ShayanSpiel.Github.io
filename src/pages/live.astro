@@ -4,6 +4,7 @@ import { SITE } from "../config";
 import { type Locale, t } from "../i18n/translations";
 import { localizePath } from "../i18n";
 import SectionHeader from "../components/sections/SectionHeader.astro";
+import SpielOSLogo from "../components/SpielOSLogo.astro";
 import LiveStats, { type LiveTotals } from "../components/live/LiveStats.astro";
 import LiveTimeline, { type LiveGoal } from "../components/live/LiveTimeline.astro";
 import snapshot from "../data/live-goals.json";
@@ -14,16 +15,77 @@ export interface Props {
 
 const { locale = "en" } = Astro.props;
 
+interface CurrentRun {
+  run_id: string;
+  goal_id: string;
+  goal_name: string;
+  owner_id: string;
+  stage?: string | null;
+  run_status?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+interface Heartbeat {
+  goal_id: string;
+  goal_name: string;
+  metric: string;
+  operator: string;
+  target: number | boolean | string;
+  stage?: string | null;
+  run_status?: string | null;
+  updated_at: string;
+}
+
+interface RuntimeState {
+  state: "running" | "resting";
+  current_run: CurrentRun | null;
+  heartbeat: Heartbeat | null;
+  last_activity_at: string | null;
+  last_sync_at: string;
+}
+
 const data = snapshot as unknown as {
   totals: LiveTotals;
   goals: LiveGoal[];
+  runtime_state?: RuntimeState;
 };
 const totals = data.totals;
 const goals = data.goals;
 
+const runtimeState: RuntimeState = data.runtime_state ?? {
+  state: "resting",
+  current_run: null,
+  heartbeat: null,
+  last_activity_at: null,
+  last_sync_at: "",
+};
+const liveState = runtimeState.state;
+const currentRun = runtimeState.current_run;
+const heartbeat: Heartbeat | null = runtimeState.heartbeat ?? null;
+
+// Readable heartbeat target: i18n metric label, operator symbol (ge/le/eq ->
+// > / < / =) and percentage targets scaled x100 with a % sign (e.g.
+// "Reply Rate > 30%").
+const METRIC_LABELS: Record<string, string> = {
+  reply_rate: t(locale, "live.metric.replyRate"),
+};
+
+function heartbeatText(hb: Heartbeat): string {
+  const metric = METRIC_LABELS[hb.metric] ?? hb.metric;
+  const operator =
+    hb.operator === "ge" ? ">" : hb.operator === "le" ? "<" : hb.operator === "eq" ? "=" : hb.operator;
+  const target =
+    typeof hb.target === "number" && hb.metric === "reply_rate"
+      ? `${Math.round(hb.target * 100)}%`
+      : String(hb.target);
+  return t(locale, "live.entry.metric", { metric, operator, target });
+}
+
+// Newest-first ordering (created_at DESC) — the same order the timeline renders.
 const recentGoals = [...goals]
-  .sort((a, b) => b.updated_at.localeCompare(a.updated_at))
-  .slice(0, 10);
+  .sort((a, b) => b.created_at.localeCompare(a.created_at))
+  .slice(0, 15);
 
 const itemListJsonLd = {
   "@context": "https://schema.org",
@@ -37,6 +99,46 @@ const itemListJsonLd = {
     position: index + 1,
     name: goal.name,
   })),
+};
+
+// Relative-time helper mirroring LiveTimeline's (kept local to the page for
+// the hero's last-activity line; the poll script re-computes it client-side).
+const now = Date.now();
+const faDigits = "۰۱۲۳۴۵۶۷۸۹";
+const num = (n: number): string =>
+  locale === "fa" ? String(n).replace(/\d/g, (d) => faDigits[Number(d)]) : String(n);
+
+function relTime(iso: string): string {
+  const diff = Math.max(0, now - new Date(iso).getTime());
+  const minutes = Math.floor(diff / 60000);
+  if (minutes < 1) return t(locale, "live.time.justNow");
+  if (minutes < 60) return t(locale, minutes === 1 ? "live.time.minuteAgo" : "live.time.minutesAgo", { n: num(minutes) });
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return t(locale, hours === 1 ? "live.time.hourAgo" : "live.time.hoursAgo", { n: num(hours) });
+  const days = Math.floor(hours / 24);
+  return t(locale, days === 1 ? "live.time.dayAgo" : "live.time.daysAgo", { n: num(days) });
+}
+
+const lastActivityText = runtimeState.last_activity_at
+  ? t(locale, "live.state.lastActivity", { time: relTime(runtimeState.last_activity_at) })
+  : "";
+
+// Client-side strings for the /live-state.json poller (no framework).
+const liveI18n = {
+  justNow: t(locale, "live.time.justNow"),
+  minuteAgo: t(locale, "live.time.minuteAgo"),
+  minutesAgo: t(locale, "live.time.minutesAgo"),
+  hourAgo: t(locale, "live.time.hourAgo"),
+  hoursAgo: t(locale, "live.time.hoursAgo"),
+  dayAgo: t(locale, "live.time.dayAgo"),
+  daysAgo: t(locale, "live.time.daysAgo"),
+  running: t(locale, "live.state.running"),
+  resting: t(locale, "live.state.resting"),
+  currentRun: t(locale, "live.state.currentRun"),
+  lastActivity: t(locale, "live.state.lastActivity"),
+  heartbeatResting: t(locale, "live.heartbeat.resting"),
+  metricLabels: METRIC_LABELS,
+  metricFormat: t(locale, "live.entry.metric"),
 };
 
 const vocab = [
@@ -68,13 +170,30 @@ const howTo = [
   locale={locale}
 >
   <!-- Hero: the live operations log -->
-  <section id="live-hero" class="relative overflow-hidden py-24 sm:py-32">
+  <section id="live-hero" class="relative overflow-hidden py-20 sm:py-24">
     <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(var(--foreground) 1px, transparent 1px); background-size: 24px 24px;"></div>
     <div class="relative mx-auto max-w-6xl px-6">
       <div class="mx-auto max-w-4xl text-center" data-aos="fade-up">
         <span class="text-2xs font-semibold uppercase tracking-widest text-primary">{t(locale, "live.hero.badge")}</span>
-        <h1 class="mt-3 text-4xl font-bold tracking-tight text-foreground-strong sm:text-5xl" set:html={t(locale, "live.hero.title")}></h1>
+        <h1 class="mt-3 flex items-center justify-center gap-3 text-4xl font-bold tracking-tight text-foreground-strong sm:text-5xl">
+          <SpielOSLogo size="md" textClass="text-4xl font-bold tracking-tight text-foreground-strong sm:text-5xl" />
+          <span set:html={t(locale, "live.hero.title")}></span>
+        </h1>
         <p class="mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">{t(locale, "live.hero.desc")}</p>
+
+        <!-- Live Running/Resting status -->
+        <div class="mt-6 flex flex-wrap items-center justify-center gap-x-4 gap-y-2" data-aos="fade-up" data-aos-delay="50">
+          <span id="live-state-chip" class="inline-flex items-center gap-1.5 rounded-sm border border-border bg-panel px-3 py-1.5 text-xs font-medium" data-live-state={liveState}>
+            <i id="live-state-icon" class:list={["bx", liveState === "running" ? "bx-run text-primary animate-pulse motion-reduce:animate-none" : "bx-time-five text-muted-foreground", "icon-base"]} aria-hidden="true"></i>
+            <span id="live-state-label" data-live-state-label>{t(locale, liveState === "running" ? "live.state.running" : "live.state.resting")}</span>
+          </span>
+          <span id="live-current-run" class:list={["inline-block max-w-[24rem] truncate text-xs text-muted-foreground", !(liveState === "running" && currentRun) && "hidden"]}>
+            {t(locale, "live.state.currentRun", { name: currentRun?.goal_name ?? "" })}
+          </span>
+          <span id="live-last-activity" class:list={["text-xs text-muted-foreground", !runtimeState.last_activity_at && "hidden"]}>
+            {lastActivityText}
+          </span>
+        </div>
       </div>
 
       <!-- Plain-language vocabulary -->
@@ -109,8 +228,41 @@ const howTo = [
     </div>
   </section>
 
+  <!-- Heartbeat: the business goal currently in flight -->
+  <section id="live-heartbeat" class="relative py-16 sm:py-20">
+    <div class="mx-auto max-w-6xl px-6">
+      <div
+        id="live-heartbeat-card"
+        class="rounded-md border border-border bg-panel p-5 sm:p-6"
+        data-aos="fade-up"
+        data-heartbeat-state={heartbeat ? "running" : "resting"}
+      >
+        <div class="flex flex-wrap items-center gap-x-5 gap-y-4">
+          <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-primary-soft">
+            <i class="bx bx-bullseye text-primary icon-xl" aria-hidden="true"></i>
+          </div>
+          <div class="min-w-0 flex-1">
+            <p class="text-2xs font-semibold uppercase tracking-widest text-primary">{t(locale, "live.heartbeat.label")}</p>
+            <h2 class="mt-1 text-sm font-semibold leading-snug text-foreground-strong" data-heartbeat-goal={heartbeat?.goal_name ?? ""}>{heartbeat?.goal_name ?? ""}</h2>
+            <p class="mt-1 font-mono text-xs text-muted-foreground" data-heartbeat-metric={heartbeat ? heartbeatText(heartbeat) : ""}>{heartbeat ? heartbeatText(heartbeat) : ""}</p>
+            <p id="live-heartbeat-resting" class:list={["mt-1 text-xs leading-relaxed text-muted-foreground", heartbeat && "hidden"]}>
+              {t(locale, "live.heartbeat.resting")}
+            </p>
+          </div>
+          <div
+            id="live-heartbeat-chip"
+            class:list={["inline-flex items-center gap-1.5 rounded-sm border border-border bg-panel px-3 py-1.5 text-xs font-medium", !heartbeat && "hidden"]}
+          >
+            <i class="bx bx-run text-primary animate-pulse motion-reduce:animate-none icon-base" aria-hidden="true"></i>
+            <span data-heartbeat-stage={heartbeat?.stage ?? ""}>{heartbeat?.stage ?? ""}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Stats strip -->
-  <section id="live-stats" class="relative py-24 sm:py-32">
+  <section id="live-stats" class="relative py-16 sm:py-20">
     <div class="mx-auto max-w-6xl px-6">
       <SectionHeader
         label={t(locale, "live.stats.label")}
@@ -121,7 +273,7 @@ const howTo = [
   </section>
 
   <!-- Timeline -->
-  <section id="live-timeline" class="relative py-24 sm:py-32">
+  <section id="live-timeline" class="relative py-16 sm:py-20">
     <div class="mx-auto max-w-4xl px-6">
       <SectionHeader
         label={t(locale, "live.filters.label")}
@@ -133,7 +285,7 @@ const howTo = [
   </section>
 
   <!-- How to read this log -->
-  <section id="live-howto" class="relative overflow-hidden py-24 sm:py-32">
+  <section id="live-howto" class="relative overflow-hidden py-16 sm:py-20">
     <div class="absolute inset-0 bg-panel-deep/50"></div>
     <div class="relative mx-auto max-w-6xl px-6">
       <SectionHeader
@@ -156,7 +308,7 @@ const howTo = [
   </section>
 
   <!-- CTA -->
-  <section id="live-cta" class="relative py-24 sm:py-32">
+  <section id="live-cta" class="relative py-16 sm:py-20">
     <div class="mx-auto max-w-3xl px-6 text-center" data-aos="fade-up">
       <h2 class="text-3xl font-bold tracking-tight text-foreground-strong sm:text-4xl">{t(locale, "live.cta.title")}</h2>
       <p class="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground">{t(locale, "live.cta.desc")}</p>
@@ -170,4 +322,122 @@ const howTo = [
   </section>
 
   <script is:inline type="application/ld+json" set:html={JSON.stringify(itemListJsonLd)} />
+
+  <!-- Client-side strings for the /live-state.json poller -->
+  <script is:inline type="application/json" id="live-state-i18n" set:html={JSON.stringify(liveI18n)}></script>
+
+  <!-- Live state polling: fetch /live-state.json every 30s, update the chip,
+       last-activity line and stat numbers in place. Silent on any error. -->
+  <script is:inline>
+    (function () {
+      var root = document.documentElement;
+      var isFa = root.lang === "fa";
+      var FA_DIGITS = "۰۱۲۳۴۵۶۷۸۹";
+      var chip = document.getElementById("live-state-chip");
+      var iconEl = document.getElementById("live-state-icon");
+      var labelEl = document.getElementById("live-state-label");
+      var runEl = document.getElementById("live-current-run");
+      var activityEl = document.getElementById("live-last-activity");
+      var hbCard = document.getElementById("live-heartbeat-card");
+      var hbGoalEl = hbCard ? hbCard.querySelector("[data-heartbeat-goal]") : null;
+      var hbMetricEl = hbCard ? hbCard.querySelector("[data-heartbeat-metric]") : null;
+      var hbStageEl = hbCard ? hbCard.querySelector("[data-heartbeat-stage]") : null;
+      var hbRestingEl = document.getElementById("live-heartbeat-resting");
+      var hbChip = document.getElementById("live-heartbeat-chip");
+      var i18nEl = document.getElementById("live-state-i18n");
+      if (!chip || !i18nEl) return;
+      var I18N = {};
+      try {
+        I18N = JSON.parse(i18nEl.textContent || "{}") || {};
+      } catch (e) {
+        /* keep empty defaults */
+      }
+
+      function num(n) {
+        var s = String(n);
+        return isFa ? s.replace(/\d/g, function (d) { return FA_DIGITS[Number(d)]; }) : s;
+      }
+
+      function relTime(iso) {
+        var diff = Math.max(0, Date.now() - new Date(iso).getTime());
+        var minutes = Math.floor(diff / 60000);
+        if (minutes < 1) return I18N.justNow || "";
+        if (minutes < 60) return (minutes === 1 ? I18N.minuteAgo : I18N.minutesAgo || "").replace("{n}", num(minutes));
+        var hours = Math.floor(minutes / 60);
+        if (hours < 24) return (hours === 1 ? I18N.hourAgo : I18N.hoursAgo || "").replace("{n}", num(hours));
+        var days = Math.floor(hours / 24);
+        return (days === 1 ? I18N.dayAgo : I18N.daysAgo || "").replace("{n}", num(days));
+      }
+
+      function heartbeatTarget(hb) {
+        var labels = I18N.metricLabels || {};
+        var metric = labels[hb.metric] || hb.metric;
+        var op = hb.operator === "ge" ? ">" : hb.operator === "le" ? "<" : hb.operator === "eq" ? "=" : hb.operator;
+        var target = hb.target;
+        if (typeof target === "number" && hb.metric === "reply_rate") target = Math.round(target * 100) + "%";
+        return (I18N.metricFormat || "{metric} {operator} {target}")
+          .replace("{metric}", metric)
+          .replace("{operator}", op)
+          .replace("{target}", target);
+      }
+
+      function applyHeartbeat(hb) {
+        if (!hbCard) return;
+        if (hb && hb.goal_name) {
+          hbCard.setAttribute("data-heartbeat-state", "running");
+          if (hbGoalEl) hbGoalEl.textContent = hb.goal_name;
+          if (hbMetricEl) hbMetricEl.textContent = heartbeatTarget(hb);
+          if (hbStageEl) hbStageEl.textContent = hb.stage || "";
+          if (hbRestingEl) hbRestingEl.classList.add("hidden");
+          if (hbChip) hbChip.classList.remove("hidden");
+        } else {
+          hbCard.setAttribute("data-heartbeat-state", "resting");
+          if (hbGoalEl) hbGoalEl.textContent = "";
+          if (hbMetricEl) hbMetricEl.textContent = "";
+          if (hbStageEl) hbStageEl.textContent = "";
+          if (hbRestingEl) hbRestingEl.classList.remove("hidden");
+          if (hbChip) hbChip.classList.add("hidden");
+        }
+      }
+
+      function applyState(data) {
+        var running = data.state === "running";
+        chip.setAttribute("data-live-state", data.state);
+        labelEl.textContent = running ? I18N.running : I18N.resting;
+        iconEl.className = "bx " + (running ? "bx-run text-primary animate-pulse motion-reduce:animate-none" : "bx-time-five text-muted-foreground") + " icon-base";
+        if (runEl) {
+          if (running && data.current_run && data.current_run.goal_name) {
+            runEl.textContent = (I18N.currentRun || "{name}").replace("{name}", data.current_run.goal_name);
+            runEl.classList.remove("hidden");
+          } else {
+            runEl.classList.add("hidden");
+          }
+        }
+        applyHeartbeat(data.heartbeat || null);
+        if (activityEl && data.last_activity_at) {
+          activityEl.textContent = (I18N.lastActivity || "{time}").replace("{time}", relTime(data.last_activity_at));
+        }
+        if (data.totals) {
+          var statKeys = ["goals_total", "goals_active", "goals_achieved", "goals_abandoned", "runs", "evidence", "decisions", "approvals", "hypotheses", "memory_claims"];
+          for (var i = 0; i < statKeys.length; i++) {
+            var statEl = document.querySelector("[data-stat-" + statKeys[i].replace(/_/g, "-") + "]");
+            if (statEl && typeof data.totals[statKeys[i]] === "number") statEl.textContent = num(data.totals[statKeys[i]]);
+          }
+        }
+      }
+
+      function poll() {
+        fetch("/live-state.json?t=" + Date.now(), { cache: "no-store" })
+          .then(function (res) { if (!res.ok) throw new Error("poll failed"); return res.json(); })
+          .then(applyState)
+          .catch(function () {
+            /* keep the previous state silently */
+          });
+      }
+
+      // First fetch immediately after load, then every 30s.
+      poll();
+      window.setInterval(poll, 30000);
+    })();
+  </script>
 </Page>

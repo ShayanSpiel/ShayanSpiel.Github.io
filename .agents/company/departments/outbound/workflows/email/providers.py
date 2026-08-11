@@ -848,10 +848,34 @@ def gmail_imap_status() -> dict:
             pass
 
 
+def _gmail_message_record(msg, num: bytes) -> dict:
+    """Convert one parsed IMAP message into the received-listing shape.
+
+    The Auto-Submitted / X-Autoreply headers are classification inputs the
+    reply classifier needs (owner evidence 2026-08-11) — Gmail's subject-only
+    listing could not distinguish a human reply from an autoresponder.
+    """
+    msg_id = str(msg.get("Message-ID") or "").strip() or f"gmail-{num.decode()}"
+    sender = parseaddr(str(msg.get("From") or ""))[1].strip().lower()
+    return {
+        "id": f"gmail-{msg_id}",
+        "from": sender or str(msg.get("From") or ""),
+        "subject": _decode_mime_header(str(msg.get("Subject") or "")),
+        "message_id": msg_id,
+        "created_at": _parse_email_date(str(msg.get("Date") or "")),
+        "text": _gmail_body_text(msg),
+        "to": str(msg.get("To") or ""),
+        "in_reply_to": str(msg.get("In-Reply-To") or ""),
+        "auto_submitted": str(msg.get("Auto-Submitted") or ""),
+        "x_autoreply": str(msg.get("X-Autoreply") or ""),
+    }
+
+
 def _list_gmail_imap() -> dict:
     """Poll the founder Gmail inbox for replies. Data shape matches the
     Resend receiving API: {"data": [{"id", "from", "subject", "message_id",
-    "created_at", "text", "to", "in_reply_to"}]}."""
+    "created_at", "text", "to", "in_reply_to", "auto_submitted",
+    "x_autoreply"}]}."""
     user = _cfg_module.GMAIL_IMAP_USER
     if not user or not _cfg_module.GMAIL_IMAP_APP_PASSWORD:
         return {"error": True, "status": 0, "message": "GMAIL_IMAP credentials not configured"}
@@ -877,19 +901,7 @@ def _list_gmail_imap() -> dict:
                 msg = email.message_from_bytes(raw)
             except Exception:
                 continue
-            msg_id = str(msg.get("Message-ID") or "").strip() or f"gmail-{num.decode()}"
-            sender = parseaddr(str(msg.get("From") or ""))[1].strip().lower()
-            subject = _decode_mime_header(str(msg.get("Subject") or ""))
-            items.append({
-                "id": f"gmail-{msg_id}",
-                "from": sender or str(msg.get("From") or ""),
-                "subject": subject,
-                "message_id": msg_id,
-                "created_at": _parse_email_date(str(msg.get("Date") or "")),
-                "text": _gmail_body_text(msg),
-                "to": str(msg.get("To") or ""),
-                "in_reply_to": str(msg.get("In-Reply-To") or ""),
-            })
+            items.append(_gmail_message_record(msg, num))
         return {"data": items, "provider": "gmail_imap"}
     except Exception as exc:
         return {"error": True, "status": 0, "message": f"Gmail IMAP sweep failed: {exc}"}

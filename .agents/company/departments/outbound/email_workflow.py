@@ -470,7 +470,9 @@ def _observe_test_provider(ctx, action_result):
         subject = str(received.get("subject") or "")
         if sender not in recipients or (token and token not in subject.casefold()):
             continue
-        auto = analytics._is_auto_reply(subject)
+        auto = (analytics.classify_reply_kind(
+            subject, received.get("auto_submitted"), received.get("x_autoreply"))
+            == "auto")
         observed.append({"kind": "email_auto_reply" if auto else "reply",
                          "source": capture, "validity": "technical_only",
                          "payload": {"recipient": sender, "received_id": received_id,

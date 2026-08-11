@@ -26,16 +26,16 @@ const num = (n: number): string =>
   locale === "fa" ? String(n).replace(/\d/g, (d) => faDigits[Number(d)]) : String(n);
 
 const stats = [
-  { value: totals.goals_total, labelKey: "live.stats.goalsTotal", icon: "bx-bullseye", color: "primary" },
-  { value: totals.goals_active, labelKey: "live.stats.active", icon: "bx-time-five", color: "warning" },
-  { value: totals.goals_achieved, labelKey: "live.stats.achieved", icon: "bx-check-square", color: "success" },
-  { value: totals.goals_abandoned, labelKey: "live.stats.abandoned", icon: "bx-error", color: "destructive" },
-  { value: totals.runs, labelKey: "live.stats.runs", icon: "bx-run", color: "accent" },
-  { value: totals.evidence, labelKey: "live.stats.evidence", icon: "bx-file", color: "purple" },
-  { value: totals.decisions, labelKey: "live.stats.decisions", icon: "bx-task", color: "accent" },
-  { value: totals.approvals, labelKey: "live.stats.approvals", icon: "bx-check-shield", color: "success" },
-  { value: totals.hypotheses, labelKey: "live.stats.hypotheses", icon: "bx-bulb", color: "warning" },
-  { value: totals.memory_claims, labelKey: "live.stats.memoryClaims", icon: "bx-brain", color: "purple" },
+  { value: totals.goals_total, labelKey: "live.stats.goalsTotal", icon: "bx-bullseye", color: "primary", stat: "goals-total" },
+  { value: totals.goals_active, labelKey: "live.stats.active", icon: "bx-time-five", color: "warning", stat: "goals-active" },
+  { value: totals.goals_achieved, labelKey: "live.stats.achieved", icon: "bx-check-square", color: "success", stat: "goals-achieved" },
+  { value: totals.goals_abandoned, labelKey: "live.stats.abandoned", icon: "bx-error", color: "destructive", stat: "goals-abandoned" },
+  { value: totals.runs, labelKey: "live.stats.runs", icon: "bx-run", color: "accent", stat: "runs" },
+  { value: totals.evidence, labelKey: "live.stats.evidence", icon: "bx-file", color: "purple", stat: "evidence" },
+  { value: totals.decisions, labelKey: "live.stats.decisions", icon: "bx-task", color: "accent", stat: "decisions" },
+  { value: totals.approvals, labelKey: "live.stats.approvals", icon: "bx-check-shield", color: "success", stat: "approvals" },
+  { value: totals.hypotheses, labelKey: "live.stats.hypotheses", icon: "bx-bulb", color: "warning", stat: "hypotheses" },
+  { value: totals.memory_claims, labelKey: "live.stats.memoryClaims", icon: "bx-brain", color: "purple", stat: "memory-claims" },
 ];
 ---
 
@@ -49,7 +49,7 @@ const stats = [
       <div class:list={["mb-3 flex h-9 w-9 items-center justify-center rounded-md bg-" + s.color + "-soft"]}>
         <i class:list={["bx", s.icon, "text-" + s.color, "icon-xl"]} aria-hidden="true"></i>
       </div>
-      <div class="text-2xl font-bold text-foreground-strong">{num(s.value)}</div>
+      <div class="text-2xl font-bold text-foreground-strong" {...{ ["data-stat-" + s.stat]: "true" }}>{num(s.value)}</div>
       <p class="mt-0.5 text-xs text-muted-foreground">{t(locale, s.labelKey)}</p>
     </div>
   ))}

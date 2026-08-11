@@ -7,6 +7,7 @@ import os
 import signal
 import subprocess
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 
@@ -57,8 +58,19 @@ class RunnerService:
         metadata = self._metadata()
         pid = metadata.get("pid")
         running = bool(pid and _alive(pid))
+        started_at = None
+        if running:
+            # The pid file is rewritten on every runner start, so its mtime is
+            # the launch time of the currently-alive local background process.
+            # No new state file is introduced.
+            try:
+                started_at = datetime.fromtimestamp(self.pid_path.stat().st_mtime,
+                                                    tz=timezone.utc).isoformat()
+            except OSError:
+                started_at = None
         return {"enabled": automation_enabled(self.state_dir),
                 "running": running, "pid": pid if running else None,
+                "started_at": started_at,
                 "pid_path": str(self.pid_path), "log_path": str(self.log_path),
                 "db_path": metadata.get("db_path", str(self.db_path))}
 

@@ -21,15 +21,46 @@ export interface Props {
 
 const { locale = "en", goals } = Astro.props;
 
-const now = Date.now();
+// The timeline is a finite log split into two clearly labeled sections:
+// business goals (owned by director/email/outbound) and self-improvement
+// sessions (everyone else). Each section renders its newest entries inline
+// (created_at DESC) and keeps the rest in the DOM hidden behind its own
+// centered Show more button. A section renders only when it has entries.
 const BUSINESS_OWNERS = new Set(["director", "email", "outbound"]);
+const BUSINESS_INLINE = 10;
+const IMPROVEMENT_INLINE = 5;
+
+const typeOf = (owner: string): "business" | "improvement" =>
+  BUSINESS_OWNERS.has(owner) ? "business" : "improvement";
+
+const ordered = [...goals].sort((a, b) => b.created_at.localeCompare(a.created_at));
+
+const sections = [
+  {
+    type: "business" as const,
+    entries: ordered.filter((g) => typeOf(g.owner_id) === "business"),
+    inlineCount: BUSINESS_INLINE,
+    titleKey: "live.sections.business.title",
+    subtitleKey: "live.sections.business.subtitle",
+    countKey: "live.sections.business.count",
+    showMoreId: "live-show-more-business",
+  },
+  {
+    type: "improvement" as const,
+    entries: ordered.filter((g) => typeOf(g.owner_id) === "improvement"),
+    inlineCount: IMPROVEMENT_INLINE,
+    titleKey: "live.sections.improvement.title",
+    subtitleKey: "live.sections.improvement.subtitle",
+    countKey: "live.sections.improvement.count",
+    showMoreId: "live-show-more-improvement",
+  },
+].filter((section) => section.entries.length > 0);
+
+const now = Date.now();
 
 const faDigits = "۰۱۲۳۴۵۶۷۸۹";
 const num = (n: number): string =>
   locale === "fa" ? String(n).replace(/\d/g, (d) => faDigits[Number(d)]) : String(n);
-
-const typeOf = (owner: string): "business" | "improvement" =>
-  BUSINESS_OWNERS.has(owner) ? "business" : "improvement";
 
 const typeTile: Record<string, string> = {
   business: "bg-primary-soft",
@@ -84,20 +115,12 @@ function metricText(goal: LiveGoal): string | null {
 }
 
 const counts = {
-  typeAll: goals.length,
-  typeBusiness: goals.filter((g) => typeOf(g.owner_id) === "business").length,
-  typeImprovement: goals.filter((g) => typeOf(g.owner_id) === "improvement").length,
-  statusAll: goals.length,
-  statusActive: goals.filter((g) => g.goal_status === "active").length,
-  statusAchieved: goals.filter((g) => g.goal_status === "achieved").length,
-  statusAbandoned: goals.filter((g) => g.goal_status === "abandoned").length,
+  statusAll: ordered.length,
+  statusActive: ordered.filter((g) => g.goal_status === "active").length,
+  statusAchieved: ordered.filter((g) => g.goal_status === "achieved").length,
+  statusAbandoned: ordered.filter((g) => g.goal_status === "abandoned").length,
 };
 
-const typePills = [
-  { value: "all", labelKey: "live.filters.type.all", count: counts.typeAll },
-  { value: "business", labelKey: "live.filters.type.business", count: counts.typeBusiness },
-  { value: "improvement", labelKey: "live.filters.type.improvement", count: counts.typeImprovement },
-];
 const statusPills = [
   { value: "all", labelKey: "live.filters.status.all", count: counts.statusAll },
   { value: "active", labelKey: "live.filters.status.active", count: counts.statusActive },
@@ -107,108 +130,106 @@ const statusPills = [
 ---
 
 <div id="live-timeline-root">
-  <!-- Filters -->
-  <div class="mb-10 flex flex-col gap-4" data-aos="fade-up">
-    <div class="flex flex-wrap items-center gap-2">
-      <span class="me-3 text-2xs font-semibold uppercase tracking-widest text-muted-foreground">{t(locale, "live.filters.type")}</span>
-      {typePills.map((pill, i) => (
-        <button
-          type="button"
-          class:list={["filter-pill", i === 0 ? "filter-active" : "filter-inactive"]}
-          data-filter-type={pill.value}
-          aria-pressed={i === 0 ? "true" : "false"}
-        >
-          {t(locale, pill.labelKey)} <span class="opacity-80">({num(pill.count)})</span>
-        </button>
-      ))}
-    </div>
-    <div class="flex flex-wrap items-center gap-2">
-      <span class="me-3 text-2xs font-semibold uppercase tracking-widest text-muted-foreground">{t(locale, "live.filters.status")}</span>
-      {statusPills.map((pill, i) => (
-        <button
-          type="button"
-          class:list={["filter-pill", i === 0 ? "filter-active" : "filter-inactive"]}
-          data-filter-status={pill.value}
-          aria-pressed={i === 0 ? "true" : "false"}
-        >
-          {t(locale, pill.labelKey)} <span class="opacity-80">({num(pill.count)})</span>
-        </button>
-      ))}
-    </div>
+  <!-- Filters: one row, status group only (the sections separate the types) -->
+  <div id="live-filters" class="mb-8 flex flex-wrap items-center gap-2" data-aos="fade-up">
+    <span class="me-3 text-2xs font-semibold uppercase tracking-widest text-muted-foreground">{t(locale, "live.filters.status")}</span>
+    {statusPills.map((pill, i) => (
+      <button
+        type="button"
+        class:list={["filter-chip", i === 0 ? "filter-active" : "filter-inactive"]}
+        data-filter-status={pill.value}
+        aria-pressed={i === 0 ? "true" : "false"}
+      >
+        {t(locale, pill.labelKey)} <span class="opacity-80">({num(pill.count)})</span>
+      </button>
+    ))}
   </div>
 
-  <!-- Timeline -->
-  <ol class="live-timeline" data-aos="fade-up">
-    {goals.map((goal) => {
-      const type = typeOf(goal.owner_id);
-      const status = goal.goal_status;
-      const node = nodeIcon[status] ?? nodeIcon.active;
-      const metric = metricText(goal);
-      return (
-        <li
-          class="live-entry relative border-s-2 border-border ps-6 pb-8 last:pb-0"
-          data-goal-id={goal.id}
-          data-type={type}
-          data-status={status}
-        >
-          <span class="absolute -start-2.5 top-0 flex h-5 w-5 items-center justify-center rounded-full border border-border bg-background" aria-hidden="true">
-            <i class:list={["bx", node.icon, node.color, "icon-sm"]}></i>
-          </span>
-          <div class="rounded-md border border-border bg-panel p-5 transition-all hover:border-border-strong hover:bg-panel-raised">
-            <div class="flex flex-wrap items-start gap-x-3 gap-y-2">
-              <div class:list={["flex h-6 w-6 shrink-0 items-center justify-center rounded-sm", typeTile[type]]}>
-                <i class:list={["bx", type === "business" ? "bx-trending-up" : "bx-slider", typeIcon[type], "icon-sm"]} aria-hidden="true"></i>
-              </div>
-              <h3 class="min-w-0 flex-1 text-sm font-semibold leading-snug text-foreground-strong">{goal.name}</h3>
-              <time datetime={goal.created_at} class="whitespace-nowrap text-2xs text-muted-foreground">
-                {relTime(goal.created_at)} · {absTime(goal.created_at)}
-              </time>
-            </div>
-            <div class="mt-3 flex flex-wrap items-center gap-1.5">
-              <span class="inline-flex items-center rounded-sm bg-primary-soft px-1.5 py-0.5 text-2xs font-medium text-primary">{goal.owner_id}</span>
-              <span class:list={["inline-flex items-center rounded-sm px-1.5 py-0.5 text-2xs font-medium", statusChip[status] ?? "bg-panel-strong text-muted-foreground"]}>
-                {t(locale, statusLabel[status] ?? "live.status.active")}
-              </span>
-              {goal.stage && (
-                <span class="inline-flex items-center rounded-sm bg-panel-strong px-1.5 py-0.5 text-2xs font-medium text-muted-foreground">
-                  {t(locale, "live.entry.stage", { stage: goal.stage })}
-                </span>
-              )}
-              {metric && (
-                <span class="inline-flex items-center rounded-sm border border-border bg-background px-1.5 py-0.5 font-mono text-2xs text-muted-foreground">
-                  {metric}
-                </span>
-              )}
-            </div>
+  {sections.map((section) => {
+    const hiddenCount = Math.max(0, section.entries.length - section.inlineCount);
+    return (
+      <section class="mb-10 last:mb-0" data-live-section={section.type} data-aos="fade-up">
+        <div class="mb-4">
+          <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <h2 class="text-lg font-bold tracking-tight text-foreground-strong">{t(locale, section.titleKey)}</h2>
+            <span class="text-2xs font-medium text-muted-foreground">{t(locale, section.countKey, { count: num(section.entries.length) })}</span>
           </div>
-        </li>
-      );
-    })}
-  </ol>
+          <p class="mt-1 max-w-2xl text-xs leading-relaxed text-muted-foreground">{t(locale, section.subtitleKey)}</p>
+        </div>
 
-  <!-- Sentinel + loading indicator: reveals the remaining entries in batches of 10 -->
-  <div id="live-loading" class="hidden mt-8" role="status" aria-live="polite">
-    <div class="flex items-center justify-center gap-2 text-xs text-muted-foreground">
-      <i class="bx bx-loader bx-spin text-primary icon-lg" aria-hidden="true"></i>
-      <span>{t(locale, "live.loading")}</span>
-    </div>
-  </div>
-  <div id="live-loaded" class="hidden mt-8">
-    <div class="flex items-center justify-center gap-2 text-xs text-muted-foreground">
-      <i class="bx bx-check-square text-success icon-lg" aria-hidden="true"></i>
-      <span>{t(locale, "live.loaded")}</span>
-    </div>
-  </div>
+        <ol class="live-timeline">
+          {section.entries.map((goal, index) => {
+            const status = goal.goal_status;
+            const node = nodeIcon[status] ?? nodeIcon.active;
+            const metric = metricText(goal);
+            return (
+              <li
+                class:list={[
+                  "live-entry relative border-s-2 border-border ps-6 pb-6 last:pb-0",
+                  index >= section.inlineCount && "live-entry--hidden",
+                ]}
+                data-goal-id={goal.id}
+                data-type={section.type}
+                data-status={status}
+              >
+                <i class:list={["absolute -start-2.5 top-0", node.icon, node.color, "icon-sm"]} aria-hidden="true"></i>
+                <div class="rounded-md border border-border bg-panel p-5 transition-all hover:border-border-strong hover:bg-panel-raised">
+                  <div class="flex flex-wrap items-start gap-x-3 gap-y-2">
+                    <div class:list={["flex h-6 w-6 shrink-0 items-center justify-center rounded-sm", typeTile[section.type]]}>
+                      <i class:list={["bx", section.type === "business" ? "bx-trending-up" : "bx-slider", typeIcon[section.type], "icon-sm"]} aria-hidden="true"></i>
+                    </div>
+                    <h3 class="min-w-0 flex-1 text-sm font-semibold leading-snug text-foreground-strong">{goal.name}</h3>
+                    <time datetime={goal.created_at} class="whitespace-nowrap text-2xs text-muted-foreground">
+                      {relTime(goal.created_at)} · {absTime(goal.created_at)}
+                    </time>
+                  </div>
+                  <div class="mt-3 flex flex-wrap items-center gap-1.5">
+                    <span class="inline-flex items-center rounded-sm bg-primary-soft px-1.5 py-0.5 text-2xs font-medium text-primary">{goal.owner_id}</span>
+                    <span class:list={["inline-flex items-center rounded-sm px-1.5 py-0.5 text-2xs font-medium", statusChip[status] ?? "bg-panel-strong text-muted-foreground"]}>
+                      {t(locale, statusLabel[status] ?? "live.status.active")}
+                    </span>
+                    {goal.stage && (
+                      <span class="inline-flex items-center rounded-sm bg-panel-strong px-1.5 py-0.5 text-2xs font-medium text-muted-foreground">
+                        {t(locale, "live.entry.stage", { stage: goal.stage })}
+                      </span>
+                    )}
+                    {metric && (
+                      <span class="inline-flex items-center rounded-sm border border-border bg-background px-1.5 py-0.5 font-mono text-2xs text-muted-foreground">
+                        {metric}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </li>
+            );
+          })}
+        </ol>
+
+        <!-- Show more: reveals every remaining entry in this section, then hides itself -->
+        {hiddenCount > 0 && (
+          <div class="mt-8 flex justify-center">
+            <button
+              id={section.showMoreId}
+              type="button"
+              class="inline-flex h-11 items-center justify-center rounded-md border border-border bg-panel px-6 text-sm font-medium transition-all hover:border-border-strong hover:bg-panel-raised"
+            >
+              {t(locale, "live.showMore")} <span class="opacity-80">({num(hiddenCount)})</span>
+            </button>
+          </div>
+        )}
+      </section>
+    );
+  })}
 </div>
 
 <style>
-  .filter-pill {
+  .filter-chip {
     display: inline-flex;
     align-items: center;
     gap: 0.375rem;
     height: 2rem;
     padding-inline: 0.75rem;
-    border-radius: var(--radius-pill);
+    border-radius: var(--radius-md);
     border: 1px solid var(--border);
     font-size: var(--font-size-xs);
     font-weight: 500;
@@ -217,16 +238,16 @@ const statusPills = [
       border-color var(--duration-fast) var(--ease),
       color var(--duration-fast) var(--ease);
   }
-  .filter-pill.filter-active {
+  .filter-chip.filter-active {
     border-color: var(--primary);
     background: var(--primary);
     color: var(--primary-foreground);
   }
-  .filter-pill.filter-inactive {
+  .filter-chip.filter-inactive {
     background: var(--panel);
     color: var(--muted-foreground);
   }
-  .filter-pill.filter-inactive:hover {
+  .filter-chip.filter-inactive:hover {
     background: var(--panel-raised);
     border-color: var(--border-strong);
   }
@@ -240,88 +261,66 @@ const statusPills = [
     var rootEl = document.getElementById("live-timeline-root");
     if (!rootEl) return;
     var root = rootEl as HTMLElement;
-    var entries = Array.prototype.slice.call(root.querySelectorAll(".live-entry")) as Element[];
-    var loading = document.getElementById("live-loading");
-    var loadedNote = document.getElementById("live-loaded");
-    var total = entries.length;
-    var batch = 10;
-    var initial = 20;
-    var revealed = Math.min(initial, total);
-    var filterType = "all";
+    var INLINE: Record<string, number> = { business: 10, improvement: 5 };
     var filterStatus = "all";
-    var busy = false;
+    var revealed: Record<string, boolean> = { business: false, improvement: false };
+
+    var sections = Array.prototype.slice.call(root.querySelectorAll("[data-live-section]")).map(function (sec: Element) {
+      var type = sec.getAttribute("data-live-section") || "";
+      return {
+        type: type,
+        entries: Array.prototype.slice.call(sec.querySelectorAll(".live-entry")) as Element[],
+        showMore: document.getElementById("live-show-more-" + type) as HTMLElement | null,
+      };
+    });
 
     function matches(el: Element): boolean {
-      if (filterType !== "all" && el.getAttribute("data-type") !== filterType) return false;
       if (filterStatus !== "all" && el.getAttribute("data-status") !== filterStatus) return false;
       return true;
     }
 
     function apply(): void {
-      entries.forEach(function (el: Element, i: number) {
-        el.classList.toggle("live-entry--hidden", !(i < revealed && matches(el)));
+      sections.forEach(function (sec) {
+        sec.entries.forEach(function (el: Element, i: number) {
+          var visible = matches(el) && (revealed[sec.type] || filterStatus !== "all" || i < INLINE[sec.type]);
+          el.classList.toggle("live-entry--hidden", !visible);
+        });
+        if (sec.showMore) sec.showMore.classList.toggle("hidden", revealed[sec.type]);
       });
-      var done = revealed >= total;
-      if (loading) loading.classList.toggle("hidden", done);
-      if (loadedNote) loadedNote.classList.toggle("hidden", !done);
     }
 
-    function revealNext(): void {
-      if (busy || revealed >= total) return;
-      busy = true;
-      window.setTimeout(function () {
-        revealed = Math.min(total, revealed + batch);
-        apply();
-        busy = false;
-      }, 250);
-    }
-
-    // The loading indicator doubles as the scroll sentinel.
-    if (loading && "IntersectionObserver" in window) {
-      var io = new IntersectionObserver(
-        function (observed: IntersectionObserverEntry[]) {
-          if (observed.some(function (o: IntersectionObserverEntry) { return o.isIntersecting; })) revealNext();
-        },
-        { rootMargin: "200px 0px" }
-      );
-      io.observe(loading);
-    }
-
-    function selectFilter(selector: string, value: string, btn: Element): void {
-      var group = root.querySelectorAll(selector);
-      for (var i = 0; i < group.length; i++) {
-        var b = group[i];
+    function selectStatus(value: string, btn: Element): void {
+      filterStatus = value;
+      var group = root.querySelectorAll("[data-filter-status]");
+      for (var k = 0; k < group.length; k++) {
+        var b = group[k];
         var active = b === btn;
         b.classList.toggle("filter-active", active);
         b.classList.toggle("filter-inactive", !active);
         b.setAttribute("aria-pressed", active ? "true" : "false");
       }
-      if (selector.indexOf("filter-type") !== -1) filterType = value;
-      else filterStatus = value;
-      // Filters apply to the whole log instantly, so counts stay honest.
-      revealed = total;
       apply();
     }
 
-    var typeButtons = root.querySelectorAll("[data-filter-type]");
-    for (var i = 0; i < typeButtons.length; i++) {
-      (function (btn: Element) {
-        btn.addEventListener("click", function () {
-          selectFilter("[data-filter-type]", btn.getAttribute("data-filter-type") || "all", btn);
-        });
-      })(typeButtons[i]);
-    }
     var statusButtons = root.querySelectorAll("[data-filter-status]");
     for (var j = 0; j < statusButtons.length; j++) {
       (function (btn: Element) {
         btn.addEventListener("click", function () {
-          selectFilter("[data-filter-status]", btn.getAttribute("data-filter-status") || "all", btn);
+          selectStatus(btn.getAttribute("data-filter-status") || "all", btn);
         });
       })(statusButtons[j]);
     }
 
-    // Initial state: first 20 inline, the rest behind the sentinel.
-    if (revealed < total && loading) loading.classList.remove("hidden");
+    sections.forEach(function (sec) {
+      if (sec.showMore) {
+        sec.showMore.addEventListener("click", function () {
+          revealed[sec.type] = true;
+          apply();
+        });
+      }
+    });
+
+    // Initial state: inline counts applied server-side.
     apply();
   })();
 </script>

@@ -3,7 +3,12 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import logging
+import os
+import sqlite3
+import subprocess
+import time
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
@@ -24,6 +29,16 @@ LIVE_SYNC_SCRIPT = "scripts/sync-live-timeline.py"
 LIVE_SYNC_DB = ".spielos/state/company.sqlite"
 LIVE_SYNC_OUT = "src/data/live-goals.json"
 
+# Live push (goal-ed500b0c63): commit + push the /live snapshot when the
+# company is actually active. Gated by SPIELOS_LIVE_PUSH (env var, falling
+# back to a value parsed from .spielos/.env), debounced 120s, non-fatal.
+# Default OFF; never force-pushes and never stages unrelated files.
+LIVE_PUSH_ENV = "SPIELOS_LIVE_PUSH"
+LIVE_PUSH_ENV_FILE = ".spielos/.env"
+LIVE_PUSH_MARKER = ".spielos/state/.live_push_state.json"
+LIVE_PUSH_STATE_OUT = "public/live-state.json"
+LIVE_PUSH_DEBOUNCE_S = 120
+
 
 def _load_live_sync():
     """Import scripts/sync-live-timeline.py; None (with a warning) when unavailable."""
@@ -42,6 +57,120 @@ def _load_live_sync():
     except Exception as exc:  # pragma: no cover - defensive; never breaks the loop
         logger.warning("live timeline sync skipped: could not load %s: %s", LIVE_SYNC_SCRIPT, exc)
         return None
+
+
+def _env_file_value(path: str, key: str) -> str | None:
+    """Value of the first KEY=VALUE line in a dotenv-style file, or None."""
+    try:
+        lines = Path(path).read_text(encoding="utf-8").splitlines()
+    except OSError:
+        return None
+    for line in lines:
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#") or "=" not in stripped:
+            continue
+        name, _, value = stripped.partition("=")
+        if name.strip() == key:
+            return value.strip()
+    return None
+
+
+def _live_push_gate() -> bool:
+    """SPIELOS_LIVE_PUSH gate: env var first, then .spielos/.env fallback."""
+    raw = os.environ.get(LIVE_PUSH_ENV)
+    if raw is None:
+        raw = _env_file_value(LIVE_PUSH_ENV_FILE, LIVE_PUSH_ENV)
+    return raw is not None and raw.strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _completed_failed_runs(db_path: str) -> int:
+    """Read-only count of completed/failed runs for the push fingerprint."""
+    try:
+        conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True, timeout=5)
+        try:
+            row = conn.execute(
+                "SELECT count(*) FROM runs WHERE status IN ('completed', 'failed')"
+            ).fetchone()
+            return int(row[0]) if row else 0
+        finally:
+            conn.close()
+    except Exception:  # pragma: no cover - defensive; fingerprint is best-effort
+        return 0
+
+
+def _live_fingerprint(snapshot: dict, db_path: str) -> str | None:
+    """Fingerprint = state + terminal goals + completed/failed runs.
+
+    None when the snapshot carries no runtime_state, so nothing is compared.
+    """
+    runtime_state = snapshot.get("runtime_state") or {}
+    totals = snapshot.get("totals") or {}
+    state = runtime_state.get("state")
+    if not state:
+        return None
+    terminal_goals = int(totals.get("goals_achieved", 0) or 0) + int(
+        totals.get("goals_abandoned", 0) or 0)
+    return f"{state}|{terminal_goals}|{_completed_failed_runs(db_path)}"
+
+
+def _read_live_push_marker(path: str) -> dict:
+    """The last push marker; {} when missing or unparsable."""
+    try:
+        data = json.loads(Path(path).read_text(encoding="utf-8"))
+        return data if isinstance(data, dict) else {}
+    except (OSError, ValueError):
+        return {}
+
+
+def _push_allowed(marker: dict) -> bool:
+    """True when there is no marker, no pushed_at, or the debounce elapsed."""
+    pushed_at = marker.get("pushed_at")
+    if not pushed_at:
+        return True
+    try:
+        parsed = datetime.fromisoformat(str(pushed_at).replace("Z", "+00:00"))
+        if parsed.tzinfo is None:
+            parsed = parsed.replace(tzinfo=timezone.utc)
+        return time.time() - parsed.timestamp() >= LIVE_PUSH_DEBOUNCE_S
+    except ValueError:
+        return True
+
+
+def _run_git(args: list[str], check: bool = True):
+    """Run a git subprocess; raises on non-zero exit when check is True."""
+    return subprocess.run(args, capture_output=True, text=True, check=check)
+
+
+def _git_push_sequence() -> bool:
+    """git add (only existing snapshot files) -> commit -> push origin HEAD.
+
+    Returns True when a push actually happened. Returns False (skip and
+    stop) when there is nothing to commit. Raises on any git failure; the
+    caller logs the warning and the goal transition continues.
+    """
+    candidates = [path for path in (LIVE_SYNC_OUT, LIVE_PUSH_STATE_OUT)
+                  if Path(path).is_file()]
+    if not candidates:
+        logger.info("live push skipped: no snapshot files to stage")
+        return False
+    _run_git(["git", "add", *candidates])
+    staged = _run_git(["git", "diff", "--cached", "--quiet"], check=False)
+    if staged.returncode == 0:
+        logger.info("live push skipped: nothing to commit")
+        return False
+    if staged.returncode != 1:
+        raise RuntimeError(f"git diff --cached --quiet exited {staged.returncode}")
+    _run_git(["git", "commit", "-m", "live: sync runtime state"])
+    _run_git(["git", "push", "origin", "HEAD"])
+    return True
+
+
+def _write_live_push_marker(path: str, fingerprint: str) -> None:
+    payload = {"fingerprint": fingerprint,
+               "pushed_at": datetime.now(timezone.utc).isoformat()}
+    marker = Path(path)
+    marker.parent.mkdir(parents=True, exist_ok=True)
+    marker.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
 
 
 class Runtime:
@@ -201,14 +330,50 @@ class Runtime:
         Best-effort: a missing script or database, or a locked database, only
         logs a warning. Never raises and never touches the sqlite write path —
         the sync script opens the database read-only (mode=ro, busy_timeout).
+
+        After a successful sync, when SPIELOS_LIVE_PUSH is enabled (default
+        off) and the fingerprint changed past the debounce window, the
+        snapshot files are committed and pushed to origin. Every git failure
+        is logged as a warning and never breaks the goal transition.
         """
         module = _load_live_sync()
         if module is None:
             return
         try:
-            module.sync_live(LIVE_SYNC_DB, LIVE_SYNC_OUT, quiet=True)
+            snapshot = module.sync_live(LIVE_SYNC_DB, LIVE_SYNC_OUT, quiet=True)
         except Exception as exc:  # pragma: no cover - defensive; never breaks the loop
             logger.warning("live timeline sync skipped (non-fatal): %s", exc)
+            return
+        try:
+            self._maybe_push_live_snapshot(snapshot)
+        except Exception as exc:  # pragma: no cover - defensive; never breaks the loop
+            logger.warning("live push skipped (non-fatal): %s", exc)
+
+    def _maybe_push_live_snapshot(self, snapshot: dict) -> None:
+        """Commit + push the /live snapshot when enabled and changed.
+
+        Fires when SPIELOS_LIVE_PUSH is enabled (default off), the
+        fingerprint (runtime state + terminal goals + completed/failed runs)
+        differs from the marker, and at least 120s passed since the last
+        push. The marker is written only after a successful push. Never
+        raises and never changes any other runtime behavior.
+        """
+        if not _live_push_gate():
+            return
+        fingerprint = _live_fingerprint(snapshot, LIVE_SYNC_DB)
+        if fingerprint is None:
+            return
+        marker = _read_live_push_marker(LIVE_PUSH_MARKER)
+        if marker.get("fingerprint") == fingerprint:
+            logger.debug("live push skipped: fingerprint unchanged")
+            return
+        if not _push_allowed(marker):
+            logger.info("live push skipped: debounce window (%ss) not elapsed",
+                        LIVE_PUSH_DEBOUNCE_S)
+            return
+        if not _git_push_sequence():
+            return
+        _write_live_push_marker(LIVE_PUSH_MARKER, fingerprint)
 
     def _notification_payload(self, goal, cycle, result, next_stage):
         evaluation = result.evaluation or {}

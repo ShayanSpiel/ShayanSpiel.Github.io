@@ -20,6 +20,97 @@ def now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+def format_utc(value) -> str:
+    """Render an ISO-8601 timestamp as a plain UTC wall-clock string."""
+    if not value:
+        return ""
+    try:
+        parsed = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    except ValueError:
+        return str(value)
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+
+
+def _why_next_for_run(run_status: str, goal_status: str, resume_at,
+                      data: dict | None) -> str | None:
+    """Plain-language why/next line for a run in the compact projection.
+
+    Machine tokens remain available unchanged; this adds one human-readable
+    line that makes suspended states self-explanatory.
+    """
+    data = data or {}
+    action = data.get("action_result") or {}
+    if run_status == "waiting":
+        parts = ["waiting"]
+        deadline = action.get("evidence_deadline")
+        if deadline:
+            parts.append(f"evidence window open until {format_utc(deadline)}")
+        if resume_at:
+            parts.append(f"next automatic check {format_utc(resume_at)}")
+        if len(parts) == 1:
+            parts.append("awaiting evidence or a state change")
+        return parts[0] + (" — " + "; ".join(parts[1:]) if len(parts) > 1 else "")
+    if run_status == "blocked":
+        task = action.get("task") or {}
+        if task.get("status") == "approved":
+            return "blocked — needs coding executor"
+        capability = ((data.get("observation") or {}).get("attention") or {}).get("capability")
+        if capability:
+            return f"blocked — needs {capability}"
+        return "blocked — needs action or remediation"
+    if run_status == "awaiting_approval":
+        return "awaiting_approval — prepared action needs your approval"
+    if run_status == "completed":
+        return {"achieved": "completed — goal achieved",
+                "abandoned": "completed — goal abandoned",
+                "expired": "completed — goal expired"}.get(
+                    goal_status, "completed — run finished; the next run needs approval to start")
+    if run_status == "failed":
+        return "failed — needs investigation; retry with `company retry <goal>`"
+    if run_status == "idle":
+        return "active — run ready to advance"
+    return None
+
+
+def _why_next_for_kind(kind: str, payload: dict | None = None) -> str | None:
+    """Plain-language why/next wording for a notification kind."""
+    payload = payload or {}
+    attention = payload.get("attention") or {}
+    if kind == "approval_required":
+        return "approval needed — prepared action needs your approval"
+    if kind == "blocked":
+        result = payload.get("result") or {}
+        task = (attention.get("task") or (result.get("metrics") or {}).get("task")
+                or (payload.get("action_result") or {}).get("task") or {})
+        if task.get("status") == "approved":
+            return "blocked — needs coding executor"
+        capability = attention.get("capability")
+        if capability:
+            return f"blocked — needs {capability}"
+        return "blocked — needs action or remediation"
+    if kind == "action_required":
+        capability = attention.get("capability")
+        if capability:
+            return f"action needed — {capability} required"
+        required = payload.get("required_user_action")
+        if required:
+            return f"action needed — {required}"
+        return "action needed — a capability or input is missing"
+    if kind == "failed":
+        return "failed — needs investigation; retry with `company retry <goal>`"
+    if kind == "run_completed":
+        return "run completed — review the result; the next run needs approval to start"
+    if kind == "goal_achieved":
+        return "goal completed — outcome achieved"
+    if kind == "goal_abandoned":
+        return "goal abandoned — closed without reaching the outcome"
+    if kind == "goal_expired":
+        return "goal expired — deadline passed before reaching the target"
+    return None
+
+
 class Store:
     def __init__(self, path: str | Path):
         self.path = Path(path)
@@ -298,7 +389,7 @@ class Store:
                     g.id,g.name,g.owner_id,g.metric,g.operator,g.target_json,g.deadline,
                     g.parent_id,g.goal_status,g.created_at,g.updated_at,
                     c.id AS run_id,c.sequence,c.stage,c.step,c.run_status,c.resume_at,
-                    c.updated_at AS runtime_updated_at,r.run_type,r.evidence_validity,
+                    c.data_json,c.updated_at AS runtime_updated_at,r.run_type,r.evidence_validity,
                     (SELECT COUNT(*) FROM evidence ev WHERE ev.run_id=c.id) AS evidence_count,
                     (SELECT verdict FROM evaluations e WHERE e.goal_id=g.id
                         ORDER BY e.created_at DESC LIMIT 1) AS verdict,
@@ -314,6 +405,9 @@ class Store:
         for row in rows:
             item = dict(row)
             item["target"] = self._normalize(json.loads(item.pop("target_json")))
+            data = self._normalize(json.loads(item.pop("data_json")))
+            item["why_next"] = _why_next_for_run(item["run_status"], item["goal_status"],
+                                                 item.get("resume_at"), data)
             if item.get("goal_met") is not None:
                 item["goal_met"] = bool(item["goal_met"])
             values.append(item)
@@ -348,6 +442,9 @@ class Store:
             payload = self._normalize(json.loads(item.pop("payload_json")))
             item["message"] = (payload.get("result") or {}).get("message")
             item["required_user_action"] = payload.get("required_user_action")
+            why_next = _why_next_for_kind(item["kind"], payload)
+            if why_next:
+                item["why_next"] = why_next
             values.append(item)
         return values
 
@@ -360,7 +457,12 @@ class Store:
                     'run_completed','goal_achieved','goal_abandoned','goal_expired')
                 ORDER BY n.created_at DESC,n.id DESC LIMIT ?""",
                 (max(1, min(int(limit), 100)),)).fetchall()
-        return [dict(row) for row in rows]
+        values = [dict(row) for row in rows]
+        for item in values:
+            why_next = _why_next_for_kind(item["kind"])
+            if why_next:
+                item["why_next"] = why_next
+        return values
 
     def cycle(self, goal_id: str) -> dict:
         with self.connect() as con:
@@ -578,7 +680,14 @@ class Store:
                     ORDER BY created_at,id LIMIT ?""", (status, limit)).fetchall()
             else:
                 rows = con.execute("SELECT * FROM notifications ORDER BY created_at,id LIMIT ?", (limit,)).fetchall()
-        return [self._decode(row) for row in rows]
+        values = []
+        for row in rows:
+            item = self._decode(row)
+            why_next = _why_next_for_kind(item["kind"], item.get("payload") or {})
+            if why_next:
+                item["why_next"] = why_next
+            values.append(item)
+        return values
 
     def acknowledge_notification(self, notification_id: str) -> dict:
         stamp = now()

@@ -139,7 +139,7 @@ def main(argv=None):
                 output = runtime.company_snapshot(args.limit)
                 output["automation"] = {
                     "enabled": service["enabled"], "running": service["running"],
-                    "pid": service["pid"],
+                    "pid": service["pid"], "started_at": service.get("started_at"),
                 }
             if not args.raw and not args.json:
                 print(render_status(output, history=args.history))
@@ -246,9 +246,12 @@ def render_report(state):
 
 
 def _goal_line(item):
-    return (f"- {item['name']} (`{item['id']}`) · {item['owner_id']} · "
+    line = (f"- {item['name']} (`{item['id']}`) · {item['owner_id']} · "
             f"{item['goal_status']} / {item['run_status']} · "
             f"{item['stage']}.{item['step']}")
+    if item.get("goal_status") == "active" and item.get("why_next"):
+        line += f"\n  {item['why_next']}"
+    return line
 
 
 def render_status(value, history=False):
@@ -269,6 +272,8 @@ def render_status(value, history=False):
                  f"- Runtime: `{item['stage']}.{item['step']}`",
                  f"- Evidence: `{item['evidence_count']}` item(s) · validity `{item['evidence_validity']}`",
                  f"- Updated: `{item['runtime_updated_at']}`"]
+        if item.get("why_next"):
+            lines.append(f"- Why/next: `{item['why_next']}`")
         if item.get("verdict"):
             lines.append(f"- Latest evaluation: `{item['verdict']}` · goal met `{item['goal_met']}`")
         if value["attention"]:
@@ -284,9 +289,14 @@ def render_status(value, history=False):
         return "\n".join(lines) + "\n"
 
     automation = value["automation"]
-    label = "running" if automation["enabled"] and automation["running"] else (
-        "enabled, runner stopped" if automation["enabled"] else "stopped")
-    lines = ["# SpielOS company", "", f"Automation: **{label}**", ""]
+    if automation.get("running"):
+        started = f", started {automation['started_at']}" if automation.get("started_at") else ""
+        header = (f"Local runner: **running** (pid {automation['pid']}{started}); "
+                  "goals only advance while this machine is on.")
+    else:
+        header = ("Local runner: **paused** - start with `company runner start`; "
+                  "goals only advance while this machine is on.")
+    lines = ["# SpielOS company", "", header, ""]
     attention = value["attention"]
     lines.append(f"## Needs attention ({len(attention)})")
     if attention:
@@ -304,6 +314,7 @@ def render_status(value, history=False):
     if value["unread_results"]:
         lines += ["", f"## Unread results ({len(value['unread_results'])})"]
         lines.extend(f"- `{item['kind']}` · {item['name']} (`{item['goal_id']}`)"
+                     + (f": {item['why_next']}" if item.get("why_next") else "")
                      for item in value["unread_results"])
     recent = value["recent_results"]
     lines += ["", f"## Recent results ({len(recent)})"]

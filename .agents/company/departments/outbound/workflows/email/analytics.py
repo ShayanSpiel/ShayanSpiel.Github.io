@@ -9,10 +9,17 @@ open rate, click rate, reply rate.
 
 Reply detection is two-channel:
   1. Automatic — replies routed to a Resend receiving domain (set REPLY_TO
-     to e.g. replies@in.spielos.xyz) are pulled via the received-emails API
-     on every scheduled `metrics` run and matched to the sent lead.
-     Auto-replies (out-of-office, ...) are recorded as kind="auto" and
-     excluded from the reply-rate goal.
+     to e.g. replies@in.spielos.xyz) or the unified Gmail IMAP capture
+     (REPLY_CAPTURE=gmail_imap) are pulled on every scheduled `metrics` run
+     and matched to the sent lead. Classification uses reliable signals —
+     the 'Automatic reply:' OOO prefix, the Auto-Submitted header, an
+     X-Autoreply header, and config.AUTO_REPLY_KEYWORDS; ordinary 'Re:'
+     subjects default to reply. Classification inputs (subject, from,
+     Auto-Submitted / X-Autoreply) are stored on every record so kinds can
+     be re-examined: `replies --recheck [--dry-run]` re-runs classification,
+     dedupes per lead (keep newest, merge metadata), and persists
+     idempotently. Auto-replies are recorded as kind="auto" and excluded
+     from the reply-rate goal.
   2. Manual — anything that lands in the normal inbox:
      `python3 outbound.py record-reply <email|lead_id>`.
 
@@ -54,7 +61,8 @@ def load_metrics() -> dict:
     if config.METRICS_PATH.exists():
         with open(config.METRICS_PATH) as f:
             return json.load(f)
-    return {"last_check": None, "emails": {}, "replies": []}
+    return {"last_check": None, "emails": {}, "replies": [],
+            "collapsed_received_ids": []}
 
 
 def save_metrics(metrics: dict) -> None:
@@ -73,8 +81,30 @@ def _parse_dt(value):
         return None
 
 
+def _parse_dt_utc(value):
+    """Parse a stored timestamp, assuming UTC when no timezone is present
+    (some manual reply records store naive datetimes)."""
+    dt = _parse_dt(value)
+    if dt is None:
+        return None
+    if dt.tzinfo is None:
+        return dt.replace(tzinfo=timezone.utc)
+    return dt
+
+
 def _valid_id(email_id) -> bool:
     return bool(email_id) and len(str(email_id)) >= 32
+
+
+def _tombstones(metrics: dict) -> set:
+    """Received ids the recheck has collapsed away (metrics.collapsed_received_ids).
+
+    The live sweep path must never capture these again — a collapsed duplicate
+    would otherwise be re-added by the next provider listing and the ledger
+    would oscillate recheck->collapsed, sweep->grown forever (owner evidence
+    2026-08-11, change-b28800611b). Read-only helper: only recheck_replies
+    ever grows the tombstone list."""
+    return {str(x) for x in (metrics.get("collapsed_received_ids") or []) if x}
 
 
 def _date_dist(a, b) -> float:
@@ -256,15 +286,50 @@ def collect(log: dict, force: bool = False):
     return metrics, True
 
 
-def _is_auto_reply(subject: str) -> bool:
+def classify_reply_kind(subject: str = "", auto_submitted=None, x_autoreply=None) -> str:
+    """Classify a captured message as 'auto' or 'reply' from reliable signals.
+
+    Strong auto signals (any one wins):
+      1. the 'Automatic reply:' out-of-office subject prefix (Outlook/Exchange
+         convention),
+      2. an Auto-Submitted header other than 'no' (RFC 3834 — 'auto-replied',
+         'auto-generated', ...),
+      3. an X-Autoreply header (present on many autoresponder transports),
+      4. a configured AUTO_REPLY_KEYWORDS hit anywhere in the subject.
+
+    Ordinary 'Re:' subjects default to 'reply' unless a strong signal says
+    auto. Missing headers are not signals.
+    """
     subj = (subject or "").casefold()
-    return any(kw in subj for kw in _AUTO_REPLY_KEYWORDS)
+    if subj.startswith("automatic reply:"):
+        return "auto"
+    auto_submitted = str(auto_submitted or "").strip().casefold()
+    if auto_submitted and auto_submitted != "no":
+        return "auto"
+    if str(x_autoreply or "").strip():
+        return "auto"
+    if any(kw in subj for kw in _AUTO_REPLY_KEYWORDS):
+        return "auto"
+    return "reply"
+
+
+def _is_auto_reply(subject: str) -> bool:
+    """Subject-only auto check (legacy callers without header inputs)."""
+    return classify_reply_kind(subject) == "auto"
 
 
 def sync_replies(log: dict, metrics: dict) -> int:
     """Pull received emails from the provider and record those that match a
     sent lead as replies (deduped by received email id). Auto-replies are
-    recorded with kind="auto". Returns the number of newly recorded."""
+    recorded with kind="auto" using reliable signals (subject prefix, subject
+    keywords, Auto-Submitted / X-Autoreply headers when the capture path
+    exposes them). Returns the number of newly recorded.
+
+    Tombstone guard (owner evidence 2026-08-11, change-b28800611b): a message
+    whose received_id is in metrics.collapsed_received_ids was collapsed away
+    by a prior `replies --recheck` and must be skipped BEFORE recording — the
+    recheck has already merged its content into the kept per-lead record.
+    This path only READS tombstones; only the recheck ever adds to them."""
     if not providers.cap_received():
         return 0
     listing = providers.list_received_emails()
@@ -274,11 +339,12 @@ def sync_replies(log: dict, metrics: dict) -> int:
     sent_by_email = {s["email"]: s for s in log.get("sent", [])}
     replies = metrics.setdefault("replies", [])
     known = {r.get("received_id") for r in replies}
+    tombstoned = _tombstones(metrics)
     added = 0
 
     for e in listing.get("data", []):
         eid = e.get("id")
-        if not eid or eid in known:
+        if not eid or eid in known or eid in tombstoned:
             continue
         sender = str(e.get("from") or "").strip().lower()
         if not sender or sender == config.FROM_EMAIL.lower():
@@ -287,17 +353,26 @@ def sync_replies(log: dict, metrics: dict) -> int:
         if not s:
             continue
         subject = str(e.get("subject") or "")
+        # Classification inputs are stored with the record so a later
+        # `replies --recheck` can re-run classification from stored signals
+        # (owner evidence 2026-08-11: kinds were decided once at first capture
+        # and never re-examined, so stale kinds persisted forever).
+        auto_submitted = str(e.get("auto_submitted") or "")
+        x_autoreply = str(e.get("x_autoreply") or "")
         replies.append({
             "received_id": eid,
             "lead_id": s["lead_id"],
             "email": sender,
+            "from": sender,
             "company": s.get("company"),
             "variant": s.get("variant"),
             "subject": subject,
             "message_id": e.get("message_id"),
             "received_at": e.get("created_at"),
             "recorded_at": datetime.now(timezone.utc).isoformat(),
-            "kind": "auto" if _is_auto_reply(subject) else "reply",
+            "kind": classify_reply_kind(subject, auto_submitted, x_autoreply),
+            "auto_submitted": auto_submitted,
+            "x_autoreply": x_autoreply,
             "note": "",
         })
         known.add(eid)
@@ -306,6 +381,186 @@ def sync_replies(log: dict, metrics: dict) -> int:
     if added:
         save_metrics(metrics)
     return added
+
+
+# ── Reconciliation (owner evidence 2026-08-11) ──────────────────────────────
+# Reply kinds used to be decided once at first capture and never re-examined,
+# and the same lead could be captured twice (gmail sweep + manual record, or
+# two sweep passes through different transport headers). `replies --recheck`
+# re-runs classification from the stored inputs, collapses per-lead duplicates
+# (keeping the newest record and merging metadata), and persists idempotently.
+# Every received_id the collapse removes is tombstoned in
+# metrics.collapsed_received_ids (change-b28800611b) so a later sweep listing
+# can never re-add the same message — sync_replies skips tombstoned ids
+# before recording; only the recheck writes tombstones.
+
+_IDENTITY_KEYS = {"received_id", "lead_id", "email", "from", "subject",
+                  "message_id", "received_at", "recorded_at", "kind"}
+
+# Identity fields that must survive a per-lead collapse even though they
+# describe the lead, not the capture: the kept (newest) record's own value
+# wins; a missing/empty value is backfilled from any record in the group.
+# (Owner evidence 2026-08-11, change-d1459e3624: the kept AP-7d1096 record
+# came out of the 3.3.0 merge with email=null because email was treated as a
+# non-mergeable identity key.)
+_MERGE_IDENTITY_KEYS = ("email", "contact_name", "company")
+
+
+def _record_time(record: dict, key: str):
+    """UTC-aware timestamp for a record field; None stays None (oldest)."""
+    return _parse_dt_utc(record.get(key))
+
+
+def _newer_record(a: dict, b: dict):
+    """Return (winner, loser) — the newer of two reply records, by received_at
+    (missing = oldest) then recorded_at; ties favor the later record in the
+    list (the later capture)."""
+    for key in ("received_at", "recorded_at"):
+        ta, tb = _record_time(a, key), _record_time(b, key)
+        if ta == tb:
+            continue
+        if ta is None:
+            return b, a
+        if tb is None:
+            return a, b
+        return (b, a) if tb > ta else (a, b)
+    return b, a
+
+
+def _merge_metadata(winner: dict, loser: dict) -> None:
+    """Merge non-identity metadata from the dropped record into the kept one
+    (notes are concatenated so owner context is never lost). Identity fields
+    (email, contact_name, company) are preserved across the collapse: the
+    newest (kept) record's own value wins; a missing/empty value is
+    backfilled from any record in the group."""
+    for key in _MERGE_IDENTITY_KEYS:
+        if winner.get(key) in (None, "", []):
+            value = loser.get(key)
+            if value not in (None, "", []):
+                winner[key] = value
+    for key, value in loser.items():
+        if key in _IDENTITY_KEYS or value in (None, "", []):
+            continue
+        if key == "note":
+            w = str(winner.get("note") or "").strip()
+            l = str(value or "").strip()
+            if l and l not in w:
+                winner["note"] = f"{w} | {l}" if w else l
+        elif key not in winner or winner.get(key) in (None, "", []):
+            winner[key] = value
+
+
+def _record_identity(record: dict) -> dict:
+    return {"lead_id": record.get("lead_id"),
+            "received_id": record.get("received_id"),
+            "subject": record.get("subject"),
+            "received_at": record.get("received_at"),
+            "kind": record.get("kind")}
+
+
+def recheck_replies(metrics: dict, dry_run: bool = False) -> dict:
+    """Reconcile the stored reply ledger.
+
+    1. Re-runs classification on every record from its stored inputs
+       (subject, from, Auto-Submitted / X-Autoreply headers) and corrects
+       stale kinds.
+    2. Dedupes per lead across capture paths — keeps the newest record
+       (received_at, falling back to recorded_at) and merges metadata from
+       the removed records (notes concatenated, identity fields email /
+       contact_name / company backfilled when the kept record lacks them).
+    3. Tombstones (owner evidence 2026-08-11, change-b28800611b): every
+       received_id on a collapsed (removed) record is added to
+       metrics.collapsed_received_ids so the live sweep path never re-captures
+       it. Only ids actually collapsed are added; the list is stored sorted
+       and unique, so repeated rechecks are idempotent with no unbounded
+       growth.
+    4. Persists only when not dry_run; idempotent — a second run over an
+       already-reconciled ledger reports no changes and rewrites nothing.
+
+    Returns a change report dict: records_before/after, reclassified,
+    collapsed, unchanged, dry_run, tombstones_before/added/total.
+    """
+    replies = metrics.get("replies") or []
+    tombstones = sorted(_tombstones(metrics))
+    report = {
+        "records_before": len(replies),
+        "records_after": len(replies),
+        "reclassified": [],
+        "collapsed": [],
+        "unchanged": 0,
+        "dry_run": bool(dry_run),
+        "tombstones_before": len(tombstones),
+        "tombstones_added": [],
+        "tombstones_total": len(tombstones),
+    }
+    if not replies:
+        return report
+
+    # Pass 1 — correct kinds from stored classification inputs.
+    corrected = []
+    for r in replies:
+        old = str(r.get("kind") or "reply").strip().lower()
+        new = classify_reply_kind(
+            r.get("subject"), r.get("auto_submitted"), r.get("x_autoreply"))
+        if old != new:
+            corrected.append((r, old, new))
+            report["reclassified"].append({
+                "lead_id": r.get("lead_id"),
+                "subject": r.get("subject"),
+                "from": r.get("from") or r.get("email"),
+                "received_id": r.get("received_id"),
+                "old": old, "new": new,
+            })
+    report["unchanged"] = len(replies) - len(corrected)
+    if not dry_run:
+        for r, _old, new in corrected:
+            r["kind"] = new
+
+    # Pass 2 — dedupe per lead across capture paths, keep newest, merge.
+    kept, removed_map, order = {}, {}, []
+    for idx, r in enumerate(replies):
+        key = r.get("lead_id") or f"__no_lead__{idx}"
+        if key in kept:
+            winner, loser = _newer_record(kept[key], r)
+            if winner is loser:
+                removed_map.setdefault(key, []).append(kept[key])
+            else:
+                removed_map.setdefault(key, []).append(loser)
+            kept[key] = winner
+            _merge_metadata(winner, loser)
+        else:
+            kept[key] = r
+            order.append(key)
+
+    after = [kept[key] for key in order]
+    report["records_after"] = len(after)
+    added_tombstones = []
+    for key in order:
+        removed = removed_map.get(key) or []
+        if not removed:
+            continue
+        # Tombstone every received_id the collapse removes — those messages
+        # must never be re-captured by a later sweep (their content now lives
+        # in the kept per-lead record). None/empty ids (manual records) are
+        # skipped: a provider listing can never carry them.
+        for r in removed:
+            rid = str(r.get("received_id") or "")
+            if rid and rid not in tombstones:
+                tombstones.append(rid)
+                added_tombstones.append(rid)
+        report["collapsed"].append({
+            "lead_id": key if not str(key).startswith("__no_lead__") else None,
+            "kept": _record_identity(kept[key]),
+            "removed": [_record_identity(x) for x in removed],
+        })
+    report["tombstones_added"] = sorted(set(added_tombstones))
+    report["tombstones_total"] = len(tombstones)
+    if not dry_run:
+        metrics["replies"] = after
+        if tombstones:
+            # Sorted unique — deterministic across runs, no unbounded growth.
+            metrics["collapsed_received_ids"] = sorted(set(tombstones))
+    return report
 
 
 # ── Aggregation ───────────────────────────────────────────────────────────────
@@ -323,16 +578,32 @@ def _reply_ids(metrics: dict) -> set:
             and not str(r.get("variant", "")).upper().startswith("TEST")}
 
 
-def aggregate(log: dict, metrics: dict) -> dict:
+def aggregate(log: dict, metrics: dict, window_hours: float = 48.0, now: datetime = None) -> dict:
+    """Aggregate per-send status + reply counts.
+
+    - `replied` stays the goal metric: unique reply-kind leads attributed to
+      sends in the log (windowed sends).
+    - `replies_received` is inbox truth: unique reply-kind leads received
+      within the window regardless of send date (owner evidence 2026-08-11).
+    """
     sent = log.get("sent", [])
     replied_ids = _reply_ids(metrics)
     auto_count = sum(1 for r in metrics.get("replies", []) if r.get("kind") == "auto")
+    window_start = (now or datetime.now(timezone.utc)) - timedelta(hours=window_hours)
+    received_reply_leads = {
+        r.get("lead_id") for r in metrics.get("replies", [])
+        if r.get("kind") == "reply"
+        and not str(r.get("variant", "")).upper().startswith("TEST")
+        and (received := _parse_dt_utc(r.get("received_at"))) is not None
+        and received >= window_start
+    }
 
     counts = {
         "sent": len(sent),
         "delivered": 0, "bounced": 0, "complained": 0,
         "opened": 0, "clicked": 0, "unresolved": 0, "unknown": 0, "denied": 0,
         "pending": 0, "replied": 0, "auto": auto_count,
+        "replies_received": len(received_reply_leads),
     }
     _PENDING = {"sent", "delivery_delayed"}
     for s in sent:
@@ -421,6 +692,7 @@ def print_report(log: dict, metrics: dict) -> None:
     print(f"  Opened:        {t['opened']:>3}/{t['delivered']:>3}  ({pct(t['open_rate'])} of delivered)  goal {config.GOAL_OPEN_RATE*100:.0f}%")
     print(f"  Clicked:       {t['clicked']:>3}/{t['delivered']:>3}  ({pct(t['click_rate'])} of delivered)  goal {config.GOAL_CLICK_RATE*100:.0f}%")
     print(f"  Replied:       {t['replied']:>3}/{t['sent']:>3}  ({pct(t['reply_rate'])} of sent)  GOAL >{config.GOAL_REPLY_RATE*100:.0f}%")
+    print(f"  Replies received (48h inbox truth, any send): {t['replies_received']:>3}")
     if t["auto"]:
         print(f"  Auto-replies:  {t['auto']:>3} (excluded from reply rate)")
     if t["unknown"]:
