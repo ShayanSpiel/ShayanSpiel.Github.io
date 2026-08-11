@@ -14,6 +14,7 @@ export const translations: Record<Locale, Translations> = {
     "nav.agentBriefing": "Agent Briefing",
     "nav.features": "Features",
     "nav.services": "Services",
+    "nav.liveaicompany": "Live AI Company",
 
     // Homepage
     "home.hero.badge": "Shayan Spiel · Founder of SpielOS",
@@ -1253,6 +1254,7 @@ export const translations: Record<Locale, Translations> = {
     "nav.agentBriefing": "بریف رایگان ایجنت",
     "nav.features": "امکانات",
     "nav.services": "خدمات",
+    "nav.liveaicompany": "شرکت هوش مصنوعی زنده",
 
     // Homepage
     "home.hero.badge": "شایان اشپیل · فاندر SpielOS",

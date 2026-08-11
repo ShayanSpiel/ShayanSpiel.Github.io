@@ -18,6 +18,17 @@ test("buyer conversion routes build with lead CTAs", () => {
   assert.match(services, /agent-briefing/);
 });
 
+test("navbar links to the live company with a liveness dot on EN and FA", () => {
+  const nav = (read("").match(/<nav[^>]*id="site-nav"[^>]*>[\s\S]*?<\/nav>/) || [""])[0];
+  assert.match(nav, /href="\/live\/"/);
+  assert.match(nav, /Live AI Company/);
+  assert.match(nav, /nav-live-dot/);
+  const faNav = (read("fa").match(/<nav[^>]*id="site-nav"[^>]*>[\s\S]*?<\/nav>/) || [""])[0];
+  assert.match(faNav, /href="\/fa\/live\/"/);
+  assert.match(faNav, /شرکت هوش مصنوعی زنده/);
+  assert.match(faNav, /nav-live-dot/);
+});
+
 test("non-indexable utility pages are noindex", () => {
   for (const route of ["use-cases", "contact/thank-you", "spielos-v1"]) {
     assert.match(read(route), /<meta name="robots" content="noindex, follow">/);

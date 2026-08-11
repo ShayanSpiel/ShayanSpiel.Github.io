@@ -102,12 +102,20 @@ export const WAITLIST_URL = "/waitlist/";
 export const SERVICES_PATH = "/services/";
 export const AGENT_BRIEFING_PATH = "/services/#agent-briefing";
 
-export const NAV_LINKS = {
+export interface NavLink {
+  label: string;
+  href: string;
+  /** Renders a small liveness ping dot beside the label. */
+  live?: boolean;
+}
+
+export const NAV_LINKS: { default: NavLink[]; showcase: NavLink[] } = {
   default: [
     { label: "Services", href: "/services/" },
     { label: "Features", href: "/features/" },
     { label: "Notes", href: "/notes/" },
     { label: "Founder", href: "/founder/" },
+    { label: "Live AI Company", href: "/live/", live: true },
   ],
   showcase: [
     { label: "How it works", href: "#how-it-works" },

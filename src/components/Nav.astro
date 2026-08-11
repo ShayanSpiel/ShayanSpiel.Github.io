@@ -1,11 +1,11 @@
 ---
 import SpielOSLogo from "./SpielOSLogo.astro";
-import { NAV_LINKS, SERVICES_PATH } from "../config";
+import { NAV_LINKS, SERVICES_PATH, type NavLink } from "../config";
 import { type Locale, t } from "../i18n/translations";
 import { localizePath } from "../i18n";
 
 export interface Props {
-  links?: { label: string; href: string }[];
+  links?: NavLink[];
   cta?: { label: string; href: string };
   locale?: Locale;
 }
@@ -15,6 +15,7 @@ const { links, cta, locale = "en" } = Astro.props;
 const navLinks = links || NAV_LINKS.default.map(link => ({
   href: localizePath(link.href, locale),
   label: t(locale, `nav.${link.label.toLowerCase().replace(/\s+/g, '')}`) || link.label,
+  live: Boolean(link.live),
 }));
 const ctaLink = cta || { label: t(locale, "services.cta.button"), href: SERVICES_PATH };
 ---
@@ -34,9 +35,18 @@ const ctaLink = cta || { label: t(locale, "services.cta.button"), href: SERVICES
       <SpielOSLogo />
     </a>
 
-    <div class="hidden md:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
+    <div class="hidden md:flex items-center gap-5 lg:gap-8 absolute left-1/2 -translate-x-1/2">
       {navLinks.map((link) => (
-        <a href={link.href} class="text-xs text-muted-foreground hover:text-foreground transition-colors">{link.label}</a>
+        <a
+          href={link.href}
+          class:list={[
+            "text-xs text-muted-foreground hover:text-foreground transition-colors",
+            link.live && "inline-flex items-center gap-1.5",
+          ]}
+        >
+          {link.live && <span class="nav-live-dot" aria-hidden="true"></span>}
+          {link.label}
+        </a>
       ))}
     </div>
 
@@ -63,7 +73,16 @@ const ctaLink = cta || { label: t(locale, "services.cta.button"), href: SERVICES
   <div class="hidden md:hidden" id="nav-mobile-menu">
     <div class="px-6 pb-4 pt-2 border-t border-border space-y-1">
       {navLinks.map((link) => (
-        <a href={link.href} class="block rounded-md px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-panel-raised transition-colors">{link.label}</a>
+        <a
+          href={link.href}
+          class:list={[
+            "rounded-md px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-panel-raised transition-colors",
+            link.live ? "flex items-center gap-1.5" : "block",
+          ]}
+        >
+          {link.live && <span class="nav-live-dot" aria-hidden="true"></span>}
+          {link.label}
+        </a>
       ))}
       <a
         href={localizePath(ctaLink.href, locale)}
@@ -126,5 +145,43 @@ const ctaLink = cta || { label: t(locale, "services.cta.button"), href: SERVICES
 
   :root[data-theme*="light"] #site-nav[data-scrolled="true"] {
     background: rgba(255, 255, 255, 0.7);
+  }
+
+  .nav-live-dot {
+    position: relative;
+    display: inline-block;
+    width: 0.375rem;
+    height: 0.375rem;
+    flex-shrink: 0;
+    border-radius: 9999px;
+    background: var(--success);
+  }
+  .nav-live-dot::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    background: var(--success);
+    animation: nav-live-ping 2.8s var(--ease) infinite;
+  }
+  @keyframes nav-live-ping {
+    0% {
+      transform: scale(1.6);
+      opacity: 0.6;
+    }
+    70% {
+      transform: scale(2.6);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(2.6);
+      opacity: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .nav-live-dot::after {
+      animation: none;
+      opacity: 0;
+    }
   }
 </style>
