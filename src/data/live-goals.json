@@ -214,7 +214,7 @@
       "owner_id": "outbound",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-12T14:28:53.597779+00:00"
+      "updated_at": "2026-08-12T14:36:16.022643+00:00"
     },
     {
       "created_at": "2026-08-10T14:42:53.516527+00:00",
@@ -608,9 +608,33 @@
       "name": "Enable direct Buffer publishing for Threads and YouTube Shorts",
       "operator": "eq",
       "owner_id": "system-improvement",
-      "stage": "ACT",
+      "stage": "EVALUATE",
       "target": true,
-      "updated_at": "2026-08-12T14:27:17.564312+00:00"
+      "updated_at": "2026-08-12T14:32:10.074269+00:00"
+    },
+    {
+      "created_at": "2026-08-12T14:33:22.007825+00:00",
+      "goal_status": "active",
+      "id": "goal-content-leads-20260812",
+      "metric": "all_children_achieved",
+      "name": "Generate 10 daily content-attributed SpielOS services leads",
+      "operator": "eq",
+      "owner_id": "director",
+      "stage": "DECIDE",
+      "target": true,
+      "updated_at": "2026-08-12T14:33:23.901005+00:00"
+    },
+    {
+      "created_at": "2026-08-12T14:33:36.319425+00:00",
+      "goal_status": "achieved",
+      "id": "goal-content-attribution-v1-20260812",
+      "metric": "acceptance_tests_passed",
+      "name": "Measure content-attributed visits, conversion rate, and daily service leads",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "stage": "OBSERVE",
+      "target": true,
+      "updated_at": "2026-08-12T14:36:09.103797+00:00"
     }
   ],
   "heartbeat": {
@@ -621,7 +645,7 @@
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-12T14:28:53.600366+00:00"
+    "updated_at": "2026-08-12T14:36:16.024576+00:00"
   },
   "runtime_state": {
     "current_run": {
@@ -632,7 +656,7 @@
       "run_id": "run-7f4669930e",
       "run_status": "waiting",
       "stage": "EVALUATE",
-      "updated_at": "2026-08-12T14:28:53.600366+00:00"
+      "updated_at": "2026-08-12T14:36:16.024576+00:00"
     },
     "heartbeat": {
       "goal_id": "goal-email-campaign-20260810",
@@ -642,22 +666,22 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-12T14:28:53.600366+00:00"
+      "updated_at": "2026-08-12T14:36:16.024576+00:00"
     },
-    "last_activity_at": "2026-08-12T14:28:53.600366+00:00",
-    "last_sync_at": "2026-08-12T14:28:53.630697+00:00",
+    "last_activity_at": "2026-08-12T14:36:16.024576+00:00",
+    "last_sync_at": "2026-08-12T14:36:16.041903+00:00",
     "state": "running"
   },
   "totals": {
-    "approvals": 42,
-    "decisions": 72,
-    "evidence": 783,
+    "approvals": 43,
+    "decisions": 73,
+    "evidence": 788,
     "goals_abandoned": 9,
-    "goals_achieved": 35,
-    "goals_active": 6,
-    "goals_total": 51,
-    "hypotheses": 10,
+    "goals_achieved": 36,
+    "goals_active": 7,
+    "goals_total": 53,
+    "hypotheses": 12,
     "memory_claims": 1,
-    "runs": 52
+    "runs": 54
   }
 }
