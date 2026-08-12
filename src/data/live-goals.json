@@ -214,7 +214,7 @@
       "owner_id": "outbound",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-12T14:43:53.700364+00:00"
+      "updated_at": "2026-08-12T17:54:48.903702+00:00"
     },
     {
       "created_at": "2026-08-10T14:42:53.516527+00:00",
@@ -656,9 +656,117 @@
       "name": "Operate the content growth program toward 200 daily visits and 10 daily services leads",
       "operator": "eq",
       "owner_id": "director",
-      "stage": "DECIDE",
+      "stage": "OBSERVE",
       "target": true,
-      "updated_at": "2026-08-12T14:46:24.087546+00:00"
+      "updated_at": "2026-08-12T17:43:32.726558+00:00"
+    },
+    {
+      "created_at": "2026-08-12T14:46:37.498110+00:00",
+      "goal_status": "active",
+      "id": "goal-content-daily-scorecard-v1-20260812",
+      "metric": "funnel_reports",
+      "name": "Measure daily Threads and YouTube content funnel performance",
+      "operator": "ge",
+      "owner_id": "analytics",
+      "stage": "ACT",
+      "target": 1,
+      "updated_at": "2026-08-12T14:46:39.272094+00:00"
+    },
+    {
+      "created_at": "2026-08-12T14:46:37.502499+00:00",
+      "goal_status": "paused",
+      "id": "goal-content-first-live-package-v1-20260812",
+      "metric": "published_items",
+      "name": "Prepare and dispatch the first quality-gated Threads and YouTube Shorts package",
+      "operator": "ge",
+      "owner_id": "content",
+      "stage": "ACT",
+      "target": 1,
+      "updated_at": "2026-08-12T17:48:37.787626+00:00"
+    },
+    {
+      "created_at": "2026-08-12T14:57:05.374729+00:00",
+      "goal_status": "achieved",
+      "id": "goal-content-batched-cadence-v1-20260812",
+      "metric": "acceptance_tests_passed",
+      "name": "Enforce five-item review batches for the 50 Threads and 50 Shorts daily content program",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "stage": "OBSERVE",
+      "target": true,
+      "updated_at": "2026-08-12T15:02:48.494204+00:00"
+    },
+    {
+      "created_at": "2026-08-12T15:13:50.459935+00:00",
+      "goal_status": "paused",
+      "id": "goal-design-template-driven-batch-v1-20260812",
+      "metric": "acceptance_tests_passed",
+      "name": "Make the Design Department render title-led themed Batch 1 social and Shorts variants",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "stage": "ACT",
+      "target": true,
+      "updated_at": "2026-08-12T15:18:24.964374+00:00"
+    },
+    {
+      "created_at": "2026-08-12T15:18:56.697712+00:00",
+      "goal_status": "achieved",
+      "id": "goal-unified-content-funnel-contract-v1-20260812",
+      "metric": "acceptance_tests_passed",
+      "name": "Replace disconnected content production with one campaign-to-lead contract",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "stage": "OBSERVE",
+      "target": true,
+      "updated_at": "2026-08-12T15:37:03.512717+00:00"
+    },
+    {
+      "created_at": "2026-08-12T15:41:45.916592+00:00",
+      "goal_status": "achieved",
+      "id": "goal-adaptive-content-experiment-contract-v1-20260812",
+      "metric": "acceptance_tests_passed",
+      "name": "Support evidence-scaled A/B and multivariate content-funnel experiments",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "stage": "OBSERVE",
+      "target": true,
+      "updated_at": "2026-08-12T16:06:42.977642+00:00"
+    },
+    {
+      "created_at": "2026-08-12T15:48:47.886955+00:00",
+      "goal_status": "achieved",
+      "id": "goal-native-approval-interaction-v1-20260812",
+      "metric": "acceptance_tests_passed",
+      "name": "Surface company approvals as native host questions",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "stage": "OBSERVE",
+      "target": true,
+      "updated_at": "2026-08-12T15:58:13.043680+00:00"
+    },
+    {
+      "created_at": "2026-08-12T16:34:47.344235+00:00",
+      "goal_status": "achieved",
+      "id": "goal-campaign-video-delivery-repair-v1-20260812",
+      "metric": "acceptance_tests_passed",
+      "name": "Repair campaign video narration timing thumbnails and artifact delivery",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "stage": "OBSERVE",
+      "target": true,
+      "updated_at": "2026-08-12T16:48:24.895631+00:00"
+    },
+    {
+      "created_at": "2026-08-12T17:02:13.139400+00:00",
+      "goal_status": "active",
+      "id": "goal-campaign-scene-source-alignment-v1-20260812",
+      "metric": "acceptance_tests_passed",
+      "name": "Bind campaign narration and motion scenes to one current SpielOS source",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "stage": "EVALUATE",
+      "target": true,
+      "updated_at": "2026-08-12T17:47:32.355256+00:00"
     }
   ],
   "heartbeat": {
@@ -669,18 +777,18 @@
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-12T14:43:53.703072+00:00"
+    "updated_at": "2026-08-12T17:54:48.906162+00:00"
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-12T14:46:23.315615+00:00",
-      "goal_id": "goal-content-growth-operations-v1-20260812",
-      "goal_name": "Operate the content growth program toward 200 daily visits and 10 daily services leads",
-      "owner_id": "director",
-      "run_id": "run-174fc3c856",
-      "run_status": "running",
-      "stage": "DECIDE",
-      "updated_at": "2026-08-12T14:46:24.088670+00:00"
+      "created_at": "2026-08-10T14:42:53.503744+00:00",
+      "goal_id": "goal-email-campaign-20260810",
+      "goal_name": "Resume daily English outbound to 30% reply rate",
+      "owner_id": "outbound",
+      "run_id": "run-7f4669930e",
+      "run_status": "waiting",
+      "stage": "EVALUATE",
+      "updated_at": "2026-08-12T17:54:48.906162+00:00"
     },
     "heartbeat": {
       "goal_id": "goal-email-campaign-20260810",
@@ -690,22 +798,22 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-12T14:43:53.703072+00:00"
+      "updated_at": "2026-08-12T17:54:48.906162+00:00"
     },
-    "last_activity_at": "2026-08-12T14:46:24.088670+00:00",
-    "last_sync_at": "2026-08-12T14:46:24.103574+00:00",
+    "last_activity_at": "2026-08-12T17:54:48.906162+00:00",
+    "last_sync_at": "2026-08-12T17:54:48.946146+00:00",
     "state": "running"
   },
   "totals": {
-    "approvals": 44,
-    "decisions": 76,
-    "evidence": 794,
+    "approvals": 51,
+    "decisions": 108,
+    "evidence": 847,
     "goals_abandoned": 9,
-    "goals_achieved": 38,
-    "goals_active": 7,
-    "goals_total": 55,
-    "hypotheses": 14,
+    "goals_achieved": 43,
+    "goals_active": 9,
+    "goals_total": 64,
+    "hypotheses": 21,
     "memory_claims": 1,
-    "runs": 56
+    "runs": 65
   }
 }
