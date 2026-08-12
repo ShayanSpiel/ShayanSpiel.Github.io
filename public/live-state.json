@@ -1,13 +1,13 @@
 {
   "current_run": {
-    "created_at": "2026-08-10T14:42:53.503744+00:00",
-    "goal_id": "goal-email-campaign-20260810",
-    "goal_name": "Resume daily English outbound to 30% reply rate",
-    "owner_id": "outbound",
-    "run_id": "run-7f4669930e",
-    "run_status": "waiting",
-    "stage": "EVALUATE",
-    "updated_at": "2026-08-12T14:36:16.024576+00:00"
+    "created_at": "2026-08-12T14:46:23.315615+00:00",
+    "goal_id": "goal-content-growth-operations-v1-20260812",
+    "goal_name": "Operate the content growth program toward 200 daily visits and 10 daily services leads",
+    "owner_id": "director",
+    "run_id": "run-174fc3c856",
+    "run_status": "running",
+    "stage": "DECIDE",
+    "updated_at": "2026-08-12T14:46:24.088670+00:00"
   },
   "heartbeat": {
     "goal_id": "goal-email-campaign-20260810",
@@ -17,21 +17,21 @@
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-12T14:36:16.024576+00:00"
+    "updated_at": "2026-08-12T14:43:53.703072+00:00"
   },
-  "last_activity_at": "2026-08-12T14:36:16.024576+00:00",
-  "last_sync_at": "2026-08-12T14:36:16.041903+00:00",
+  "last_activity_at": "2026-08-12T14:46:24.088670+00:00",
+  "last_sync_at": "2026-08-12T14:46:24.103574+00:00",
   "state": "running",
   "totals": {
-    "approvals": 43,
-    "decisions": 73,
-    "evidence": 788,
+    "approvals": 44,
+    "decisions": 76,
+    "evidence": 794,
     "goals_abandoned": 9,
-    "goals_achieved": 36,
+    "goals_achieved": 38,
     "goals_active": 7,
-    "goals_total": 53,
-    "hypotheses": 12,
+    "goals_total": 55,
+    "hypotheses": 14,
     "memory_claims": 1,
-    "runs": 54
+    "runs": 56
   }
 }
