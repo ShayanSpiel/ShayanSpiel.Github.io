@@ -7,8 +7,9 @@ _CONNECTIONS = {
     item.id: item for item in (
         ConnectionSpec(
             "buffer",
-            "Social publishing through the active Codex app or OpenCode MCP.",
-            ("create_draft", "schedule", "publish", "verify"),
+            "Direct Buffer GraphQL publishing for approved Threads and YouTube packages.",
+            ("create_draft", "schedule", "publish", "verify", "metrics", "delete"),
+            ("direct",), True, ("BUFFER_API_KEY",),
         ),
         ConnectionSpec(
             "posthog",

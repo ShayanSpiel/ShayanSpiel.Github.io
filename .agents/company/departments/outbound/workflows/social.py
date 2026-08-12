@@ -80,28 +80,6 @@ def drafts_from_evidence(evidence, prospects) -> list[dict]:
     return values
 
 
-def agent_request(goal_id: str, workflow_id: str, needed: int) -> dict:
-    if workflow_id == "social-lead-research":
-        return {
-            "capability": "social_prospect_research",
-            "workflow_id": workflow_id,
-            "agent_id": "social-researcher",
-            "skill_ids": ["outbound-email", "outbound"],
-            "needed": needed,
-            "completion_evidence": "social_prospect evidence records that pass ICP and source validation",
-            "next_trigger": f"company retry {goal_id}",
-        }
-    return {
-        "capability": "personalized_dm_drafting",
-        "workflow_id": workflow_id,
-        "agent_id": "outreach-writer",
-        "skill_ids": ["outbound-email", "copywriting-en", "copywriting-fa"],
-        "needed": needed,
-        "completion_evidence": "dm_draft evidence records linked to researched social prospects",
-        "next_trigger": f"company retry {goal_id}",
-    }
-
-
 def _http_url(value: str) -> bool:
     parsed = urlparse(value)
     return parsed.scheme in {"http", "https"} and bool(parsed.netloc)

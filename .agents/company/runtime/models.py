@@ -93,8 +93,33 @@ class StageResult:
 
 
 @dataclass(frozen=True)
+class WorkflowStep:
+    """One Lego node inside a WorkflowSpec graph.
+
+    kind:
+      employee   — open a durable work order for an employee
+      approval   — park until runtime approval key "execute"
+      connection — host/connection handoff that must record evidence
+      machine    — optional pure code hook on the Department
+    """
+
+    id: str
+    kind: str = "employee"
+    employee_id: str | None = None
+    produces: tuple[str, ...] = ()
+    requires: tuple[str, ...] = ()
+    skill_ids: tuple[str, ...] = ()
+    connection_ids: tuple[str, ...] = ()
+
+
+@dataclass(frozen=True)
 class WorkflowSpec:
-    """A named playbook inside a Department; never a second runtime loop."""
+    """A named playbook inside a Department; never a second runtime loop.
+
+    `steps` remains the human-readable playbook labels.
+    `graph` is the optional executable Lego chain; when empty the interpreter
+    synthesizes one employee shortfall from agents + evidence_sources.
+    """
 
     id: str
     description: str
@@ -104,6 +129,7 @@ class WorkflowSpec:
     approval_points: tuple[str, ...] = ()
     evidence_sources: tuple[str, ...] = ()
     connection_ids: tuple[str, ...] = ()
+    graph: tuple[WorkflowStep, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -115,19 +141,6 @@ class AgentSpec:
     skill_ids: tuple[str, ...]
     permissions: tuple[str, ...]
     produces: tuple[str, ...]
-
-
-@dataclass(frozen=True)
-class ContentPackage:
-    """A run artifact grouping one idea and its coordinated deliverables."""
-
-    id: str
-    goal_id: str
-    run_id: str
-    brief: dict[str, Any]
-    deliverables: tuple[dict[str, Any], ...] = ()
-    evidence_ids: tuple[str, ...] = ()
-    publication: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -149,7 +162,6 @@ class GoalHandler:
     description = ""
     goal_schema: dict[str, Any] = {}
     version = "1.0.0"
-    deprecated = False
 
     def observe(self, ctx: GoalContext) -> StageResult:
         raise NotImplementedError
@@ -165,9 +177,20 @@ class GoalHandler:
 
 
 class Department(GoalHandler):
-    """Human-facing business unit plugged into the one company runtime."""
+    """Human-facing business unit plugged into the one company runtime.
+
+    A clean Lego department package declares:
+      - workflows (WorkflowSpec + optional graph)
+      - agent_ids / workflow_agents
+      - evidence_metrics (metric → accepted evidence kinds)
+      - goal_schema (metrics + config enums)
+
+    Execution is supplied by runtime.interpreter.InterpretedDepartment unless
+    a Department overrides stages for a special path (e.g. live email send).
+    """
 
     department_id = ""
     workflows: tuple[WorkflowSpec, ...] = ()
     agent_ids: tuple[str, ...] = ()
-    production_ready = True
+    evidence_metrics: dict = {}
+    workflow_agents: dict = {}

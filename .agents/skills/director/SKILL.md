@@ -78,6 +78,12 @@ shell request.
 4. Treat approval as a hard stop. Show exact artifact, action, scope, risk, and
    consequence. The `approve` command releases the approved action and the
    runner continues automatically.
+   When the notification provides `approval_interaction`, invoke the host's
+   native question control immediately (`question` in OpenCode;
+   `request_user_input` in Codex when exposed) with separate Approve and Reject
+   choices. Never combine approvals. If unavailable, show the same fields as a
+   prominent blocking question with its exact fallback command. Execute only
+   after Approve; Reject leaves the action parked.
 5. Evidence commands wake evaluation and parent Director goals automatically.
 6. Read pending notifications for approval, blocker, evaluation, and completion
    reports. Acknowledge only after communicating them.

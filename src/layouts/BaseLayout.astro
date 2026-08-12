@@ -188,7 +188,7 @@ const lang = locale === "fa" ? "fa" : "en";
     </script>
 
     <!-- Deferred: load gtag.js + initialize PostHog -->
-    <script is:inline define:vars={{ gaId: ANALYTICS.googleAnalyticsId, phKey: ANALYTICS.posthogApiKey, phHost: ANALYTICS.posthogApiHost }}>
+    <script is:inline define:vars={{ gaId: ANALYTICS.googleAnalyticsId, phKey: ANALYTICS.posthogApiKey, phHost: ANALYTICS.posthogApiHost, contentSources: ANALYTICS.contentSources, attributionParameters: ANALYTICS.attributionParameters }}>
       (function(){
         var started = false;
         function loadAnalytics(){
@@ -215,13 +215,18 @@ const lang = locale === "fa" ? "fa" : "en";
     </script>
 
     <!-- Event tracking: CTA clicks, outbound links, scroll depth, form submits -->
-    <script is:inline>
+    <script is:inline define:vars={{ contentSources: ANALYTICS.contentSources, attributionParameters: ANALYTICS.attributionParameters }}>
       (function(){
         'use strict';
 
         function track(eventName, params){
           if(!window.__spielosAnalyticsConsent) return;
           params = params || {};
+          var context = attribution();
+          Object.keys(context).forEach(function(key){
+            if(params[key] === undefined) params[key] = context[key];
+          });
+          if(params.page_path === undefined) params.page_path = window.location.pathname;
           if(typeof gtag === 'function'){ gtag('event', eventName, params); }
           if(typeof posthog !== 'undefined' && posthog && typeof posthog.capture === 'function'){
             posthog.capture(eventName, params);
@@ -242,6 +247,31 @@ const lang = locale === "fa" ? "fa" : "en";
 
         function getLocale(){
           return document.documentElement.lang || 'en';
+        }
+
+        function attribution(){
+          var params = new URLSearchParams(window.location.search);
+          var current = { landing_path: window.location.pathname };
+          attributionParameters.forEach(function(key){
+            var value = (params.get(key) || '').trim().toLowerCase();
+            if(value && /^[a-z0-9._-]{1,120}$/.test(value)) current[key] = value;
+          });
+          var hasCampaign = Object.keys(current).length > 1;
+          var stored = {};
+          try {
+            stored = JSON.parse(sessionStorage.getItem('spielos.content-attribution') || '{}');
+          } catch(err) {}
+          var context = hasCampaign ? current : stored;
+          if(hasCampaign){
+            try { sessionStorage.setItem('spielos.content-attribution', JSON.stringify(current)); } catch(err) {}
+          }
+          return {
+            landing_path: context.landing_path || window.location.pathname,
+            source: context.utm_source || 'direct',
+            medium: context.utm_medium || 'none',
+            campaign: context.utm_campaign || 'none',
+            content_id: context.utm_content || 'none'
+          };
         }
 
         /* ---- Lead form funnel tracking ---- */
@@ -305,12 +335,12 @@ const lang = locale === "fa" ? "fa" : "en";
           var link = el.tagName === 'A' ? el : el.closest('a');
           if(link){
             var href = link.getAttribute('href') || '';
-            if(href.indexOf('/services/') !== -1 && href.indexOf('agent-briefing') !== -1){
+            if(href.indexOf('/services/') !== -1){
               track('cta_clicked', {
                 page: getPage(),
                 device: getDevice(),
                 locale: getLocale(),
-                cta_type: 'agent_briefing',
+                cta_type: href.indexOf('agent-briefing') !== -1 ? 'agent_briefing' : 'services',
                 link_text: (link.textContent || '').trim().substring(0, 100)
               });
             }
@@ -399,11 +429,20 @@ const lang = locale === "fa" ? "fa" : "en";
           }
         });
 
+        function recordContentLanding(){
+          if(!window.__spielosAnalyticsConsent) return;
+          var context = attribution();
+          if(contentSources.indexOf(context.source) !== -1){
+            track('content_landing', { page: getPage(), device: getDevice(), locale: getLocale() });
+          }
+        }
+
         /* ---- Initialize observers after DOM ready ---- */
         if(document.readyState === 'loading'){
-          document.addEventListener('DOMContentLoaded', observeWaitlistResult);
+          document.addEventListener('DOMContentLoaded', function(){ observeWaitlistResult(); recordContentLanding(); });
         }else{
           observeWaitlistResult();
+          recordContentLanding();
         }
       })();
     </script>

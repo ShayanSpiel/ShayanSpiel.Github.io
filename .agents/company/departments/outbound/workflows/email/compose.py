@@ -319,10 +319,21 @@ def pick_queue(cohort_filters: dict | None = None) -> list:
     return q
 
 
-def build_batch_emails(batch_id: str, leads: list, hypothesis: str) -> dict:
-    """Compose every lead in `leads` into the batch artifact. Strict mode:
-    unprepared leads are skipped with a reason; domains are deduped within
-    the batch. Returns {"emails": [...], "skipped": [...]}."""
+def build_batch_emails(batch_id: str, leads: list, hypothesis: str,
+                       limit: int | None = None) -> dict:
+    """Compose leads into the batch artifact. Strict mode: unprepared leads
+    are skipped with a reason; domains are deduped within the batch.
+
+    Owner order 2026-08-11 (batch floor): when `limit` is set, the WHOLE
+    queue is walked and composition stops as soon as `limit` emails are
+    composed — skips inside the first block (unprepared leads, same-domain
+    duplicates) no longer shrink the batch. Strict rules are NEVER relaxed
+    to reach the limit; when the queue cannot fill it, what is available is
+    returned with queue_exhausted=true. With limit=None (default) the
+    behavior is unchanged and the result is exactly
+    {"emails": [...], "skipped": [...]}.
+
+    Returns {"emails": [...], "skipped": [...], "queue_exhausted": bool}."""
     emails = []
     skipped = []
     seen_domains = set()
@@ -352,4 +363,9 @@ def build_batch_emails(batch_id: str, leads: list, hypothesis: str) -> dict:
                 "variant": f"offer-{offer_variant_index(i) + 1}",
             },
         })
-    return {"emails": emails, "skipped": skipped}
+        if limit is not None and len(emails) >= limit:
+            break
+    result = {"emails": emails, "skipped": skipped}
+    if limit is not None:
+        result["queue_exhausted"] = len(emails) < limit
+    return result

@@ -39,9 +39,24 @@ class CompanySnapshotTests(unittest.TestCase):
         output = self.capture("status")
         self.assertIn("# SpielOS company", output)
         self.assertIn("Snapshot goal", output)
+        self.assertIn("Open work orders", output)
         self.assertNotIn("allowed_files", output)
         self.assertNotIn("x" * 100, output)
         self.assertLess(len(output), 5_000)
+
+    def test_status_and_tasks_surface_open_work_orders(self):
+        goal = self.goal("goal-work-order")
+        blocked = self.runtime.once(goal["id"])
+        self.assertEqual("blocked", blocked["cycle"]["run_status"])
+        orders = self.runtime.store.work_orders(status="open", goal_id=goal["id"])
+        self.assertEqual(1, len(orders))
+        self.assertEqual("content-strategist", orders[0]["employee_id"])
+        output = self.capture("status")
+        self.assertIn(orders[0]["id"], output)
+        self.assertIn("content-strategist", output)
+        tasks = self.capture("tasks")
+        self.assertIn(orders[0]["id"], tasks)
+        self.assertIn("content-strategist", tasks)
 
     def test_raw_status_remains_an_explicit_full_audit_escape_hatch(self):
         self.goal("goal-raw")
@@ -58,11 +73,19 @@ class CompanySnapshotTests(unittest.TestCase):
         self.runtime.store.notify(goal["id"], cycle["id"], "approval_required", {
             "result": {"message": "Review the package"},
             "required_user_action": "Approve the exact package",
+            "approval_interaction": {
+                "question": "Approve this package?", "action": "Publish package",
+                "artifact": "batch-1", "destination": "Threads", "scope": "one batch",
+                "risk": "Public post", "consequence": "Nothing publishes",
+                "fallback_command": "company approve goal-one",
+            },
             "large": "x" * 10_000,
         })
         output = self.capture("status", goal["id"])
         self.assertIn("Approve the exact package", output)
         self.assertIn("awaiting_approval", output)
+        self.assertIn("Approve this package?", output)
+        self.assertIn("company approve goal-one", output)
         self.assertNotIn("x" * 100, output)
         self.assertLess(len(output), 5_000)
 

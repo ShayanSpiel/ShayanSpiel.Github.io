@@ -10,7 +10,7 @@
 <html lang="en" data-theme="gruvbox-dark">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>SpielOS company harness</title>
+  <title>SpielOS content template</title>
   <link rel="stylesheet" href="/.agents/company/departments/design/system/production.css">
   <link rel="stylesheet" href="/node_modules/boxicons/css/boxicons.min.css">
   <style>
@@ -43,6 +43,7 @@
     .social-goal::before { content: ""; width: 52%; aspect-ratio: 1; border-radius: inherit; background: var(--primary); }
     h1 { max-width: 14ch; margin: 0; text-align: center; color: var(--foreground-strong); font-size: clamp(40px, 7.2cqw, 116px); font-weight: 800; line-height: .98; letter-spacing: -.045em; }
     h1 .accent { color: var(--primary); }
+    .template-hook { max-width: 42ch; margin: 0; text-align: center; color: var(--muted-foreground); font: 500 clamp(18px, 2.1cqw, 32px)/1.25 var(--font-sans); }
     footer { margin-bottom: 5cqh; color: var(--muted-foreground); font: 500 clamp(20px, 1.7cqw, 26px)/1 var(--font-mono); }
     /* Stations: HTML dots placed at the exact path vertices (the line is
        drawn through them), so a node can never drift off the line. */
@@ -100,7 +101,7 @@
   </svg>
 
   <header>
-    <div class="eyebrow">The company is the product</div>
+    <div class="eyebrow" id="template-eyebrow">Campaign context required</div>
   </header>
 
   <main>
@@ -118,7 +119,8 @@
       <i class="bx bx-chevron-right loop-arrow a4"></i>
       <div class="social-goal" aria-label="Goal"></div>
     </div>
-    <h1 class="canvas-title">One loop.<br><span class="accent">Lego-block Departments.</span></h1>
+    <h1 class="canvas-title" id="template-title">Campaign title required</h1>
+    <p class="template-hook" id="template-hook">Design renders only from the shared campaign Artifact.</p>
   </main>
 
   <span class="station s1" data-label="Outbound"></span>
@@ -129,5 +131,35 @@
 
   <footer><span class="brand-lockup"><img src="/public/assets/favicons/favicon.svg" alt="">spielos.xyz</span></footer>
 </div>
+<script>
+  (function () {
+    function applyRendition(order) {
+      if (!order || !order.design || !Array.isArray(order.design.title_lines)) {
+        document.documentElement.dataset.templateReady = 'error';
+        throw new Error('A typed campaign rendition is required');
+      }
+      var design = order.design;
+      document.documentElement.dataset.theme = design.theme;
+      document.body.dataset.layout = design.layout;
+      document.body.dataset.campaignId = order.campaign_id;
+      document.body.dataset.batchId = order.batch_id;
+      document.body.dataset.itemId = order.item_id;
+      document.body.dataset.contentId = order.content_id;
+      document.getElementById('template-eyebrow').textContent = design.eyebrow;
+      document.getElementById('template-hook').textContent = design.supporting_text;
+      document.getElementById('template-title').innerHTML = design.title_lines.map(function (line, index) {
+          var text = line.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+          return index === design.accent_line ? '<span class="accent">' + text + '</span>' : text;
+      }).join('<br>');
+      document.querySelectorAll('.station').forEach(function (station, index) {
+        station.dataset.label = (design.station_labels || [])[index] || station.dataset.label;
+      });
+      document.title = 'SpielOS — ' + design.title_lines.join(' ');
+      document.documentElement.dataset.templateReady = 'true';
+    }
+    window.__applyCampaignRendition = applyRendition;
+    document.documentElement.dataset.templateReady = 'waiting';
+  }());
+</script>
 </body>
 </html>

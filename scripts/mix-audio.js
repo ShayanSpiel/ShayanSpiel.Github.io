@@ -34,7 +34,6 @@ const MANIFEST = join(AUDIO, ".voice-manifest.json");
 const TEMPLATES = join(ROOT, ".agents/company/departments/design/templates/video");
 const SCENARIOS = { b: ["hook", "pain", "promise", "pillars", "director", "cta"], c: ["hook", "build", "live", "director", "cta"] };
 
-const DURATION = 15;
 const LUFS_TARGET = -16;
 const TRUE_PEAK = -1;
 
@@ -74,6 +73,11 @@ if (!timing.voice || timing.voice !== cfgVoice) {
   console.error(`Voice mismatch: scene_timing.voice=${timing.voice} vs voice_selection=${cfgVoice}. Regenerate every clip with the pinned voice; never mix generations.`);
   process.exit(1);
 }
+const DURATION = Number(timing.duration || timing.scenes?.at(-1)?.end || 0);
+if (!Number.isFinite(DURATION) || DURATION <= 0 || DURATION >= 60) {
+  console.error(`Invalid narration-led duration: ${DURATION}. Shorts must be positive and under 60 seconds.`);
+  process.exit(1);
+}
 
 /* Manifest provenance (stale-proofing against leftover clips). */
 if (existsSync(MANIFEST)) {
@@ -102,20 +106,26 @@ for (const s of scenes) {
 console.log(`\n  Mixing scenario ${scenario} — ${scenes.length} narration clips (voice: ${timing.voice}), NARRATION-ONLY (no music bed)`);
 console.log(`  Spec: ${LUFS_TARGET} LUFS · TP ${TRUE_PEAK} dBTP · 48kHz AAC\n`);
 
-/* Voice bus: window = schedule end - start (speech + settle). The clip was
-   generated to that measured window, so atrim never cuts speech; fades only
-   ease the edges. Delay to the measured scene start. */
+/* Voice bus uses the explicit measured speech window, not the larger visual
+   scene window. This preserves the readable visual lead/hold without adding
+   silence to, truncating, or shifting the spoken take. */
 const inputs = scenes.map((s, i) => `-i ${join(AUDIO, s.clip)}`).join(" ");
 const prepped = scenes.map((s, i) => {
-  const window = Math.max(s.end - s.start, 0.5);
+  const speechStart = Number(s.speech_start);
+  const speechEnd = Number(s.speech_end);
+  const window = speechEnd - speechStart;
+  if (!Number.isFinite(window) || window <= 0) {
+    console.error(`Invalid measured speech window for ${s.scene}`);
+    process.exit(1);
+  }
   const trim = `atrim=0:${window.toFixed(2)}`;
   const fade = `afade=t=in:st=0:d=0.04,afade=t=out:st=${(window - 0.06).toFixed(2)}:d=0.06`;
-  const delayMs = Math.round(s.start * 1000);
+  const delayMs = Math.round(speechStart * 1000);
   return `[${i}:a]${trim},${fade},adelay=${delayMs}|${delayMs},aformat=channel_layouts=stereo[v${i}]`;
 });
 
 const mixInputs = scenes.map((_, i) => `[v${i}]`).join("");
-const final = `${mixInputs}amix=inputs=${scenes.length}:normalize=0:dropout_transition=0,loudnorm=I=${LUFS_TARGET}:TP=${TRUE_PEAK - 0.5}:LRA=11[out]`;
+const final = `${mixInputs}amix=inputs=${scenes.length}:normalize=0:dropout_transition=0,loudnorm=I=${LUFS_TARGET}:TP=${TRUE_PEAK - 0.5}:LRA=11,apad=whole_dur=${DURATION}[out]`;
 
 const filter = [...prepped, final].join(";");
 

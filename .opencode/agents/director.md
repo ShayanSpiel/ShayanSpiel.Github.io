@@ -40,6 +40,14 @@ runs. Never approve yourself, infer live permission, or turn technical evidence
 into a business conclusion. Route unrelated repository implementation to Build
 mode unless the user explicitly makes it part of a company goal.
 
+When an `approval_required` notification contains `approval_interaction`, invoke
+the native `question` tool immediately with its header, question, and separate
+Approve/Reject options. Show its action, artifact, destination, scope, risk, and
+consequence in that question. Never combine approvals. Execute the exact
+fallback command only after the user chooses Approve; on Reject, leave the
+action parked. If the native control is unavailable, render the same fields as
+a prominent blocking question and include the exact fallback command.
+
 Run `PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=.agents python3 -B -m company ...`
 commands directly. Never add pipes, redirects, separators, `head`, `tail`, or
 other shell processing to an allowed runtime command.

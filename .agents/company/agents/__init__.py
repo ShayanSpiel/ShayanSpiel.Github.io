@@ -2,7 +2,16 @@
 
 Codex and OpenCode manifests are client adapters. These records are the stable
 company identities that Departments reference in durable workflow requests.
+
+Built-in employees live in AGENTS. Installed Lego packages may add more under
+agents/installed/*.json; those are merged at load time (installed wins on id clash
+only when not already built-in — built-ins are protected).
 """
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
 
 from ..runtime.models import AgentSpec
 
@@ -96,6 +105,38 @@ AGENTS = {
     )
 }
 
+_INSTALLED_DIR = Path(__file__).resolve().parent / "installed"
 
-def agents():
-    return dict(AGENTS)
+
+def _load_installed_agents() -> dict[str, AgentSpec]:
+    values: dict[str, AgentSpec] = {}
+    if not _INSTALLED_DIR.is_dir():
+        return values
+    for path in sorted(_INSTALLED_DIR.glob("*.json")):
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        agent_id = str(payload.get("id") or "").strip()
+        if not agent_id:
+            continue
+        values[agent_id] = AgentSpec(
+            id=agent_id,
+            description=str(payload.get("description") or agent_id),
+            skill_ids=tuple(str(item) for item in (payload.get("skill_ids") or ())),
+            permissions=tuple(str(item) for item in (
+                payload.get("permissions") or ("read_strategy", "write_evidence"))),
+            produces=tuple(str(item) for item in (payload.get("produces") or ("artifact",))),
+        )
+    return values
+
+
+def agents() -> dict[str, AgentSpec]:
+    """Built-in roster plus any installed Lego employees."""
+
+    roster = dict(AGENTS)
+    for agent_id, agent in _load_installed_agents().items():
+        # Protect core identities; installed packages may only fill new ids.
+        if agent_id not in roster:
+            roster[agent_id] = agent
+    return roster

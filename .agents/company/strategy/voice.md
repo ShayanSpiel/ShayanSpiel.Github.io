@@ -33,3 +33,24 @@ Before producing an asset, answer: if the audience remembers only one idea,
 what should it be, why will they care, and what is the clearest appealing title
 that remains true? State the idea first. Expand only after it is understood.
 Do not mechanically repeat the company headline in every asset.
+
+## Content context and live proof
+
+For cold social audiences, never open with advice that assumes the reader knows
+SpielOS. First establish the operator's situation, the concrete operating
+problem, and what SpielOS does; only then give the lesson, proof, or CTA. Reject
+an asset when a reasonable reader could ask “who is this for?” or “what is this
+about?” after its opening.
+
+At least every fifth paired social idea is a build-in-public story. It uses real
+company evidence to show the trigger, tension, decision, tradeoff, harness rule
+(goal, evidence, approval, or evaluation), and next measurable step. Link to
+`/live/` as proof of the company journey and retain the tracked services CTA as
+the commercial path. Never manufacture customer outcomes, virality, or learning
+that has not been observed.
+
+Campaign copy, titles, narration, CTA, design variables, and learning IDs live
+in one shared campaign Artifact. Departments add typed evidence to that record;
+they never copy these choices into department-owned batch files or templates.
+Design remains the only visual rendering authority. Analytics may propose only
+one documented variable for the next batch after complete comparable evidence.

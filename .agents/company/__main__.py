@@ -21,6 +21,19 @@ def build_parser():
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("departments")
     commands.add_parser("catalog")
+    department = commands.add_parser("department", help="install/validate Department Lego packages")
+    department_commands = department.add_subparsers(dest="department_command", required=True)
+    install = department_commands.add_parser("install")
+    install.add_argument("--spec", help="department_spec JSON object")
+    install.add_argument("--file", help="path to department_spec JSON file")
+    install.add_argument("--force", action="store_true")
+    install.add_argument("--id", help="override/default department id")
+    install.add_argument("--version", help="override/default version")
+    validate = department_commands.add_parser("validate")
+    validate.add_argument("--spec", help="department_spec JSON object")
+    validate.add_argument("--file", help="path to department_spec JSON file")
+    validate.add_argument("--id", help="override/default department id")
+    department_commands.add_parser("list")
     goal = commands.add_parser("goal")
     goals = goal.add_subparsers(dest="goal_command", required=True)
     create = goals.add_parser("create")
@@ -81,6 +94,17 @@ def build_parser():
     notification_commands = notifications.add_subparsers(dest="notification_command", required=True)
     listed = notification_commands.add_parser("list"); listed.add_argument("--status", choices=("pending", "delivered")); listed.add_argument("--limit", type=int, default=100)
     acknowledge = notification_commands.add_parser("ack"); acknowledge.add_argument("notification_id")
+    tasks = commands.add_parser("tasks", help="list durable employee work orders")
+    tasks.add_argument("work_order_id", nargs="?")
+    tasks.add_argument("--status", choices=("active", "open", "claimed", "done", "cancelled"),
+                       default="active")
+    tasks.add_argument("--goal")
+    tasks.add_argument("--limit", type=int, default=50)
+    tasks.add_argument("--json", action="store_true")
+    tasks.add_argument("--claim", metavar="WORKER_ID")
+    tasks.add_argument("--complete", metavar="WORKER_ID")
+    tasks.add_argument("--evidence", default="[]",
+                       help="JSON array of {kind,source?,payload?,validity?}")
     return parser
 
 
@@ -102,6 +126,34 @@ def main(argv=None):
         elif args.command == "catalog":
             from .runtime.catalog import catalog
             output = catalog()
+        elif args.command == "department":
+            from .runtime.install import (
+                install_department, normalize_department_spec, validate_department_spec)
+            from .runtime.package import package_spec, validate_package
+            if args.department_command == "list":
+                output = []
+                for key, value in sorted(departments().items()):
+                    defects = validate_package(value)
+                    output.append({**package_spec(value), "package_defects": defects,
+                                   "lego": not defects})
+            else:
+                if args.file:
+                    payload = json.loads(Path(args.file).read_text())
+                elif args.spec:
+                    payload = json.loads(args.spec)
+                else:
+                    raise ValueError("provide --spec JSON or --file path")
+                if not isinstance(payload, dict):
+                    raise ValueError("department_spec must be a JSON object")
+                if args.department_command == "validate":
+                    normalized = normalize_department_spec(
+                        payload, default_id=args.id)
+                    defects = validate_department_spec(normalized)
+                    output = {"ok": not defects, "defects": defects, "package": normalized}
+                else:
+                    output = install_department(
+                        payload, default_id=args.id, default_version=args.version,
+                        force=args.force)
         elif args.command == "goal" and args.goal_command == "create":
             config = json.loads(args.config)
             hypothesis = json.loads(args.hypothesis)
@@ -191,6 +243,32 @@ def main(argv=None):
                 output = runtime.store.notifications(args.status, args.limit)
             else:
                 output = runtime.store.acknowledge_notification(args.notification_id)
+        elif args.command == "tasks":
+            if args.claim or args.complete:
+                if not args.work_order_id:
+                    raise ValueError("tasks --claim/--complete requires WORK_ORDER_ID")
+                if args.claim and args.complete:
+                    raise ValueError("choose either --claim or --complete")
+                if args.claim:
+                    output = runtime.claim_work_order(args.work_order_id, args.claim)
+                else:
+                    evidence = json.loads(args.evidence)
+                    if not isinstance(evidence, list):
+                        raise ValueError("--evidence must be a JSON array")
+                    output = runtime.complete_work_order(
+                        args.work_order_id, args.complete, evidence)
+                    output = {
+                        "work_order": runtime.store.work_order(args.work_order_id),
+                        "goal": runtime.status(output["work_order"]["goal_id"]),
+                    }
+            elif args.work_order_id:
+                output = runtime.store.work_order(args.work_order_id)
+            else:
+                output = runtime.store.work_orders(
+                    status=args.status, goal_id=args.goal, limit=args.limit)
+            if not args.json and not args.work_order_id:
+                print(render_tasks(output))
+                return 0
         else:
             state = runtime.status(args.goal_id)
             output = {**state, "events": runtime.store.events(args.goal_id, args.events),
@@ -254,6 +332,29 @@ def _goal_line(item):
     return line
 
 
+def _work_order_line(item):
+    accepts = ", ".join(item.get("accepts_evidence") or []) or "capability handoff"
+    goal_name = item.get("goal_name") or item.get("goal_id")
+    line = (f"- `{item['id']}` · {item['employee_id']} · {goal_name} (`{item['goal_id']}`) · "
+            f"need {item['needed']} × [{accepts}]")
+    if item.get("why_next"):
+        line += f"\n  {item['why_next']}"
+    brief = item.get("brief") or {}
+    if brief.get("message"):
+        line += f"\n  {brief['message']}"
+    return line
+
+
+def render_tasks(items):
+    lines = [f"# Work orders ({len(items)})", ""]
+    if not items:
+        lines.append("- None.")
+    else:
+        lines.extend(_work_order_line(item) for item in items)
+    lines += ["", "Any host can pick one up, write accepted evidence, then `company retry GOAL_ID`."]
+    return "\n".join(lines) + "\n"
+
+
 def render_status(value, history=False):
     """Human-first status output that stays small as the audit ledger grows."""
 
@@ -276,15 +377,31 @@ def render_status(value, history=False):
             lines.append(f"- Why/next: `{item['why_next']}`")
         if item.get("verdict"):
             lines.append(f"- Latest evaluation: `{item['verdict']}` · goal met `{item['goal_met']}`")
+        work_orders = value.get("work_orders") or []
+        if work_orders:
+            lines += ["", f"## Open work orders ({len(work_orders)})"]
+            lines.extend(_work_order_line(item) for item in work_orders)
         if value["attention"]:
             lines += ["", "## Needs attention"]
             for attention in value["attention"]:
                 required = attention.get("required_user_action") or attention.get("message") or "Review"
                 lines.append(f"- `{attention['kind']}`: {required}")
-        elif value["unread_results"]:
+                interaction = attention.get("approval_interaction") or {}
+                if interaction:
+                    lines.extend([
+                        f"  - Question: {interaction['question']}",
+                        f"  - Action: {interaction['action']}",
+                        f"  - Artifact: {interaction.get('artifact') or 'none'}",
+                        f"  - Destination: {interaction['destination']}",
+                        f"  - Scope: {interaction['scope']}",
+                        f"  - Risk: {interaction['risk']}",
+                        f"  - Consequence: {interaction['consequence']}",
+                        f"  - Fallback: `{interaction['fallback_command']}`",
+                    ])
+        elif not work_orders and value["unread_results"]:
             lines += ["", "## Unread result",
                       f"- `{value['unread_results'][0]['kind']}` is ready to report."]
-        else:
+        elif not work_orders:
             lines += ["", "No action required."]
         return "\n".join(lines) + "\n"
 
@@ -305,6 +422,12 @@ def render_status(value, history=False):
             lines.append(f"- `{item['kind']}` · {item['name']} (`{item['goal_id']}`): {required}")
     else:
         lines.append("- Nothing requires action.")
+    work_orders = value.get("work_orders") or []
+    lines += ["", f"## Open work orders ({len(work_orders)})"]
+    if work_orders:
+        lines.extend(_work_order_line(item) for item in work_orders)
+    else:
+        lines.append("- None.")
     active = value["active_goals"]
     lines += ["", f"## Active goals ({len(active)})"]
     lines.extend(_goal_line(item) for item in active) if active else lines.append("- None.")

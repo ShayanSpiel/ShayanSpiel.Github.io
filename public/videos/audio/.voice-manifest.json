@@ -1,0 +1,44 @@
+{
+  "voice": "Charon",
+  "voice_selection": "Charon",
+  "chain": [
+    "gemini",
+    "mistral",
+    "cartesia",
+    "elevenlabs"
+  ],
+  "updated_at": "2026-08-12T17:38:47.676Z",
+  "scenarios": {
+    "b": {
+      "provider": "mistral",
+      "provider_voice": "en_paul_confident",
+      "campaign_id": "content-leads-20260812",
+      "batch_id": "content-leads-20260812-batch-01",
+      "item_id": "batch-01-item-04",
+      "generated_at": "2026-08-12T17:35:42.658Z",
+      "clips": {
+        "hook": 3.318,
+        "pain": 1.64,
+        "promise": 2.277,
+        "pillars": 1.17,
+        "director": 1.471,
+        "cta": 6.353
+      }
+    },
+    "c": {
+      "provider": "mistral",
+      "provider_voice": "en_paul_confident",
+      "campaign_id": "content-leads-20260812",
+      "batch_id": "content-leads-20260812-batch-01",
+      "item_id": "batch-01-item-05",
+      "generated_at": "2026-08-12T17:38:47.676Z",
+      "clips": {
+        "hook": 1.989,
+        "build": 1.111,
+        "live": 2.005,
+        "director": 1.705,
+        "cta": 6.009
+      }
+    }
+  }
+}

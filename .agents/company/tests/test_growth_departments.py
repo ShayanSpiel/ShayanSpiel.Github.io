@@ -5,7 +5,7 @@ from pathlib import Path
 from company.connections import connection, connections
 from company.departments.seo.keywords import build_opportunities
 from company.runtime.catalog import catalog
-from company.runtime.models import ContentPackage, Department, GoalContext, Goal
+from company.runtime.models import Department, GoalContext, Goal
 from company.runtime.registry import departments
 
 
@@ -20,6 +20,7 @@ class GrowthDepartmentTests(unittest.TestCase):
         value = catalog()
         self.assertNotIn("tools", value)
         self.assertNotIn("control_engines", value)
+        self.assertEqual("interpreter", value["runtime"]["department_runtime"])
         self.assertEqual({"buffer", "posthog", "search-console", "website", "web-research",
                           "email-delivery"},
                          {item["id"] for item in value["connections"]})
@@ -31,12 +32,8 @@ class GrowthDepartmentTests(unittest.TestCase):
             for connection_id in workflow["connections"]
         }
         self.assertLessEqual(referenced, known_connections)
-
-    def test_content_package_is_only_a_serializable_run_artifact(self):
-        item = ContentPackage("pkg-1", "goal-1", "run-1", {"idea": "one loop"},
-                              ({"kind": "x_post"},), ("ev-1",), {})
-        self.assertEqual("run-1", item.run_id)
-        self.assertFalse(isinstance(item, Department))
+        lego = {item["id"] for item in value["departments"] if item.get("lego")}
+        self.assertTrue({"content", "design", "analytics", "seo"}.issubset(lego))
 
     def test_department_requests_agent_then_evaluates_typed_evidence(self):
         goal = Goal("g", "graphics", "design", "rendition_count", "ge", 1,
@@ -45,6 +42,10 @@ class GrowthDepartmentTests(unittest.TestCase):
         ctx = GoalContext(goal, {"evidence": []}, (), lambda _: None)
         decision = department.decide(ctx, department.observe(ctx).payload)
         self.assertEqual("request_agent", decision.payload["action"])
+        self.assertEqual("designer", decision.payload["agent_id"])
+        self.assertEqual(["graphic_render"], decision.payload["accepted_evidence_kinds"])
+        self.assertEqual(["spielos-ui"], decision.payload["skill_ids"])
+        self.assertEqual("rendition-pack", decision.payload["workflow_id"])
         ctx = GoalContext(goal, {"evidence": [{"kind": "graphic_render"}]}, (), lambda _: None)
         decision = department.decide(ctx, department.observe(ctx).payload)
         self.assertEqual("evaluate", decision.payload["action"])
@@ -56,10 +57,19 @@ class GrowthDepartmentTests(unittest.TestCase):
         evidence = [{"kind": "content_package", "payload": {"channel_id": "channel", "text": "hello"}}]
         department = departments()["content"]
         waiting = GoalContext(goal, {"evidence": evidence}, (), lambda _: None)
-        decision = department.decide(waiting, department.observe(waiting).payload)
+        observation = department.observe(waiting).payload
+        decision = department.decide(waiting, observation)
+        self.assertEqual("request_approval", decision.payload["action"])
         self.assertEqual("awaiting_approval", department.act(waiting, decision.payload).run_status.value)
         approved = GoalContext(goal, {"evidence": evidence}, (), lambda _: "approved")
-        result = department.act(approved, decision.payload)
+        advanced = department.act(approved, decision.payload)
+        self.assertEqual("DECIDE", advanced.next_stage.value)
+        next_decision = department.decide(approved, department.observe(approved).payload)
+        self.assertEqual("connection_dispatch", next_decision.payload["action"])
+        # Connection dispatch also requires approval before host handoff.
+        self.assertEqual("awaiting_approval",
+                         department.act(waiting, next_decision.payload).run_status.value)
+        result = department.act(approved, next_decision.payload)
         self.assertEqual("blocked", result.run_status.value)
         self.assertEqual("buffer", result.payload["connection_request"]["connection_id"])
         self.assertEqual("publication_receipt", result.payload["connection_request"]["required_evidence"])
@@ -89,6 +99,25 @@ class DesignContractTests(unittest.TestCase):
         self.assertIn((True, False, False), ratios)
         self.assertIn((False, True, False), ratios)
         self.assertIn((False, False, True), ratios)
+
+    def test_campaign_video_templates_have_no_legacy_scene_copy_or_spoken_pronunciation_instruction(self):
+        root = Path(__file__).parents[3]
+        sources = "\n".join((root / path).read_text() for path in (
+            ".agents/company/departments/design/templates/video/scenario-b.html",
+            ".agents/company/departments/design/templates/video/scenario-c.html",
+        ))
+        for stale in ("Employees using AI separately", "Repeated prompts, copied context",
+                      "One assistant doing everything", "Hire a role", "AI directs"):
+            self.assertNotIn(stale, sources)
+        for field in ("visual.headline", "visual.supporting_text", "visual.component",
+                      "visual.icon", "visual.labels"):
+            self.assertIn(field, sources)
+        tts = (root / "scripts/tts-gemini.js").read_text()
+        self.assertNotIn("SpielOS (pronounced", tts)
+        self.assertIn('[/SpielOS/g, "Shpeel O S"]', tts)
+        self.assertIn('spoken_display_alignment === "url-pronunciation"', tts)
+        self.assertIn('displayed === "spielos.xyz/services"', tts)
+        self.assertIn('spoken === "go to spielos dot xyz slash services."', tts)
 
     def test_keyword_research_marks_unmeasured_demand_unknown(self):
         values = build_opportunities(["AI department", "company harness"],

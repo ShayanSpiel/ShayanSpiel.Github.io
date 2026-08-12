@@ -223,12 +223,40 @@ class Store:
                     created_at TEXT NOT NULL, delivered_at TEXT,
                     UNIQUE(goal_id,run_id,kind)
                 );
+                CREATE TABLE IF NOT EXISTS work_orders (
+                    id TEXT PRIMARY KEY,
+                    goal_id TEXT NOT NULL REFERENCES goals(id),
+                    run_id TEXT NOT NULL REFERENCES runs(id),
+                    employee_id TEXT NOT NULL,
+                    workflow_id TEXT,
+                    step_id TEXT,
+                    needed INTEGER NOT NULL DEFAULT 1,
+                    accepts_evidence_json TEXT NOT NULL,
+                    brief_json TEXT NOT NULL,
+                    status TEXT NOT NULL,
+                    claimed_by TEXT,
+                    claimed_at TEXT,
+                    result_evidence_ids_json TEXT NOT NULL DEFAULT '[]',
+                    created_at TEXT NOT NULL,
+                    updated_at TEXT NOT NULL
+                );
+                CREATE INDEX IF NOT EXISTS idx_work_orders_status
+                    ON work_orders(status, created_at);
+                CREATE INDEX IF NOT EXISTS idx_work_orders_goal_run
+                    ON work_orders(goal_id, run_id, status);
             """)
             change_columns = {row[1] for row in con.execute("PRAGMA table_info(change_tasks)")}
             if "change_kind" not in change_columns:
                 con.execute("ALTER TABLE change_tasks ADD COLUMN change_kind TEXT NOT NULL DEFAULT 'repair'")
             if "specification_json" not in change_columns:
                 con.execute("ALTER TABLE change_tasks ADD COLUMN specification_json TEXT NOT NULL DEFAULT '{}'")
+            work_order_columns = {
+                row[1] for row in con.execute("PRAGMA table_info(work_orders)")
+            }
+            if "claimed_by" not in work_order_columns:
+                con.execute("ALTER TABLE work_orders ADD COLUMN claimed_by TEXT")
+            if "claimed_at" not in work_order_columns:
+                con.execute("ALTER TABLE work_orders ADD COLUMN claimed_at TEXT")
             con.execute("""INSERT OR IGNORE INTO runs
                 SELECT c.id,c.goal_id,'execution',NULL,NULL,g.owner_id,'unversioned',NULL,
                        g.config_json,'{}','{}','business',NULL,NULL,c.run_status,c.created_at,c.updated_at
@@ -442,6 +470,7 @@ class Store:
             payload = self._normalize(json.loads(item.pop("payload_json")))
             item["message"] = (payload.get("result") or {}).get("message")
             item["required_user_action"] = payload.get("required_user_action")
+            item["approval_interaction"] = payload.get("approval_interaction")
             why_next = _why_next_for_kind(item["kind"], payload)
             if why_next:
                 item["why_next"] = why_next
@@ -646,6 +675,8 @@ class Store:
                 con.execute(f"""UPDATE notifications SET status='delivered',delivered_at=?
                     WHERE goal_id=? AND status='pending' AND kind IN ({marks})""",
                     (stamp, goal_id, *ACTIONABLE_NOTIFICATION_KINDS))
+                con.execute("""UPDATE work_orders SET status='cancelled',updated_at=?
+                    WHERE goal_id=? AND status='open'""", (stamp, goal_id))
 
     def event(self, goal_id: str, cycle_id: str | None, kind: str, payload: dict) -> None:
         with self.connect() as con:
@@ -755,3 +786,197 @@ class Store:
     def release(self, goal_id: str, holder: str) -> None:
         with self.connect() as con:
             con.execute("DELETE FROM leases WHERE goal_id=? AND holder=?", (goal_id, holder))
+
+    def open_work_order(self, *, goal_id: str, run_id: str, employee_id: str,
+                        needed: int = 1, accepts_evidence: list | None = None,
+                        workflow_id: str | None = None, step_id: str | None = None,
+                        brief: dict | None = None) -> dict:
+        """Create or refresh one open employee assignment for a goal run.
+
+        Idempotent per (goal_id, run_id, employee_id) while status is open so
+        re-persisting a blocked ACT does not duplicate work for the same employee.
+        """
+
+        accepts = list(accepts_evidence or [])
+        needed = max(1, int(needed))
+        brief = dict(brief or {})
+        stamp = now()
+        with self.connect() as con:
+            row = con.execute("""SELECT * FROM work_orders
+                WHERE goal_id=? AND run_id=? AND employee_id=?
+                  AND COALESCE(workflow_id,'')=COALESCE(?,'')
+                  AND COALESCE(step_id,'')=COALESCE(?,'')
+                  AND status IN ('open','claimed')
+                ORDER BY created_at DESC LIMIT 1""", (
+                    goal_id, run_id, employee_id, workflow_id, step_id)).fetchone()
+            if row:
+                con.execute("""UPDATE work_orders SET needed=?,accepts_evidence_json=?,
+                    workflow_id=COALESCE(?,workflow_id),step_id=COALESCE(?,step_id),
+                    brief_json=?,updated_at=? WHERE id=?""", (
+                    needed, json.dumps(accepts), workflow_id, step_id,
+                    json.dumps(brief), stamp, row["id"]))
+                order_id = row["id"]
+            else:
+                order_id = f"work-{uuid.uuid4().hex[:12]}"
+                con.execute("""INSERT INTO work_orders(
+                    id,goal_id,run_id,employee_id,workflow_id,step_id,needed,
+                    accepts_evidence_json,brief_json,status,claimed_by,claimed_at,
+                    result_evidence_ids_json,created_at,updated_at)
+                    VALUES (?,?,?,?,?,?,?,?,?,'open',NULL,NULL,'[]',?,?)""", (
+                    order_id, goal_id, run_id, employee_id, workflow_id, step_id, needed,
+                    json.dumps(accepts), json.dumps(brief), stamp, stamp))
+                con.execute(
+                    "INSERT INTO events(goal_id,cycle_id,kind,payload_json,created_at) VALUES (?,?,?,?,?)",
+                    (goal_id, run_id, "work_order.opened",
+                     json.dumps({"work_order_id": order_id, "employee_id": employee_id,
+                                 "needed": needed, "accepts_evidence": accepts}), stamp))
+        return self.work_order(order_id)
+
+    def work_order(self, work_order_id: str) -> dict:
+        with self.connect() as con:
+            row = con.execute("SELECT * FROM work_orders WHERE id=?", (work_order_id,)).fetchone()
+        value = self._decode(row)
+        if not value:
+            raise KeyError(f"unknown work order: {work_order_id}")
+        return value
+
+    def work_orders(self, *, status: str | None = "open", goal_id: str | None = None,
+                    run_id: str | None = None, limit: int = 50) -> list[dict]:
+        clauses, parameters = [], []
+        if status == "active":
+            clauses.append("w.status IN ('open','claimed')")
+        elif status:
+            clauses.append("w.status=?")
+            parameters.append(status)
+        if goal_id:
+            clauses.append("w.goal_id=?")
+            parameters.append(goal_id)
+        if run_id:
+            clauses.append("w.run_id=?")
+            parameters.append(run_id)
+        where = f"WHERE {' AND '.join(clauses)}" if clauses else ""
+        parameters.append(max(1, min(int(limit), 100)))
+        with self.connect() as con:
+            rows = con.execute(f"""SELECT w.*,g.name AS goal_name,g.owner_id,g.goal_status
+                FROM work_orders w JOIN goals g ON g.id=w.goal_id
+                {where}
+                ORDER BY w.created_at,w.id LIMIT ?""", parameters).fetchall()
+        values = []
+        for row in rows:
+            item = self._decode(row)
+            if item["status"] == "open":
+                item["why_next"] = (
+                    f"open — {item['employee_id']} must produce "
+                    f"{item['needed']} accepted artifact(s); then `company retry {item['goal_id']}`")
+            elif item["status"] == "claimed":
+                item["why_next"] = (
+                    f"claimed by {item['claimed_by']} — complete this exact assignment "
+                    "with linked evidence")
+            elif item["status"] == "done":
+                item["why_next"] = "done — accepted evidence recorded; retry the goal if still blocked"
+            else:
+                item["why_next"] = f"{item['status']} — no further employee action"
+            values.append(item)
+        return values
+
+    def claim_work_order(self, work_order_id: str, worker_id: str) -> dict:
+        """Atomically assign one open work order to exactly one host worker."""
+
+        worker_id = str(worker_id or "").strip()
+        if not worker_id:
+            raise ValueError("worker_id is required")
+        stamp = now()
+        with self.connect() as con:
+            current = con.execute(
+                "SELECT * FROM work_orders WHERE id=?", (work_order_id,)).fetchone()
+            if current is None:
+                raise KeyError(f"unknown work order: {work_order_id}")
+            if current["status"] == "claimed" and current["claimed_by"] == worker_id:
+                return self._decode(current)
+            if current["status"] != "open":
+                owner = current["claimed_by"] or current["status"]
+                raise RuntimeError(f"work order is not available (owned by {owner})")
+            changed = con.execute("""UPDATE work_orders
+                SET status='claimed',claimed_by=?,claimed_at=?,updated_at=?
+                WHERE id=? AND status='open'""",
+                (worker_id, stamp, stamp, work_order_id)).rowcount
+            if changed != 1:
+                raise RuntimeError("work order was claimed by another worker")
+            row = con.execute(
+                "SELECT * FROM work_orders WHERE id=?", (work_order_id,)).fetchone()
+            con.execute(
+                "INSERT INTO events(goal_id,cycle_id,kind,payload_json,created_at) VALUES (?,?,?,?,?)",
+                (row["goal_id"], row["run_id"], "work_order.claimed",
+                 json.dumps({"work_order_id": work_order_id, "worker_id": worker_id}), stamp))
+        return self._decode(row)
+
+    def complete_work_order(self, work_order_id: str, evidence_ids: list | None = None,
+                            worker_id: str | None = None) -> dict:
+        stamp = now()
+        with self.connect() as con:
+            current = con.execute("SELECT * FROM work_orders WHERE id=?", (work_order_id,)).fetchone()
+            if current is None:
+                raise KeyError(f"unknown work order: {work_order_id}")
+            if current["status"] != "open":
+                if current["status"] == "done":
+                    return self._decode(current)
+                if current["status"] != "claimed":
+                    raise RuntimeError(f"work order cannot complete from {current['status']}")
+            if current["status"] == "claimed" and current["claimed_by"] != worker_id:
+                raise RuntimeError(
+                    f"work order is claimed by {current['claimed_by']}; {worker_id!r} cannot complete it")
+            con.execute("""UPDATE work_orders SET status='done',result_evidence_ids_json=?,
+                updated_at=? WHERE id=? AND status='open'""",
+                        (json.dumps(list(evidence_ids or [])), stamp, work_order_id))
+            if current["status"] == "claimed":
+                con.execute("""UPDATE work_orders SET status='done',result_evidence_ids_json=?,
+                    updated_at=? WHERE id=? AND status='claimed' AND claimed_by=?""",
+                    (json.dumps(list(evidence_ids or [])), stamp, work_order_id, worker_id))
+            row = con.execute("SELECT * FROM work_orders WHERE id=?", (work_order_id,)).fetchone()
+        value = self._decode(row)
+        self.event(value["goal_id"], value["run_id"], "work_order.done",
+                   {"work_order_id": work_order_id,
+                    "evidence_ids": list(evidence_ids or [])})
+        return value
+
+    def cancel_open_work_orders(self, goal_id: str, run_id: str | None = None,
+                                reason: str = "cancelled") -> int:
+        stamp = now()
+        with self.connect() as con:
+            if run_id:
+                cur = con.execute("""UPDATE work_orders SET status='cancelled',updated_at=?
+                    WHERE goal_id=? AND run_id=? AND status IN ('open','claimed')""",
+                                 (stamp, goal_id, run_id))
+            else:
+                cur = con.execute("""UPDATE work_orders SET status='cancelled',updated_at=?
+                    WHERE goal_id=? AND status IN ('open','claimed')""", (stamp, goal_id))
+            count = cur.rowcount
+        if count:
+            self.event(goal_id, run_id, "work_order.cancelled",
+                       {"count": count, "reason": reason})
+        return count
+
+    def refresh_work_orders_for_run(self, goal_id: str, run_id: str) -> list[dict]:
+        """Mark open work orders done when accepted evidence meets the needed count."""
+
+        evidence = self.evidence(run_id)
+        completed = []
+        active = self.work_orders(status="active", goal_id=goal_id, run_id=run_id, limit=100)
+        for order in active:
+            accepts = set(order.get("accepts_evidence") or [])
+            if not accepts:
+                continue
+            linked = [item for item in evidence
+                      if (item.get("payload") or {}).get("work_order_id") == order["id"]]
+            if linked:
+                matched = [item for item in linked if item.get("kind") in accepts]
+            elif len(active) == 1:
+                # Backward compatibility for existing single-assignment runs.
+                matched = [item for item in evidence if item.get("kind") in accepts]
+            else:
+                matched = []
+            if len(matched) >= int(order.get("needed") or 1):
+                completed.append(self.complete_work_order(
+                    order["id"], [item["id"] for item in matched[: int(order["needed"])]],
+                    worker_id=order.get("claimed_by")))
+        return completed

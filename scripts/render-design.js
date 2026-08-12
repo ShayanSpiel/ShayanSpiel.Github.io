@@ -11,6 +11,9 @@ const DESIGN_ROOT = join(ROOT, ".agents/company/departments/design");
 const TEMPLATE = join(DESIGN_ROOT, "templates/social/harness-architecture.html");
 const PRESETS_FILE = join(DESIGN_ROOT, "presets.json");
 const OUTPUT_ROOT = join(ROOT, ".spielos/artifacts/design-showcase/graphics");
+const CAMPAIGN_MANIFEST = process.env.CAMPAIGN_MANIFEST
+  ? resolve(process.env.CAMPAIGN_MANIFEST) : null;
+const CAMPAIGN_ITEM_ID = process.env.CAMPAIGN_ITEM_ID || "";
 const MIME = { ".html": "text/html", ".css": "text/css", ".js": "application/javascript",
   ".json": "application/json", ".woff2": "font/woff2", ".png": "image/png", ".svg": "image/svg+xml" };
 
@@ -63,6 +66,8 @@ function validateStatic(failures) {
   if (!html.includes("social-goal")) failures.push("template does not carry the goal bullseye");
   if (!html.includes("spielos.xyz")) failures.push("template does not show the canonical website");
   if (html.includes("Tools stay stable")) failures.push("template uses the retired Tool vocabulary");
+  if (html.includes("batch-01.json")) failures.push("template is coupled to a hardcoded campaign batch");
+  if (!html.includes("__applyCampaignRendition")) failures.push("template lacks the shared campaign rendition handoff");
   /* Canvas composition (owner contract №6): flat connected journey line +
      loop symbol + centered bold title — NOT a card-with-arrows layout. */
   if (!html.includes("canvas-title")) failures.push("template missing centered .canvas-title");
@@ -86,10 +91,43 @@ function validateStatic(failures) {
 
 /* In-render gate: the fonts, centered bold title, loop symbol, journey line,
    and stations must ACTUALLY render (not fall back, not empty). */
+function checkFixture() {
+  return { campaign_id: "contract-check", batch_id: "contract-check-batch", item_id: "contract-check-item",
+    content_id: "contract-check-item-threads", design: {
+      template_id: "harness-architecture", theme: "gruvbox-dark", surface: "background",
+      color_role: "primary", alignment: "center", layout: "centered-journey",
+      size_preset: "threads-portrait", eyebrow: "SpielOS campaign contract",
+      title_lines: ["Context first.", "One clear idea."], accent_line: 1,
+      supporting_text: "A render receives its title and hierarchy from one shared campaign Artifact.",
+      station_labels: ["Strategy", "Design", "Publish", "Measure", "Decide"],
+    } };
+}
+
+function campaignOrder(manifestPath, itemId) {
+  if (!manifestPath || !itemId) {
+    if (process.env.LEGACY_DESIGN_RENDER === "1") return checkFixture();
+    throw new Error("Set CAMPAIGN_MANIFEST and CAMPAIGN_ITEM_ID to render a campaign asset");
+  }
+  const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+  const item = (manifest.items || []).find((entry) => entry.item_id === itemId);
+  if (!item) throw new Error(`Campaign item not found: ${itemId}`);
+  const rendition = item.renditions?.threads;
+  if (!rendition?.design) throw new Error(`Threads Design order missing for ${itemId}`);
+  return { campaign_id: manifest.campaign_id, batch_id: manifest.batch_id, item_id: item.item_id,
+    content_id: rendition.content_id, design: rendition.design };
+}
+
+async function applyOrder(page, order) {
+  await page.waitForFunction(() => typeof window.__applyCampaignRendition === "function", { timeout: 8000 });
+  await page.evaluate((value) => window.__applyCampaignRendition(value), order);
+  await page.waitForFunction(() => document.documentElement.dataset.templateReady === "true", { timeout: 8000 });
+}
+
 async function renderGate(baseUrl, browser) {
   const page = await browser.newPage();
   await page.setViewport({ width: 1600, height: 900, deviceScaleFactor: 1 });
   await page.goto(`${baseUrl}/.agents/company/departments/design/templates/social/harness-architecture.html`, { waitUntil: "networkidle0" });
+  await applyOrder(page, checkFixture());
   await page.evaluate(() => document.fonts.ready);
   await new Promise((r) => setTimeout(r, 300));
   return page.evaluate(() => {
@@ -194,13 +232,15 @@ async function render() {
   mkdirSync(output, { recursive: true });
   const { server, base } = await startServer();
   const browser = await launch();
+  const order = campaignOrder(CAMPAIGN_MANIFEST, CAMPAIGN_ITEM_ID);
   try {
     const page = await browser.newPage();
     for (const [name, size] of selected) {
       await page.setViewport({ ...size, deviceScaleFactor: 1 });
       await page.goto(`${base}/.agents/company/departments/design/templates/social/harness-architecture.html`, { waitUntil: "networkidle0" });
+      await applyOrder(page, order);
       await page.evaluate(() => document.fonts.ready);
-      await page.screenshot({ path: join(output, `harness-architecture-${name}-${size.width}x${size.height}.png`) });
+      await page.screenshot({ path: join(output, `${order.content_id}-${name}-${size.width}x${size.height}.png`) });
       console.log(`Rendered ${name} ${size.width}x${size.height}`);
     }
   } finally { await browser.close(); server.close(); }

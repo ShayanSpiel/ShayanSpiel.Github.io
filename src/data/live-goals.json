@@ -214,7 +214,7 @@
       "owner_id": "outbound",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-12T19:02:34.055178+00:00"
+      "updated_at": "2026-08-12T19:12:22.800682+00:00"
     },
     {
       "created_at": "2026-08-10T14:42:53.516527+00:00",
@@ -658,7 +658,7 @@
       "owner_id": "director",
       "stage": "OBSERVE",
       "target": true,
-      "updated_at": "2026-08-12T17:43:32.726558+00:00"
+      "updated_at": "2026-08-12T19:11:19.969992+00:00"
     },
     {
       "created_at": "2026-08-12T14:46:37.498110+00:00",
@@ -682,7 +682,7 @@
       "owner_id": "content",
       "stage": "ACT",
       "target": 1,
-      "updated_at": "2026-08-12T19:00:48.028030+00:00"
+      "updated_at": "2026-08-12T19:11:19.647399+00:00"
     },
     {
       "created_at": "2026-08-12T14:57:05.374729+00:00",
@@ -789,7 +789,7 @@
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-12T19:02:34.057493+00:00"
+    "updated_at": "2026-08-12T19:12:22.802354+00:00"
   },
   "runtime_state": {
     "current_run": {
@@ -800,7 +800,7 @@
       "run_id": "run-7f4669930e",
       "run_status": "waiting",
       "stage": "EVALUATE",
-      "updated_at": "2026-08-12T19:02:34.057493+00:00"
+      "updated_at": "2026-08-12T19:12:22.802354+00:00"
     },
     "heartbeat": {
       "goal_id": "goal-email-campaign-20260810",
@@ -810,16 +810,16 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-12T19:02:34.057493+00:00"
+      "updated_at": "2026-08-12T19:12:22.802354+00:00"
     },
-    "last_activity_at": "2026-08-12T19:02:34.057493+00:00",
-    "last_sync_at": "2026-08-12T19:02:34.100255+00:00",
+    "last_activity_at": "2026-08-12T19:12:22.802354+00:00",
+    "last_sync_at": "2026-08-12T19:12:22.817891+00:00",
     "state": "running"
   },
   "totals": {
-    "approvals": 52,
-    "decisions": 110,
-    "evidence": 859,
+    "approvals": 54,
+    "decisions": 115,
+    "evidence": 864,
     "goals_abandoned": 9,
     "goals_achieved": 44,
     "goals_active": 10,

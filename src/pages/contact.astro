@@ -99,6 +99,7 @@ const breadcrumbJsonLd = {
 
         form.addEventListener('submit', async function(e) {
           e.preventDefault();
+          if (typeof window.spielosTrack === 'function') window.spielosTrack('lead_form_submit', { form_type: 'contact' });
           errorEl.classList.add('hidden');
           btn.disabled = true;
           btn.classList.add('opacity-70', 'cursor-not-allowed');
@@ -119,12 +120,14 @@ const breadcrumbJsonLd = {
             if (response.ok) {
               form.classList.add('hidden');
               successState.classList.remove('hidden');
+              if (typeof window.spielosTrack === 'function') window.spielosTrack('lead_form_success', { form_type: 'contact' });
             } else {
               throw new Error('Submission failed');
             }
           } catch (err) {
             errorEl.textContent = 'Something went wrong. Please try again or email us directly.';
             errorEl.classList.remove('hidden');
+            if (typeof window.spielosTrack === 'function') window.spielosTrack('lead_form_error', { form_type: 'contact' });
             btn.disabled = false;
             btn.classList.remove('opacity-70', 'cursor-not-allowed');
             text.textContent = originalText;

@@ -1,8 +1,8 @@
 {
-  "version": "1.0.0",
+  "version": "3.0.0",
   "privacy": "No raw email, phone, message, or free-text fields.",
   "stages": [
-    {"id": "attention", "events": ["$pageview", "content_impression"]},
+    {"id": "attention", "events": ["$pageview", "content_landing", "content_impression"]},
     {"id": "engagement", "events": ["content_engagement", "cta_clicked"]},
     {"id": "intent", "events": ["lead_form_start"]},
     {"id": "lead", "events": ["lead_form_submit", "lead_form_success"]},
@@ -10,5 +10,20 @@
     {"id": "conversation", "events": ["booked_call"]},
     {"id": "revenue", "events": ["sale"]}
   ],
-  "required_properties": ["locale", "page_path", "source", "medium", "campaign", "content_id"]
+  "campaign_join_keys": ["campaign_id", "batch_id", "item_id", "content_id", "creative_signature"],
+  "objectives": {"qualified_visits_per_day": 200, "leads_per_day": 10, "lead_conversion_rate": 0.05},
+  "formulas": {
+    "ctr": "content_landings / platform_views",
+    "service_intent_rate": "service_cta_clicks / content_landings",
+    "lead_conversion_rate": "leads / content_landings"
+  },
+  "experiment_contract": {
+    "test_types": ["single-variable", "a/b", "factorial", "funnel"],
+    "scopes": ["cross-channel-creative", "website-cro"],
+    "variable_count": {"minimum": 1, "maximum": 3, "sparse_evidence_default": 1},
+    "required": ["control_and_variant_cells", "assignment", "primary_metric", "guardrails", "minimum_evidence_per_cell", "analysis_method"],
+    "multi_change_rule": "Independent effects for every variable or one supported interaction effect.",
+    "website_mutation": "Separate approval required."
+  },
+  "required_properties": ["locale", "page_path", "landing_path", "source", "medium", "campaign", "campaign_id", "batch_id", "item_id", "content_id", "platform", "creative_signature", "batch_number", "batch_item", "hook_id", "narrative_type"]
 }

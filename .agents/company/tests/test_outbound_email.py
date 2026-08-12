@@ -1036,3 +1036,111 @@ class ReplyDisplayToleranceTests(unittest.TestCase):
         self.assertEqual(kept["contact_name"], "Old Name")
         # Identity the newest carries wins (newest-wins rule)
         self.assertEqual(kept["company"], "NewCo")
+
+
+class BatchFillLimitTests(unittest.TestCase):
+    """Bounded repair 2026-08-11 (goal-email-batch-fill-20260811, outbound
+    3.3.2 -> 3.3.3): build_batch_emails(limit=N) walks the WHOLE queue and
+    stops once N emails are composed, so unprepared leads and same-domain
+    duplicates inside the first block no longer shrink the batch below the
+    50-lead floor (live: 35/50 on goal-email-send-20260811-b1). Strict
+    compose rules and the domain dedupe policy are unchanged — skipped leads
+    still carry their real reasons; when the queue cannot fill the limit the
+    available remainder is returned with queue_exhausted=true. Hermetic —
+    synthetic leads only, no network, no master.
+
+    Fixture arithmetic note: the recorded spec pairs "60 leads" with "exactly
+    50 emails and 15 skipped", which cannot both hold (60 - 15 = 45). The
+    fixture uses 65 leads (first 50 contain the 15 skips; 15 sendable leads
+    follow) so the recorded assertion holds exactly and the deep-pull is
+    exercised."""
+
+    @staticmethod
+    def _lead(seq, prepared=True, domain=None):
+        c = dict(RESEARCHED, lead_id=f"EN-{3000 + seq}",
+                 email=f"owner{seq}@{domain or f'acme{seq}-uk.com'}",
+                 company=f"Acme {seq}")
+        if not prepared:
+            c["pain_hypothesis"] = "The company likely has a staffing workflow"
+        return c
+
+    @staticmethod
+    def _first_50_with_15_skips_and_15_after():
+        """65 leads: first 50 = 35 sendable + 9 unprepared + 6 same-domain
+        duplicates (15 skips inside the first block); 15 sendable leads
+        follow. Without the fix a queue[:50] slice yields only 35 emails."""
+        leads = [BatchFillLimitTests._lead(s) for s in range(35)]
+        leads += [BatchFillLimitTests._lead(s, prepared=False)
+                  for s in range(35, 44)]
+        leads += [BatchFillLimitTests._lead(s, domain=f"acme{s - 44}-uk.com")
+                  for s in range(44, 50)]
+        leads += [BatchFillLimitTests._lead(s) for s in range(50, 65)]
+        return leads
+
+    def test_BatchFillLimit_fills_50_despite_15_skips_in_first_50(self):
+        """(a) limit=50 with skips inside the first 50 pulls deeper into the
+        queue and returns exactly 50 emails and 15 skipped — the strict skip
+        reasons are preserved, nothing is fabricated."""
+        leads = self._first_50_with_15_skips_and_15_after()
+        self.assertEqual(len(leads), 65)
+        built = compose.build_batch_emails("B1", leads, "h", limit=50)
+        self.assertEqual(len(built["emails"]), 50)
+        self.assertEqual(len(built["skipped"]), 15)
+        reasons = [s["reason"] for s in built["skipped"]]
+        self.assertEqual(sum("unprepared" in r for r in reasons), 9)
+        self.assertEqual(sum("already in this batch" in r for r in reasons), 6)
+        self.assertFalse(built["queue_exhausted"])
+        # The fill pulled past the first 50: the deepest sendable lead (the
+        # 65th queue entry) is composed; no lead is composed twice.
+        self.assertEqual(built["emails"][-1]["lead_id"], "EN-3064")
+        ids = [e["lead_id"] for e in built["emails"]]
+        self.assertEqual(len(ids), len(set(ids)))
+
+    def test_BatchFillLimit_queue_exhausted_returns_available(self):
+        """(b) 40 sendable leads with limit=50 returns the 40 available
+        emails plus queue_exhausted=true — never fabricated content."""
+        leads = [self._lead(s) for s in range(40)]
+        built = compose.build_batch_emails("B1", leads, "h", limit=50)
+        self.assertEqual(len(built["emails"]), 40)
+        self.assertEqual(built["skipped"], [])
+        self.assertTrue(built["queue_exhausted"])
+
+    def test_BatchFillLimit_no_limit_backward_compatible(self):
+        """(c) Without a limit the behavior and result shape are unchanged:
+        every sendable lead is composed, skips carry real reasons, and no
+        queue_exhausted key is added."""
+        leads = ([self._lead(s) for s in range(3)]
+                 + [self._lead(3, prepared=False)]
+                 + [self._lead(4, domain="acme0-uk.com")])
+        built = compose.build_batch_emails("B1", leads, "h")
+        self.assertEqual(len(built["emails"]), 3)
+        self.assertEqual(len(built["skipped"]), 2)
+        self.assertEqual(set(built.keys()), {"emails", "skipped"})
+
+    def test_BatchFillLimit_prepare_passes_full_queue_with_limit(self):
+        """actor.prepare hands the WHOLE queue to compose with limit=slice_size
+        (min(block_size, daily cap remaining)) and reports emails count,
+        skipped, queue size, limit, and queue_exhausted in the result. The
+        daily cap is still honored: slice_size stays 50 with cap 200 / 0
+        used, and the fill never exceeds it."""
+        from company.departments.outbound.workflows.email import actor
+        leads = self._first_50_with_15_skips_and_15_after()
+        knobs = {"block_size": 50, "daily_cap": 200, "cohort_filters": {}}
+        control = type("C", (), {"knobs": lambda self: knobs})()
+        ctx = type("Ctx", (), {"control": control})()
+        with unittest.mock.patch.object(compose, "pick_queue", return_value=leads), \
+                unittest.mock.patch.object(outbound, "daily_cap",
+                                           return_value=(200, "steady")), \
+                unittest.mock.patch.object(outbound, "sent_today",
+                                           return_value=0), \
+                unittest.mock.patch.object(outbound, "load_sent_log",
+                                           return_value={"sent": []}):
+            result = actor.prepare(ctx, {"batch_id": "B1", "prediction": "p"})
+        self.assertEqual(result["emails_count"], 50)
+        self.assertEqual(len(result["emails"]), 50)
+        self.assertEqual(len(result["skipped"]), 15)
+        self.assertEqual(result["queue_size"], 65)
+        self.assertEqual(result["limit"], 50)
+        self.assertFalse(result["queue_exhausted"])
+        self.assertEqual(result["cap"]["cap"], 200)
+        self.assertEqual(result["emails"][-1]["lead_id"], "EN-3064")

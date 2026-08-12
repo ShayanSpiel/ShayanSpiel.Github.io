@@ -1,11 +1,24 @@
 """Bounded self-improvement: prepare a code task, validate it, version it, return."""
 
+import os
+import shlex
+import subprocess
+import sys
+import tempfile
+
+from .install import (
+    allowed_install_files,
+    install_department,
+    normalize_department_spec,
+    validate_department_spec,
+    REPO_ROOT,
+)
 from .models import GoalHandler, GoalStatus, RunStatus, Stage, StageResult
 
 
 class SystemImprovement(GoalHandler):
     id = "system-improvement"
-    version = "1.1.0"
+    version = "1.2.0"
     description = "Coordinates bounded runtime repairs or new Departments with approval and test evidence."
     goal_schema = {
         "metrics": ["acceptance_tests_passed"],
@@ -19,6 +32,7 @@ class SystemImprovement(GoalHandler):
             "originating_run_id": {"type": "string"},
             "change_kind": {"enum": ["repair", "create_department"]},
             "department_spec": {"type": "object", "required_when": {"change_kind": "create_department"}},
+            "force_install": {"type": "boolean"},
         },
     }
 
@@ -41,6 +55,17 @@ class SystemImprovement(GoalHandler):
             missing.append("change_kind(repair|create_department)")
         if change_kind == "create_department" and not config.get("department_spec"):
             missing.append("department_spec")
+        if change_kind == "create_department" and config.get("department_spec"):
+            defects = validate_department_spec({
+                **dict(config.get("department_spec") or {}),
+                "id": (config.get("department_spec") or {}).get("id") or config.get("owner_id"),
+                "version": (config.get("department_spec") or {}).get("version") or config.get("target_version"),
+            })
+            if defects:
+                return StageResult("diagnose", {"missing": defects}, RunStatus.BLOCKED, Stage.DECIDE,
+                                   decision={"type": "block_invalid_department_spec",
+                                             "rationale": "department_spec failed package validation",
+                                             "payload": {"defects": defects}})
         if missing:
             return StageResult("diagnose", {"missing": missing}, RunStatus.BLOCKED, Stage.DECIDE,
                                decision={"type": "block_invalid_change_task",
@@ -50,6 +75,8 @@ class SystemImprovement(GoalHandler):
             action = {"action": "create_change_task"}
         elif tasks[-1]["status"] == "proposed":
             action = {"action": "approve_change_task", "task_id": tasks[-1]["id"]}
+        elif tasks[-1]["status"] == "approved" and config.get("change_kind") == "create_department":
+            action = {"action": "install_department", "task_id": tasks[-1]["id"]}
         elif tasks[-1]["status"] in ("completed", "failed"):
             action = {"action": "evaluate_change", "task_id": tasks[-1]["id"]}
         else:
@@ -68,16 +95,32 @@ class SystemImprovement(GoalHandler):
                 task = previous["task"]
                 if ctx.approval_status("execute") != "approved":
                     return StageResult("review", previous, RunStatus.AWAITING_APPROVAL, Stage.ACT)
-                task = ctx.update_change_task(task["id"], "approved", {})
-                return StageResult("execute_change", {"task": task}, RunStatus.BLOCKED, Stage.ACT,
-                                   message="Coding executor must modify only allowed files and record acceptance results")
+                if ctx.update_change_task and task.get("status") == "proposed":
+                    task = ctx.update_change_task(task["id"], "approved", {})
+                return self._after_approval(ctx, task)
             if not ctx.create_change_task:
                 return StageResult("prepare", {"error": "change-task capability unavailable"},
                                    RunStatus.FAILED, Stage.ACT)
+            allowed = list(config["allowed_files"])
+            if config.get("change_kind") == "create_department":
+                dept_id = (config.get("department_spec") or {}).get("id") or config["owner_id"]
+                try:
+                    preview = normalize_department_spec(
+                        dict(config.get("department_spec") or {}),
+                        default_id=str(dept_id).replace("-", "_"),
+                        default_version=config.get("target_version"),
+                    )
+                    install_paths = allowed_install_files(
+                        preview["id"], preview.get("agent_ids") or [])
+                except ValueError:
+                    install_paths = allowed_install_files(str(dept_id).replace("-", "_"))
+                for path in install_paths:
+                    if path not in allowed:
+                        allowed.append(path)
             task = ctx.create_change_task({
                 "owner_id": config["owner_id"], "from_version": config["from_version"],
                 "target_version": config["target_version"], "problem": config["problem"],
-                "allowed_files": config["allowed_files"], "acceptance_tests": config["acceptance_tests"],
+                "allowed_files": allowed, "acceptance_tests": config["acceptance_tests"],
                 "originating_run_id": config.get("originating_run_id"),
                 "change_kind": config.get("change_kind", "repair"),
                 "specification": config.get("department_spec", {}),
@@ -88,11 +131,105 @@ class SystemImprovement(GoalHandler):
             if ctx.approval_status("execute") != "approved":
                 return StageResult("review", decision, RunStatus.AWAITING_APPROVAL, Stage.ACT)
             task = ctx.update_change_task(decision["task_id"], "approved", {})
-            return StageResult("execute_change", {"task": task}, RunStatus.BLOCKED, Stage.ACT,
-                               message="Coding executor must modify only allowed files and record acceptance results")
+            return self._after_approval(ctx, task)
+        if action == "install_department":
+            task = next((item for item in (ctx.cycle.get("change_tasks") or ())
+                         if item["id"] == decision.get("task_id")), None)
+            if not task:
+                return StageResult("install", {"error": "change task missing"}, RunStatus.FAILED, Stage.ACT)
+            return self._install_department(ctx, task)
         if action == "wait_for_executor":
             return StageResult("execute_change", decision, RunStatus.BLOCKED, Stage.ACT)
         return StageResult("validate_change", decision, next_stage=Stage.EVALUATE)
+
+    def _after_approval(self, ctx, task):
+        config = ctx.goal.config
+        if config.get("change_kind") == "create_department":
+            return self._install_department(ctx, task)
+        return StageResult("execute_change", {"task": task}, RunStatus.BLOCKED, Stage.ACT,
+                           message="Coding executor must modify only allowed files and record acceptance results")
+
+    def _install_department(self, ctx, task):
+        config = ctx.goal.config
+        spec = dict(config.get("department_spec") or task.get("specification") or {})
+        dept_id = str(spec.get("id") or config.get("owner_id") or "").replace("-", "_")
+        try:
+            receipt = install_department(
+                spec,
+                default_id=dept_id,
+                default_version=config.get("target_version"),
+                force=bool(config.get("force_install")),
+                allowed_files=task.get("allowed_files") or config.get("allowed_files"),
+            )
+        except (ValueError, FileExistsError, PermissionError, OSError) as error:
+            if ctx.update_change_task:
+                ctx.update_change_task(task["id"], "failed", {
+                    "passed": False, "error": str(error), "commands": ["company department install"],
+                })
+            return StageResult("install", {"task_id": task["id"], "error": str(error)},
+                               RunStatus.BLOCKED, Stage.ACT,
+                               message=f"Department install failed: {error}")
+        acceptance = self._run_department_acceptance(
+            list(config.get("acceptance_tests") or []))
+        if not acceptance["passed"]:
+            failed = {"passed": False, "deployed": True, "install": receipt,
+                      "acceptance": acceptance}
+            if ctx.update_change_task:
+                ctx.update_change_task(task["id"], "failed", failed)
+            return StageResult(
+                "install", failed, RunStatus.BLOCKED, Stage.ACT,
+                message="Department installed but its declared acceptance command failed")
+        result = {
+            "passed": True,
+            "deployed": True,
+            "acceptance": acceptance,
+            "install": receipt,
+        }
+        if ctx.update_change_task:
+            task = ctx.update_change_task(task["id"], "completed", result)
+        return StageResult("install", {"task": task, "install": receipt},
+                           next_stage=Stage.EVALUATE,
+                           evidence=[{"kind": "department_installed", "source": self.id,
+                                      "validity": "technical_only",
+                                      "payload": {"department_id": receipt["id"],
+                                                  "version": receipt["version"],
+                                                  "written": receipt["written"]}}],
+                           message=f"Installed Department package `{receipt['id']}`")
+
+    @staticmethod
+    def _run_department_acceptance(commands):
+        """Run the small read-only CLI surface accepted for declarative installs."""
+
+        results = []
+        allowed = {("department", "list"), ("catalog",), ("departments",)}
+        environment = {**os.environ, "PYTHONDONTWRITEBYTECODE": "1",
+                       "PYTHONPATH": ".agents"}
+        with tempfile.TemporaryDirectory() as directory:
+            acceptance_db = os.path.join(directory, "company.sqlite")
+            for command in commands:
+                parts = shlex.split(str(command))
+                if parts and parts[0] == "company":
+                    company_args = tuple(parts[1:])
+                elif parts[:4] == ["python3", "-B", "-m", "company"]:
+                    company_args = tuple(parts[4:])
+                else:
+                    company_args = ()
+                if company_args not in allowed:
+                    return {"passed": False, "results": results, "error": (
+                        f"unsupported Department acceptance command: {command}")}
+                completed = subprocess.run(
+                    [sys.executable, "-B", "-m", "company", "--db", acceptance_db,
+                     *company_args], cwd=REPO_ROOT, env=environment,
+                    capture_output=True, text=True)
+                results.append({"command": command, "returncode": completed.returncode,
+                                "stdout": completed.stdout[-2000:],
+                                "stderr": completed.stderr[-2000:]})
+                if completed.returncode != 0:
+                    return {"passed": False, "results": results}
+        return {"passed": True, "results": results,
+                "install_checks": ["normalized", "references_resolved",
+                                   "generated_source_compiles", "catalog_discovery",
+                                   "agent_roster_loaded"]}
 
     def evaluate(self, ctx, action_result):
         tasks = list(ctx.cycle.get("change_tasks") or ())

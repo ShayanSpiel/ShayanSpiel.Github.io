@@ -98,6 +98,12 @@ class RuntimeTests(unittest.TestCase):
         self.assertEqual(parked["cycle"]["stage"], "ACT")
         self.assertEqual(parked["cycle"]["step"], "review")
         self.assertEqual(parked["cycle"]["run_status"], "awaiting_approval")
+        interaction = parked["pending_notifications"][0]["payload"]["approval_interaction"]
+        self.assertEqual("Approval required", interaction["header"])
+        self.assertEqual(["Approve", "Reject"],
+                         [item["label"] for item in interaction["options"]])
+        self.assertIn(goal["id"], interaction["fallback_command"])
+        self.assertEqual("internal runtime", interaction["destination"])
         runtime.approve(goal["id"])
         complete = runtime.once(goal["id"])
         self.assertEqual(complete["goal"]["goal_status"], "achieved")
@@ -167,6 +173,11 @@ class RuntimeTests(unittest.TestCase):
         self.assertEqual(note["kind"], "action_required")
         self.assertEqual(note["payload"]["attention"]["capability"], "lead_research")
         self.assertIn("company retry", note["payload"]["next_trigger"])
+        orders = runtime.store.work_orders(status="open", goal_id=goal["id"])
+        self.assertEqual(1, len(orders))
+        self.assertEqual("lead-researcher", orders[0]["employee_id"])
+        self.assertEqual(7, orders[0]["needed"])
+        self.assertEqual(note["payload"]["work_order_id"], orders[0]["id"])
 
     def test_director_dispatches_child_and_completes(self):
         runtime = self.runtime({"director": Director(), "immediate_test": ImmediateHandler()})
@@ -519,8 +530,9 @@ class DirectorIdentityContractTests(unittest.TestCase):
         prompt = (root / ".codex/agents/director.toml").read_text()
         self.assertIn("You are the operating Director of SpielOS", prompt)
         self.assertIn("Route unrelated repository implementation", prompt)
+        self.assertIn("request_user_input", prompt)
 
-    def test_opencode_notification_hook_is_passive_and_honors_stop(self):
+    def test_opencode_notification_hook_uses_native_question_and_honors_stop(self):
         root = Path(__file__).resolve().parents[3]
         config = (root / "opencode.json").read_text()
         plugin = (root / ".opencode/plugins/spielos-notifications.ts").read_text()
@@ -528,7 +540,9 @@ class DirectorIdentityContractTests(unittest.TestCase):
         self.assertIn('event.type === "session.idle"', plugin)
         self.assertIn('input.command === "stop"', plugin)
         self.assertIn("company runner stop", plugin)
-        self.assertNotIn("promptAsync", plugin)
+        self.assertIn("promptAsync", plugin)
+        self.assertIn('agent: "director"', plugin)
+        self.assertIn("native question tool", plugin)
 
     def test_system_improvement_groups_safe_permissions(self):
         root = Path(__file__).resolve().parents[3]
@@ -697,7 +711,8 @@ class PlainLanguageProjectionTests(unittest.TestCase):
         raw = json.loads(self.capture(runtime, "status", "--raw", goal["id"]))
         self.assertEqual(
             {"goal", "cycle", "run", "evidence", "decisions", "evaluation",
-             "latest_result", "change_tasks", "children", "pending_notifications"},
+             "latest_result", "change_tasks", "work_orders", "children",
+             "pending_notifications"},
             set(raw))
         self.assertEqual({"id", "goal_id", "sequence", "stage", "step", "run_status",
                           "resume_at", "data", "created_at", "updated_at"}, set(raw["cycle"]))
@@ -719,6 +734,7 @@ class PlainLanguageProjectionTests(unittest.TestCase):
         runtime.store.notify(goal["id"], cycle["id"], "approval_required", {
             "result": {"message": "Review the prepared batch"},
             "required_user_action": "Approve the prepared action",
+            "approval_interaction": {"question": "Approve this batch?"},
         })
         runtime.store.notify(goal["id"], cycle["id"], "blocked", {
             "result": {"message": "Coding executor must modify only allowed files",
@@ -729,6 +745,8 @@ class PlainLanguageProjectionTests(unittest.TestCase):
                          "Review the prepared batch")
         self.assertEqual(rows["approval_required"]["why_next"],
                          "approval needed — prepared action needs your approval")
+        self.assertEqual(rows["approval_required"]["payload"]["approval_interaction"]["question"],
+                         "Approve this batch?")
         self.assertEqual(rows["blocked"]["payload"]["result"]["message"],
                          "Coding executor must modify only allowed files")
         self.assertEqual(rows["blocked"]["why_next"], "blocked — needs coding executor")

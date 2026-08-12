@@ -132,6 +132,7 @@ const formCopy = {
   form.addEventListener('submit', async function(e) {
     e.preventDefault();
     if (typeof window.spielosTrack === 'function') window.spielosTrack('agent_briefing_form_submit', { page: window.location.pathname, locale: document.documentElement.lang || 'en' });
+    if (typeof window.spielosTrack === 'function') window.spielosTrack('lead_form_submit', { form_type: 'agent_briefing' });
     errorEl.classList.add('hidden');
     btn.disabled = true;
     btn.classList.add('opacity-70', 'cursor-not-allowed');
@@ -153,6 +154,7 @@ const formCopy = {
         form.classList.add('hidden');
         successState.classList.remove('hidden');
         if (typeof window.spielosTrack === 'function') window.spielosTrack('agent_briefing_form_success', { page: window.location.pathname, locale: document.documentElement.lang || 'en' });
+        if (typeof window.spielosTrack === 'function') window.spielosTrack('lead_form_success', { form_type: 'agent_briefing' });
       } else {
         throw new Error('Submission failed');
       }
@@ -164,6 +166,7 @@ const formCopy = {
       text.textContent = originalText;
       spinner.style.display = 'none';
       if (typeof window.spielosTrack === 'function') window.spielosTrack('agent_briefing_form_error', { page: window.location.pathname, locale: document.documentElement.lang || 'en' });
+      if (typeof window.spielosTrack === 'function') window.spielosTrack('lead_form_error', { form_type: 'agent_briefing' });
     }
   });
 

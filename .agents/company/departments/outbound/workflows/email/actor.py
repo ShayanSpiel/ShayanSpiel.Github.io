@@ -3,7 +3,9 @@
 
 PREPARE applies the intervention's levers (cohort filters, subject rotation),
 composes per-lead emails in STRICT mode (unprepared leads are skipped), and
-dedupes domains within the batch. EXECUTE is the deterministic paced send:
+dedupes domains within the batch. Batches fill to the block-size floor by
+walking the whole queue with a limit (owner order 2026-08-11) — the daily cap
+still bounds the fill. EXECUTE is the deterministic paced send:
 daily cap honored, sent-log + provider dedupe, transient retries with
 backoff, quota errors switch providers, every send is recorded in the
 sent log and the action ledger.
@@ -38,13 +40,25 @@ def prepare(ctx, intervention: dict) -> dict:
                      max(0, cap - used_today))
     if slice_size <= 0:
         return {"id": intervention.get("batch_id", "unset"), "emails": [],
-                "skipped": [], "reason": "daily cap reached"}
+                "skipped": [], "emails_count": 0, "queue_size": len(queue),
+                "limit": slice_size, "queue_exhausted": True,
+                "reason": "daily cap reached"}
 
     batch_id = intervention.get("batch_id", "unset")
     hypothesis = intervention.get("prediction") or "research-first: per-lead hook + pain hypothesis"
-    built = compose.build_batch_emails(batch_id, queue[:slice_size], hypothesis)
+    # Batch floor (owner order 2026-08-11): walk the WHOLE queue with
+    # limit=slice_size so skips inside the first block (unprepared leads,
+    # same-domain duplicates) cannot shrink the batch below block_size. The
+    # daily cap is still honored — slice_size is min(block_size, cap
+    # remaining) and the fill never exceeds it.
+    built = compose.build_batch_emails(batch_id, queue, hypothesis,
+                                       limit=slice_size)
     return {"id": batch_id, "hypothesis": hypothesis,
             "emails": built["emails"], "skipped": built["skipped"],
+            "emails_count": len(built["emails"]),
+            "queue_size": len(queue),
+            "limit": slice_size,
+            "queue_exhausted": built.get("queue_exhausted", False),
             "filters": filters, "cap": {"cap": cap, "phase": phase,
                                         "used_today": used_today},
             "intervention": intervention}

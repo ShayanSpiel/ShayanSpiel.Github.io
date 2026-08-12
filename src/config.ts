@@ -92,6 +92,8 @@ export const ANALYTICS = {
   posthogApiKey: "phc_1osIFVXYDFr7Z00RN5gRaF4kRfZ1safm9c7NswRfKpm",
   posthogApiHost: "https://t.spielos.xyz",
   debug: false,
+  contentSources: ["threads", "youtube"] as const,
+  attributionParameters: ["utm_source", "utm_medium", "utm_campaign", "utm_content"] as const,
 };
 
 export const FORMS = {

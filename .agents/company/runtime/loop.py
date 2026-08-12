@@ -13,6 +13,7 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
+from .contracts import approval_interaction, enrich_work_order_source, validate_goal_request
 from .models import GoalContext, Goal, GoalStatus, RunStatus, Stage
 from .registry import handlers as installed_handlers
 from .store import Store
@@ -20,6 +21,14 @@ from .store import Store
 TERMINAL = {"achieved", "abandoned", "expired"}
 SUSPENDED = {RunStatus.WAITING, RunStatus.AWAITING_APPROVAL, RunStatus.BLOCKED,
              RunStatus.FAILED, RunStatus.COMPLETED}
+
+# Map capability tokens from department attention payloads to catalog defaults.
+CAPABILITY_EMPLOYEES = {
+    "lead_research": "lead-researcher",
+}
+CAPABILITY_WORKFLOWS = {
+    "lead_research": "lead-research",
+}
 
 logger = logging.getLogger("company.runtime.loop")
 
@@ -185,7 +194,10 @@ class Runtime:
             raise KeyError(f"goal owner '{values['owner_id']}' is not installed")
         if values.get("deadline"):
             _timestamp(values["deadline"])
-        values.setdefault("owner_version", self.registry[values["owner_id"]].version)
+        handler = self.registry[values["owner_id"]]
+        values["config"] = validate_goal_request(
+            handler, metric=values["metric"], config=values.get("config"))
+        values.setdefault("owner_version", handler.version)
         return self.store.create_goal(**values)
 
     def once(self, goal_id: str, holder: str | None = None) -> dict:
@@ -280,6 +292,12 @@ class Runtime:
         next_stage = result.next_stage or {
             Stage.OBSERVE: Stage.DECIDE, Stage.DECIDE: Stage.ACT,
             Stage.ACT: Stage.EVALUATE, Stage.EVALUATE: Stage.OBSERVE}[stage]
+        # Evidence-producing actions must re-enter through OBSERVE. Jumping
+        # straight from ACT to DECIDE would reuse the observation captured
+        # before that evidence existed, so graph interpreters can select and
+        # execute the same machine node repeatedly within one advance.
+        if result.evidence and result.step == "machine" and next_stage is Stage.DECIDE:
+            next_stage = Stage.OBSERVE
         data = dict(cycle.get("data") or {})
         data[{Stage.OBSERVE: "observation", Stage.DECIDE: "decision",
               Stage.ACT: "action_result", Stage.EVALUATE: "evaluation"}[stage]] = result.payload
@@ -308,21 +326,20 @@ class Runtime:
             self.store.add_decision(goal.id, cycle["id"], result.decision)
         if result.evaluation:
             self.store.add_evaluation(goal.id, cycle["id"], result.evaluation)
+        work_order = self._maybe_open_work_order(goal, cycle, result)
+        payload = self._notification_payload(goal, cycle, result, next_stage, work_order)
         if result.run_status is RunStatus.AWAITING_APPROVAL:
-            self.store.notify(goal.id, cycle["id"], "approval_required",
-                              self._notification_payload(goal, cycle, result, next_stage))
+            self.store.notify(goal.id, cycle["id"], "approval_required", payload)
         elif result.attention:
-            self.store.notify(goal.id, cycle["id"], "action_required",
-                              self._notification_payload(goal, cycle, result, next_stage))
+            self.store.notify(goal.id, cycle["id"], "action_required", payload)
         elif result.run_status in (RunStatus.BLOCKED, RunStatus.FAILED):
-            self.store.notify(goal.id, cycle["id"], result.run_status.value,
-                              self._notification_payload(goal, cycle, result, next_stage))
+            self.store.notify(goal.id, cycle["id"], result.run_status.value, payload)
         if goal_status in TERMINAL:
             self.store.notify(goal.id, cycle["id"], f"goal_{goal_status}",
-                              self._notification_payload(goal, cycle, result, next_stage))
+                              self._notification_payload(goal, cycle, result, next_stage, work_order))
         elif stage is Stage.EVALUATE and result.run_status is RunStatus.COMPLETED:
             self.store.notify(goal.id, cycle["id"], "run_completed",
-                              self._notification_payload(goal, cycle, result, next_stage))
+                              self._notification_payload(goal, cycle, result, next_stage, work_order))
 
     def _sync_live_snapshot(self):
         """Regenerate the committed /live snapshot after a persisted transition.
@@ -375,11 +392,74 @@ class Runtime:
             return
         _write_live_push_marker(LIVE_PUSH_MARKER, fingerprint)
 
-    def _notification_payload(self, goal, cycle, result, next_stage):
+    def _maybe_open_work_order(self, goal, cycle, result):
+        """Persist a durable employee assignment when a run parks on agent work.
+
+        Approvals are not work orders. Only blocked runs that name an employee
+        (or a known capability / connection handoff) create one. Missing employee
+        or evidence kinds are filled from the Department WorkflowSpec catalog.
+        """
+
+        if result.run_status is not RunStatus.BLOCKED:
+            return None
+        attention = dict(result.attention or {})
+        payload = result.payload if isinstance(result.payload, dict) else {}
+        source = {**payload, **attention}
+        connection_request = source.get("connection_request")
+        if not isinstance(connection_request, dict):
+            connection_request = None
+
+        if source.get("capability") in CAPABILITY_WORKFLOWS and not source.get("workflow_id"):
+            source["workflow_id"] = CAPABILITY_WORKFLOWS[source["capability"]]
+        if source.get("capability") in CAPABILITY_EMPLOYEES and not source.get("agent_id"):
+            source["agent_id"] = CAPABILITY_EMPLOYEES[source["capability"]]
+        if connection_request is not None:
+            source.setdefault("agent_id", connection_request.get("employee_id") or "publisher")
+            if connection_request.get("required_evidence") and not source.get("accepted_evidence_kinds"):
+                source["accepted_evidence_kinds"] = [connection_request["required_evidence"]]
+
+        handler = self.registry.get(goal.owner_id)
+        goal_row = {"metric": goal.metric, "config": goal.config, "owner_id": goal.owner_id}
+        source = enrich_work_order_source(handler, goal_row, source)
+
+        employee_id = source.get("agent_id") or source.get("employee_id")
+        if not employee_id:
+            return None
+
+        accepts = list(source.get("accepted_evidence_kinds") or source.get("accepts_evidence") or [])
+        needed = int(source.get("needed") or source.get("needed_leads") or 1)
+        brief = {
+            "goal_id": goal.id,
+            "goal_name": goal.name,
+            "owner_id": goal.owner_id,
+            "metric": goal.metric,
+            "operator": goal.operator,
+            "target": goal.target,
+            "message": result.message,
+            "action": source.get("action") or "request_agent",
+            "capability": source.get("capability") or (
+                connection_request.get("capability") if connection_request else None),
+            "skill_ids": source.get("skill_ids") or [],
+            "connection_ids": source.get("connection_ids") or [],
+            "workflow_id": source.get("workflow_id") or goal.config.get("workflow"),
+            "step_id": source.get("step_id") or result.step,
+            "required_user_action": source.get("required_user_action") or (
+                f"{employee_id} must produce {needed} validated artifact(s)"),
+            "next_trigger": source.get("next_trigger") or f"company retry {goal.id}",
+            "connection_request": connection_request,
+            "accepted_evidence_kinds": accepts,
+        }
+        return self.store.open_work_order(
+            goal_id=goal.id, run_id=cycle["id"], employee_id=employee_id,
+            needed=needed, accepts_evidence=accepts,
+            workflow_id=brief["workflow_id"],
+            step_id=source.get("step_id") or result.step, brief=brief)
+
+    def _notification_payload(self, goal, cycle, result, next_stage, work_order=None):
         evaluation = result.evaluation or {}
         attention = result.attention or {}
         goal_met = bool(evaluation.get("goal_met")) or result.goal_status is GoalStatus.ACHIEVED
-        return {
+        payload = {
             "goal": {"id": goal.id, "name": goal.name, "metric": goal.metric,
                      "operator": goal.operator, "target": goal.target},
             "run": {"id": cycle["id"], "sequence": cycle["sequence"],
@@ -399,6 +479,23 @@ class Runtime:
             "attention": attention,
             "artifact": result.payload.get("preview_path") if isinstance(result.payload, dict) else None,
         }
+        if result.run_status is RunStatus.AWAITING_APPROVAL:
+            payload["approval_interaction"] = approval_interaction(goal, result)
+        if work_order:
+            payload["work_order_id"] = work_order["id"]
+            payload["work_order"] = {
+                "id": work_order["id"], "employee_id": work_order["employee_id"],
+                "needed": work_order["needed"],
+                "accepts_evidence": work_order.get("accepts_evidence") or [],
+                "status": work_order["status"],
+            }
+            if not payload.get("required_user_action"):
+                payload["required_user_action"] = (
+                    f"{work_order['employee_id']} must produce "
+                    f"{work_order['needed']} accepted artifact(s)")
+            if not payload.get("next_trigger"):
+                payload["next_trigger"] = f"company retry {goal.id}"
+        return payload
 
     def _create_child(self, parent_goal_id: str, parent_run_id: str, spec: dict) -> dict:
         required = ("name", "owner_id", "metric", "operator", "target")
@@ -420,7 +517,14 @@ class Runtime:
         cycle = self.store.cycle(goal_id)
         if cycle["run_status"] != "awaiting_approval":
             raise RuntimeError(f"goal is not awaiting approval (status: {cycle['run_status']})")
+        action = (cycle.get("data") or {}).get("action_result") or {}
+        decision = (cycle.get("data") or {}).get("decision") or {}
+        step_id = action.get("step_id") or decision.get("step_id")
         self.store.approve(goal_id, cycle["id"], "execute", note)
+        if step_id:
+            # Explicit Workflow approval nodes get their own key. The run-level
+            # execute grant still prevents follow-up prompts for ordinary steps.
+            self.store.approve(goal_id, cycle["id"], f"step:{step_id}", note)
         return self.status(goal_id)
 
     def set_goal_status(self, goal_id: str, status: GoalStatus) -> dict:
@@ -435,6 +539,13 @@ class Runtime:
         cycle = self.store.cycle(goal_id)
         if cycle["run_status"] not in {"blocked", "failed"}:
             raise RuntimeError(f"retry requires blocked or failed status (current: {cycle['run_status']})")
+        # Complete work orders whose evidence is already present before the run restarts.
+        self.store.refresh_work_orders_for_run(goal_id, cycle["id"])
+        # Capability handoffs (no typed evidence kinds) treat explicit retry as completion.
+        for order in self.store.work_orders(status="active", goal_id=goal_id, run_id=cycle["id"], limit=100):
+            if not (order.get("accepts_evidence") or []):
+                self.store.complete_work_order(
+                    order["id"], [], worker_id=order.get("claimed_by"))
         self.store.update_cycle(cycle["id"], stage="OBSERVE", step="collect",
                                 run_status="idle", resume_at=None, data={})
         self.store.resolve_actionable_notifications(goal_id, cycle["id"])
@@ -466,16 +577,81 @@ class Runtime:
         return self.status(goal_id)
 
     def add_evidence(self, goal_id: str, *, kind: str, source: str, payload: dict,
-                     validity: str | None = None) -> dict:
+                     validity: str | None = None,
+                     work_order_id: str | None = None) -> dict:
         cycle = self.store.cycle(goal_id)
         run = self.store.run(cycle["id"])
+        payload = dict(payload or {})
+        if work_order_id:
+            order = self.store.work_order(work_order_id)
+            if order["goal_id"] != goal_id or order["run_id"] != cycle["id"]:
+                raise ValueError("work order does not belong to the current goal run")
+            accepts = list(order.get("accepts_evidence") or [])
+            if accepts and kind not in accepts:
+                raise ValueError(
+                    f"evidence kind '{kind}' is not accepted; use: {', '.join(accepts)}")
+            payload["work_order_id"] = work_order_id
         evidence = self.store.add_evidence(goal_id, cycle["id"], kind, source, payload,
                                            validity or run["evidence_validity"])
         self.store.event(goal_id, cycle["id"], "evidence.recorded", {"evidence_id": evidence["id"], "kind": kind})
+        self.store.refresh_work_orders_for_run(goal_id, cycle["id"])
         if cycle["run_status"] == "waiting" and self._goal_met_from_evidence(goal_id, cycle["id"]):
             self.store.update_cycle(cycle["id"], stage="EVALUATE", step="measure", run_status="waiting",
                                     resume_at=now_iso(), data=cycle["data"])
         return self.status(goal_id)
+
+    def claim_work_order(self, work_order_id: str, worker_id: str) -> dict:
+        """Claim one assignment without changing its Goal or run state."""
+
+        order = self.store.claim_work_order(work_order_id, worker_id)
+        goal = self.store.goal(order["goal_id"])
+        if goal["goal_status"] != "active":
+            raise RuntimeError(f"work order goal is {goal['goal_status']}, not active")
+        return order
+
+    def complete_work_order(self, work_order_id: str, worker_id: str,
+                            evidence: list[dict]) -> dict:
+        """Validate linked evidence, close one claimed assignment, and resume its Goal."""
+
+        order = self.store.work_order(work_order_id)
+        if order["status"] != "claimed" or order.get("claimed_by") != worker_id:
+            owner = order.get("claimed_by") or order["status"]
+            raise RuntimeError(f"work order must be claimed by {worker_id!r} (current: {owner})")
+        accepts = set(order.get("accepts_evidence") or [])
+        records = [dict(item) for item in (evidence or [])]
+        accepted = [item for item in records if not accepts or item.get("kind") in accepts]
+        needed = int(order.get("needed") or 1)
+        if accepts and len(accepted) < needed:
+            raise ValueError(
+                f"work order needs {needed} accepted evidence item(s): {', '.join(sorted(accepts))}")
+        if not accepts and not records:
+            accepted = []
+        elif not accepts:
+            accepted = records
+
+        evidence_ids = []
+        for item in accepted:
+            kind = str(item.get("kind") or "").strip()
+            if not kind:
+                raise ValueError("each evidence item needs kind")
+            state = self.add_evidence(
+                order["goal_id"], kind=kind,
+                source=str(item.get("source") or worker_id),
+                payload=dict(item.get("payload") or {}),
+                validity=item.get("validity"), work_order_id=work_order_id)
+            linked = [value for value in state["evidence"]
+                      if (value.get("payload") or {}).get("work_order_id") == work_order_id]
+            evidence_ids = [value["id"] for value in linked]
+
+        completed = self.store.complete_work_order(
+            work_order_id, evidence_ids[:needed] if needed else evidence_ids,
+            worker_id=worker_id)
+        cycle = self.store.cycle(order["goal_id"])
+        if cycle["run_status"] in {"blocked", "failed"}:
+            self.retry(order["goal_id"])
+            from .runner import Runner
+            Runner(self).tick(order["goal_id"])
+        return {"work_order": completed, "goal": self.status(order["goal_id"])}
 
     def complete_change(self, task_id: str, *, passed: bool, result: dict,
                         deployed: bool = False) -> dict:
@@ -526,6 +702,7 @@ class Runtime:
                 "evaluation": self.store.evaluation(cycle["id"]),
                 "latest_result": latest_result,
                 "change_tasks": self.store.change_tasks_for_run(cycle["id"]),
+                "work_orders": self.store.work_orders(status=None, goal_id=goal_id, limit=20),
                 "children": children,
                 "pending_notifications": [item for item in self.store.notifications("pending")
                                           if item["goal_id"] == goal_id]}
@@ -543,6 +720,7 @@ class Runtime:
                           if item["goal_id"] == goal_id],
             "unread_results": [item for item in self.store.unread_results(100)
                                if item["goal_id"] == goal_id],
+            "work_orders": self.store.work_orders(status="active", goal_id=goal_id, limit=20),
         }
 
     def company_snapshot(self, recent_limit: int = 5) -> dict:
@@ -551,6 +729,7 @@ class Runtime:
         return {
             "counts": self.store.goal_counts(),
             "attention": self.store.attention(10),
+            "work_orders": self.store.work_orders(status="active", limit=20),
             "active_goals": self.store.goal_summaries(statuses=("active",), limit=20),
             "paused_goals": self.store.goal_summaries(statuses=("paused",), limit=10),
             "unread_results": self.store.unread_results(5),

@@ -30,7 +30,11 @@ export const SpielOSNotifications: Plugin = async ({ client, directory, $ }) => 
       if (status.enabled === false) return
       await shell`python3 -B -m company runner tick`.quiet().nothrow()
       const raw = await shell`python3 -B -m company notifications list --status pending --limit 100`.text()
-      const pending = (JSON.parse(raw) as Array<{ id: string; kind: string }>).filter(
+      const pending = (JSON.parse(raw) as Array<{
+        id: string
+        kind: string
+        payload?: { approval_interaction?: Record<string, unknown> }
+      }>).filter(
         (item) => REPORTABLE.has(item.kind),
       )
       const pendingIDs = new Set(pending.map((item) => item.id))
@@ -42,6 +46,33 @@ export const SpielOSNotifications: Plugin = async ({ client, directory, $ }) => 
       if (!fresh.length) return
       fresh.forEach((item) => prompted.set(item.id, now))
       const ids = fresh.map((item) => item.id)
+      const approvals = fresh.filter(
+        (item) => item.kind === "approval_required" && item.payload?.approval_interaction,
+      )
+      if (activeSessionID) {
+        for (const item of approvals) {
+          // The native question is an agent tool, not a plugin API. Wake the
+          // Director with one typed interaction; it must ask before acting.
+          await client.session.promptAsync({
+            path: { id: activeSessionID },
+            query: { directory },
+            body: {
+              agent: "director",
+              parts: [{
+                type: "text",
+                text: [
+                  "A SpielOS action is parked for approval.",
+                  "Immediately invoke the native question tool with exactly the supplied interaction.",
+                  "Show Approve and Reject separately. Do not combine this with another approval.",
+                  "Run the fallback command only after an explicit Approve answer.",
+                  "On Reject, leave the action parked and report that nothing executed.",
+                  JSON.stringify(item.payload?.approval_interaction),
+                ].join("\n"),
+              }],
+            },
+          })
+        }
+      }
       await client.tui.showToast({
         query: { directory },
         body: {
@@ -61,11 +92,13 @@ export const SpielOSNotifications: Plugin = async ({ client, directory, $ }) => 
   }
 
   const timer = setInterval(check, 5000)
+  let activeSessionID: string | undefined
 
   return {
     dispose: async () => clearInterval(timer),
     event: async ({ event }) => {
       if (event.type === "session.idle") {
+        activeSessionID = event.properties.sessionID
         await check()
       }
     },

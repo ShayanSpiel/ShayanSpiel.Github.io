@@ -4,23 +4,11 @@ from pathlib import Path
 
 from ..agents import agents as installed_agents
 from ..connections import connections as installed_connections
+from .package import package_spec, validate_package
 from .registry import departments as installed_departments
 
 COMPANY_ROOT = Path(__file__).resolve().parents[1]
 SKILLS_ROOT = COMPANY_ROOT.parent / "skills"
-
-
-def _workflow(item):
-    return {
-        "id": item.id,
-        "description": item.description,
-        "steps": list(item.steps),
-        "agents": list(item.agent_ids),
-        "skills": list(item.skill_ids),
-        "approvals": list(item.approval_points),
-        "evidence": list(item.evidence_sources),
-        "connections": list(item.connection_ids),
-    }
 
 
 def _skills():
@@ -38,18 +26,18 @@ def _skills():
 
 
 def catalog():
-    departments = [{
-        "id": item.department_id,
-        "version": item.version,
-        "description": item.description,
-        "workflows": [_workflow(workflow) for workflow in item.workflows],
-        "agents": list(item.agent_ids),
-    } for _, item in sorted(installed_departments().items())]
+    departments = []
+    for _, item in sorted(installed_departments().items()):
+        package = package_spec(item)
+        package["package_defects"] = validate_package(item)
+        package["lego"] = not package["package_defects"]
+        departments.append(package)
     return {
         "runtime": {
-            "version": "5.1.0",
+            "version": "5.3.0",
             "loop": ["GOAL", "OBSERVE", "DECIDE", "ACT", "EVALUATE"],
             "controls": ["director", "system-improvement"],
+            "department_runtime": "interpreter",
             "goal_authority": ".spielos/state/company.sqlite",
         },
         "departments": departments,
