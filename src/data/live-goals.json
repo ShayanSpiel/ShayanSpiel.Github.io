@@ -214,7 +214,7 @@
       "owner_id": "outbound",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-12T13:56:41.630935+00:00"
+      "updated_at": "2026-08-12T14:28:53.597779+00:00"
     },
     {
       "created_at": "2026-08-10T14:42:53.516527+00:00",
@@ -578,7 +578,7 @@
     },
     {
       "created_at": "2026-08-12T02:29:29.620252+00:00",
-      "goal_status": "active",
+      "goal_status": "abandoned",
       "id": "goal-buffer-graphql-wiring-20260812",
       "metric": "acceptance_tests_passed",
       "name": "Wire Buffer Connection for unattended Threads + Shorts publishing (GraphQL API)",
@@ -586,7 +586,7 @@
       "owner_id": "system-improvement",
       "stage": "ACT",
       "target": "True",
-      "updated_at": "2026-08-12T02:29:30.118084+00:00"
+      "updated_at": "2026-08-12T14:26:47.972471+00:00"
     },
     {
       "created_at": "2026-08-12T13:33:47.067176+00:00",
@@ -599,6 +599,18 @@
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-12T13:47:44.323929+00:00"
+    },
+    {
+      "created_at": "2026-08-12T14:27:08.413082+00:00",
+      "goal_status": "active",
+      "id": "goal-buffer-graphql-direct-v2-20260812",
+      "metric": "acceptance_tests_passed",
+      "name": "Enable direct Buffer publishing for Threads and YouTube Shorts",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "stage": "ACT",
+      "target": true,
+      "updated_at": "2026-08-12T14:27:17.564312+00:00"
     }
   ],
   "heartbeat": {
@@ -609,7 +621,7 @@
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-12T13:56:41.632852+00:00"
+    "updated_at": "2026-08-12T14:28:53.600366+00:00"
   },
   "runtime_state": {
     "current_run": {
@@ -620,7 +632,7 @@
       "run_id": "run-7f4669930e",
       "run_status": "waiting",
       "stage": "EVALUATE",
-      "updated_at": "2026-08-12T13:56:41.632852+00:00"
+      "updated_at": "2026-08-12T14:28:53.600366+00:00"
     },
     "heartbeat": {
       "goal_id": "goal-email-campaign-20260810",
@@ -630,22 +642,22 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-12T13:56:41.632852+00:00"
+      "updated_at": "2026-08-12T14:28:53.600366+00:00"
     },
-    "last_activity_at": "2026-08-12T13:56:41.632852+00:00",
-    "last_sync_at": "2026-08-12T13:56:41.661838+00:00",
+    "last_activity_at": "2026-08-12T14:28:53.600366+00:00",
+    "last_sync_at": "2026-08-12T14:28:53.630697+00:00",
     "state": "running"
   },
   "totals": {
-    "approvals": 40,
-    "decisions": 71,
-    "evidence": 778,
-    "goals_abandoned": 8,
+    "approvals": 42,
+    "decisions": 72,
+    "evidence": 783,
+    "goals_abandoned": 9,
     "goals_achieved": 35,
     "goals_active": 6,
-    "goals_total": 50,
-    "hypotheses": 9,
+    "goals_total": 51,
+    "hypotheses": 10,
     "memory_claims": 1,
-    "runs": 51
+    "runs": 52
   }
 }
