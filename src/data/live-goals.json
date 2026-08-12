@@ -214,7 +214,7 @@
       "owner_id": "outbound",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-12T19:37:45.278744+00:00"
+      "updated_at": "2026-08-12T20:05:37.389781+00:00"
     },
     {
       "created_at": "2026-08-10T14:42:53.516527+00:00",
@@ -658,7 +658,7 @@
       "owner_id": "director",
       "stage": "OBSERVE",
       "target": true,
-      "updated_at": "2026-08-12T19:11:19.969992+00:00"
+      "updated_at": "2026-08-12T20:04:48.412896+00:00"
     },
     {
       "created_at": "2026-08-12T14:46:37.498110+00:00",
@@ -674,15 +674,15 @@
     },
     {
       "created_at": "2026-08-12T14:46:37.502499+00:00",
-      "goal_status": "active",
+      "goal_status": "achieved",
       "id": "goal-content-first-live-package-v1-20260812",
       "metric": "published_items",
       "name": "Prepare and dispatch the first quality-gated Threads and YouTube Shorts package",
       "operator": "ge",
       "owner_id": "content",
-      "stage": "ACT",
+      "stage": "OBSERVE",
       "target": 1,
-      "updated_at": "2026-08-12T19:11:19.647399+00:00"
+      "updated_at": "2026-08-12T20:04:48.108464+00:00"
     },
     {
       "created_at": "2026-08-12T14:57:05.374729+00:00",
@@ -801,7 +801,7 @@
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-12T19:37:45.281188+00:00"
+    "updated_at": "2026-08-12T20:05:37.391906+00:00"
   },
   "runtime_state": {
     "current_run": {
@@ -812,7 +812,7 @@
       "run_id": "run-7f4669930e",
       "run_status": "waiting",
       "stage": "EVALUATE",
-      "updated_at": "2026-08-12T19:37:45.281188+00:00"
+      "updated_at": "2026-08-12T20:05:37.391906+00:00"
     },
     "heartbeat": {
       "goal_id": "goal-email-campaign-20260810",
@@ -822,22 +822,22 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-12T19:37:45.281188+00:00"
+      "updated_at": "2026-08-12T20:05:37.391906+00:00"
     },
-    "last_activity_at": "2026-08-12T19:37:45.281188+00:00",
-    "last_sync_at": "2026-08-12T19:37:45.329935+00:00",
+    "last_activity_at": "2026-08-12T20:05:37.391906+00:00",
+    "last_sync_at": "2026-08-12T20:05:37.406083+00:00",
     "state": "running"
   },
   "totals": {
     "approvals": 55,
-    "decisions": 116,
-    "evidence": 868,
+    "decisions": 120,
+    "evidence": 875,
     "goals_abandoned": 9,
-    "goals_achieved": 45,
-    "goals_active": 10,
+    "goals_achieved": 46,
+    "goals_active": 9,
     "goals_total": 66,
     "hypotheses": 21,
-    "memory_claims": 1,
+    "memory_claims": 2,
     "runs": 67
   }
 }
