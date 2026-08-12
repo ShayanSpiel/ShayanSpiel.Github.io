@@ -215,7 +215,7 @@ def ready_campaign_package(package: dict[str, Any]) -> dict[str, Any]:
 
 class ContentDepartment(EvidenceDepartment, Department):
     id = department_id = "content"
-    version = "3.1.1"
+    version = "3.2.0"
     description = "Owns strategy, explicit experiment cells, and copy in one campaign Artifact, then coordinates typed Design, publishing, and Analytics handoffs through the shared identity."
     agent_ids = ("content-strategist", "content-writer", "publisher")
     production_ready = True

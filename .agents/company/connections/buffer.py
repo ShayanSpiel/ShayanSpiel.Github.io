@@ -18,7 +18,10 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urlparse
 from urllib.request import Request, urlopen
 
-from ..departments.campaign_contract import SCHEMA_VERSION as CAMPAIGN_SCHEMA_VERSION
+from ..departments.campaign_contract import (
+    SCHEMA_VERSION as CAMPAIGN_SCHEMA_VERSION,
+    publication_package,
+)
 
 
 API_URL = "https://api.buffer.com"
@@ -253,12 +256,33 @@ def _delivery_posts(package: dict[str, Any], client: BufferClient) -> list[dict[
     return resolved
 
 
+def _publication_input(package: dict[str, Any]) -> dict[str, Any]:
+    """Turn one already-approved batch handoff into the Buffer input.
+
+    Batch review is the sole owner authorization. The asset-promotion step
+    carries that decision into per-rendition IDs for provenance; this helper
+    refuses anything that has not completed that promotion.
+    """
+    manifest = package.get("campaign_manifest") if isinstance(package, dict) else None
+    if manifest is None:
+        return package
+    if package.get("review_required") is not True:
+        raise BufferError("Campaign handoff must preserve the explicit batch approval gate")
+    if not isinstance(manifest, dict) or manifest.get("phase") != "approved":
+        raise BufferError("Campaign handoff needs the hosted approved campaign Artifact")
+    try:
+        return publication_package(manifest)
+    except ValueError as error:
+        raise BufferError(str(error)) from error
+
+
 def dispatch(package: dict[str, Any], execution_mode: str) -> dict[str, Any]:
     """Dispatch an already-approved publisher package; never infer a channel or text."""
     if execution_mode != "live":
         return {"ok": False, "message": "Buffer dispatch is a dry run; no post was created"}
     client = BufferClient()
-    posts = _delivery_posts(package, client)
+    publication = _publication_input(package)
+    posts = _delivery_posts(publication, client)
     channel_ids = [str(item["channel_id"]) for item in posts]
     capacity = client.available_capacity(sorted(set(channel_ids)))
     requested = {channel_id: channel_ids.count(channel_id) for channel_id in set(channel_ids)}
@@ -285,7 +309,7 @@ def dispatch(package: dict[str, Any], execution_mode: str) -> dict[str, Any]:
         })
     limits = client.posting_limits(sorted(set(channel_ids)))
     return {"ok": True, "post": created[0] if len(created) == 1 else None, "posts": created,
-            "campaign_id": package.get("campaign_id"), "batch_id": package.get("batch_id"),
+            "campaign_id": publication.get("campaign_id"), "batch_id": publication.get("batch_id"),
             "delivery_receipts": receipts,
             "rate_limits": client.last_rate_limits, "posting_limits": limits, "capacity_before_dispatch": capacity}
 

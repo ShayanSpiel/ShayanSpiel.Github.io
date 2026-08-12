@@ -36,21 +36,21 @@ class GrowthDepartmentTests(unittest.TestCase):
         self.assertTrue({"content", "design", "analytics", "seo"}.issubset(lego))
 
     def test_department_requests_agent_then_evaluates_typed_evidence(self):
-        goal = Goal("g", "graphics", "design", "rendition_count", "ge", 1,
-                    None, None, "active", {"workflow": "rendition-pack"})
+        goal = Goal("g", "graphics", "design", "approved_designs", "ge", 1,
+                    None, None, "active", {"workflow": "social-visual"})
         department = departments()["design"]
         ctx = GoalContext(goal, {"evidence": []}, (), lambda _: None)
         decision = department.decide(ctx, department.observe(ctx).payload)
         self.assertEqual("request_agent", decision.payload["action"])
         self.assertEqual("designer", decision.payload["agent_id"])
-        self.assertEqual(["graphic_render"], decision.payload["accepted_evidence_kinds"])
+        self.assertEqual(["approved_design"], decision.payload["accepted_evidence_kinds"])
         self.assertEqual(["spielos-ui"], decision.payload["skill_ids"])
-        self.assertEqual("rendition-pack", decision.payload["workflow_id"])
-        ctx = GoalContext(goal, {"evidence": [{"kind": "graphic_render"}]}, (), lambda _: None)
+        self.assertEqual("social-visual", decision.payload["workflow_id"])
+        ctx = GoalContext(goal, {"evidence": [{"kind": "approved_design"}]}, (), lambda _: None)
         decision = department.decide(ctx, department.observe(ctx).payload)
         self.assertEqual("evaluate", decision.payload["action"])
 
-    def test_content_publish_is_approval_gated_then_requests_host_connection(self):
+    def test_content_publish_is_approval_gated_then_uses_direct_buffer_connection(self):
         goal = Goal("g", "publish", "content", "published_items", "ge", 1,
                     None, None, "active",
                     {"workflow": "publish", "connection": "buffer", "execution_mode": "dry_run"})
@@ -66,22 +66,26 @@ class GrowthDepartmentTests(unittest.TestCase):
         self.assertEqual("DECIDE", advanced.next_stage.value)
         next_decision = department.decide(approved, department.observe(approved).payload)
         self.assertEqual("connection_dispatch", next_decision.payload["action"])
-        # Connection dispatch also requires approval before host handoff.
+        # Connection dispatch also requires approval before direct delivery.
         self.assertEqual("awaiting_approval",
                          department.act(waiting, next_decision.payload).run_status.value)
         result = department.act(approved, next_decision.payload)
         self.assertEqual("blocked", result.run_status.value)
-        self.assertEqual("buffer", result.payload["connection_request"]["connection_id"])
-        self.assertEqual("publication_receipt", result.payload["connection_request"]["required_evidence"])
+        self.assertEqual("Buffer dispatch is a dry run; no post was created",
+                         result.payload["connection_request"]["message"])
 
 
 class ConnectionContractTests(unittest.TestCase):
-    def test_interactive_connections_are_host_first(self):
-        for connection_id in ("buffer", "posthog", "search-console", "website", "web-research"):
+    def test_interactive_connections_are_host_first_except_direct_buffer_delivery(self):
+        for connection_id in ("posthog", "search-console", "website", "web-research"):
             item = connection(connection_id)
             self.assertEqual(("codex", "opencode"), item.hosts)
             self.assertFalse(item.unattended)
             self.assertEqual((), item.required_environment)
+        item = connection("buffer")
+        self.assertEqual(("direct",), item.hosts)
+        self.assertTrue(item.unattended)
+        self.assertEqual(("BUFFER_API_KEY",), item.required_environment)
 
     def test_only_email_delivery_requires_unattended_direct_credentials(self):
         item = connections()["email-delivery"]

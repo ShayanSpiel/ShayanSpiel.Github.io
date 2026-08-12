@@ -4,7 +4,12 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
-from company.connections.buffer import BufferClient, BufferError, _env_values, _public_https_url
+from company.connections.buffer import (
+    BufferClient, BufferError, _env_values, _publication_input, _public_https_url,
+)
+from company.departments.campaign_contract import apply_render_report, approve_rendered_campaign
+from company.departments.design.department import accept_design_order, render_report
+from company.tests.test_campaign_handoff_contract import campaign_manifest
 
 
 class BufferConnectionTests(unittest.TestCase):
@@ -39,6 +44,29 @@ class BufferConnectionTests(unittest.TestCase):
         client = BufferClient()
         with self.assertRaises(BufferError):
             client.create_post(channel_id="channel-1", text="check", assets=[{"type": "video", "url": "https://10.0.0.1/a.mp4"}])
+
+    def test_hosted_approved_batch_handoff_becomes_buffer_package(self):
+        designed = accept_design_order(campaign_manifest())
+        assets = [
+            {"item_id": item["item_id"], "platform": platform,
+             "type": "image" if platform == "threads" else "video",
+             "local_path": "asset", "sha256": "sha", "render_report_id": "render"}
+            for item in designed["items"] for platform in ("threads", "youtube")
+        ]
+        rendered = apply_render_report(designed, render_report(designed, assets))
+        approved = approve_rendered_campaign(rendered, [
+            {"item_id": item["item_id"], "platform": platform, "status": "approved",
+             "approval_id": f"batch-review-{item['item_id']}-{platform}",
+             "public_url": f"https://spielos.xyz/campaign-assets/batch/{item['item_id']}-{platform}"}
+            for item in rendered["items"] for platform in ("threads", "youtube")
+        ])
+        package = _publication_input({"campaign_manifest": approved, "review_required": True})
+        self.assertEqual(10, len(package["posts"]))
+        self.assertTrue(all(item["approval_id"].startswith("batch-review-") for item in package["posts"]))
+
+    def test_rendered_batch_cannot_bypass_approval(self):
+        with self.assertRaisesRegex(BufferError, "hosted approved"):
+            _publication_input({"campaign_manifest": {"phase": "rendered"}, "review_required": True})
 
 
 if __name__ == "__main__":
