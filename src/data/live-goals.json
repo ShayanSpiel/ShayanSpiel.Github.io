@@ -214,7 +214,7 @@
       "owner_id": "outbound",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-12T20:05:37.389781+00:00"
+      "updated_at": "2026-08-12T20:42:28.256981+00:00"
     },
     {
       "created_at": "2026-08-10T14:42:53.516527+00:00",
@@ -791,6 +791,18 @@
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-12T19:35:15.333847+00:00"
+    },
+    {
+      "created_at": "2026-08-12T20:39:10.289532+00:00",
+      "goal_status": "achieved",
+      "id": "goal-buffer-caption-linebreak-repair-v1-20260813",
+      "metric": "acceptance_tests_passed",
+      "name": "Prevent escaped line-break captions in Buffer publishing",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "stage": "OBSERVE",
+      "target": true,
+      "updated_at": "2026-08-12T20:41:17.094071+00:00"
     }
   ],
   "heartbeat": {
@@ -801,7 +813,7 @@
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-12T20:05:37.391906+00:00"
+    "updated_at": "2026-08-12T20:42:28.259261+00:00"
   },
   "runtime_state": {
     "current_run": {
@@ -812,7 +824,7 @@
       "run_id": "run-7f4669930e",
       "run_status": "waiting",
       "stage": "EVALUATE",
-      "updated_at": "2026-08-12T20:05:37.391906+00:00"
+      "updated_at": "2026-08-12T20:42:28.259261+00:00"
     },
     "heartbeat": {
       "goal_id": "goal-email-campaign-20260810",
@@ -822,22 +834,22 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-12T20:05:37.391906+00:00"
+      "updated_at": "2026-08-12T20:42:28.259261+00:00"
     },
-    "last_activity_at": "2026-08-12T20:05:37.391906+00:00",
-    "last_sync_at": "2026-08-12T20:05:37.406083+00:00",
+    "last_activity_at": "2026-08-12T20:42:28.259261+00:00",
+    "last_sync_at": "2026-08-12T20:42:28.306328+00:00",
     "state": "running"
   },
   "totals": {
-    "approvals": 55,
-    "decisions": 120,
-    "evidence": 875,
+    "approvals": 56,
+    "decisions": 121,
+    "evidence": 882,
     "goals_abandoned": 9,
-    "goals_achieved": 46,
+    "goals_achieved": 47,
     "goals_active": 9,
-    "goals_total": 66,
-    "hypotheses": 21,
+    "goals_total": 67,
+    "hypotheses": 22,
     "memory_claims": 2,
-    "runs": 67
+    "runs": 68
   }
 }
