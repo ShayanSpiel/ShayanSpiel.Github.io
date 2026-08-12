@@ -1,4 +1,6 @@
 import os
+import json
+import re
 import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -38,6 +40,20 @@ class BufferConnectionTests(unittest.TestCase):
         self.assertEqual("post-1", post["id"])
         self.assertIn("saveToDraft: true", seen["query"])
         self.assertEqual("99", client.last_rate_limits["x-ratelimit-remaining"])
+
+    @patch.dict(os.environ, {"BUFFER_API_KEY": "test-token"}, clear=False)
+    def test_caption_normalizes_literal_line_break_markers_before_graphql(self):
+        client = BufferClient()
+        seen = {}
+
+        def fake_graphql(query):
+            seen["query"] = query
+            return {"createPost": {"post": {"id": "post-1", "status": "draft"}}}
+
+        client.graphql = fake_graphql
+        client.create_post(channel_id="channel-1", text=r"First paragraph\n\n• one\n• two", mode="draft")
+        serialized = re.search(r"text: (.*?), channelId:", seen["query"]).group(1)
+        self.assertEqual("First paragraph\n\n• one\n• two", json.loads(serialized))
 
     @patch.dict(os.environ, {"BUFFER_API_KEY": "test-token"}, clear=False)
     def test_private_asset_rejected_before_request(self):

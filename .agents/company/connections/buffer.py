@@ -80,6 +80,11 @@ def _graphql_string(value: str) -> str:
     return json.dumps(str(value))
 
 
+def _normalize_caption(value: str) -> str:
+    """Turn escaped line-break markers into the paragraph breaks platforms render."""
+    return str(value).replace("\\r\\n", "\n").replace("\\n", "\n").replace("\\r", "\n")
+
+
 def _rate_limits(headers: Any) -> dict[str, str]:
     items = headers.items() if hasattr(headers, "items") else []
     return {str(key): str(value) for key, value in items
@@ -139,6 +144,7 @@ class BufferClient:
             raise BufferError("Buffer mode must be draft, queue, scheduled, or now")
         if mode == "scheduled" and not due_at:
             raise BufferError("A scheduled Buffer post needs an ISO-8601 due_at timestamp")
+        text = _normalize_caption(text)
         fields = [f"text: {_graphql_string(text)}", f"channelId: {_graphql_string(channel_id)}",
                   "schedulingType: automatic", f"mode: {modes[mode]}"]
         if mode == "draft":
