@@ -7,7 +7,7 @@
     "run_id": "run-7f4669930e",
     "run_status": "waiting",
     "stage": "EVALUATE",
-    "updated_at": "2026-08-12T20:42:28.259261+00:00"
+    "updated_at": "2026-08-12T21:08:53.318041+00:00"
   },
   "heartbeat": {
     "goal_id": "goal-email-campaign-20260810",
@@ -17,21 +17,21 @@
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-12T20:42:28.259261+00:00"
+    "updated_at": "2026-08-12T21:08:53.318041+00:00"
   },
-  "last_activity_at": "2026-08-12T20:42:28.259261+00:00",
-  "last_sync_at": "2026-08-12T20:42:28.306328+00:00",
+  "last_activity_at": "2026-08-12T21:08:53.318041+00:00",
+  "last_sync_at": "2026-08-12T21:08:53.367978+00:00",
   "state": "running",
   "totals": {
     "approvals": 56,
-    "decisions": 121,
-    "evidence": 882,
+    "decisions": 123,
+    "evidence": 886,
     "goals_abandoned": 9,
-    "goals_achieved": 47,
-    "goals_active": 9,
-    "goals_total": 67,
-    "hypotheses": 22,
-    "memory_claims": 2,
-    "runs": 68
+    "goals_achieved": 48,
+    "goals_active": 10,
+    "goals_total": 69,
+    "hypotheses": 24,
+    "memory_claims": 3,
+    "runs": 70
   }
 }
