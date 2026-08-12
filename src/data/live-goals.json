@@ -214,7 +214,7 @@
       "owner_id": "outbound",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-11T22:19:28.255138+00:00"
+      "updated_at": "2026-08-12T00:12:39.580000+00:00"
     },
     {
       "created_at": "2026-08-10T14:42:53.516527+00:00",
@@ -464,7 +464,7 @@
       "name": "Live heartbeat: active business goal above totals, split timeline into business vs self-improvement sections",
       "operator": "eq",
       "owner_id": "system-improvement",
-      "stage": "OBSERVE",
+      "stage": "EVALUATE",
       "target": true,
       "updated_at": "2026-08-11T15:21:37.663021+00:00"
     },
@@ -530,7 +530,7 @@
     },
     {
       "created_at": "2026-08-11T16:50:16.409728+00:00",
-      "goal_status": "active",
+      "goal_status": "expired",
       "id": "goal-email-send-20260811-b2",
       "metric": "reply_rate",
       "name": "English outbound send batch 2: 50 from remaining queue (owner order 2026-08-11)",
@@ -538,7 +538,7 @@
       "owner_id": "outbound",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-11T22:22:11.443324+00:00"
+      "updated_at": "2026-08-12T00:05:49.196809+00:00"
     },
     {
       "created_at": "2026-08-11T22:09:55.380262+00:00",
@@ -554,47 +554,47 @@
     }
   ],
   "heartbeat": {
-    "goal_id": "goal-email-send-20260811-b2",
-    "goal_name": "English outbound send batch 2: 50 from remaining queue (owner order 2026-08-11)",
+    "goal_id": "goal-email-campaign-20260810",
+    "goal_name": "Resume daily English outbound to 30% reply rate",
     "metric": "reply_rate",
     "operator": "ge",
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-11T22:22:11.444815+00:00"
+    "updated_at": "2026-08-12T00:12:39.582959+00:00"
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-11T16:50:16.409728+00:00",
-      "goal_id": "goal-email-send-20260811-b2",
-      "goal_name": "English outbound send batch 2: 50 from remaining queue (owner order 2026-08-11)",
+      "created_at": "2026-08-10T14:42:53.503744+00:00",
+      "goal_id": "goal-email-campaign-20260810",
+      "goal_name": "Resume daily English outbound to 30% reply rate",
       "owner_id": "outbound",
-      "run_id": "run-7343b0d074",
+      "run_id": "run-7f4669930e",
       "run_status": "waiting",
       "stage": "EVALUATE",
-      "updated_at": "2026-08-11T22:22:11.444815+00:00"
+      "updated_at": "2026-08-12T00:12:39.582959+00:00"
     },
     "heartbeat": {
-      "goal_id": "goal-email-send-20260811-b2",
-      "goal_name": "English outbound send batch 2: 50 from remaining queue (owner order 2026-08-11)",
+      "goal_id": "goal-email-campaign-20260810",
+      "goal_name": "Resume daily English outbound to 30% reply rate",
       "metric": "reply_rate",
       "operator": "ge",
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-11T22:22:11.444815+00:00"
+      "updated_at": "2026-08-12T00:12:39.582959+00:00"
     },
-    "last_activity_at": "2026-08-11T22:23:27.519181+00:00",
-    "last_sync_at": "2026-08-11T22:23:27.530593+00:00",
+    "last_activity_at": "2026-08-12T00:12:39.582959+00:00",
+    "last_sync_at": "2026-08-12T00:12:39.614279+00:00",
     "state": "running"
   },
   "totals": {
     "approvals": 38,
     "decisions": 66,
-    "evidence": 706,
+    "evidence": 735,
     "goals_abandoned": 7,
     "goals_achieved": 34,
-    "goals_active": 5,
+    "goals_active": 4,
     "goals_total": 46,
     "hypotheses": 8,
     "memory_claims": 1,
