@@ -214,7 +214,7 @@
       "owner_id": "outbound",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-13T01:50:47.163246+00:00"
+      "updated_at": "2026-08-13T02:04:47.126120+00:00"
     },
     {
       "created_at": "2026-08-10T14:42:53.516527+00:00",
@@ -851,6 +851,30 @@
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-13T01:46:04.047605+00:00"
+    },
+    {
+      "created_at": "2026-08-13T01:55:01.430962+00:00",
+      "goal_status": "achieved",
+      "id": "goal-strategic-cognition-p1-discipline-20260813",
+      "metric": "acceptance_tests_passed",
+      "name": "P1: Preserve strategic lineage for Director system interventions",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "stage": "OBSERVE",
+      "target": true,
+      "updated_at": "2026-08-13T02:00:25.391802+00:00"
+    },
+    {
+      "created_at": "2026-08-13T02:03:58.933060+00:00",
+      "goal_status": "active",
+      "id": "goal-strategic-cognition-p2-lego-freeze-20260813",
+      "metric": "acceptance_tests_passed",
+      "name": "P2: Validate and freeze the shared Department Lego boundary",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "stage": "ACT",
+      "target": true,
+      "updated_at": "2026-08-13T02:04:03.955278+00:00"
     }
   ],
   "heartbeat": {
@@ -861,7 +885,7 @@
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-13T01:50:47.165763+00:00"
+    "updated_at": "2026-08-13T02:04:47.128196+00:00"
   },
   "runtime_state": {
     "current_run": {
@@ -872,7 +896,7 @@
       "run_id": "run-7f4669930e",
       "run_status": "waiting",
       "stage": "EVALUATE",
-      "updated_at": "2026-08-13T01:50:47.165763+00:00"
+      "updated_at": "2026-08-13T02:04:47.128196+00:00"
     },
     "heartbeat": {
       "goal_id": "goal-email-campaign-20260810",
@@ -882,22 +906,22 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-13T01:50:47.165763+00:00"
+      "updated_at": "2026-08-13T02:04:47.128196+00:00"
     },
-    "last_activity_at": "2026-08-13T01:50:47.165763+00:00",
-    "last_sync_at": "2026-08-13T01:50:47.223046+00:00",
+    "last_activity_at": "2026-08-13T02:04:47.128196+00:00",
+    "last_sync_at": "2026-08-13T02:04:47.146107+00:00",
     "state": "running"
   },
   "totals": {
-    "approvals": 57,
-    "decisions": 127,
-    "evidence": 927,
+    "approvals": 58,
+    "decisions": 129,
+    "evidence": 932,
     "goals_abandoned": 10,
-    "goals_achieved": 50,
-    "goals_active": 9,
-    "goals_total": 71,
+    "goals_achieved": 51,
+    "goals_active": 10,
+    "goals_total": 73,
     "hypotheses": 25,
     "memory_claims": 4,
-    "runs": 72
+    "runs": 74
   }
 }
