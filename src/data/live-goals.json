@@ -8,6 +8,7 @@
       "name": "Achieve 30% reply rate in controlled inbox test",
       "operator": "ge",
       "owner_id": "director",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": 0.3,
       "updated_at": "2026-08-10T00:28:30.344311+00:00"
@@ -20,6 +21,7 @@
       "name": "Send controlled four-inbox email batch and reach 30% replies",
       "operator": "ge",
       "owner_id": "email",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": 0.3,
       "updated_at": "2026-08-10T00:28:30.281454+00:00"
@@ -32,6 +34,7 @@
       "name": "Restore automatic email measurement and reply observation",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-10T00:43:46.378202+00:00"
@@ -44,6 +47,7 @@
       "name": "Configure reply.spielos.xyz inbound receiving on all usable providers and prove automatic reply capture",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "ACT",
       "target": true,
       "updated_at": "2026-08-10T02:55:36.809637+00:00"
@@ -56,6 +60,7 @@
       "name": "Unified reply.spielos.xyz inbound with CC visibility and automatic reply capture",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "ACT",
       "target": true,
       "updated_at": "2026-08-10T03:48:40.990868+00:00"
@@ -68,6 +73,7 @@
       "name": "Consolidate SpielOS into one lean company harness",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-10T03:59:58.058795+00:00"
@@ -80,6 +86,7 @@
       "name": "Repair existing site acceptance regressions exposed by harness verification",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-10T03:59:58.172133+00:00"
@@ -92,6 +99,7 @@
       "name": "Restore repository architecture guard compliance",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-10T03:59:58.292300+00:00"
@@ -104,6 +112,7 @@
       "name": "Install Content, Design, Analytics, and SEO Departments",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-10T05:10:03.246891+00:00"
@@ -116,6 +125,7 @@
       "name": "Remove duplicate Persian SEO titles",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-10T05:10:15.986143+00:00"
@@ -128,6 +138,7 @@
       "name": "Align company runtime map with production Departments",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-10T05:11:25.161045+00:00"
@@ -140,6 +151,7 @@
       "name": "Make OpenCode automation stoppable and quiet",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "ACT",
       "target": true,
       "updated_at": "2026-08-10T12:25:10.884657+00:00"
@@ -152,6 +164,7 @@
       "name": "Consolidate the SpielOS company harness",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-10T13:05:37.400736+00:00"
@@ -164,6 +177,7 @@
       "name": "Make company status compact and trustworthy",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-10T13:43:36.074175+00:00"
@@ -176,9 +190,10 @@
       "name": "Wire reply.spielos.xyz inbound receiving and forward replies to shayan@spielos.xyz",
       "operator": "eq",
       "owner_id": "system-improvement",
-      "stage": "EVALUATE",
+      "run_status": "blocked",
+      "stage": "ACT",
       "target": true,
-      "updated_at": "2026-08-10T15:42:06.516534+00:00"
+      "updated_at": "2026-08-13T21:52:02.061922+00:00"
     },
     {
       "created_at": "2026-08-10T14:30:47.529357+00:00",
@@ -188,6 +203,7 @@
       "name": "Upgrade SpielOS social design and video production system",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "DECIDE",
       "target": true,
       "updated_at": "2026-08-10T14:31:01.816228+00:00"
@@ -200,18 +216,24 @@
       "name": "Upgrade SpielOS social design and video production system",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-10T14:54:36.503833+00:00"
     },
     {
+      "business_value": "More qualified replies create a repeatable sales pipeline.",
+      "business_value_fa": "جواب‌های باکیفیت بیشتر، مسیر فروش تکرارپذیرتری می‌سازن.",
       "created_at": "2026-08-10T14:42:53.503744+00:00",
+      "display_title": "Improve qualified outbound conversations",
+      "display_title_fa": "گفت‌وگوهای فروش باکیفیت رو بیشتر کنیم",
       "goal_status": "active",
       "id": "goal-email-campaign-20260810",
       "metric": "reply_rate",
       "name": "Resume daily English outbound to 30% reply rate",
       "operator": "ge",
       "owner_id": "outbound",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": 0.3,
       "updated_at": "2026-08-13T04:24:08.578347+00:00"
@@ -224,6 +246,7 @@
       "name": "Rework outbound copy to agentic-company positioning with researched per-lead A/B variants",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "blocked",
       "stage": "ACT",
       "target": true,
       "updated_at": "2026-08-10T14:44:23.858202+00:00"
@@ -236,6 +259,7 @@
       "name": "Restore and polish original SpielOS creative system",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "ACT",
       "target": true,
       "updated_at": "2026-08-10T15:42:19.095383+00:00"
@@ -248,6 +272,7 @@
       "name": "Establish the One Idea Rule across SpielOS content",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "ACT",
       "target": true,
       "updated_at": "2026-08-10T15:42:19.261560+00:00"
@@ -260,6 +285,7 @@
       "name": "Unified reply capture via Gmail IMAP (replies@spielos.xyz)",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-10T15:56:12.838878+00:00"
@@ -272,6 +298,7 @@
       "name": "Restore and polish the flat SpielOS creative signature",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-11T00:04:25.597056+00:00"
@@ -284,6 +311,7 @@
       "name": "Establish the One Idea Hierarchy across SpielOS content",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-10T20:25:46.562904+00:00"
@@ -296,6 +324,7 @@
       "name": "Fix live guardrail to accept gmail_inbox capture mode",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-10T17:13:10.594161+00:00"
@@ -308,6 +337,7 @@
       "name": "Align DirectorIdentityContractTests with YAML agent permission format",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-10T17:13:10.792531+00:00"
@@ -320,6 +350,7 @@
       "name": "Launch package: Postmark active, daily caps 400, pending-status delivery gate",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-10T17:48:02.692165+00:00"
@@ -332,6 +363,7 @@
       "name": "Idempotent email batch execution: skip already-sent leads instead of refusing the batch",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-10T20:33:14.685938+00:00"
@@ -344,6 +376,7 @@
       "name": "Delivered-rate gate excludes suppressed bounces",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-10T21:03:15.177356+00:00"
@@ -356,6 +389,7 @@
       "name": "Fix flat creative deliverables to owner standard: one voice, no music, full sentences, subtle hit pulses, website typography, canvas-style graphics",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "ACT",
       "target": true,
       "updated_at": "2026-08-12T01:04:19.774159+00:00"
@@ -368,6 +402,7 @@
       "name": "Build /live company timeline page: goals, self-improvement sessions, filters, SEO",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-11T12:22:54.177548+00:00"
@@ -380,6 +415,7 @@
       "name": "Auto-sync live timeline snapshot from runtime state after every goal transition",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-11T12:16:12.490010+00:00"
@@ -392,6 +428,7 @@
       "name": "Fix truncated syntax in scripts/render-video.js (missing closing brace)",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-11T12:21:13.862533+00:00"
@@ -404,6 +441,7 @@
       "name": "Reply-rate truth: reclassify stale reply kinds, header-aware auto-detection, inbox-true window counts",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-11T13:27:49.143940+00:00"
@@ -416,6 +454,7 @@
       "name": "Plain-language goal status: why waiting, next check time, local-runner awareness",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-11T13:29:36.864472+00:00"
@@ -428,6 +467,7 @@
       "name": "Revise /live page: design-system conformance, top-15 + show-more, Running/Resting live status",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-11T13:19:38.329698+00:00"
@@ -440,6 +480,7 @@
       "name": "Live push: auto-commit + push snapshot on state flips and run completions (env-guarded, debounced, non-fatal)",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-11T15:39:50.405225+00:00"
@@ -452,6 +493,7 @@
       "name": "Update spielos-ui skill: ops-page patterns, chip radius rule, live-status pattern",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-11T16:54:25.940102+00:00"
@@ -464,6 +506,7 @@
       "name": "Live heartbeat: active business goal above totals, split timeline into business vs self-improvement sections",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "EVALUATE",
       "target": true,
       "updated_at": "2026-08-11T15:21:37.663021+00:00"
@@ -476,6 +519,7 @@
       "name": "Reply ledger display: tolerate merged records without recorded_at/email, preserve identity on merge",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-11T15:15:16.870988+00:00"
@@ -488,6 +532,7 @@
       "name": "Reply recheck tombstones: collapsed received_ids must never be re-captured by the sweep",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-11T15:41:20.901285+00:00"
@@ -500,6 +545,7 @@
       "name": "English outbound send batch 1: 50 from remaining queue (owner order 2026-08-11)",
       "operator": "ge",
       "owner_id": "outbound",
+      "run_status": "completed",
       "stage": "ACT",
       "target": 0.3,
       "updated_at": "2026-08-11T16:49:55.087804+00:00"
@@ -512,6 +558,7 @@
       "name": "Live page polish: merged status heartbeat, hero title/desc, full-width loop, timeline polish + animations",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "EVALUATE",
       "target": true,
       "updated_at": "2026-08-11T20:37:16.632464+00:00"
@@ -524,6 +571,7 @@
       "name": "Email batch prepare must fill to the 50-lead floor: pull deeper into the queue instead of slice-then-skip",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-11T16:46:27.016170+00:00"
@@ -536,6 +584,7 @@
       "name": "English outbound send batch 2: 50 from remaining queue (owner order 2026-08-11)",
       "operator": "ge",
       "owner_id": "outbound",
+      "run_status": "completed",
       "stage": "EVALUATE",
       "target": 0.3,
       "updated_at": "2026-08-12T00:05:49.196809+00:00"
@@ -548,6 +597,7 @@
       "name": "Navbar Live AI Company link with slow green ping dot",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-11T22:23:27.517880+00:00"
@@ -560,6 +610,7 @@
       "name": "Multi-provider TTS fallback chain + definitive masculine narration contract + video order readiness",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "blocked",
       "stage": "ACT",
       "target": true,
       "updated_at": "2026-08-12T01:13:59.181667+00:00"
@@ -572,6 +623,7 @@
       "name": "English outbound send batch 3: next 50 from remaining queue via Brevo (owner order 2026-08-12)",
       "operator": "ge",
       "owner_id": "outbound",
+      "run_status": "completed",
       "stage": "ACT",
       "target": 0.3,
       "updated_at": "2026-08-13T01:09:15.776238+00:00"
@@ -584,6 +636,7 @@
       "name": "Wire Buffer Connection for unattended Threads + Shorts publishing (GraphQL API)",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "ACT",
       "target": "True",
       "updated_at": "2026-08-12T14:26:47.972471+00:00"
@@ -596,6 +649,7 @@
       "name": "Stabilize Department install and generic work-order execution",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-12T13:47:44.323929+00:00"
@@ -608,9 +662,10 @@
       "name": "Enable direct Buffer publishing for Threads and YouTube Shorts",
       "operator": "eq",
       "owner_id": "system-improvement",
-      "stage": "EVALUATE",
+      "run_status": "blocked",
+      "stage": "ACT",
       "target": true,
-      "updated_at": "2026-08-12T14:32:10.074269+00:00"
+      "updated_at": "2026-08-13T22:15:40.923537+00:00"
     },
     {
       "created_at": "2026-08-12T14:33:22.007825+00:00",
@@ -620,6 +675,7 @@
       "name": "Generate 10 daily content-attributed SpielOS services leads",
       "operator": "eq",
       "owner_id": "director",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-12T14:45:07.499872+00:00"
@@ -632,6 +688,7 @@
       "name": "Measure content-attributed visits, conversion rate, and daily service leads",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-12T14:36:09.103797+00:00"
@@ -644,30 +701,41 @@
       "name": "Build the quality-gated Threads and YouTube Shorts content experiment process",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-12T14:45:07.254106+00:00"
     },
     {
+      "business_value": "Useful content should create qualified visits and Agent Brief requests.",
+      "business_value_fa": "محتوای مفید باید بازدید هدفمند و درخواست Agent Brief ایجاد کنه.",
       "created_at": "2026-08-12T14:46:23.315615+00:00",
+      "display_title": "Grow qualified visits and service leads",
+      "display_title_fa": "بازدید هدفمند و درخواست خدمات رو بیشتر کنیم",
       "goal_status": "active",
       "id": "goal-content-growth-operations-v1-20260812",
       "metric": "all_children_achieved",
       "name": "Operate the content growth program toward 200 daily visits and 10 daily services leads",
       "operator": "eq",
       "owner_id": "director",
+      "run_status": "waiting",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-12T20:04:48.412896+00:00"
     },
     {
+      "business_value": "The company needs evidence about which content creates visits and leads.",
+      "business_value_fa": "شرکت باید بدونه کدوم محتوا واقعاً بازدید و لید ایجاد می‌کنه.",
       "created_at": "2026-08-12T14:46:37.498110+00:00",
+      "display_title": "Measure the content-to-lead funnel",
+      "display_title_fa": "مسیر محتوا تا لید رو اندازه بگیریم",
       "goal_status": "active",
       "id": "goal-content-daily-scorecard-v1-20260812",
       "metric": "funnel_reports",
       "name": "Measure daily Threads and YouTube content funnel performance",
       "operator": "ge",
       "owner_id": "analytics",
+      "run_status": "blocked",
       "stage": "ACT",
       "target": 1,
       "updated_at": "2026-08-12T14:46:39.272094+00:00"
@@ -680,6 +748,7 @@
       "name": "Prepare and dispatch the first quality-gated Threads and YouTube Shorts package",
       "operator": "ge",
       "owner_id": "content",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": 1,
       "updated_at": "2026-08-12T20:04:48.108464+00:00"
@@ -692,6 +761,7 @@
       "name": "Enforce five-item review batches for the 50 Threads and 50 Shorts daily content program",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-12T15:02:48.494204+00:00"
@@ -704,6 +774,7 @@
       "name": "Make the Design Department render title-led themed Batch 1 social and Shorts variants",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "blocked",
       "stage": "ACT",
       "target": true,
       "updated_at": "2026-08-12T15:18:24.964374+00:00"
@@ -716,6 +787,7 @@
       "name": "Replace disconnected content production with one campaign-to-lead contract",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-12T15:37:03.512717+00:00"
@@ -728,6 +800,7 @@
       "name": "Support evidence-scaled A/B and multivariate content-funnel experiments",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-12T16:06:42.977642+00:00"
@@ -740,6 +813,7 @@
       "name": "Surface company approvals as native host questions",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-12T15:58:13.043680+00:00"
@@ -752,6 +826,7 @@
       "name": "Repair campaign video narration timing thumbnails and artifact delivery",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-12T16:48:24.895631+00:00"
@@ -764,9 +839,10 @@
       "name": "Bind campaign narration and motion scenes to one current SpielOS source",
       "operator": "eq",
       "owner_id": "system-improvement",
-      "stage": "EVALUATE",
+      "run_status": "blocked",
+      "stage": "ACT",
       "target": true,
-      "updated_at": "2026-08-12T17:47:32.355256+00:00"
+      "updated_at": "2026-08-13T21:52:01.893732+00:00"
     },
     {
       "created_at": "2026-08-12T18:54:38.563122+00:00",
@@ -776,6 +852,7 @@
       "name": "Advance machine evidence to content approval without transition loops",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-12T19:00:19.700596+00:00"
@@ -788,6 +865,7 @@
       "name": "Use the existing Batch 1 authorization once and publish hosted campaign assets",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-12T19:35:15.333847+00:00"
@@ -800,6 +878,7 @@
       "name": "Prevent escaped line-break captions in Buffer publishing",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-12T20:41:17.094071+00:00"
@@ -812,6 +891,7 @@
       "name": "Make content strategy-to-production lean, customer-first, and platform-native",
       "operator": "eq",
       "owner_id": "content",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": 1,
       "updated_at": "2026-08-12T21:06:07.081441+00:00"
@@ -824,21 +904,27 @@
       "name": "Migrate the next prepared content package to the lean one-idea contract",
       "operator": "eq",
       "owner_id": "content",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": 1,
       "updated_at": "2026-08-12T21:09:15.520720+00:00"
     },
     {
+      "business_value": "Consistent qualified outreach tests whether the sales message creates conversations.",
+      "business_value_fa": "ارتباط‌گیری منظم با لیدهای مناسب نشون می‌ده پیام فروش گفت‌وگو ایجاد می‌کنه یا نه.",
       "created_at": "2026-08-13T01:34:06.413534+00:00",
+      "display_title": "Deliver the next qualified outbound batch",
+      "display_title_fa": "بسته بعدی ارتباط‌گیری با لیدهای مناسب رو ارسال کنیم",
       "goal_status": "active",
       "id": "goal-email-send-20260813-b4",
       "metric": "reply_rate",
       "name": "English outbound send batch 4: next 50 from remaining queue via Brevo (owner order 2026-08-13)",
       "operator": "ge",
       "owner_id": "outbound",
+      "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-13T20:55:54.580372+00:00"
+      "updated_at": "2026-08-13T22:48:00.210487+00:00"
     },
     {
       "created_at": "2026-08-13T01:44:21.896620+00:00",
@@ -848,6 +934,7 @@
       "name": "P0: Prevent technical readiness from satisfying unmet business outcomes",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-13T01:46:04.047605+00:00"
@@ -860,6 +947,7 @@
       "name": "P1: Preserve strategic lineage for Director system interventions",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-13T02:00:25.391802+00:00"
@@ -872,6 +960,7 @@
       "name": "P2: Validate and freeze the shared Department Lego boundary",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-13T02:11:53.392844+00:00"
@@ -884,6 +973,7 @@
       "name": "P2 prerequisite: Align Design rendition evidence contract",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-13T02:11:40.576278+00:00"
@@ -896,6 +986,7 @@
       "name": "P2 prerequisite: Align interpreter fixture to canonical render report",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-13T02:10:49.745544+00:00"
@@ -908,6 +999,7 @@
       "name": "P3A: Link persisted decisions to the exact evidence used",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "ACT",
       "target": true,
       "updated_at": "2026-08-13T20:17:15.302714+00:00"
@@ -920,21 +1012,27 @@
       "name": "Upgrade campaign Shorts with readable contrast and creative placement system",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-13T02:49:12.007158+00:00"
     },
     {
+      "business_value": "Buyer-focused content creates useful reach and routes operators to Services.",
+      "business_value_fa": "محتوای مناسب خریدار، مخاطب مفید رو به صفحه خدمات می‌رسونه.",
       "created_at": "2026-08-13T02:43:28.844798+00:00",
+      "display_title": "Prepare the next educational content package",
+      "display_title_fa": "بسته بعدی محتوای آموزشی رو آماده کنیم",
       "goal_status": "active",
       "id": "goal-content-batch02-package-v1-20260813",
       "metric": "published_items",
       "name": "Prepare and present the Batch 2 Threads and YouTube Shorts package",
       "operator": "ge",
       "owner_id": "content",
+      "run_status": "blocked",
       "stage": "ACT",
       "target": 1,
-      "updated_at": "2026-08-13T03:21:11.451692+00:00"
+      "updated_at": "2026-08-13T22:45:49.302583+00:00"
     },
     {
       "created_at": "2026-08-13T11:16:19.514261+00:00",
@@ -944,6 +1042,7 @@
       "name": "Restore batch-1 Shorts template quality and add short thumbnail titles",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "awaiting_approval",
       "stage": "ACT",
       "target": true,
       "updated_at": "2026-08-13T11:16:32.484208+00:00"
@@ -956,6 +1055,7 @@
       "name": "Implement website conversion rebuild plan on review branch",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "blocked",
       "stage": "ACT",
       "target": true,
       "updated_at": "2026-08-13T21:33:32.296611+00:00"
@@ -968,6 +1068,7 @@
       "name": "P2.5E: Prove one causal frontier with batches inside Runs",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-13T20:16:44.134551+00:00"
@@ -980,6 +1081,7 @@
       "name": "P3A: Persist exact Evidence to Decision provenance",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-13T20:35:20.120904+00:00"
@@ -992,6 +1094,7 @@
       "name": "P3B: Resolve hypotheses only from same-branch prediction tests",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-13T20:41:57.163393+00:00"
@@ -1004,6 +1107,7 @@
       "name": "P3C: Persist only evidence-backed decision-relevant Memory",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-13T20:56:50.195026+00:00"
@@ -1016,6 +1120,7 @@
       "name": "P4: Retrieve bounded trustworthy Memory across Departments",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-13T21:01:31.452688+00:00"
@@ -1028,6 +1133,7 @@
       "name": "P5: Escalate persistent valid business failure strategically",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-13T21:03:25.677469+00:00"
@@ -1040,6 +1146,7 @@
       "name": "P5: Escalate persistent valid business failure strategically",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-13T21:11:54.984971+00:00"
@@ -1052,9 +1159,49 @@
       "name": "P6: Expose the canonical Strategy Kernel safely",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-13T21:24:56.021909+00:00"
+    },
+    {
+      "created_at": "2026-08-13T21:56:47.406868+00:00",
+      "goal_status": "proposed",
+      "id": "goal-buffer-graphql-revalidate-v1-20260814",
+      "metric": "acceptance_tests_passed",
+      "name": "Revalidate direct Buffer publishing with corrected acceptance command",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "run_status": "awaiting_approval",
+      "stage": "DECIDE",
+      "target": true,
+      "updated_at": "2026-08-13T21:56:47.415008+00:00"
+    },
+    {
+      "created_at": "2026-08-13T22:03:52.271950+00:00",
+      "goal_status": "achieved",
+      "id": "goal-website-waitlist-architecture-migration-v1-20260814",
+      "metric": "acceptance_tests_passed",
+      "name": "Replace the legacy waitlist route with the new Architecture page",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "run_status": "completed",
+      "stage": "OBSERVE",
+      "target": true,
+      "updated_at": "2026-08-13T22:55:20.905004+00:00"
+    },
+    {
+      "created_at": "2026-08-13T22:35:31.342613+00:00",
+      "goal_status": "active",
+      "id": "goal-content-batch03-package-v1-20260814",
+      "metric": "published_items",
+      "name": "Produce Batch 3 Threads and YouTube Shorts from handoff-control signal",
+      "operator": "ge",
+      "owner_id": "content",
+      "run_status": "blocked",
+      "stage": "ACT",
+      "target": 1,
+      "updated_at": "2026-08-13T22:41:10.836439+00:00"
     }
   ],
   "heartbeat": {
@@ -1065,18 +1212,18 @@
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-13T20:55:54.582594+00:00"
+    "updated_at": "2026-08-13T22:48:00.212222+00:00"
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-13T19:31:32.273247+00:00",
-      "goal_id": "goal-website-conversion-rebuild-v1-20260813",
-      "goal_name": "Implement website conversion rebuild plan on review branch",
-      "owner_id": "system-improvement",
-      "run_id": "run-93ad39d4b4",
-      "run_status": "blocked",
-      "stage": "ACT",
-      "updated_at": "2026-08-13T21:33:32.297779+00:00"
+      "created_at": "2026-08-13T01:34:06.413534+00:00",
+      "goal_id": "goal-email-send-20260813-b4",
+      "goal_name": "English outbound send batch 4: next 50 from remaining queue via Brevo (owner order 2026-08-13)",
+      "owner_id": "outbound",
+      "run_id": "run-84bbf06732",
+      "run_status": "waiting",
+      "stage": "EVALUATE",
+      "updated_at": "2026-08-13T22:48:00.212222+00:00"
     },
     "heartbeat": {
       "goal_id": "goal-email-send-20260813-b4",
@@ -1086,22 +1233,22 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-13T20:55:54.582594+00:00"
+      "updated_at": "2026-08-13T22:48:00.212222+00:00"
     },
-    "last_activity_at": "2026-08-13T21:33:32.297779+00:00",
-    "last_sync_at": "2026-08-13T21:33:32.310245+00:00",
+    "last_activity_at": "2026-08-13T22:55:20.905964+00:00",
+    "last_sync_at": "2026-08-13T22:55:20.920213+00:00",
     "state": "running"
   },
   "totals": {
-    "approvals": 73,
-    "decisions": 156,
-    "evidence": 1231,
+    "approvals": 82,
+    "decisions": 171,
+    "evidence": 1256,
     "goals_abandoned": 12,
-    "goals_achieved": 62,
-    "goals_active": 12,
-    "goals_total": 88,
-    "hypotheses": 28,
+    "goals_achieved": 63,
+    "goals_active": 13,
+    "goals_total": 91,
+    "hypotheses": 29,
     "memory_claims": 5,
-    "runs": 89
+    "runs": 97
   }
 }
