@@ -6,8 +6,8 @@
     "owner_id": "system-improvement",
     "run_id": "run-d551b495da",
     "run_status": "running",
-    "stage": "DECIDE",
-    "updated_at": "2026-08-13T23:04:18.319395+00:00"
+    "stage": "ACT",
+    "updated_at": "2026-08-13T23:06:10.593164+00:00"
   },
   "heartbeat": {
     "goal_id": "goal-email-send-20260813-b4",
@@ -19,12 +19,12 @@
     "target": 0.3,
     "updated_at": "2026-08-13T22:48:00.212222+00:00"
   },
-  "last_activity_at": "2026-08-13T23:04:18.319395+00:00",
-  "last_sync_at": "2026-08-13T23:04:18.330871+00:00",
+  "last_activity_at": "2026-08-13T23:06:10.593164+00:00",
+  "last_sync_at": "2026-08-13T23:06:10.648157+00:00",
   "state": "running",
   "totals": {
     "approvals": 84,
-    "decisions": 172,
+    "decisions": 173,
     "evidence": 1257,
     "goals_abandoned": 12,
     "goals_achieved": 63,
