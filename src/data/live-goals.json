@@ -838,7 +838,7 @@
       "owner_id": "outbound",
       "stage": "ACT",
       "target": 0.3,
-      "updated_at": "2026-08-13T01:35:31.507616+00:00"
+      "updated_at": "2026-08-13T02:20:54.832559+00:00"
     },
     {
       "created_at": "2026-08-13T01:44:21.896620+00:00",
@@ -911,6 +911,30 @@
       "stage": "ACT",
       "target": true,
       "updated_at": "2026-08-13T02:12:32.572908+00:00"
+    },
+    {
+      "created_at": "2026-08-13T02:38:16.834846+00:00",
+      "goal_status": "achieved",
+      "id": "goal-design-video-contrast-placement-v1-20260813",
+      "metric": "acceptance_tests_passed",
+      "name": "Upgrade campaign Shorts with readable contrast and creative placement system",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "stage": "OBSERVE",
+      "target": true,
+      "updated_at": "2026-08-13T02:49:12.007158+00:00"
+    },
+    {
+      "created_at": "2026-08-13T02:43:28.844798+00:00",
+      "goal_status": "active",
+      "id": "goal-content-batch02-package-v1-20260813",
+      "metric": "published_items",
+      "name": "Prepare and present the Batch 2 Threads and YouTube Shorts package",
+      "operator": "ge",
+      "owner_id": "content",
+      "stage": "ACT",
+      "target": 1,
+      "updated_at": "2026-08-13T02:44:07.543925+00:00"
     }
   ],
   "heartbeat": {
@@ -925,14 +949,14 @@
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-10T14:42:53.503744+00:00",
-      "goal_id": "goal-email-campaign-20260810",
-      "goal_name": "Resume daily English outbound to 30% reply rate",
-      "owner_id": "outbound",
-      "run_id": "run-7f4669930e",
-      "run_status": "waiting",
-      "stage": "EVALUATE",
-      "updated_at": "2026-08-13T02:18:06.460331+00:00"
+      "created_at": "2026-08-13T02:43:28.844798+00:00",
+      "goal_id": "goal-content-batch02-package-v1-20260813",
+      "goal_name": "Prepare and present the Batch 2 Threads and YouTube Shorts package",
+      "owner_id": "content",
+      "run_id": "run-f4b5ba3a5c",
+      "run_status": "blocked",
+      "stage": "ACT",
+      "updated_at": "2026-08-13T02:44:07.545259+00:00"
     },
     "heartbeat": {
       "goal_id": "goal-email-campaign-20260810",
@@ -944,20 +968,20 @@
       "target": 0.3,
       "updated_at": "2026-08-13T02:18:06.460331+00:00"
     },
-    "last_activity_at": "2026-08-13T02:18:06.460331+00:00",
-    "last_sync_at": "2026-08-13T02:18:06.518143+00:00",
+    "last_activity_at": "2026-08-13T02:49:12.008576+00:00",
+    "last_sync_at": "2026-08-13T02:49:12.018577+00:00",
     "state": "running"
   },
   "totals": {
-    "approvals": 61,
-    "decisions": 132,
-    "evidence": 942,
+    "approvals": 63,
+    "decisions": 135,
+    "evidence": 946,
     "goals_abandoned": 10,
-    "goals_achieved": 54,
-    "goals_active": 10,
-    "goals_total": 76,
-    "hypotheses": 25,
+    "goals_achieved": 55,
+    "goals_active": 11,
+    "goals_total": 78,
+    "hypotheses": 27,
     "memory_claims": 4,
-    "runs": 77
+    "runs": 79
   }
 }
