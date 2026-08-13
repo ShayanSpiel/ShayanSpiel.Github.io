@@ -214,7 +214,7 @@
       "owner_id": "outbound",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-13T01:12:52.494334+00:00"
+      "updated_at": "2026-08-13T01:50:47.163246+00:00"
     },
     {
       "created_at": "2026-08-10T14:42:53.516527+00:00",
@@ -827,6 +827,30 @@
       "stage": "OBSERVE",
       "target": 1,
       "updated_at": "2026-08-12T21:09:15.520720+00:00"
+    },
+    {
+      "created_at": "2026-08-13T01:34:06.413534+00:00",
+      "goal_status": "active",
+      "id": "goal-email-send-20260813-b4",
+      "metric": "reply_rate",
+      "name": "English outbound send batch 4: next 50 from remaining queue via Brevo (owner order 2026-08-13)",
+      "operator": "ge",
+      "owner_id": "outbound",
+      "stage": "ACT",
+      "target": 0.3,
+      "updated_at": "2026-08-13T01:35:31.507616+00:00"
+    },
+    {
+      "created_at": "2026-08-13T01:44:21.896620+00:00",
+      "goal_status": "achieved",
+      "id": "goal-strategic-cognition-p0-truth-20260813",
+      "metric": "acceptance_tests_passed",
+      "name": "P0: Prevent technical readiness from satisfying unmet business outcomes",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "stage": "OBSERVE",
+      "target": true,
+      "updated_at": "2026-08-13T01:46:04.047605+00:00"
     }
   ],
   "heartbeat": {
@@ -837,7 +861,7 @@
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-13T01:12:52.496813+00:00"
+    "updated_at": "2026-08-13T01:50:47.165763+00:00"
   },
   "runtime_state": {
     "current_run": {
@@ -848,7 +872,7 @@
       "run_id": "run-7f4669930e",
       "run_status": "waiting",
       "stage": "EVALUATE",
-      "updated_at": "2026-08-13T01:12:52.496813+00:00"
+      "updated_at": "2026-08-13T01:50:47.165763+00:00"
     },
     "heartbeat": {
       "goal_id": "goal-email-campaign-20260810",
@@ -858,22 +882,22 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-13T01:12:52.496813+00:00"
+      "updated_at": "2026-08-13T01:50:47.165763+00:00"
     },
-    "last_activity_at": "2026-08-13T01:12:52.496813+00:00",
-    "last_sync_at": "2026-08-13T01:12:52.552255+00:00",
+    "last_activity_at": "2026-08-13T01:50:47.165763+00:00",
+    "last_sync_at": "2026-08-13T01:50:47.223046+00:00",
     "state": "running"
   },
   "totals": {
-    "approvals": 56,
-    "decisions": 125,
-    "evidence": 919,
+    "approvals": 57,
+    "decisions": 127,
+    "evidence": 927,
     "goals_abandoned": 10,
-    "goals_achieved": 49,
-    "goals_active": 8,
-    "goals_total": 69,
-    "hypotheses": 24,
+    "goals_achieved": 50,
+    "goals_active": 9,
+    "goals_total": 71,
+    "hypotheses": 25,
     "memory_claims": 4,
-    "runs": 70
+    "runs": 72
   }
 }
