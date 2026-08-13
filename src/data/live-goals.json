@@ -838,7 +838,7 @@
       "owner_id": "outbound",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-13T04:21:24.314470+00:00"
+      "updated_at": "2026-08-13T20:14:31.277085+00:00"
     },
     {
       "created_at": "2026-08-13T01:44:21.896620+00:00",
@@ -902,7 +902,7 @@
     },
     {
       "created_at": "2026-08-13T02:12:31.057158+00:00",
-      "goal_status": "active",
+      "goal_status": "abandoned",
       "id": "goal-strategic-cognition-p3a-provenance-20260813",
       "metric": "acceptance_tests_passed",
       "name": "P3A: Link persisted decisions to the exact evidence used",
@@ -910,7 +910,7 @@
       "owner_id": "system-improvement",
       "stage": "ACT",
       "target": true,
-      "updated_at": "2026-08-13T02:50:28.325313+00:00"
+      "updated_at": "2026-08-13T20:17:15.302714+00:00"
     },
     {
       "created_at": "2026-08-13T02:38:16.834846+00:00",
@@ -935,6 +935,54 @@
       "stage": "ACT",
       "target": 1,
       "updated_at": "2026-08-13T03:21:11.451692+00:00"
+    },
+    {
+      "created_at": "2026-08-13T11:16:19.514261+00:00",
+      "goal_status": "active",
+      "id": "goal-design-video-restore-batch1-thumbs-v1-20260813",
+      "metric": "acceptance_tests_passed",
+      "name": "Restore batch-1 Shorts template quality and add short thumbnail titles",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "stage": "ACT",
+      "target": true,
+      "updated_at": "2026-08-13T11:16:32.484208+00:00"
+    },
+    {
+      "created_at": "2026-08-13T19:31:32.273247+00:00",
+      "goal_status": "active",
+      "id": "goal-website-conversion-rebuild-v1-20260813",
+      "metric": "acceptance_tests_passed",
+      "name": "Implement website conversion rebuild plan on review branch",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "stage": "ACT",
+      "target": true,
+      "updated_at": "2026-08-13T19:51:59.028196+00:00"
+    },
+    {
+      "created_at": "2026-08-13T20:10:53.936379+00:00",
+      "goal_status": "achieved",
+      "id": "goal-strategic-cognition-p25e-frontier-20260813",
+      "metric": "acceptance_tests_passed",
+      "name": "P2.5E: Prove one causal frontier with batches inside Runs",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "stage": "OBSERVE",
+      "target": true,
+      "updated_at": "2026-08-13T20:16:44.134551+00:00"
+    },
+    {
+      "created_at": "2026-08-13T20:17:34.102192+00:00",
+      "goal_status": "active",
+      "id": "goal-strategic-cognition-p3a-provenance-v2-20260813",
+      "metric": "acceptance_tests_passed",
+      "name": "P3A: Persist exact Evidence to Decision provenance",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "stage": "DECIDE",
+      "target": true,
+      "updated_at": "2026-08-13T20:17:35.726385+00:00"
     }
   ],
   "heartbeat": {
@@ -945,18 +993,18 @@
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-13T04:21:24.316607+00:00"
+    "updated_at": "2026-08-13T20:14:31.279170+00:00"
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-13T01:34:06.413534+00:00",
-      "goal_id": "goal-email-send-20260813-b4",
-      "goal_name": "English outbound send batch 4: next 50 from remaining queue via Brevo (owner order 2026-08-13)",
-      "owner_id": "outbound",
-      "run_id": "run-84bbf06732",
-      "run_status": "waiting",
-      "stage": "EVALUATE",
-      "updated_at": "2026-08-13T04:21:24.316607+00:00"
+      "created_at": "2026-08-13T20:17:34.102192+00:00",
+      "goal_id": "goal-strategic-cognition-p3a-provenance-v2-20260813",
+      "goal_name": "P3A: Persist exact Evidence to Decision provenance",
+      "owner_id": "system-improvement",
+      "run_id": "run-be52a54bc3",
+      "run_status": "running",
+      "stage": "DECIDE",
+      "updated_at": "2026-08-13T20:17:35.727412+00:00"
     },
     "heartbeat": {
       "goal_id": "goal-email-send-20260813-b4",
@@ -966,22 +1014,22 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-13T04:21:24.316607+00:00"
+      "updated_at": "2026-08-13T20:14:31.279170+00:00"
     },
-    "last_activity_at": "2026-08-13T04:24:08.580561+00:00",
-    "last_sync_at": "2026-08-13T04:24:08.630605+00:00",
+    "last_activity_at": "2026-08-13T20:17:35.727412+00:00",
+    "last_sync_at": "2026-08-13T20:17:35.738335+00:00",
     "state": "running"
   },
   "totals": {
-    "approvals": 64,
-    "decisions": 137,
-    "evidence": 1140,
-    "goals_abandoned": 10,
-    "goals_achieved": 55,
-    "goals_active": 11,
-    "goals_total": 78,
-    "hypotheses": 27,
+    "approvals": 66,
+    "decisions": 144,
+    "evidence": 1215,
+    "goals_abandoned": 11,
+    "goals_achieved": 56,
+    "goals_active": 13,
+    "goals_total": 82,
+    "hypotheses": 28,
     "memory_claims": 5,
-    "runs": 79
+    "runs": 83
   }
 }
