@@ -214,7 +214,7 @@
       "owner_id": "outbound",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-13T02:10:59.608040+00:00"
+      "updated_at": "2026-08-13T02:18:06.457888+00:00"
     },
     {
       "created_at": "2026-08-10T14:42:53.516527+00:00",
@@ -866,27 +866,27 @@
     },
     {
       "created_at": "2026-08-13T02:03:58.933060+00:00",
-      "goal_status": "active",
+      "goal_status": "achieved",
       "id": "goal-strategic-cognition-p2-lego-freeze-20260813",
       "metric": "acceptance_tests_passed",
       "name": "P2: Validate and freeze the shared Department Lego boundary",
       "operator": "eq",
       "owner_id": "system-improvement",
-      "stage": "EVALUATE",
+      "stage": "OBSERVE",
       "target": true,
-      "updated_at": "2026-08-13T02:06:50.029871+00:00"
+      "updated_at": "2026-08-13T02:11:53.392844+00:00"
     },
     {
       "created_at": "2026-08-13T02:07:08.464462+00:00",
-      "goal_status": "active",
+      "goal_status": "achieved",
       "id": "goal-p2-design-evidence-contract-repair-20260813",
       "metric": "acceptance_tests_passed",
       "name": "P2 prerequisite: Align Design rendition evidence contract",
       "operator": "eq",
       "owner_id": "system-improvement",
-      "stage": "EVALUATE",
+      "stage": "OBSERVE",
       "target": true,
-      "updated_at": "2026-08-13T02:09:01.849520+00:00"
+      "updated_at": "2026-08-13T02:11:40.576278+00:00"
     },
     {
       "created_at": "2026-08-13T02:09:16.212541+00:00",
@@ -899,6 +899,18 @@
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-13T02:10:49.745544+00:00"
+    },
+    {
+      "created_at": "2026-08-13T02:12:31.057158+00:00",
+      "goal_status": "active",
+      "id": "goal-strategic-cognition-p3a-provenance-20260813",
+      "metric": "acceptance_tests_passed",
+      "name": "P3A: Link persisted decisions to the exact evidence used",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "stage": "ACT",
+      "target": true,
+      "updated_at": "2026-08-13T02:12:32.572908+00:00"
     }
   ],
   "heartbeat": {
@@ -909,7 +921,7 @@
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-13T02:10:59.610260+00:00"
+    "updated_at": "2026-08-13T02:18:06.460331+00:00"
   },
   "runtime_state": {
     "current_run": {
@@ -920,7 +932,7 @@
       "run_id": "run-7f4669930e",
       "run_status": "waiting",
       "stage": "EVALUATE",
-      "updated_at": "2026-08-13T02:10:59.610260+00:00"
+      "updated_at": "2026-08-13T02:18:06.460331+00:00"
     },
     "heartbeat": {
       "goal_id": "goal-email-campaign-20260810",
@@ -930,22 +942,22 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-13T02:10:59.610260+00:00"
+      "updated_at": "2026-08-13T02:18:06.460331+00:00"
     },
-    "last_activity_at": "2026-08-13T02:10:59.610260+00:00",
-    "last_sync_at": "2026-08-13T02:10:59.627348+00:00",
+    "last_activity_at": "2026-08-13T02:18:06.460331+00:00",
+    "last_sync_at": "2026-08-13T02:18:06.518143+00:00",
     "state": "running"
   },
   "totals": {
     "approvals": 61,
-    "decisions": 131,
-    "evidence": 938,
+    "decisions": 132,
+    "evidence": 942,
     "goals_abandoned": 10,
-    "goals_achieved": 52,
-    "goals_active": 11,
-    "goals_total": 75,
+    "goals_achieved": 54,
+    "goals_active": 10,
+    "goals_total": 76,
     "hypotheses": 25,
     "memory_claims": 4,
-    "runs": 76
+    "runs": 77
   }
 }
