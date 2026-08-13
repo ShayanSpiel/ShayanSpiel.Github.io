@@ -958,7 +958,7 @@
       "owner_id": "system-improvement",
       "stage": "ACT",
       "target": true,
-      "updated_at": "2026-08-13T19:51:59.028196+00:00"
+      "updated_at": "2026-08-13T21:33:32.296611+00:00"
     },
     {
       "created_at": "2026-08-13T20:10:53.936379+00:00",
@@ -1010,15 +1010,51 @@
     },
     {
       "created_at": "2026-08-13T20:57:24.537493+00:00",
-      "goal_status": "active",
+      "goal_status": "achieved",
       "id": "goal-strategic-cognition-p4-cross-learning-20260814",
       "metric": "acceptance_tests_passed",
       "name": "P4: Retrieve bounded trustworthy Memory across Departments",
       "operator": "eq",
       "owner_id": "system-improvement",
-      "stage": "DECIDE",
+      "stage": "OBSERVE",
       "target": true,
-      "updated_at": "2026-08-13T20:57:25.221826+00:00"
+      "updated_at": "2026-08-13T21:01:31.452688+00:00"
+    },
+    {
+      "created_at": "2026-08-13T21:03:09.093940+00:00",
+      "goal_status": "abandoned",
+      "id": "goal-strategic-cognition-p5-frontier-20260814",
+      "metric": "acceptance_tests_passed",
+      "name": "P5: Escalate persistent valid business failure strategically",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "stage": "OBSERVE",
+      "target": true,
+      "updated_at": "2026-08-13T21:03:25.677469+00:00"
+    },
+    {
+      "created_at": "2026-08-13T21:03:41.948530+00:00",
+      "goal_status": "achieved",
+      "id": "goal-strategic-cognition-p5-frontier-v2-20260814",
+      "metric": "acceptance_tests_passed",
+      "name": "P5: Escalate persistent valid business failure strategically",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "stage": "OBSERVE",
+      "target": true,
+      "updated_at": "2026-08-13T21:11:54.984971+00:00"
+    },
+    {
+      "created_at": "2026-08-13T21:13:35.006942+00:00",
+      "goal_status": "achieved",
+      "id": "goal-strategic-cognition-p6-kernel-20260814",
+      "metric": "acceptance_tests_passed",
+      "name": "P6: Expose the canonical Strategy Kernel safely",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "stage": "OBSERVE",
+      "target": true,
+      "updated_at": "2026-08-13T21:24:56.021909+00:00"
     }
   ],
   "heartbeat": {
@@ -1033,14 +1069,14 @@
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-13T20:57:24.537493+00:00",
-      "goal_id": "goal-strategic-cognition-p4-cross-learning-20260814",
-      "goal_name": "P4: Retrieve bounded trustworthy Memory across Departments",
+      "created_at": "2026-08-13T19:31:32.273247+00:00",
+      "goal_id": "goal-website-conversion-rebuild-v1-20260813",
+      "goal_name": "Implement website conversion rebuild plan on review branch",
       "owner_id": "system-improvement",
-      "run_id": "run-43edb869b3",
-      "run_status": "running",
-      "stage": "DECIDE",
-      "updated_at": "2026-08-13T20:57:25.222867+00:00"
+      "run_id": "run-93ad39d4b4",
+      "run_status": "blocked",
+      "stage": "ACT",
+      "updated_at": "2026-08-13T21:33:32.297779+00:00"
     },
     "heartbeat": {
       "goal_id": "goal-email-send-20260813-b4",
@@ -1052,20 +1088,20 @@
       "target": 0.3,
       "updated_at": "2026-08-13T20:55:54.582594+00:00"
     },
-    "last_activity_at": "2026-08-13T20:57:25.222867+00:00",
-    "last_sync_at": "2026-08-13T20:57:25.233767+00:00",
+    "last_activity_at": "2026-08-13T21:33:32.297779+00:00",
+    "last_sync_at": "2026-08-13T21:33:32.310245+00:00",
     "state": "running"
   },
   "totals": {
-    "approvals": 69,
-    "decisions": 150,
-    "evidence": 1226,
-    "goals_abandoned": 11,
-    "goals_achieved": 59,
-    "goals_active": 13,
-    "goals_total": 85,
+    "approvals": 73,
+    "decisions": 156,
+    "evidence": 1231,
+    "goals_abandoned": 12,
+    "goals_achieved": 62,
+    "goals_active": 12,
+    "goals_total": 88,
     "hypotheses": 28,
     "memory_claims": 5,
-    "runs": 86
+    "runs": 89
   }
 }
