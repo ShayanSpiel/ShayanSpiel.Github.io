@@ -838,7 +838,7 @@
       "owner_id": "outbound",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-13T20:14:31.277085+00:00"
+      "updated_at": "2026-08-13T20:37:56.094480+00:00"
     },
     {
       "created_at": "2026-08-13T01:44:21.896620+00:00",
@@ -974,15 +974,27 @@
     },
     {
       "created_at": "2026-08-13T20:17:34.102192+00:00",
-      "goal_status": "active",
+      "goal_status": "achieved",
       "id": "goal-strategic-cognition-p3a-provenance-v2-20260813",
       "metric": "acceptance_tests_passed",
       "name": "P3A: Persist exact Evidence to Decision provenance",
       "operator": "eq",
       "owner_id": "system-improvement",
-      "stage": "DECIDE",
+      "stage": "OBSERVE",
       "target": true,
-      "updated_at": "2026-08-13T20:17:35.726385+00:00"
+      "updated_at": "2026-08-13T20:35:20.120904+00:00"
+    },
+    {
+      "created_at": "2026-08-13T20:36:04.447509+00:00",
+      "goal_status": "active",
+      "id": "goal-strategic-cognition-p3b-hypothesis-20260814",
+      "metric": "acceptance_tests_passed",
+      "name": "P3B: Resolve hypotheses only from same-branch prediction tests",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "stage": "ACT",
+      "target": true,
+      "updated_at": "2026-08-13T20:37:11.396425+00:00"
     }
   ],
   "heartbeat": {
@@ -993,18 +1005,18 @@
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-13T20:14:31.279170+00:00"
+    "updated_at": "2026-08-13T20:37:56.096070+00:00"
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-13T20:17:34.102192+00:00",
-      "goal_id": "goal-strategic-cognition-p3a-provenance-v2-20260813",
-      "goal_name": "P3A: Persist exact Evidence to Decision provenance",
-      "owner_id": "system-improvement",
-      "run_id": "run-be52a54bc3",
-      "run_status": "running",
-      "stage": "DECIDE",
-      "updated_at": "2026-08-13T20:17:35.727412+00:00"
+      "created_at": "2026-08-13T01:34:06.413534+00:00",
+      "goal_id": "goal-email-send-20260813-b4",
+      "goal_name": "English outbound send batch 4: next 50 from remaining queue via Brevo (owner order 2026-08-13)",
+      "owner_id": "outbound",
+      "run_id": "run-84bbf06732",
+      "run_status": "waiting",
+      "stage": "EVALUATE",
+      "updated_at": "2026-08-13T20:37:56.096070+00:00"
     },
     "heartbeat": {
       "goal_id": "goal-email-send-20260813-b4",
@@ -1014,22 +1026,22 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-13T20:14:31.279170+00:00"
+      "updated_at": "2026-08-13T20:37:56.096070+00:00"
     },
-    "last_activity_at": "2026-08-13T20:17:35.727412+00:00",
-    "last_sync_at": "2026-08-13T20:17:35.738335+00:00",
+    "last_activity_at": "2026-08-13T20:37:56.096070+00:00",
+    "last_sync_at": "2026-08-13T20:37:56.110708+00:00",
     "state": "running"
   },
   "totals": {
-    "approvals": 66,
-    "decisions": 144,
-    "evidence": 1215,
+    "approvals": 68,
+    "decisions": 147,
+    "evidence": 1220,
     "goals_abandoned": 11,
-    "goals_achieved": 56,
+    "goals_achieved": 57,
     "goals_active": 13,
-    "goals_total": 82,
+    "goals_total": 83,
     "hypotheses": 28,
     "memory_claims": 5,
-    "runs": 83
+    "runs": 84
   }
 }
