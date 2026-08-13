@@ -605,82 +605,82 @@ class ReplyTruthReconcileTests(unittest.TestCase):
     """Bounded repair 2026-08-11 (change-326f0c32e6, goal-reply-truth-20260811):
     header-aware auto-reply detection with stored classification inputs,
     per-lead dedupe reconciliation, and inbox-truth metrics. The reply fixture
-    is the LIVE ledger (.spielos/state/outbound/metrics.json) verbatim."""
+    is a synthetic ledger with the same shapes as production records."""
 
     LIVE_REPLIES = [
-        {"received_id": None, "lead_id": "TEST-loop-001", "email": "xhayan@gmail.com",
+        {"received_id": None, "lead_id": "TEST-loop-001", "email": "tester@example.com",
          "company": "Test", "variant": "Test", "subject": "SpielOS outbound loop test",
          "message_id": None, "received_at": None,
          "recorded_at": "2026-08-07T19:45:08.453097+00:00",
          "kind": "reply", "note": "user reply to loop test"},
         {"received_id": "gmail-<CA+Y0w+cMpwH53Lar+dNUhSe-Yo832N=JAY8bfTX3ZYv6sWi=fA@mail.gmail.com>",
-         "lead_id": "TEST-loop-001", "email": "xhayan@gmail.com", "company": "Test",
+         "lead_id": "TEST-loop-001", "email": "tester@example.com", "company": "Test",
          "variant": "Test", "subject": "Re: SpielOS outbound loop test",
          "message_id": "<CA+Y0w+cMpwH53Lar+dNUhSe-Yo832N=JAY8bfTX3ZYv6sWi=fA@mail.gmail.com>",
          "received_at": "2026-08-07T19:42:33+00:00",
          "recorded_at": "2026-08-10T17:19:12.442354+00:00",
          "kind": "reply", "note": ""},
         {"received_id": "gmail-<aa02f018e7cf443d991a47ee13f7606b@CWLP123MB6411.GBRP123.PROD.OUTLOOK.COM>",
-         "lead_id": "EN-1152", "email": "jay.plant@wentworthjames.co.uk",
-         "company": "Wentworth James Group", "variant": "researched-personal",
-         "subject": "Automatic reply: Recruiting ops at Wentworth James Group",
+         "lead_id": "EN-1152", "email": "alex.lee@example-recruiting.test",
+         "company": "Example Recruiting Co", "variant": "researched-personal",
+         "subject": "Automatic reply: Recruiting ops at Example Recruiting Co",
          "message_id": "<aa02f018e7cf443d991a47ee13f7606b@CWLP123MB6411.GBRP123.PROD.OUTLOOK.COM>",
          "received_at": "2026-08-09T12:24:33+00:00",
          "recorded_at": "2026-08-10T17:19:12.442470+00:00",
-         "kind": "auto", "note": "Jay Plant / Wentworth James Group — OOO auto-reply 2026-08-09: "
+         "kind": "auto", "note": "Alex Lee / Example Recruiting Co — OOO auto-reply 2026-08-09: "
          "'out of office with limited access, returning Monday 2026-08-10'. Accounts queries -> "
-         "accounts@wentworthjames.co.uk (role inbox, out of policy). Deliverability CONFIRMED by "
+         "accounts@example-recruiting.test (role inbox, out of policy). Deliverability CONFIRMED by "
          "OOO reply; master status upgraded to Verified.",
          "subclass": "out-of-office"},
         {"received_id": "gmail-<26c91a6e846f485abb5890f30b5f3678@LO2P123MB5480.GBRP123.PROD.OUTLOOK.COM>",
-         "lead_id": "EN-1153", "email": "jweeden@vr-group.co.uk",
-         "company": "VR Group", "variant": "researched-personal",
-         "subject": "Automatic reply: Screening loop at VR Group",
+         "lead_id": "EN-1153", "email": "jordan.west@example-group.test",
+         "company": "Example Group", "variant": "researched-personal",
+         "subject": "Automatic reply: Screening loop at Example Group",
          "message_id": "<26c91a6e846f485abb5890f30b5f3678@LO2P123MB5480.GBRP123.PROD.OUTLOOK.COM>",
          "received_at": "2026-08-09T12:27:06+00:00",
          "recorded_at": "2026-08-10T17:19:12.442482+00:00",
-         "kind": "auto", "note": "Jack Weeden / VR Group — OOO auto-reply 2026-08-09: 'away on leave, "
-         "no email access'. Urgent -> Josh Barlow 07508 535621 / jbarlow@vr-group.co.uk (confirmed "
-         "Group Candidate Manager on vr-group.co.uk/about). Deliverability CONFIRMED by OOO reply; "
+         "kind": "auto", "note": "Jordan West / Example Group — OOO auto-reply 2026-08-09: 'away on leave, "
+         "no email access'. Urgent -> Casey Lee 07000 000000 / casey.lee@example-group.test (confirmed "
+         "Group Candidate Manager on example-group.test/about). Deliverability CONFIRMED by OOO reply; "
          "master status upgraded to Verified.",
          "subclass": "out-of-office"},
         {"received_id": "gmail-<CA+Y0w+fzCSbC6Gks_hSva4Wz2u2jpLx00GfJgYpcx2HagZGyMQ@mail.gmail.com>",
-         "lead_id": "TEST-loop-001", "email": "xhayan@gmail.com", "company": "Test",
+         "lead_id": "TEST-loop-001", "email": "tester@example.com", "company": "Test",
          "variant": "Test", "subject": "Re: SpielOS loop test 617052",
          "message_id": "<CA+Y0w+fzCSbC6Gks_hSva4Wz2u2jpLx00GfJgYpcx2HagZGyMQ@mail.gmail.com>",
          "received_at": "2026-08-10T00:21:12+00:00",
          "recorded_at": "2026-08-10T17:19:12.442504+00:00",
          "kind": "reply", "note": ""},
         {"received_id": "gmail-<msmuuj62.b570adbe-95d2-46d2-9330-4c2d63d1e7bc@we.are.superhuman.com>",
-         "lead_id": "EN-1157", "email": "rhys@sigmarecruitment.co.uk",
-         "company": "Sigma Recruitment", "variant": "researched-personal",
-         "subject": "Re: Staffing loop at Sigma Recruitment",
+         "lead_id": "EN-1157", "email": "riley@example-staffing.test",
+         "company": "Example Staffing", "variant": "researched-personal",
+         "subject": "Re: Staffing loop at Example Staffing",
          "message_id": "<msmuuj62.b570adbe-95d2-46d2-9330-4c2d63d1e7bc@we.are.superhuman.com>",
          "received_at": "2026-08-10T06:34:02+00:00",
          "recorded_at": "2026-08-10T17:19:12.442514+00:00",
          "kind": "reply", "note": ""},
         {"received_id": "gmail-<CABmWERz6j4fH1HjJWPwiF74y+m0hremvUUeTL-qMtbjtvTtLZg@mail.gmail.com>",
-         "lead_id": "AP-7d1096", "email": "tony@webkatalyst.com",
-         "company": "Web Katalyst", "variant": "researched-personal",
+         "lead_id": "AP-7d1096", "email": "casey@example-agency.test",
+         "company": "Example Agency", "variant": "researched-personal",
          "subject": "Re: Delivery loop cost",
          "message_id": "<CABmWERz6j4fH1HjJWPwiF74y+m0hremvUUeTL-qMtbjtvTtLZg@mail.gmail.com>",
          "received_at": "2026-08-10T10:10:12+00:00",
          "recorded_at": "2026-08-10T17:19:12.442526+00:00",
          "kind": "auto",
          "note": "Owner confirmed 2026-08-11: bot/away auto-reply (out of office), NOT a real reply"},
-        {"lead_id": "AP-7d1096", "company": "Web Katalyst", "kind": "reply",
+        {"lead_id": "AP-7d1096", "company": "Example Agency", "kind": "reply",
          "outcome": "rejected",
          "reason": "Not looking to bring in an external solution for this workflow at the moment — "
                    "pass for now",
          "note": "Owner-forwarded real reply 2026-08-11 (separate from earlier bot/away auto event). "
                  "Company type owner-confirmed: software agency. Rejection class R1: external-solution "
                  "readiness / in-house capability.",
-         "subject": "Re: Web Katalyst client-delivery flow",
+         "subject": "Re: Example Agency client-delivery flow",
          "received_at": "2026-08-11T00:00:00"},
         {"received_id": "gmail-<CWXP265MB3191F6660D3E788F0E4C330BF5DD2@CWXP265MB3191.GBRP265.PROD.OUTLOOK.COM>",
-         "lead_id": "EN-1157", "email": "rhys@sigmarecruitment.co.uk",
-         "company": "Sigma Recruitment", "variant": "researched-personal",
-         "subject": "Staffing loop at Sigma Recruitment",
+         "lead_id": "EN-1157", "email": "riley@example-staffing.test",
+         "company": "Example Staffing", "variant": "researched-personal",
+         "subject": "Staffing loop at Example Staffing",
          "message_id": "<CWXP265MB3191F6660D3E788F0E4C330BF5DD2@CWXP265MB3191.GBRP265.PROD.OUTLOOK.COM>",
          "received_at": "2026-08-11T00:33:25+00:00",
          "recorded_at": "2026-08-11T00:35:58.225223+00:00",
@@ -694,7 +694,7 @@ class ReplyTruthReconcileTests(unittest.TestCase):
         from company.departments.outbound.workflows.email import analytics
         # OOO prefix (Outlook convention) is a strong auto signal
         self.assertEqual(analytics.classify_reply_kind(
-            "Automatic reply: Recruiting ops at Wentworth James Group"), "auto")
+            "Automatic reply: Recruiting ops at Example Recruiting Co"), "auto")
         # Auto-Submitted header (RFC 3834) beats an ordinary Re: subject
         self.assertEqual(analytics.classify_reply_kind(
             "Re: Staffing loop", auto_submitted="auto-replied"), "auto")
@@ -713,7 +713,7 @@ class ReplyTruthReconcileTests(unittest.TestCase):
         import email as email_mod
         from company.departments.outbound.workflows.email import providers
         msg = email_mod.message.EmailMessage()
-        msg["From"] = "Jay Plant <jay.plant@wentworthjames.co.uk>"
+        msg["From"] = "Alex Lee <alex.lee@example-recruiting.test>"
         msg["To"] = "replies@spielos.xyz"
         msg["Subject"] = "Re: Recruiting ops"
         msg["Message-ID"] = "<m1@outlook.com>"
@@ -802,8 +802,8 @@ class ReplyTruthReconcileTests(unittest.TestCase):
 
         # Aggregate: replied=2 (windowed sends — goal metric unchanged), auto=2
         log = {"sent": [
-            {"lead_id": "EN-1157", "email": "rhys@sigmarecruitment.co.uk"},
-            {"lead_id": "AP-7d1096", "email": "tony@webkatalyst.com"},
+            {"lead_id": "EN-1157", "email": "riley@example-staffing.test"},
+            {"lead_id": "AP-7d1096", "email": "casey@example-agency.test"},
         ]}
         agg = analytics.aggregate(log, metrics)
         self.assertEqual(agg["replied"], 2)
@@ -965,15 +965,15 @@ class ReplyDisplayToleranceTests(unittest.TestCase):
         config.METRICS_PATH = tmp / "metrics.json"
         config.SENT_LOG_PATH = tmp / "sent.json"
         merged = {"received_id": None, "lead_id": "AP-7d1096", "email": None,
-                  "company": "Web Katalyst", "variant": "researched-personal",
-                  "subject": "Re: Web Katalyst client-delivery flow",
+                  "company": "Example Agency", "variant": "researched-personal",
+                  "subject": "Re: Example Agency client-delivery flow",
                   "received_at": "2026-08-11T00:00:00+00:00", "recorded_at": None,
                   "kind": "reply", "note": ""}
         with open(config.METRICS_PATH, "w") as f:
             json.dump({"emails": {}, "replies": [merged]}, f)
         outbound.save_sent_log({"sent": [
-            {"lead_id": "AP-7d1096", "email": "tony@webkatalyst.com",
-             "contact_name": "Tony Turquet", "company": "Web Katalyst"},
+            {"lead_id": "AP-7d1096", "email": "casey@example-agency.test",
+             "contact_name": "Casey Example", "company": "Example Agency"},
         ]})
         buf = io.StringIO()
         with contextlib.redirect_stdout(buf):
@@ -983,7 +983,7 @@ class ReplyDisplayToleranceTests(unittest.TestCase):
         # recorded_at missing -> received_at fallback rendered
         self.assertIn("2026-08-11T00:00", out)
         # email missing -> lead email from the sent log rendered
-        self.assertIn("tony@webkatalyst.com", out)
+        self.assertIn("casey@example-agency.test", out)
 
     def test_replies_renders_record_with_only_lead_id_no_timestamps(self):
         """Even a record with no timestamps and no sent-log match renders
@@ -1019,7 +1019,7 @@ class ReplyDisplayToleranceTests(unittest.TestCase):
                   "note": ""}
         newest = {"received_id": "gmail-<n1@example.com>", "lead_id": "AP-9x",
                   "email": None, "company": "NewCo", "variant": "researched-personal",
-                  "subject": "Re: Web Katalyst client-delivery flow",
+                  "subject": "Re: Example Agency client-delivery flow",
                   "message_id": "<n1@example.com>",
                   "received_at": "2026-08-11T00:00:00+00:00", "recorded_at": None,
                   "kind": "reply", "note": ""}
@@ -1029,7 +1029,7 @@ class ReplyDisplayToleranceTests(unittest.TestCase):
         self.assertEqual(len(metrics["replies"]), 1)
         kept = metrics["replies"][0]
         # Newest record is kept (received_at 2026-08-11 beats 2026-08-10)
-        self.assertEqual(kept["subject"], "Re: Web Katalyst client-delivery flow")
+        self.assertEqual(kept["subject"], "Re: Example Agency client-delivery flow")
         self.assertEqual(kept["received_id"], "gmail-<n1@example.com>")
         # Identity the newest lacks is backfilled from the group (oldest)
         self.assertEqual(kept["email"], "old@example.com")

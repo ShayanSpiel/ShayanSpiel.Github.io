@@ -3,12 +3,17 @@
 from __future__ import annotations
 
 import json
+import os
 import sqlite3
+import sys
 import uuid
 from contextlib import contextmanager
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Iterator
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+CANONICAL_LIVE_DB = REPO_ROOT / ".spielos" / "state" / "company.sqlite"
 
 TERMINAL_GOAL_STATUSES = ("achieved", "abandoned", "expired")
 ACTIONABLE_NOTIFICATION_KINDS = (
@@ -42,6 +47,8 @@ def _why_next_for_run(run_status: str, goal_status: str, resume_at,
     """
     data = data or {}
     action = data.get("action_result") or {}
+    if goal_status == "proposed":
+        return "proposed — Director recommends deferral; override to start"
     if run_status == "waiting":
         parts = ["waiting"]
         deadline = action.get("evidence_deadline")
@@ -53,6 +60,10 @@ def _why_next_for_run(run_status: str, goal_status: str, resume_at,
             parts.append("awaiting evidence or a state change")
         return parts[0] + (" — " + "; ".join(parts[1:]) if len(parts) > 1 else "")
     if run_status == "blocked":
+        evaluation = data.get("evaluation") or {}
+        experiment = evaluation.get("next_experiment") or {}
+        if experiment.get("action") == "retry_same_scope":
+            return "blocked — next same-scope attempt starts automatically"
         task = action.get("task") or {}
         if task.get("status") == "approved":
             return "blocked — needs coding executor"
@@ -63,10 +74,20 @@ def _why_next_for_run(run_status: str, goal_status: str, resume_at,
     if run_status == "awaiting_approval":
         return "awaiting_approval — prepared action needs your approval"
     if run_status == "completed":
-        return {"achieved": "completed — goal achieved",
-                "abandoned": "completed — goal abandoned",
-                "expired": "completed — goal expired"}.get(
-                    goal_status, "completed — run finished; the next run needs approval to start")
+        if goal_status in {"achieved", "abandoned", "expired"}:
+            return {"achieved": "completed — goal achieved",
+                    "abandoned": "completed — goal abandoned",
+                    "expired": "completed — goal expired"}[goal_status]
+        evaluation = data.get("evaluation") or {}
+        experiment = evaluation.get("next_experiment") or {}
+        validity = evaluation.get("validity") or "business"
+        if validity in {"invalid", "contaminated"}:
+            return f"completed — evaluation is {validity}; continuation stopped"
+        if experiment.get("system_improvement"):
+            return "completed — continuation blocked; a system improvement is required"
+        if experiment:
+            return "completed — next run starts automatically"
+        return "completed — run finished; no valid next experiment"
     if run_status == "failed":
         return "failed — needs investigation; retry with `company retry <goal>`"
     if run_status == "idle":
@@ -79,6 +100,9 @@ def _why_next_for_kind(kind: str, payload: dict | None = None) -> str | None:
     payload = payload or {}
     attention = payload.get("attention") or {}
     if kind == "approval_required":
+        alignment = payload.get("alignment") or {}
+        if alignment.get("judgment") == "defer_recommended":
+            return "approval needed — Director recommends deferral; override to start"
         return "approval needed — prepared action needs your approval"
     if kind == "blocked":
         result = payload.get("result") or {}
@@ -101,7 +125,12 @@ def _why_next_for_kind(kind: str, payload: dict | None = None) -> str | None:
     if kind == "failed":
         return "failed — needs investigation; retry with `company retry <goal>`"
     if kind == "run_completed":
-        return "run completed — review the result; the next run needs approval to start"
+        experiment = (payload.get("next_experiment") or {})
+        if experiment.get("system_improvement"):
+            return "run completed — continuation blocked; a system improvement is required"
+        if experiment:
+            return "run completed — review the result; the next run starts automatically"
+        return "run completed — review the result; no valid next experiment"
     if kind == "goal_achieved":
         return "goal completed — outcome achieved"
     if kind == "goal_abandoned":
@@ -111,14 +140,59 @@ def _why_next_for_kind(kind: str, payload: dict | None = None) -> str | None:
     return None
 
 
+def canonical_live_db() -> Path:
+    """Resolved path of the repository-local company database."""
+
+    return CANONICAL_LIVE_DB.resolve()
+
+
+def is_canonical_live_db(path: str | Path) -> bool:
+    try:
+        return Path(path).resolve() == canonical_live_db()
+    except OSError:
+        return False
+
+
+def _in_test_process() -> bool:
+    """True when company tests are running and live writes are not explicitly allowed."""
+
+    if os.environ.get("SPIELOS_ALLOW_LIVE_DB_WRITE") == "1":
+        return False
+    if os.environ.get("SPIELOS_TEST_ISOLATION") == "1":
+        return True
+    argv = " ".join(sys.argv)
+    return "unittest" in sys.modules and ("unittest" in argv or "test_" in argv)
+
+
+def _guard_live_write(path: Path) -> None:
+    if _in_test_process() and is_canonical_live_db(path):
+        raise RuntimeError(
+            "tests cannot open the canonical live company database for writing")
+
+
 class Store:
-    def __init__(self, path: str | Path):
+    def __init__(self, path: str | Path, *, readonly: bool = False):
         self.path = Path(path)
+        self.readonly = readonly
+        if readonly:
+            return
+        _guard_live_write(self.path)
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self._init()
 
     @contextmanager
     def connect(self) -> Iterator[sqlite3.Connection]:
+        if self.readonly:
+            con = sqlite3.connect(f"file:{self.path.resolve()}?mode=ro", uri=True, timeout=10)
+            con.row_factory = sqlite3.Row
+            con.execute("PRAGMA query_only=ON")
+            try:
+                con.execute("PRAGMA foreign_keys=ON")
+                yield con
+            finally:
+                con.close()
+            return
+        _guard_live_write(self.path)
         con = sqlite3.connect(self.path, timeout=10)
         con.row_factory = sqlite3.Row
         con.execute("PRAGMA foreign_keys=ON")
@@ -453,7 +527,7 @@ class Store:
         return values
 
     def attention(self, limit: int = 10) -> list[dict]:
-        """Return only unresolved notifications belonging to active goals."""
+        """Return unresolved notifications on active or proposed goals."""
 
         marks = ",".join("?" for _ in ACTIONABLE_NOTIFICATION_KINDS)
         with self.connect() as con:
@@ -461,7 +535,8 @@ class Store:
                     n.payload_json,g.name,g.owner_id,c.stage,c.step,c.run_status
                 FROM notifications n JOIN goals g ON g.id=n.goal_id
                 JOIN cycles c ON c.id=n.run_id
-                WHERE n.status='pending' AND g.goal_status='active' AND n.kind IN ({marks})
+                WHERE n.status='pending' AND g.goal_status IN ('active','proposed')
+                    AND n.kind IN ({marks})
                 ORDER BY n.created_at,n.id LIMIT ?""",
                 (*ACTIONABLE_NOTIFICATION_KINDS, max(1, min(int(limit), 100)))).fetchall()
         values = []
@@ -545,6 +620,23 @@ class Store:
             raise KeyError(f"unknown run: {run_id}")
         return value
 
+    def hypothesis(self, hypothesis_id: str) -> dict:
+        with self.connect() as con:
+            row = con.execute("SELECT * FROM hypotheses WHERE id=?", (hypothesis_id,)).fetchone()
+        value = self._decode(row)
+        if not value:
+            raise KeyError(f"unknown hypothesis: {hypothesis_id}")
+        return value
+
+    def resolve_hypothesis(self, hypothesis_id: str, status: str) -> dict:
+        if status not in {"supported", "rejected", "inconclusive"}:
+            raise ValueError(f"invalid hypothesis status: {status}")
+        with self.connect() as con:
+            con.execute(
+                "UPDATE hypotheses SET status=?,updated_at=? WHERE id=? AND status='active'",
+                (status, now(), hypothesis_id))
+        return self.hypothesis(hypothesis_id)
+
     def update_run(self, run_id: str, *, status: str | None = None,
                    validity: str | None = None, contamination_reason: str | None = None,
                    resume_run_id: str | None = None) -> None:
@@ -585,10 +677,13 @@ class Store:
 
     def add_evaluation(self, goal_id: str, run_id: str, evaluation: dict) -> dict:
         evaluation_id = f"eval-{uuid.uuid4().hex[:12]}"
+        metrics = dict(evaluation.get("metrics", {}))
+        if evaluation.get("hypothesis_result"):
+            metrics["hypothesis_result"] = dict(evaluation["hypothesis_result"])
         with self.connect() as con:
             con.execute("INSERT INTO evaluations VALUES (?,?,?,?,?,?,?,?,?,?)", (
                 evaluation_id, goal_id, run_id, evaluation.get("verdict", "inconclusive"),
-                int(bool(evaluation.get("goal_met"))), json.dumps(evaluation.get("metrics", {})),
+                int(bool(evaluation.get("goal_met"))), json.dumps(metrics),
                 evaluation.get("validity", "business"), evaluation.get("contamination_reason"),
                 json.dumps(evaluation.get("next_experiment", {})), now()))
         return self.evaluation(run_id)
@@ -603,6 +698,27 @@ class Store:
             row = con.execute("SELECT * FROM evaluations WHERE goal_id=? ORDER BY created_at DESC LIMIT 1",
                               (goal_id,)).fetchone()
         return self._decode(row)
+
+    def goal_run_history(self, goal_id: str, limit: int = 5) -> tuple[dict, ...]:
+        with self.connect() as con:
+            rows = con.execute(
+                "SELECT * FROM runs WHERE goal_id=? ORDER BY created_at DESC LIMIT ?",
+                (goal_id, max(1, min(limit, 20)))).fetchall()
+        history = []
+        for row in rows:
+            run = self._decode(row)
+            evaluation = self.evaluation(run["id"])
+            if not evaluation:
+                continue
+            hypothesis = (self.hypothesis(run["hypothesis_id"])
+                          if run.get("hypothesis_id") else None)
+            history.append({
+                "run": run,
+                "evaluation": evaluation,
+                "hypothesis": hypothesis,
+                "evidence": tuple(self.evidence(run["id"])),
+            })
+        return tuple(history)
 
     def register_owner_version(self, owner_id: str, version: str, status: str = "deployed",
                                code_ref: str | None = None, test_summary: dict | None = None) -> None:
@@ -654,11 +770,32 @@ class Store:
             rows = con.execute("SELECT * FROM change_tasks WHERE run_id=? ORDER BY created_at", (run_id,)).fetchall()
         return [self._decode(row) for row in rows]
 
+    def change_tasks_for_goal(self, goal_id: str) -> list[dict]:
+        with self.connect() as con:
+            rows = con.execute(
+                "SELECT * FROM change_tasks WHERE goal_id=? ORDER BY created_at,id",
+                (goal_id,)).fetchall()
+        return [self._decode(row) for row in rows]
+
     def complete_change_task(self, task_id: str, status: str, result: dict) -> dict:
+        current = self.change_task(task_id)
+        allowed = {
+            "proposed": {"approved"},
+            "approved": {"completed", "failed"},
+        }
+        if status not in allowed.get(current["status"], ()):
+            raise RuntimeError(
+                f"change task {task_id} cannot move from {current['status']} to {status}")
         with self.connect() as con:
             con.execute("UPDATE change_tasks SET status=?,result_json=?,updated_at=? WHERE id=?",
                         (status, json.dumps(result), now(), task_id))
         return self.change_task(task_id)
+
+    def update_goal_config(self, goal_id: str, config: dict) -> dict:
+        with self.connect() as con:
+            con.execute("UPDATE goals SET config_json=?,updated_at=? WHERE id=?",
+                        (json.dumps(config), now(), goal_id))
+        return self.goal(goal_id)
 
     def set_goal_status(self, goal_id: str, status: str) -> None:
         with self.connect() as con:
@@ -676,7 +813,7 @@ class Store:
                     WHERE goal_id=? AND status='pending' AND kind IN ({marks})""",
                     (stamp, goal_id, *ACTIONABLE_NOTIFICATION_KINDS))
                 con.execute("""UPDATE work_orders SET status='cancelled',updated_at=?
-                    WHERE goal_id=? AND status='open'""", (stamp, goal_id))
+                    WHERE goal_id=? AND status IN ('open','claimed')""", (stamp, goal_id))
 
     def event(self, goal_id: str, cycle_id: str | None, kind: str, payload: dict) -> None:
         with self.connect() as con:
@@ -685,11 +822,15 @@ class Store:
 
     def notify(self, goal_id: str, run_id: str, kind: str, payload: dict) -> dict:
         notification_id = f"note-{uuid.uuid4().hex[:12]}"
+        stamp = now()
         with self.connect() as con:
-            con.execute("""INSERT OR IGNORE INTO notifications
+            con.execute("""INSERT INTO notifications
                 (id,goal_id,run_id,kind,payload_json,status,created_at,delivered_at)
-                VALUES (?,?,?,?,?,'pending',?,NULL)""",
-                (notification_id, goal_id, run_id, kind, json.dumps(payload), now()))
+                VALUES (?,?,?,?,?,'pending',?,NULL)
+                ON CONFLICT(goal_id,run_id,kind) DO UPDATE SET
+                    payload_json=excluded.payload_json,status='pending',
+                    created_at=excluded.created_at,delivered_at=NULL""",
+                (notification_id, goal_id, run_id, kind, json.dumps(payload), stamp))
             row = con.execute("""SELECT * FROM notifications
                 WHERE goal_id=? AND run_id=? AND kind=?""", (goal_id, run_id, kind)).fetchone()
         return self._decode(row)
@@ -732,15 +873,41 @@ class Store:
         return value
 
     def wake_goal(self, goal_id: str, reason: str) -> bool:
+        """Return a waiting parent to OBSERVE, or make an evidence wait due now.
+
+        Does not touch awaiting_approval or an in-progress coding block.
+        """
+
         cycle = self.cycle(goal_id)
-        if cycle["run_status"] != "waiting":
+        status = cycle["run_status"]
+        stage = cycle["stage"]
+        if status not in {"waiting", "blocked"}:
             return False
         stamp = now()
-        with self.connect() as con:
-            con.execute("UPDATE cycles SET resume_at=?,updated_at=? WHERE id=?",
-                        (stamp, stamp, cycle["id"]))
+        if status == "waiting" and stage == "OBSERVE":
+            self.update_cycle(cycle["id"], stage="OBSERVE", step="collect",
+                              run_status="idle", resume_at=None, data=cycle.get("data") or {})
+        elif status == "waiting":
+            with self.connect() as con:
+                con.execute("UPDATE cycles SET resume_at=?,updated_at=? WHERE id=?",
+                            (stamp, stamp, cycle["id"]))
+        elif status == "blocked" and stage == "EVALUATE":
+            self.update_cycle(cycle["id"], stage="OBSERVE", step="collect",
+                              run_status="idle", resume_at=None, data=cycle.get("data") or {})
+        else:
+            return False
         self.event(goal_id, cycle["id"], "run.woken", {"reason": reason})
         return True
+
+    def cancel_work_orders(self, goal_id: str, *, include_claimed: bool = False) -> int:
+        statuses = ("open", "claimed") if include_claimed else ("open",)
+        marks = ",".join("?" for _ in statuses)
+        with self.connect() as con:
+            cur = con.execute(
+                f"""UPDATE work_orders SET status='cancelled',updated_at=?
+                    WHERE goal_id=? AND status IN ({marks})""",
+                (now(), goal_id, *statuses))
+            return cur.rowcount
 
     def events(self, goal_id: str, limit: int = 20) -> list[dict]:
         with self.connect() as con:
@@ -761,11 +928,39 @@ class Store:
                               (goal_id, cycle_id, key)).fetchone()
         return row[0] if row else None
 
-    def memories(self, owner_id: str, goal_id: str) -> tuple[dict, ...]:
+    def memories(self, owner_id: str, goal_id: str,
+                 ancestor_goal_ids: tuple[str, ...] = ()) -> tuple[dict, ...]:
+        goal_ids = tuple(dict.fromkeys((goal_id, *ancestor_goal_ids)))
+        marks = ",".join("?" for _ in goal_ids)
         with self.connect() as con:
-            rows = con.execute("SELECT * FROM memory WHERE owner_id=? AND (goal_id=? OR goal_id IS NULL) ORDER BY id DESC LIMIT 50",
-                               (owner_id, goal_id)).fetchall()
+            rows = con.execute(
+                f"SELECT * FROM memory WHERE owner_id=? AND goal_id IN ({marks}) "
+                "ORDER BY id DESC LIMIT 50", (owner_id, *goal_ids)).fetchall()
         return tuple(self._decode(r) for r in rows)
+
+    def shared_memories(self, audience_owner_id: str, topics: tuple[str, ...],
+                        limit: int = 10) -> tuple[dict, ...]:
+        requested = {item for item in topics if item}
+        if not requested or limit <= 0:
+            return ()
+        with self.connect() as con:
+            rows = con.execute(
+                "SELECT * FROM memory WHERE owner_id!=? ORDER BY id DESC LIMIT 200",
+                (audience_owner_id,)).fetchall()
+        selected = []
+        for row in rows:
+            item = self._decode(row)
+            evidence = item.get("evidence") or {}
+            if evidence.get("share_scope") != "company":
+                continue
+            if audience_owner_id not in set(evidence.get("audience_departments") or ()):
+                continue
+            if not requested.intersection(evidence.get("topics") or ()):
+                continue
+            selected.append(item)
+            if len(selected) >= min(limit, 10):
+                break
+        return tuple(selected)
 
     def learn(self, owner_id: str, goal_id: str, claim: str, evidence: dict, confidence: float) -> None:
         with self.connect() as con:

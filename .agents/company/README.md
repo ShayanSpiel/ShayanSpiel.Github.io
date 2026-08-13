@@ -141,6 +141,36 @@ A Department folder only needs package data (workflows, agents, metrics,
 evidence_metrics). Custom stage code is reserved for special paths (live email).
 `company catalog` marks packages with `"lego": true` when validation passes.
 
+The shared Lego boundary is frozen at runtime catalog version `5.3.1`. Integrity
+6.4 proved that freeze behaviorally, not only as serializable metadata:
+
+- Content, Analytics, and Outbound execute representative flows through
+  `runtime/interpreter.py`.
+- A step's `requires` list is an AND: every declared kind must be present
+  before the step advances.
+- A required kind must be produced by a graph node or declared in that
+  Workflow's evidence sources as a cross-Department handoff.
+- `lego: true` therefore means the package both validates and runs the shared
+  OBSERVE→DECIDE→ACT→EVALUATE interpreter.
+
+Expanding that contract requires fresh evidence of a recurring business need
+that cannot be expressed through these primitives and a separately bounded
+system-improvement Goal. A Department-specific algorithm, prompt, channel bug,
+or quality issue is not an abstraction leak.
+
+Outbound's direct email Workflow remains the **only** documented stage
+exception (`email-outreach`). It uses bespoke stage behavior for guarded
+unattended delivery, provider observation, and evidence-window polling while
+still exposing the same Goal, Workflow, Agent, Skill, Connection, approval,
+metric, and evidence contract in the catalog. Social research and DM drafts
+use the shared interpreter. Email does not own another lifecycle or justify
+widening the common Lego primitives.
+
+The current campaign Artifact authority is
+`departments/campaign_contract.py` at schema `1.1`. Schema `1.0` remains
+readable when the artifact already satisfies the current fields. Retired
+`batch_items` / live-journey packages are rejected and must be migrated.
+
 ### Install path
 
 ```sh
@@ -188,6 +218,112 @@ Internal CLI operations such as `runner tick`, `change complete`, evidence
 recording, and notification acknowledgement are runtime plumbing. They are not
 additional user-facing concepts or slash commands.
 
+## Pursuit semantics and alignment
+
+These are operating meanings, not new public vocabulary and not new tables.
+
+| Kind | Meaning | Explicitly not |
+|---|---|---|
+| Primary Goal | Durable measurable business outcome | A slogan, task list, batch, or readiness proxy |
+| Supporting Goal | Active bottleneck promoted to autonomous pursuit | Every metric in the causal model |
+| System Improvement Goal | Bounded repair or capability that enables pursuit | Proof the parent business outcome happened |
+| Run | One controlled attempt toward a Goal | The Goal itself |
+| Batch | Bounded exposure inside one Run | A new Goal by default |
+| Task | Known bounded work | An autonomous pursuit |
+| Guardrail | Quality, risk, evidence, or authority constraint | A Goal by default |
+
+The runtime accepts an optional `config.pursuit_kind` only to make one of the
+three Goal roles explicit: `primary_goal`, `supporting_goal`, or
+`system_improvement_goal`. It rejects `run`, `batch`, `task`, and `guardrail`
+as Goal kinds. A bounded Batch lives at `run.config_snapshot.batch` with an ID
+and positive size. This is a projection over existing Goal and Run records;
+there is no causal-graph table or second scheduler.
+
+A requested System Improvement is judged before it consumes company attention:
+
+1. supports an active company outcome,
+2. enables one,
+3. protects a required invariant, or
+4. is a justified bounded exploration.
+
+If none apply, the Goal is created as `proposed` and the Director recommends
+deferral with the opportunity cost. The owner may override (`company approve`
+or `company resume`). The audit keeps `judgment: defer_recommended` and stamps
+`owner_override`. Override is not strategic justification and does not approve
+sending, publishing, spending, or code changes.
+
+Do not invent causal lineage from filenames or test counts. Missing material
+fields stay `unknown` and block or defer the repair.
+
+When a child Goal changes material state, a waiting parent returns to OBSERVE
+and re-measures its own outcome. Child success does not achieve the parent.
+Pausing or closing an ancestor pauses descendants and cancels their open or
+claimed work orders.
+
+An active unmet Goal with a valid next experiment continues automatically.
+That is permission to keep pursuing, not permission to send, publish, spend,
+or change code. Automatic continuation stops when the Goal is terminal, the
+evaluation is invalid, the next experiment is missing or is a system-improvement
+blocker, a declared run limit is reached, an ancestor is not active, or another
+Goal already holds the same channel or file scope. `company next` remains a
+manual escape hatch.
+
+Every persisted decision may link the exact Evidence IDs that justified its
+selected branch. The shared interpreter links only the metric, prerequisite,
+or package evidence it inspected; Director system-intervention decisions link
+only invalid or contaminated evidence from the child's latest evaluated Run.
+The runtime accepts links only from the current Run, evaluated children, or the
+ancestor lineage. Unrelated visible records and obsolete child attempts are not
+attached, and no provenance schema or graph store is added.
+
+A Run hypothesis begins `active` and may move once to `supported`, `rejected`,
+or `inconclusive`. Resolution requires an evaluation to explicitly name the
+hypothesis attached to that same Run and state that its prediction was tested.
+Goal achievement alone never resolves a hypothesis. Invalid or contaminated
+tests can resolve only as inconclusive, while technical-only acceptance may
+resolve a technical Run's hypothesis but never a business hypothesis. An
+adjacent child or repair therefore cannot settle its parent's prediction.
+
+Memory is narrower than a Run event or evaluation: it is an evidence-backed
+reusable claim likely to change or better justify a future decision. A handler
+must explicitly mark the claim reusable, state its decision relevance and
+applicability, and cite valid Evidence IDs from the current Run. Routine
+completion and shortfall summaries, invalid support, and unscoped claims stay
+out of Memory. Retrieval is bounded to the current Goal and its ancestor Goals
+owned by the same Department. When the shared interpreter uses a claim, the
+persisted decision names the Memory ID and includes the claim in its rationale.
+
+Cross-Department retrieval is opt-in and bounded. A reusable claim must set
+`share_scope: company`, name its `audience_departments`, and declare `topics`.
+The receiving Goal must request matching `config.memory_topics`. The runtime
+returns at most ten newest matching claims from other Departments; unshared,
+wrong-audience, wrong-topic, and invalid claims never enter the Goal context.
+The same explicit Memory-ID decision audit applies. This uses the existing
+Memory table and deterministic metadata filters—no embeddings, vector store,
+or implicit company-wide context.
+
+Strategic escalation is deliberately harder than tactical continuation. The
+Director may propose a Policy or Model experiment only after three consecutive
+valid business experiments on one Supporting Goal reject their own exact
+hypotheses while reporting competent execution and a trustworthy system. Each
+proposal names its scope, changed strategic variable, stop condition,
+confidence, contradiction assessment, and the exact Run, hypothesis, and
+Evidence IDs that justify it. Technical-only, invalid, unresolved, or
+operationally untrustworthy attempts cannot trigger escalation. The proposal
+parks for explicit owner approval; approval authorizes the discriminating
+experiment only and never mutates strategy automatically.
+
+The Strategy Kernel is a read-only logical graph over existing authority, not a
+second strategy store. `strategy/kernel.json` maps exact authoritative Markdown
+sections into Intent, Model, Policy, and Constitution and exposes ICP,
+positioning, voice, and measurement as named views. Every Goal context contains
+its current measurable Intent plus at most eight sections selected by explicit
+`config.strategy_context.topics`, scopes, and layers; required safety rules
+still apply. Each section carries its source path and hash. Evidence and Memory
+remain separate, and neither an experiment proposal nor its approval can edit a
+strategy source. `company strategy` shows the reference-only state; topic/scope
+options show the same bounded context selector used by the runtime.
+
 ## Safety and system improvement
 
 Live external actions always park for approval. Generated material is not
@@ -208,10 +344,15 @@ Runtime or Department changes use one bounded `system_improvement` Goal with:
 - problem and allowed files;
 - exact acceptance commands;
 - `change_kind: repair` or `create_department`;
-- a `department_spec` when creating a Department.
+- a `department_spec` when creating a Department;
+- an alignment judgment, or an explicit owner override.
 
 The executor edits only approved files, records actual test evidence, and never
-marks deployment unless deployment happened.
+marks deployment unless deployment happened. A failed acceptance opens a fresh
+task on the same Goal and allowed files. Same-scope retries do not ask for
+approval again. Expanding files, diagnosis, or side effects needs a new
+approval or a new Goal. The local evaluation never satisfies a parent business
+metric.
 
 ## OpenCode permission policy
 

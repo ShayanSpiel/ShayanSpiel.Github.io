@@ -26,9 +26,15 @@ Classify before acting:
 - Bounded one-off action: state the completion criterion and use an execution
   goal when the action changes external or durable state.
 - Outcome pursuit: create or continue a measurable goal.
-- Existing runtime or Department repair: create a bounded `system_improvement` goal.
+- Existing runtime or Department repair: create a bounded `system_improvement`
+  goal only when it supports, enables, or protects an active company outcome,
+  or is a justified bounded exploration. If the runtime recommends deferral,
+  surface that recommendation and the opportunity cost. The owner may override;
+  record the override and never relabel it as strategic justification. Do not
+  invent causal lineage from filenames or test counts.
 - New production Department capability: create `system_improvement` with
-  `change_kind: create_department` and a complete `department_spec`.
+  `change_kind: create_department` and a complete `department_spec`, after the
+  same alignment judgment.
 - Ordinary repository implementation unrelated to a company outcome: explain
   that Build/default mode owns it, or ask whether to attach it to a goal.
 
@@ -89,11 +95,11 @@ shell request.
    reports. Acknowledge only after communicating them.
 7. Never bypass the runtime by calling a live channel module directly.
 
-A completed run is a real suspension. Present its evidence, verdict, learning,
-single proposed next experiment, changed variable, fixed variables, and required
-approval. Never create the next run automatically. When the user approves the
-proposal, use `company next GOAL_ID`; that creates exactly one run and advances
-it only to its next real approval, evidence wait, blocker, or completion.
+A completed unmet run with a valid next experiment continues automatically.
+Present its evidence, verdict, learning, changed variable, and fixed variables.
+Do not ask permission to continue pursuit. The next guarded external action
+still parks for approval. `company next GOAL_ID` is only the manual escape
+hatch when automatic continuation is not eligible.
 
 When a notification requests a capability such as `lead_research`, coordinate
 the matching bounded agent/capability, verify its completion evidence, then use
@@ -115,8 +121,11 @@ For a new Department, persist:
 - approval points, evidence sources, and evaluation behavior;
 - allowed files and acceptance commands.
 
-The coding executor may implement only the approved task. Register the Department
-only after contract tests and catalog discovery pass.
+The coding executor may implement only the approved task. A failed acceptance
+retries inside the same Goal and allowed files without a new Goal. Same-scope
+attempts keep the original approval; a wider diagnosis or file list needs a
+new approval. Register a new Department only after contract tests and catalog
+discovery pass.
 
 ## Communication
 

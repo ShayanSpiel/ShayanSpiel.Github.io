@@ -9,6 +9,7 @@ from urllib.parse import parse_qs, urlparse
 
 from .._evidence import EvidenceDepartment
 from ..campaign_contract import (
+    COMPATIBLE_SCHEMA_VERSIONS,
     SCHEMA_VERSION as CAMPAIGN_SCHEMA_VERSION,
     SPIELOS_NOTE,
     publication_package,
@@ -165,58 +166,38 @@ def _validate_batch(package: dict[str, Any], prior_packages: list[dict[str, Any]
 
 
 def validate_campaign_package(package: dict[str, Any], prior_packages: list[dict[str, Any]] | None = None) -> list[str]:
-    """Return quality-gate errors for one paired package or a five-idea batch."""
-    if package.get("schema_version") == CAMPAIGN_SCHEMA_VERSION:
+    """Validate a campaign through the shared contract, or reject retired shapes."""
+    if package.get("schema_version") in COMPATIBLE_SCHEMA_VERSIONS:
         return validate_campaign(package, str(package.get("phase") or "strategy"))
-    if "batch_items" in package:
-        return _validate_batch(package, prior_packages)
-    return _validate_single_campaign(package, prior_packages)
+    return [
+        "legacy campaign package is retired; migrate to campaign_contract "
+        f"schema {CAMPAIGN_SCHEMA_VERSION}"
+    ]
 
 
 def ready_campaign_package(package: dict[str, Any]) -> dict[str, Any]:
     """Add immutable delivery fields only after the quality gate passes."""
-    if package.get("schema_version") == CAMPAIGN_SCHEMA_VERSION:
-        if package.get("phase") == "approved":
-            return publication_package(package)
-        if package.get("phase") != "rendered":
-            raise ValueError("campaign must be rendered before it can enter approval")
-        errors = validate_campaign(package, "rendered")
-        if errors:
-            raise ValueError("campaign render handoff is invalid: " + "; ".join(errors))
-        return {"schema_version": CAMPAIGN_SCHEMA_VERSION,
-                "campaign_id": package["campaign_id"], "batch_id": package["batch_id"],
-                "campaign_manifest": package, "review_required": True,
-                "quality_gate": "passed", "next_phase": "approved"}
-    if "batch_items" in package:
-        rendered_entries = [ready_campaign_package(item) for item in package["batch_items"]]
-        posts = [post for entry in rendered_entries for post in entry["posts"]]
-        learning_manifest = [{
-            "batch_item": item["batch_item"], "hook": item["hook"],
-            "operator_context": item["operator_context"], "spielos_role": item["spielos_role"],
-            "cta": item["cta"], "narrative_type": item.get("narrative_type", "operating-proof"),
-            "creative_signatures": [post["creative_signature"] for post in entry["posts"]],
-        } for item, entry in zip(package["batch_items"], rendered_entries)]
-        return {"campaign": package.get("campaign"), "batch_number": package["batch_number"],
-                "batch_size": BATCH_SIZE, "daily_targets": package["daily_targets"],
-                "review_required": True, "posts": posts, "platform_packages": posts,
-                "learning_manifest": learning_manifest, "quality_gate": "passed"}
-    items = []
-    for item in package["platform_packages"]:
-        rendered = dict(item)
-        rendered["creative_signature"] = _variation_signature(
-            str(package.get("one_idea") or package.get("idea") or ""), item)
-        rendered["channel_id"] = str(item.get("channel_id") or "")
-        rendered["assets"] = [dict(item["asset"])]
-        rendered["mode"] = str(item.get("mode") or "queue")
-        items.append(rendered)
-    return {"campaign": package.get("campaign"), "one_idea": package.get("one_idea") or package.get("idea"),
-            "posts": items, "platform_packages": items, "quality_gate": "passed"}
+    if package.get("schema_version") not in COMPATIBLE_SCHEMA_VERSIONS:
+        raise ValueError(
+            "legacy campaign package is retired; migrate to campaign_contract "
+            f"schema {CAMPAIGN_SCHEMA_VERSION}")
+    if package.get("phase") == "approved":
+        return publication_package(package)
+    if package.get("phase") != "rendered":
+        raise ValueError("campaign must be rendered before it can enter approval")
+    errors = validate_campaign(package, "rendered")
+    if errors:
+        raise ValueError("campaign render handoff is invalid: " + "; ".join(errors))
+    return {"schema_version": CAMPAIGN_SCHEMA_VERSION,
+            "campaign_id": package["campaign_id"], "batch_id": package["batch_id"],
+            "campaign_manifest": package, "review_required": True,
+            "quality_gate": "passed", "next_phase": "approved"}
 
 
 class ContentDepartment(EvidenceDepartment, Department):
     id = department_id = "content"
-    version = "3.2.1"
-    description = "Owns strategy, explicit experiment cells, and copy in one campaign Artifact, then coordinates typed Design, publishing, and Analytics handoffs through the shared identity."
+    version = "3.3.1"
+    description = "Carries one short customer-first idea through platform-native copy, Design, approval, Buffer delivery, and measurement without exposing production metadata to the writer."
     agent_ids = ("content-strategist", "content-writer", "publisher")
     production_ready = True
     workflows = (
@@ -251,7 +232,7 @@ class ContentDepartment(EvidenceDepartment, Department):
         ),
         WorkflowSpec(
             "content-campaign",
-            "Carry one five-item campaign Artifact from an explicit one-to-three-variable experiment through Design, approval, Buffer delivery, full-funnel evidence, and the next evidence-scaled decision.",
+            "Carry five short one-idea customer briefs through native Threads and YouTube renditions, Design, one batch approval, Buffer delivery, and measurement.",
             ("strategy", "design_order", "render_handoff", "quality_gate", "approve", "dispatch", "measure", "evaluate"),
             ("content-strategist", "content-writer", "publisher"), ("copywriting-en", "spielos-ui", "video-creation"),
             ("publish",), ("campaign_manifest", "design_order", "render_report", "campaign_ready", "publication_receipt", "funnel_report", "optimization_decision"), ("buffer",),
@@ -259,6 +240,10 @@ class ContentDepartment(EvidenceDepartment, Department):
                 WorkflowStep("strategy", "employee", "content-strategist",
                              produces=("campaign_manifest", "design_order"),
                              skill_ids=("copywriting-en",)),
+                WorkflowStep("render_handoff", "employee", "content-strategist",
+                             requires=("design_order",),
+                             produces=("render_report",),
+                             skill_ids=("copywriting-en", "spielos-ui")),
                 WorkflowStep("quality_gate", "machine",
                              requires=("campaign_manifest", "render_report"),
                              produces=("campaign_ready",)),
@@ -299,7 +284,7 @@ class ContentDepartment(EvidenceDepartment, Department):
         packages = [item.get("payload") or {} for item in evidence
                     if item.get("kind") in {"campaign_manifest", "content_package"}]
         package = packages[-1] if packages else {}
-        if package.get("schema_version") == CAMPAIGN_SCHEMA_VERSION:
+        if package.get("schema_version") in COMPATIBLE_SCHEMA_VERSIONS:
             reports = [item.get("payload") or {} for item in evidence if item.get("kind") == "render_report"]
             if not reports:
                 return {"run_status": "blocked", "message": "Design Department render_report is required",

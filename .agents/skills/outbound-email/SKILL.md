@@ -19,10 +19,11 @@ PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=.agents python3 -B -m company status GOAL_I
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=.agents python3 -B -m company once GOAL_ID
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=.agents python3 -B -m company approve GOAL_ID
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=.agents python3 -B -m company report GOAL_ID
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=.agents python3 -B -m company next GOAL_ID
 ```
 
 Never select `execution_mode: live` or approve a prepared batch for the user.
+An unmet run with a valid next experiment continues automatically; the next
+send still parks for approval. `company next` is only a manual escape hatch.
 
 # Personal Cold Email + Sending Workflow
 
@@ -35,7 +36,7 @@ Three parts, one loop:
 1. **Content**: research-first, one-person voice, personal cold emails (and DMs) that read like a specific human wrote them to one specific human.
 2. **Sending**: the Outbound Department reads the master lead list
    (`.spielos/data/outbound/`) and acts through guarded provider adapters.
-3. **Email Data**: the feedback loop. The Department pulls provider status for every sent email, scores the funnel against the persisted goal's metric and target, and produces a verdict plus one proposed next action. Each run then parks until the user asks the Director to start that next run.
+3. **Email Data**: the feedback loop. The Department pulls provider status for every sent email, scores the funnel against the persisted goal's metric and target, and produces a verdict plus one proposed next action. A valid next experiment continues automatically; the next send still parks for approval.
 
 Use this skill for any SpielOS outbound email, DM, or follow-up, and for operating the Outbound Department.
 
@@ -205,8 +206,9 @@ second state machine.
   previous batch, sample-aware: ≥20 per batch, ≥2pt movement), LEARN (verdict
   into the knowledge store), GOAL CHECK against the persisted goal target,
   and writes the journal/report.
-- **completion** — the runtime parks the completed run and proposes at most one
-  next experiment.
+- **completion** — the runtime records the completed run and, when the next
+  experiment is valid, starts that Run automatically. The next send still
+  parks for approval.
 
 **Variables the Department may propose**:
 - `subject` — subject bank rotation per segment (`rotate_subjects` lever)

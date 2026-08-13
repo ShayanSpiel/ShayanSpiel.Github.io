@@ -50,7 +50,7 @@ class CatalogWorkOrderTests(unittest.TestCase):
         self.assertEqual("request_agent", payload["action"])
         self.assertEqual("designer", payload["agent_id"])
         self.assertEqual("rendition-pack", payload["workflow_id"])
-        self.assertEqual(["graphic_render"], payload["accepted_evidence_kinds"])
+        self.assertEqual(["render_report"], payload["accepted_evidence_kinds"])
         self.assertEqual(["spielos-ui"], payload["skill_ids"])
         self.assertEqual(2, payload["needed"])
 
@@ -65,7 +65,7 @@ class CatalogWorkOrderTests(unittest.TestCase):
             orders = runtime.store.work_orders(status="open", goal_id=goal["id"])
             self.assertEqual(1, len(orders))
             self.assertEqual("designer", orders[0]["employee_id"])
-            self.assertEqual(["graphic_render"], orders[0]["accepts_evidence"])
+            self.assertEqual(["render_report"], orders[0]["accepts_evidence"])
             self.assertEqual("rendition-pack", orders[0]["workflow_id"])
             self.assertEqual(["spielos-ui"], orders[0]["brief"]["skill_ids"])
 
@@ -91,13 +91,13 @@ class CatalogWorkOrderTests(unittest.TestCase):
                 Runtime(db).claim_work_order(order["id"], "host-b")
 
             result = runtime.complete_work_order(order["id"], "host-a", [{
-                "kind": "graphic_render",
+                "kind": "render_report",
                 "source": "host-a",
                 "payload": {"path": "artifact.png"},
             }])
             self.assertEqual("done", result["work_order"]["status"])
             linked = [item for item in result["goal"]["evidence"]
-                      if item["kind"] == "graphic_render"]
+                      if item["kind"] == "render_report"]
             self.assertEqual(order["id"], linked[0]["payload"]["work_order_id"])
             self.assertEqual("achieved", result["goal"]["goal"]["goal_status"])
 

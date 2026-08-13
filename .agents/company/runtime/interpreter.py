@@ -16,6 +16,8 @@ from typing import Any
 from ..connections import connection as resolve_connection
 from .contracts import agent_shortfall, employee_for, workflow_by_id
 from .models import GoalStatus, RunStatus, Stage, StageResult, WorkflowSpec, WorkflowStep
+from .memory import apply_memory, relevant_memory
+from .truth import countable_evidence, derive_evaluation_validity, is_business_outcome
 
 
 def compare(value, operator, target):
@@ -30,13 +32,38 @@ def _kinds_present(evidence: list[dict], kinds: tuple[str, ...] | list[str]) -> 
     return sum(1 for item in evidence if item.get("kind") in accept)
 
 
+def _kinds_satisfied(evidence: list[dict], kinds: tuple[str, ...] | list[str]) -> bool:
+    """True only when every declared kind is present at least once."""
+
+    required = [kind for kind in kinds if kind]
+    if not required:
+        return True
+    present = {item.get("kind") for item in evidence}
+    return set(required) <= present
+
+
+def _missing_kinds(evidence: list[dict], kinds: tuple[str, ...] | list[str]) -> list[str]:
+    present = {item.get("kind") for item in evidence}
+    return [kind for kind in kinds if kind and kind not in present]
+
+
+def _evidence_ids(evidence: list[dict], kinds=()) -> list[str]:
+    """IDs of the evidence records this decision branch actually inspected."""
+
+    accepted = set(kinds or ())
+    return [item["id"] for item in evidence
+            if item.get("id") and (not accepted or item.get("kind") in accepted)]
+
+
 def _memory_view(memory) -> list[dict[str, Any]]:
     values = []
     for item in tuple(memory or ())[:10]:
         values.append({
+            "id": item.get("id"),
             "claim": item.get("claim"),
             "confidence": item.get("confidence"),
             "goal_id": item.get("goal_id"),
+            "evidence": item.get("evidence") or {},
         })
     return values
 
@@ -67,11 +94,12 @@ def next_incomplete_step(graph: tuple[WorkflowStep, ...], evidence: list[dict],
     """First graph node that still needs work (requires, approval, or produces)."""
 
     for node in graph:
-        if node.requires and _kinds_present(evidence, node.requires) < 1:
+        if node.requires and not _kinds_satisfied(evidence, node.requires):
+            missing = _missing_kinds(evidence, node.requires)
             producers = [prior for prior in graph
-                         if set(prior.produces) & set(node.requires)]
+                         if set(prior.produces) & set(missing)]
             for prior in producers:
-                if _kinds_present(evidence, prior.produces) < 1:
+                if not _kinds_satisfied(evidence, prior.produces):
                     return prior
             return node
         if node.kind == "approval":
@@ -129,17 +157,21 @@ class InterpretedDepartment:
     def decide(self, ctx, observation):
         metric = ctx.goal.metric
         current_value = observation.get(metric, 0)
+        evidence = list(observation.get("evidence") or ())
+        workflow_id = observation.get("workflow") or ctx.goal.config.get("workflow")
+        memory = relevant_memory(
+            observation.get("memory") or (), metric=metric, workflow_id=workflow_id)
         if compare(current_value, ctx.goal.operator, ctx.goal.target):
             payload = {"action": "evaluate", "metric": metric, "value": current_value}
+            metric_kinds = tuple(self.evidence_metrics.get(metric) or ())
             return StageResult("choose_intervention", payload,
-                               decision={"type": "evaluate",
+                               decision=apply_memory({"type": "evaluate",
                                          "rationale": "Package evidence meets the goal",
-                                         "payload": payload})
+                                         "evidence_ids": _evidence_ids(evidence, metric_kinds),
+                                         "payload": payload}, memory))
 
-        workflow_id = observation.get("workflow") or ctx.goal.config.get("workflow")
         workflow = workflow_by_id(self, workflow_id)
         graph = synthesize_graph(self, workflow, metric)
-        evidence = list(observation.get("evidence") or ())
         step = next_incomplete_step(graph, evidence, ctx.approval_status)
 
         if step is None:
@@ -149,32 +181,38 @@ class InterpretedDepartment:
                 self, goal_id=ctx.goal.id, metric=metric, needed=needed,
                 workflow_id=workflow_id, config=ctx.goal.config)
             return StageResult("choose_intervention", payload,
-                               decision={"type": "request_agent",
+                               decision=apply_memory({"type": "request_agent",
                                          "rationale": "Catalog shortfall for the goal metric",
-                                         "payload": payload})
+                                         "evidence_ids": _evidence_ids(
+                                             evidence,
+                                             tuple(self.evidence_metrics.get(metric) or ())),
+                                         "payload": payload}, memory))
 
         # Missing prerequisites → request whatever evidence unlocks this step.
-        if step.requires and _kinds_present(evidence, step.requires) < 1:
-            needed = max(1, 1 - _kinds_present(evidence, step.requires))
+        if step.requires and not _kinds_satisfied(evidence, step.requires):
+            missing = _missing_kinds(evidence, step.requires)
+            needed = max(1, len(missing))
             payload = agent_shortfall(
                 self, goal_id=ctx.goal.id, metric=metric, needed=needed,
                 workflow_id=workflow_id, config=ctx.goal.config)
-            payload["accepted_evidence_kinds"] = list(step.requires)
+            payload["accepted_evidence_kinds"] = missing
             payload["step_id"] = step.id
             payload["required_user_action"] = (
-                f"Produce prerequisite evidence: {', '.join(step.requires)}")
+                f"Produce prerequisite evidence: {', '.join(missing)}")
             return StageResult("choose_intervention", payload,
-                               decision={"type": "request_agent",
+                               decision=apply_memory({"type": "request_agent",
                                          "rationale": f"Step `{step.id}` is waiting on prerequisites",
-                                         "payload": payload})
+                                         "evidence_ids": _evidence_ids(evidence, step.requires),
+                                         "payload": payload}, memory))
 
         if step.kind == "approval":
             payload = {"action": "request_approval", "workflow_id": workflow_id,
                        "step_id": step.id, "metric": metric, "value": current_value}
             return StageResult("choose_intervention", payload,
-                               decision={"type": "request_approval",
+                               decision=apply_memory({"type": "request_approval",
                                          "rationale": f"Workflow step `{step.id}` requires approval",
-                                         "payload": payload})
+                                         "evidence_ids": _evidence_ids(evidence, step.requires),
+                                         "payload": payload}, memory))
 
         if step.kind == "connection":
             configured = ctx.goal.config.get("connection")
@@ -203,18 +241,22 @@ class InterpretedDepartment:
                 "metric": metric,
             }
             return StageResult("choose_intervention", payload,
-                               decision={"type": "connection_dispatch",
+                               decision=apply_memory({"type": "connection_dispatch",
                                          "rationale": f"Workflow step `{step.id}` needs a Connection",
-                                         "payload": payload})
+                                         "evidence_ids": ([package_evidence[-1]["id"]]
+                                                          if package_evidence and package_evidence[-1].get("id")
+                                                          else []),
+                                         "payload": payload}, memory))
 
         if step.kind == "machine":
             payload = {"action": "run_machine_step", "workflow_id": workflow_id,
                        "step_id": step.id, "produces": list(step.produces),
                        "metric": metric}
             return StageResult("choose_intervention", payload,
-                               decision={"type": "run_machine_step",
+                               decision=apply_memory({"type": "run_machine_step",
                                          "rationale": f"Workflow step `{step.id}` is machine-owned",
-                                         "payload": payload})
+                                         "evidence_ids": _evidence_ids(evidence, step.requires),
+                                         "payload": payload}, memory))
 
         # employee step
         needed = max(1, int(ctx.goal.target) - int(current_value or 0))
@@ -235,9 +277,11 @@ class InterpretedDepartment:
         payload["step_id"] = step.id
         payload["action"] = "request_agent"
         return StageResult("choose_intervention", payload,
-                           decision={"type": "request_agent",
+                           decision=apply_memory({"type": "request_agent",
                                      "rationale": f"Workflow step `{step.id}` needs employee output",
-                                     "payload": payload})
+                                     "evidence_ids": _evidence_ids(
+                                         evidence, tuple(step.requires) + tuple(step.produces)),
+                                     "payload": payload}, memory))
 
     def act(self, ctx, decision):
         action = decision.get("action")
@@ -321,7 +365,8 @@ class InterpretedDepartment:
     def evaluate(self, ctx, action_result):
         metric = action_result.get("metric", ctx.goal.metric)
         # Prefer live evidence counts over stale decide payload.
-        evidence = list(ctx.cycle.get("evidence") or ())
+        run = ctx.cycle.get("run") or {}
+        evidence = countable_evidence(list(ctx.cycle.get("evidence") or ()), ctx.goal, run)
         kinds = tuple(self.evidence_metrics.get(metric) or ())
         if kinds:
             value = _kinds_present(evidence, kinds)
@@ -331,7 +376,9 @@ class InterpretedDepartment:
         if action_result.get("publication_receipt", {}).get("ok"):
             value = max(int(value or 0), 1)
         met = compare(value, ctx.goal.operator, ctx.goal.target)
-        validity = "business" if ctx.goal.config.get("business_learning_allowed") else "technical_only"
+        validity = derive_evaluation_validity(evidence, ctx.goal, run)
+        if is_business_outcome(ctx.goal, run) and validity != "business":
+            met = False
         workflow_id = ctx.goal.config.get("workflow")
         evaluation = {"verdict": "goal_met" if met else "continue", "goal_met": met,
                       "metrics": {metric: value}, "validity": validity,
@@ -340,16 +387,8 @@ class InterpretedDepartment:
                           "action": "continue_workflow",
                           "workflow_id": workflow_id,
                           "change_one_variable": "workflow_step_output"}}
-        learnings = [{
-            "claim": (f"{self.id}:{workflow_id} achieved {metric}={value}"
-                      if met else
-                      f"{self.id}:{workflow_id} still short on {metric} (have {value}, want {ctx.goal.target})"),
-            "evidence": {"metric": metric, "value": value, "target": ctx.goal.target,
-                         "workflow_id": workflow_id, "goal_id": ctx.goal.id},
-            "confidence": 0.8 if met else 0.45,
-        }]
         return StageResult("goal_check", {metric: value}, RunStatus.COMPLETED,
                            goal_status=GoalStatus.ACHIEVED if met else None,
-                           evaluation=evaluation, learnings=learnings,
+                           evaluation=evaluation,
                            message=("Department package goal achieved" if met
                                     else "Department package run completed; more evidence required"))

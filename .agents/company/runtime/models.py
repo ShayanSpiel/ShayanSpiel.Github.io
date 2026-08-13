@@ -73,6 +73,7 @@ class GoalContext:
     create_child_goal: Callable[[dict[str, Any]], dict[str, Any]] | None = None
     create_change_task: Callable[[dict[str, Any]], dict[str, Any]] | None = None
     update_change_task: Callable[[str, str, dict[str, Any]], dict[str, Any]] | None = None
+    strategy: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass

@@ -19,6 +19,7 @@ from urllib.parse import urlparse
 from urllib.request import Request, urlopen
 
 from ..departments.campaign_contract import (
+    COMPATIBLE_SCHEMA_VERSIONS,
     SCHEMA_VERSION as CAMPAIGN_SCHEMA_VERSION,
     publication_package,
 )
@@ -229,7 +230,7 @@ def _delivery_posts(package: dict[str, Any], client: BufferClient) -> list[dict[
     if not posts:
         raise BufferError("Approved Buffer package needs one or more posts")
     resolved: list[dict[str, Any]] = []
-    shared_campaign = package.get("schema_version") == CAMPAIGN_SCHEMA_VERSION
+    shared_campaign = package.get("schema_version") in COMPATIBLE_SCHEMA_VERSIONS
     if shared_campaign:
         for field in ("campaign_id", "batch_id"):
             if not package.get(field):

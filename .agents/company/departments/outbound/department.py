@@ -1,15 +1,21 @@
 """Production Outbound Department over the single company runtime."""
 
-from .email_workflow import EmailWorkflow, _compare
-from .workflows import social
-from ...runtime.contracts import agent_shortfall
-from ...runtime.models import Department, GoalStatus, RunStatus, Stage, StageResult, WorkflowSpec, WorkflowStep
+from .email_workflow import EmailWorkflow
+from ...runtime.interpreter import InterpretedDepartment
+from ...runtime.models import Department, WorkflowSpec, WorkflowStep
+
+BESPOKE_STAGE_EXCEPTIONS = {
+    "email-outreach": (
+        "EmailWorkflow remains the unattended send path: provider delivery, "
+        "approval, inbound evidence windows, and reply measurement."
+    ),
+}
 
 
 class OutboundDepartment(EmailWorkflow, Department):
     id = "outbound"
     department_id = "outbound"
-    version = "3.2.0"
+    version = "3.2.1"
     description = "Finds and researches qualified prospects, prepares email or social outreach, and measures buyer outcomes."
     deprecated = False
     agent_ids = ("lead-researcher", "social-researcher", "outreach-writer")
@@ -68,62 +74,26 @@ class OutboundDepartment(EmailWorkflow, Department):
         },
     }
 
+    @staticmethod
+    def uses_email_exception(ctx) -> bool:
+        return ctx.goal.config.get("workflow", "email-outreach") == "email-outreach"
+
     def observe(self, ctx):
-        workflow = ctx.goal.config.get("workflow", "email-outreach")
-        if workflow == "email-outreach":
-            return super().observe(ctx)
-        evidence = list(ctx.cycle.get("evidence") or ())
-        prospects = social.prospects_from_evidence(evidence)
-        drafts = social.drafts_from_evidence(evidence, prospects)
-        payload = {"workflow": workflow, "prospects": prospects, "drafts": drafts,
-                   "qualified_social_leads": len(prospects), "approved_dm_drafts": len(drafts)}
-        return StageResult("collect", payload, message=f"Observed {len(prospects)} social prospects and {len(drafts)} DM drafts")
+        if self.uses_email_exception(ctx):
+            return EmailWorkflow.observe(self, ctx)
+        return InterpretedDepartment.observe(self, ctx)
 
     def decide(self, ctx, observation):
-        workflow = observation.get("workflow") or ctx.goal.config.get("workflow", "email-outreach")
-        if workflow == "email-outreach":
-            return super().decide(ctx, observation)
-        metric = ("qualified_social_leads" if workflow == "social-lead-research"
-                  else "approved_dm_drafts" if workflow == "social-dm"
-                  else ctx.goal.metric)
-        target = int(ctx.goal.target if ctx.goal.metric == metric else ctx.goal.config.get("required_count") or 1)
-        current = int(observation.get(metric) or 0)
-        if current >= target:
-            payload = {"action": "evaluate", "workflow_id": workflow, "metric": metric,
-                       "value": current, "target": target}
-            return StageResult("choose_intervention", payload,
-                               decision={"type": "evaluate_workflow", "rationale": "Required artifacts are present",
-                                         "payload": payload})
-        payload = agent_shortfall(
-            self, goal_id=ctx.goal.id, metric=metric, needed=target - current,
-            workflow_id=workflow, config=ctx.goal.config)
-        return StageResult("choose_intervention", payload,
-                           decision={"type": "request_agent", "rationale": "A bounded employee must produce validated evidence",
-                                     "payload": payload})
+        if self.uses_email_exception(ctx):
+            return EmailWorkflow.decide(self, ctx, observation)
+        return InterpretedDepartment.decide(self, ctx, observation)
 
     def act(self, ctx, decision):
-        if ctx.goal.config.get("workflow", "email-outreach") == "email-outreach":
-            return super().act(ctx, decision)
-        if decision.get("action") == "request_agent":
-            employee = decision.get("agent_id") or decision.get("employee_id") or "employee"
-            return StageResult("request_agent", decision, RunStatus.BLOCKED, Stage.ACT,
-                               message=decision.get("required_user_action") or (
-                                   f"{employee} must produce {decision.get('needed')} validated artifact(s)"),
-                               attention=decision)
-        return StageResult("collect_artifacts", decision, next_stage=Stage.EVALUATE)
+        if self.uses_email_exception(ctx):
+            return EmailWorkflow.act(self, ctx, decision)
+        return InterpretedDepartment.act(self, ctx, decision)
 
     def evaluate(self, ctx, action_result):
-        if ctx.goal.config.get("workflow", "email-outreach") == "email-outreach":
-            return super().evaluate(ctx, action_result)
-        metric = action_result.get("metric") or ctx.goal.metric
-        value = int(action_result.get("value") or 0)
-        met = _compare(value, ctx.goal.operator, ctx.goal.target)
-        metrics = {metric: value}
-        evaluation = {"verdict": "goal_met" if met else "continue", "goal_met": met,
-                      "metrics": metrics, "validity": "technical_only",
-                      "contamination_reason": None,
-                      "next_experiment": {} if met else {"action": "request_more_validated_artifacts"}}
-        return StageResult("goal_check", metrics, RunStatus.COMPLETED,
-                           goal_status=GoalStatus.ACHIEVED if met else None,
-                           evaluation=evaluation,
-                           message="Outbound workflow artifact goal achieved" if met else "More workflow artifacts are required")
+        if self.uses_email_exception(ctx):
+            return EmailWorkflow.evaluate(self, ctx, action_result)
+        return InterpretedDepartment.evaluate(self, ctx, action_result)

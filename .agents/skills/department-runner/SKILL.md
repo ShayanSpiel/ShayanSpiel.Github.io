@@ -12,7 +12,8 @@ using `PYTHONPATH=.agents` and `PYTHONDONTWRITEBYTECODE=1`.
 
 Create or select one measurable Department goal, then use `once`, `status`,
 `approve`, `pause`, `resume`, and `report`. Preserve the four-stage contract and
-surface every suspension. A Department supplies domain observation, diagnosis,
+surface every suspension. A completed unmet run with a valid next experiment
+continues automatically; the next guarded action still parks. A Department supplies domain observation, diagnosis,
 artifacts, guardrails, execution and measurement; the runtime owns transitions,
 all goals, state, leases, approvals and events.
 

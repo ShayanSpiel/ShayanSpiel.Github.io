@@ -13,7 +13,9 @@ acceptance commands, version before, and target version.
 2. Modify only `allowed_files`. Do not opportunistically refactor.
 3. Preserve the originating business hypothesis and controlled variables.
 4. Run every acceptance command exactly as recorded.
-5. Record failure honestly if any acceptance command fails.
+5. Record failure honestly if any acceptance command fails. A failed
+   acceptance stays failed; the next try is a new task on the same Goal
+   and allowed files, not a rewrite of the failed task.
 6. On success, call `company change complete` with the actual test evidence.
 7. Mark deployed only after deployment actually happened.
 8. Return control to the originating run. Never convert machinery evidence into

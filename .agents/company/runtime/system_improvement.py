@@ -18,7 +18,7 @@ from .models import GoalHandler, GoalStatus, RunStatus, Stage, StageResult
 
 class SystemImprovement(GoalHandler):
     id = "system-improvement"
-    version = "1.2.0"
+    version = "1.4.0"
     description = "Coordinates bounded runtime repairs or new Departments with approval and test evidence."
     goal_schema = {
         "metrics": ["acceptance_tests_passed"],
@@ -33,6 +33,9 @@ class SystemImprovement(GoalHandler):
             "change_kind": {"enum": ["repair", "create_department"]},
             "department_spec": {"type": "object", "required_when": {"change_kind": "create_department"}},
             "force_install": {"type": "boolean"},
+            "owner_override": {"type": "boolean"},
+            "alignment": {"type": "object"},
+            "max_attempts": {"type": "integer"},
         },
     }
 
@@ -47,6 +50,16 @@ class SystemImprovement(GoalHandler):
 
     def decide(self, ctx, observation):
         config = observation.get("config") or {}
+        alignment = config.get("alignment") or {}
+        if (alignment.get("judgment") == "defer_recommended"
+                and not alignment.get("owner_override")
+                and not config.get("owner_override")):
+            return StageResult(
+                "diagnose", {"alignment": alignment}, RunStatus.BLOCKED, Stage.DECIDE,
+                decision={"type": "block_unaligned_system_improvement",
+                          "rationale": alignment.get("rationale")
+                          or "Director recommended deferral; owner override required",
+                          "payload": {"alignment": alignment}})
         required = ("owner_id", "from_version", "target_version", "problem",
                     "allowed_files", "acceptance_tests")
         missing = [key for key in required if not config.get(key)]
@@ -125,6 +138,11 @@ class SystemImprovement(GoalHandler):
                 "change_kind": config.get("change_kind", "repair"),
                 "specification": config.get("department_spec", {}),
             })
+            if ctx.approval_status("execute") == "approved":
+                if ctx.update_change_task and task.get("status") == "proposed":
+                    task = ctx.update_change_task(task["id"], "approved", {
+                        "carried_scope_approval": True})
+                return self._after_approval(ctx, task)
             return StageResult("review", {"task": task}, RunStatus.AWAITING_APPROVAL, Stage.ACT,
                                message="Approve the bounded code-change task before execution")
         if action == "approve_change_task":
@@ -239,9 +257,12 @@ class SystemImprovement(GoalHandler):
         evaluation = {"verdict": "keep" if passed else "reject", "goal_met": passed,
                       "metrics": metrics, "validity": "technical_only",
                       "contamination_reason": None if passed else "Code change did not pass acceptance",
-                      "next_experiment": {"resume_run_id": ctx.goal.config.get("originating_run_id")} if passed else {}}
+                      "next_experiment": (
+                          {"resume_run_id": ctx.goal.config.get("originating_run_id")} if passed
+                          else {"action": "retry_same_scope"})}
         if passed:
             return StageResult("goal_check", metrics, RunStatus.IDLE, goal_status=GoalStatus.ACHIEVED,
                                evaluation=evaluation, message="System change validated and versioned")
         return StageResult("goal_check", metrics, RunStatus.BLOCKED, Stage.EVALUATE,
-                           evaluation=evaluation, message="System change failed acceptance")
+                           evaluation=evaluation,
+                           message="System change failed acceptance; a same-scope attempt can continue")

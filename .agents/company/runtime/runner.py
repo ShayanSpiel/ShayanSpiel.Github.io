@@ -5,6 +5,7 @@ from __future__ import annotations
 import time
 from datetime import datetime, timezone
 
+from .alignment import approval_key
 from .loop import Runtime
 from .service import automation_enabled
 
@@ -70,10 +71,12 @@ class Runner:
         if status == "idle":
             return True
         if status == "completed":
-            return False
+            return self.runtime.continuation_decision(row["goal"]["id"])["eligible"]
+        if status in {"blocked", "failed"}:
+            return self.runtime.repair_iteration_decision(row["goal"]["id"])["eligible"]
         if status == "awaiting_approval":
             return self.runtime.store.approval(
-                row["goal"]["id"], cycle["id"], "execute") == "approved"
+                row["goal"]["id"], cycle["id"], approval_key(cycle)) == "approved"
         if status != "waiting" or not cycle.get("resume_at"):
             return False
         return datetime.fromisoformat(cycle["resume_at"]) <= datetime.now(timezone.utc)

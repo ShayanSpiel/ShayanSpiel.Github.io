@@ -3,8 +3,9 @@ from pathlib import Path
 
 from company.departments.analytics.department import campaign_funnel_report
 from company.departments.campaign_contract import (
+    LINK_IN_BIO,
     SCHEMA_VERSION,
-    SPIELOS_NOTE,
+    SPIELOS_REMINDER,
     apply_delivery_receipts,
     apply_funnel_report,
     apply_render_report,
@@ -48,13 +49,20 @@ def campaign_manifest():
             }
             rendition = {
                 "platform": platform, "content_id": content_id,
-                "copy": f"Context first. One supervised workflow. {destination}\n\n{SPIELOS_NOTE}",
-                "destination": destination, "design": design,
+                "copy": (
+                    f"AI answers are useful. But repeated work still needs a usable workflow.\n\n"
+                    f"Map the missing workflow:\n{destination}"
+                    if platform == "threads" else
+                    f"AI answers are useful. But repeated work still needs a usable workflow.\n\n{LINK_IN_BIO}"
+                ) + (f"\n\n{SPIELOS_REMINDER}" if sequence == 5 else ""),
+                "destination": destination,
+                "link_placement": "caption" if platform == "threads" else "bio",
+                "design": design,
             }
             if platform == "youtube":
                 rendition["narration"] = {"scenes": [
                     {"id": scene, "text": text} for scene, text in (
-                        ("hook", "Your team repeats this work."),
+                        ("hook", "AI answers are useful. But repeated work still needs a usable workflow."),
                         ("pain", "Context disappears across tools."),
                         ("promise", "SpielOS connects one supervised workflow."),
                         ("proof", "The decision and review stay visible."),
@@ -66,23 +74,22 @@ def campaign_manifest():
         item = {
             "sequence": sequence, "item_id": item_id,
             "one_idea": f"One operating proof {sequence}",
-            "operator_context": "An established business repeats knowledge work across disconnected tools.",
-            "problem": "The workflow loses context, ownership, and review.",
-            "spielos_role": "SpielOS connects one supervised AI workflow and keeps decisions visible.",
-            "hook": {"id": f"context-hook-{sequence}", "text": "If your team repeats this work daily, start here."},
-            "cta": {"id": f"services-cta-{sequence}", "text": "Talk through the workflow at SpielOS services."},
-            "narrative_type": "live-journey" if sequence == 5 else "operating-proof",
+            "brief": {
+                "reader": "Owner of an established service business",
+                "customer_moment": "Staff move repeated customer work between disconnected tools by hand.",
+                "one_idea": f"One operating proof {sequence}",
+                "desired_result": "Move the work faster without losing customer context.",
+                "proof": "The work can be mapped from intake to result.",
+            },
+            "hook": {"id": f"context-hook-{sequence}", "text": "AI answers are useful. But repeated work still needs a usable workflow."},
+            "cta": {"id": f"services-cta-{sequence}", "text": "Map the missing workflow."},
+            "narrative_type": "spielos-reminder" if sequence == 5 else "customer-insight",
             "renditions": renditions,
         }
         if sequence == 5:
-            item["live_story"] = {
-                "trigger": "A cold-audience hook started with unexplained advice.",
-                "tension": "The reader could not know who or what the advice referred to.",
-                "decision": "Require context and SpielOS's role before advice.",
-                "tradeoff": "Less clever language for more immediate clarity.",
-                "harness_rule": "The review gate rejects context-free creative.",
-                "next_step": "Measure qualified visits and services CTA clicks.",
-                "proof_url": "https://spielos.xyz/live/",
+            item["reminder"] = {
+                "text": SPIELOS_REMINDER,
+                "proof": "The company uses SpielOS to operate its own repeatable work.",
             }
         items.append(item)
     return {
@@ -318,6 +325,26 @@ class CampaignHandoffContractTests(unittest.TestCase):
         manifest["experiment"]["separate_approval_required"] = True
         self.assertEqual(validate_campaign(manifest, "strategy"), [])
 
+    def test_public_copy_rejects_internal_language_and_literal_line_breaks(self):
+        manifest = campaign_manifest()
+        manifest["items"][0]["renditions"]["threads"]["copy"] = (
+            r"I stopped the first batch.\n\nThe review gate caught it."
+        )
+        errors = validate_campaign(manifest, "strategy")
+        self.assertTrue(any("real line breaks" in error for error in errors))
+        self.assertTrue(any("internal production language: batch" in error for error in errors))
+        self.assertTrue(any("internal production language: review gate" in error for error in errors))
+
+    def test_youtube_uses_bio_and_only_fifth_item_uses_the_reminder(self):
+        manifest = campaign_manifest()
+        youtube = manifest["items"][0]["renditions"]["youtube"]
+        youtube["copy"] += " https://spielos.xyz/services/?utm_source=youtube"
+        manifest["items"][0]["renditions"]["threads"]["copy"] += f"\n\n{SPIELOS_REMINDER}"
+        manifest["items"][4]["renditions"]["youtube"]["copy"] = LINK_IN_BIO
+        errors = validate_campaign(manifest, "strategy")
+        self.assertTrue(any("YouTube Shorts copy must not contain a URL" in error for error in errors))
+        self.assertTrue(any("must not include the fifth-item" in error for error in errors))
+        self.assertTrue(any("must end with the fifth-item" in error for error in errors))
 
 if __name__ == "__main__":
     unittest.main()
