@@ -1205,16 +1205,16 @@
     },
     {
       "created_at": "2026-08-13T23:18:40.264858+00:00",
-      "goal_status": "proposed",
+      "goal_status": "active",
       "id": "goal-company-run-card-output-v1-20260814",
       "metric": "acceptance_tests_passed",
       "name": "Present company runtime output as user-friendly cards in run cards",
       "operator": "eq",
       "owner_id": "system-improvement",
-      "run_status": "awaiting_approval",
+      "run_status": "running",
       "stage": "DECIDE",
       "target": true,
-      "updated_at": "2026-08-13T23:18:40.271339+00:00"
+      "updated_at": "2026-08-13T23:25:39.110239+00:00"
     }
   ],
   "heartbeat": {
@@ -1229,14 +1229,14 @@
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-12T14:46:37.498110+00:00",
-      "goal_id": "goal-content-daily-scorecard-v1-20260812",
-      "goal_name": "Measure daily Threads and YouTube content funnel performance",
-      "owner_id": "analytics",
-      "run_id": "run-285a44260d",
+      "created_at": "2026-08-13T23:18:40.264858+00:00",
+      "goal_id": "goal-company-run-card-output-v1-20260814",
+      "goal_name": "Present company runtime output as user-friendly cards in run cards",
+      "owner_id": "system-improvement",
+      "run_id": "run-b970dece41",
       "run_status": "running",
-      "stage": "ACT",
-      "updated_at": "2026-08-13T23:24:15.209665+00:00"
+      "stage": "DECIDE",
+      "updated_at": "2026-08-13T23:25:39.111057+00:00"
     },
     "heartbeat": {
       "goal_id": "goal-email-send-20260813-b4",
@@ -1248,17 +1248,17 @@
       "target": 0.3,
       "updated_at": "2026-08-13T23:22:20.663150+00:00"
     },
-    "last_activity_at": "2026-08-13T23:24:15.209665+00:00",
-    "last_sync_at": "2026-08-13T23:24:15.234470+00:00",
+    "last_activity_at": "2026-08-13T23:25:39.111057+00:00",
+    "last_sync_at": "2026-08-13T23:25:39.123700+00:00",
     "state": "running"
   },
   "totals": {
-    "approvals": 85,
-    "decisions": 175,
-    "evidence": 1262,
+    "approvals": 86,
+    "decisions": 176,
+    "evidence": 1263,
     "goals_abandoned": 12,
     "goals_achieved": 64,
-    "goals_active": 13,
+    "goals_active": 14,
     "goals_total": 92,
     "hypotheses": 30,
     "memory_claims": 5,
