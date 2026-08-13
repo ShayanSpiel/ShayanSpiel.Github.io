@@ -5,9 +5,9 @@
     "goal_name": "Revalidate direct Buffer publishing with corrected acceptance command",
     "owner_id": "system-improvement",
     "run_id": "run-d551b495da",
-    "run_status": "running",
+    "run_status": "awaiting_approval",
     "stage": "ACT",
-    "updated_at": "2026-08-13T23:06:10.593164+00:00"
+    "updated_at": "2026-08-13T23:06:10.826519+00:00"
   },
   "heartbeat": {
     "goal_id": "goal-email-send-20260813-b4",
@@ -19,8 +19,8 @@
     "target": 0.3,
     "updated_at": "2026-08-13T22:48:00.212222+00:00"
   },
-  "last_activity_at": "2026-08-13T23:06:10.593164+00:00",
-  "last_sync_at": "2026-08-13T23:06:10.648157+00:00",
+  "last_activity_at": "2026-08-13T23:06:10.826519+00:00",
+  "last_sync_at": "2026-08-13T23:06:10.838101+00:00",
   "state": "running",
   "totals": {
     "approvals": 84,
