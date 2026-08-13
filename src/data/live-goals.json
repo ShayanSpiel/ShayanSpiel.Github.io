@@ -729,16 +729,16 @@
       "created_at": "2026-08-12T14:46:37.498110+00:00",
       "display_title": "Measure the content-to-lead funnel",
       "display_title_fa": "مسیر محتوا تا لید رو اندازه بگیریم",
-      "goal_status": "active",
+      "goal_status": "achieved",
       "id": "goal-content-daily-scorecard-v1-20260812",
       "metric": "funnel_reports",
       "name": "Measure daily Threads and YouTube content funnel performance",
       "operator": "ge",
       "owner_id": "analytics",
-      "run_status": "running",
-      "stage": "EVALUATE",
+      "run_status": "completed",
+      "stage": "OBSERVE",
       "target": 1,
-      "updated_at": "2026-08-13T23:29:06.704330+00:00"
+      "updated_at": "2026-08-13T23:33:23.536058+00:00"
     },
     {
       "created_at": "2026-08-12T14:46:37.502499+00:00",
@@ -924,7 +924,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-13T23:27:39.967144+00:00"
+      "updated_at": "2026-08-13T23:32:58.766694+00:00"
     },
     {
       "created_at": "2026-08-13T01:44:21.896620+00:00",
@@ -1225,18 +1225,18 @@
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-13T23:27:39.968975+00:00"
+    "updated_at": "2026-08-13T23:32:58.768947+00:00"
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-12T14:46:37.498110+00:00",
-      "goal_id": "goal-content-daily-scorecard-v1-20260812",
-      "goal_name": "Measure daily Threads and YouTube content funnel performance",
-      "owner_id": "analytics",
-      "run_id": "run-285a44260d",
-      "run_status": "running",
+      "created_at": "2026-08-13T01:34:06.413534+00:00",
+      "goal_id": "goal-email-send-20260813-b4",
+      "goal_name": "English outbound send batch 4: next 50 from remaining queue via Brevo (owner order 2026-08-13)",
+      "owner_id": "outbound",
+      "run_id": "run-84bbf06732",
+      "run_status": "waiting",
       "stage": "EVALUATE",
-      "updated_at": "2026-08-13T23:29:06.705227+00:00"
+      "updated_at": "2026-08-13T23:32:58.768947+00:00"
     },
     "heartbeat": {
       "goal_id": "goal-email-send-20260813-b4",
@@ -1246,19 +1246,19 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-13T23:27:39.968975+00:00"
+      "updated_at": "2026-08-13T23:32:58.768947+00:00"
     },
-    "last_activity_at": "2026-08-13T23:29:06.705227+00:00",
-    "last_sync_at": "2026-08-13T23:29:06.715456+00:00",
+    "last_activity_at": "2026-08-13T23:33:23.538449+00:00",
+    "last_sync_at": "2026-08-13T23:33:23.551902+00:00",
     "state": "running"
   },
   "totals": {
     "approvals": 86,
     "decisions": 176,
-    "evidence": 1264,
+    "evidence": 1265,
     "goals_abandoned": 12,
-    "goals_achieved": 64,
-    "goals_active": 14,
+    "goals_achieved": 65,
+    "goals_active": 13,
     "goals_total": 92,
     "hypotheses": 30,
     "memory_claims": 5,
