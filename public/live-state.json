@@ -1,13 +1,13 @@
 {
   "current_run": {
-    "created_at": "2026-08-13T01:34:06.413534+00:00",
-    "goal_id": "goal-email-send-20260813-b4",
-    "goal_name": "English outbound send batch 4: next 50 from remaining queue via Brevo (owner order 2026-08-13)",
-    "owner_id": "outbound",
-    "run_id": "run-84bbf06732",
-    "run_status": "waiting",
-    "stage": "EVALUATE",
-    "updated_at": "2026-08-13T23:11:42.709980+00:00"
+    "created_at": "2026-08-12T14:46:37.498110+00:00",
+    "goal_id": "goal-content-daily-scorecard-v1-20260812",
+    "goal_name": "Measure daily Threads and YouTube content funnel performance",
+    "owner_id": "analytics",
+    "run_id": "run-285a44260d",
+    "run_status": "running",
+    "stage": "DECIDE",
+    "updated_at": "2026-08-13T23:15:35.029705+00:00"
   },
   "heartbeat": {
     "goal_id": "goal-email-send-20260813-b4",
@@ -19,13 +19,13 @@
     "target": 0.3,
     "updated_at": "2026-08-13T23:11:42.709980+00:00"
   },
-  "last_activity_at": "2026-08-13T23:12:03.820781+00:00",
-  "last_sync_at": "2026-08-13T23:12:03.831963+00:00",
+  "last_activity_at": "2026-08-13T23:15:35.029705+00:00",
+  "last_sync_at": "2026-08-13T23:15:35.039025+00:00",
   "state": "running",
   "totals": {
     "approvals": 85,
     "decisions": 173,
-    "evidence": 1259,
+    "evidence": 1260,
     "goals_abandoned": 12,
     "goals_achieved": 64,
     "goals_active": 13,
