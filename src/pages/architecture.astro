@@ -1,0 +1,106 @@
+---
+import Page from "../layouts/Page.astro";
+import ContactModal from "../components/ContactModal.astro";
+import DepartmentMap from "../components/architecture/DepartmentMap.astro";
+import OperatingLoop from "../components/architecture/OperatingLoop.astro";
+import SectionHeader from "../components/sections/SectionHeader.astro";
+import { SITE } from "../config";
+import { localizePath } from "../i18n";
+import { type Locale, t } from "../i18n/translations";
+
+export interface Props { locale?: Locale; }
+const { locale = "en" } = Astro.props;
+const vocabulary = ["goal", "department", "workflow", "agent", "skill", "connection", "artifact"];
+const controls = ["persistentGoals", "humanApproval", "controlledAccess", "visibleEvidence", "evaluation", "separateWork"];
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: t(locale, "nav.home"), item: `${SITE.url}${localizePath("/", locale)}` },
+    { "@type": "ListItem", position: 2, name: t(locale, "nav.architecture"), item: `${SITE.url}${localizePath("/architecture/", locale)}` },
+  ],
+};
+---
+
+<Page title={t(locale, "architecture.pageTitle")} description={t(locale, "architecture.pageDesc")} image="/images/company-harness/harness-architecture-og-1200x630.png" locale={locale}>
+  <section class="relative flex min-h-[78vh] items-center overflow-hidden py-24 sm:py-32">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
+    <div class="absolute left-1/2 top-[42%] h-[32rem] w-[48rem] -translate-x-1/2 -translate-y-1/2 glow-blob opacity-20"></div>
+    <div class="absolute left-[58%] top-[38%] h-64 w-64 rounded-full opacity-10" style="background: radial-gradient(closest-side, var(--accent), transparent 72%);"></div>
+    <div class="relative mx-auto max-w-4xl px-6 text-center" data-aos="fade-up">
+      <p class="text-2xs font-semibold uppercase tracking-widest text-primary">{t(locale, "architecture.hero.label")}</p>
+      <h1 class="mt-4 text-4xl font-extrabold leading-tightest tracking-tight text-foreground-strong sm:text-6xl">{t(locale, "architecture.hero.titleLead")}<br /><span class="text-primary">{t(locale, "architecture.hero.titleAccent")}</span></h1>
+      <p class="mx-auto mt-6 max-w-3xl text-base leading-relaxed text-muted-foreground">{t(locale, "architecture.hero.desc")}</p>
+      <div class="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
+        <a href={localizePath("/live/", locale)} data-architecture-live class="inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground transition-all hover:brightness-110">{t(locale, "architecture.hero.primary")}</a>
+        <a href={localizePath("/services/agent-brief/#request", locale)} data-open-contact-modal data-architecture-brief class="inline-flex h-11 items-center justify-center rounded-md border border-border bg-panel px-6 text-sm font-medium text-foreground transition-all hover:border-border-strong hover:bg-panel-raised">{t(locale, "architecture.hero.secondary")}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative py-24 sm:py-32">
+    <div class="mx-auto max-w-6xl px-6">
+      <SectionHeader title={t(locale, "architecture.loop.heading")} description={t(locale, "architecture.loop.body")} />
+      <OperatingLoop locale={locale} />
+    </div>
+  </section>
+
+  <section class="relative overflow-hidden py-24 sm:py-32">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="relative mx-auto max-w-6xl px-6">
+      <SectionHeader title={t(locale, "architecture.department.heading")} description={t(locale, "architecture.department.body")} />
+      <DepartmentMap locale={locale} />
+    </div>
+  </section>
+
+  <section class="relative py-24 sm:py-32">
+    <div class="mx-auto max-w-6xl px-6">
+      <SectionHeader title={t(locale, "architecture.vocabulary.heading")} />
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" data-aos="fade-up">
+        {vocabulary.map((item) => (
+          <div class="rounded-md border border-border bg-panel p-5">
+            <h3 class="text-sm font-semibold text-foreground-strong">{t(locale, `architecture.vocabulary.${item}.title`)}</h3>
+            <p class="mt-2 text-xs leading-relaxed text-muted-foreground">{t(locale, `architecture.vocabulary.${item}.desc`)}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="relative overflow-hidden py-24 sm:py-32">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="relative mx-auto max-w-6xl px-6">
+      <SectionHeader title={t(locale, "architecture.control.heading")} description={t(locale, "architecture.control.body")} />
+      <ul class="mx-auto grid max-w-4xl gap-3 sm:grid-cols-2" data-aos="fade-up">
+        {controls.map((control) => <li class="flex gap-3 rounded-md border border-border bg-panel p-4 text-xs leading-relaxed text-muted-foreground"><i class="bx bx-check-square mt-0.5 text-success icon-md" aria-hidden="true"></i>{t(locale, `architecture.control.${control}`)}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="relative py-24 sm:py-32">
+    <div class="mx-auto max-w-4xl px-6">
+      <SectionHeader title={t(locale, "architecture.example.heading")} description={t(locale, "architecture.example.body")} />
+      <div class="rounded-lg border border-border bg-panel p-6" data-aos="fade-up">
+        {(["goal", "observe", "decide", "act", "evaluate", "artifacts"] as const).map((step) => <div class="grid gap-2 border-b border-border py-4 last:border-0 sm:grid-cols-[7rem_1fr]"><h3 class="text-xs font-semibold text-primary">{t(locale, `architecture.example.${step}.title`)}</h3><p class="text-xs leading-relaxed text-muted-foreground">{t(locale, `architecture.example.${step}.desc`)}</p></div>)}
+      </div>
+      <div class="mt-8 text-center"><a href={localizePath("/live/", locale)} class="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:opacity-80">{t(locale, "architecture.example.cta")}<i class="bx bx-chevron-right rtl-flip icon-md" aria-hidden="true"></i></a></div>
+    </div>
+  </section>
+
+  <section class="relative overflow-hidden py-24 sm:py-32">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="relative mx-auto max-w-3xl px-6 text-center" data-aos="fade-up">
+      <h2 class="text-3xl font-bold tracking-tight text-foreground-strong sm:text-4xl">{t(locale, "architecture.cta.title")}</h2>
+      <p class="mt-4 text-base leading-relaxed text-muted-foreground">{t(locale, "architecture.cta.desc")}</p>
+      <a href={localizePath("/services/agent-brief/#request", locale)} data-open-contact-modal class="mt-8 inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground transition-all hover:brightness-110">{t(locale, "cta.requestAgentBrief")}</a>
+    </div>
+  </section>
+
+  <ContactModal locale={locale} />
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
+  <script is:inline>
+    document.querySelectorAll("[data-architecture-live]").forEach(function (link) { link.addEventListener("click", function () { if (typeof window.spielosTrack === "function") window.spielosTrack("cta_clicked", { cta_type: "architecture_live" }); }); });
+    document.querySelectorAll("[data-architecture-brief]").forEach(function (link) { link.addEventListener("click", function () { if (typeof window.spielosTrack === "function") window.spielosTrack("cta_clicked", { cta_type: "architecture_brief" }); }); });
+  </script>
+</Page>

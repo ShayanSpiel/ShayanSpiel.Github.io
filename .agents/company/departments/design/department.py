@@ -59,7 +59,7 @@ def render_report(manifest: dict[str, Any], assets: list[dict[str, Any]]) -> dic
 
 class DesignDepartment(EvidenceDepartment, Department):
     id = department_id = "design"
-    version = "3.2.0"
+    version = "3.2.1"
     description = "Consumes a shared campaign Artifact and returns verified renditions whose spoken text, displayed copy, components, icons, labels, timing, and evidence remain controlled by that one campaign identity."
     agent_ids = ("designer", "video-producer")
     production_ready = True
@@ -105,7 +105,7 @@ class DesignDepartment(EvidenceDepartment, Department):
                    "config": {"workflow": {"enum": [w.id for w in workflows]},
                               "required_count": {"type": "integer"}}}
     evidence_metrics = {"approved_designs": ("approved_design",),
-                        "rendition_count": ("graphic_render",),
+                        "rendition_count": ("render_report",),
                         "video_renders": ("video_render",),
                         "video_orders": ("video_render",)}
     workflow_agents = {"social-visual": "designer", "rendition-pack": "designer",

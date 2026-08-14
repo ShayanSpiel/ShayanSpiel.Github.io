@@ -11,6 +11,7 @@ only when not already built-in — built-ins are protected).
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 from ..runtime.models import AgentSpec
@@ -108,11 +109,19 @@ AGENTS = {
 _INSTALLED_DIR = Path(__file__).resolve().parent / "installed"
 
 
+def installed_agents_dir() -> Path:
+    """Directory of installed Lego employees; tests may redirect it."""
+
+    override = os.environ.get("SPIELOS_AGENTS_INSTALLED_ROOT")
+    return Path(override) if override else _INSTALLED_DIR
+
+
 def _load_installed_agents() -> dict[str, AgentSpec]:
     values: dict[str, AgentSpec] = {}
-    if not _INSTALLED_DIR.is_dir():
+    root = installed_agents_dir()
+    if not root.is_dir():
         return values
-    for path in sorted(_INSTALLED_DIR.glob("*.json")):
+    for path in sorted(root.glob("*.json")):
         try:
             payload = json.loads(path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError):

@@ -4,6 +4,10 @@ import { type Locale, t } from "../../i18n/translations";
 export interface LiveGoal {
   id: string;
   name: string;
+  display_title?: string;
+  display_title_fa?: string;
+  business_value?: string;
+  business_value_fa?: string;
   owner_id: string;
   goal_status: string;
   metric: string;
@@ -12,416 +16,103 @@ export interface LiveGoal {
   created_at: string;
   updated_at: string;
   stage?: string | null;
+  run_status?: string | null;
 }
 
-export interface Props {
-  locale?: Locale;
-  goals: LiveGoal[];
-}
-
+export interface Props { locale?: Locale; goals: LiveGoal[]; }
 const { locale = "en", goals } = Astro.props;
-
-// The timeline is a finite log split into two clearly labeled sections:
-// business goals (owned by director/email/outbound) and self-improvement
-// sessions (everyone else). Each section renders its newest entries inline
-// (created_at DESC) and keeps the rest in the DOM hidden behind its own
-// centered Show more button. A section renders only when it has entries.
-const BUSINESS_OWNERS = new Set(["director", "email", "outbound"]);
-const BUSINESS_INLINE = 10;
-const IMPROVEMENT_INLINE = 5;
-
-const typeOf = (owner: string): "business" | "improvement" =>
-  BUSINESS_OWNERS.has(owner) ? "business" : "improvement";
-
-const ordered = [...goals].sort((a, b) => b.created_at.localeCompare(a.created_at));
-
-const sections = [
-  {
-    type: "business" as const,
-    entries: ordered.filter((g) => typeOf(g.owner_id) === "business"),
-    inlineCount: BUSINESS_INLINE,
-    titleKey: "live.sections.business.title",
-    subtitleKey: "live.sections.business.subtitle",
-    countKey: "live.sections.business.count",
-    showMoreId: "live-show-more-business",
-  },
-  {
-    type: "improvement" as const,
-    entries: ordered.filter((g) => typeOf(g.owner_id) === "improvement"),
-    inlineCount: IMPROVEMENT_INLINE,
-    titleKey: "live.sections.improvement.title",
-    subtitleKey: "live.sections.improvement.subtitle",
-    countKey: "live.sections.improvement.count",
-    showMoreId: "live-show-more-improvement",
-  },
-].filter((section) => section.entries.length > 0);
-
-const now = Date.now();
-
+const active = goals.filter((goal) => goal.goal_status === "active");
+const business = active.filter((goal) => goal.owner_id !== "system-improvement").sort((a, b) => b.updated_at.localeCompare(a.updated_at));
+const improvements = active.filter((goal) => goal.owner_id === "system-improvement").sort((a, b) => b.updated_at.localeCompare(a.updated_at));
+const formatter = new Intl.DateTimeFormat(locale === "fa" ? "fa-IR-u-ca-gregory" : "en-US", { dateStyle: "medium", timeStyle: "short", timeZone: "UTC" });
 const faDigits = "۰۱۲۳۴۵۶۷۸۹";
-const num = (n: number): string =>
-  locale === "fa" ? String(n).replace(/\d/g, (d) => faDigits[Number(d)]) : String(n);
-
-const typeTile: Record<string, string> = {
-  business: "bg-primary-soft",
-  improvement: "bg-purple-soft",
-};
-const typeIcon: Record<string, string> = {
-  business: "text-primary",
-  improvement: "text-purple",
-};
-const nodeIcon: Record<string, { icon: string; color: string }> = {
-  active: { icon: "bx-time-five", color: "text-warning" },
-  achieved: { icon: "bx-check-square", color: "text-success" },
-  abandoned: { icon: "bx-error", color: "text-destructive" },
-};
-const statusChip: Record<string, string> = {
-  active: "bg-warning-soft text-warning",
-  achieved: "bg-success-soft text-success",
-  abandoned: "bg-destructive-soft text-destructive",
-};
-const statusLabel: Record<string, string> = {
-  active: "live.status.active",
-  achieved: "live.status.achieved",
-  abandoned: "live.status.abandoned",
-};
-
-function relTime(iso: string): string {
-  const diff = Math.max(0, now - new Date(iso).getTime());
-  const minutes = Math.floor(diff / 60000);
-  if (minutes < 1) return t(locale, "live.time.justNow");
-  if (minutes < 60) return t(locale, minutes === 1 ? "live.time.minuteAgo" : "live.time.minutesAgo", { n: num(minutes) });
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return t(locale, hours === 1 ? "live.time.hourAgo" : "live.time.hoursAgo", { n: num(hours) });
-  const days = Math.floor(hours / 24);
-  return t(locale, days === 1 ? "live.time.dayAgo" : "live.time.daysAgo", { n: num(days) });
-}
-
-const absoluteFormatter = new Intl.DateTimeFormat(
-  locale === "fa" ? "fa-IR-u-ca-gregory" : "en-US",
-  { dateStyle: "medium", timeStyle: "short", timeZone: "UTC" }
-);
-const absTime = (iso: string): string => absoluteFormatter.format(new Date(iso));
-
-function metricText(goal: LiveGoal): string | null {
-  const target =
-    typeof goal.target === "number"
-      ? goal.metric === "reply_rate"
-        ? `${Math.round(goal.target * 100)}%`
-        : String(goal.target)
-      : String(goal.target);
-  const operator = goal.operator === "ge" ? "≥" : goal.operator === "le" ? "≤" : goal.operator;
-  return t(locale, "live.entry.metric", { metric: goal.metric, operator, target });
-}
-
-const counts = {
-  statusAll: ordered.length,
-  statusActive: ordered.filter((g) => g.goal_status === "active").length,
-  statusAchieved: ordered.filter((g) => g.goal_status === "achieved").length,
-  statusAbandoned: ordered.filter((g) => g.goal_status === "abandoned").length,
-};
-
-const statusPills = [
-  { value: "all", labelKey: "live.filters.status.all", count: counts.statusAll },
-  { value: "active", labelKey: "live.filters.status.active", count: counts.statusActive },
-  { value: "achieved", labelKey: "live.filters.status.achieved", count: counts.statusAchieved },
-  { value: "abandoned", labelKey: "live.filters.status.abandoned", count: counts.statusAbandoned },
-];
+const localNumber = (value: string) => locale === "fa" ? value.replace(/\d/g, (digit) => faDigits[Number(digit)]) : value;
+const departmentKey = (owner: string) => ["director", "outbound", "email", "analytics", "content", "design", "seo"].includes(owner) ? `live.department.${owner}` : "live.department.operations";
+const titleFor = (goal: LiveGoal) => locale === "fa" ? (goal.display_title_fa || goal.display_title || goal.name) : (goal.display_title || goal.name);
+const valueFor = (goal: LiveGoal, improvement = false) => locale === "fa" ? (goal.business_value_fa || goal.business_value || t(locale, improvement ? "live.company.improvementWhy" : "live.company.defaultWhy")) : (goal.business_value || t(locale, improvement ? "live.company.improvementWhy" : "live.company.defaultWhy"));
+const nextKey = (status?: string | null) => status === "awaiting_approval" ? "approval" : status === "blocked" ? "blocked" : status === "waiting" ? "waiting" : "continue";
+const operatorText = (operator: string) => operator === "ge" ? "≥" : operator === "le" ? "≤" : operator === "eq" ? "=" : operator;
+const targetText = (goal: LiveGoal) => goal.metric === "reply_rate" && typeof goal.target === "number" ? `${Math.round(goal.target * 100)}%` : String(goal.target);
 ---
 
-<div id="live-timeline-root">
-  <!-- Filters: one row, status group only (the sections separate the types) -->
-  <div id="live-filters" class="mb-8 flex flex-wrap items-center gap-2" data-aos="fade-up">
-    <span class="me-3 text-2xs font-semibold uppercase tracking-widest text-muted-foreground">{t(locale, "live.filters.status")}</span>
-    {statusPills.map((pill, i) => (
-      <button
-        type="button"
-        class:list={["filter-chip", i === 0 ? "filter-active" : "filter-inactive"]}
-        data-filter-status={pill.value}
-        aria-pressed={i === 0 ? "true" : "false"}
-      >
-        {t(locale, pill.labelKey)} <span class="live-count opacity-80">({num(pill.count)})</span>
-      </button>
-    ))}
-  </div>
+<div id="live-company-view">
+  <section aria-labelledby="business-work-heading">
+    <div class="mb-6">
+      <h2 id="business-work-heading" class="text-2xl font-bold tracking-tight text-foreground-strong">{t(locale, "live.company.businessTitle")}</h2>
+      <p class="mt-2 text-sm leading-relaxed text-muted-foreground">{t(locale, "live.company.businessDesc")}</p>
+    </div>
+    <ol class="live-business-timeline">
+      {business.length === 0 && <p class="rounded-md border border-border bg-panel p-5 text-sm text-muted-foreground">{t(locale, "live.company.noActive")}</p>}
+      {business.map((goal) => (
+        <li class="live-business-entry relative border-s-2 border-border pb-7 ps-7 last:pb-0" data-aos="fade-up">
+          <span class="live-timeline-node absolute -start-[9px] top-5 flex h-4 w-4 items-center justify-center rounded-full border-2 border-warning bg-background shadow-[0_0_18px_var(--warning-soft)]" aria-hidden="true"><span class="h-1.5 w-1.5 rounded-full bg-warning"></span></span>
+        <article class="group relative overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-0.5 hover:border-border-strong sm:p-6">
+          <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-primary via-accent to-transparent opacity-80"></div>
+          <h3 class="text-lg font-semibold leading-snug text-foreground-strong">{titleFor(goal)}</h3>
+          <dl class="mt-5 grid gap-4 sm:grid-cols-2">
+            <div><dt class="text-2xs font-semibold uppercase tracking-wider text-foreground-muted">{t(locale, "live.company.why")}</dt><dd class="mt-1 text-xs leading-relaxed text-muted-foreground">{valueFor(goal)}</dd></div>
+            <div><dt class="text-2xs font-semibold uppercase tracking-wider text-foreground-muted">{t(locale, "live.company.department")}</dt><dd class="mt-1 text-xs text-muted-foreground">{t(locale, departmentKey(goal.owner_id))}</dd></div>
+            <div><dt class="text-2xs font-semibold uppercase tracking-wider text-foreground-muted">{t(locale, "live.company.status")}</dt><dd class="mt-1 text-xs text-warning">{t(locale, `live.status.${goal.goal_status}`)}</dd></div>
+            <div><dt class="text-2xs font-semibold uppercase tracking-wider text-foreground-muted">{t(locale, "live.company.result")}</dt><dd class="mt-1 text-xs text-muted-foreground">{t(locale, "live.company.measuring")}</dd></div>
+            <div><dt class="text-2xs font-semibold uppercase tracking-wider text-foreground-muted">{t(locale, "live.company.next")}</dt><dd class="mt-1 text-xs text-muted-foreground">{t(locale, `live.company.next.${nextKey(goal.run_status)}`)}</dd></div>
+            <div><dt class="text-2xs font-semibold uppercase tracking-wider text-foreground-muted">{t(locale, "live.company.updated")}</dt><dd class="mt-1 text-xs text-muted-foreground"><time datetime={goal.updated_at}>{localNumber(formatter.format(new Date(goal.updated_at)))}</time></dd></div>
+          </dl>
+          <details class="mt-5 border-t border-border pt-4" data-live-system-details>
+            <summary class="cursor-pointer text-xs font-semibold text-primary">{t(locale, "live.company.details")}</summary>
+            <dl class="mt-4 grid gap-3 rounded-md bg-panel-raised p-4 font-mono text-2xs text-muted-foreground sm:grid-cols-2">
+              <div><dt>{t(locale, "live.company.canonical")}</dt><dd class="mt-1 text-foreground">{goal.name}</dd></div>
+              <div><dt>{t(locale, "live.company.identifier")}</dt><dd class="mt-1 break-all text-foreground">{goal.id}</dd></div>
+              <div><dt>{t(locale, "live.company.systemState")}</dt><dd class="mt-1 text-foreground">{goal.stage || t(locale, "live.company.unknown")} · {goal.run_status || t(locale, "live.company.unknown")}</dd></div>
+              <div><dt>{t(locale, "live.company.metric")}</dt><dd class="mt-1 text-foreground">{goal.metric} {operatorText(goal.operator)} {targetText(goal)}</dd></div>
+            </dl>
+          </details>
+        </article>
+        </li>
+      ))}
+    </ol>
+  </section>
 
-  {sections.map((section) => {
-    const hiddenCount = Math.max(0, section.entries.length - section.inlineCount);
-    return (
-      <section class="mb-10 last:mb-0" data-live-section={section.type} data-aos="fade-up">
-        <div class="mb-4">
-          <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-            <h2 class="text-lg font-bold tracking-tight text-foreground-strong">{t(locale, section.titleKey)}</h2>
-            <span class="live-count text-2xs font-medium text-muted-foreground">{t(locale, section.countKey, { count: num(section.entries.length) })}</span>
-          </div>
-          <p class="mt-1 max-w-2xl text-xs leading-relaxed text-muted-foreground">{t(locale, section.subtitleKey)}</p>
-        </div>
-
-        <ol class="live-timeline">
-          {section.entries.map((goal, index) => {
-            const status = goal.goal_status;
-            const node = nodeIcon[status] ?? nodeIcon.active;
-            const metric = metricText(goal);
-            return (
-              <li
-                class:list={[
-                  "live-entry relative border-s-2 border-border ps-6 pb-6 last:pb-0",
-                  index >= section.inlineCount && "live-entry--hidden",
-                ]}
-                data-goal-id={goal.id}
-                data-type={section.type}
-                data-status={status}
-              >
-                <i class:list={["absolute -start-2 top-0", node.icon, node.color, "icon-lg"]} aria-hidden="true"></i>
-                <div class="rounded-md border border-border bg-panel p-5 transition-all hover:border-border-strong hover:bg-panel-raised">
-                  <div class="flex flex-wrap items-start gap-x-3 gap-y-2">
-                    <div class:list={["flex h-6 w-6 shrink-0 items-center justify-center rounded-sm", typeTile[section.type]]}>
-                      <i class:list={["bx", section.type === "business" ? "bx-trending-up" : "bx-slider", typeIcon[section.type], "icon-sm"]} aria-hidden="true"></i>
-                    </div>
-                    <h3 class="min-w-0 flex-1 text-sm font-semibold leading-snug text-foreground-strong">{goal.name}</h3>
-                    <time datetime={goal.created_at} class="whitespace-nowrap text-2xs text-muted-foreground">
-                      {relTime(goal.created_at)} · {absTime(goal.created_at)}
-                    </time>
-                  </div>
-                  <div class="mt-3 flex flex-wrap items-center gap-1.5">
-                    <span class="inline-flex items-center rounded-sm bg-primary-soft px-1.5 py-0.5 text-2xs font-medium text-primary">{goal.owner_id}</span>
-                    <span class:list={["inline-flex items-center rounded-sm px-1.5 py-0.5 text-2xs font-medium", statusChip[status] ?? "bg-panel-strong text-muted-foreground"]}>
-                      {t(locale, statusLabel[status] ?? "live.status.active")}
-                    </span>
-                    {goal.stage && (
-                      <span class="inline-flex items-center rounded-sm bg-panel-strong px-1.5 py-0.5 text-2xs font-medium text-muted-foreground">
-                        {t(locale, "live.entry.stage", { stage: goal.stage })}
-                      </span>
-                    )}
-                    {metric && (
-                      <span class="inline-flex items-center rounded-sm border border-border bg-background px-1.5 py-0.5 font-mono text-2xs text-muted-foreground">
-                        {metric}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </li>
-            );
-          })}
-        </ol>
-
-        <!-- Show more: reveals every remaining entry in this section, then hides itself -->
-        {hiddenCount > 0 && (
-          <div class="mt-8 flex justify-center">
-            <button
-              id={section.showMoreId}
-              type="button"
-              class="inline-flex h-11 items-center justify-center rounded-md border border-border bg-panel px-6 text-sm font-medium transition-all hover:border-border-strong hover:bg-panel-raised"
-            >
-              {t(locale, "live.showMore")} <span class="opacity-80">({num(hiddenCount)})</span>
-            </button>
-          </div>
-        )}
-      </section>
-    );
-  })}
+  <details class="mt-10 rounded-lg border border-border bg-panel" data-improvement-section>
+    <summary class="cursor-pointer p-5 sm:p-6">
+      <span class="block text-lg font-bold text-foreground-strong">{t(locale, "live.company.improvementTitle")}</span>
+      <span class="mt-1 block text-xs leading-relaxed text-muted-foreground">{t(locale, "live.company.improvementDesc")}</span>
+    </summary>
+    <div class="space-y-4 border-t border-border p-5 sm:p-6">
+      {improvements.map((goal) => (
+        <article class="rounded-md border border-border bg-panel-raised p-5">
+          <h3 class="text-sm font-semibold text-foreground-strong">{titleFor(goal)}</h3>
+          <p class="mt-2 text-xs leading-relaxed text-muted-foreground">{valueFor(goal, true)}</p>
+          <details class="mt-4" data-live-system-details><summary class="cursor-pointer text-xs font-semibold text-primary">{t(locale, "live.company.details")}</summary><div class="mt-3 rounded-md bg-background p-3 font-mono text-2xs text-muted-foreground"><p>{goal.name}</p><p class="mt-1 break-all">{goal.id}</p><p class="mt-1">{goal.stage || t(locale, "live.company.unknown")} · {goal.run_status || t(locale, "live.company.unknown")}</p></div></details>
+        </article>
+      ))}
+    </div>
+  </details>
 </div>
 
 <style>
-  .filter-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
-    height: 2rem;
-    padding-inline: 0.75rem;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--border);
-    font-size: var(--font-size-xs);
-    font-weight: 500;
-    transition:
-      background-color var(--duration-fast) var(--ease),
-      border-color var(--duration-fast) var(--ease),
-      color var(--duration-fast) var(--ease);
+  .live-business-entry:first-child .live-timeline-node::after {
+    content: "";
+    position: absolute;
+    inset: -0.4rem;
+    border: 1px solid var(--warning);
+    border-radius: var(--radius-pill);
+    animation: live-timeline-pulse 1.8s ease-out infinite;
   }
-  .filter-chip.filter-active {
-    border-color: var(--primary);
-    background: var(--primary);
-    color: var(--primary-foreground);
+  @keyframes live-timeline-pulse {
+    from { transform: scale(0.7); opacity: 0.75; }
+    to { transform: scale(1.35); opacity: 0; }
   }
-  .filter-chip.filter-inactive {
-    background: var(--panel);
-    color: var(--muted-foreground);
-  }
-  .filter-chip.filter-inactive:hover {
-    background: var(--panel-raised);
-    border-color: var(--border-strong);
-  }
-  .live-entry--hidden {
-    display: none;
-  }
-
-  /* Count badges (filter chips + section headers) pop on filter changes.
-     Transforms need an inline-block/blockified box, so pin the display. */
-  .live-count {
-    display: inline-block;
-  }
-  .live-count-pop {
-    animation: live-count-pop 240ms var(--ease);
-  }
-  @keyframes live-count-pop {
-    0% {
-      transform: scale(1);
-    }
-    40% {
-      transform: scale(1.18);
-    }
-    100% {
-      transform: scale(1);
-    }
-  }
-
-  /* Newly visible entries fade + slide in with a short stagger. */
-  .live-entry--in {
-    animation: live-entry-in 240ms ease-out both;
-  }
-  @keyframes live-entry-in {
-    from {
-      opacity: 0;
-      transform: translateY(6px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  /* Show more fades out after revealing the remaining entries. */
-  .live-showmore-out {
-    animation: live-fade-out 200ms ease-out both;
-  }
-  @keyframes live-fade-out {
-    from {
-      opacity: 1;
-    }
-    to {
-      opacity: 0;
-    }
-  }
-
   @media (prefers-reduced-motion: reduce) {
-    .live-entry--in,
-    .live-count-pop,
-    .live-showmore-out {
-      animation: none !important;
-    }
+    .live-business-entry:first-child .live-timeline-node::after { animation: none; }
   }
 </style>
 
 <script>
-  (function () {
-    var rootEl = document.getElementById("live-timeline-root");
-    if (!rootEl) return;
-    var root = rootEl as HTMLElement;
-    var INLINE: Record<string, number> = { business: 10, improvement: 5 };
-    var filterStatus = "all";
-    var revealed: Record<string, boolean> = { business: false, improvement: false };
-    var firstApply = true;
-
-    var sections = Array.prototype.slice.call(root.querySelectorAll("[data-live-section]")).map(function (sec: Element) {
-      var type = sec.getAttribute("data-live-section") || "";
-      return {
-        type: type,
-        entries: Array.prototype.slice.call(sec.querySelectorAll(".live-entry")) as Element[],
-        showMore: document.getElementById("live-show-more-" + type) as HTMLElement | null,
-      };
+  document.querySelectorAll("[data-live-system-details]").forEach((details) => {
+    details.addEventListener("toggle", () => {
+      if (!(details instanceof HTMLDetailsElement) || !details.open) return;
+      const tracker = (window as typeof window & { spielosTrack?: (name: string, properties: Record<string, string>) => void }).spielosTrack;
+      if (typeof tracker === "function") tracker("live_system_details_expanded", { page: window.location.pathname });
     });
-
-    function matches(el: Element): boolean {
-      if (filterStatus !== "all" && el.getAttribute("data-status") !== filterStatus) return false;
-      return true;
-    }
-
-    function popCounts(): void {
-      var counts = root.querySelectorAll(".live-count");
-      for (var i = 0; i < counts.length; i++) {
-        var el = counts[i] as HTMLElement;
-        el.classList.remove("live-count-pop");
-        void el.offsetWidth; // restart the animation
-        el.classList.add("live-count-pop");
-      }
-    }
-
-    function apply(): void {
-      var newlyVisible: Element[] = [];
-      sections.forEach(function (sec) {
-        sec.entries.forEach(function (el: Element, i: number) {
-          var visible = matches(el) && (revealed[sec.type] || filterStatus !== "all" || i < INLINE[sec.type]);
-          var wasVisible = !el.classList.contains("live-entry--hidden");
-          el.classList.toggle("live-entry--hidden", !visible);
-          if (visible && !wasVisible) newlyVisible.push(el);
-        });
-      });
-      // The initial server render already applied the inline counts: do not
-      // animate entries on first load.
-      if (firstApply) {
-        firstApply = false;
-        return;
-      }
-      // Stagger newly visible entries (25-35ms apart, capped so the delay
-      // never grows past ~360ms), then pop every count badge.
-      var capped = Math.min(newlyVisible.length, 12);
-      for (var k = 0; k < capped; k++) {
-        (function (el: Element, delayMs: number) {
-          var item = el as HTMLElement;
-          item.classList.add("live-entry--in");
-          item.style.animationDelay = delayMs + "ms";
-          item.addEventListener("animationend", function () {
-            item.classList.remove("live-entry--in");
-            item.style.animationDelay = "";
-          }, { once: true });
-        })(newlyVisible[k], k * 30);
-      }
-      popCounts();
-    }
-
-    function selectStatus(value: string, btn: Element): void {
-      filterStatus = value;
-      var group = root.querySelectorAll("[data-filter-status]");
-      for (var k = 0; k < group.length; k++) {
-        var b = group[k];
-        var active = b === btn;
-        b.classList.toggle("filter-active", active);
-        b.classList.toggle("filter-inactive", !active);
-        b.setAttribute("aria-pressed", active ? "true" : "false");
-      }
-      apply();
-    }
-
-    var statusButtons = root.querySelectorAll("[data-filter-status]");
-    for (var j = 0; j < statusButtons.length; j++) {
-      (function (btn: Element) {
-        btn.addEventListener("click", function () {
-          selectStatus(btn.getAttribute("data-filter-status") || "all", btn);
-        });
-      })(statusButtons[j]);
-    }
-
-    sections.forEach(function (sec) {
-      if (sec.showMore) {
-        sec.showMore.addEventListener("click", function () {
-          revealed[sec.type] = true;
-          apply();
-          // Fade the button out, then hide it. Under reduced motion the
-          // animation never runs, so hide it immediately instead.
-          var btn = sec.showMore as HTMLElement;
-          if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-            btn.classList.add("hidden");
-          } else {
-            btn.classList.add("live-showmore-out");
-            window.setTimeout(function () {
-              btn.classList.add("hidden");
-            }, 260);
-          }
-        });
-      }
-    });
-
-    // Initial state: inline counts applied server-side.
-    apply();
-  })();
+  });
 </script>

@@ -1,137 +1,44 @@
 ---
-import Page from "../layouts/Page.astro";
-import { SITE } from "../config";
-import { type Locale, t } from "../i18n/translations";
-import { localizePath } from "../i18n";
-import SectionHeader from "../components/sections/SectionHeader.astro";
-import SpielOSLogo from "../components/SpielOSLogo.astro";
-import LiveStats, { type LiveTotals } from "../components/live/LiveStats.astro";
+import ContactModal from "../components/ContactModal.astro";
 import LiveTimeline, { type LiveGoal } from "../components/live/LiveTimeline.astro";
 import LiveStatus, { type Heartbeat } from "../components/live/LiveStatus.astro";
+import LiveStats, { type LiveTotals } from "../components/live/LiveStats.astro";
+import SectionHeader from "../components/sections/SectionHeader.astro";
+import OperatingLoop from "../components/architecture/OperatingLoop.astro";
+import Page from "../layouts/Page.astro";
+import { SITE } from "../config";
+import { localizePath } from "../i18n";
+import { type Locale, t } from "../i18n/translations";
 import snapshot from "../data/live-goals.json";
 
-export interface Props {
-  locale?: Locale;
-}
-
+export interface Props { locale?: Locale; }
 const { locale = "en" } = Astro.props;
-
-interface RuntimeState {
-  state: "running" | "resting";
-  current_run: unknown;
-  heartbeat: Heartbeat | null;
-  last_activity_at: string | null;
-  last_sync_at: string;
-}
-
-const data = snapshot as unknown as {
-  totals: LiveTotals;
-  goals: LiveGoal[];
-  runtime_state?: RuntimeState;
+const data = snapshot as unknown as { goals: LiveGoal[]; totals: LiveTotals; runtime_state?: { state?: "running" | "resting"; heartbeat?: Heartbeat | null; last_activity_at?: string | null; last_sync_at?: string } };
+const state = data.runtime_state?.state ?? "resting";
+const heartbeat = data.runtime_state?.heartbeat ?? null;
+const metricLabel = (metric: string) => metric === "reply_rate" ? t(locale, "live.metric.replyRate") : metric;
+const heartbeatText = (hb: Heartbeat) => {
+  const operator = hb.operator === "ge" ? "≥" : hb.operator === "le" ? "≤" : hb.operator === "eq" ? "=" : hb.operator;
+  const target = hb.metric === "reply_rate" && typeof hb.target === "number" ? `${Math.round(hb.target * 100)}%` : String(hb.target);
+  return t(locale, "live.entry.metric", { metric: metricLabel(hb.metric), operator, target });
 };
-const totals = data.totals;
-const goals = data.goals;
-
-const runtimeState: RuntimeState = data.runtime_state ?? {
-  state: "resting",
-  current_run: null,
-  heartbeat: null,
-  last_activity_at: null,
-  last_sync_at: "",
-};
-const liveState = runtimeState.state;
-const heartbeat: Heartbeat | null = runtimeState.heartbeat ?? null;
-
-// Readable heartbeat target: i18n metric label, operator symbol (ge/le/eq ->
-// > / < / =) and percentage targets scaled x100 with a % sign (e.g.
-// "Reply Rate > 30%").
-const METRIC_LABELS: Record<string, string> = {
-  reply_rate: t(locale, "live.metric.replyRate"),
-};
-
-function heartbeatText(hb: Heartbeat): string {
-  const metric = METRIC_LABELS[hb.metric] ?? hb.metric;
-  const operator =
-    hb.operator === "ge" ? ">" : hb.operator === "le" ? "<" : hb.operator === "eq" ? "=" : hb.operator;
-  const target =
-    typeof hb.target === "number" && hb.metric === "reply_rate"
-      ? `${Math.round(hb.target * 100)}%`
-      : String(hb.target);
-  return t(locale, "live.entry.metric", { metric, operator, target });
-}
-
-// Newest-first ordering (created_at DESC) — the same order the timeline renders.
-const recentGoals = [...goals]
-  .sort((a, b) => b.created_at.localeCompare(a.created_at))
-  .slice(0, 15);
-
-const itemListJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "ItemList",
-  name: t(locale, "live.pageTitle"),
-  description: t(locale, "live.pageDesc"),
-  url: `${SITE.url}${localizePath("/live/", locale)}`,
-  numberOfItems: recentGoals.length,
-  itemListElement: recentGoals.map((goal, index) => ({
-    "@type": "ListItem",
-    position: index + 1,
-    name: goal.name,
-  })),
-};
-
-// Relative-time helper mirroring LiveTimeline's (kept local to the page for
-// the hero's last-activity line; the poll script re-computes it client-side).
-const now = Date.now();
-const faDigits = "۰۱۲۳۴۵۶۷۸۹";
-const num = (n: number): string =>
-  locale === "fa" ? String(n).replace(/\d/g, (d) => faDigits[Number(d)]) : String(n);
-
-function relTime(iso: string): string {
-  const diff = Math.max(0, now - new Date(iso).getTime());
-  const minutes = Math.floor(diff / 60000);
-  if (minutes < 1) return t(locale, "live.time.justNow");
-  if (minutes < 60) return t(locale, minutes === 1 ? "live.time.minuteAgo" : "live.time.minutesAgo", { n: num(minutes) });
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return t(locale, hours === 1 ? "live.time.hourAgo" : "live.time.hoursAgo", { n: num(hours) });
-  const days = Math.floor(hours / 24);
-  return t(locale, days === 1 ? "live.time.dayAgo" : "live.time.daysAgo", { n: num(days) });
-}
-
-const lastActivityText = runtimeState.last_activity_at
-  ? t(locale, "live.state.lastActivity", { time: relTime(runtimeState.last_activity_at) })
+const lastActivityText = data.runtime_state?.last_activity_at
+  ? t(locale, "live.state.lastActivity", { time: new Intl.DateTimeFormat(locale === "fa" ? "fa-IR-u-ca-gregory" : "en-US", { dateStyle: "medium", timeStyle: "short" }).format(new Date(data.runtime_state.last_activity_at)) })
   : "";
-
-// Client-side strings for the /live-state.json poller (no framework).
-const liveI18n = {
-  justNow: t(locale, "live.time.justNow"),
-  minuteAgo: t(locale, "live.time.minuteAgo"),
-  minutesAgo: t(locale, "live.time.minutesAgo"),
-  hourAgo: t(locale, "live.time.hourAgo"),
-  hoursAgo: t(locale, "live.time.hoursAgo"),
-  dayAgo: t(locale, "live.time.dayAgo"),
-  daysAgo: t(locale, "live.time.daysAgo"),
-  running: t(locale, "live.state.running"),
-  resting: t(locale, "live.state.resting"),
-  lastActivity: t(locale, "live.state.lastActivity"),
-  metricLabels: METRIC_LABELS,
-  metricFormat: t(locale, "live.entry.metric"),
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: t(locale, "nav.home"), item: `${SITE.url}${localizePath("/", locale)}` },
+    { "@type": "ListItem", position: 2, name: t(locale, "nav.live"), item: `${SITE.url}${localizePath("/live/", locale)}` },
+  ],
 };
-
 const vocab = [
   { icon: "bx-bullseye", color: "primary", titleKey: "live.vocab.goal.title", descKey: "live.vocab.goal.desc" },
   { icon: "bx-group", color: "accent", titleKey: "live.vocab.department.title", descKey: "live.vocab.department.desc" },
   { icon: "bx-run", color: "purple", titleKey: "live.vocab.run.title", descKey: "live.vocab.run.desc" },
   { icon: "bx-slider", color: "warning", titleKey: "live.vocab.improvement.title", descKey: "live.vocab.improvement.desc" },
 ];
-
-const loopSteps = [
-  { labelKey: "live.hero.loop.goal", icon: "bx-bullseye" },
-  { labelKey: "live.hero.loop.observe", icon: "bx-search" },
-  { labelKey: "live.hero.loop.decide", icon: "bx-task" },
-  { labelKey: "live.hero.loop.act", icon: "bx-rocket" },
-  { labelKey: "live.hero.loop.evaluate", icon: "bx-line-chart" },
-];
-
 const howTo = [
   { icon: "bx-bullseye", color: "primary", titleKey: "live.howto.goal.title", descKey: "live.howto.goal.desc" },
   { icon: "bx-revision", color: "accent", titleKey: "live.howto.run.title", descKey: "live.howto.run.desc" },
@@ -140,248 +47,147 @@ const howTo = [
 ];
 ---
 
-<Page
-  title={t(locale, "live.pageTitle")}
-  description={t(locale, "live.pageDesc")}
-  locale={locale}
->
-  <!-- Hero: the live operations log -->
-  <section id="live-hero" class="relative overflow-hidden py-20 sm:py-24">
-    <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(var(--foreground) 1px, transparent 1px); background-size: 24px 24px;"></div>
-    <div class="relative mx-auto max-w-6xl px-6">
-      <div class="mx-auto max-w-4xl text-center" data-aos="fade-up">
-        <span class="text-2xs font-semibold uppercase tracking-widest text-primary">{t(locale, "live.hero.badge")}</span>
-        <h1 class="mt-3 flex items-center justify-center gap-3 text-4xl font-bold tracking-tight text-foreground-strong sm:text-5xl">
-          <SpielOSLogo
-            markOnly
-            boxClass="flex h-9 w-9 shrink-0 items-center justify-center rounded-sm bg-panel-raised text-foreground-strong sm:h-12 sm:w-12"
-          />
-          <span>{t(locale, "live.hero.title")}</span>
-        </h1>
-        <p class="mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">{t(locale, "live.hero.desc")}</p>
-
-        <!-- Merged live status + heartbeat: running/resting state, the goal in
-             flight and its metric target. The whole card links to the timeline. -->
-        <div class="mx-auto mt-8 max-w-4xl" data-aos="fade-up" data-aos-delay="50">
-          <LiveStatus
-            locale={locale}
-            state={liveState}
-            heartbeat={heartbeat}
-            heartbeatText={heartbeatText}
-            lastActivityText={lastActivityText}
-          />
-        </div>
-      </div>
-
-      <!-- Plain-language vocabulary -->
-      <div class="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-4" data-aos="fade-up" data-aos-delay="100">
-        {vocab.map((v) => (
-          <div class="rounded-md border border-border bg-panel p-5 transition-all hover:border-border-strong hover:bg-panel-raised">
-            <div class:list={["mb-3 flex h-9 w-9 items-center justify-center rounded-md bg-" + v.color + "-soft"]}>
-              <i class:list={["bx", v.icon, "text-" + v.color, "icon-xl"]} aria-hidden="true"></i>
-            </div>
-            <h2 class="mb-1 text-sm font-semibold text-foreground-strong">{t(locale, v.titleKey)}</h2>
-            <p class="text-xs leading-relaxed text-muted-foreground">{t(locale, v.descKey)}</p>
-          </div>
-        ))}
-      </div>
-
-      <!-- The loop + evidence model (full width, aligned with the cards grid) -->
-      <div class="mt-10 w-full rounded-md border border-border bg-panel p-5" data-aos="fade-up" data-aos-delay="150" data-live-loop>
-        <p class="mb-4 text-center text-2xs font-semibold uppercase tracking-widest text-muted-foreground">{t(locale, "live.hero.loop.title")}</p>
-        <div class="flex flex-wrap items-center justify-center gap-2">
-          {loopSteps.map((step, i) => (
-            <>
-              <span class="inline-flex items-center gap-1.5 rounded-sm bg-primary-soft px-2.5 py-1 text-2xs font-semibold text-primary">
-                <i class:list={["bx", step.icon, "icon-sm"]} aria-hidden="true"></i>
-                {t(locale, step.labelKey)}
-              </span>
-              {i < loopSteps.length - 1 && <i class="bx bx-chevron-right rtl-flip text-muted-foreground icon-md" aria-hidden="true"></i>}
-            </>
-          ))}
-        </div>
-        <p class="mt-4 text-center text-xs leading-relaxed text-muted-foreground">{t(locale, "live.hero.evidence")}</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Stats strip -->
-  <section id="live-stats" class="relative py-16 sm:py-20">
-    <div class="mx-auto max-w-6xl px-6">
-      <SectionHeader
-        label={t(locale, "live.stats.label")}
-        title={t(locale, "live.stats.title")}
-      />
-      <LiveStats locale={locale} totals={totals} />
-    </div>
-  </section>
-
-  <!-- Timeline -->
-  <section id="live-timeline" class="relative py-16 sm:py-20">
-    <div class="mx-auto max-w-4xl px-6">
-      <SectionHeader
-        label={t(locale, "live.filters.label")}
-        title={t(locale, "live.filters.title")}
-        description={t(locale, "live.filters.desc")}
-      />
-      <LiveTimeline locale={locale} goals={goals} />
-    </div>
-  </section>
-
-  <!-- How to read this log -->
-  <section id="live-howto" class="relative overflow-hidden py-16 sm:py-20">
+<Page title={t(locale, "conversion.live.pageTitle")} description={t(locale, "conversion.live.pageDesc")} locale={locale}>
+  <section id="live-hero" class="relative overflow-hidden py-24 sm:py-32">
     <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
+    <div class="absolute left-1/2 top-[36%] h-[30rem] w-[46rem] -translate-x-1/2 -translate-y-1/2 glow-blob opacity-20"></div>
+    <div class="absolute left-[60%] top-[32%] h-64 w-64 rounded-full opacity-10" style="background: radial-gradient(closest-side, var(--accent), transparent 72%);"></div>
+    <div class="relative mx-auto max-w-4xl px-6 text-center" data-aos="fade-up">
+      <p class="text-2xs font-semibold uppercase tracking-widest text-primary">{t(locale, "conversion.live.hero.label")}</p>
+      <h1 class="mt-4 text-4xl font-extrabold leading-tightest tracking-tight text-foreground-strong sm:text-6xl">{t(locale, "conversion.live.hero.titleLead")}<br /><span class="text-primary">{t(locale, "conversion.live.hero.titleAccent")}</span></h1>
+      <p class="mx-auto mt-6 max-w-3xl text-base leading-relaxed text-muted-foreground">{t(locale, "conversion.live.hero.body")}</p>
+      <div class="mx-auto mt-8 max-w-3xl text-start">
+        <LiveStatus locale={locale} state={state} heartbeat={heartbeat} heartbeatText={heartbeatText} lastActivityText={lastActivityText} />
+      </div>
+      <div class="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
+        <a href={localizePath("/services/agent-brief/#request", locale)} data-open-contact-modal data-cta-location="live_hero" class="inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground">{t(locale, "cta.requestAgentBrief")}</a>
+        <a href={localizePath("/architecture/", locale)} class="inline-flex h-11 items-center justify-center rounded-md border border-border bg-panel px-6 text-sm font-medium">{t(locale, "conversion.live.hero.secondary")}</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="live-model" class="relative overflow-hidden py-20 sm:py-24">
+    <div class="absolute inset-0 opacity-[0.03] hero-grid"></div>
     <div class="relative mx-auto max-w-6xl px-6">
-      <SectionHeader
-        label={t(locale, "live.howto.label")}
-        title={t(locale, "live.howto.title")}
-        description={t(locale, "live.howto.desc")}
-      />
-      <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" data-aos="fade-up" data-aos-delay="100">
-        {howTo.map((card) => (
-          <div class="rounded-md border border-border bg-panel p-5 transition-all hover:border-border-strong hover:bg-panel-raised">
-            <div class:list={["mb-3 flex h-9 w-9 items-center justify-center rounded-md bg-" + card.color + "-soft"]}>
-              <i class:list={["bx", card.icon, "text-" + card.color, "icon-xl"]} aria-hidden="true"></i>
-            </div>
-            <h3 class="mb-1 text-sm font-semibold text-foreground-strong">{t(locale, card.titleKey)}</h3>
-            <p class="text-xs leading-relaxed text-muted-foreground">{t(locale, card.descKey)}</p>
-          </div>
+      <SectionHeader label={t(locale, "live.hero.loop.title")} title={t(locale, "live.howto.title")} description={t(locale, "live.howto.desc")} />
+      <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" data-aos="fade-up">
+        {vocab.map((item) => (
+          <article class="group relative overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
+            <div class:list={["absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-" + item.color + " to-transparent"]}></div>
+            <div class:list={["mb-4 flex h-10 w-10 items-center justify-center rounded-md bg-" + item.color + "-soft"]}><i class:list={["bx", item.icon, "text-" + item.color, "icon-xl"]} aria-hidden="true"></i></div>
+            <h3 class="text-sm font-semibold text-foreground-strong">{t(locale, item.titleKey)}</h3>
+            <p class="mt-2 text-xs leading-relaxed text-muted-foreground">{t(locale, item.descKey)}</p>
+          </article>
+        ))}
+      </div>
+      <div class="mt-8"><OperatingLoop locale={locale} /></div>
+      <p class="mx-auto mt-5 max-w-2xl text-center text-xs leading-relaxed text-muted-foreground">{t(locale, "live.hero.evidence")}</p>
+    </div>
+  </section>
+
+  <section id="live-stats" class="relative py-16 sm:py-20">
+    <div class="mx-auto max-w-6xl px-6"><SectionHeader label={t(locale, "live.stats.label")} title={t(locale, "live.stats.title")} /><LiveStats locale={locale} totals={data.totals} /></div>
+  </section>
+
+  <section id="live-howto" class="relative overflow-hidden py-20 sm:py-24">
+    <div class="absolute inset-0 bg-panel-deep/35"></div>
+    <div class="relative mx-auto max-w-6xl px-6">
+      <SectionHeader label={t(locale, "live.howto.label")} title={t(locale, "live.howto.title")} description={t(locale, "live.howto.desc")} />
+      <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" data-aos="fade-up">
+        {howTo.map((item, index) => (
+          <article class="relative rounded-lg border border-border bg-panel p-5 shadow-panel">
+            <span class="absolute end-4 top-4 font-mono text-2xs text-foreground-muted">0{index + 1}</span>
+            <div class:list={["mb-4 flex h-10 w-10 items-center justify-center rounded-md bg-" + item.color + "-soft"]}><i class:list={["bx", item.icon, "text-" + item.color, "icon-xl"]} aria-hidden="true"></i></div>
+            <h3 class="text-sm font-semibold text-foreground-strong">{t(locale, item.titleKey)}</h3>
+            <p class="mt-2 text-xs leading-relaxed text-muted-foreground">{t(locale, item.descKey)}</p>
+          </article>
         ))}
       </div>
     </div>
   </section>
 
-  <!-- CTA -->
-  <section id="live-cta" class="relative py-16 sm:py-20">
-    <div class="mx-auto max-w-3xl px-6 text-center" data-aos="fade-up">
-      <h2 class="text-3xl font-bold tracking-tight text-foreground-strong sm:text-4xl">{t(locale, "live.cta.title")}</h2>
-      <p class="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground">{t(locale, "live.cta.desc")}</p>
-      <a
-        href={localizePath("/services/", locale)}
-        class="mt-8 inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground transition-all hover:brightness-110 active:brightness-95"
-      >
-        {t(locale, "live.cta.button")}
-      </a>
+  <section id="live-timeline" class="relative overflow-hidden py-20 sm:py-24">
+    <div class="absolute inset-0 bg-panel-deep/35"></div>
+    <div class="absolute inset-0 opacity-[0.025] hero-grid"></div>
+    <div class="relative mx-auto max-w-4xl px-6">
+      <LiveTimeline locale={locale} goals={data.goals} />
     </div>
   </section>
 
-  <script is:inline type="application/ld+json" set:html={JSON.stringify(itemListJsonLd)} />
+  <section id="live-cta" class="relative overflow-hidden py-24 sm:py-32">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="relative mx-auto max-w-3xl px-6 text-center" data-aos="fade-up">
+      <h2 class="text-3xl font-bold tracking-tight text-foreground-strong sm:text-4xl">{t(locale, "conversion.live.final.title")}</h2>
+      <p class="mt-4 text-base leading-relaxed text-muted-foreground">{t(locale, "conversion.live.final.body")}</p>
+      <a href={localizePath("/services/agent-brief/#request", locale)} data-open-contact-modal data-cta-location="live_final" class="mt-8 inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground">{t(locale, "cta.requestAgentBrief")}</a>
+    </div>
+  </section>
 
-  <!-- Client-side strings for the /live-state.json poller -->
-  <script is:inline type="application/json" id="live-state-i18n" set:html={JSON.stringify(liveI18n)}></script>
-
-  <!-- Live state polling: fetch /live-state.json every 30s, update the merged
-       status card (state, heartbeat goal/target/stage, resting visibility, last
-       activity) and stat numbers in place. Silent on any error. -->
-  <script is:inline>
+  <ContactModal locale={locale} />
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
+  <script is:inline define:vars={{
+    runningLabel: t(locale, "live.state.running"),
+    restingLabel: t(locale, "live.state.resting"),
+    restingText: t(locale, "live.heartbeat.resting"),
+    replyRateLabel: t(locale, "live.metric.replyRate"),
+    metricTemplate: t(locale, "live.entry.metric"),
+    activityTemplate: t(locale, "live.state.lastActivity"),
+    localeCode: locale === "fa" ? "fa-IR-u-ca-gregory" : "en-US",
+  }}>
     (function () {
-      var root = document.documentElement;
-      var isFa = root.lang === "fa";
-      var FA_DIGITS = "۰۱۲۳۴۵۶۷۸۹";
-      var statusRoot = document.getElementById("live-status-root");
-      var statusTile = statusRoot ? statusRoot.querySelector(".live-hb-tile") : null;
-      var stateIconEl = document.getElementById("live-status-state-icon");
-      var stateLabelEl = document.getElementById("live-status-state-label-text");
-      var hbGoalEl = statusRoot ? statusRoot.querySelector("[data-heartbeat-goal]") : null;
-      var hbMetricEl = statusRoot ? statusRoot.querySelector("[data-heartbeat-metric]") : null;
-      var hbStageEl = statusRoot ? statusRoot.querySelector("[data-heartbeat-stage]") : null;
-      var hbStageWrap = document.getElementById("live-status-stage");
-      var restingEl = document.getElementById("live-status-resting");
-      var activityEl = document.getElementById("live-status-activity");
-      var i18nEl = document.getElementById("live-state-i18n");
-      if (!statusRoot || !i18nEl) return;
-      var I18N = {};
-      try {
-        I18N = JSON.parse(i18nEl.textContent || "{}") || {};
-      } catch (e) {
-        /* keep empty defaults */
+      var root = document.getElementById('live-status-root');
+      if (!root) return;
+      var label = document.getElementById('live-status-state-label-text');
+      var icon = document.getElementById('live-status-state-icon');
+      var tile = root.querySelector('.live-hb-tile');
+      var goal = root.querySelector('[data-heartbeat-goal]');
+      var metric = root.querySelector('[data-heartbeat-metric]');
+      var stageWrap = document.getElementById('live-status-stage');
+      var stage = root.querySelector('[data-heartbeat-stage]');
+      var resting = document.getElementById('live-status-resting');
+      var activity = document.getElementById('live-status-activity');
+      function metricText(heartbeat) {
+        if (!heartbeat) return '';
+        var operator = heartbeat.operator === 'ge' ? '≥' : heartbeat.operator === 'le' ? '≤' : heartbeat.operator === 'eq' ? '=' : heartbeat.operator;
+        var metricName = heartbeat.metric === 'reply_rate' ? replyRateLabel : heartbeat.metric;
+        var target = heartbeat.metric === 'reply_rate' && typeof heartbeat.target === 'number' ? Math.round(heartbeat.target * 100) + '%' : String(heartbeat.target);
+        return metricTemplate.replace('{metric}', metricName).replace('{operator}', operator).replace('{target}', target);
       }
-
-      function num(n) {
-        var s = String(n);
-        return isFa ? s.replace(/\d/g, function (d) { return FA_DIGITS[Number(d)]; }) : s;
-      }
-
-      function relTime(iso) {
-        var diff = Math.max(0, Date.now() - new Date(iso).getTime());
-        var minutes = Math.floor(diff / 60000);
-        if (minutes < 1) return I18N.justNow || "";
-        if (minutes < 60) return (minutes === 1 ? I18N.minuteAgo : I18N.minutesAgo || "").replace("{n}", num(minutes));
-        var hours = Math.floor(minutes / 60);
-        if (hours < 24) return (hours === 1 ? I18N.hourAgo : I18N.hoursAgo || "").replace("{n}", num(hours));
-        var days = Math.floor(hours / 24);
-        return (days === 1 ? I18N.dayAgo : I18N.daysAgo || "").replace("{n}", num(days));
-      }
-
-      function heartbeatTarget(hb) {
-        var labels = I18N.metricLabels || {};
-        var metric = labels[hb.metric] || hb.metric;
-        var op = hb.operator === "ge" ? ">" : hb.operator === "le" ? "<" : hb.operator === "eq" ? "=" : hb.operator;
-        var target = hb.target;
-        if (typeof target === "number" && hb.metric === "reply_rate") target = Math.round(target * 100) + "%";
-        return (I18N.metricFormat || "{metric} {operator} {target}")
-          .replace("{metric}", metric)
-          .replace("{operator}", op)
-          .replace("{target}", target);
-      }
-
-      function applyState(data) {
-        var running = data.state === "running";
-        var hb = data.heartbeat || null;
-        statusRoot.setAttribute("data-live-state", data.state);
-        statusRoot.setAttribute("data-heartbeat-state", hb ? "running" : "resting");
-        statusRoot.classList.toggle("live-state-running", !!hb);
-        statusRoot.classList.toggle("live-state-resting", !hb);
-        if (statusTile) {
-          statusTile.classList.toggle("bg-success-soft", !!hb);
-          statusTile.classList.toggle("text-success", !!hb);
-          statusTile.classList.toggle("bg-destructive-soft", !hb);
-          statusTile.classList.toggle("text-destructive", !hb);
+      function apply(data) {
+        var running = data && data.state === 'running' && data.heartbeat;
+        var heartbeat = running ? data.heartbeat : null;
+        root.setAttribute('data-live-state', running ? 'running' : 'resting');
+        root.setAttribute('data-heartbeat-state', running ? 'running' : 'resting');
+        root.classList.toggle('live-state-running', !!running);
+        root.classList.toggle('live-state-resting', !running);
+        if (label) label.textContent = running ? runningLabel : restingLabel;
+        if (icon) icon.className = 'bx ' + (running ? 'bx-run text-primary' : 'bx-time-five text-muted-foreground') + ' icon-sm';
+        if (tile) {
+          tile.classList.toggle('bg-success-soft', !!running);
+          tile.classList.toggle('text-success', !!running);
+          tile.classList.toggle('bg-destructive-soft', !running);
+          tile.classList.toggle('text-destructive', !running);
         }
-        if (stateIconEl) {
-          stateIconEl.className = "bx " + (running ? "bx-run text-primary" : "bx-time-five text-muted-foreground") + " icon-sm";
+        if (goal) goal.textContent = heartbeat ? heartbeat.goal_name : '';
+        if (metric) metric.textContent = metricText(heartbeat);
+        if (stage) stage.textContent = heartbeat && heartbeat.stage ? heartbeat.stage : '';
+        if (stageWrap) stageWrap.classList.toggle('hidden', !(heartbeat && heartbeat.stage));
+        if (resting) {
+          resting.textContent = restingText;
+          resting.classList.toggle('hidden', !!running);
         }
-        if (stateLabelEl) stateLabelEl.textContent = running ? I18N.running : I18N.resting;
-        if (hb && hb.goal_name) {
-          if (hbGoalEl) hbGoalEl.textContent = hb.goal_name;
-          if (hbMetricEl) hbMetricEl.textContent = heartbeatTarget(hb);
-          if (hbStageEl) hbStageEl.textContent = hb.stage || "";
-          if (hbStageWrap) hbStageWrap.classList.remove("hidden");
-          if (restingEl) restingEl.classList.add("hidden");
-        } else {
-          if (hbGoalEl) hbGoalEl.textContent = "";
-          if (hbMetricEl) hbMetricEl.textContent = "";
-          if (hbStageEl) hbStageEl.textContent = "";
-          if (hbStageWrap) hbStageWrap.classList.add("hidden");
-          if (restingEl) restingEl.classList.remove("hidden");
-        }
-        if (activityEl) {
-          if (data.last_activity_at) {
-            activityEl.textContent = (I18N.lastActivity || "{time}").replace("{time}", relTime(data.last_activity_at));
-            activityEl.classList.remove("hidden");
-          } else {
-            activityEl.classList.add("hidden");
+        if (activity) {
+          var activityText = '';
+          if (data && data.last_activity_at) {
+            var formatted = new Intl.DateTimeFormat(localeCode, { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(data.last_activity_at));
+            activityText = activityTemplate.replace('{time}', formatted);
           }
-        }
-        if (data.totals) {
-          var statKeys = ["goals_total", "goals_active", "goals_achieved", "goals_abandoned", "runs", "evidence", "decisions", "approvals", "hypotheses", "memory_claims"];
-          for (var i = 0; i < statKeys.length; i++) {
-            var statEl = document.querySelector("[data-stat-" + statKeys[i].replace(/_/g, "-") + "]");
-            if (statEl && typeof data.totals[statKeys[i]] === "number") statEl.textContent = num(data.totals[statKeys[i]]);
-          }
+          activity.textContent = activityText;
+          activity.classList.toggle('hidden', !activityText);
         }
       }
-
-      function poll() {
-        fetch("/live-state.json?t=" + Date.now(), { cache: "no-store" })
-          .then(function (res) { if (!res.ok) throw new Error("poll failed"); return res.json(); })
-          .then(applyState)
-          .catch(function () {
-            /* keep the previous state silently */
-          });
-      }
-
-      // First fetch immediately after load, then every 30s.
+      function poll() { fetch('/live-state.json?t=' + Date.now(), { cache: 'no-store' }).then(function (response) { if (!response.ok) throw new Error('status'); return response.json(); }).then(apply).catch(function () {}); }
       poll();
       window.setInterval(poll, 30000);
     })();

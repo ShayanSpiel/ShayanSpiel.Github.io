@@ -1,56 +1,59 @@
 # Company voice
 
-Write like a founder who has built and operated the system: specific, calm,
-plain-spoken, and evidence-aware.
+Write like a founder speaking to one established operator: clear, compact,
+specific, and useful.
 
-- Lead with the buyer's work and consequence, not AI terminology.
-- Use concrete observations and real constraints.
-- Separate what was built, what was tested, and what produced a business result.
-- Avoid inflated autonomy, transformation, and replacement claims.
-- Preserve Shayan's first-person ownership when the communication is founder-led.
+## One idea
 
-Language-specific mechanics remain in the copywriting and translation skills.
+Every piece communicates one idea. Start from the buyer's world, not SpielOS's
+internal work.
 
-## One Idea Hierarchy
+Before writing, lock only:
 
-Every public communication follows one message hierarchy:
+- **Reader** — one ICP segment from `icp.md`.
+- **Moment** — one situation they recognize from their work.
+- **Idea** — one useful point about that situation.
+- **Result** — what becomes faster, cheaper, safer, or easier.
+- **Proof** — optional evidence that directly supports the idea.
 
-1. **Company promise** — the durable commercial direction: help an established
-   business pursue roughly 2× the output at half the operating cost, one
-   workflow at a time. This is the offer and desired outcome, not fabricated
-   proof; actual claims must be measured against the buyer's baseline.
-2. **Topic-specific idea** — select the one problem, mechanism, objection,
-   lesson, proof point, or outcome this page, article, email, video, graphic, or
-   funnel step needs to communicate. Different assets may choose different
-   topics, but each topic must have an explicit connection to the company
-   promise.
-3. **Asset execution** — express that topic through one clear, compelling title
-   and one coherent argument. Description, evidence, visual hierarchy,
-   narration, music, and CTA must support that idea instead of introducing
-   competing promises.
+Do not publish our production vocabulary: batch, campaign, hook, correction,
+review gate, content dispatch, Artifact, Department, runtime, or harness rule.
+Internal work is source evidence only when a buyer can use the lesson without
+understanding how SpielOS produces content.
 
-Before producing an asset, answer: if the audience remembers only one idea,
-what should it be, why will they care, and what is the clearest appealing title
-that remains true? State the idea first. Expand only after it is understood.
-Do not mechanically repeat the company headline in every asset.
+## Copy shape
 
-## Content context and live proof
+Use the shortest shape that carries the idea:
 
-For cold social audiences, never open with advice that assumes the reader knows
-SpielOS. First establish the operator's situation, the concrete operating
-problem, and what SpielOS does; only then give the lesson, proof, or CTA. Reject
-an asset when a reasonable reader could ask “who is this for?” or “what is this
-about?” after its opening.
+1. A sharp, understandable opening.
+2. One short explanation or list.
+3. An optional natural SpielOS bridge.
+4. An optional platform-native CTA.
 
-At least every fifth paired social idea is a build-in-public story. It uses real
-company evidence to show the trigger, tension, decision, tradeoff, harness rule
-(goal, evidence, approval, or evaluation), and next measurable step. Link to
-`/live/` as proof of the company journey and retain the tracked services CTA as
-the commercial path. Never manufacture customer outcomes, virality, or learning
-that has not been observed.
+The reference standard is: clear claim, readable spacing, short bullets when
+useful, one product bridge, and the link separated from the argument.
 
-Campaign copy, titles, narration, CTA, design variables, and learning IDs live
-in one shared campaign Artifact. Departments add typed evidence to that record;
-they never copy these choices into department-owned batch files or templates.
-Design remains the only visual rendering authority. Analytics may propose only
-one documented variable for the next batch after complete comparable evidence.
+Do not force SpielOS, a CTA, a link, proof, or a company promise into every
+piece. Remove any sentence that does not strengthen the one idea.
+
+## SpielOS reminder
+
+Every fifth paired social idea is a short reminder that SpielOS is operating
+itself as an AI company. It may use one relevant public proof point, but it is
+not an internal run log or a mandatory six-part build story.
+
+Canonical reminder:
+
+`SpielOS is running itself — an AI company.`
+
+## Platform rules
+
+- Threads: native paragraphs and bullets; when used, put the destination on its
+  own line after the CTA.
+- YouTube Shorts: concise description; use `Link in bio.` and never paste a UTM
+  URL into the description.
+- Always use real line breaks. Never publish literal `\n` or `\r` markers.
+
+Product and business claims must remain supported. Delivery metadata,
+experiments, approvals, design, rendering, and analytics are added after the
+copy is written; they are not part of the writing prompt.

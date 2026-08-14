@@ -21,6 +21,12 @@ def build_parser():
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("departments")
     commands.add_parser("catalog")
+    strategy = commands.add_parser("strategy", help="show the read-only Strategy Kernel")
+    strategy.add_argument("--topic", action="append", default=[])
+    strategy.add_argument("--scope", action="append", default=[])
+    strategy.add_argument("--layer", action="append", choices=(
+        "intent", "model", "policy", "constitution"), default=[])
+    strategy.add_argument("--max-sections", type=int, default=8)
     department = commands.add_parser("department", help="install/validate Department Lego packages")
     department_commands = department.add_subparsers(dest="department_command", required=True)
     install = department_commands.add_parser("install")
@@ -115,9 +121,36 @@ def scalar(value):
         return value
 
 
+def _runtime_mode(args) -> str | None:
+    """How the CLI should open the company database, if at all.
+
+    None: no Runtime (catalog, package inspection, runner process control).
+    read: query-only snapshot. write: an explicit mutating command.
+    """
+
+    if args.command in {"departments", "catalog", "strategy"}:
+        return None
+    if args.command == "department":
+        return None
+    if args.command == "runner" and args.runner_command in {"status", "start", "stop", "enable"}:
+        return None
+    if args.command == "status":
+        return "read"
+    if args.command == "report":
+        return "read"
+    if args.command == "goal" and getattr(args, "goal_command", None) in {"list", "show"}:
+        return "read"
+    if args.command == "notifications" and args.notification_command == "list":
+        return "read"
+    if args.command == "tasks" and not getattr(args, "claim", None) and not getattr(args, "complete", None):
+        return "read"
+    return "write"
+
+
 def main(argv=None):
     args = build_parser().parse_args(argv)
-    runtime = Runtime(args.db)
+    mode = _runtime_mode(args)
+    runtime = Runtime(args.db, readonly=(mode == "read")) if mode else None
     try:
         if args.command == "departments":
             output = [{"id": key, "version": value.version, "description": value.description,
@@ -126,6 +159,24 @@ def main(argv=None):
         elif args.command == "catalog":
             from .runtime.catalog import catalog
             output = catalog()
+        elif args.command == "strategy":
+            from .runtime.models import Goal
+            from .runtime.strategy import (
+                load_strategy_kernel, select_strategy_context, strategy_kernel_summary)
+            kernel = load_strategy_kernel()
+            if args.topic or args.scope or args.layer:
+                synthetic = Goal(
+                    id="strategy-view", name="Inspect canonical strategy",
+                    owner_id="director", metric="strategy_state", operator="eq",
+                    target="current", deadline=None, parent_id=None,
+                    goal_status="active", config={"strategy_context": {
+                        "topics": args.topic, "scopes": args.scope or ["director"],
+                        "layers": args.layer or ["model", "policy", "constitution"],
+                    }})
+                output = select_strategy_context(
+                    synthetic, kernel, max_sections=args.max_sections)
+            else:
+                output = strategy_kernel_summary(kernel)
         elif args.command == "department":
             from .runtime.install import (
                 install_department, normalize_department_spec, validate_department_spec)
@@ -314,7 +365,7 @@ def render_report(state):
             lines += ["", "## Proposed next run"] + [
                 f"- {key}: {value}" for key, value in evaluation["next_experiment"].items()]
             lines += ["", "## Required action",
-                      f"Ask the Director to start the next run for `{goal['id']}`."]
+                      "The next valid run starts automatically; guarded actions still need approval."]
     if cycle["run_status"] == "awaiting_approval":
         preview = cycle.get("data", {}).get("action_result", {}).get("preview_path")
         lines += ["", "## Required action", "Review and approve the prepared action."]
@@ -327,7 +378,7 @@ def _goal_line(item):
     line = (f"- {item['name']} (`{item['id']}`) · {item['owner_id']} · "
             f"{item['goal_status']} / {item['run_status']} · "
             f"{item['stage']}.{item['step']}")
-    if item.get("goal_status") == "active" and item.get("why_next"):
+    if item.get("goal_status") in {"active", "proposed"} and item.get("why_next"):
         line += f"\n  {item['why_next']}"
     return line
 
@@ -431,6 +482,10 @@ def render_status(value, history=False):
     active = value["active_goals"]
     lines += ["", f"## Active goals ({len(active)})"]
     lines.extend(_goal_line(item) for item in active) if active else lines.append("- None.")
+    proposed = value.get("proposed_goals") or []
+    if proposed:
+        lines += ["", f"## Proposed / deferred ({len(proposed)})"]
+        lines.extend(_goal_line(item) for item in proposed)
     if value["paused_goals"]:
         lines += ["", f"## Paused ({len(value['paused_goals'])})"]
         lines.extend(_goal_line(item) for item in value["paused_goals"])

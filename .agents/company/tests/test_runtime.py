@@ -39,8 +39,12 @@ class ApprovalHandler(GoalHandler):
         return StageResult("execute", {"executed": True})
 
     def evaluate(self, ctx, action_result):
+        validity = (ctx.cycle.get("run") or {}).get("evidence_validity") or "business"
         return StageResult("goal_check", {"goal_met": action_result.get("executed")},
-                           RunStatus.IDLE, goal_status=GoalStatus.ACHIEVED)
+                           RunStatus.IDLE, goal_status=GoalStatus.ACHIEVED,
+                           evaluation={"verdict": "goal_met", "goal_met": True,
+                                       "metrics": {ctx.goal.metric: True},
+                                       "validity": validity})
 
 
 class ImmediateHandler(GoalHandler):
@@ -56,8 +60,12 @@ class ImmediateHandler(GoalHandler):
         return StageResult("execute", {"done": True})
 
     def evaluate(self, ctx, action_result):
+        validity = (ctx.cycle.get("run") or {}).get("evidence_validity") or "business"
         return StageResult("goal_check", {"done": True}, RunStatus.IDLE,
                            goal_status=GoalStatus.ACHIEVED,
+                           evaluation={"verdict": "goal_met", "goal_met": True,
+                                       "metrics": {ctx.goal.metric: True},
+                                       "validity": validity},
                            learnings=[{"claim": "Immediate action worked", "evidence": {"done": True},
                                        "confidence": 1.0}])
 
@@ -135,7 +143,7 @@ class RuntimeTests(unittest.TestCase):
             runtime.once(goal["id"], holder="codex")
         runtime.store.release(goal["id"], "opencode")
 
-    def test_completed_run_parks_until_explicit_next(self):
+    def test_completed_unmet_run_continues_without_company_next(self):
         runtime = self.runtime({"iterative_test": IterativeHandler()})
         goal = runtime.create_goal(name="Improve score", owner_id="iterative_test",
                                    metric="score", operator="ge", target=0.8,
@@ -143,16 +151,18 @@ class RuntimeTests(unittest.TestCase):
         completed = runtime.once(goal["id"])
         self.assertEqual(completed["cycle"]["run_status"], "completed")
         self.assertEqual(completed["cycle"]["sequence"], 1)
-        self.assertEqual(runtime.once(goal["id"])["cycle"]["sequence"], 1)
         notes = runtime.store.notifications("pending")
         self.assertEqual([note["kind"] for note in notes], ["run_completed"])
-        self.assertEqual(notes[0]["payload"]["required_user_action"],
-                         "Ask the Director to start the proposed next run")
+        self.assertIsNone(notes[0]["payload"]["required_user_action"])
+        self.assertIn("starts automatically", notes[0]["why_next"])
 
-        started = runtime.next(goal["id"])
-        self.assertEqual(started["cycle"]["sequence"], 2)
-        self.assertEqual(started["cycle"]["run_status"], "idle")
-        self.assertEqual(started["run"]["changed_variables"], {"sample": "next"})
+        continued = runtime.once(goal["id"])
+        self.assertEqual(continued["cycle"]["sequence"], 2)
+        self.assertEqual(continued["run"]["changed_variables"], {"sample": "next"})
+        events = runtime.store.events(goal["id"])
+        started = [item for item in events if item["kind"] == "run.started"
+                   and item["payload"].get("automatic")]
+        self.assertTrue(started)
 
     def test_email_shortfall_emits_typed_director_action(self):
         runtime = self.runtime({"email": EmailWorkflow()})
@@ -188,8 +198,140 @@ class RuntimeTests(unittest.TestCase):
         result = runtime.once(parent["id"])
         self.assertEqual(runtime.status(child["id"])["goal"]["goal_status"], "achieved")
         self.assertEqual(result["goal"]["goal_status"], "achieved")
-        self.assertEqual(runtime.store.memories("immediate_test", child["id"])[0]["claim"],
-                         "Immediate action worked")
+        self.assertEqual((), runtime.store.memories("immediate_test", child["id"]))
+
+    def test_director_technical_children_cannot_satisfy_business_outcome(self):
+        runtime = self.runtime({"director": Director(), "immediate_test": ImmediateHandler()})
+        parent = runtime.create_goal(
+            name="Generate 10 daily services leads", owner_id="director",
+            metric="all_children_achieved", operator="eq", target=True, config={})
+        children = [runtime.create_goal(
+            name=name, owner_id="immediate_test", metric="done", operator="eq", target=True,
+            parent_id=parent["id"], run_type="system_improvement",
+            evidence_validity="technical_only", config={}) for name in (
+                "Build attribution infrastructure", "Build content pipeline infrastructure")]
+
+        for child in children:
+            self.assertEqual(runtime.once(child["id"])["goal"]["goal_status"], "achieved")
+
+        result = runtime.once(parent["id"])
+
+        self.assertNotEqual(result["goal"]["goal_status"], "achieved")
+        self.assertFalse(result["evaluation"]["goal_met"])
+        self.assertEqual(result["cycle"]["data"]["evaluation"]["achieved_children"], 2)
+        self.assertEqual(result["cycle"]["data"]["evaluation"]["accepted_achieved_children"], 0)
+
+    def test_director_system_improvement_decision_preserves_strategic_lineage(self):
+        goal = Goal("parent", "Increase qualified services leads", "director", "sales",
+                    "ge", 10, None, None, "active", {})
+        proposal = {
+            "owner_id": "outbound", "from_version": "2.0.0", "target_version": "2.0.1",
+            "problem": "Transport failures invalidated the acquisition experiment",
+            "allowed_files": ["outbound.py"], "acceptance_tests": ["python -m unittest"],
+            "observed_reality": "Transport failed for the controlled batch",
+            "causal_hypothesis": "Provider result mapping drops successful sends",
+            "smallest_intervention": "Repair outbound transport mapping only",
+            "expected_measurable_effect": "Child run produces valid send evidence",
+            "stop_condition": "Acceptance tests pass and the child can resume",
+        }
+        child = {
+            "id": "child-outbound", "goal_status": "active",
+            "cycle": {"run_status": "completed"},
+            "evaluation": {"run_id": "run-child", "validity": "contaminated",
+                           "contamination_reason": "Transport failed for the controlled batch",
+                           "next_experiment": {"system_improvement": proposal}},
+        }
+        created = []
+        ctx = GoalContext(goal, {"children": (child,)}, (), lambda _key: None,
+                          create_child_goal=lambda spec: created.append(spec) or {"id": "repair"})
+
+        decision = Director().decide(ctx, {"children": [child]})
+        lineage = decision.decision["payload"]["strategic_lineage"]
+
+        self.assertEqual(lineage["business_goal"]["id"], "parent")
+        self.assertEqual(lineage["observed_reality"], "Transport failed for the controlled batch")
+        self.assertEqual(lineage["diagnosis_level"], "system")
+        self.assertTrue(lineage["causal_hypothesis"])
+        self.assertTrue(lineage["smallest_intervention"])
+        self.assertTrue(lineage["expected_measurable_effect"])
+        self.assertTrue(lineage["stop_condition"])
+        self.assertTrue(lineage["non_goals"])
+
+        Director().act(ctx, decision.payload)
+        self.assertEqual(created[0]["config"]["strategic_lineage"], lineage)
+
+    def test_director_system_improvement_decision_links_child_evidence(self):
+        runtime = self.runtime({
+            "director": Director(),
+            "immediate_test": ImmediateHandler(),
+            "system-improvement": SystemImprovement(),
+        })
+        parent = runtime.create_goal(
+            name="Increase qualified services leads", owner_id="director",
+            metric="sales", operator="ge", target=10, config={})
+        child = runtime.create_goal(
+            name="Run acquisition transport", owner_id="immediate_test",
+            metric="done", operator="eq", target=True,
+            parent_id=parent["id"], config={})
+        relevant = runtime.store.add_evidence(
+            child["id"], runtime.store.cycle(child["id"])["id"],
+            "transport_failure", "outbound", {"failed": True}, "contaminated")
+        runtime.store.add_evidence(
+            child["id"], runtime.store.cycle(child["id"])["id"],
+            "market_observation", "outbound", {"visible": True}, "business")
+        proposal = {
+            "owner_id": "outbound", "from_version": "2.0.0",
+            "target_version": "2.0.1", "problem": "Transport mapping failed",
+            "allowed_files": ["outbound.py"],
+            "acceptance_tests": ["python -m unittest"],
+            "observed_reality": "Transport failed for the controlled batch",
+            "causal_hypothesis": "Provider mapping drops successful sends",
+            "smallest_intervention": "Repair outbound transport mapping only",
+            "expected_measurable_effect": "The child produces valid send evidence",
+            "stop_condition": "Acceptance passes and the child can resume",
+        }
+        child_run = runtime.store.cycle(child["id"])["id"]
+        runtime.store.add_evaluation(child["id"], child_run, {
+            "verdict": "contaminated", "goal_met": False,
+            "metrics": {"done": False}, "validity": "contaminated",
+            "contamination_reason": "Transport failed for the controlled batch",
+            "next_experiment": {"system_improvement": proposal},
+        })
+        runtime.store.update_cycle(
+            child_run, stage="OBSERVE", step="goal_check",
+            run_status="completed", data={})
+        runtime.store.update_run(
+            child_run, status="completed", validity="contaminated",
+            contamination_reason="Transport failed for the controlled batch")
+
+        runtime.once(parent["id"])
+
+        decisions = runtime.store.decisions(runtime.store.cycle(parent["id"])["id"])
+        intervention = next(item for item in decisions
+                            if item["decision_type"] == "system_improvement")
+        self.assertEqual(intervention["evidence_ids"], [relevant["id"]])
+
+    def test_director_blocks_untraceable_system_improvement(self):
+        goal = Goal("parent", "Increase qualified services leads", "director", "sales",
+                    "ge", 10, None, None, "active", {})
+        child = {
+            "id": "child-outbound", "goal_status": "active",
+            "cycle": {"run_status": "completed"},
+            "evaluation": {"run_id": "run-child", "validity": "contaminated",
+                           "contamination_reason": "",
+                           "next_experiment": {"system_improvement": {
+                               "owner_id": "outbound", "from_version": "2.0.0",
+                               "target_version": "2.0.1", "allowed_files": ["outbound.py"],
+                               "acceptance_tests": ["python -m unittest"]}}},
+        }
+        ctx = GoalContext(goal, {"children": (child,)}, (), lambda _key: None)
+
+        result = Director().decide(ctx, {"children": [child]})
+
+        self.assertEqual(result.run_status, RunStatus.BLOCKED)
+        self.assertEqual(result.decision["type"], "block_untraceable_system_improvement")
+        self.assertIn("observed_reality", result.payload["defects"])
+        self.assertNotEqual(result.payload["action"], "create_system_improvement")
 
     def test_director_surfaces_child_approval_without_approving_it(self):
         runtime = self.runtime({"director": Director(), "approval_test": ApprovalHandler()})
@@ -278,7 +420,8 @@ class RuntimeTests(unittest.TestCase):
             run_type="system_improvement", evidence_validity="technical_only", config={
                 "owner_id": "email", "from_version": "2.0.0", "target_version": "2.0.1",
                 "problem": "provider result mapping is wrong", "allowed_files": ["email.py"],
-                "acceptance_tests": ["python -m unittest"], "originating_run_id": "run-origin"})
+                "acceptance_tests": ["python -m unittest"], "originating_run_id": "run-origin",
+                "owner_override": True})
         parked = runtime.once(goal["id"])
         self.assertEqual(parked["cycle"]["run_status"], "awaiting_approval")
         runtime.approve(goal["id"])
@@ -347,31 +490,27 @@ class RuntimeTests(unittest.TestCase):
                                        "test_recipients": recipients, "throttle_seconds": 0,
                                        "evidence_window_hours": 0,
                                        "reply_capture": "manual_inbox"})
-        with patch("company.departments.outbound.email_workflow._write_test_preview", return_value=Path("/tmp/preview.md")):
-            runtime.once(goal["id"])
-        runtime.approve(goal["id"])
-        with patch("company.departments.outbound.workflows.email.providers.send_email",
+        with patch("company.departments.outbound.email_workflow._write_test_preview",
+                   return_value=Path("/tmp/preview.md")), \
+             patch("company.departments.outbound.workflows.email.providers.send_email",
                    side_effect=[{"id": f"provider-{index}"} for index in range(4)]), \
              patch("company.departments.outbound.email_workflow._observe_test_provider", return_value=[]):
+            runtime.once(goal["id"])
+            runtime.approve(goal["id"])
             Runner(runtime).tick(goal["id"])
 
-        completed = runtime.status(goal["id"])
-        self.assertEqual(completed["goal"]["goal_status"], "active")
-        self.assertEqual(completed["cycle"]["run_status"], "completed")
-        self.assertEqual(completed["evaluation"]["verdict"], "not_yet")
-        self.assertEqual(completed["evaluation"]["next_experiment"]["change_one_variable"],
-                         "test_token")
-        self.assertIn("Proposed next run", render_report(completed))
-        self.assertIn("run_completed",
-                      {item["kind"] for item in runtime.store.notifications("pending")})
-
-        runtime.next(goal["id"])
-        with patch("company.departments.outbound.email_workflow._write_test_preview", return_value=Path("/tmp/preview-2.md")):
-            Runner(runtime).tick(goal["id"])
         next_state = runtime.status(goal["id"])
+        self.assertEqual(next_state["goal"]["goal_status"], "active")
         self.assertEqual(next_state["cycle"]["sequence"], 2)
         self.assertEqual(next_state["cycle"]["run_status"], "awaiting_approval")
         self.assertEqual(next_state["run"]["changed_variables"], {"test_token": "new_run_token"})
+        self.assertIsNone(runtime.store.approval(
+            goal["id"], next_state["cycle"]["id"], "execute"))
+        evaluation = runtime.store.latest_evaluation_for_goal(goal["id"])
+        self.assertEqual(evaluation["verdict"], "not_yet")
+        self.assertEqual(evaluation["next_experiment"]["change_one_variable"], "test_token")
+        self.assertIn("run_completed",
+                      {item["kind"] for item in runtime.store.notifications("pending")})
 
     def test_resend_observer_imports_opens_and_replies_then_achieves_goal(self):
         runtime = self.runtime({"email": EmailWorkflow()})
@@ -476,7 +615,9 @@ class RuntimeTests(unittest.TestCase):
             outcome = runner.tick(child["id"])
         self.assertTrue(outcome["advanced"])
         self.assertEqual(runtime.status(child["id"])["goal"]["goal_status"], "achieved")
-        self.assertEqual(runtime.status(parent["id"])["goal"]["goal_status"], "achieved")
+        # Parent is a business reply-rate outcome; a technical system_test child
+        # cannot convert it into a technical readiness Goal.
+        self.assertNotEqual(runtime.status(parent["id"])["goal"]["goal_status"], "achieved")
         kinds = {item["kind"] for item in runtime.store.notifications("pending")}
         self.assertIn("goal_achieved", kinds)
 
@@ -490,7 +631,8 @@ class RuntimeTests(unittest.TestCase):
                 "from_version": "new", "target_version": "1.0.0",
                 "problem": "Create content distribution capability",
                 "allowed_files": [".agents/company/departments/content/department.py"],
-                "acceptance_tests": ["python -m unittest"]})
+                "acceptance_tests": ["python -m unittest"],
+                "owner_override": True})
         blocked = runtime.once(invalid["id"])
         self.assertIn("department_spec", blocked["cycle"]["data"]["decision"]["missing"])
 
@@ -505,7 +647,8 @@ class RuntimeTests(unittest.TestCase):
                 "acceptance_tests": ["python -m unittest"],
                 "department_spec": {"purpose": "distribute content", "metrics": ["qualified_views"],
                                 "external_actions": ["publish"], "approval_points": ["publish"],
-                                "evidence_sources": ["analytics"]}})
+                                "evidence_sources": ["analytics"]},
+                "owner_override": True})
         parked = runtime.once(valid["id"])
         task = parked["change_tasks"][0]
         self.assertEqual(task["change_kind"], "create_department")

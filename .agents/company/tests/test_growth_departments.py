@@ -35,6 +35,42 @@ class GrowthDepartmentTests(unittest.TestCase):
         lego = {item["id"] for item in value["departments"] if item.get("lego")}
         self.assertTrue({"content", "design", "analytics", "seo"}.issubset(lego))
 
+    def test_representative_departments_share_frozen_lego_contract(self):
+        value = catalog()
+        representatives = {
+            item["id"]: item for item in value["departments"]
+            if item["id"] in {"content", "analytics", "outbound"}
+        }
+        self.assertEqual({"content", "analytics", "outbound"}, set(representatives))
+        package_fields = {
+            "id", "version", "description", "agent_ids", "workflow_agents",
+            "evidence_metrics", "metrics", "config_schema", "workflows",
+            "package_defects", "lego",
+        }
+        workflow_fields = {
+            "id", "description", "steps", "agents", "skills", "approvals",
+            "evidence", "connections", "graph",
+        }
+        step_fields = {
+            "id", "kind", "employee_id", "produces", "requires", "skill_ids",
+            "connection_ids",
+        }
+        for department in representatives.values():
+            self.assertEqual([], department["package_defects"])
+            self.assertTrue(department["lego"])
+            self.assertEqual(package_fields, set(department))
+            self.assertTrue(department["metrics"])
+            self.assertTrue(department["evidence_metrics"])
+            self.assertTrue(department["workflows"])
+            for workflow in department["workflows"]:
+                self.assertEqual(workflow_fields, set(workflow))
+                self.assertTrue(workflow["steps"])
+                self.assertTrue(workflow["agents"])
+                self.assertTrue(workflow["evidence"])
+                for step in workflow["graph"]:
+                    self.assertEqual(step_fields, set(step))
+                    self.assertIn(step["kind"], {"employee", "approval", "connection", "machine"})
+
     def test_department_requests_agent_then_evaluates_typed_evidence(self):
         goal = Goal("g", "graphics", "design", "approved_designs", "ge", 1,
                     None, None, "active", {"workflow": "social-visual"})

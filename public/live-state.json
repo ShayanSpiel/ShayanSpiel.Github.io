@@ -1,37 +1,37 @@
 {
   "current_run": {
-    "created_at": "2026-08-13T19:31:32.273247+00:00",
-    "goal_id": "goal-website-conversion-rebuild-v1-20260813",
-    "goal_name": "Implement website conversion rebuild plan on review branch",
+    "created_at": "2026-08-14T01:25:32.461141+00:00",
+    "goal_id": "goal-campaign-scene-source-alignment-v1-20260812",
+    "goal_name": "Bind campaign narration and motion scenes to one current SpielOS source",
     "owner_id": "system-improvement",
-    "run_id": "run-93ad39d4b4",
+    "run_id": "run-e8f5db4d9f",
     "run_status": "blocked",
     "stage": "ACT",
-    "updated_at": "2026-08-13T21:33:32.297779+00:00"
+    "updated_at": "2026-08-14T01:25:32.584138+00:00"
   },
   "heartbeat": {
-    "goal_id": "goal-email-send-20260813-b4",
-    "goal_name": "English outbound send batch 4: next 50 from remaining queue via Brevo (owner order 2026-08-13)",
-    "metric": "reply_rate",
-    "operator": "ge",
+    "goal_id": "goal-content-growth-operations-v1-20260812",
+    "goal_name": "Operate the content growth program toward 200 daily visits and 10 daily services leads",
+    "metric": "all_children_achieved",
+    "operator": "eq",
     "run_status": "waiting",
-    "stage": "EVALUATE",
-    "target": 0.3,
-    "updated_at": "2026-08-13T20:55:54.582594+00:00"
+    "stage": "OBSERVE",
+    "target": true,
+    "updated_at": "2026-08-13T23:42:08.305471+00:00"
   },
-  "last_activity_at": "2026-08-13T21:33:32.297779+00:00",
-  "last_sync_at": "2026-08-13T21:33:32.310245+00:00",
+  "last_activity_at": "2026-08-14T01:40:06.216395+00:00",
+  "last_sync_at": "2026-08-14T01:40:06.229139+00:00",
   "state": "running",
   "totals": {
-    "approvals": 73,
-    "decisions": 156,
-    "evidence": 1231,
+    "approvals": 94,
+    "decisions": 189,
+    "evidence": 1284,
     "goals_abandoned": 12,
-    "goals_achieved": 62,
+    "goals_achieved": 66,
     "goals_active": 12,
-    "goals_total": 88,
-    "hypotheses": 28,
+    "goals_total": 93,
+    "hypotheses": 32,
     "memory_claims": 5,
-    "runs": 89
+    "runs": 103
   }
 }

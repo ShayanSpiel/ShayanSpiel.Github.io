@@ -37,23 +37,18 @@ instead of restating the architecture.
 This is Shayan Spiel's founder-led buyer and lead-conversion website for SpielOS.
 The commercial objective is to turn qualified visitors into implementation leads
 and product buyers through the services, Agent Brief, and contact flows.
-The waitlist remains a protected legacy product route and is not the site's
-primary conversion path.
+The former waitlist destination has been replaced by the Architecture page and
+is not part of the site's conversion path.
 
 ## Protected scope
 
-The `/waitlist` route and everything exclusively supporting it is protected.
-Do not edit, refactor, rename, move, redirect, or modify any file under:
-- `src/pages/waitlist.astro`
-- `src/components/showcase/*`
+The retired showcase implementation remains protected. Do not edit, refactor,
+rename, move, or modify any file under `src/components/showcase/*`.
+`src/pages/waitlist.astro` and `src/pages/fa/waitlist.astro` are approved direct
+redirect wrappers to their localized Architecture routes. Do not add any other
+behavior to them.
 
-Exception: the waitlist is now fully locale-aware like the rest of the site.
-All user-facing strings live in `src/i18n/translations.ts` under the `waitlist.*`
-key namespace. Never add hardcoded English text to showcase components; always
-route through `t(locale, "waitlist.*")`. `src/pages/fa/waitlist.astro` is the
-thin FA wrapper (matches all other FA pages).
-
-The navbar CTA points to `/services/`. The Agent Brief section and page remain
+The navbar CTA points to `/services/agent-brief/#request`. The Agent Brief section and page remain
 the existing assessment experience; do not replace them with a generic CTA
 page. The legacy waitlist is not a default CTA.
 
@@ -84,7 +79,9 @@ belong under `.spielos/artifacts/`, not strategy, assets, or skills.
 | `/contact/` | `src/pages/contact.astro` | Business contact form (EN) |
 | `/services/` | `src/pages/services.astro` | Buyer-facing AI implementation offer (EN) |
 | `/services/agent-brief/` | `src/pages/services/agent-brief.astro` | Agent Brief experience (EN) |
-| `/waitlist/` | `src/pages/waitlist.astro` | Product landing + waitlist (locale-aware) |
+| `/architecture/` | `src/pages/architecture.astro` | Buyer-facing company architecture (EN) |
+| `/live/` | `src/pages/live.astro` | Plain-language live company record (EN) |
+| `/waitlist/` | `src/pages/waitlist.astro` | 301 redirect to `/architecture/` |
 | `/about/` | `src/pages/about.astro` | SpielOS about page (EN) |
 | `/fa/` | `src/pages/fa/index.astro` | Homepage (FA) |
 | `/fa/about/` | `src/pages/fa/about.astro` | About page (FA) |
@@ -92,8 +89,10 @@ belong under `.spielos/artifacts/`, not strategy, assets, or skills.
 | `/fa/notes/` | `src/pages/fa/notes/index.astro` | Notes index (FA) |
 | `/fa/notes/[slug]/` | `src/pages/fa/notes/[...slug].astro` | Individual note pages (FA) |
 | `/fa/contact/` | `src/pages/fa/contact.astro` | Contact form (FA) |
-| `/fa/waitlist/` | `src/pages/fa/waitlist.astro` | Product landing + waitlist (FA) |
-| `/features/` | `src/pages/features/index.astro` | Features hub — four-layer architecture (EN) |
+| `/fa/architecture/` | `src/pages/fa/architecture.astro` | Buyer-facing company architecture (FA) |
+| `/fa/live/` | `src/pages/fa/live.astro` | Plain-language live company record (FA) |
+| `/fa/waitlist/` | `src/pages/fa/waitlist.astro` | 301 redirect to `/fa/architecture/` |
+| `/features/` | `src/pages/features/index.astro` | 301 redirect to `/architecture/` |
 | `/features/chat/` | `src/pages/features/chat/index.astro` | Chat hub — execution modes (EN) |
 | `/features/chat/director-mode/` | `src/pages/features/chat/director-mode.astro` | Director Mode — long-running agent sessions (EN) |
 | `/features/chat/direct-mode/` | `src/pages/features/chat/direct-mode.astro` | Direct Mode — workflow execution and scheduling (EN) |
@@ -171,19 +170,19 @@ Persian headings use heavier font-weight (h1=800, h2=700, h3+=600) via `[dir="rt
 
 Single source of truth: `src/config.ts` → `NAV_LINKS`.
 
-Default nav: Services → `/services/`, Features → `/features/`, Notes → `/notes/`,
-Founder → `/founder/`, Contact → `/contact/`.
-Primary navbar CTA: Services → `/services/`.
+Default nav: Services → `/services/`, Architecture → `/architecture/`, Live →
+`/live/`, Notes → `/notes/`, Founder → `/founder/`.
+Primary navbar CTA: Request an Agent Brief → `/services/agent-brief/#request`.
 The Agent Brief experience remains at `/services/agent-brief/` and in the
 services page.
 
-Showcase nav (waitlist page only): anchor links to page sections.
+The retired showcase navigation is not used by any active route.
 
 ## Footer
 
 Single source of truth: `src/config.ts` → `FOOTER_LINKS`.
 
-Default footer: SpielOS, Services, Agent Briefing, Features, Notes, Founder, Contact.
+Default footer: SpielOS, Agent Brief, Services, Architecture, Live, Notes, Founder, Contact.
 Social icons: X, GitHub.
 Copyright: dynamic year, "SpielOS is independently built by Shayan Spiel."
 

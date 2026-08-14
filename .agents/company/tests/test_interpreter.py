@@ -24,6 +24,44 @@ class PackageShapeTests(unittest.TestCase):
 
 
 class InterpreterRuntimeTests(unittest.TestCase):
+    def test_persisted_decision_links_only_evidence_used(self):
+        class ProvenanceDepartment(InterpretedDepartment, Department):
+            id = department_id = "provenance-fixture"
+            version = "1.0.0"
+            description = "Exact evidence provenance fixture"
+            agent_ids = ("publisher",)
+            goal_schema = {"metrics": ["published"],
+                           "config": {"workflow": {"enum": ["primary"]}}}
+            evidence_metrics = {"published": ("publication_receipt",)}
+            workflows = (WorkflowSpec(
+                "primary", "fixture", ("approve", "dispatch"),
+                ("publisher",), (), ("publish",),
+                ("campaign_ready", "publication_receipt"), (), graph=(
+                    WorkflowStep("approve", "approval", requires=("campaign_ready",)),
+                )),)
+
+        with tempfile.TemporaryDirectory() as tmp:
+            runtime = Runtime(Path(tmp) / "company.sqlite", {
+                ProvenanceDepartment.id: ProvenanceDepartment(),
+            })
+            goal = runtime.create_goal(
+                name="Link the decision", owner_id=ProvenanceDepartment.id,
+                metric="published", operator="ge", target=1,
+                config={"workflow": "primary"})
+            relevant = runtime.add_evidence(
+                goal["id"], kind="campaign_ready", source="quality-gate",
+                payload={"ready": True}, validity="technical_only")["evidence"][-1]
+            runtime.add_evidence(
+                goal["id"], kind="unrelated_observation", source="observer",
+                payload={"visible": True}, validity="technical_only")
+
+            runtime.once(goal["id"])
+
+            decisions = runtime.store.decisions(runtime.store.cycle(goal["id"])["id"])
+            approval = next(item for item in decisions
+                            if item["decision_type"] == "request_approval")
+            self.assertEqual(approval["evidence_ids"], [relevant["id"]])
+
     def test_machine_evidence_is_reobserved_before_the_approval_node(self):
         class MachineThenApprovalDepartment(InterpretedDepartment, Department):
             id = department_id = "machine-then-approval"
@@ -108,7 +146,7 @@ class InterpreterRuntimeTests(unittest.TestCase):
             self.assertEqual(
                 "approve_two", second["cycle"]["data"]["action_result"]["step_id"])
 
-    def test_design_graph_opens_work_order_and_learns(self):
+    def test_design_graph_opens_work_order_without_completion_diary(self):
         with tempfile.TemporaryDirectory() as tmp:
             runtime = Runtime(Path(tmp) / "company.sqlite")
             goal = runtime.create_goal(
@@ -128,15 +166,10 @@ class InterpreterRuntimeTests(unittest.TestCase):
             runtime.add_evidence(goal["id"], kind="render_report", source="designer",
                                  payload={"file": "render-report.json"}, validity="technical_only")
             runtime.retry(goal["id"])
-            shortfall = runtime.once(goal["id"])
-            self.assertEqual("blocked", shortfall["cycle"]["run_status"])
-            runtime.add_evidence(goal["id"], kind="graphic_render", source="designer",
-                                 payload={"file": "card.png"}, validity="technical_only")
-            runtime.retry(goal["id"])
             done = runtime.once(goal["id"])
             self.assertEqual("achieved", done["goal"]["goal_status"])
             memories = runtime.store.memories("design", goal["id"])
-            self.assertTrue(any("achieved" in item["claim"] for item in memories))
+            self.assertEqual((), memories)
 
     def test_content_publish_graph_approves_then_connection_work_order(self):
         with tempfile.TemporaryDirectory() as tmp:

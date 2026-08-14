@@ -1,9 +1,9 @@
 export const SITE = {
   name: "SpielOS",
-  tagline: "Notes from the gap",
+  tagline: "AI workflow systems for established businesses",
   url: "https://spielos.xyz",
-  description: "I spent ten years building startup systems and more than 20 products. SpielOS is where that work finally became one AI employee and department platform.",
-  descriptionFa: "یه دهه سیستم‌های استارتاپ و بیشتر از ۲۰ محصول ساختم. SpielOS جاییه که اون کار بالاخره تبدیل به یه سکوی کارمند و بخش AI شد.",
+  description: "SpielOS runs real company work through supervised AI departments. Start with one repetitive workflow and a clear Agent Brief.",
+  descriptionFa: "SpielOS کارهای واقعی شرکت رو با دپارتمان‌های AI و زیر نظر آدم‌ها اجرا می‌کنه. از یک ورک‌فلوی تکراری و یک Agent Brief روشن شروع کن.",
   locale: "en",
   colorScheme: "dark",
   themeColor: "#282828",
@@ -100,9 +100,13 @@ export const FORMS = {
   contact: "https://formsubmit.co/66shayan@gmail.com",
 };
 
-export const WAITLIST_URL = "/waitlist/";
+// Compatibility alias for older imports. The public waitlist route now redirects here.
+export const WAITLIST_URL = "/architecture/";
 export const SERVICES_PATH = "/services/";
-export const AGENT_BRIEFING_PATH = "/services/#agent-briefing";
+// Legacy path retired after conversion migration: AGENT_BRIEFING_PATH = "/services/#agent-briefing"
+export const AGENT_BRIEFING_PATH = "/services/agent-brief/#request";
+/** Canonical Agent Brief request form destination (inline form on the Agent Brief page). */
+export const AGENT_BRIEF_REQUEST_PATH = "/services/agent-brief/#request";
 
 export interface NavLink {
   label: string;
@@ -114,10 +118,10 @@ export interface NavLink {
 export const NAV_LINKS: { default: NavLink[]; showcase: NavLink[] } = {
   default: [
     { label: "Services", href: "/services/" },
-    { label: "Features", href: "/features/" },
+    { label: "Architecture", href: "/architecture/" },
+    { label: "Live", href: "/live/", live: true },
     { label: "Notes", href: "/notes/" },
     { label: "Founder", href: "/founder/" },
-    { label: "Live AI Company", href: "/live/", live: true },
   ],
   showcase: [
     { label: "How it works", href: "#how-it-works" },
@@ -128,12 +132,13 @@ export const NAV_LINKS: { default: NavLink[]; showcase: NavLink[] } = {
 
 export const FOOTER_LINKS = {
   default: [
-    { label: "Agent Briefing", href: AGENT_BRIEFING_PATH },
+    { label: "Agent Brief", href: AGENT_BRIEF_REQUEST_PATH },
     { label: "Services", href: "/services/" },
-    { label: "Features", href: "/features/" },
+    { label: "Architecture", href: "/architecture/" },
+    { label: "Live", href: "/live/" },
     { label: "Notes", href: "/notes/" },
     { label: "Founder", href: "/founder/" },
-    { label: "Live", href: "/live/" },
+    { label: "Contact", href: "/contact/" },
   ],
   showcase: [
     { label: "Privacy", href: "#" },

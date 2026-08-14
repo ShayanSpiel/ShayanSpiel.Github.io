@@ -16,14 +16,22 @@ from typing import Any
 from urllib.parse import parse_qs, urlparse
 
 
-SCHEMA_VERSION = "1.0"
+SCHEMA_VERSION = "1.1"
+COMPATIBLE_SCHEMA_VERSIONS = frozenset({"1.0", "1.1"})
 PLATFORMS = ("threads", "youtube")
 PLATFORM_CONTRACT = {
-    "threads": {"asset_type": "image", "size_preset": "threads-portrait"},
-    "youtube": {"asset_type": "video", "size_preset": "youtube-shorts"},
+    "threads": {"asset_type": "image", "size_preset": "threads-portrait", "link_placement": "caption"},
+    "youtube": {"asset_type": "video", "size_preset": "youtube-shorts", "link_placement": "bio"},
 }
 PHASES = ("strategy", "designed", "rendered", "approved", "delivered", "measured", "evaluated")
-SPIELOS_NOTE = "This is SpielOS, An AI company running itself."
+SPIELOS_NOTE = "This is SpielOS, An AI company running itself."  # legacy packages
+SPIELOS_REMINDER = "SpielOS is running itself — an AI company."
+LINK_IN_BIO = "Link in bio."
+INTERNAL_COPY_TERMS = {
+    "approval record", "batch", "campaign artifact", "campaign handoff",
+    "content dispatch", "content department", "creative signature", "harness rule",
+    "review gate", "runtime",
+}
 SEMANTIC_SURFACES = {"background", "panel", "panel-raised", "panel-strong", "panel-deep"}
 SEMANTIC_COLORS = {"primary", "accent", "purple", "info", "success", "warning"}
 STRATEGY_REFS = {
@@ -55,6 +63,45 @@ def _text(value: Any) -> str:
 
 def _identifier(value: Any) -> bool:
     return bool(re.fullmatch(r"[a-z0-9][a-z0-9-]{2,79}", str(value or "")))
+
+
+def _validate_copy(copy: Any, platform: str, destination: str,
+                   reminder: bool, prefix: str, errors: list[str]) -> None:
+    raw = str(copy or "").strip()
+    compact = _text(raw)
+    if not compact:
+        errors.append(f"{prefix}.copy is required")
+        return
+    if "\\n" in raw or "\\r" in raw:
+        errors.append(f"{prefix}.copy must use real line breaks, not literal escape markers")
+    public_copy = re.sub(r"https?://\S+", "", compact, flags=re.IGNORECASE).casefold()
+    for term in INTERNAL_COPY_TERMS:
+        if re.search(rf"\b{re.escape(term)}\b", public_copy):
+            errors.append(f"{prefix}.copy exposes internal production language: {term}")
+    if any(line.rstrip() != line for line in raw.splitlines()):
+        errors.append(f"{prefix}.copy must not contain trailing spaces")
+    for line in raw.splitlines():
+        if "•" in line and not line.lstrip().startswith("•"):
+            errors.append(f"{prefix}.bullets must start on their own lines")
+            break
+    has_reminder = SPIELOS_REMINDER.casefold() in public_copy
+    if reminder and not compact.endswith(SPIELOS_REMINDER):
+        errors.append(f"{prefix}.copy must end with the fifth-item SpielOS reminder")
+    if not reminder and has_reminder:
+        errors.append(f"{prefix}.copy must not include the fifth-item SpielOS reminder")
+    if platform == "threads":
+        if destination:
+            if destination not in raw:
+                errors.append(f"{prefix}.copy must include its tracked Threads destination")
+            elif destination not in {line.strip() for line in raw.splitlines()}:
+                errors.append(f"{prefix}.Threads destination must be on its own line")
+        elif "http://" in raw or "https://" in raw:
+            errors.append(f"{prefix}.copy cannot contain an untracked Threads URL")
+    elif platform == "youtube":
+        if "http://" in raw or "https://" in raw or "utm_" in raw.lower():
+            errors.append(f"{prefix}.YouTube Shorts copy must not contain a URL or UTM parameters")
+        if destination and LINK_IN_BIO.casefold() not in raw.casefold():
+            errors.append(f"{prefix}.YouTube Shorts copy must use 'Link in bio.'")
 
 
 def creative_signature(campaign_id: str, item_id: str, platform: str,
@@ -270,6 +317,15 @@ def _validate_design(design: dict[str, Any], platform: str, prefix: str,
     raw = json.dumps(design).lower()
     if "#" in raw or "rgb(" in raw or "hsl(" in raw:
         errors.append(f"{prefix}.design must not contain raw colors")
+    public_design = _text(" ".join([
+        str(design.get("eyebrow") or ""),
+        " ".join(map(str, design.get("title_lines") or [])),
+        str(design.get("supporting_text") or ""),
+        " ".join(map(str, design.get("station_labels") or [])),
+    ])).casefold()
+    for term in INTERNAL_COPY_TERMS:
+        if re.search(rf"\b{re.escape(term)}\b", public_design):
+            errors.append(f"{prefix}.design exposes internal production language: {term}")
     lines = design.get("title_lines") or []
     if not isinstance(lines, list) or not 1 <= len(lines) <= 3 or any(not _text(line) for line in lines):
         errors.append(f"{prefix}.design.title_lines must contain one to three readable lines")
@@ -285,18 +341,22 @@ def _validate_rendition(manifest: dict[str, Any], item: dict[str, Any],
         return
     if rendition.get("platform") != platform:
         errors.append(f"{prefix}.platform must be {platform}")
+    destination = str(rendition.get("destination") or "")
+    expected_placement = PLATFORM_CONTRACT[platform]["link_placement"] if destination else "none"
+    if rendition.get("link_placement") != expected_placement:
+        errors.append(f"{prefix}.link_placement must be {expected_placement}")
     content_id = str(rendition.get("content_id") or "")
     expected_content = f"{item_id}-{platform}"
     if content_id != expected_content:
         errors.append(f"{prefix}.content_id must be {expected_content}")
-    destination = str(rendition.get("destination") or "")
-    errors.extend(f"{prefix}.{error}" for error in _validate_destination(
-        destination, platform, str(manifest.get("campaign_id") or ""), content_id))
-    copy = _text(rendition.get("copy"))
-    if not copy.endswith(SPIELOS_NOTE):
-        errors.append(f"{prefix}.copy must end with the SpielOS note")
-    if destination and destination not in str(rendition.get("copy") or ""):
-        errors.append(f"{prefix}.copy must include its tracked destination")
+    if destination:
+        errors.extend(f"{prefix}.{error}" for error in _validate_destination(
+            destination, platform, str(manifest.get("campaign_id") or ""), content_id))
+    _validate_copy(rendition.get("copy"), platform, destination,
+                   item.get("sequence") == 5, prefix, errors)
+    hook_text = _text((item.get("hook") or {}).get("text"))
+    if hook_text and not _text(rendition.get("copy")).casefold().startswith(hook_text.casefold()):
+        errors.append(f"{prefix}.copy must begin with the item's locked opening")
     design = rendition.get("design") or {}
     _validate_design(design, platform, prefix, errors)
     expected_signature = creative_signature(str(manifest.get("campaign_id") or ""), item_id, platform, design)
@@ -335,6 +395,8 @@ def _validate_rendition(manifest: dict[str, Any], item: dict[str, Any],
             )
             if displayed != spoken and not url_aligned:
                 errors.append(f"{prefix}.narration scene {index + 1} spoken text must equal its displayed headline")
+        if scenes and hook_text and _text(scenes[0].get("text")).casefold() != hook_text.casefold():
+            errors.append(f"{prefix}.narration must begin with the item's locked opening")
         title = _text(" ".join(design.get("title_lines") or []))
         if controlled_scenes and scenes and _text(scenes[0].get("text")).casefold() != title.casefold():
             errors.append(f"{prefix}.narration hook must equal the complete designed title")
@@ -364,8 +426,10 @@ def validate_campaign(manifest: dict[str, Any], phase: str | None = None) -> lis
     phase = phase or str(manifest.get("phase") or "strategy")
     if phase not in PHASES:
         return [f"phase must be one of: {', '.join(PHASES)}"]
-    if manifest.get("schema_version") != SCHEMA_VERSION:
-        errors.append(f"schema_version must be {SCHEMA_VERSION}")
+    if manifest.get("schema_version") not in COMPATIBLE_SCHEMA_VERSIONS:
+        errors.append(
+            f"schema_version must be {SCHEMA_VERSION} "
+            f"(compatible: {', '.join(sorted(COMPATIBLE_SCHEMA_VERSIONS))})")
     for field in ("campaign_id", "batch_id"):
         if not _identifier(manifest.get(field)):
             errors.append(f"{field} must be a stable lowercase identifier")
@@ -393,15 +457,30 @@ def validate_campaign(manifest: dict[str, Any], phase: str | None = None) -> lis
         seen_ids.add(item_id)
         if item.get("sequence") != sequence:
             errors.append(f"items.{item_id}.sequence must be {sequence}")
-        for field in ("one_idea", "operator_context", "problem", "spielos_role"):
-            if not _text(item.get(field)):
-                errors.append(f"items.{item_id}.{field} is required")
+        brief = item.get("brief") or {}
+        for field in ("reader", "customer_moment", "one_idea", "desired_result"):
+            if not _text(brief.get(field)):
+                errors.append(f"items.{item_id}.brief.{field} is required")
+        if _text(item.get("one_idea")) != _text(brief.get("one_idea")):
+            errors.append(f"items.{item_id}.one_idea must match brief.one_idea")
+        if len(_text(brief.get("one_idea"))) > 180:
+            errors.append(f"items.{item_id}.brief.one_idea must stay under 180 characters")
+        if len(_text(brief.get("customer_moment"))) > 240:
+            errors.append(f"items.{item_id}.brief.customer_moment must stay under 240 characters")
+        public_source = " ".join(
+            _text(brief.get(field)) for field in
+            ("customer_moment", "one_idea", "desired_result", "proof")
+        ) + " " + _text((item.get("hook") or {}).get("text"))
+        public_source = public_source.casefold()
+        for term in INTERNAL_COPY_TERMS:
+            if re.search(rf"\b{re.escape(term)}\b", public_source):
+                errors.append(f"items.{item_id}.brief uses internal term: {term}")
         hook = item.get("hook") or {}
         cta = item.get("cta") or {}
         if not _identifier(hook.get("id")) or not _text(hook.get("text")):
-            errors.append(f"items.{item_id}.hook needs a stable id and context-first text")
-        if not _identifier(cta.get("id")) or not _text(cta.get("text")):
-            errors.append(f"items.{item_id}.cta needs a stable id and text")
+            errors.append(f"items.{item_id}.hook needs a stable id and clear text")
+        if cta and (not _identifier(cta.get("id")) or not _text(cta.get("text"))):
+            errors.append(f"items.{item_id}.cta must be complete when present")
         for platform in PLATFORMS:
             _validate_rendition(manifest, item, platform, phase, errors)
             rendition = (item.get("renditions") or {}).get(platform) or {}
@@ -411,12 +490,15 @@ def validate_campaign(manifest: dict[str, Any], phase: str | None = None) -> lis
                 errors.append(f"items.{item_id}.{platform} repeats a creative signature")
             seen_signatures.add(signature)
         if sequence == 5:
-            story = item.get("live_story") or {}
-            required = ("trigger", "tension", "decision", "tradeoff", "harness_rule", "next_step", "proof_url")
-            if item.get("narrative_type") != "live-journey" or any(not _text(story.get(field)) for field in required):
-                errors.append("the fifth item must be a complete live-journey story")
-            if story.get("proof_url") != "https://spielos.xyz/live/":
-                errors.append("the fifth item live story must prove the journey at https://spielos.xyz/live/")
+            reminder = item.get("reminder") or {}
+            if item.get("narrative_type") != "spielos-reminder":
+                errors.append("the fifth item must be a spielos-reminder")
+            if reminder.get("text") != SPIELOS_REMINDER:
+                errors.append("the fifth item must use the canonical SpielOS reminder")
+            if not _text(reminder.get("proof")):
+                errors.append("the fifth item reminder needs one short public proof point")
+        elif item.get("narrative_type") == "spielos-reminder":
+            errors.append("only the fifth item may be a spielos-reminder")
     measurement = manifest.get("measurement") or {}
     if measurement.get("join_keys") != ["campaign_id", "batch_id", "item_id", "content_id", "creative_signature"]:
         errors.append("measurement.join_keys must preserve the campaign-to-lead identity chain")

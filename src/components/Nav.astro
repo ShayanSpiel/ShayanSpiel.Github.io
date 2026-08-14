@@ -1,6 +1,6 @@
 ---
 import SpielOSLogo from "./SpielOSLogo.astro";
-import { NAV_LINKS, SERVICES_PATH, type NavLink } from "../config";
+import { NAV_LINKS, AGENT_BRIEF_REQUEST_PATH, type NavLink } from "../config";
 import { type Locale, t } from "../i18n/translations";
 import { localizePath } from "../i18n";
 
@@ -12,12 +12,17 @@ export interface Props {
 
 const { links, cta, locale = "en" } = Astro.props;
 
+const currentPath = Astro.url.pathname;
+
 const navLinks = links || NAV_LINKS.default.map(link => ({
   href: localizePath(link.href, locale),
   label: t(locale, `nav.${link.label.toLowerCase().replace(/\s+/g, '')}`) || link.label,
   live: Boolean(link.live),
 }));
-const ctaLink = cta || { label: t(locale, "services.cta.button"), href: SERVICES_PATH };
+const ctaLink = cta || { label: t(locale, "cta.requestAgentBrief"), href: AGENT_BRIEF_REQUEST_PATH };
+
+const normalize = (p: string) => p.replace(/\/+$/, "") || "/";
+const isCurrent = (href: string) => normalize(href) === normalize(currentPath);
 ---
 
 <nav
@@ -39,9 +44,11 @@ const ctaLink = cta || { label: t(locale, "services.cta.button"), href: SERVICES
       {navLinks.map((link) => (
         <a
           href={link.href}
+          aria-current={isCurrent(link.href) ? "page" : undefined}
           class:list={[
             "text-xs text-muted-foreground hover:text-foreground transition-colors",
             link.live && "inline-flex items-center gap-1.5",
+            isCurrent(link.href) && "text-foreground font-medium",
           ]}
         >
           {link.live && <span class="nav-live-dot" aria-hidden="true"></span>}
@@ -53,6 +60,7 @@ const ctaLink = cta || { label: t(locale, "services.cta.button"), href: SERVICES
     <div class="flex items-center gap-3 relative z-10 shrink-0">
       <a
         href={localizePath(ctaLink.href, locale)}
+        data-open-contact-modal
         class="hidden sm:inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-4 h-8 text-xs font-medium hover:brightness-110 active:brightness-95 transition-all"
       >
         {ctaLink.label}
@@ -62,22 +70,25 @@ const ctaLink = cta || { label: t(locale, "services.cta.button"), href: SERVICES
         type="button"
         class="md:hidden flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-panel-raised transition-colors"
         id="nav-menu-toggle"
-        aria-label="Toggle menu"
+        aria-label={t(locale, "nav.toggleMenu")}
         aria-expanded="false"
+        aria-controls="nav-mobile-menu"
       >
         <i class="bx bx-menu icon-2xl"></i>
       </button>
     </div>
   </div>
 
-  <div class="hidden md:hidden" id="nav-mobile-menu">
-    <div class="px-6 pb-4 pt-2 border-t border-border space-y-1">
+  <div class="hidden md:hidden" id="nav-mobile-menu" role="dialog" aria-modal="true" aria-label={t(locale, "common.navAria")} tabindex="-1">
+    <div class="nav-mobile-panel px-6 pb-6 pt-3 space-y-1">
       {navLinks.map((link) => (
         <a
           href={link.href}
+          aria-current={isCurrent(link.href) ? "page" : undefined}
           class:list={[
             "rounded-md px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-panel-raised transition-colors",
             link.live ? "flex items-center gap-1.5" : "block",
+            isCurrent(link.href) && "bg-panel-raised text-foreground font-medium",
           ]}
         >
           {link.live && <span class="nav-live-dot" aria-hidden="true"></span>}
@@ -86,6 +97,7 @@ const ctaLink = cta || { label: t(locale, "services.cta.button"), href: SERVICES
       ))}
       <a
         href={localizePath(ctaLink.href, locale)}
+        data-open-contact-modal
         class="block mt-2 rounded-md bg-primary text-primary-foreground px-3 py-2 text-sm text-center font-medium"
       >
         {ctaLink.label}
@@ -100,6 +112,7 @@ const ctaLink = cta || { label: t(locale, "services.cta.button"), href: SERVICES
   var nav = document.getElementById('site-nav');
   var toggle = document.getElementById('nav-menu-toggle');
   var menu = document.getElementById('nav-mobile-menu');
+  var lastFocus = null;
 
   function updateNav() {
     if (!nav) return;
@@ -112,24 +125,83 @@ const ctaLink = cta || { label: t(locale, "services.cta.button"), href: SERVICES
 
   if (!toggle || !menu) return;
 
-  toggle.addEventListener('click', function() {
-    var expanded = toggle.getAttribute('aria-expanded') === 'true';
-    toggle.setAttribute('aria-expanded', String(!expanded));
-    menu.classList.toggle('hidden');
-
+  function setIcons(open) {
     var icon = toggle.querySelector('i');
-    if (icon) {
-      icon.className = expanded ? 'bx bx-menu' : 'bx bx-x';
+    if (icon) icon.className = open ? 'bx bx-x' : 'bx bx-menu';
+  }
+
+  function menuFocusables() {
+    return Array.prototype.slice.call(
+      menu.querySelectorAll('a[href], button:not([disabled])')
+    );
+  }
+
+  function openMenu() {
+    if (toggle.getAttribute('aria-expanded') === 'true') return;
+    lastFocus = document.activeElement;
+    toggle.setAttribute('aria-expanded', 'true');
+    menu.classList.remove('hidden');
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+    menu.focus({ preventScroll: true });
+    setIcons(true);
+  }
+
+  function closeMenu(restoreFocus) {
+    if (toggle.getAttribute('aria-expanded') !== 'true') return;
+    toggle.setAttribute('aria-expanded', 'false');
+    menu.classList.add('hidden');
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
+    setIcons(false);
+    if (restoreFocus && lastFocus && typeof lastFocus.focus === 'function') {
+      lastFocus.focus({ preventScroll: true });
+    }
+    lastFocus = null;
+  }
+
+  toggle.addEventListener('click', function() {
+    if (window.getComputedStyle(toggle).display === 'none') return;
+    if (toggle.getAttribute('aria-expanded') === 'true') {
+      closeMenu(true);
+    } else {
+      openMenu();
     }
   });
 
-  menu.querySelectorAll('a').forEach(function(link) {
-    link.addEventListener('click', function() {
-      menu.classList.add('hidden');
-      toggle.setAttribute('aria-expanded', 'false');
-      var icon = toggle.querySelector('i');
-      if (icon) icon.className = 'bx bx-menu';
-    });
+  menu.addEventListener('click', function(e) {
+    if (e.target.closest && e.target.closest('a')) closeMenu(false);
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (toggle.getAttribute('aria-expanded') !== 'true') return;
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      closeMenu(true);
+      return;
+    }
+    if (e.key === 'Tab') {
+      var f = menuFocusables();
+      if (!f.length) return;
+      var first = f[0];
+      var last = f[f.length - 1];
+      var active = document.activeElement;
+      if (e.shiftKey) {
+        if (active === first || active === menu || !menu.contains(active)) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (active === last || active === menu || !menu.contains(active)) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    }
+  });
+
+  window.addEventListener('resize', function() {
+    if (window.innerWidth >= 768) closeMenu(false);
   });
 })();
 </script>
@@ -145,6 +217,18 @@ const ctaLink = cta || { label: t(locale, "services.cta.button"), href: SERVICES
 
   :root[data-theme*="light"] #site-nav[data-scrolled="true"] {
     background: rgba(255, 255, 255, 0.7);
+  }
+
+  /* Mobile menu: opaque full-screen panel clearly separated from page content. */
+  #nav-mobile-menu {
+    position: fixed;
+    inset: 4rem 0 0 0;
+    z-index: 60;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    background: var(--panel);
+    border-top: 1px solid var(--border);
+    outline: none;
   }
 
   .nav-live-dot {

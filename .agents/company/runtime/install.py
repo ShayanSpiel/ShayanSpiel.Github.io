@@ -567,7 +567,8 @@ def _install_live_transaction(normalized: dict[str, Any], *, force: bool,
         normalized["id"], [item["id"] for item in installable_agents])
     _assert_allowed(planned, allowed_files)
 
-    with tempfile.TemporaryDirectory(prefix=".department-install-", dir=COMPANY_ROOT) as tmp:
+    with tempfile.TemporaryDirectory(
+            prefix=".department-install-", dir=str(DEPARTMENTS_ROOT.parent)) as tmp:
         temporary = Path(tmp)
         staged_paths = department_paths(
             normalized["id"], root=temporary / "departments")

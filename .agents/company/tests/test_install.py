@@ -1,9 +1,11 @@
 """Department install path: spec → package files → discovery → goals."""
 
 import json
-import shutil
+import os
+import sys
 import tempfile
 import unittest
+from contextlib import contextmanager
 from pathlib import Path
 from unittest.mock import patch
 
@@ -19,6 +21,47 @@ from company.runtime.loop import Runtime
 from company.runtime.registry import departments, handlers
 from company.runtime.system_improvement import SystemImprovement
 from company.runtime.templates import build_graph_from_brief, infer_template
+
+
+@contextmanager
+def isolated_install_roots():
+    """Redirect live install destinations into a temporary company tree."""
+
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        departments_root = root / "departments"
+        agents_root = root / "agents" / "installed"
+        departments_root.mkdir(parents=True)
+        agents_root.mkdir(parents=True)
+        import company.departments as department_package
+        import company.runtime.install as install_mod
+
+        original_path = list(department_package.__path__)
+        previous_agents = os.environ.get("SPIELOS_AGENTS_INSTALLED_ROOT")
+        department_package.__path__.insert(0, str(departments_root))
+        os.environ["SPIELOS_AGENTS_INSTALLED_ROOT"] = str(agents_root)
+        try:
+            with patch.object(install_mod, "DEPARTMENTS_ROOT", departments_root), \
+                 patch.object(install_mod, "AGENTS_INSTALLED_ROOT", agents_root):
+                yield {
+                    "root": root,
+                    "departments": departments_root,
+                    "agents": agents_root,
+                }
+        finally:
+            department_package.__path__[:] = original_path
+            if previous_agents is None:
+                os.environ.pop("SPIELOS_AGENTS_INSTALLED_ROOT", None)
+            else:
+                os.environ["SPIELOS_AGENTS_INSTALLED_ROOT"] = previous_agents
+            for prefix in ("company.departments.demo_ops",
+                           "company.departments.auto_install_dept",
+                           "company.departments.cli_install_dept",
+                           "company.departments.iso_ops",
+                           "company.departments.content"):
+                for key in list(sys.modules):
+                    if key == prefix or key.startswith(prefix + "."):
+                        del sys.modules[key]
 
 
 class SpecNormalizationTests(unittest.TestCase):
@@ -101,29 +144,10 @@ class InstallPathTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
-        self.root = Path(self.temp.name) / "departments"
-        self.root.mkdir()
         self.dept_id = "demo_ops"
-        self.addCleanup(self._cleanup_live_install)
-
-    def _cleanup_live_install(self):
-        # Install tests that hit the live tree must clean up.
-        company = Path(__file__).resolve().parents[1]
-        live = company / "departments" / self.dept_id
-        if live.exists():
-            shutil.rmtree(live)
-        agents_dir = company / "agents" / "installed"
-        for path in agents_dir.glob("demo_ops*.json"):
-            path.unlink(missing_ok=True)
-        for path in agents_dir.glob("cli_install*.json"):
-            path.unlink(missing_ok=True)
-        for path in agents_dir.glob("auto_install*.json"):
-            path.unlink(missing_ok=True)
-        import sys
-        for prefix in (f"company.departments.{self.dept_id}", "company.agents"):
-            for key in list(sys.modules):
-                if key == prefix or key.startswith(prefix + "."):
-                    del sys.modules[key]
+        stack = isolated_install_roots()
+        self.tree = stack.__enter__()
+        self.addCleanup(stack.__exit__, None, None, None)
 
     def test_install_writes_package_agents_and_registers(self):
         receipt = install_department({
@@ -140,7 +164,8 @@ class InstallPathTests(unittest.TestCase):
         self.assertTrue(receipt["ok"])
         self.assertEqual(self.dept_id, receipt["id"])
         self.assertIn("demo-ops-operator", receipt["agents"])
-        self.assertTrue(any("agents/installed" in path for path in receipt["agents_written"]))
+        self.assertTrue(any("agents/installed" in path or str(self.tree["agents"]) in path
+                            for path in receipt["agents_written"]))
         self.assertIn(self.dept_id, departments())
         self.assertIn("demo-ops-operator", installed_agents())
         agent = installed_agents()["demo-ops-operator"]
@@ -150,6 +175,7 @@ class InstallPathTests(unittest.TestCase):
         self.assertEqual("playbooks", installed.goal_schema["metrics"][0])
         graph = installed.workflows[0].graph
         self.assertGreaterEqual(len(graph), 2)
+        self.assertTrue((self.tree["departments"] / self.dept_id / "department.py").is_file())
 
         with tempfile.TemporaryDirectory() as tmp:
             runtime = Runtime(Path(tmp) / "company.sqlite")
@@ -170,6 +196,8 @@ class InstallPathTests(unittest.TestCase):
             }, force=True, allowed_files=[".agents/company/departments/other/department.py"])
 
     def test_force_cannot_overwrite_built_in_department(self):
+        built_in = self.tree["departments"] / "content"
+        built_in.mkdir()
         with self.assertRaisesRegex(ValueError, "built-in"):
             install_department({
                 "id": "content", "purpose": "collision", "metrics": ["items"],
@@ -183,8 +211,7 @@ class InstallPathTests(unittest.TestCase):
             "evidence_sources": ["item_record"],
         }
         install_department(spec, force=True)
-        company = Path(__file__).resolve().parents[1]
-        department_file = company / "departments" / self.dept_id / "department.py"
+        department_file = self.tree["departments"] / self.dept_id / "department.py"
         original = department_file.read_text()
 
         with patch("company.runtime.install.load_installed_department",
@@ -201,20 +228,9 @@ class SystemImprovementInstallTests(unittest.TestCase):
         self.dept_id = "auto_install_dept"
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
-        self.addCleanup(self._cleanup)
-
-    def _cleanup(self):
-        company = Path(__file__).resolve().parents[1]
-        live = company / "departments" / self.dept_id
-        if live.exists():
-            shutil.rmtree(live)
-        for path in (company / "agents" / "installed").glob("auto_install*.json"):
-            path.unlink(missing_ok=True)
-        import sys
-        for prefix in (f"company.departments.{self.dept_id}", "company.agents"):
-            for key in list(sys.modules):
-                if key == prefix or key.startswith(prefix + "."):
-                    del sys.modules[key]
+        stack = isolated_install_roots()
+        self.tree = stack.__enter__()
+        self.addCleanup(stack.__exit__, None, None, None)
 
     def test_create_department_installs_after_approval(self):
         runtime = Runtime(Path(self.temp.name) / "company.sqlite",
@@ -239,6 +255,7 @@ class SystemImprovementInstallTests(unittest.TestCase):
                     self.dept_id, preview["agent_ids"]),
                 "acceptance_tests": ["company department list"],
                 "force_install": True,
+                "owner_override": True,
                 "department_spec": {
                     "id": self.dept_id,
                     "purpose": "Auto installed demo",
@@ -267,20 +284,9 @@ class SystemImprovementInstallTests(unittest.TestCase):
 class CliInstallTests(unittest.TestCase):
     def setUp(self):
         self.dept_id = "cli_install_dept"
-        self.addCleanup(self._cleanup)
-
-    def _cleanup(self):
-        company = Path(__file__).resolve().parents[1]
-        live = company / "departments" / self.dept_id
-        if live.exists():
-            shutil.rmtree(live)
-        for path in (company / "agents" / "installed").glob("cli_install*.json"):
-            path.unlink(missing_ok=True)
-        import sys
-        for prefix in (f"company.departments.{self.dept_id}", "company.agents"):
-            for key in list(sys.modules):
-                if key == prefix or key.startswith(prefix + "."):
-                    del sys.modules[key]
+        stack = isolated_install_roots()
+        self.tree = stack.__enter__()
+        self.addCleanup(stack.__exit__, None, None, None)
 
     def test_cli_validate_and_install(self):
         from company.__main__ import main
@@ -320,9 +326,7 @@ class CliInstallTests(unittest.TestCase):
         self.assertIn(self.dept_id, departments())
         self.assertIn("cli-install-writer", installed_agents())
         stem = agent_file_stem("cli-install-writer")
-        self.assertTrue(
-            (Path(__file__).resolve().parents[1] / "agents" / "installed" / f"{stem}.json"
-             ).is_file())
+        self.assertTrue((self.tree["agents"] / f"{stem}.json").is_file())
 
 
 if __name__ == "__main__":

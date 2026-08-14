@@ -6,6 +6,7 @@ from ..agents import agents as installed_agents
 from ..connections import connections as installed_connections
 from .package import package_spec, validate_package
 from .registry import departments as installed_departments
+from .strategy import strategy_kernel_summary
 
 COMPANY_ROOT = Path(__file__).resolve().parents[1]
 SKILLS_ROOT = COMPANY_ROOT.parent / "skills"
@@ -34,11 +35,12 @@ def catalog():
         departments.append(package)
     return {
         "runtime": {
-            "version": "5.3.0",
+            "version": "6.0.0",
             "loop": ["GOAL", "OBSERVE", "DECIDE", "ACT", "EVALUATE"],
             "controls": ["director", "system-improvement"],
             "department_runtime": "interpreter",
             "goal_authority": ".spielos/state/company.sqlite",
+            "strategy_kernel": strategy_kernel_summary(),
         },
         "departments": departments,
         "agents": [vars(item) for _, item in sorted(installed_agents().items())],

@@ -2,13 +2,20 @@
 
 from datetime import datetime, timezone
 
+from .alignment import (
+    UNKNOWN, as_goal_record, is_market_outcome, judge_alignment, present,
+)
 from .models import GoalHandler, GoalStatus, RunStatus, Stage, StageResult
+from .strategic import strategic_frontier
+from .truth import (
+    accepted_validities, child_supports_parent, derive_evaluation_validity,
+)
 
 
 class Director(GoalHandler):
     id = "director"
     description = "Coordinates child goals while preserving their state and approvals."
-    version = "2.1.0"
+    version = "2.7.0"
     goal_schema = {
         "metrics": ["all_children_achieved", "achieved_children", "reply_rate", "sales", "booked_calls"],
         "config": {"accepted_evidence_validity": {"type": "array"}},
@@ -42,15 +49,70 @@ class Director(GoalHandler):
                    c["evaluation"].get("validity") in ("contaminated", "invalid")]
         if invalid:
             child = invalid[0]
+            child_evidence_ids = [
+                item["id"] for item in (child.get("evidence") or ())
+                if item.get("id") and item.get("validity") in ("contaminated", "invalid")
+            ]
             proposal = (child["evaluation"].get("next_experiment") or {}).get("system_improvement")
             if proposal:
+                lineage = _system_intervention_lineage(ctx.goal, child, proposal)
+                defects = _lineage_defects(lineage)
+                if defects:
+                    payload = {"action": "block_untraceable_system_improvement",
+                               "child_id": child["id"], "defects": defects,
+                               "proposal": proposal}
+                    return StageResult(
+                        "diagnose", payload, RunStatus.BLOCKED, Stage.DECIDE,
+                        decision={"type": "block_untraceable_system_improvement",
+                                  "rationale": "A system change cannot proceed without complete strategic lineage",
+                                  "evidence_ids": child_evidence_ids,
+                                  "payload": payload},
+                        message="Director blocked a system intervention that lost its strategic lineage")
+                parent = as_goal_record(ctx.goal)
+                alignment = judge_alignment(
+                    {"owner_id": "system-improvement",
+                     "metric": "acceptance_tests_passed",
+                     "run_type": "system_improvement", "config": proposal},
+                    active_outcomes=[parent] if is_market_outcome(parent) else [],
+                    parent=parent,
+                )
+                if alignment["judgment"] != "aligned":
+                    payload = {"action": "request_owner_override",
+                               "child_id": child["id"],
+                               "originating_run_id": child["evaluation"]["run_id"],
+                               "proposal": proposal, "strategic_lineage": lineage,
+                               "alignment": alignment}
+                    return StageResult(
+                        "review", payload,
+                        decision={"type": "recommend_defer",
+                                  "rationale": alignment["rationale"],
+                                  "next_run_type": "system_improvement",
+                                  "evidence_ids": child_evidence_ids,
+                                  "payload": payload})
                 payload = {"action": "create_system_improvement", "child_id": child["id"],
-                           "originating_run_id": child["evaluation"]["run_id"], "proposal": proposal}
+                           "originating_run_id": child["evaluation"]["run_id"],
+                           "proposal": proposal, "strategic_lineage": lineage,
+                           "alignment": alignment}
                 return StageResult("choose_intervention", payload,
                                    decision={"type": "system_improvement",
-                                             "rationale": child["evaluation"].get("contamination_reason") or
-                                                          "Department failure invalidated business evidence",
-                                             "next_run_type": "system_improvement", "payload": payload})
+                                             "rationale": lineage["causal_hypothesis"],
+                                             "next_run_type": "system_improvement",
+                                             "evidence_ids": child_evidence_ids,
+                                             "payload": payload})
+        strategic = strategic_frontier(children)
+        if strategic:
+            return StageResult(
+                "choose_intervention", strategic,
+                decision={
+                    "type": "strategic_experiment",
+                    "rationale": (
+                        "Competent execution and a trustworthy system produced "
+                        "three rejected business hypotheses; test the declared "
+                        f"{strategic['strategic_level']} candidate next"),
+                    "evidence_ids": strategic["supporting_evidence_ids"],
+                    "next_run_type": "business_experiment",
+                    "payload": strategic,
+                })
         runnable = [c for c in children if c["goal_status"] == "active" and _runnable(c)]
         if runnable:
             payload = {"action": "dispatch", "child_id": runnable[0]["id"]}
@@ -81,6 +143,17 @@ class Director(GoalHandler):
                                      "payload": payload})
 
     def act(self, ctx, decision):
+        if decision.get("action") == "propose_strategic_experiment":
+            if ctx.approval_status("execute") != "approved":
+                return StageResult(
+                    "review_strategy", decision, RunStatus.AWAITING_APPROVAL, Stage.ACT,
+                    message=(
+                        "Owner authority is required before running this strategic "
+                        "experiment; no Policy or Model has been changed"))
+            return StageResult(
+                "authorize_strategy_test",
+                {**decision, "owner_authorized": True, "strategy_mutated": False},
+                message="Strategic experiment authorized; Policy and Model remain proposals")
         if decision.get("action") == "surface":
             return StageResult("review", decision, RunStatus.WAITING, Stage.OBSERVE,
                                resume_at=None,
@@ -90,8 +163,22 @@ class Director(GoalHandler):
                 return StageResult("execute", {"error": "dispatcher unavailable"}, RunStatus.FAILED, Stage.ACT)
             outcome = ctx.dispatch_goal(decision["child_id"])
             child_cycle = outcome["cycle"]
+            if child_cycle["run_status"] in {"blocked", "failed"}:
+                child_id = decision["child_id"]
+                child_status = child_cycle["run_status"]
+                attention = {
+                    "child_id": child_id,
+                    "child_status": child_status,
+                    "required_user_action": (
+                        f"Review child {child_id}; the parent metric is not satisfied"),
+                }
+                return StageResult(
+                    "review_child", {"child_id": child_id, "outcome": outcome},
+                    RunStatus.WAITING, Stage.OBSERVE, resume_at=None,
+                    attention=attention,
+                    message=f"Child {child_id} needs attention ({child_status})")
             if outcome["goal"]["goal_status"] == "active" and child_cycle["run_status"] in {
-                "waiting", "awaiting_approval", "blocked", "failed"
+                "waiting", "awaiting_approval"
             }:
                 return StageResult("wait_for_child", {"child_id": decision["child_id"],
                                                        "outcome": outcome},
@@ -99,20 +186,16 @@ class Director(GoalHandler):
                                    resume_at=child_cycle.get("resume_at"),
                                    message="Director parked until the child run changes")
             return StageResult("execute", {"child_id": decision["child_id"], "outcome": outcome})
+        if decision.get("action") == "request_owner_override":
+            if ctx.approval_status("alignment_override") != "approved":
+                return StageResult(
+                    "review", decision, RunStatus.AWAITING_APPROVAL, Stage.ACT,
+                    message=decision.get("alignment", {}).get("rationale")
+                    or "Director recommends deferral; owner override required")
+            return self._create_system_improvement(
+                ctx, decision, owner_override=True)
         if decision.get("action") == "create_system_improvement":
-            if not ctx.create_child_goal:
-                return StageResult("execute", {"error": "child creator unavailable"}, RunStatus.FAILED, Stage.ACT)
-            proposal = decision["proposal"]
-            child = ctx.create_child_goal({
-                "name": f"Repair {proposal['owner_id']}: {proposal['problem']}",
-                "owner_id": "system-improvement", "metric": "acceptance_tests_passed",
-                "operator": "eq", "target": True, "run_type": "system_improvement",
-                "evidence_validity": "technical_only", "resume_run_id": decision["originating_run_id"],
-                "config": {**proposal, "originating_run_id": decision["originating_run_id"]},
-                "hypothesis": {"statement": proposal["problem"], "variable": "owner_version",
-                               "prediction": "The bounded repair restores valid execution"},
-            })
-            return StageResult("execute", {"created_goal": child["id"], "action": "system_improvement"})
+            return self._create_system_improvement(ctx, decision, owner_override=False)
         if decision.get("action") == "wait_for_children":
             return StageResult("wait_for_children", decision, RunStatus.WAITING,
                                Stage.OBSERVE, resume_at=decision.get("resume_at"),
@@ -121,27 +204,39 @@ class Director(GoalHandler):
 
     def evaluate(self, ctx, action_result):
         children = list(ctx.cycle.get("children") or ())
-        achieved = sum(child["goal_status"] == "achieved" for child in children)
-        accepted = set(ctx.goal.config.get("accepted_evidence_validity") or ["business"])
-        evaluations = [child.get("evaluation") for child in children if child.get("evaluation") and
-                       child["evaluation"].get("validity") in accepted]
+        run = ctx.cycle.get("run") or {}
+        accepted = accepted_validities(ctx.goal, run)
+        supporting = [child for child in children
+                      if child_supports_parent(ctx.goal.metric, child, accepted)]
+        raw_achieved = sum(child["goal_status"] == "achieved" for child in children)
+        accepted_achieved = len(supporting)
+        evaluations = [child.get("evaluation") for child in supporting if child.get("evaluation")]
         metric_values = [item.get("metrics", {}).get(ctx.goal.metric) for item in evaluations
                          if item.get("metrics", {}).get(ctx.goal.metric) is not None]
         if ctx.goal.metric == "all_children_achieved":
-            met = bool(children) and achieved == len(children)
-            measured = achieved
+            met = bool(children) and accepted_achieved == len(children)
+            measured = accepted_achieved
         elif ctx.goal.metric == "achieved_children":
-            measured = achieved
+            measured = accepted_achieved
             met = _compare(measured, ctx.goal.operator, ctx.goal.target)
         else:
             measured = max(metric_values) if metric_values else None
             met = measured is not None and _compare(measured, ctx.goal.operator, ctx.goal.target)
-        payload = {"achieved_children": achieved, "total_children": len(children),
+        validity = derive_evaluation_validity(
+            [{"validity": (child.get("evaluation") or {}).get("validity")
+              or (child.get("run") or {}).get("evidence_validity")}
+             for child in supporting],
+            ctx.goal, run)
+        if met and validity not in accepted:
+            met = False
+        payload = {"achieved_children": raw_achieved,
+                   "accepted_achieved_children": accepted_achieved,
+                   "total_children": len(children),
                    "metric": ctx.goal.metric, "metric_value": measured, "goal_met": met,
                    "accepted_evidence_validity": sorted(accepted)}
         evaluation = {"verdict": "goal_met" if met else "continue", "goal_met": met,
-                      "metrics": {ctx.goal.metric: measured, "achieved_children": achieved},
-                      "validity": next(iter(accepted)) if len(accepted) == 1 else "business",
+                      "metrics": {ctx.goal.metric: measured, "achieved_children": accepted_achieved},
+                      "validity": validity,
                       "next_experiment": {} if met else {"action": "continue_child_runs"}}
         if met:
             return StageResult("goal_check", payload, RunStatus.COMPLETED, goal_status=GoalStatus.ACHIEVED,
@@ -154,13 +249,75 @@ class Director(GoalHandler):
                                message="Director goal is unmet and no active child can continue")
         return StageResult("goal_check", payload, RunStatus.COMPLETED, evaluation=evaluation,
                            next_run={"run_type": "evaluation",
-                                     "evidence_validity": next(iter(accepted)) if len(accepted) == 1 else "business"},
-                           message="Director evaluated the run; the proposed next run needs user approval")
+                                     "evidence_validity": validity},
+                           message="Director evaluated the run; the next valid run continues automatically")
+
+    def _create_system_improvement(self, ctx, decision, *, owner_override: bool):
+        if not ctx.create_child_goal:
+            return StageResult("execute", {"error": "child creator unavailable"}, RunStatus.FAILED, Stage.ACT)
+        proposal = decision["proposal"]
+        lineage = decision["strategic_lineage"]
+        alignment = dict(decision.get("alignment") or {})
+        if owner_override:
+            alignment["owner_override"] = True
+        config = {**proposal, "originating_run_id": decision["originating_run_id"],
+                  "strategic_lineage": lineage, "alignment": alignment}
+        if owner_override:
+            config["owner_override"] = True
+        child = ctx.create_child_goal({
+            "name": f"Repair {proposal['owner_id']}: {proposal['problem']}",
+            "owner_id": "system-improvement", "metric": "acceptance_tests_passed",
+            "operator": "eq", "target": True, "run_type": "system_improvement",
+            "evidence_validity": "technical_only", "resume_run_id": decision["originating_run_id"],
+            "config": config,
+            "hypothesis": {"statement": proposal["problem"], "variable": "owner_version",
+                           "prediction": "The bounded repair restores valid execution"},
+        })
+        return StageResult("execute", {"created_goal": child["id"], "action": "system_improvement",
+                                       "alignment": alignment})
 
 
 def _compare(value, operator, target):
     return {"ge": value >= target, "gt": value > target, "eq": value == target,
             "le": value <= target, "lt": value < target}.get(operator, False)
+
+
+def _system_intervention_lineage(goal, child, proposal):
+    evaluation = child.get("evaluation") or {}
+    observed = (present(proposal.get("observed_reality"))
+                or present(evaluation.get("contamination_reason")))
+    return {
+        "business_goal": {"id": goal.id, "name": goal.name, "metric": goal.metric,
+                          "operator": goal.operator, "target": goal.target},
+        "observed_reality": observed or UNKNOWN,
+        "diagnosis_level": present(proposal.get("diagnosis_level")) or "system",
+        "causal_hypothesis": present(proposal.get("causal_hypothesis")) or UNKNOWN,
+        "smallest_intervention": present(proposal.get("smallest_intervention")) or UNKNOWN,
+        "expected_measurable_effect": present(
+            proposal.get("expected_measurable_effect") or proposal.get("expected_effect")) or UNKNOWN,
+        "stop_condition": present(proposal.get("stop_condition")) or UNKNOWN,
+        "non_goals": list(proposal.get("non_goals") or (
+            "Change the parent business goal",
+            "Change controlled business variables",
+            "Redesign unrelated runtime or Department architecture",
+        )),
+    }
+
+
+def _lineage_defects(lineage):
+    defects = []
+    goal = lineage.get("business_goal") or {}
+    if not all(goal.get(key) not in (None, "") for key in ("id", "name", "metric", "operator")):
+        defects.append("business_goal")
+    if lineage.get("diagnosis_level") != "system":
+        defects.append("diagnosis_level(system)")
+    for key in ("observed_reality", "causal_hypothesis", "smallest_intervention",
+                "expected_measurable_effect", "stop_condition"):
+        if not present(lineage.get(key)):
+            defects.append(key)
+    if not lineage.get("non_goals"):
+        defects.append("non_goals")
+    return defects
 
 
 def _runnable(child):

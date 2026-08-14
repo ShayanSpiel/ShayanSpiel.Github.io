@@ -113,6 +113,14 @@ def validate_package(department: Department) -> list[str]:
                 if connection_id not in known_connections:
                     defects.append(
                         f"workflow {workflow.id} step {node.id} references unknown connection {connection_id}")
+        produced = {kind for node in workflow.graph for kind in node.produces}
+        declared = set(workflow.evidence_sources)
+        for node in workflow.graph:
+            for kind in node.requires:
+                if kind not in produced and kind not in declared:
+                    defects.append(
+                        f"workflow {workflow.id} step {node.id} requires {kind} "
+                        "with no producer or declared handoff")
     metrics = list((getattr(department, "goal_schema", None) or {}).get("metrics") or [])
     evidence = getattr(department, "evidence_metrics", None) or {}
     for metric in metrics:

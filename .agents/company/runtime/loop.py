@@ -13,10 +13,20 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
+from .alignment import (
+    active_market_outcomes, alignment_override_interaction, approval_key,
+    judge_alignment, needs_alignment, resolve_originating_goal,
+    validate_goal_topology,
+)
+from .continuation import ancestors_allow, conflicting_goal, continuation_decision
+from .repair_iteration import iteration_decision, same_scope
 from .contracts import approval_interaction, enrich_work_order_source, validate_goal_request
 from .models import GoalContext, Goal, GoalStatus, RunStatus, Stage
+from .memory import eligible_memory
+from .strategy import select_strategy_context
 from .registry import handlers as installed_handlers
 from .store import Store
+from .truth import achievement_allowed, countable_evidence, hypothesis_resolution
 
 TERMINAL = {"achieved", "abandoned", "expired"}
 SUSPENDED = {RunStatus.WAITING, RunStatus.AWAITING_APPROVAL, RunStatus.BLOCKED,
@@ -183,34 +193,96 @@ def _write_live_push_marker(path: str, fingerprint: str) -> None:
 
 
 class Runtime:
-    def __init__(self, db_path: str | Path, registry: dict | None = None):
-        self.store = Store(db_path)
+    def __init__(self, db_path: str | Path, registry: dict | None = None,
+                 *, readonly: bool = False):
+        self.readonly = readonly
+        self.store = Store(db_path, readonly=readonly)
         self.registry = registry or installed_handlers()
-        for handler in self.registry.values():
-            self.store.register_owner_version(handler.id, handler.version, status="deployed")
 
     def create_goal(self, **values) -> dict:
         if values["owner_id"] not in self.registry:
             raise KeyError(f"goal owner '{values['owner_id']}' is not installed")
         if values.get("deadline"):
             _timestamp(values["deadline"])
+        validate_goal_topology(values)
         handler = self.registry[values["owner_id"]]
         values["config"] = validate_goal_request(
             handler, metric=values["metric"], config=values.get("config"))
         values.setdefault("owner_version", handler.version)
+        if needs_alignment(values):
+            return self._create_aligned_goal(values)
         return self.store.create_goal(**values)
+
+    def _create_aligned_goal(self, values: dict) -> dict:
+        config = dict(values.get("config") or {})
+        parent = None
+        if values.get("parent_id"):
+            try:
+                parent = self.store.goal(values["parent_id"])
+            except KeyError:
+                parent = None
+        judgment = judge_alignment(
+            {**values, "config": config},
+            active_outcomes=active_market_outcomes(self.store.goals()),
+            parent=parent,
+            originating_goal=resolve_originating_goal(self.store, values, config),
+        )
+        config["alignment"] = judgment
+        if judgment.get("owner_override"):
+            config["owner_override"] = True
+        values["config"] = config
+        goal = self.store.create_goal(**values)
+        cycle = self.store.cycle(goal["id"])
+        self.store.add_decision(goal["id"], cycle["id"], {
+            "type": "alignment",
+            "rationale": judgment["rationale"],
+            "payload": judgment,
+        })
+        self.store.event(goal["id"], cycle["id"], "alignment.judged", judgment)
+        if judgment["judgment"] == "defer_recommended" and not judgment.get("owner_override"):
+            self._park_alignment_deferral(goal, cycle, judgment)
+            return self.store.goal(goal["id"])
+        return self.store.goal(goal["id"])
+
+    def _park_alignment_deferral(self, goal: dict, cycle: dict, judgment: dict) -> None:
+        self.store.set_goal_status(goal["id"], GoalStatus.PROPOSED.value)
+        data = {"decision": {"action": "alignment_override", "alignment": judgment}}
+        self.store.update_cycle(
+            cycle["id"], stage=Stage.DECIDE.value, step="alignment",
+            run_status=RunStatus.AWAITING_APPROVAL.value, resume_at=None, data=data)
+        self.store.notify(goal["id"], cycle["id"], "approval_required", {
+            "result": {"message": judgment["rationale"]},
+            "required_user_action": (
+                "Override the recommended deferral to start this work, or leave it proposed"),
+            "approval_interaction": alignment_override_interaction(goal, judgment),
+            "alignment": judgment,
+        })
 
     def once(self, goal_id: str, holder: str | None = None) -> dict:
         holder = holder or f"runtime-{uuid.uuid4().hex[:8]}"
         goal = self.store.goal(goal_id)
+        if goal["goal_status"] in TERMINAL:
+            return self.status(goal_id)
         if goal.get("deadline") and datetime.now(timezone.utc) >= _timestamp(goal["deadline"]):
             self.store.set_goal_status(goal_id, GoalStatus.EXPIRED.value)
             self.store.event(goal_id, self.store.cycle(goal_id)["id"], "goal.expired", {"deadline": goal["deadline"]})
             return self.status(goal_id)
-        if goal["goal_status"] in TERMINAL:
-            return self.status(goal_id)
+        if goal["goal_status"] == "proposed":
+            raise RuntimeError(
+                f"goal {goal_id} is proposed; Director recommended deferral. "
+                "Approve or resume to override — that record is not strategic justification")
         if goal["goal_status"] != "active":
             raise RuntimeError(f"goal {goal_id} is {goal['goal_status']}; resume it before running")
+        if self.store.cycle(goal_id)["run_status"] == "completed":
+            decision = self.continuation_decision(goal_id)
+            if not decision["eligible"]:
+                return self.status(goal_id)
+            self.next(goal_id, automatic=True)
+        elif self.store.cycle(goal_id)["run_status"] in {"blocked", "failed"}:
+            decision = self.repair_iteration_decision(goal_id)
+            if not decision["eligible"]:
+                return self.status(goal_id)
+            self.retry(goal_id, automatic=True)
         if not self.store.acquire(goal_id, holder):
             raise RuntimeError(f"goal {goal_id} is already running in another client")
         try:
@@ -218,7 +290,7 @@ class Runtime:
             result = self._advance(goal_id, holder)
             after = self._state_signature(goal_id)
             if before != after and goal.get("parent_id"):
-                self.store.wake_goal(goal["parent_id"], f"child_changed:{goal_id}")
+                self._return_to_parent(goal_id)
             return result
         finally:
             self.store.release(goal_id, holder)
@@ -236,7 +308,8 @@ class Runtime:
                 return self.status(goal_id)
             if cycle["run_status"] == "completed":
                 return self.status(goal_id)
-            if cycle["run_status"] == "awaiting_approval" and not self.store.approval(goal_id, cycle["id"], "execute"):
+            if (cycle["run_status"] == "awaiting_approval"
+                    and self.store.approval(goal_id, cycle["id"], approval_key(cycle)) != "approved"):
                 return self.status(goal_id)
 
             handler = self.registry[row["owner_id"]]
@@ -247,23 +320,42 @@ class Runtime:
             children = []
             for child in self.store.goals(parent_id=goal_id):
                 child_cycle = self.store.cycle(child["id"])
+                child_evaluation = self.store.latest_evaluation_for_goal(child["id"])
+                evaluated_run_id = ((child_evaluation or {}).get("run_id")
+                                    or child_cycle["id"])
                 children.append({**child, "cycle": child_cycle,
                                  "run": self.store.run(child_cycle["id"]),
-                                 "evaluation": self.store.latest_evaluation_for_goal(child["id"])})
+                                 "evaluation": child_evaluation,
+                                 "evidence": tuple(self.store.evidence(evaluated_run_id)),
+                                 "history": self.store.goal_run_history(child["id"], limit=5)})
             run = self.store.run(cycle["id"])
+            ancestor_goal_ids = []
+            ancestor_id = goal.parent_id
+            while ancestor_id:
+                ancestor = self.store.goal(ancestor_id)
+                ancestor_goal_ids.append(ancestor["id"])
+                ancestor_id = ancestor.get("parent_id")
+            local_memory = self.store.memories(
+                goal.owner_id, goal.id, tuple(ancestor_goal_ids))
+            memory_topics = goal.config.get("memory_topics") or ()
+            if not isinstance(memory_topics, (list, tuple)):
+                memory_topics = ()
+            shared_memory = self.store.shared_memories(
+                goal.owner_id, tuple(str(item) for item in memory_topics if item), limit=10)
             context = GoalContext(
                 goal=goal, cycle={**cycle, "run": run, "children": tuple(children),
                                   "evidence": tuple(self.store.evidence(cycle["id"])),
                                   "evaluation": self.store.evaluation(cycle["id"]),
                                   "change_tasks": tuple(self.store.change_tasks_for_run(cycle["id"]))},
-                memory=self.store.memories(goal.owner_id, goal.id),
+                memory=tuple((*local_memory, *shared_memory)),
                 approval_status=lambda key, g=goal_id, c=cycle["id"]: self.store.approval(g, c, key),
                 dispatch_goal=lambda child_id: self.once(child_id, holder=f"{holder}:{goal_id}"),
                 create_child_goal=lambda spec, p=goal_id, r=cycle["id"]: self._create_child(p, r, spec),
                 create_change_task=lambda spec, g=goal_id, r=cycle["id"]: self.store.create_change_task(
                     goal_id=g, run_id=r, **spec),
                 update_change_task=lambda task_id, status, result: self.store.complete_change_task(
-                    task_id, status, result))
+                    task_id, status, result),
+                strategy=select_strategy_context(goal))
             result = self._call(handler, Stage(cycle["stage"]), context)
             if Stage(cycle["stage"]) is Stage.EVALUATE and result.run_status is RunStatus.IDLE:
                 result.run_status = RunStatus.COMPLETED
@@ -303,6 +395,20 @@ class Runtime:
               Stage.ACT: "action_result", Stage.EVALUATE: "evaluation"}[stage]] = result.payload
         if stage is Stage.EVALUATE:
             data["next_run"] = dict(result.next_run or {})
+        if result.goal_status is GoalStatus.ACHIEVED:
+            run = self.store.run(cycle["id"])
+            children = []
+            for child in self.store.goals(parent_id=goal.id):
+                child_cycle = self.store.cycle(child["id"])
+                children.append({
+                    **child, "run": self.store.run(child_cycle["id"]),
+                    "evaluation": self.store.latest_evaluation_for_goal(child["id"]),
+                })
+            if not achievement_allowed(goal, run, result.evaluation, children=children):
+                result.goal_status = None
+                if result.evaluation is not None:
+                    result.evaluation["goal_met"] = False
+                    result.evaluation["verdict"] = result.evaluation.get("verdict") or "continue"
         goal_status = result.goal_status.value if result.goal_status else goal.goal_status
         self.store.set_goal_status(goal.id, goal_status)
         self.store.update_cycle(cycle["id"], stage=next_stage.value, step=result.step,
@@ -315,17 +421,36 @@ class Runtime:
         self.store.event(goal.id, cycle["id"], f"{stage.value.lower()}.{result.step}", {
             "status": result.run_status.value, "next_stage": next_stage.value,
             "message": result.message, "payload": result.payload})
+        run = self.store.run(cycle["id"])
+        current_evidence = list(self.store.evidence(cycle["id"]))
         for learning in result.learnings:
-            self.store.learn(goal.owner_id, goal.id, learning["claim"],
-                             learning.get("evidence") or {}, float(learning.get("confidence", 0.5)))
+            memory = eligible_memory(learning, current_evidence, goal, run)
+            if memory:
+                self.store.learn(goal.owner_id, goal.id, memory["claim"],
+                                 memory["evidence"], memory["confidence"])
         for evidence in result.evidence:
             self.store.add_evidence(goal.id, cycle["id"], evidence["kind"],
                                     evidence.get("source", goal.owner_id), evidence.get("payload", {}),
                                     evidence.get("validity", self.store.run(cycle["id"])["evidence_validity"]))
         if result.decision:
-            self.store.add_decision(goal.id, cycle["id"], result.decision)
+            decision = dict(result.decision)
+            requested = list(decision.get("evidence_ids") or ())
+            allowed = self._decision_evidence_scope(goal.id, cycle["id"])
+            decision["evidence_ids"] = [item for item in requested if item in allowed]
+            self.store.add_decision(goal.id, cycle["id"], decision)
         if result.evaluation:
-            self.store.add_evaluation(goal.id, cycle["id"], result.evaluation)
+            evaluation = self.store.add_evaluation(goal.id, cycle["id"], result.evaluation)
+            run = self.store.run(cycle["id"])
+            hypothesis_status = hypothesis_resolution(goal, run, result.evaluation)
+            if (hypothesis_status
+                    and self.store.hypothesis(run["hypothesis_id"])["status"] == "active"):
+                hypothesis = self.store.resolve_hypothesis(
+                    run["hypothesis_id"], hypothesis_status)
+                self.store.event(goal.id, cycle["id"], "hypothesis.resolved", {
+                    "hypothesis_id": hypothesis["id"],
+                    "status": hypothesis["status"],
+                    "evaluation_id": evaluation["id"],
+                })
         work_order = self._maybe_open_work_order(goal, cycle, result)
         payload = self._notification_payload(goal, cycle, result, next_stage, work_order)
         if result.run_status is RunStatus.AWAITING_APPROVAL:
@@ -340,6 +465,28 @@ class Runtime:
         elif stage is Stage.EVALUATE and result.run_status is RunStatus.COMPLETED:
             self.store.notify(goal.id, cycle["id"], "run_completed",
                               self._notification_payload(goal, cycle, result, next_stage, work_order))
+
+    def _decision_evidence_scope(self, goal_id: str, run_id: str) -> set[str]:
+        """Evidence reachable from the current Run, evaluated children, or ancestors."""
+
+        allowed = {item["id"] for item in self.store.evidence(run_id)}
+        for child in self.store.goals(parent_id=goal_id):
+            history = self.store.goal_run_history(child["id"], limit=5)
+            if history:
+                for item in history:
+                    allowed.update(row["id"] for row in item["evidence"])
+            else:
+                child_run_id = self.store.cycle(child["id"])["id"]
+                allowed.update(item["id"] for item in self.store.evidence(child_run_id))
+        parent_id = self.store.goal(goal_id).get("parent_id")
+        while parent_id:
+            parent_cycle = self.store.cycle(parent_id)
+            parent_evaluation = self.store.latest_evaluation_for_goal(parent_id)
+            parent_run_id = ((parent_evaluation or {}).get("run_id")
+                             or parent_cycle["id"])
+            allowed.update(item["id"] for item in self.store.evidence(parent_run_id))
+            parent_id = self.store.goal(parent_id).get("parent_id")
+        return allowed
 
     def _sync_live_snapshot(self):
         """Regenerate the committed /live snapshot after a persisted transition.
@@ -470,12 +617,9 @@ class Runtime:
                        "goal_met": goal_met,
                        "metrics": evaluation.get("metrics", result.payload)},
             "next_experiment": evaluation.get("next_experiment", {}),
-            "next_trigger": attention.get("next_trigger") or (
-                f"company next {goal.id}" if result.run_status is RunStatus.COMPLETED and not goal_met else None),
+            "next_trigger": attention.get("next_trigger"),
             "required_user_action": attention.get("required_user_action") or (
-                "Approve the prepared action" if result.run_status is RunStatus.AWAITING_APPROVAL else
-                "Ask the Director to start the proposed next run"
-                if result.run_status is RunStatus.COMPLETED and not goal_met else None),
+                "Approve the prepared action" if result.run_status is RunStatus.AWAITING_APPROVAL else None),
             "attention": attention,
             "artifact": result.payload.get("preview_path") if isinstance(result.payload, dict) else None,
         }
@@ -517,6 +661,8 @@ class Runtime:
         cycle = self.store.cycle(goal_id)
         if cycle["run_status"] != "awaiting_approval":
             raise RuntimeError(f"goal is not awaiting approval (status: {cycle['run_status']})")
+        if approval_key(cycle) == "alignment_override":
+            return self._apply_alignment_override(goal_id, note)
         action = (cycle.get("data") or {}).get("action_result") or {}
         decision = (cycle.get("data") or {}).get("decision") or {}
         step_id = action.get("step_id") or decision.get("step_id")
@@ -527,18 +673,146 @@ class Runtime:
             self.store.approve(goal_id, cycle["id"], f"step:{step_id}", note)
         return self.status(goal_id)
 
+    def _apply_alignment_override(self, goal_id: str, note: str = "") -> dict:
+        goal = self.store.goal(goal_id)
+        cycle = self.store.cycle(goal_id)
+        config = dict(goal.get("config") or {})
+        alignment = dict(config.get("alignment") or {})
+        alignment["owner_override"] = True
+        if note:
+            alignment["override_note"] = note
+        config["owner_override"] = True
+        config["alignment"] = alignment
+        self.store.update_goal_config(goal_id, config)
+        self.store.approve(goal_id, cycle["id"], "alignment_override", note)
+        self.store.add_decision(goal_id, cycle["id"], {
+            "type": "owner_override",
+            "rationale": "Owner overrode Director deferral; this is not strategic justification",
+            "payload": alignment,
+        })
+        self.store.event(goal_id, cycle["id"], "alignment.overridden", alignment)
+        if goal["goal_status"] == "proposed" or goal["owner_id"] == "system-improvement":
+            self.store.set_goal_status(goal_id, GoalStatus.ACTIVE.value)
+            self.store.update_cycle(
+                cycle["id"], stage=Stage.OBSERVE.value, step="collect",
+                run_status=RunStatus.IDLE.value, resume_at=None, data={})
+            self.store.resolve_actionable_notifications(goal_id, cycle["id"])
+        return self.status(goal_id)
+
     def set_goal_status(self, goal_id: str, status: GoalStatus) -> dict:
         previous = self.store.goal(goal_id)["goal_status"]
+        if (status is GoalStatus.ACTIVE and previous == "proposed"
+                and ((self.store.goal(goal_id).get("config") or {}).get("alignment") or {})
+                .get("judgment") == "defer_recommended"):
+            return self._apply_alignment_override(goal_id, note="resume")
         self.store.set_goal_status(goal_id, status.value)
         if status is GoalStatus.ACTIVE and previous in TERMINAL:
             self.store.new_cycle(goal_id)
         self.store.event(goal_id, self.store.cycle(goal_id)["id"], f"goal.{status.value}", {})
+        if status in {GoalStatus.PAUSED, GoalStatus.ABANDONED, GoalStatus.EXPIRED, GoalStatus.ACHIEVED}:
+            self._halt_descendants(goal_id)
+            if status is GoalStatus.PAUSED:
+                self.store.cancel_work_orders(goal_id, include_claimed=True)
+        if (self.store.goal(goal_id).get("parent_id")
+                and status in {GoalStatus.PAUSED, GoalStatus.ABANDONED}):
+            self._return_to_parent(goal_id)
         return self.status(goal_id)
 
-    def retry(self, goal_id: str) -> dict:
+    def _halt_descendants(self, ancestor_id: str) -> None:
+        for child in self.store.goals(parent_id=ancestor_id):
+            if child["goal_status"] != "active":
+                continue
+            self.store.set_goal_status(child["id"], GoalStatus.PAUSED.value)
+            self.store.cancel_work_orders(child["id"], include_claimed=True)
+            self.store.event(child["id"], self.store.cycle(child["id"])["id"],
+                             "goal.paused", {"reason": f"ancestor_halted:{ancestor_id}"})
+            self._halt_descendants(child["id"])
+
+    def _return_to_parent(self, child_id: str) -> None:
+        child = self.store.goal(child_id)
+        parent_id = child.get("parent_id")
+        if not parent_id:
+            return
+        try:
+            parent = self.store.goal(parent_id)
+        except KeyError:
+            return
+        if parent["goal_status"] != "active":
+            return
+        child_cycle = self.store.cycle(child_id)
+        reason = f"child_changed:{child_id}"
+        self.store.wake_goal(parent_id, reason)
+        if child["goal_status"] == "achieved":
+            self._resume_originating(child, child_cycle)
+            return
+        if child["goal_status"] in {"paused", "abandoned"} or child_cycle["run_status"] in {
+                "failed", "blocked"}:
+            parent_cycle = self.store.cycle(parent_id)
+            self.store.notify(parent_id, parent_cycle["id"], "action_required", {
+                "result": {"message": f"Child {child_id} needs attention"},
+                "required_user_action": "Review the child; the parent metric is not satisfied",
+                "child_id": child_id,
+                "child_status": child["goal_status"],
+                "child_run_status": child_cycle["run_status"],
+            })
+
+    def _resume_originating(self, child: dict, child_cycle: dict) -> None:
+        child_run = self.store.run(child_cycle["id"])
+        resume_id = (child_run.get("resume_run_id")
+                     or (child.get("config") or {}).get("originating_run_id"))
+        if not resume_id:
+            return
+        try:
+            origin = self.store.run(resume_id)
+            origin_goal_id = origin["goal_id"]
+        except KeyError:
+            return
+        origin_goal = self.store.goal(origin_goal_id)
+        if origin_goal["goal_status"] != "active":
+            return
+        origin_cycle = self.store.cycle(origin_goal_id)
+        if origin_cycle["run_status"] == "completed":
+            if self.continuation_decision(origin_goal_id)["eligible"]:
+                self.next(origin_goal_id, automatic=True)
+            return
+        self.store.wake_goal(origin_goal_id, f"resume_run:{resume_id}")
+
+    def repair_iteration_decision(self, goal_id: str) -> dict:
+        goal = self.store.goal(goal_id)
+        cycle = self.store.cycle(goal_id)
+        tasks = self.store.change_tasks_for_run(cycle["id"])
+        return iteration_decision(
+            goal=goal, cycle=cycle,
+            evaluation=self.store.evaluation(cycle["id"]),
+            tasks_for_goal=self.store.change_tasks_for_goal(goal_id),
+            last_task=tasks[-1] if tasks else None,
+        )
+
+    def retry(self, goal_id: str, *, automatic: bool = False) -> dict:
         cycle = self.store.cycle(goal_id)
         if cycle["run_status"] not in {"blocked", "failed"}:
             raise RuntimeError(f"retry requires blocked or failed status (current: {cycle['run_status']})")
+        tasks = self.store.change_tasks_for_run(cycle["id"])
+        last_task = tasks[-1] if tasks else None
+        evaluation = self.store.evaluation(cycle["id"])
+        if last_task and last_task["status"] == "failed" and evaluation:
+            if automatic:
+                decision = self.repair_iteration_decision(goal_id)
+                if not decision["eligible"]:
+                    raise RuntimeError(f"automatic repair iteration refused: {decision['reason']}")
+            previous = self.store.run(cycle["id"])
+            created = self.store.new_cycle(goal_id, {
+                "run_type": previous["run_type"],
+                "evidence_validity": previous["evidence_validity"],
+            })
+            if (self.store.approval(goal_id, cycle["id"], "execute") == "approved"
+                    and same_scope(self.store.goal(goal_id).get("config") or {}, last_task)):
+                self.store.approve(goal_id, created["id"], "execute",
+                                   "carried same-scope approval")
+            self.store.event(goal_id, created["id"], "run.started", {
+                "previous_run_id": cycle["id"], "reason": "new_change_attempt",
+                "failed_task_id": last_task["id"], "automatic": automatic})
+            return self.status(goal_id)
         # Complete work orders whose evidence is already present before the run restarts.
         self.store.refresh_work_orders_for_run(goal_id, cycle["id"])
         # Capability handoffs (no typed evidence kinds) treat explicit retry as completion.
@@ -552,7 +826,18 @@ class Runtime:
         self.store.event(goal_id, cycle["id"], "run.retried", {})
         return self.status(goal_id)
 
-    def next(self, goal_id: str) -> dict:
+    def continuation_decision(self, goal_id: str) -> dict:
+        goal = self.store.goal(goal_id)
+        cycle = self.store.cycle(goal_id)
+        return continuation_decision(
+            goal=goal, cycle=cycle,
+            evaluation=self.store.evaluation(cycle["id"]),
+            run_count=cycle.get("sequence") or 1,
+            ancestor_active=ancestors_allow(self.store, goal),
+            conflicting=conflicting_goal(self.store, goal),
+        )
+
+    def next(self, goal_id: str, *, automatic: bool = False) -> dict:
         goal = self.store.goal(goal_id)
         if goal["goal_status"] != "active":
             raise RuntimeError(f"next run requires an active goal (current: {goal['goal_status']})")
@@ -564,16 +849,24 @@ class Runtime:
             raise RuntimeError("completed run has no evaluation")
         if evaluation["goal_met"]:
             raise RuntimeError("goal is already met; do not start another run")
+        if automatic:
+            decision = self.continuation_decision(goal_id)
+            if not decision["eligible"]:
+                raise RuntimeError(f"automatic continuation refused: {decision['reason']}")
         if goal["owner_id"] == "director":
             for child in self.store.goals(parent_id=goal_id):
                 child_cycle = self.store.cycle(child["id"])
                 if child["goal_status"] == "active" and child_cycle["run_status"] == "completed":
-                    self.next(child["id"])
+                    child_decision = self.continuation_decision(child["id"])
+                    if child_decision["eligible"] or not automatic:
+                        self.next(child["id"], automatic=automatic)
         metadata = dict((cycle.get("data") or {}).get("next_run") or {})
         metadata.setdefault("owner_version", self.registry[goal["owner_id"]].version)
         created = self.store.new_cycle(goal_id, metadata)
         self.store.event(goal_id, created["id"], "run.started", {
-            "previous_run_id": cycle["id"], "approved_experiment": evaluation["next_experiment"]})
+            "previous_run_id": cycle["id"],
+            "approved_experiment": evaluation["next_experiment"],
+            "automatic": automatic})
         return self.status(goal_id)
 
     def add_evidence(self, goal_id: str, *, kind: str, source: str, payload: dict,
@@ -656,6 +949,9 @@ class Runtime:
     def complete_change(self, task_id: str, *, passed: bool, result: dict,
                         deployed: bool = False) -> dict:
         task = self.store.change_task(task_id)
+        if task["status"] != "approved":
+            raise RuntimeError(
+                f"change task {task_id} is {task['status']}; only an approved task can be completed")
         status = "completed" if passed else "failed"
         task = self.store.complete_change_task(task_id, status, result)
         validity = "technical_only" if passed else "invalid"
@@ -675,7 +971,8 @@ class Runtime:
 
     def _goal_met_from_evidence(self, goal_id: str, run_id: str) -> bool:
         goal = self.store.goal(goal_id)
-        evidence = self.store.evidence(run_id)
+        run = self.store.run(run_id)
+        evidence = countable_evidence(self.store.evidence(run_id), goal, run)
         sent = len({item["payload"].get("recipient") for item in evidence
                     if item["kind"] == "email_sent" and item["payload"].get("recipient")})
         replies = len({item["payload"].get("recipient") for item in evidence
@@ -731,6 +1028,7 @@ class Runtime:
             "attention": self.store.attention(10),
             "work_orders": self.store.work_orders(status="active", limit=20),
             "active_goals": self.store.goal_summaries(statuses=("active",), limit=20),
+            "proposed_goals": self.store.goal_summaries(statuses=("proposed",), limit=10),
             "paused_goals": self.store.goal_summaries(statuses=("paused",), limit=10),
             "unread_results": self.store.unread_results(5),
             "recent_results": self.store.goal_summaries(
