@@ -236,7 +236,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-14T12:23:24.403161+00:00"
+      "updated_at": "2026-08-14T12:54:39.610563+00:00"
     },
     {
       "created_at": "2026-08-10T14:42:53.516527+00:00",
@@ -249,7 +249,7 @@
       "run_status": "blocked",
       "stage": "ACT",
       "target": true,
-      "updated_at": "2026-08-10T14:44:23.858202+00:00"
+      "updated_at": "2026-08-14T12:36:16.271189+00:00"
     },
     {
       "created_at": "2026-08-10T15:14:35.151855+00:00",
@@ -1192,16 +1192,16 @@
     },
     {
       "created_at": "2026-08-13T22:35:31.342613+00:00",
-      "goal_status": "active",
+      "goal_status": "achieved",
       "id": "goal-content-batch03-package-v1-20260814",
       "metric": "published_items",
       "name": "Produce Batch 3 Threads and YouTube Shorts from handoff-control signal",
       "operator": "ge",
       "owner_id": "content",
-      "run_status": "blocked",
-      "stage": "ACT",
+      "run_status": "completed",
+      "stage": "OBSERVE",
       "target": 1,
-      "updated_at": "2026-08-14T01:15:27.594061+00:00"
+      "updated_at": "2026-08-14T12:54:58.874403+00:00"
     },
     {
       "created_at": "2026-08-13T23:18:40.264858+00:00",
@@ -1254,6 +1254,32 @@
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-14T12:07:10.795657+00:00"
+    },
+    {
+      "created_at": "2026-08-14T12:45:30.467963+00:00",
+      "goal_status": "active",
+      "id": "goal-email-copy-acceptance-v1-20260814",
+      "metric": "acceptance_tests_passed",
+      "name": "Correct outbound compose acceptance command to scoped tests",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "run_status": "awaiting_approval",
+      "stage": "ACT",
+      "target": true,
+      "updated_at": "2026-08-14T12:45:47.640642+00:00"
+    },
+    {
+      "created_at": "2026-08-14T12:46:45.901574+00:00",
+      "goal_status": "active",
+      "id": "goal-campaign-asset-url-repair-v1-20260814",
+      "metric": "acceptance_tests_passed",
+      "name": "Repair campaign asset promotion URL naming and re-promote batch-02/03 assets",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "run_status": "blocked",
+      "stage": "ACT",
+      "target": true,
+      "updated_at": "2026-08-14T12:54:22.301653+00:00"
     }
   ],
   "heartbeat": {
@@ -1264,7 +1290,7 @@
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-14T12:23:24.405396+00:00"
+    "updated_at": "2026-08-14T12:54:39.612502+00:00"
   },
   "runtime_state": {
     "current_run": {
@@ -1275,7 +1301,7 @@
       "run_id": "run-bf91da1096",
       "run_status": "waiting",
       "stage": "EVALUATE",
-      "updated_at": "2026-08-14T12:23:24.405396+00:00"
+      "updated_at": "2026-08-14T12:54:39.612502+00:00"
     },
     "heartbeat": {
       "goal_id": "goal-email-campaign-20260810",
@@ -1285,22 +1311,22 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-14T12:23:24.405396+00:00"
+      "updated_at": "2026-08-14T12:54:39.612502+00:00"
     },
-    "last_activity_at": "2026-08-14T12:28:45.659834+00:00",
-    "last_sync_at": "2026-08-14T12:28:45.678647+00:00",
+    "last_activity_at": "2026-08-14T12:54:58.878024+00:00",
+    "last_sync_at": "2026-08-14T12:54:58.905407+00:00",
     "state": "running"
   },
   "totals": {
-    "approvals": 100,
-    "decisions": 198,
-    "evidence": 1798,
+    "approvals": 103,
+    "decisions": 206,
+    "evidence": 1807,
     "goals_abandoned": 12,
-    "goals_achieved": 70,
-    "goals_active": 10,
-    "goals_total": 95,
+    "goals_achieved": 71,
+    "goals_active": 11,
+    "goals_total": 97,
     "hypotheses": 33,
     "memory_claims": 5,
-    "runs": 106
+    "runs": 109
   }
 }
