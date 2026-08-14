@@ -1,13 +1,13 @@
 {
   "current_run": {
-    "created_at": "2026-08-13T22:35:31.342613+00:00",
-    "goal_id": "goal-content-batch03-package-v1-20260814",
-    "goal_name": "Produce Batch 3 Threads and YouTube Shorts from handoff-control signal",
-    "owner_id": "content",
-    "run_id": "run-c3eec5b060",
-    "run_status": "running",
-    "stage": "DECIDE",
-    "updated_at": "2026-08-14T01:09:26.398678+00:00"
+    "created_at": "2026-08-14T01:25:32.461141+00:00",
+    "goal_id": "goal-campaign-scene-source-alignment-v1-20260812",
+    "goal_name": "Bind campaign narration and motion scenes to one current SpielOS source",
+    "owner_id": "system-improvement",
+    "run_id": "run-e8f5db4d9f",
+    "run_status": "blocked",
+    "stage": "ACT",
+    "updated_at": "2026-08-14T01:25:32.584138+00:00"
   },
   "heartbeat": {
     "goal_id": "goal-content-growth-operations-v1-20260812",
@@ -19,19 +19,19 @@
     "target": true,
     "updated_at": "2026-08-13T23:42:08.305471+00:00"
   },
-  "last_activity_at": "2026-08-14T01:09:26.398678+00:00",
-  "last_sync_at": "2026-08-14T01:09:26.412940+00:00",
+  "last_activity_at": "2026-08-14T01:40:06.216395+00:00",
+  "last_sync_at": "2026-08-14T01:40:06.229139+00:00",
   "state": "running",
   "totals": {
-    "approvals": 89,
-    "decisions": 181,
-    "evidence": 1275,
+    "approvals": 94,
+    "decisions": 189,
+    "evidence": 1284,
     "goals_abandoned": 12,
-    "goals_achieved": 65,
+    "goals_achieved": 66,
     "goals_active": 12,
-    "goals_total": 92,
-    "hypotheses": 31,
+    "goals_total": 93,
+    "hypotheses": 32,
     "memory_claims": 5,
-    "runs": 99
+    "runs": 103
   }
 }
