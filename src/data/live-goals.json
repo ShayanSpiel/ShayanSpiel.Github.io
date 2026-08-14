@@ -1023,16 +1023,16 @@
       "created_at": "2026-08-13T02:43:28.844798+00:00",
       "display_title": "Prepare the next educational content package",
       "display_title_fa": "بسته بعدی محتوای آموزشی رو آماده کنیم",
-      "goal_status": "achieved",
+      "goal_status": "active",
       "id": "goal-content-batch02-package-v1-20260813",
       "metric": "published_items",
       "name": "Prepare and present the Batch 2 Threads and YouTube Shorts package",
       "operator": "ge",
       "owner_id": "content",
-      "run_status": "completed",
-      "stage": "OBSERVE",
+      "run_status": "blocked",
+      "stage": "ACT",
       "target": 1,
-      "updated_at": "2026-08-14T00:37:04.397473+00:00"
+      "updated_at": "2026-08-14 00:57:44"
     },
     {
       "created_at": "2026-08-13T11:16:19.514261+00:00",
@@ -1198,10 +1198,10 @@
       "name": "Produce Batch 3 Threads and YouTube Shorts from handoff-control signal",
       "operator": "ge",
       "owner_id": "content",
-      "run_status": "blocked",
-      "stage": "ACT",
+      "run_status": "running",
+      "stage": "DECIDE",
       "target": 1,
-      "updated_at": "2026-08-13T22:41:10.836439+00:00"
+      "updated_at": "2026-08-14T01:09:26.397062+00:00"
     },
     {
       "created_at": "2026-08-13T23:18:40.264858+00:00",
@@ -1229,14 +1229,14 @@
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-14T00:17:41.770320+00:00",
-      "goal_id": "goal-email-campaign-20260810",
-      "goal_name": "Resume daily English outbound to 30% reply rate",
-      "owner_id": "outbound",
-      "run_id": "run-bf91da1096",
-      "run_status": "awaiting_approval",
-      "stage": "ACT",
-      "updated_at": "2026-08-14T00:18:00.923388+00:00"
+      "created_at": "2026-08-13T22:35:31.342613+00:00",
+      "goal_id": "goal-content-batch03-package-v1-20260814",
+      "goal_name": "Produce Batch 3 Threads and YouTube Shorts from handoff-control signal",
+      "owner_id": "content",
+      "run_id": "run-c3eec5b060",
+      "run_status": "running",
+      "stage": "DECIDE",
+      "updated_at": "2026-08-14T01:09:26.398678+00:00"
     },
     "heartbeat": {
       "goal_id": "goal-content-growth-operations-v1-20260812",
@@ -1248,17 +1248,17 @@
       "target": true,
       "updated_at": "2026-08-13T23:42:08.305471+00:00"
     },
-    "last_activity_at": "2026-08-14T00:37:04.400490+00:00",
-    "last_sync_at": "2026-08-14T00:37:04.416860+00:00",
+    "last_activity_at": "2026-08-14T01:09:26.398678+00:00",
+    "last_sync_at": "2026-08-14T01:09:26.412940+00:00",
     "state": "running"
   },
   "totals": {
-    "approvals": 87,
-    "decisions": 179,
-    "evidence": 1271,
+    "approvals": 89,
+    "decisions": 181,
+    "evidence": 1275,
     "goals_abandoned": 12,
-    "goals_achieved": 66,
-    "goals_active": 11,
+    "goals_achieved": 65,
+    "goals_active": 12,
     "goals_total": 92,
     "hypotheses": 31,
     "memory_claims": 5,
