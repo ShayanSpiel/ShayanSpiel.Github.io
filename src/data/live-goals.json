@@ -1231,16 +1231,16 @@
     },
     {
       "created_at": "2026-08-14T01:44:23.294030+00:00",
-      "goal_status": "active",
+      "goal_status": "achieved",
       "id": "goal-476f0aadbb",
       "metric": "acceptance_tests_passed",
       "name": "Keep live snapshot push from blocking goal transitions",
       "operator": "eq",
       "owner_id": "system-improvement",
-      "run_status": "blocked",
-      "stage": "ACT",
+      "run_status": "completed",
+      "stage": "OBSERVE",
       "target": true,
-      "updated_at": "2026-08-14T02:01:59.150904+00:00"
+      "updated_at": "2026-08-14T12:16:42.415374+00:00"
     },
     {
       "created_at": "2026-08-14T02:52:24.392423+00:00",
@@ -1287,17 +1287,17 @@
       "target": 0.3,
       "updated_at": "2026-08-14T12:10:52.121573+00:00"
     },
-    "last_activity_at": "2026-08-14T12:10:52.121573+00:00",
-    "last_sync_at": "2026-08-14T12:10:52.209512+00:00",
+    "last_activity_at": "2026-08-14T12:16:42.416801+00:00",
+    "last_sync_at": "2026-08-14T12:16:42.436312+00:00",
     "state": "running"
   },
   "totals": {
     "approvals": 100,
     "decisions": 198,
-    "evidence": 1795,
+    "evidence": 1796,
     "goals_abandoned": 12,
-    "goals_achieved": 68,
-    "goals_active": 12,
+    "goals_achieved": 69,
+    "goals_active": 11,
     "goals_total": 95,
     "hypotheses": 33,
     "memory_claims": 5,
