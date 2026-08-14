@@ -1,0 +1,61 @@
+---
+import { type Locale, t } from "../../i18n/translations";
+
+export interface Props {
+  locale?: Locale;
+}
+
+const { locale = "en" } = Astro.props;
+const steps = [
+  { icon: "bx-bullseye", key: "goal" },
+  { icon: "bx-search", key: "observe" },
+  { icon: "bx-task", key: "decide" },
+  { icon: "bx-play", key: "act" },
+  { icon: "bx-check-square", key: "evaluate" },
+];
+---
+
+<div class="loop-canvas relative overflow-hidden rounded-xl border border-border bg-panel px-5 py-10 shadow-panel sm:px-8 sm:py-14" data-aos="fade-up">
+  <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
+  <div class="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 glow-blob opacity-15"></div>
+  <div class="loop-rail relative z-10 grid gap-6 sm:grid-cols-5 sm:gap-0">
+    {steps.map((step, index) => (
+      <div class="loop-station relative flex items-center gap-4 sm:flex-col sm:gap-3 sm:text-center">
+        <div class:list={["loop-node relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-md border bg-panel-raised", index < 3 ? "border-primary text-primary shadow-[0_0_24px_var(--primary-soft)]" : "border-border text-muted-foreground"]}>
+          <i class:list={["bx", step.icon, "icon-xl"]} aria-hidden="true"></i>
+        </div>
+        <div>
+          <p class:list={["text-xs font-semibold", index < 3 ? "text-foreground-strong" : "text-foreground-muted"]}>{t(locale, `architecture.loop.${step.key}.title`)}</p>
+          <p class="mt-1 text-3xs leading-relaxed text-muted-foreground">{t(locale, `architecture.loop.${step.key}.desc`)}</p>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .loop-rail::before,
+  .loop-rail::after {
+    content: "";
+    position: absolute;
+    inset-inline-start: 1.3rem;
+    top: 1.3rem;
+    bottom: 1.3rem;
+    width: 2px;
+    border-radius: var(--radius-pill);
+  }
+  .loop-rail::before { background: var(--border-strong); }
+  .loop-rail::after { bottom: 50%; background: linear-gradient(to bottom, var(--primary), var(--accent)); }
+  @media (min-width: 640px) {
+    .loop-rail::before,
+    .loop-rail::after {
+      inset-inline-start: 10%;
+      inset-inline-end: 10%;
+      top: 1.3rem;
+      bottom: auto;
+      width: auto;
+      height: 2px;
+    }
+    .loop-rail::after { inset-inline-end: 50%; background: linear-gradient(to right, var(--primary), var(--accent)); }
+  }
+</style>

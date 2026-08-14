@@ -82,15 +82,54 @@ def _decode_target(raw: str) -> Any:
         return raw
 
 
-def _latest_stages(conn: sqlite3.Connection) -> Dict[str, str]:
-    """Map goal_id -> stage of its highest-sequence cycle, when present."""
-    latest: Dict[str, str] = {}
+def _latest_cycles(conn: sqlite3.Connection) -> Dict[str, Dict[str, str]]:
+    """Map goal_id to the public-safe state of its highest-sequence cycle."""
+    latest: Dict[str, Dict[str, str]] = {}
     for row in conn.execute(
-        "SELECT goal_id, stage FROM cycles ORDER BY goal_id, sequence DESC"
+        "SELECT goal_id, stage, run_status FROM cycles ORDER BY goal_id, sequence DESC"
     ):
         if row["goal_id"] not in latest:
-            latest[row["goal_id"]] = row["stage"]
+            latest[row["goal_id"]] = {
+                "stage": row["stage"],
+                "run_status": row["run_status"],
+            }
     return latest
+
+
+# Buyer-readable labels are explicit public copy, never inferred by the sync.
+# Raw canonical titles remain in `name` and are shown in system details.
+_PUBLIC_GOAL_COPY: Dict[str, Dict[str, str]] = {
+    "goal-email-campaign-20260810": {
+        "display_title": "Improve qualified outbound conversations",
+        "display_title_fa": "گفت‌وگوهای فروش باکیفیت رو بیشتر کنیم",
+        "business_value": "More qualified replies create a repeatable sales pipeline.",
+        "business_value_fa": "جواب‌های باکیفیت بیشتر، مسیر فروش تکرارپذیرتری می‌سازن.",
+    },
+    "goal-content-growth-operations-v1-20260812": {
+        "display_title": "Grow qualified visits and service leads",
+        "display_title_fa": "بازدید هدفمند و درخواست خدمات رو بیشتر کنیم",
+        "business_value": "Useful content should create qualified visits and Agent Brief requests.",
+        "business_value_fa": "محتوای مفید باید بازدید هدفمند و درخواست Agent Brief ایجاد کنه.",
+    },
+    "goal-content-daily-scorecard-v1-20260812": {
+        "display_title": "Measure the content-to-lead funnel",
+        "display_title_fa": "مسیر محتوا تا لید رو اندازه بگیریم",
+        "business_value": "The company needs evidence about which content creates visits and leads.",
+        "business_value_fa": "شرکت باید بدونه کدوم محتوا واقعاً بازدید و لید ایجاد می‌کنه.",
+    },
+    "goal-email-send-20260813-b4": {
+        "display_title": "Deliver the next qualified outbound batch",
+        "display_title_fa": "بسته بعدی ارتباط‌گیری با لیدهای مناسب رو ارسال کنیم",
+        "business_value": "Consistent qualified outreach tests whether the sales message creates conversations.",
+        "business_value_fa": "ارتباط‌گیری منظم با لیدهای مناسب نشون می‌ده پیام فروش گفت‌وگو ایجاد می‌کنه یا نه.",
+    },
+    "goal-content-batch02-package-v1-20260813": {
+        "display_title": "Prepare the next educational content package",
+        "display_title_fa": "بسته بعدی محتوای آموزشی رو آماده کنیم",
+        "business_value": "Buyer-focused content creates useful reach and routes operators to Services.",
+        "business_value_fa": "محتوای مناسب خریدار، مخاطب مفید رو به صفحه خدمات می‌رسونه.",
+    },
+}
 
 
 def _count(conn: sqlite3.Connection, table: str) -> int:
@@ -243,8 +282,12 @@ def _write_json(path: Path, payload: Dict[str, Any], quiet: bool, summary: str) 
 
     if not quiet:
         action = "wrote" if changed else "unchanged (deterministic snapshot, no mtime churn)"
+        try:
+            display_path = path.relative_to(REPO_ROOT)
+        except ValueError:
+            display_path = path
         print(
-            f"sync-live-timeline: {action} {path.relative_to(REPO_ROOT)} {summary}"
+            f"sync-live-timeline: {action} {display_path} {summary}"
         )
     return changed
 
@@ -273,7 +316,7 @@ def sync_live(
         goals = conn.execute(
             f"SELECT {_GOAL_COLUMNS} FROM goals ORDER BY created_at, id"
         ).fetchall()
-        stages = _latest_stages(conn)
+        cycles = _latest_cycles(conn)
 
         status_counts: Dict[str, int] = {}
         for row in goals:
@@ -302,6 +345,7 @@ def sync_live(
                 {
                     "id": row["id"],
                     "name": row["name"],
+                    **_PUBLIC_GOAL_COPY.get(row["id"], {}),
                     "owner_id": row["owner_id"],
                     "goal_status": row["goal_status"],
                     "metric": row["metric"],
@@ -309,7 +353,8 @@ def sync_live(
                     "target": _decode_target(row["target_json"]),
                     "created_at": row["created_at"],
                     "updated_at": row["updated_at"],
-                    "stage": stages.get(row["id"]),
+                    "stage": cycles.get(row["id"], {}).get("stage"),
+                    "run_status": cycles.get(row["id"], {}).get("run_status"),
                 }
                 for row in goals
             ],

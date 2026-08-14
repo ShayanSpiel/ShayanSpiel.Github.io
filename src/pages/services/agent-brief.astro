@@ -4,6 +4,7 @@ import { SITE } from "../../config";
 import { type Locale, t } from "../../i18n/translations";
 import { localizePath } from "../../i18n";
 import ContactModal from "../../components/ContactModal.astro";
+import AgentBriefForm from "../../components/AgentBriefForm.astro";
 
 export interface Props {
   locale?: Locale;
@@ -31,70 +32,70 @@ const BRIEF_TABLE = [
   { icon: "bx-rocket",          nameKey: "services.brief.step7.name", descKey: "services.brief.step7.desc" },
 ];
 
-const EX_EN = JSON.stringify([
-  { 0: "support request message", 1: "customer", 2: "categorize and draft a reply", 3: "response draft", 4: "Slack channel", 5: "customer history", 6: "escalation policies", 7: "response time < 2 min" },
-  { 0: "screenshot", 1: "QA team", 2: "extract errors and file a bug", 3: "bug ticket", 4: "Jira board", 5: "codebase context", 6: "severity classification", 7: "reproduction steps captured" },
-  { 0: "contract PDF", 1: "legal department", 2: "extract key dates and obligations", 3: "structured summary", 4: "Notion page", 5: "past contract terms", 6: "compliance checklist", 7: "all deadlines identified" },
-]);
-const EX_FA = JSON.stringify([
-  { 0: "پیام درخواست پشتیبانی", 1: "مشتری", 2: "دسته‌بندی و پاسخ اولیه", 3: "پیش‌نویس پاسخ", 4: "کانال Slack", 5: "تاریخچه مشتری", 6: "سیاست‌های ارجاع", 7: "زمان پاسخ کمتر از ۲ دقیقه" },
-  { 0: "اسکرین‌شات", 1: "تیم QA", 2: "استخراج خطاها و ثبت باگ", 3: "تیکت باگ", 4: "تخته Jira", 5: "زمینه کدپایگاه", 6: "طبقه‌بندی شدت", 7: "مراحل بازتولید ثبت شده" },
-  { 0: "قرارداد PDF", 1: "بخش حقوقی", 2: "استخراج تاریخ‌ها و تعهدات", 3: "خلاصه ساختاریافته", 4: "صفحه Notion", 5: "شرایط قراردادهای قبلی", 6: "چک‌لیست انطباق", 7: "تمام مهلت‌ها شناسایی شده" },
-]);
-const examplesJson = locale === "fa" ? EX_FA : EX_EN;
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: t(locale, "nav.home"), item: `${SITE.url}${localizePath("/", locale)}` },
+    { "@type": "ListItem", position: 2, name: t(locale, "nav.services"), item: `${SITE.url}${localizePath("/services/", locale)}` },
+    { "@type": "ListItem", position: 3, name: t(locale, "agentBrief.label"), item: `${SITE.url}${localizePath("/services/agent-brief/", locale)}` },
+  ],
+};
 ---
 
 <Page
-  title={t(locale, "services.brief.title") + " — " + SITE.name}
-  description={t(locale, "services.brief.subtitle")}
+  title={t(locale, "agentBrief.pageTitle")}
+  description={t(locale, "agentBrief.pageDesc")}
   image="/assets/og/home.png"
   locale={locale}
 >
-  <section class="pt-24 sm:pt-32 pb-8 sm:pb-10">
-    <div class="mx-auto max-w-3xl px-6">
+  <section class="relative overflow-hidden pt-24 sm:pt-32 pb-12 sm:pb-16">
+    <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
+    <div class="absolute left-1/2 top-1/3 h-[28rem] w-[42rem] -translate-x-1/2 -translate-y-1/2 glow-blob opacity-15"></div>
+    <div class="relative mx-auto max-w-3xl px-6">
       <div class="mb-10">
         <a href={localizePath("/services/", locale)} class="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors mb-6">
           <i class="bx bx-chevron-left icon-base rtl:rotate-180"></i>
           {t(locale, "services.pageTitle")}
         </a>
 
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
-          <div class="flex items-center gap-3">
-            <div class="flex h-10 w-10 items-center justify-center rounded-md bg-primary-soft">
-              <i class="bx bx-file text-primary icon-xl"></i>
-            </div>
-            <h1 class="text-2xl sm:text-3xl font-bold text-foreground-strong tracking-tight">{t(locale, "services.brief.title")}</h1>
+        <p class="text-2xs font-semibold uppercase tracking-widest text-primary">{t(locale, "agentBrief.label")}</p>
+        <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mt-3 mb-4">
+          <div class="max-w-2xl">
+            <h1 class="text-4xl font-extrabold leading-tightest tracking-tight text-foreground-strong sm:text-5xl">{t(locale, "agentBrief.hero.titleLead")}<br /><span class="text-primary">{t(locale, "agentBrief.hero.titleAccent")}</span></h1>
+            <p class="mt-5 text-sm leading-relaxed text-muted-foreground">{t(locale, "agentBrief.hero.body")}</p>
+            <p class="mt-3 text-xs font-medium text-foreground">{t(locale, "agentBrief.hero.trust")}</p>
           </div>
-          <button data-open-contact-modal type="button" class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-5 h-10 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20 cursor-pointer shrink-0">
-            {t(locale, "services.cta.button")}
-          </button>
+          <a
+            href={localizePath("/services/agent-brief/#request", locale)}
+            data-open-contact-modal
+            class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-5 h-10 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20 cursor-pointer shrink-0"
+          >
+            {t(locale, "cta.requestAgentBrief")}
+          </a>
         </div>
-        <p class="text-sm text-muted-foreground">{t(locale, "services.brief.subtitle")}</p>
       </div>
 
       <div class="h-px bg-border mb-10"></div>
 
       <!-- 1. The Brief Framework -->
-      <div class="mb-14">
+      <div id="framework" class="mb-14 scroll-mt-24">
         <h2 class="text-xs font-semibold text-primary uppercase tracking-wider mb-6">{t(locale, "services.brief.section1")}</h2>
-        <div class="flex items-center justify-between gap-1 sm:gap-2" data-aos="fade-up">
+        <div class="brief-rail relative grid grid-cols-7 gap-1 sm:gap-2" data-aos="fade-up">
           {PIPELINE_NODES.map((n, i) => (
             <Fragment>
-              <div class="flex flex-col items-center gap-1.5 flex-1 min-w-0">
-                <div class:list={["pipeline-icon", n.colorClass]}>
+              <div class="relative z-10 flex min-w-0 flex-col items-center gap-1.5">
+                <div class:list={["pipeline-icon border bg-panel", n.colorClass, i < 4 ? "border-primary shadow-[0_0_18px_var(--primary-soft)]" : "border-border"]}>
                   <i class={`bx ${n.icon}`}></i>
                 </div>
                 <span class="pipeline-label text-center leading-tight text-3xs sm:text-2xs">{i + 1}. {t(locale, `services.brief.step${i + 1}.name`)}</span>
               </div>
-              {i < PIPELINE_NODES.length - 1 && (
-                <i class="bx bx-chevron-right text-muted-foreground icon-base rtl:rotate-180 shrink-0"></i>
-              )}
             </Fragment>
           ))}
         </div>
       </div>
 
-      <!-- 2. Core Agent Statement — animated slots -->
+      <!-- 2. Core Agent Statement with animated slots -->
       <div class="mb-14">
         <h2 class="text-xs font-semibold text-primary uppercase tracking-wider mb-4">{t(locale, "services.brief.section2")}</h2>
         <div class="rounded-md border border-border bg-panel p-6 sm:p-8">
@@ -123,111 +124,27 @@ const examplesJson = locale === "fa" ? EX_FA : EX_EN;
     </div>
   </section>
 
-  <!-- CTA -->
-  <section class="relative pt-8 sm:pt-10 pb-20 sm:pb-24 overflow-hidden">
+  <!-- Agent Brief request form (inline, works without JavaScript) -->
+  <section id="request" class="relative pt-8 sm:pt-10 pb-20 sm:pb-24 overflow-hidden">
     <div class="absolute inset-0 bg-panel-deep/50"></div>
     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] glow-blob opacity-10"></div>
 
-    <div class="relative mx-auto max-w-3xl px-6 text-center" data-aos="fade-up">
-      <h2 class="text-3xl sm:text-4xl font-bold text-foreground-strong tracking-tight" set:html={t(locale, "services.cta.title")} />
-      <p class="mt-4 text-sm text-muted-foreground max-w-lg mx-auto">
-        {t(locale, "services.cta.desc")}
-      </p>
-      <button data-open-contact-modal type="button" class="mt-8 inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20 cursor-pointer">
-        {t(locale, "services.cta.button")}
-      </button>
+    <div class="relative mx-auto max-w-3xl px-6" data-aos="fade-up">
+      <AgentBriefForm id="agent-brief-inline" locale={locale} />
     </div>
   </section>
 
   <ContactModal locale={locale} />
-
-  <script is:inline define:vars={{ examplesJson }}>
-  (function () {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    var examples = JSON.parse(examplesJson);
-    var labels = ["[input]", "[source]", "[job]", "[output]", "[interface]", "[knowledge and memory]", "[rules and approvals]", "[measurable criteria]"];
-    var setIdx = 0;
-    var slots = document.querySelectorAll(".brief-slot[data-bracket]");
-    var total = slots.length;
-    var DUR = 300;
-
-    function fadeAll(to, dur, cb) {
-      var starts = [];
-      for (var i = 0; i < total; i++) starts.push(parseFloat(getComputedStyle(slots[i]).opacity));
-      var t0 = performance.now();
-      function tick(now) {
-        var p = Math.min((now - t0) / dur, 1);
-        for (var i = 0; i < total; i++) {
-          slots[i].style.opacity = starts[i] + (to - starts[i]) * p;
-        }
-        if (p < 1) requestAnimationFrame(tick);
-        else if (cb) cb();
-      }
-      requestAnimationFrame(tick);
-    }
-
-    function setTexts(arr) {
-      for (var i = 0; i < total; i++) slots[i].textContent = arr[i];
-    }
-
-    function fillOne(idx, cb) {
-      var el = slots[idx];
-      var from = parseFloat(getComputedStyle(el).opacity);
-      var t0 = performance.now();
-      function tick(now) {
-        var p = Math.min((now - t0) / DUR, 1);
-        el.style.opacity = from + (0 - from) * p;
-        if (p < 1) requestAnimationFrame(tick);
-        else {
-          el.textContent = "[" + examples[setIdx][idx] + "]";
-          el.style.opacity = "0";
-          requestAnimationFrame(function () {
-            requestAnimationFrame(function () {
-              var t1 = performance.now();
-              function tick2(now) {
-                var p2 = Math.min((now - t1) / DUR, 1);
-                el.style.opacity = p2;
-                if (p2 < 1) requestAnimationFrame(tick2);
-                else if (cb) cb();
-              }
-              requestAnimationFrame(tick2);
-            });
-          });
-        }
-      }
-      requestAnimationFrame(tick);
-    }
-
-    function fillAll(cb) {
-      var i = 0;
-      function next() {
-        if (i < total) fillOne(i++, function () { setTimeout(next, 500); });
-        else if (cb) cb();
-      }
-      next();
-    }
-
-    function resetAll(cb) {
-      fadeAll(0, DUR, function () {
-        setTexts(labels);
-        fadeAll(1, DUR, cb);
-      });
-    }
-
-    function loop() {
-      setTimeout(function () {
-        fillAll(function () {
-          setTimeout(function () {
-            resetAll(function () {
-              setIdx = (setIdx + 1) % examples.length;
-              loop();
-            });
-          }, 3000);
-        });
-      }, 3500);
-    }
-
-    loop();
-  })();
-  </script>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
 </Page>
+
+<style>
+  .brief-rail::before {
+    content: "";
+    position: absolute;
+    inset-inline: 7%;
+    top: 1.25rem;
+    height: 2px;
+    background: linear-gradient(to right, var(--primary), var(--accent), var(--border));
+  }
+</style>

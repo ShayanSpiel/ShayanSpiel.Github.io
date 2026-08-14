@@ -6,7 +6,10 @@
  * never writes the canonical `/sitemap.xml` that robots.txt points crawlers to.
  * This consolidates whatever was generated into a single `/sitemap.xml` that
  * always serves: a `urlset` when only one chunk exists, else a `sitemapindex`
- * listing every chunk. Noindex pages are excluded. Exit 0 = ok, exit 1 = broken sitemap found.
+ * listing every chunk. Noindex pages are excluded. Intentional migration
+ * redirects are expanded from Astro's minimal static stubs into complete
+ * noindex documents so the shared SEO audit can still verify them.
+ * Exit 0 = ok, exit 1 = broken sitemap found.
  */
 import { readFileSync, readdirSync, writeFileSync, statSync } from "fs";
 import { join, extname } from "path";
@@ -31,10 +34,15 @@ function routeUrlFromHtml(htmlFile) {
 }
 
 const noindexUrls = new Set();
+const redirectUrls = new Set();
 for (const htmlFile of collectHtml(dist)) {
   const html = readFileSync(htmlFile, "utf8");
+  const routeUrl = routeUrlFromHtml(htmlFile);
   if (/<meta name="robots"[^>]*content="[^"]*noindex/.test(html)) {
-    noindexUrls.add(routeUrlFromHtml(htmlFile));
+    noindexUrls.add(routeUrl);
+  }
+  if (/<meta http-equiv="refresh"/i.test(html)) {
+    redirectUrls.add(routeUrl);
   }
 }
 
@@ -53,17 +61,17 @@ if (chunkFiles.length === 0) {
 
 const sitemapXml = join(dist, "sitemap.xml");
 
-function filterNoindex(xml) {
+function filterNonCanonical(xml) {
   return xml.replace(/<url>[\s\S]*?<\/url>/g, (urlBlock) => {
     const locMatch = urlBlock.match(/<loc>([^<]+)<\/loc>/);
-    if (locMatch && noindexUrls.has(locMatch[1])) return "";
+    if (locMatch && (noindexUrls.has(locMatch[1]) || redirectUrls.has(locMatch[1]))) return "";
     return urlBlock;
   });
 }
 
 if (chunkFiles.length === 1) {
   let content = readFileSync(join(dist, chunkFiles[0]), "utf8");
-  content = filterNoindex(content);
+  content = filterNonCanonical(content);
   writeFileSync(sitemapXml, content);
   console.log(`postbuild-sitemap: wrote single-urlset sitemap.xml from ${chunkFiles[0]}`);
 } else {
@@ -81,3 +89,27 @@ if (!/<loc>https:\/\/spielos\.xyz/.test(raw)) {
   process.exit(1);
 }
 console.log("postbuild-sitemap: dist/sitemap.xml OK");
+
+const redirectShells = [
+  { source: "architecture/index.html", destination: "waitlist/index.html", target: "/architecture/" },
+  { source: "architecture/index.html", destination: "features/index.html", target: "/architecture/" },
+  { source: "fa/architecture/index.html", destination: "fa/waitlist/index.html", target: "/fa/architecture/" },
+  { source: "fa/architecture/index.html", destination: "fa/features/index.html", target: "/fa/architecture/" },
+];
+
+for (const { source, destination, target } of redirectShells) {
+  const sourcePath = join(dist, source);
+  const destinationPath = join(dist, destination);
+  let html = readFileSync(sourcePath, "utf8");
+  html = html.replace(
+    /<meta name="robots"[^>]*>/,
+    '<meta name="robots" content="noindex">',
+  );
+  html = html.replace(
+    "<head>",
+    `<head><meta http-equiv="refresh" content="0;url=${target}">`,
+  );
+  writeFileSync(destinationPath, html);
+}
+
+console.log(`postbuild-sitemap: expanded ${redirectShells.length} redirect documents`);

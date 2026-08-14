@@ -15,8 +15,10 @@ The site converts qualified visitors into two outcomes:
 The primary buyer path is `/services/`. The existing Agent Brief experience
 remains available at `/services/agent-brief/` and the services page. Do not
 replace it with a generic CTA page.
-The general fallback is `/contact/`. `/waitlist/` is a protected legacy product
-route and must not be used as the default site CTA.
+The general fallback is `/contact/`. The retired `/waitlist/` route redirects
+directly to `/architecture/`; its Persian equivalent redirects to
+`/fa/architecture/`. The former showcase implementation remains recoverable in
+Git history and is not part of the active funnel.
 
 ## One Idea Hierarchy
 
@@ -39,7 +41,7 @@ to the next relevant step.
 ```text
 Founder / operator with repetitive work
         ↓
-Homepage, founder story, notes, features
+Homepage, founder story, notes, Architecture, Live
         ↓
 Services implementation offer and Agent Brief assessment
         ↓
@@ -55,10 +57,10 @@ Qualified buyer conversation
 | Positioning | `/`, `/founder/`, `/about/` | Page components + `src/config.ts` |
 | Buyer conversion | `/services/`, `/services/agent-brief/` | Services pages + `ContactModal` |
 | General leads | `/contact/`, `/contact/thank-you/` | Contact page + `FORMS` config |
-| Product education | `/features/**`, `/use-cases/` | `FeaturesLayout` + feature components |
+| Product education | `/architecture/`, `/live/` | Architecture and Live page components |
 | Founder-led content | `/notes/**` | Notes collection + post components |
-| Legacy product | `/waitlist/`, `/fa/waitlist/` | Protected showcase components |
-| Migration redirects | `/posts/**`, `/shayan/` | Redirect page files |
+| Legacy feature detail | `/features/**` subpages | Retained with `noindex, follow` pending evidence-based retirement |
+| Migration redirects | `/waitlist/`, `/fa/waitlist/`, `/features/`, `/fa/features/`, `/posts/**`, `/shayan/` | Redirect page files |
 
 `/use-cases/`, `/contact/thank-you/`, `/fa/contact/thank-you/`, and archived
 product pages are not indexable. They may remain crawlable so search engines
@@ -79,9 +81,8 @@ can process their robots directives.
 
 ## Conversion analytics
 
-Conversion events use the generic `lead_*` vocabulary. The legacy waitlist form
-is tagged with `form_type: waitlist_legacy`; it is not treated as the primary
-business funnel.
+Conversion events use the generic `lead_*` vocabulary. The active form type is
+`agent_brief`; analytics never include form contents or visitor identity.
 
 No event may contain email addresses, names, messages, business descriptions,
 or other form contents.
