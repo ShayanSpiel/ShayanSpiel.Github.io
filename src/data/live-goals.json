@@ -233,10 +233,10 @@
       "name": "Resume daily English outbound to 30% reply rate",
       "operator": "ge",
       "owner_id": "outbound",
-      "run_status": "awaiting_approval",
-      "stage": "ACT",
+      "run_status": "waiting",
+      "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-14T00:18:00.922420+00:00"
+      "updated_at": "2026-08-14T12:04:18.893593+00:00"
     },
     {
       "created_at": "2026-08-10T14:42:53.516527+00:00",
@@ -1045,7 +1045,7 @@
       "run_status": "blocked",
       "stage": "ACT",
       "target": true,
-      "updated_at": "2026-08-13T22:57:45.864814+00:00"
+      "updated_at": "2026-08-14T03:51:23.691873+00:00"
     },
     {
       "created_at": "2026-08-13T19:31:32.273247+00:00",
@@ -1058,7 +1058,7 @@
       "run_status": "blocked",
       "stage": "ACT",
       "target": true,
-      "updated_at": "2026-08-13T21:33:32.296611+00:00"
+      "updated_at": "2026-08-14T03:51:23.256878+00:00"
     },
     {
       "created_at": "2026-08-13T20:10:53.936379+00:00",
@@ -1228,53 +1228,79 @@
       "stage": "ACT",
       "target": true,
       "updated_at": "2026-08-14T01:16:04.620082+00:00"
+    },
+    {
+      "created_at": "2026-08-14T01:44:23.294030+00:00",
+      "goal_status": "active",
+      "id": "goal-476f0aadbb",
+      "metric": "acceptance_tests_passed",
+      "name": "Keep live snapshot push from blocking goal transitions",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "run_status": "blocked",
+      "stage": "ACT",
+      "target": true,
+      "updated_at": "2026-08-14T02:01:59.150904+00:00"
+    },
+    {
+      "created_at": "2026-08-14T02:52:24.392423+00:00",
+      "goal_status": "achieved",
+      "id": "goal-abc1a2de7a",
+      "metric": "acceptance_tests_passed",
+      "name": "Sync render-design narration check to the narration-led-v2 contract",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "run_status": "completed",
+      "stage": "OBSERVE",
+      "target": true,
+      "updated_at": "2026-08-14T12:07:10.795657+00:00"
     }
   ],
   "heartbeat": {
-    "goal_id": "goal-content-growth-operations-v1-20260812",
-    "goal_name": "Operate the content growth program toward 200 daily visits and 10 daily services leads",
-    "metric": "all_children_achieved",
-    "operator": "eq",
+    "goal_id": "goal-email-campaign-20260810",
+    "goal_name": "Resume daily English outbound to 30% reply rate",
+    "metric": "reply_rate",
+    "operator": "ge",
     "run_status": "waiting",
-    "stage": "OBSERVE",
-    "target": true,
-    "updated_at": "2026-08-13T23:42:08.305471+00:00"
+    "stage": "EVALUATE",
+    "target": 0.3,
+    "updated_at": "2026-08-14T12:04:18.895735+00:00"
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-14T01:25:32.461141+00:00",
-      "goal_id": "goal-campaign-scene-source-alignment-v1-20260812",
-      "goal_name": "Bind campaign narration and motion scenes to one current SpielOS source",
-      "owner_id": "system-improvement",
-      "run_id": "run-e8f5db4d9f",
-      "run_status": "blocked",
-      "stage": "ACT",
-      "updated_at": "2026-08-14T01:25:32.584138+00:00"
+      "created_at": "2026-08-14T00:17:41.770320+00:00",
+      "goal_id": "goal-email-campaign-20260810",
+      "goal_name": "Resume daily English outbound to 30% reply rate",
+      "owner_id": "outbound",
+      "run_id": "run-bf91da1096",
+      "run_status": "waiting",
+      "stage": "EVALUATE",
+      "updated_at": "2026-08-14T12:04:18.895735+00:00"
     },
     "heartbeat": {
-      "goal_id": "goal-content-growth-operations-v1-20260812",
-      "goal_name": "Operate the content growth program toward 200 daily visits and 10 daily services leads",
-      "metric": "all_children_achieved",
-      "operator": "eq",
+      "goal_id": "goal-email-campaign-20260810",
+      "goal_name": "Resume daily English outbound to 30% reply rate",
+      "metric": "reply_rate",
+      "operator": "ge",
       "run_status": "waiting",
-      "stage": "OBSERVE",
-      "target": true,
-      "updated_at": "2026-08-13T23:42:08.305471+00:00"
+      "stage": "EVALUATE",
+      "target": 0.3,
+      "updated_at": "2026-08-14T12:04:18.895735+00:00"
     },
-    "last_activity_at": "2026-08-14T01:40:06.216395+00:00",
-    "last_sync_at": "2026-08-14T01:40:06.229139+00:00",
+    "last_activity_at": "2026-08-14T12:07:10.797210+00:00",
+    "last_sync_at": "2026-08-14T12:07:10.815396+00:00",
     "state": "running"
   },
   "totals": {
-    "approvals": 94,
-    "decisions": 189,
-    "evidence": 1284,
+    "approvals": 100,
+    "decisions": 197,
+    "evidence": 1792,
     "goals_abandoned": 12,
-    "goals_achieved": 66,
-    "goals_active": 12,
-    "goals_total": 93,
-    "hypotheses": 32,
+    "goals_achieved": 67,
+    "goals_active": 13,
+    "goals_total": 95,
+    "hypotheses": 33,
     "memory_claims": 5,
-    "runs": 103
+    "runs": 106
   }
 }
