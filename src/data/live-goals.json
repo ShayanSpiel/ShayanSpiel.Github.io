@@ -233,10 +233,10 @@
       "name": "Resume daily English outbound to 30% reply rate",
       "operator": "ge",
       "owner_id": "outbound",
-      "run_status": "completed",
-      "stage": "OBSERVE",
+      "run_status": "awaiting_approval",
+      "stage": "ACT",
       "target": 0.3,
-      "updated_at": "2026-08-13T04:24:08.578347+00:00"
+      "updated_at": "2026-08-14T00:18:00.922420+00:00"
     },
     {
       "created_at": "2026-08-10T14:42:53.516527+00:00",
@@ -721,7 +721,7 @@
       "run_status": "waiting",
       "stage": "OBSERVE",
       "target": true,
-      "updated_at": "2026-08-12T20:04:48.412896+00:00"
+      "updated_at": "2026-08-13T23:42:08.294473+00:00"
     },
     {
       "business_value": "The company needs evidence about which content creates visits and leads.",
@@ -915,16 +915,16 @@
       "created_at": "2026-08-13T01:34:06.413534+00:00",
       "display_title": "Deliver the next qualified outbound batch",
       "display_title_fa": "بسته بعدی ارتباط‌گیری با لیدهای مناسب رو ارسال کنیم",
-      "goal_status": "active",
+      "goal_status": "expired",
       "id": "goal-email-send-20260813-b4",
       "metric": "reply_rate",
       "name": "English outbound send batch 4: next 50 from remaining queue via Brevo (owner order 2026-08-13)",
       "operator": "ge",
       "owner_id": "outbound",
-      "run_status": "waiting",
+      "run_status": "completed",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-13T23:38:17.322812+00:00"
+      "updated_at": "2026-08-14T00:17:41.619100+00:00"
     },
     {
       "created_at": "2026-08-13T01:44:21.896620+00:00",
@@ -1211,57 +1211,57 @@
       "name": "Present company runtime output as user-friendly cards in run cards",
       "operator": "eq",
       "owner_id": "system-improvement",
-      "run_status": "running",
+      "run_status": "blocked",
       "stage": "ACT",
       "target": true,
-      "updated_at": "2026-08-13T23:39:21.800626+00:00"
+      "updated_at": "2026-08-13T23:55:54.693191+00:00"
     }
   ],
   "heartbeat": {
-    "goal_id": "goal-email-send-20260813-b4",
-    "goal_name": "English outbound send batch 4: next 50 from remaining queue via Brevo (owner order 2026-08-13)",
-    "metric": "reply_rate",
-    "operator": "ge",
+    "goal_id": "goal-content-growth-operations-v1-20260812",
+    "goal_name": "Operate the content growth program toward 200 daily visits and 10 daily services leads",
+    "metric": "all_children_achieved",
+    "operator": "eq",
     "run_status": "waiting",
-    "stage": "EVALUATE",
-    "target": 0.3,
-    "updated_at": "2026-08-13T23:38:17.324927+00:00"
+    "stage": "OBSERVE",
+    "target": true,
+    "updated_at": "2026-08-13T23:42:08.305471+00:00"
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-13T23:18:40.264858+00:00",
-      "goal_id": "goal-company-run-card-output-v1-20260814",
-      "goal_name": "Present company runtime output as user-friendly cards in run cards",
-      "owner_id": "system-improvement",
-      "run_id": "run-b970dece41",
-      "run_status": "running",
+      "created_at": "2026-08-14T00:17:41.770320+00:00",
+      "goal_id": "goal-email-campaign-20260810",
+      "goal_name": "Resume daily English outbound to 30% reply rate",
+      "owner_id": "outbound",
+      "run_id": "run-bf91da1096",
+      "run_status": "awaiting_approval",
       "stage": "ACT",
-      "updated_at": "2026-08-13T23:39:21.801344+00:00"
+      "updated_at": "2026-08-14T00:18:00.923388+00:00"
     },
     "heartbeat": {
-      "goal_id": "goal-email-send-20260813-b4",
-      "goal_name": "English outbound send batch 4: next 50 from remaining queue via Brevo (owner order 2026-08-13)",
-      "metric": "reply_rate",
-      "operator": "ge",
+      "goal_id": "goal-content-growth-operations-v1-20260812",
+      "goal_name": "Operate the content growth program toward 200 daily visits and 10 daily services leads",
+      "metric": "all_children_achieved",
+      "operator": "eq",
       "run_status": "waiting",
-      "stage": "EVALUATE",
-      "target": 0.3,
-      "updated_at": "2026-08-13T23:38:17.324927+00:00"
+      "stage": "OBSERVE",
+      "target": true,
+      "updated_at": "2026-08-13T23:42:08.305471+00:00"
     },
-    "last_activity_at": "2026-08-13T23:39:21.801344+00:00",
-    "last_sync_at": "2026-08-13T23:39:21.815458+00:00",
+    "last_activity_at": "2026-08-14T00:18:00.923388+00:00",
+    "last_sync_at": "2026-08-14T00:18:00.935000+00:00",
     "state": "running"
   },
   "totals": {
-    "approvals": 86,
-    "decisions": 177,
-    "evidence": 1266,
+    "approvals": 87,
+    "decisions": 178,
+    "evidence": 1270,
     "goals_abandoned": 12,
     "goals_achieved": 65,
-    "goals_active": 13,
+    "goals_active": 12,
     "goals_total": 92,
-    "hypotheses": 30,
+    "hypotheses": 31,
     "memory_claims": 5,
-    "runs": 98
+    "runs": 99
   }
 }
