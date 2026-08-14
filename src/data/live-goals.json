@@ -236,7 +236,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-14T12:04:18.893593+00:00"
+      "updated_at": "2026-08-14T12:10:52.119612+00:00"
     },
     {
       "created_at": "2026-08-10T14:42:53.516527+00:00",
@@ -1036,16 +1036,16 @@
     },
     {
       "created_at": "2026-08-13T11:16:19.514261+00:00",
-      "goal_status": "active",
+      "goal_status": "achieved",
       "id": "goal-design-video-restore-batch1-thumbs-v1-20260813",
       "metric": "acceptance_tests_passed",
       "name": "Restore batch-1 Shorts template quality and add short thumbnail titles",
       "operator": "eq",
       "owner_id": "system-improvement",
-      "run_status": "blocked",
-      "stage": "ACT",
+      "run_status": "completed",
+      "stage": "OBSERVE",
       "target": true,
-      "updated_at": "2026-08-14T03:51:23.691873+00:00"
+      "updated_at": "2026-08-14T12:08:36.031830+00:00"
     },
     {
       "created_at": "2026-08-13T19:31:32.273247+00:00",
@@ -1264,7 +1264,7 @@
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-14T12:04:18.895735+00:00"
+    "updated_at": "2026-08-14T12:10:52.121573+00:00"
   },
   "runtime_state": {
     "current_run": {
@@ -1275,7 +1275,7 @@
       "run_id": "run-bf91da1096",
       "run_status": "waiting",
       "stage": "EVALUATE",
-      "updated_at": "2026-08-14T12:04:18.895735+00:00"
+      "updated_at": "2026-08-14T12:10:52.121573+00:00"
     },
     "heartbeat": {
       "goal_id": "goal-email-campaign-20260810",
@@ -1285,19 +1285,19 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-14T12:04:18.895735+00:00"
+      "updated_at": "2026-08-14T12:10:52.121573+00:00"
     },
-    "last_activity_at": "2026-08-14T12:07:10.797210+00:00",
-    "last_sync_at": "2026-08-14T12:07:10.815396+00:00",
+    "last_activity_at": "2026-08-14T12:10:52.121573+00:00",
+    "last_sync_at": "2026-08-14T12:10:52.209512+00:00",
     "state": "running"
   },
   "totals": {
     "approvals": 100,
-    "decisions": 197,
-    "evidence": 1792,
+    "decisions": 198,
+    "evidence": 1795,
     "goals_abandoned": 12,
-    "goals_achieved": 67,
-    "goals_active": 13,
+    "goals_achieved": 68,
+    "goals_active": 12,
     "goals_total": 95,
     "hypotheses": 33,
     "memory_claims": 5,
