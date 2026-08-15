@@ -236,7 +236,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-15T01:44:55.140094+00:00"
+      "updated_at": "2026-08-15T01:56:55.452447+00:00"
     },
     {
       "created_at": "2026-08-10T14:42:53.516527+00:00",
@@ -1305,7 +1305,7 @@
       "run_status": "waiting",
       "stage": "OBSERVE",
       "target": 3,
-      "updated_at": "2026-08-15T01:40:40.027902+00:00"
+      "updated_at": "2026-08-15T01:46:02.986971+00:00"
     },
     {
       "created_at": "2026-08-14T21:56:34.516762+00:00",
@@ -1322,16 +1322,16 @@
     },
     {
       "created_at": "2026-08-14T21:57:22.140776+00:00",
-      "goal_status": "active",
+      "goal_status": "achieved",
       "id": "goal-approval-policy-20260815",
       "metric": "acceptance_tests_passed",
       "name": "Approval policy (per_action/per_run/everything_approved) + approve --scope CLI",
       "operator": "eq",
       "owner_id": "system-improvement",
-      "run_status": "blocked",
-      "stage": "ACT",
+      "run_status": "completed",
+      "stage": "OBSERVE",
       "target": true,
-      "updated_at": "2026-08-14T22:19:35.498734+00:00"
+      "updated_at": "2026-08-15T01:57:47.433177+00:00"
     },
     {
       "created_at": "2026-08-14T21:59:21.745669+00:00",
@@ -1357,7 +1357,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-15T01:43:48.488199+00:00"
+      "updated_at": "2026-08-15T01:55:50.255682+00:00"
     },
     {
       "created_at": "2026-08-15T00:32:48.129043+00:00",
@@ -1394,7 +1394,7 @@
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-15T01:44:55.141991+00:00"
+    "updated_at": "2026-08-15T01:56:55.453695+00:00"
   },
   "runtime_state": {
     "current_run": {
@@ -1405,7 +1405,7 @@
       "run_id": "run-bf91da1096",
       "run_status": "waiting",
       "stage": "EVALUATE",
-      "updated_at": "2026-08-15T01:44:55.141991+00:00"
+      "updated_at": "2026-08-15T01:56:55.453695+00:00"
     },
     "heartbeat": {
       "goal_id": "goal-email-campaign-20260810",
@@ -1415,19 +1415,19 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-15T01:44:55.141991+00:00"
+      "updated_at": "2026-08-15T01:56:55.453695+00:00"
     },
-    "last_activity_at": "2026-08-15T01:45:58.984164+00:00",
-    "last_sync_at": "2026-08-15T01:45:58.995478+00:00",
+    "last_activity_at": "2026-08-15T01:57:47.434039+00:00",
+    "last_sync_at": "2026-08-15T01:57:47.445317+00:00",
     "state": "running"
   },
   "totals": {
     "approvals": 111,
-    "decisions": 223,
-    "evidence": 2192,
+    "decisions": 224,
+    "evidence": 2198,
     "goals_abandoned": 12,
-    "goals_achieved": 76,
-    "goals_active": 13,
+    "goals_achieved": 77,
+    "goals_active": 12,
     "goals_total": 105,
     "hypotheses": 34,
     "memory_claims": 5,
