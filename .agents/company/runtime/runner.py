@@ -174,6 +174,10 @@ class Runner:
         if status == "awaiting_approval":
             return self.runtime.store.approval(
                 row["goal"]["id"], cycle["id"], approval_key(cycle)) == "approved"
+        if status == "running":
+            # Mid-flight cycle whose client died (no live lease) must stay
+            # resumable, or the goal parks invisibly until a manual `once`.
+            return self.runtime.store.live_lease(row["goal"]["id"]) is None
         if status != "waiting" or not cycle.get("resume_at"):
             return False
         return datetime.fromisoformat(cycle["resume_at"]) <= datetime.now(timezone.utc)

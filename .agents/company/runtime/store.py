@@ -982,6 +982,20 @@ class Store:
         with self.connect() as con:
             con.execute("DELETE FROM leases WHERE goal_id=? AND holder=?", (goal_id, holder))
 
+    def live_lease(self, goal_id: str) -> dict | None:
+        """The current non-expired lease for a goal, or None when free/stale.
+
+        Read-only. A mid-flight cycle whose lease expired (or was never
+        written) is treated as stale and resumable by the pull worker.
+        """
+        with self.connect() as con:
+            row = con.execute(
+                "SELECT holder, expires_at FROM leases WHERE goal_id=? AND expires_at>?",
+                (goal_id, now())).fetchone()
+        if row is None:
+            return None
+        return {"holder": row[0], "expires_at": row[1]}
+
     def open_work_order(self, *, goal_id: str, run_id: str, employee_id: str,
                         needed: int = 1, accepts_evidence: list | None = None,
                         workflow_id: str | None = None, step_id: str | None = None,
