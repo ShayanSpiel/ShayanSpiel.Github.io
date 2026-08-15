@@ -27,6 +27,18 @@ Intended API contract (implementer must make every test pass by editing ONLY
 3. The plugin lifecycle (dispose, session.idle event, command.execute.before
    stop/start hooks) is unchanged in intent.
 
+Goal-runner-watchdog-supervision-20260815 extends the surface contract:
+
+4. The plugin INVERTS the silent skip: when the polled runner status says not
+   running, or the daemon's heartbeat stamp
+   (.spielos/state/runner.heartbeat) is older than HEARTBEAT_STALE_MS
+   (75_000 ms), it surfaces a chat-visible runner-down alert (toast +
+   director wake-up) throttled by the same 300_000 ms re-prompt window via
+   the synthetic "runner-down" key, and that key survives the id prune.
+5. The REPORTABLE kind set additionally accepts the runtime watchdog kinds
+   `runner_down` and `stuck_goal`, and action_required payloads carrying a
+   `watchdog.signal` marker are surfaced with the watchdog titles.
+
 This suite is hermetic and static: it only reads the plugin source file from
 the repo and asserts the required behaviors exist in the source. No network, no
 subprocesses, no live state is touched.
@@ -144,6 +156,44 @@ class NotificationSurfaceContractTests(unittest.TestCase):
         self.assertIn("command.execute.before", self.source)
         self.assertIn("company runner stop", self.source)
         self.assertIn("company runner enable", self.source)
+
+    def test_heartbeat_stale_threshold_and_path_present(self):
+        self.assertIn("HEARTBEAT_STALE_MS", self.source)
+        self.assertIn("75_000", self.source)
+        self.assertIn(".spielos/state/runner.heartbeat", self.source)
+
+    def test_runner_down_detection_inverts_silent_skip(self):
+        body = "\n".join(self.check_body())
+        # The alert condition combines the polled status with heartbeat age.
+        self.assertIn("status.running !== true", body)
+        self.assertIn("heartbeatAge !== null && heartbeatAge > HEARTBEAT_STALE_MS", body)
+        # The early return must NOT fire when the runner is down: fresh
+        # notifications are skipped but the runner-down alert still runs.
+        self.assertIn("if (!fresh.length && !runnerDown) return", body)
+        # Throttled by the same 300_000 ms re-prompt window via a synthetic key.
+        self.assertIn('prompted.get("runner-down")', body)
+        self.assertIn('prompted.set("runner-down", now)', body)
+        self.assertIn("> 300_000", body)
+
+    def test_runner_down_alert_surfaces_in_chat(self):
+        body = "\n".join(self.check_body())
+        self.assertIn('title: "SpielOS runner down"', body)
+        self.assertIn("company runner start", body)
+        self.assertIn('variant: "warning"', body)
+
+    def test_runner_down_key_survives_prompted_prune(self):
+        # The synthesized key is not a notification id; the prune must skip it
+        # or the throttle resets on every check and the alert spams.
+        self.assertIn('id !== "runner-down"', self.source)
+
+    def test_runner_down_and_stuck_goal_kinds_surfaced(self):
+        block = self.source[self.source.index("const REPORTABLE"):]
+        block = block[:block.index("])") + 1]
+        for kind in ("runner_down", "stuck_goal"):
+            self.assertIn('"%s"' % kind, block)
+        # Runtime watchdog notifications ride the action_required kind with a
+        # payload watchdog.signal marker; the plugin types surface it.
+        self.assertIn("watchdog?.signal", self.source)
 
 
 if __name__ == "__main__":
