@@ -236,7 +236,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-15T13:14:00.087051+00:00"
+      "updated_at": "2026-08-15T13:36:19.991623+00:00"
     },
     {
       "created_at": "2026-08-10T14:42:53.516527+00:00",
@@ -1357,7 +1357,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-15T13:13:44.757830+00:00"
+      "updated_at": "2026-08-15T13:34:53.406883+00:00"
     },
     {
       "created_at": "2026-08-15T00:32:48.129043+00:00",
@@ -1409,7 +1409,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-15T13:08:49.819232+00:00"
+      "updated_at": "2026-08-15T13:35:25.536409+00:00"
     },
     {
       "created_at": "2026-08-15T03:10:46.410099+00:00",
@@ -1422,7 +1422,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-15T13:09:41.780862+00:00"
+      "updated_at": "2026-08-15T13:36:04.844435+00:00"
     },
     {
       "created_at": "2026-08-15T03:22:50.223477+00:00",
@@ -1527,6 +1527,19 @@
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-15T13:13:58.566760+00:00"
+    },
+    {
+      "created_at": "2026-08-15T13:32:03.478430+00:00",
+      "goal_status": "achieved",
+      "id": "goal-opencode-plugin-contract-20260815",
+      "metric": "acceptance_tests_passed",
+      "name": "Fix OpenCode V1 plugin export contract: load the notification plugin",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "run_status": "completed",
+      "stage": "OBSERVE",
+      "target": true,
+      "updated_at": "2026-08-15T13:40:01.341352+00:00"
     }
   ],
   "heartbeat": {
@@ -1537,7 +1550,7 @@
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-15T13:14:00.088584+00:00"
+    "updated_at": "2026-08-15T13:36:19.993427+00:00"
   },
   "runtime_state": {
     "current_run": {
@@ -1548,7 +1561,7 @@
       "run_id": "run-bf91da1096",
       "run_status": "waiting",
       "stage": "EVALUATE",
-      "updated_at": "2026-08-15T13:14:00.088584+00:00"
+      "updated_at": "2026-08-15T13:36:19.993427+00:00"
     },
     "heartbeat": {
       "goal_id": "goal-email-campaign-20260810",
@@ -1558,22 +1571,22 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-15T13:14:00.088584+00:00"
+      "updated_at": "2026-08-15T13:36:19.993427+00:00"
     },
-    "last_activity_at": "2026-08-15T13:14:00.088584+00:00",
-    "last_sync_at": "2026-08-15T13:14:00.122265+00:00",
+    "last_activity_at": "2026-08-15T13:40:01.342797+00:00",
+    "last_sync_at": "2026-08-15T13:40:01.360824+00:00",
     "state": "running"
   },
   "totals": {
-    "approvals": 128,
-    "decisions": 256,
-    "evidence": 3008,
+    "approvals": 129,
+    "decisions": 258,
+    "evidence": 3039,
     "goals_abandoned": 12,
-    "goals_achieved": 88,
+    "goals_achieved": 89,
     "goals_active": 12,
-    "goals_total": 116,
+    "goals_total": 117,
     "hypotheses": 34,
     "memory_claims": 5,
-    "runs": 129
+    "runs": 130
   }
 }
