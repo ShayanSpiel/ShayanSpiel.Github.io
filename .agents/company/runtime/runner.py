@@ -4,8 +4,9 @@ from __future__ import annotations
 
 import json
 import os
+import threading
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from .alignment import approval_key
@@ -17,20 +18,80 @@ from .service import automation_enabled
 # plugin) can distinguish a dead daemon from an idle one, and a rate-limited
 # stall scan emits actionable stuck_goal notifications instead of parking
 # silently (2026-08-15 incident: daemon crash went unnoticed for ~34 minutes).
+#
+# 2026-08-15 wedge hardening: the heartbeat is now TWO signals so a normal
+# long tick can never false-alarm "runner down" while a wedged loop is still
+# caught. The watch loop stamps ``last_tick`` once per cycle (loop progress);
+# a dedicated lightweight heartbeat thread stamps ``alive_at`` every
+# ``HEARTBEAT_INTERVAL_SECONDS`` regardless of how long a tick takes (process
+# liveness). The plugin alerts on a stale ``alive_at`` (process dead) or a
+# stale ``last_tick`` beyond the loop-wedge threshold (hung serial loop).
 HEARTBEAT_FILENAME = "runner.heartbeat"
+HEARTBEAT_INTERVAL_SECONDS = 10     # alive_at cadence while the daemon runs
 STALL_CHECK_INTERVAL_SECONDS = 60   # how often the watchdog scan runs
 STALL_GRACE_SECONDS = 90            # resume_at may be this late before alerting
 DISPATCH_STALE_SECONDS = 3600       # mirrors runtime.async_dispatch threshold
+# Lease liveness: store.acquire() grants a 60s TTL lease (no renewal). A tick
+# that holds its lease beyond LEASE_HELD_GRACE_SECONDS with no cycle
+# advancement is wedged — the bounded measure path completes well under this.
+LEASE_TTL_SECONDS = 60              # mirrors store.acquire(seconds=60)
+LEASE_HELD_GRACE_SECONDS = 55       # above the bounded-tick budget, below TTL
+# A pending async dispatch file whose worker thread died with its process can
+# be recovered as soon as it predates this daemon generation by more than
+# DISPATCH_DEAD_WORKER_GRACE_SECONDS (a fresh pending file in THIS generation
+# has a live worker thread and must never be touched).
+DISPATCH_DEAD_WORKER_GRACE_SECONDS = 90
+# Send-activity liveness (2026-08-15 quota-stall incident): outbound batches
+# b6/b7 stalled ~6h on provider daily-quota exhaustion while their workers
+# stayed alive and the runtime stayed healthy — nothing alerted because every
+# watchdog signal above needs a dead or wedged worker, and a live-but-starved
+# worker is indistinguishable from normal slow sending. The sent ledger is the
+# only liveness proof: a dispatch pending longer than SEND_STALL_GRACE_SECONDS
+# whose newest ledger send is ALSO older than the grace is stalled. A dedicated
+# rate limiter bounds re-emission (the store upsert keeps one notification row
+# per goal/run/kind, but re-stamping it refreshes created_at).
+SEND_ACTIVITY_CHECK_INTERVAL_SECONDS = 300  # dedicated send-scan limiter
+SEND_STALL_GRACE_SECONDS = 900              # pending w/o a new send -> alert
 
 
 def heartbeat_age(heartbeat_path, now=None) -> float | None:
-    """Seconds since the last watch tick; None when missing or unparsable."""
+    """Seconds since the last watch tick; None when missing or unparsable.
+
+    ``last_tick`` is the LOOP signal: it goes stale when the serial watch
+    loop stops completing cycles (wedged or dead), even though the alive_at
+    thread keeps stamping.
+    """
     try:
         data = json.loads(Path(heartbeat_path).read_text(encoding="utf-8"))
         last_tick = data.get("last_tick")
         if not last_tick:
             return None
         parsed = datetime.fromisoformat(str(last_tick).replace("Z", "+00:00"))
+        if parsed.tzinfo is None:
+            parsed = parsed.replace(tzinfo=timezone.utc)
+        now = now or datetime.now(timezone.utc)
+        if now.tzinfo is None:
+            now = now.replace(tzinfo=timezone.utc)
+        return max(0.0, (now - parsed).total_seconds())
+    except (OSError, ValueError, TypeError, json.JSONDecodeError):
+        return None
+
+
+def heartbeat_alive_age(heartbeat_path, now=None) -> float | None:
+    """Seconds since the heartbeat thread last stamped ``alive_at``.
+
+    This is the PROCESS signal: the dedicated heartbeat thread stamps it
+    every HEARTBEAT_INTERVAL_SECONDS independently of how long the current
+    tick runs, so a normal ~3-minute measure poll never makes it stale. Only
+    a dead (or hard-hung) process stops the thread. None when the payload
+    predates the alive_at field or is unreadable.
+    """
+    try:
+        data = json.loads(Path(heartbeat_path).read_text(encoding="utf-8"))
+        alive_at = data.get("alive_at")
+        if not alive_at:
+            return None
+        parsed = datetime.fromisoformat(str(alive_at).replace("Z", "+00:00"))
         if parsed.tzinfo is None:
             parsed = parsed.replace(tzinfo=timezone.utc)
         now = now or datetime.now(timezone.utc)
@@ -59,18 +120,74 @@ def runner_down_signal(heartbeat_path, max_age_seconds: float, now=None) -> dict
     }
 
 
+def last_send_at(sent_log_path, now=None) -> datetime | None:
+    """Newest send timestamp in the outbound sent ledger, else None.
+
+    The ledger (``.spielos/state/outbound/sent.json``) is a dict with a
+    ``sent`` list; entries carry ``timestamp`` (``sent_at`` accepted as a
+    fallback). Returns None — the caller then skips quietly — when the ledger
+    is missing, unreadable, not a dict, has no sent entries, or no entry
+    timestamp is usable, because there is no send-liveness signal to reason
+    about. A ledger timestamp in the future (clock skew) also yields None: it
+    is not evidence of stalled sending either way.
+    """
+    try:
+        data = json.loads(Path(sent_log_path).read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return None
+    if not isinstance(data, dict):
+        return None
+    newest = None
+    for entry in data.get("sent", []):
+        if not isinstance(entry, dict):
+            continue
+        parsed = Runner._parse_dt(entry.get("timestamp") or entry.get("sent_at"))
+        if parsed is None:
+            continue
+        if newest is None or parsed > newest:
+            newest = parsed
+    if newest is None:
+        return None
+    now = now or datetime.now(timezone.utc)
+    if now.tzinfo is None:
+        now = now.replace(tzinfo=timezone.utc)
+    return newest if newest <= now else None
+
+
 class Runner:
     def __init__(self, runtime: Runtime, *,
                  stall_check_interval_seconds: float = STALL_CHECK_INTERVAL_SECONDS,
                  stall_grace_seconds: float = STALL_GRACE_SECONDS,
-                 dispatch_stale_seconds: float = DISPATCH_STALE_SECONDS):
+                 dispatch_stale_seconds: float = DISPATCH_STALE_SECONDS,
+                 heartbeat_interval_seconds: float = HEARTBEAT_INTERVAL_SECONDS,
+                 lease_held_grace_seconds: float = LEASE_HELD_GRACE_SECONDS,
+                 dead_worker_grace_seconds: float = DISPATCH_DEAD_WORKER_GRACE_SECONDS,
+                 send_activity_check_interval_seconds: float = SEND_ACTIVITY_CHECK_INTERVAL_SECONDS,
+                 send_stall_grace_seconds: float = SEND_STALL_GRACE_SECONDS):
         self.runtime = runtime
         self._stall_check_interval_seconds = stall_check_interval_seconds
         self._stall_grace_seconds = stall_grace_seconds
         self._dispatch_stale_seconds = dispatch_stale_seconds
+        self._heartbeat_interval_seconds = heartbeat_interval_seconds
+        self._lease_held_grace_seconds = lease_held_grace_seconds
+        self._dead_worker_grace_seconds = dead_worker_grace_seconds
+        self._send_activity_check_interval_seconds = send_activity_check_interval_seconds
+        self._send_stall_grace_seconds = send_stall_grace_seconds
         self._last_stall_check = 0.0
+        self._last_send_activity_check = 0.0
         self._active_goal_id = None
         self._cycle = 0
+        # Heartbeat state: the watch loop stamps last_tick/cycle per cycle;
+        # the heartbeat thread stamps alive_at on the same payload. A lock
+        # keeps the two writers from losing each other's fields.
+        self._hb_lock = threading.Lock()
+        self._hb_payload = {"pid": os.getpid()}
+        self._hb_stop = threading.Event()
+        self._hb_thread: threading.Thread | None = None
+        # Daemon generation boundary for dead-worker dispatch recovery: any
+        # pending dispatch file created before this Runner existed cannot
+        # have a live worker thread (threads die with their process).
+        self._generation_started_at = datetime.now(timezone.utc)
 
     def heartbeat_path(self) -> Path:
         """The heartbeat file lives beside the runtime database (.spielos/state)."""
@@ -85,20 +202,54 @@ class Runner:
         signal.
         """
         self._cycle += 1
-        payload = {
-            "pid": os.getpid(),
-            "last_tick": datetime.now(timezone.utc).isoformat(),
-            "cycle": self._cycle,
-        }
+        with self._hb_lock:
+            self._hb_payload.update({
+                "last_tick": datetime.now(timezone.utc).isoformat(),
+                "cycle": self._cycle,
+            })
+            self._write_heartbeat_payload()
+
+    def _stamp_alive(self) -> None:
+        """Heartbeat-thread stamp: process liveness, independent of tick length."""
+        with self._hb_lock:
+            self._hb_payload["alive_at"] = datetime.now(timezone.utc).isoformat()
+            self._write_heartbeat_payload()
+
+    def _write_heartbeat_payload(self) -> None:
         try:
             path = self.heartbeat_path()
             path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text(json.dumps(payload) + "\n", encoding="utf-8")
+            path.write_text(json.dumps(self._hb_payload) + "\n", encoding="utf-8")
         except OSError:  # pragma: no cover - defensive; stale heartbeat is the signal
             pass
 
+    def _start_heartbeat_thread(self) -> None:
+        """Run the alive_at stamper while the watch loop lives.
+
+        Idempotent: a second watch() on the same Runner must not spawn a
+        second thread. The thread is daemon so a wedged tick can never keep
+        the daemon process from exiting.
+        """
+
+        def _loop():
+            while not self._hb_stop.wait(self._heartbeat_interval_seconds):
+                self._stamp_alive()
+
+        if self._hb_thread is not None and self._hb_thread.is_alive():
+            return
+        self._hb_stop.clear()
+        self._hb_thread = threading.Thread(target=_loop, name="runner-heartbeat",
+                                           daemon=True)
+        self._hb_thread.start()
+
+    def _stop_heartbeat_thread(self) -> None:
+        self._hb_stop.set()
+
     def heartbeat_age(self, now=None) -> float | None:
         return heartbeat_age(self.heartbeat_path(), now=now)
+
+    def heartbeat_alive_age(self, now=None) -> float | None:
+        return heartbeat_alive_age(self.heartbeat_path(), now=now)
 
     def runner_down(self, max_age_seconds: float = STALL_GRACE_SECONDS,
                     now=None) -> dict | None:
@@ -134,24 +285,28 @@ class Runner:
     def watch(self, interval_seconds: float = 2.0, goal_id: str | None = None,
               max_ticks: int | None = None):
         ticks, previous_pending = 0, None
-        while max_ticks is None or ticks < max_ticks:
-            self.write_heartbeat()
-            try:
-                result = self.tick(goal_id)
-                pending = tuple(item["id"] for item in result["pending_notifications"])
-                if result["advanced"] or pending != previous_pending:
-                    yield result
-                previous_pending = pending
-                ticks += 1
-                self._check_stalled(goal_id)
-            except Exception as exc:
-                # Best-effort: tell the world the watch loop is dying before
-                # the daemon exits. The heartbeat reader remains the primary
-                # dead-daemon detector.
-                self._emit_runner_down(exc)
-                raise
-            if max_ticks is None or ticks < max_ticks:
-                time.sleep(interval_seconds)
+        self._start_heartbeat_thread()
+        try:
+            while max_ticks is None or ticks < max_ticks:
+                self.write_heartbeat()
+                try:
+                    result = self.tick(goal_id)
+                    pending = tuple(item["id"] for item in result["pending_notifications"])
+                    if result["advanced"] or pending != previous_pending:
+                        yield result
+                    previous_pending = pending
+                    ticks += 1
+                    self._check_stalled(goal_id)
+                except Exception as exc:
+                    # Best-effort: tell the world the watch loop is dying before
+                    # the daemon exits. The heartbeat reader remains the primary
+                    # dead-daemon detector.
+                    self._emit_runner_down(exc)
+                    raise
+                if max_ticks is None or ticks < max_ticks:
+                    time.sleep(interval_seconds)
+        finally:
+            self._stop_heartbeat_thread()
 
     def _candidates(self, goal_id: str | None) -> list[str]:
         rows = self.runtime.list_goals()
@@ -242,17 +397,41 @@ class Runner:
         self._last_stall_check = time.monotonic()
         emitted: list[str] = []
         rows = self._scope_rows(goal_id, self.runtime.list_goals())
+        now = datetime.now(timezone.utc)
         for row in rows:
             goal = row["goal"]
             if goal["goal_status"] != "active":
                 continue
             cycle = row["cycle"]
+            # Lease-held cycles (2026-08-15 wedge hardening): a cycle whose
+            # lease is held beyond the grace with no advancement since the
+            # lease was acquired is a tick that never completes. The bounded
+            # measure path finishes far under the grace, so a legit tick
+            # never trips this; a wedged one is called out while its lease is
+            # still live (once the lease expires, the resume_at detector
+            # above — or a fresh runner — takes over).
+            lease = self.runtime.store.live_lease(goal["id"])
+            if lease is not None:
+                acquired = self._lease_acquired_at(lease)
+                if acquired is not None:
+                    held_seconds = (now - acquired).total_seconds()
+                    if held_seconds > self._lease_held_grace_seconds:
+                        updated_at = self._parse_dt(cycle.get("updated_at"))
+                        if updated_at is None or updated_at <= acquired:
+                            self._emit_stuck_goal(
+                                goal, cycle,
+                                reason="cycle lease held without advancement",
+                                detail={"holder": lease.get("holder"),
+                                        "lease_acquired_at": acquired.isoformat(),
+                                        "lease_held_seconds": held_seconds,
+                                        "cycle_updated_at": cycle.get("updated_at")})
+                            emitted.append(goal["id"])
             if cycle["run_status"] != "waiting" or not cycle.get("resume_at"):
                 continue
             resume_at = self._parse_dt(cycle.get("resume_at"))
             if resume_at is None:
                 continue
-            due_since = (datetime.now(timezone.utc) - resume_at).total_seconds()
+            due_since = (now - resume_at).total_seconds()
             if due_since < self._stall_grace_seconds:
                 continue
             updated_at = self._parse_dt(cycle.get("updated_at"))
@@ -264,6 +443,23 @@ class Runner:
                                           "cycle_updated_at": cycle.get("updated_at"),
                                           "due_seconds_ago": due_since})
             emitted.append(goal["id"])
+        # Dead-worker pending dispatches: recover (remove) files whose worker
+        # thread died with a previous daemon generation, then emit. The files
+        # are gone before the stale scan below, so the two paths never
+        # double-report the same dispatch.
+        for dispatch_goal_id, batch_id, started_at in self._recover_dead_worker_dispatches():
+            try:
+                goal = self.runtime.store.goal(dispatch_goal_id)
+                cycle = self.runtime.store.cycle(dispatch_goal_id)
+            except KeyError:
+                continue  # dispatch file for a goal that no longer exists
+            if goal["goal_status"] != "active":
+                continue
+            self._emit_stuck_goal(goal, cycle,
+                                  reason="async dispatch worker died; pending file removed for re-dispatch",
+                                  detail={"batch_id": batch_id, "started_at": started_at,
+                                          "grace_seconds": self._dead_worker_grace_seconds})
+            emitted.append(dispatch_goal_id)
         for dispatch_goal_id, batch_id, started_at in self._stale_dispatch_files():
             try:
                 goal = self.runtime.store.goal(dispatch_goal_id)
@@ -276,7 +472,92 @@ class Runner:
                                   detail={"batch_id": batch_id, "started_at": started_at,
                                           "stale_threshold_seconds": self._dispatch_stale_seconds})
             emitted.append(dispatch_goal_id)
+        # Send-activity liveness (2026-08-15 quota-stall incident): a live
+        # worker that stopped recording sends (provider quota/rate-limit
+        # exhaustion or provider outage) is invisible to every check above —
+        # the daemon, heartbeat, leases, and cycle clocks all stay healthy.
+        # The sent ledger is the only proof the worker is progressing: a
+        # pending dispatch with no new send within the grace is called out
+        # with an actionable payload instead of waiting hours invisibly.
+        # Failed files are intentionally not scanned (they re-dispatch via
+        # the 6.6.0 grace semantics), and a missing/unreadable ledger is
+        # skipped quietly by the scanner.
+        if time.monotonic() - self._last_send_activity_check >= self._send_activity_check_interval_seconds:
+            self._last_send_activity_check = time.monotonic()
+            for (dispatch_goal_id, batch_id, started_at, last_send_at,
+                 pending_seconds, idle_seconds) in self._send_stalled_dispatches():
+                try:
+                    goal = self.runtime.store.goal(dispatch_goal_id)
+                    cycle = self.runtime.store.cycle(dispatch_goal_id)
+                except KeyError:
+                    continue  # dispatch file for a goal that no longer exists
+                if goal["goal_status"] != "active":
+                    continue
+                self._emit_stuck_goal(
+                    goal, cycle,
+                    reason="no send activity for pending async dispatch",
+                    detail={
+                        "batch_id": batch_id,
+                        "started_at": started_at,
+                        "last_send_at": last_send_at,
+                        "pending_seconds": pending_seconds,
+                        "idle_seconds": idle_seconds,
+                        "send_stall_grace_seconds": self._send_stall_grace_seconds,
+                        "likely_cause": "quota exhaustion / provider rate limit / provider outage",
+                    })
+                emitted.append(dispatch_goal_id)
         return emitted
+
+    def _lease_acquired_at(self, lease: dict):
+        """The lease acquisition time = expires_at - the fixed TTL.
+
+        store.acquire() grants a single-row lease with expires_at = now + 60s
+        and never renews; there is no acquired_at column, so the TTL is
+        subtracted (leases are immutable while held — the only renewal is a
+        fresh acquire after expiry).
+        """
+        expires = self._parse_dt(lease.get("expires_at"))
+        if expires is None:
+            return None
+        return expires - timedelta(seconds=LEASE_TTL_SECONDS)
+
+    def _recover_dead_worker_dispatches(self) -> list[tuple[str, str, str]]:
+        """(goal_id, batch_id, started_at) for pending dispatch files whose
+        worker cannot be alive, removed so the workflow re-dispatches.
+
+        Dispatch workers are daemon threads of the process that dispatched
+        them; threads die with their process. A pending file created before
+        this Runner generation started (by more than the grace, so a fresh
+        dispatch in a just-started generation is never misread) therefore has
+        no live worker: removing it is exactly the manual cleanup from the
+        2026-08-15 incident, made safe and automatic. Files within this
+        generation, or younger than the grace, keep their live-worker status.
+        """
+        dispatch_dir = self.runtime.store.path.parent / "outbound" / "async"
+        if not dispatch_dir.is_dir():
+            return []
+        recovered = []
+        now = datetime.now(timezone.utc)
+        for path in dispatch_dir.glob("*/*.json"):
+            try:
+                data = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                continue
+            if data.get("status") != "pending":
+                continue
+            started = self._parse_dt(data.get("started_at"))
+            if started is None:
+                continue  # no usable started_at -> the stale path owns it
+            if started >= self._generation_started_at:
+                continue  # dispatched by this generation: worker is live
+            if (now - started).total_seconds() <= self._dead_worker_grace_seconds:
+                continue  # within the short grace: do not race a fresh start
+            try:
+                path.unlink()
+            except OSError:  # pragma: no cover - defensive; retry next scan
+                continue
+            recovered.append((path.parent.name, path.stem, data.get("started_at")))
+        return recovered
 
     def _stale_dispatch_files(self) -> list[tuple[str, str, str]]:
         """(goal_id, batch_id, started_at) for pending async dispatch files
@@ -303,6 +584,48 @@ class Runner:
             if (now - started).total_seconds() > self._dispatch_stale_seconds:
                 stale.append((path.parent.name, path.stem, started_at))
         return stale
+
+    def _send_stalled_dispatches(self) -> list[tuple[str, str, str, str, float, float]]:
+        """(goal_id, batch_id, started_at, last_send_at, pending_seconds,
+        idle_seconds) for pending dispatch files with no recent send activity.
+
+        The sent ledger is the only liveness proof for a pending dispatch
+        whose worker thread is alive: a worker that records no sends is
+        stalled no matter how healthy the daemon looks. Fires only when BOTH
+        the dispatch has been pending longer than the send-stall grace AND the
+        newest ledger send is older than the grace, so normal slow sending and
+        young re-dispatches never false-positive. Returns nothing when the
+        ledger cannot be read or carries no usable send timestamps (skip
+        quietly — no signal to reason about). Failed files are intentionally
+        ignored: they re-dispatch through the 6.6.0 grace semantics.
+        """
+        dispatch_dir = self.runtime.store.path.parent / "outbound" / "async"
+        if not dispatch_dir.is_dir():
+            return []
+        newest = last_send_at(self.runtime.store.path.parent / "outbound" / "sent.json")
+        if newest is None:
+            return []
+        stalled = []
+        now = datetime.now(timezone.utc)
+        for path in dispatch_dir.glob("*/*.json"):
+            try:
+                data = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                continue
+            if data.get("status") != "pending":
+                continue
+            started = self._parse_dt(data.get("started_at"))
+            if started is None:
+                continue  # no usable started_at -> the stale path owns it
+            pending_seconds = (now - started).total_seconds()
+            if pending_seconds <= self._send_stall_grace_seconds:
+                continue  # young dispatch / re-dispatch: still within grace
+            idle_seconds = (now - newest).total_seconds()
+            if idle_seconds <= self._send_stall_grace_seconds:
+                continue  # a send was recorded within the grace: worker is live
+            stalled.append((path.parent.name, path.stem, data.get("started_at"),
+                            newest.isoformat(), pending_seconds, idle_seconds))
+        return stalled
 
     @staticmethod
     def _parse_dt(value):
