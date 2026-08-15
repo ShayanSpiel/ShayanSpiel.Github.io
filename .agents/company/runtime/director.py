@@ -213,6 +213,7 @@ class Director(GoalHandler):
         evaluations = [child.get("evaluation") for child in supporting if child.get("evaluation")]
         metric_values = [item.get("metrics", {}).get(ctx.goal.metric) for item in evaluations
                          if item.get("metrics", {}).get(ctx.goal.metric) is not None]
+        goal_booked_calls = []
         if ctx.goal.metric == "all_children_achieved":
             met = bool(children) and accepted_achieved == len(children)
             measured = accepted_achieved
@@ -221,11 +222,19 @@ class Director(GoalHandler):
             met = _compare(measured, ctx.goal.operator, ctx.goal.target)
         else:
             measured = max(metric_values) if metric_values else None
+            if ctx.goal.metric == "booked_calls":
+                goal_booked_calls = [
+                    item for item in (ctx.cycle.get("evidence") or ())
+                    if item.get("kind") == "booked_call"
+                    and (item.get("validity") or "business") in accepted]
+                if goal_booked_calls:
+                    measured = (len(goal_booked_calls) if measured is None
+                                else max(measured, len(goal_booked_calls)))
             met = measured is not None and _compare(measured, ctx.goal.operator, ctx.goal.target)
         validity = derive_evaluation_validity(
             [{"validity": (child.get("evaluation") or {}).get("validity")
               or (child.get("run") or {}).get("evidence_validity")}
-             for child in supporting],
+             for child in supporting] + goal_booked_calls,
             ctx.goal, run)
         if met and validity not in accepted:
             met = False
