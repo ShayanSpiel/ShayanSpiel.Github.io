@@ -5,27 +5,27 @@
     "goal_name": "English outbound send batch 6: next 50 from remaining queue",
     "owner_id": "outbound",
     "run_id": "run-0e93fa8686",
-    "run_status": "waiting",
-    "stage": "ACT",
-    "updated_at": "2026-08-15T03:35:16.716426+00:00"
+    "run_status": "failed",
+    "stage": "EVALUATE",
+    "updated_at": "2026-08-15T03:50:19.632979+00:00"
   },
   "heartbeat": {
-    "goal_id": "goal-email-send-20260815-b6",
-    "goal_name": "English outbound send batch 6: next 50 from remaining queue",
+    "goal_id": "goal-email-campaign-20260810",
+    "goal_name": "Resume daily English outbound to 30% reply rate",
     "metric": "reply_rate",
     "operator": "ge",
     "run_status": "waiting",
-    "stage": "ACT",
+    "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-15T03:35:16.716426+00:00"
+    "updated_at": "2026-08-15T03:45:53.657253+00:00"
   },
-  "last_activity_at": "2026-08-15T03:36:44.372749+00:00",
-  "last_sync_at": "2026-08-15T03:36:44.391918+00:00",
+  "last_activity_at": "2026-08-15T03:50:19.632979+00:00",
+  "last_sync_at": "2026-08-15T03:50:19.685843+00:00",
   "state": "running",
   "totals": {
     "approvals": 118,
     "decisions": 238,
-    "evidence": 2230,
+    "evidence": 2232,
     "goals_abandoned": 12,
     "goals_achieved": 81,
     "goals_active": 13,
