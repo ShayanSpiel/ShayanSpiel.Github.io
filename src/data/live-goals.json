@@ -1543,16 +1543,16 @@
     },
     {
       "created_at": "2026-08-15T13:54:12.821412+00:00",
-      "goal_status": "active",
+      "goal_status": "achieved",
       "id": "goal-site-leftover-cleanup-v1-20260815",
       "metric": "acceptance_tests_passed",
       "name": "Discard uncommitted site flip; retire orphan /about/ to /founder/",
       "operator": "eq",
       "owner_id": "system-improvement",
-      "run_status": "blocked",
-      "stage": "ACT",
+      "run_status": "completed",
+      "stage": "OBSERVE",
       "target": true,
-      "updated_at": "2026-08-15T14:00:43.104078+00:00"
+      "updated_at": "2026-08-15T16:04:34.099808+00:00"
     },
     {
       "created_at": "2026-08-15T13:56:56.616392+00:00",
@@ -1638,17 +1638,17 @@
       "target": 0.3,
       "updated_at": "2026-08-15T16:01:00.670614+00:00"
     },
-    "last_activity_at": "2026-08-15T16:01:09.976985+00:00",
-    "last_sync_at": "2026-08-15T16:01:09.988767+00:00",
+    "last_activity_at": "2026-08-15T16:04:34.100785+00:00",
+    "last_sync_at": "2026-08-15T16:04:34.114457+00:00",
     "state": "running"
   },
   "totals": {
     "approvals": 135,
-    "decisions": 269,
-    "evidence": 3182,
+    "decisions": 270,
+    "evidence": 3184,
     "goals_abandoned": 13,
-    "goals_achieved": 90,
-    "goals_active": 15,
+    "goals_achieved": 91,
+    "goals_active": 14,
     "goals_total": 122,
     "hypotheses": 35,
     "memory_claims": 5,
