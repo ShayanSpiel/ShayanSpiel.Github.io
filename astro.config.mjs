@@ -26,6 +26,8 @@ export default defineConfig({
         if (path === '/posts/' || path.startsWith('/posts/')) return false;
         // Exclude /shayan/ redirect stub (301 to /founder/)
         if (path === '/shayan/') return false;
+        // Exclude /about/ redirect stubs (301 to /founder/)
+        if (path === '/about/' || path === '/fa/about/') return false;
         return true;
       },
     }),

@@ -54,13 +54,13 @@ Qualified buyer conversation
 
 | Area | Routes | Owner |
 |---|---|---|
-| Positioning | `/`, `/founder/`, `/about/` | Page components + `src/config.ts` |
+| Positioning | `/`, `/founder/` | Page components + `src/config.ts` |
 | Buyer conversion | `/services/`, `/services/agent-brief/` | Services pages + `ContactModal` |
 | General leads | `/contact/`, `/contact/thank-you/` | Contact page + `FORMS` config |
 | Product education | `/architecture/`, `/live/` | Architecture and Live page components |
 | Founder-led content | `/notes/**` | Notes collection + post components |
 | Legacy feature detail | `/features/**` subpages | Retained with `noindex, follow` pending evidence-based retirement |
-| Migration redirects | `/waitlist/`, `/fa/waitlist/`, `/features/`, `/fa/features/`, `/posts/**`, `/shayan/` | Redirect page files |
+| Migration redirects | `/waitlist/`, `/fa/waitlist/`, `/features/`, `/fa/features/`, `/posts/**`, `/shayan/`, `/about/`, `/fa/about/` | Redirect page files |
 
 `/use-cases/`, `/contact/thank-you/`, `/fa/contact/thank-you/`, and archived
 product pages are not indexable. They may remain crawlable so search engines
@@ -101,6 +101,10 @@ intent. Noindex:
 Every indexable page must have unique title and description, a self-canonical,
 valid reciprocal hreflang links, valid structured data where appropriate, and a
 direct crawlable internal path from the site navigation or related content.
+
+`/about/` and `/fa/about/` are retired single-hop redirects to `/founder/` and
+`/fa/founder/`, matching the `/shayan/` and `/posts/**` convention. They are
+excluded from the sitemap and are not indexable.
 
 ## Validation commands
 
