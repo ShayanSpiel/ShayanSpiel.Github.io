@@ -108,6 +108,24 @@ def _is_stale(data: dict) -> bool:
     return (datetime.now(timezone.utc) - started_dt).total_seconds() > STALE_THRESHOLD_SECONDS
 
 
+def failed_age_seconds(data: dict) -> float | None:
+    """Seconds elapsed since a failed dispatch record completed.
+
+    Returns None when the record has no usable completed_at; callers treat
+    that as immediately retryable so a worker failure can always recover.
+    """
+    completed_at = data.get("completed_at")
+    if not completed_at:
+        return None
+    try:
+        completed_dt = datetime.fromisoformat(completed_at)
+    except ValueError:
+        return None
+    if completed_dt.tzinfo is None:
+        completed_dt = completed_dt.replace(tzinfo=timezone.utc)
+    return (datetime.now(timezone.utc) - completed_dt).total_seconds()
+
+
 def check(goal_id: str, batch_id: str) -> dict | None:
     """Check if background work is done. Returns result or None if pending."""
     result_path = _get_result_path(goal_id, batch_id)

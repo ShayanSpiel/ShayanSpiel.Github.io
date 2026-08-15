@@ -18,6 +18,8 @@ from datetime import datetime, timezone
 from . import compose, config, content as content_bank, outbound, providers
 from .templates import SIGNATURE_HTML, SIGNATURE_TEXT
 
+FAILED_RETRY_SECONDS = 300  # grace before a failed background dispatch retries
+
 
 def prepare(ctx, intervention: dict) -> dict:
     knobs = ctx.control.knobs()
@@ -129,6 +131,16 @@ def is_pending(ctx, batch_id: str) -> bool:
     return False
 
 
+def _failed_within_grace(result: dict) -> bool:
+    """A failed dispatch file is retryable only after FAILED_RETRY_SECONDS
+    have elapsed since it completed, so a fresh worker failure is parked
+    (run WAITING, re-ticked) instead of being hot-looped. A record without a
+    usable completed_at is treated as immediately retryable."""
+    from .....runtime.async_dispatch import failed_age_seconds
+    age = failed_age_seconds(result)
+    return age is not None and age < FAILED_RETRY_SECONDS
+
+
 def execute(ctx, batch: dict, dry: bool = False) -> dict:
     """Dispatch email sending to background instead of blocking the runner."""
     batch_id = batch.get("id", "UNNAMED")
@@ -145,22 +157,38 @@ def execute(ctx, batch: dict, dry: bool = False) -> dict:
     if goal_id and batch_id:
         if _is_pending(goal_id, batch_id):
             return {"dispatched": True, "batch_id": batch_id, "note": "already dispatched"}
+        previous_error = None
         result = check(goal_id, batch_id)
         if result and result.get("status") == "done":
             return result.get("result", {})
         elif result and result.get("status") == "failed":
-            raise RuntimeError(f"Background execution failed: {result.get('error')}")
+            if _failed_within_grace(result):
+                # Fresh failure: keep the error evidence in the file and park
+                # the run (dispatched contract -> WAITING) so the next tick
+                # retries only after the grace window — never a hot loop.
+                return {"dispatched": True, "batch_id": batch_id,
+                        "note": "background execution failed; retrying after grace",
+                        "error": result.get("error")}
+            # Grace elapsed: a failed worker is retryable, not terminal.
+            # Preserve the error evidence, clear the file, and fall through
+            # to a fresh dispatch below.
+            previous_error = result.get("error")
+            cleanup(goal_id, batch_id)
         elif result and result.get("status") == "stale":
             cleanup(goal_id, batch_id)
 
         dispatch_result = dispatch(goal_id, batch_id, _execute_emails, ctx, batch)
 
-        return {
+        outcome = {
             "dispatched": True,
             "batch_id": batch_id,
             "note": "dispatched to background",
             "details": dispatch_result,
         }
+        if previous_error:
+            outcome["previous_error"] = previous_error
+            outcome["note"] = "re-dispatched after previous failure"
+        return outcome
 
     # No goal identity to reconcile against: fall back to the previous
     # synchronous behavior so legacy/direct callers keep working.

@@ -17,8 +17,10 @@ Human-written state (goal spec, approvals, knobs) lives in control.json: the
 owner edits JSON, the machine writes SQLite.
 """
 
+import functools
 import json
 import sqlite3
+import threading
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -30,14 +32,35 @@ def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+def _locked(method):
+    """Serialize access to the shared sqlite3 connection.
+
+    The connection is opened with check_same_thread=False so the
+    async-dispatch worker thread can record actions on a store opened by the
+    daemon/tick thread. The (re-entrant) lock keeps concurrent
+    execute/commit sequences from interleaving on the shared connection;
+    re-entrancy keeps nested public calls (e.g. latest_batch -> get_batch)
+    from deadlocking.
+    """
+
+    @functools.wraps(method)
+    def wrapper(self, *args, **kwargs):
+        with self._lock:
+            return method(self, *args, **kwargs)
+
+    return wrapper
+
+
 class OutboundStore:
     def __init__(self, path: str | Path):
         self.path = str(path)
         Path(self.path).parent.mkdir(parents=True, exist_ok=True)
-        self.db = sqlite3.connect(self.path)
+        self._lock = threading.RLock()
+        self.db = sqlite3.connect(self.path, check_same_thread=False)
         self.db.row_factory = sqlite3.Row
         self._migrate()
 
+    @_locked
     def _migrate(self) -> None:
         # v5 vocabulary migration. Preserve every existing Outbound state row.
         tables = {
@@ -120,6 +143,7 @@ class OutboundStore:
 
     # ── engine_state ──────────────────────────────────────────────────────────
 
+    @_locked
     def get_state(self, key: str, default: Any = None) -> Any:
         row = self.db.execute(
             "SELECT value FROM workflow_state WHERE key=?", (key,)).fetchone()
@@ -130,6 +154,7 @@ class OutboundStore:
         except (TypeError, ValueError):
             return default
 
+    @_locked
     def set_state(self, key: str, value: Any) -> None:
         payload = json.dumps(value, default=str)
         self.db.execute(
@@ -184,6 +209,7 @@ class OutboundStore:
 
     # ── batches ───────────────────────────────────────────────────────────────
 
+    @_locked
     def upsert_batch(self, batch: dict) -> None:
         self.db.execute(
             """INSERT INTO batches(id, workflow, phase, created_at, updated_at,
@@ -206,6 +232,7 @@ class OutboundStore:
              batch.get("preview_path"), batch.get("report_path")))
         self.db.commit()
 
+    @_locked
     def get_batch(self, batch_id: str) -> dict | None:
         row = self.db.execute(
             "SELECT * FROM batches WHERE id=?", (batch_id,)).fetchone()
@@ -229,12 +256,14 @@ class OutboundStore:
             "report_path": row["report_path"],
         }
 
+    @_locked
     def update_batch_phase(self, batch_id: str, phase: str) -> None:
         self.db.execute(
             "UPDATE batches SET phase=?, updated_at=? WHERE id=?",
             (phase, utc_now(), batch_id))
         self.db.commit()
 
+    @_locked
     def update_batch_metrics(self, batch_id: str, metrics: dict, verdict: dict | None = None) -> None:
         self.db.execute(
             "UPDATE batches SET metrics_json=?, verdict_json=?, updated_at=? WHERE id=?",
@@ -242,12 +271,14 @@ class OutboundStore:
              json.dumps(verdict or {}, default=str), utc_now(), batch_id))
         self.db.commit()
 
+    @_locked
     def update_batch_report(self, batch_id: str, report_path: str) -> None:
         self.db.execute(
             "UPDATE batches SET report_path=?, updated_at=? WHERE id=?",
             (report_path, utc_now(), batch_id))
         self.db.commit()
 
+    @_locked
     def latest_batch(self) -> dict | None:
         row = self.db.execute(
             "SELECT id FROM batches ORDER BY created_at DESC LIMIT 1").fetchone()
@@ -255,6 +286,7 @@ class OutboundStore:
 
     # ── knowledge (LEARN) ─────────────────────────────────────────────────────
 
+    @_locked
     def record_trial(self, variable: str, trial: dict) -> None:
         row = self.db.execute(
             "SELECT tried_json FROM knowledge WHERE variable=?",
@@ -275,6 +307,7 @@ class OutboundStore:
              trial.get("verdict") or "", utc_now()))
         self.db.commit()
 
+    @_locked
     def knowledge_for(self, variable: str) -> dict:
         row = self.db.execute(
             "SELECT tried_json, verdict FROM knowledge WHERE variable=?",
@@ -287,6 +320,7 @@ class OutboundStore:
             tried = []
         return {"tried": tried, "verdict": row["verdict"] or None}
 
+    @_locked
     def all_knowledge(self) -> dict:
         rows = self.db.execute("SELECT variable, tried_json, verdict FROM knowledge").fetchall()
         out = {}
@@ -300,6 +334,7 @@ class OutboundStore:
 
     # ── leads / actions / goals (channel-neutral store) ──────────────────────
 
+    @_locked
     def upsert_leads(self, leads) -> int:
         rows = list(leads)
         now = utc_now()
@@ -324,6 +359,7 @@ class OutboundStore:
         self.db.commit()
         return len(rows)
 
+    @_locked
     def add_goal(self, goal: WorkflowGoal) -> None:
         self.db.execute(
             """INSERT INTO goals VALUES (?,?,?,?,?,?,?)
@@ -335,11 +371,13 @@ class OutboundStore:
              goal.min_icp_score, goal.queue_target, int(goal.enabled)))
         self.db.commit()
 
+    @_locked
     def get_lead(self, lead_id: str) -> Lead | None:
         row = self.db.execute(
             "SELECT * FROM leads WHERE lead_id=?", (lead_id,)).fetchone()
         return self._lead(row) if row else None
 
+    @_locked
     def ready_queue(self, channel: str, limit: int = 50, min_score: int = 75) -> list:
         rows = self.db.execute(
             """SELECT * FROM leads WHERE state='ready' AND icp_score>=?
@@ -347,6 +385,7 @@ class OutboundStore:
             (min_score, f'%"{channel}"%', limit)).fetchall()
         return [self._lead(row) for row in rows]
 
+    @_locked
     def record_action(self, lead_id: str, channel: str, action: str, result: str, note: str = "") -> None:
         self.db.execute(
             "INSERT INTO actions(lead_id,channel,action,result,note,created_at) VALUES(?,?,?,?,?,?)",
@@ -357,6 +396,7 @@ class OutboundStore:
             (new_state, utc_now(), lead_id))
         self.db.commit()
 
+    @_locked
     def action_count(self, channel: str, action: str, result: str | None = None) -> int:
         query = "SELECT COUNT(*) FROM actions WHERE channel=? AND action=?"
         args: list = [channel, action]
@@ -365,10 +405,12 @@ class OutboundStore:
             args.append(result)
         return int(self.db.execute(query, args).fetchone()[0])
 
+    @_locked
     def counts(self) -> dict:
         rows = self.db.execute("SELECT state, COUNT(*) AS n FROM leads GROUP BY state").fetchall()
         return {row["state"]: row["n"] for row in rows}
 
+    @_locked
     def close(self) -> None:
         self.db.close()
 
