@@ -279,14 +279,21 @@ def _email_type(email: str) -> str:
     return "personal"
 
 
-def pick_queue(cohort_filters: dict | None = None) -> list:
+def pick_queue(cohort_filters: dict | None = None,
+               reserved_lead_ids=()) -> list:
     """Ordered, deduped send queue from the master database. Filters come
     from the owner's control knobs (min_tier, skip_unverified, language); the
     queue never lowers the ICP bar — it only deepens or shallowens by tier.
     cohort_filters.language (e.g. "English") restricts the queue to contacts
     whose language matches case-insensitively — Persian is postponed, so the
-    campaign passes language="English" and no Persian email can send."""
+    campaign passes language="English" and no Persian email can send.
+
+    reserved_lead_ids excludes leads already claimed by a prepared-
+    not-executed batch, so concurrent prepares build disjoint batches; the
+    parameter is optional for backward compatibility (report/observer call
+    with filters only)."""
     filters = cohort_filters or {}
+    reserved = set(reserved_lead_ids or ())
     min_tier = str(filters.get("min_tier") or "plausible").lower()
     skip_unverified = bool(filters.get("skip_unverified"))
     lang_filter = str(filters.get("language") or "").strip()
@@ -295,6 +302,8 @@ def pick_queue(cohort_filters: dict | None = None) -> list:
 
     queued = []
     for c in contacts:
+        if c["lead_id"] in reserved:
+            continue
         if lang_filter and str(c.get("language") or "").strip().lower() != lang_filter.lower():
             continue
         if outbound.already_sent(c["lead_id"], log_data):

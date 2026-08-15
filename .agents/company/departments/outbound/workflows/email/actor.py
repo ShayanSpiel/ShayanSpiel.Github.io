@@ -5,20 +5,43 @@ PREPARE applies the intervention's levers (cohort filters, subject rotation),
 composes per-lead emails in STRICT mode (unprepared leads are skipped), and
 dedupes domains within the batch. Batches fill to the block-size floor by
 walking the whole queue with a limit (owner order 2026-08-11) — the daily cap
-still bounds the fill. EXECUTE dispatches to background for non-blocking sends:
-daily cap honored, sent-log + provider dedupe, transient retries with
-backoff, quota errors switch providers, every send is recorded in the
-sent log and the action ledger.
+still bounds the fill. Every prepare persists a unique registered batch id
+that claims its lead set until execution (idempotency repair 2026-08-15:
+never the shared "unset" fallback, and concurrent prepares get disjoint
+sets). EXECUTE dispatches to background for non-blocking sends: daily cap
+honored, sent-log + provider dedupe, transient retries with backoff, quota
+errors switch providers, every send is recorded in the sent log, the action
+ledger, and the durable per-lead submission registry (in_flight before the
+first attempt; resolved to accepted/failed/submitted_unknown; a 12h cooldown
+blocks re-submission by any worker or generation).
 """
 
 import threading
 import time
+import uuid
 from datetime import datetime, timezone
 
 from . import compose, config, content as content_bank, outbound, providers
 from .templates import SIGNATURE_HTML, SIGNATURE_TEXT
 
 FAILED_RETRY_SECONDS = 300  # grace before a failed background dispatch retries
+
+# Idempotency repair (goal-email-send-idempotency-20260815): the durable
+# per-lead submission registry keeps an in_flight marker from the moment a
+# provider attempt starts until its outcome is recorded. A lead whose entry
+# is in_flight/accepted/submitted_unknown inside this window is never
+# submitted again by any worker, generation, or goal.
+SUBMISSION_COOLDOWN_SECONDS = 12 * 3600  # 12 hours
+STATUS_IN_FLIGHT = "in_flight"
+STATUS_ACCEPTED = "accepted"
+STATUS_FAILED = "failed"
+STATUS_SUBMITTED_UNKNOWN = "submitted_unknown"
+
+# Provider-side accepts with no local success (hung transport capped by
+# _send_with_cap) resolve to submitted_unknown — the provider may hold a
+# submission the ledger cannot see, so a local "failed" record must never
+# cause an immediate re-submission.
+HUNG_CAP_PREFIX = "send exceeded"
 
 
 def prepare(ctx, intervention: dict) -> dict:
@@ -32,7 +55,6 @@ def prepare(ctx, intervention: dict) -> dict:
         for seg in (levers.get("subject_rotation") or {}):
             content_bank.rotate_bank(seg, note="act: subject lever applied")
 
-    queue = compose.pick_queue(filters)
     cap, phase = outbound.daily_cap()
     knob_cap = knobs.get("daily_cap")
     if knob_cap:
@@ -40,21 +62,73 @@ def prepare(ctx, intervention: dict) -> dict:
     used_today = outbound.sent_today(outbound.load_sent_log())
     slice_size = min(knobs.get("block_size") or config.BLOCK_SIZE,
                      max(0, cap - used_today))
+
+    store = getattr(ctx, "store", None)
+    requested_id = intervention.get("batch_id")
+    owner = _goal_id(ctx) or ""
+    hypothesis = intervention.get("prediction") or "research-first: per-lead hook + pain hypothesis"
+
+    if store is None:
+        # Legacy callers (unit tests) without a store keep the historical
+        # behavior: no registration, id from the intervention or "unset".
+        queue = compose.pick_queue(filters)
+        batch_id = requested_id or "unset"
+    else:
+        # Idempotency repair: every prepare persists a unique registered
+        # batch id (never the shared "unset" fallback that let goals b4–b7
+        # dispatch the same leads under one identity).
+        if requested_id and store.batch_registered(requested_id):
+            raise ValueError(
+                f"batch_id {requested_id!r} is already registered — a batch "
+                "id belongs to exactly one prepared batch")
+        if slice_size <= 0:
+            # Daily cap reached: still allocate a unique id so the persisted
+            # row is never "unset"; the empty batch claims no leads.
+            batch_id = requested_id or f"send-{uuid.uuid4().hex[:12]}"
+            store.register_batch(batch_id, owner=owner, lead_ids=[])
+            queue = compose.pick_queue(filters)
+        else:
+            # Claim a disjoint lead set: re-pick with the freshly reserved
+            # ids and retry on a reservation race (up to 10 re-picks). Claims
+            # are the leads the batch actually composed, so a concurrent
+            # prepare walks past them and composes the remainder. An
+            # explicitly requested id is never retried — any ValueError
+            # (already registered, or overlapping another pending batch) is
+            # a hard rejection.
+            for _ in range(10):
+                reserved = store.reserved_lead_ids()
+                queue = compose.pick_queue(filters, reserved_lead_ids=reserved)
+                candidate = requested_id or f"send-{uuid.uuid4().hex[:12]}"
+                built = compose.build_batch_emails(candidate, queue,
+                                                   hypothesis, limit=slice_size)
+                try:
+                    store.register_batch(
+                        candidate, owner=owner,
+                        lead_ids=[e["lead_id"] for e in built["emails"]])
+                except ValueError:
+                    if requested_id:
+                        raise
+                    continue
+                batch_id = candidate
+                break
+            else:
+                raise ValueError(
+                    "could not allocate a disjoint batch after 10 re-picks")
+
     if slice_size <= 0:
-        return {"id": intervention.get("batch_id", "unset"), "emails": [],
+        return {"id": batch_id, "emails": [],
                 "skipped": [], "emails_count": 0, "queue_size": len(queue),
                 "limit": slice_size, "queue_exhausted": True,
                 "reason": "daily cap reached"}
 
-    batch_id = intervention.get("batch_id", "unset")
-    hypothesis = intervention.get("prediction") or "research-first: per-lead hook + pain hypothesis"
-    # Batch floor (owner order 2026-08-11): walk the WHOLE queue with
-    # limit=slice_size so skips inside the first block (unprepared leads,
-    # same-domain duplicates) cannot shrink the batch below block_size. The
-    # daily cap is still honored — slice_size is min(block_size, cap
-    # remaining) and the fill never exceeds it.
-    built = compose.build_batch_emails(batch_id, queue, hypothesis,
-                                       limit=slice_size)
+    if store is None:
+        # Batch floor (owner order 2026-08-11): walk the WHOLE queue with
+        # limit=slice_size so skips inside the first block (unprepared leads,
+        # same-domain duplicates) cannot shrink the batch below block_size. The
+        # daily cap is still honored — slice_size is min(block_size, cap
+        # remaining) and the fill never exceeds it.
+        built = compose.build_batch_emails(batch_id, queue, hypothesis,
+                                           limit=slice_size)
     return {"id": batch_id, "hypothesis": hypothesis,
             "emails": built["emails"], "skipped": built["skipped"],
             "emails_count": len(built["emails"]),
@@ -146,6 +220,12 @@ def execute(ctx, batch: dict, dry: bool = False) -> dict:
     batch_id = batch.get("id", "UNNAMED")
     emails = batch.get("emails", [])
     if not emails:
+        # Nothing to send now or on any resume — release the batch's lead
+        # claims so a later prepare can re-claim them (dry runs are NOT
+        # released: the real execution may still come).
+        store = getattr(ctx, "store", None)
+        if store is not None and batch_id:
+            store.mark_batch_executed(batch_id)
         return {"sent": 0, "failed": 0, "deduped": 0, "note": "empty batch"}
 
     if dry:
@@ -198,6 +278,18 @@ def execute(ctx, batch: dict, dry: bool = False) -> dict:
 def _execute_emails(ctx, batch: dict) -> dict:
     """The actual email sending logic, run in background thread."""
     batch_id = batch.get("id", "UNNAMED")
+    store = getattr(ctx, "store", None)
+    try:
+        return _execute_emails_inner(ctx, store, batch_id, batch)
+    finally:
+        # Whatever happens — success, failure, an exception, or an
+        # entirely-deduped batch — the batch has been taken and its lead
+        # claims are released so later prepares can re-claim them.
+        if store is not None and batch_id:
+            store.mark_batch_executed(batch_id)
+
+
+def _execute_emails_inner(ctx, store, batch_id: str, batch: dict) -> dict:
     emails = batch.get("emails", [])
     if not emails:
         return {"sent": 0, "failed": 0, "deduped": 0, "note": "empty batch"}
@@ -256,8 +348,28 @@ def _execute_emails(ctx, batch: dict) -> dict:
                 **{f"feat_{k}": v for k, v in feat.items()},
             })
             outbound.save_sent_log(log)
+            # Provider-side truth becomes locally visible in the registry
+            # too — the acceptance may predate this worker's own attempt.
+            if store is not None:
+                store.record_submission(
+                    c["lead_id"], c["email"], provider,
+                    attempted_at=datetime.now(timezone.utc).isoformat(),
+                    status=STATUS_ACCEPTED, provider_id=str(pri),
+                    message="provider pre-check dedupe")
             deduped_count += 1
             continue
+
+        # Idempotency repair: claim the lead in the durable submission
+        # registry BEFORE the first provider attempt. An active entry
+        # (in_flight/accepted/submitted_unknown inside the cooldown) means
+        # another worker or generation already holds this lead — skip it.
+        if store is not None:
+            claim = store.claim_or_active(
+                c["lead_id"], c["email"], provider,
+                cooldown_seconds=SUBMISSION_COOLDOWN_SECONDS)
+            if not claim["claimed"]:
+                deduped_count += 1
+                continue
 
         body_html = e["body_html"].replace("{SIGNATURE_HTML}", SIGNATURE_HTML).replace("{SIGNATURE_TEXT}", SIGNATURE_TEXT)
         body_text = e["body_text"].replace("{SIGNATURE_HTML}", SIGNATURE_HTML).replace("{SIGNATURE_TEXT}", SIGNATURE_TEXT)
@@ -267,6 +379,14 @@ def _execute_emails(ctx, batch: dict) -> dict:
         result = None
         attempts = 0
         while True:
+            # Refresh the in_flight marker on every attempt so the registry
+            # mirrors the provider actually called (quota switching changes
+            # provider mid-loop) and the attempted-at time stays current.
+            if store is not None:
+                store.record_submission(
+                    c["lead_id"], c["email"], provider,
+                    attempted_at=datetime.now(timezone.utc).isoformat(),
+                    status=STATUS_IN_FLIGHT, attempts=None)
             result = _send_with_cap(
                 provider, c["email"], e["subject"], body_html, body_text,
                 reply_to=config.REPLY_TO,
@@ -296,6 +416,23 @@ def _execute_emails(ctx, batch: dict) -> dict:
             fail_count += 1
             ctx.store.record_action(c["lead_id"], "email", "send_email", "failed",
                                     str(result.get("message", "unknown"))[:200])
+            if store is not None:
+                # Definite failures stay retryable (failed entries never
+                # block). A hung-cap response means the provider may have
+                # accepted the submission — resolve to submitted_unknown so
+                # the cooldown blocks a blind re-submission.
+                if str(err_msg).startswith(HUNG_CAP_PREFIX):
+                    store.record_submission(
+                        c["lead_id"], c["email"], provider,
+                        attempted_at=datetime.now(timezone.utc).isoformat(),
+                        status=STATUS_SUBMITTED_UNKNOWN, provider_id=None,
+                        message=err_msg[:200])
+                else:
+                    store.record_submission(
+                        c["lead_id"], c["email"], provider,
+                        attempted_at=datetime.now(timezone.utc).isoformat(),
+                        status=STATUS_FAILED, provider_id=None,
+                        message=err_msg[:200])
         else:
             for f in log.get("failed", []):
                 if isinstance(f, dict) and f.get("lead_id") == c["lead_id"] and not f.get("resolved_at"):
@@ -313,6 +450,12 @@ def _execute_emails(ctx, batch: dict) -> dict:
             sent_count += 1
             ctx.store.record_action(c["lead_id"], "email", "send_email", "sent",
                                     f"batch {batch_id}")
+            if store is not None:
+                store.record_submission(
+                    c["lead_id"], c["email"], provider,
+                    attempted_at=datetime.now(timezone.utc).isoformat(),
+                    status=STATUS_ACCEPTED, provider_id=str(result.get("id")),
+                    message=None)
 
         if i < len(emails) - 1:
             time.sleep(config.THROTTLE_SECONDS)
