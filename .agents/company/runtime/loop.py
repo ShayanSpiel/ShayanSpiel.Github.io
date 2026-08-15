@@ -8,9 +8,10 @@ import logging
 import os
 import sqlite3
 import subprocess
+import threading
 import time
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from .alignment import (
@@ -19,9 +20,13 @@ from .alignment import (
     validate_goal_topology,
 )
 from .continuation import ancestors_allow, conflicting_goal, continuation_decision
+from .errors import is_transient
 from .repair_iteration import iteration_decision, same_scope
 from .contracts import approval_interaction, enrich_work_order_source, validate_goal_request
-from .models import GoalContext, Goal, GoalStatus, RunStatus, Stage
+from .models import (
+    ApprovalPolicy, GoalContext, Goal, GoalStatus, RetryPolicy, RunStatus,
+    Stage, StageResult,
+)
 from .memory import eligible_memory
 from .strategy import select_strategy_context
 from .registry import handlers as installed_handlers
@@ -57,6 +62,12 @@ LIVE_PUSH_ENV_FILE = ".spielos/.env"
 LIVE_PUSH_MARKER = ".spielos/state/.live_push_state.json"
 LIVE_PUSH_STATE_OUT = "public/live-state.json"
 LIVE_PUSH_DEBOUNCE_S = 120
+
+# Bounded best-effort: a hanging git push or snapshot sync must never
+# block a goal transition. Values chosen to keep the /live loop usable
+# while still failing fast when the network or filesystem wedges.
+LIVE_PUSH_GIT_TIMEOUT_S = 20
+LIVE_SYNC_TIMEOUT_S = 15
 
 
 def _load_live_sync():
@@ -156,8 +167,39 @@ def _push_allowed(marker: dict) -> bool:
 
 
 def _run_git(args: list[str], check: bool = True):
-    """Run a git subprocess; raises on non-zero exit when check is True."""
-    return subprocess.run(args, capture_output=True, text=True, check=check)
+    """Run a git subprocess with a hard timeout; raises on non-zero exit when
+    check is True and on TimeoutExpired when git hangs past the bound. Every
+    caller treats failures as non-fatal and logs a warning."""
+    return subprocess.run(args, capture_output=True, text=True, check=check,
+                          timeout=LIVE_PUSH_GIT_TIMEOUT_S)
+
+
+def _bounded_sync(module, timeout=None):
+    """Run module.sync_live on a daemon thread with a hard timeout.
+
+    Returns the snapshot dict, or None when the sync times out or fails.
+    A timed-out worker is a daemon thread and is abandoned, so the CLI
+    process can still exit; the snapshot is simply missing this round.
+    """
+    timeout = timeout if timeout is not None else LIVE_SYNC_TIMEOUT_S
+    result: dict = {}
+
+    def _run():
+        try:
+            result["snapshot"] = module.sync_live(LIVE_SYNC_DB, LIVE_SYNC_OUT, quiet=True)
+        except Exception as exc:  # pragma: no cover - defensive; never breaks the loop
+            result["error"] = exc
+
+    worker = threading.Thread(target=_run, daemon=True)
+    worker.start()
+    worker.join(timeout=timeout)
+    if worker.is_alive():
+        logger.warning("live timeline sync skipped (timed out after %ss)", timeout)
+        return None
+    if "error" in result:
+        logger.warning("live timeline sync skipped (non-fatal): %s", result["error"])
+        return None
+    return result.get("snapshot")
 
 
 def _git_push_sequence() -> bool:
@@ -208,6 +250,14 @@ class Runtime:
         handler = self.registry[values["owner_id"]]
         values["config"] = validate_goal_request(
             handler, metric=values["metric"], config=values.get("config"))
+        policy = (values["config"] or {}).get("approval_policy")
+        if policy is not None:
+            try:
+                ApprovalPolicy(policy)
+            except ValueError as exc:
+                raise ValueError(
+                    f"unknown approval_policy: {policy!r}; "
+                    f"use one of: {', '.join(item.value for item in ApprovalPolicy)}") from exc
         values.setdefault("owner_version", handler.version)
         if needs_alignment(values):
             return self._create_aligned_goal(values)
@@ -295,6 +345,43 @@ class Runtime:
         finally:
             self.store.release(goal_id, holder)
 
+    def _approval_status(self, goal: dict, cycle: dict, key: str) -> str | None:
+        """Policy-aware read of one approval key.
+
+        `per_action` (the default) keeps today's behavior: every key is read
+        from the store. `everything_approved` reads every key as "approved" so
+        guarded execute actions never park. `per_run` reads every key as
+        "approved" once the run-level key (approval_key(cycle)) is approved in
+        the store — the first approval carries the rest of the Run. The
+        alignment_override gate is excluded: it is an owner judgment, not an
+        execute action, and policies never bypass it.
+        """
+        run_key = approval_key(cycle)
+        if run_key == "alignment_override":
+            return self.store.approval(goal["id"], cycle["id"], key)
+        policy = (goal.get("config") or {}).get("approval_policy")
+        if policy == ApprovalPolicy.EVERYTHING_APPROVED.value:
+            return "approved"
+        if (policy == ApprovalPolicy.PER_RUN.value
+                and self.store.approval(goal["id"], cycle["id"], run_key) == "approved"):
+            return "approved"
+        return self.store.approval(goal["id"], cycle["id"], key)
+
+    def _set_approval_policy(self, goal_id: str, policy: str) -> None:
+        """Persist the Goal's approval mode in config; reject unknown modes."""
+        try:
+            ApprovalPolicy(policy)
+        except ValueError as exc:
+            raise ValueError(
+                f"unknown approval_policy: {policy!r}; "
+                f"use one of: {', '.join(item.value for item in ApprovalPolicy)}") from exc
+        goal = self.store.goal(goal_id)
+        config = dict(goal.get("config") or {})
+        config["approval_policy"] = policy
+        self.store.update_goal_config(goal_id, config)
+        self.store.event(goal_id, self.store.cycle(goal_id)["id"],
+                         "goal.approval_policy", {"policy": policy})
+
     def _advance(self, goal_id: str, holder: str) -> dict:
         start_sequence = self.store.cycle(goal_id)["sequence"]
         for _ in range(8):
@@ -309,7 +396,7 @@ class Runtime:
             if cycle["run_status"] == "completed":
                 return self.status(goal_id)
             if (cycle["run_status"] == "awaiting_approval"
-                    and self.store.approval(goal_id, cycle["id"], approval_key(cycle)) != "approved"):
+                    and self._approval_status(row, cycle, approval_key(cycle)) != "approved"):
                 return self.status(goal_id)
 
             handler = self.registry[row["owner_id"]]
@@ -348,7 +435,7 @@ class Runtime:
                                   "evaluation": self.store.evaluation(cycle["id"]),
                                   "change_tasks": tuple(self.store.change_tasks_for_run(cycle["id"]))},
                 memory=tuple((*local_memory, *shared_memory)),
-                approval_status=lambda key, g=goal_id, c=cycle["id"]: self.store.approval(g, c, key),
+                approval_status=lambda key, g=row, c=cycle: self._approval_status(g, c, key),
                 dispatch_goal=lambda child_id: self.once(child_id, holder=f"{holder}:{goal_id}"),
                 create_child_goal=lambda spec, p=goal_id, r=cycle["id"]: self._create_child(p, r, spec),
                 create_change_task=lambda spec, g=goal_id, r=cycle["id"]: self.store.create_change_task(
@@ -356,7 +443,10 @@ class Runtime:
                 update_change_task=lambda task_id, status, result: self.store.complete_change_task(
                     task_id, status, result),
                 strategy=select_strategy_context(goal))
-            result = self._call(handler, Stage(cycle["stage"]), context)
+            try:
+                result = self._call(handler, Stage(cycle["stage"]), context)
+            except Exception as exc:
+                result = self._failure_result(goal, cycle, exc)
             if Stage(cycle["stage"]) is Stage.EVALUATE and result.run_status is RunStatus.IDLE:
                 result.run_status = RunStatus.COMPLETED
             self._persist(goal, cycle, result)
@@ -378,6 +468,42 @@ class Runtime:
         if stage is Stage.ACT:
             return handler.act(ctx, data.get("decision") or {})
         return handler.evaluate(ctx, data.get("action_result") or {})
+
+    def _failure_result(self, goal, cycle, exc) -> StageResult:
+        """Translate a handler exception into a persisted loop outcome.
+
+        A transient provider failure (rate limit, timeout, 5xx, DNS — see
+        ``company.runtime.errors``) raised by an ACT action with a configured
+        ``retry_policy`` parks the run in WAITING with ``resume_at`` set to
+        now + backoff, so the next automatic Runner tick retries the same
+        ACT step with no manual ``company retry``. Every other case keeps
+        today's manual-retry world: the run is marked FAILED. Exceptions at
+        OBSERVE/DECIDE/EVALUATE are re-raised unchanged.
+        """
+        if Stage(cycle["stage"]) is not Stage.ACT:
+            raise
+        error = {"type": type(exc).__name__, "message": str(exc)}
+        policy = RetryPolicy.from_config(goal.config)
+        if is_transient(exc) and policy is not None:
+            data = dict(cycle.get("data") or {})
+            previous = data.get("action_result") or {}
+            previous_retry = previous.get("retry") if isinstance(previous, dict) else {}
+            failures = int((previous_retry or {}).get("failures") or 0) + 1
+            if failures <= policy.max_retries:
+                resume_at = (datetime.now(timezone.utc)
+                             + timedelta(seconds=policy.backoff_seconds)).isoformat()
+                return StageResult(
+                    step=cycle["step"], next_stage=Stage.ACT,
+                    run_status=RunStatus.WAITING, resume_at=resume_at,
+                    message=(f"Transient {type(exc).__name__} on attempt {failures}; "
+                             f"scheduled retry in {policy.backoff_seconds:g}s"),
+                    payload={"error": error, "retry": {
+                        "failures": failures, "max_retries": policy.max_retries,
+                        "resume_at": resume_at}})
+        return StageResult(
+            step=cycle["step"], run_status=RunStatus.FAILED,
+            message=f"{type(exc).__name__}: {exc}",
+            payload={"error": error})
 
     def _persist(self, goal, cycle, result):
         stage = Stage(cycle["stage"])
@@ -494,6 +620,8 @@ class Runtime:
         Best-effort: a missing script or database, or a locked database, only
         logs a warning. Never raises and never touches the sqlite write path —
         the sync script opens the database read-only (mode=ro, busy_timeout).
+        Both the in-process sync and every git push are bounded, so a hung
+        network, remote lock, or filesystem can never block a transition.
 
         After a successful sync, when SPIELOS_LIVE_PUSH is enabled (default
         off) and the fingerprint changed past the debounce window, the
@@ -503,10 +631,8 @@ class Runtime:
         module = _load_live_sync()
         if module is None:
             return
-        try:
-            snapshot = module.sync_live(LIVE_SYNC_DB, LIVE_SYNC_OUT, quiet=True)
-        except Exception as exc:  # pragma: no cover - defensive; never breaks the loop
-            logger.warning("live timeline sync skipped (non-fatal): %s", exc)
+        snapshot = _bounded_sync(module)
+        if snapshot is None:
             return
         try:
             self._maybe_push_live_snapshot(snapshot)
@@ -657,12 +783,22 @@ class Runtime:
             evidence_validity=spec.get("evidence_validity", "business"),
             resume_run_id=spec.get("resume_run_id"))
 
-    def approve(self, goal_id: str, note: str = "") -> dict:
+    def approve(self, goal_id: str, note: str = "", scope: str | None = None) -> dict:
+        """Approve the parked action; with ``scope`` also set the Goal policy.
+
+        ``scope`` is an ApprovalPolicy mode ("per_action", "per_run",
+        "everything_approved"). ``per_run`` / ``everything_approved`` record
+        ``config["approval_policy"]`` on the Goal in addition to granting the
+        current action; ``per_action`` (or no scope) never changes the policy.
+        """
         cycle = self.store.cycle(goal_id)
         if cycle["run_status"] != "awaiting_approval":
             raise RuntimeError(f"goal is not awaiting approval (status: {cycle['run_status']})")
         if approval_key(cycle) == "alignment_override":
-            return self._apply_alignment_override(goal_id, note)
+            result = self._apply_alignment_override(goal_id, note)
+            if scope:
+                self._set_approval_policy(goal_id, scope)
+            return result
         action = (cycle.get("data") or {}).get("action_result") or {}
         decision = (cycle.get("data") or {}).get("decision") or {}
         step_id = action.get("step_id") or decision.get("step_id")
@@ -671,6 +807,8 @@ class Runtime:
             # Explicit Workflow approval nodes get their own key. The run-level
             # execute grant still prevents follow-up prompts for ordinary steps.
             self.store.approve(goal_id, cycle["id"], f"step:{step_id}", note)
+        if scope:
+            self._set_approval_policy(goal_id, scope)
         return self.status(goal_id)
 
     def _apply_alignment_override(self, goal_id: str, note: str = "") -> dict:

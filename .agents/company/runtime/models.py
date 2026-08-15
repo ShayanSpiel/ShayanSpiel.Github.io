@@ -42,11 +42,62 @@ class RunType(str, Enum):
     SYSTEM_TEST = "system_test"
 
 
+class ApprovalPolicy(str, Enum):
+    """Per-Goal approval mode, stored in ``goal.config["approval_policy"]``.
+
+    - ``PER_ACTION``           — today's behavior: every guarded execute action
+                                parks at AWAITING_APPROVAL until approved.
+    - ``PER_RUN``              — after the FIRST approval of a Run (cycle),
+                                every remaining approval key of that Run reads
+                                as "approved"; a new Run starts unapproved.
+    - ``EVERYTHING_APPROVED``  — guarded execute actions never park; every key
+                                reads as "approved" for the Goal.
+
+    ``per_action`` is the default when the config key is absent.
+    """
+
+    PER_ACTION = "per_action"
+    PER_RUN = "per_run"
+    EVERYTHING_APPROVED = "everything_approved"
+
+
 class EvidenceValidity(str, Enum):
     BUSINESS = "business"
     TECHNICAL_ONLY = "technical_only"
     CONTAMINATED = "contaminated"
     INVALID = "invalid"
+
+
+@dataclass(frozen=True)
+class RetryPolicy:
+    """Per-goal automatic retry for transient ACT failures, from
+    ``goal.config["retry_policy"]``.
+
+    - ``max_retries``  — retries AFTER the first failure (total attempts is
+                         max_retries + 1).
+    - ``backoff_seconds`` — scheduled delay (resume_at) before each retry;
+                         never slept through in-process.
+
+    ``from_config`` returns None (no auto-retry) when the key is absent or
+    malformed; those goals keep the legacy manual-retry world.
+    """
+
+    max_retries: int
+    backoff_seconds: float
+
+    @classmethod
+    def from_config(cls, config: dict | None) -> "RetryPolicy | None":
+        raw = (config or {}).get("retry_policy")
+        if not isinstance(raw, dict):
+            return None
+        try:
+            max_retries = int(raw.get("max_retries"))
+            backoff_seconds = float(raw.get("backoff_seconds"))
+        except (TypeError, ValueError):
+            return None
+        if max_retries < 0 or backoff_seconds < 0:
+            return None
+        return cls(max_retries=max_retries, backoff_seconds=backoff_seconds)
 
 
 @dataclass(frozen=True)

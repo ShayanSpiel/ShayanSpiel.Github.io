@@ -9,9 +9,57 @@ updated_at}. The workflow sees only the payload; the Department owns
 the row.
 """
 
+import socket
+import urllib.error
 from datetime import datetime, timezone
 
 from .models import Phase
+from ...runtime.errors import (
+    DNSError,
+    RateLimitError,
+    TimeoutError as TransientTimeout,
+    UpstreamError,
+)
+
+
+def _classify_transport_failure(exc: Exception) -> None:
+    """Re-raise a provider transport exception as its transient taxonomy class.
+
+    Maps the failure vocabulary the email providers can surface onto
+    ``company.runtime.errors``: HTTP 429 -> RateLimitError, HTTP 5xx ->
+    UpstreamError, DNS resolution failures -> DNSError, request timeouts ->
+    TimeoutError, connection-level failures (refused/reset/unreachable) ->
+    UpstreamError. Everything else is re-raised unchanged so non-transient
+    bugs keep today's behavior. Always raises; never returns.
+    """
+    if isinstance(exc, urllib.error.HTTPError):
+        if exc.code == 429:
+            retry_after = None
+            raw = exc.headers.get("Retry-After") if exc.headers else None
+            if raw is not None:
+                try:
+                    retry_after = float(str(raw).strip())
+                except ValueError:
+                    retry_after = None
+            raise RateLimitError(str(exc), retry_after=retry_after) from exc
+        if 500 <= exc.code < 600:
+            raise UpstreamError(str(exc)) from exc
+        raise exc
+    if isinstance(exc, (socket.gaierror, socket.herror)):
+        raise DNSError(str(exc)) from exc
+    if isinstance(exc, (socket.timeout, TimeoutError)):
+        raise TransientTimeout(str(exc)) from exc
+    if isinstance(exc, ConnectionError):
+        raise UpstreamError(str(exc)) from exc
+    raise exc
+
+
+def _guarded(call):
+    """Run one provider-touching workflow step through the taxonomy."""
+    try:
+        return call()
+    except Exception as exc:  # noqa: BLE001 - classified, then re-raised
+        _classify_transport_failure(exc)
 
 
 def prepare(ctx, intervention: dict) -> dict:
@@ -55,7 +103,7 @@ def validate(ctx, row: dict) -> list:
 
 
 def gate(ctx) -> dict:
-    fresh = ctx.workflow.observe(ctx, quick=True)
+    fresh = _guarded(lambda: ctx.workflow.observe(ctx, quick=True))
     result = ctx.policy.check(ctx, fresh)
     result["guardrails"] = [g.get("name") for g in
                             (fresh.get("meta") or {}).get("guardrails", [])]
@@ -66,7 +114,7 @@ def gate(ctx) -> dict:
 
 
 def execute(ctx, row: dict, dry: bool = False) -> dict:
-    result = ctx.workflow.execute(ctx, row["batch"], dry=dry)
+    result = _guarded(lambda: ctx.workflow.execute(ctx, row["batch"], dry=dry))
     ctx.store.update_batch_metrics(row["id"], result)
     ctx.artifacts.log(
         f"execute{' (dry)' if dry else ''}: {row['id']} → sent {result.get('sent', 0)}, "

@@ -5,7 +5,7 @@ PREPARE applies the intervention's levers (cohort filters, subject rotation),
 composes per-lead emails in STRICT mode (unprepared leads are skipped), and
 dedupes domains within the batch. Batches fill to the block-size floor by
 walking the whole queue with a limit (owner order 2026-08-11) — the daily cap
-still bounds the fill. EXECUTE is the deterministic paced send:
+still bounds the fill. EXECUTE dispatches to background for non-blocking sends:
 daily cap honored, sent-log + provider dedupe, transient retries with
 backoff, quota errors switch providers, every send is recorded in the
 sent log and the action ledger.
@@ -109,7 +109,66 @@ def _provider_sent_id(email, hours=24):
         return "unknown"
 
 
+def _goal_id(ctx):
+    """Resolve the goal identity used for dispatch bookkeeping.
+
+    The email workflow stamps `outbound.goal_id` before execution; the
+    legacy workflow path calls with the GoalContext (ctx.goal.id). Callers
+    with neither keep the pre-dispatch synchronous behavior.
+    """
+    return (getattr(ctx, "goal_id", None)
+            or getattr(getattr(ctx, "goal", None), "id", None))
+
+
+def is_pending(ctx, batch_id: str) -> bool:
+    """Check if there's a pending background dispatch for this batch."""
+    from .....runtime.async_dispatch import is_pending as _is_pending
+    goal_id = _goal_id(ctx)
+    if goal_id and batch_id:
+        return _is_pending(goal_id, batch_id)
+    return False
+
+
 def execute(ctx, batch: dict, dry: bool = False) -> dict:
+    """Dispatch email sending to background instead of blocking the runner."""
+    batch_id = batch.get("id", "UNNAMED")
+    emails = batch.get("emails", [])
+    if not emails:
+        return {"sent": 0, "failed": 0, "deduped": 0, "note": "empty batch"}
+
+    if dry:
+        return {"sent": 0, "failed": 0, "deduped": 0,
+                "note": f"DRY RUN — {len(emails)} emails validated, nothing sent"}
+
+    from .....runtime.async_dispatch import check, cleanup, dispatch, is_pending as _is_pending
+    goal_id = _goal_id(ctx)
+    if goal_id and batch_id:
+        if _is_pending(goal_id, batch_id):
+            return {"dispatched": True, "batch_id": batch_id, "note": "already dispatched"}
+        result = check(goal_id, batch_id)
+        if result and result.get("status") == "done":
+            return result.get("result", {})
+        elif result and result.get("status") == "failed":
+            raise RuntimeError(f"Background execution failed: {result.get('error')}")
+        elif result and result.get("status") == "stale":
+            cleanup(goal_id, batch_id)
+
+        dispatch_result = dispatch(goal_id, batch_id, _execute_emails, ctx, batch)
+
+        return {
+            "dispatched": True,
+            "batch_id": batch_id,
+            "note": "dispatched to background",
+            "details": dispatch_result,
+        }
+
+    # No goal identity to reconcile against: fall back to the previous
+    # synchronous behavior so legacy/direct callers keep working.
+    return _execute_emails(ctx, batch)
+
+
+def _execute_emails(ctx, batch: dict) -> dict:
+    """The actual email sending logic, run in background thread."""
     batch_id = batch.get("id", "UNNAMED")
     emails = batch.get("emails", [])
     if not emails:
@@ -143,10 +202,6 @@ def execute(ctx, batch: dict, dry: bool = False) -> dict:
     if pre_deduped and not emails:
         return {"sent": 0, "failed": 0, "deduped": pre_deduped,
                 "note": "entire batch already in the sent log — nothing to send"}
-
-    if dry:
-        return {"sent": 0, "failed": 0, "deduped": 0,
-                "note": f"DRY RUN — {len(emails)} emails validated, nothing sent"}
 
     sent_count = 0
     fail_count = 0

@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import sqlite3
 import sys
 from pathlib import Path
 
@@ -19,7 +20,8 @@ def build_parser():
     parser = argparse.ArgumentParser(prog="python3 -m company")
     parser.add_argument("--db", default=str(DEFAULT_DB))
     commands = parser.add_subparsers(dest="command", required=True)
-    commands.add_parser("departments")
+    departments_parser = commands.add_parser("departments")
+    departments_parser.add_argument("--json", action="store_true")
     commands.add_parser("catalog")
     strategy = commands.add_parser("strategy", help="show the read-only Strategy Kernel")
     strategy.add_argument("--topic", action="append", default=[])
@@ -27,6 +29,7 @@ def build_parser():
     strategy.add_argument("--layer", action="append", choices=(
         "intent", "model", "policy", "constitution"), default=[])
     strategy.add_argument("--max-sections", type=int, default=8)
+    strategy.add_argument("--json", action="store_true")
     department = commands.add_parser("department", help="install/validate Department Lego packages")
     department_commands = department.add_subparsers(dest="department_command", required=True)
     install = department_commands.add_parser("install")
@@ -39,7 +42,8 @@ def build_parser():
     validate.add_argument("--spec", help="department_spec JSON object")
     validate.add_argument("--file", help="path to department_spec JSON file")
     validate.add_argument("--id", help="override/default department id")
-    department_commands.add_parser("list")
+    dept_list = department_commands.add_parser("list")
+    dept_list.add_argument("--json", action="store_true")
     goal = commands.add_parser("goal")
     goals = goal.add_subparsers(dest="goal_command", required=True)
     create = goals.add_parser("create")
@@ -62,10 +66,15 @@ def build_parser():
     create.add_argument("--parent-run")
     create.add_argument("--triggered-by")
     create.add_argument("--resume-run")
-    goals.add_parser("list")
+    create.add_argument("--json", action="store_true")
+    goal_list = goals.add_parser("list")
+    goal_list.add_argument("--json", action="store_true")
     show = goals.add_parser("show"); show.add_argument("goal_id")
+    show.add_argument("--json", action="store_true")
     once = commands.add_parser("once"); once.add_argument("goal_id")
+    once.add_argument("--json", action="store_true")
     next_run = commands.add_parser("next"); next_run.add_argument("goal_id")
+    next_run.add_argument("--json", action="store_true")
     status = commands.add_parser("status")
     status.add_argument("goal_id", nargs="?")
     status.add_argument("--history", action="store_true",
@@ -77,29 +86,43 @@ def build_parser():
     status.add_argument("--json", action="store_true",
                         help="render the compact projection as JSON")
     approve = commands.add_parser("approve"); approve.add_argument("goal_id"); approve.add_argument("--note", default="")
+    approve.add_argument("--scope", choices=("per_action", "per_run", "everything_approved"),
+                         help="approval mode for this Goal: approve now AND record the policy "
+                              "(per_run/everything_approved), or just approve (per_action/none)")
+    approve.add_argument("--json", action="store_true")
     for name in ("pause", "resume", "abandon"):
         item = commands.add_parser(name); item.add_argument("goal_id")
+        item.add_argument("--json", action="store_true")
     retry = commands.add_parser("retry"); retry.add_argument("goal_id")
+    retry.add_argument("--json", action="store_true")
     report = commands.add_parser("report"); report.add_argument("goal_id"); report.add_argument("--events", type=int, default=10); report.add_argument("--json", action="store_true")
     evidence = commands.add_parser("evidence")
     evidence_commands = evidence.add_subparsers(dest="evidence_command", required=True)
     reply = evidence_commands.add_parser("reply"); reply.add_argument("goal_id"); reply.add_argument("--recipient", required=True); reply.add_argument("--note", default="")
+    reply.add_argument("--json", action="store_true")
     add = evidence_commands.add_parser("add"); add.add_argument("goal_id"); add.add_argument("--kind", required=True); add.add_argument("--source", required=True); add.add_argument("--payload", default="{}"); add.add_argument("--validity")
+    add.add_argument("--json", action="store_true")
     change = commands.add_parser("change")
     change_commands = change.add_subparsers(dest="change_command", required=True)
     complete = change_commands.add_parser("complete"); complete.add_argument("task_id"); complete.add_argument("--passed", action="store_true"); complete.add_argument("--deployed", action="store_true"); complete.add_argument("--result", default="{}")
+    complete.add_argument("--json", action="store_true")
     runner = commands.add_parser("runner")
     runner_commands = runner.add_subparsers(dest="runner_command", required=True)
     tick = runner_commands.add_parser("tick"); tick.add_argument("goal_id", nargs="?"); tick.add_argument("--max-advances", type=int, default=100)
     watch = runner_commands.add_parser("watch"); watch.add_argument("goal_id", nargs="?"); watch.add_argument("--interval", type=float, default=2.0); watch.add_argument("--max-ticks", type=int)
     start = runner_commands.add_parser("start"); start.add_argument("--interval", type=float, default=2.0)
+    start.add_argument("--json", action="store_true")
     runner_commands.add_parser("enable")
-    runner_commands.add_parser("stop")
-    runner_commands.add_parser("status")
+    stop = runner_commands.add_parser("stop")
+    stop.add_argument("--json", action="store_true")
+    status = runner_commands.add_parser("status")
+    status.add_argument("--json", action="store_true")
     notifications = commands.add_parser("notifications")
     notification_commands = notifications.add_subparsers(dest="notification_command", required=True)
     listed = notification_commands.add_parser("list"); listed.add_argument("--status", choices=("pending", "delivered")); listed.add_argument("--limit", type=int, default=100)
+    listed.add_argument("--json", action="store_true")
     acknowledge = notification_commands.add_parser("ack"); acknowledge.add_argument("notification_id")
+    acknowledge.add_argument("--json", action="store_true")
     tasks = commands.add_parser("tasks", help="list durable employee work orders")
     tasks.add_argument("work_order_id", nargs="?")
     tasks.add_argument("--status", choices=("active", "open", "claimed", "done", "cancelled"),
@@ -248,8 +271,7 @@ def main(argv=None):
                 print(render_status(output, history=args.history))
                 return 0
         elif args.command == "approve":
-            runtime.approve(args.goal_id, args.note)
-            Runner(runtime).tick(args.goal_id)
+            runtime.approve(args.goal_id, args.note, scope=args.scope)
             output = runtime.status(args.goal_id)
         elif args.command in ("pause", "resume", "abandon"):
             statuses = {"pause": GoalStatus.PAUSED, "resume": GoalStatus.ACTIVE, "abandon": GoalStatus.ABANDONED}
@@ -276,8 +298,13 @@ def main(argv=None):
             if args.runner_command == "tick":
                 output = runner.tick(args.goal_id, args.max_advances)
             elif args.runner_command == "watch":
+                # The daemon's watch cycle delivers pending notifications on
+                # every tick so they do not accumulate unseen while it is on.
+                from .runtime.notifications import deliver_pending
                 for result in runner.watch(args.interval, args.goal_id, args.max_ticks):
-                    print(json.dumps(result, ensure_ascii=False, default=str), flush=True)
+                    delivered = deliver_pending(runtime.store)
+                    print(json.dumps({**result, "notifications_delivered": delivered},
+                                     ensure_ascii=False, default=str), flush=True)
                 return 0
             else:
                 service = RunnerService(PROJECT_ROOT, Path(args.db))
@@ -327,10 +354,18 @@ def main(argv=None):
             if not args.json:
                 print(render_report(output))
                 return 0
-        print(json.dumps(output, indent=2, ensure_ascii=False, default=str))
+        if getattr(args, "json", False):
+            print(json.dumps(output, indent=2, ensure_ascii=False, default=str))
+        else:
+            print(_render_default(args, output))
         return 0
-    except (KeyError, RuntimeError, ValueError, json.JSONDecodeError) as exc:
-        print(json.dumps({"error": str(exc)}, indent=2), file=sys.stderr)
+    except (KeyError, RuntimeError, ValueError, json.JSONDecodeError,
+            sqlite3.OperationalError) as exc:
+        message = str(exc).strip("'")
+        if getattr(args, "json", False):
+            print(json.dumps({"error": message}, indent=2), file=sys.stderr)
+        else:
+            print(f"company: {message}", file=sys.stderr)
         return 1
 
 
@@ -501,6 +536,202 @@ def render_status(value, history=False):
     terminal = counts["achieved"] + counts["abandoned"] + counts["expired"]
     lines += ["", f"History: {terminal} terminal goal(s), {counts['total']} total. ",
               "Use `company status --history --limit N` for more or `--raw` for the full audit payload."]
+    return "\n".join(lines) + "\n"
+
+
+# ---- Card-style renders (default output for every user-facing command) ----
+
+
+def _result_message(item):
+    """The human message of a notification payload, when present."""
+    payload = item.get("payload") or {}
+    result = payload.get("result")
+    if isinstance(result, str):
+        return result
+    if isinstance(result, dict):
+        return result.get("message")
+    return None
+
+
+def _render_default(args, output) -> str:
+    """Human-first card render for the command that just ran.
+
+    Commands without a dedicated renderer (catalog, department install,
+    runner tick, tasks WORK_ORDER_ID, status --raw, ...) keep the raw JSON
+    projection: they are machine views or runtime plumbing.
+    """
+    command = args.command
+    if command == "departments":
+        return render_departments(output)
+    if command == "strategy":
+        return render_strategy(output)
+    if command == "department" and args.department_command == "list":
+        return render_department_packages(output)
+    if command == "goal":
+        if args.goal_command == "create":
+            return render_goal_created(output)
+        if args.goal_command == "list":
+            return render_goal_list(output)
+        return render_goal_state(output["goal"]["name"], output)
+    if command == "notifications":
+        if args.notification_command == "ack":
+            return render_notification_ack(output)
+        return render_notifications_list(output)
+    if command == "evidence":
+        kind = "reply" if args.evidence_command == "reply" else args.kind
+        return render_goal_state(f"Evidence added: {kind}", output)
+    if command == "change":
+        return render_goal_state(f"Change complete: {output['goal']['name']}", output)
+    if command == "runner":
+        titles = {"start": "Runner started", "stop": "Runner stopped",
+                  "enable": "Runner enabled", "status": "Runner status"}
+        return render_runner(titles[args.runner_command], output)
+    titles = {"pause": "Paused", "resume": "Resumed", "abandon": "Abandoned",
+              "approve": "Approved", "retry": "Retried", "once": "Run once",
+              "next": "Next run started"}
+    if command in titles:
+        return render_goal_state(f"{titles[command]}: {output['goal']['name']}", output)
+    return json.dumps(output, indent=2, ensure_ascii=False, default=str)
+
+
+def render_goal_state(title, value):
+    """Card for a full runtime.status() projection (goal/show and transitions)."""
+    goal, cycle, run = value["goal"], value["cycle"], value["run"]
+    lines = [f"# {title}", "",
+             f"- Goal: `{goal['id']}`",
+             f"- Owner: `{goal['owner_id']}`",
+             f"- Outcome: `{goal['metric']} {goal['operator']} {goal['target']}`",
+             f"- Goal status: `{goal['goal_status']}`",
+             f"- Current run: `{run['id']}` · `{run['run_type']}` · `{run['status']}`",
+             f"- Runtime: `{cycle['stage']}.{cycle['step']}` · `{cycle['run_status']}`",
+             f"- Evidence: `{len(value.get('evidence') or [])}` item(s)"]
+    if run.get("evidence_validity"):
+        lines.append(f"- Evidence validity: `{run['evidence_validity']}`")
+    pending = [item for item in (value.get("pending_notifications") or [])
+               if item.get("status") == "pending"]
+    if pending:
+        lines.append(f"- Pending notifications: `{len(pending)}`")
+    return "\n".join(lines) + "\n"
+
+
+def render_goal_created(value):
+    """Card for the goal create confirmation (a raw goal row)."""
+    lines = [f"# Goal created: {value['name']}", "",
+             f"- Goal: `{value['id']}`",
+             f"- Owner: `{value['owner_id']}`",
+             f"- Outcome: `{value['metric']} {value['operator']} {value['target']}`",
+             f"- Status: `{value['goal_status']}`"]
+    alignment = (value.get("config") or {}).get("alignment")
+    if alignment:
+        lines.append(f"- Alignment: `{alignment.get('judgment')}`")
+    return "\n".join(lines) + "\n"
+
+
+def render_goal_list(items):
+    """Card for `company goal list`."""
+    lines = [f"# Goals ({len(items)})", ""]
+    if items:
+        lines.extend(_goal_line(item) for item in items)
+    else:
+        lines.append("- None.")
+    lines += ["", "Create goals with `company goal create`; inspect one with `company goal show GOAL_ID`."]
+    return "\n".join(lines) + "\n"
+
+
+def _notification_line(item):
+    message = _result_message(item)
+    line = (f"- `{item['id']}` · `{item['kind']}` · {item['goal_id']} · "
+            f"status `{item['status']}`")
+    if item.get("why_next"):
+        line += f"\n  {item['why_next']}"
+    if message:
+        line += f"\n  {message}"
+    return line
+
+
+def render_notifications_list(items):
+    pending = sum(1 for item in items if item.get("status") == "pending")
+    lines = [f"# Notifications ({len(items)}, {pending} pending)", ""]
+    if items:
+        lines.extend(_notification_line(item) for item in items)
+    else:
+        lines.append("- None.")
+    return "\n".join(lines) + "\n"
+
+
+def render_notification_ack(item):
+    lines = [f"# Notification acknowledged", "",
+             f"- Notification: `{item['id']}`",
+             f"- Kind: `{item['kind']}`",
+             f"- Goal: `{item['goal_id']}`",
+             f"- Status: `{item['status']}`"]
+    return "\n".join(lines) + "\n"
+
+
+def render_departments(items):
+    lines = [f"# Departments ({len(items)})", ""]
+    if items:
+        for item in items:
+            lines.append(f"- `{item['id']}` v{item['version']} — {item['description']}")
+    else:
+        lines.append("- None.")
+    return "\n".join(lines) + "\n"
+
+
+def render_department_packages(items):
+    lines = [f"# Department packages ({len(items)})", ""]
+    if not items:
+        lines.append("- None.")
+    for item in items:
+        line = f"- `{item['id']}` v{item['version']} — {item['description']}"
+        if item.get("lego"):
+            line += " · installable Lego package"
+        defects = item.get("package_defects") or []
+        if defects:
+            line += f"\n  package defects: {', '.join(defects)}"
+        lines.append(line)
+    return "\n".join(lines) + "\n"
+
+
+def render_strategy(value):
+    """Card for the Strategy Kernel summary or a bounded context selection."""
+    if "current_intent" in value:
+        intent = value.get("current_intent") or {}
+        lines = [f"# Strategy context: {intent.get('name') or intent.get('goal_id')}", "",
+                 f"- State hash: `{value.get('state_hash')}`",
+                 f"- Sections: `{len(value.get('sections') or [])}` of `{value.get('section_limit')}`",
+                 f"- Memory separate: `{value.get('memory_separate')}`",
+                 f"- Strategy mutable: `{value.get('strategy_mutable')}`",
+                 ""]
+        for section in value.get("sections") or []:
+            lines.append(f"- `{section['id']}` — {section['heading']} (`{section['source']}`)")
+    else:
+        lines = [f"# Strategy kernel", "",
+                 f"- Schema version: `{value.get('schema_version')}`",
+                 f"- Authority: `{value.get('authority')}`",
+                 f"- Mutation: `{value.get('mutation')}`",
+                 ""]
+        for layer, atoms in (value.get("layers") or {}).items():
+            lines.append(f"## {layer.capitalize()} ({len(atoms)})")
+            for atom in atoms:
+                lines.append(f"- `{atom['id']}` — {atom['heading']}")
+    return "\n".join(lines) + "\n"
+
+
+def render_runner(title, value):
+    """Card for RunnerService status/start/stop/enable output."""
+    lines = [f"# {title}", ""]
+    if value.get("running"):
+        started = f" · started {value.get('started_at')}" if value.get("started_at") else ""
+        lines += [f"- State: `running` (pid `{value.get('pid')}`{started})",
+                  f"- Enabled: `{value.get('enabled')}`",
+                  f"- Log: `{value.get('log_path')}`"]
+    else:
+        lines += [f"- State: `stopped`",
+                  f"- Enabled: `{value.get('enabled')}`",
+                  f"- Log: `{value.get('log_path')}`",
+                  "",
+                  "Start automation with `company runner start`."]
     return "\n".join(lines) + "\n"
 
 

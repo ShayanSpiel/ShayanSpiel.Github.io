@@ -121,6 +121,9 @@ class EmailWorkflow(GoalHandler):
                     return _capture_setup_required(
                         ctx, readiness.get("reason") or "Automatic reply capture is not ready", readiness)
         outbound = outbound_context(mode == "dry_run", ctx.goal.config)
+        # Stamp the goal identity so the actor can reconcile background
+        # dispatch files for THIS goal (outbound context has no goal id).
+        setattr(outbound, "goal_id", ctx.goal.id)
         if outbound.stop_file.exists():
             return StageResult("guardrail", {"stop_file": str(outbound.stop_file)},
                                RunStatus.BLOCKED, Stage.ACT,
@@ -153,7 +156,34 @@ class EmailWorkflow(GoalHandler):
         if not row:
             return StageResult("execute", {**previous, "error": "outbound batch missing"},
                                RunStatus.FAILED, Stage.ACT)
+
+        # Check if there's already a pending dispatch
+        from .workflows.email import actor
+        if actor.is_pending(ctx, batch_id):
+            return StageResult(
+                "review",
+                previous,
+                RunStatus.WAITING,
+                Stage.ACT,
+                resume_at=_dispatch_poll(ctx.goal.config).isoformat(),
+                evidence=None,
+            )
+
+        # Execute the batch (may dispatch to background)
         result = outbound_execution.execute(outbound, row, dry=mode == "dry_run")
+
+        # Check if dispatched to background
+        if result.get("dispatched"):
+            return StageResult(
+                "review",
+                {**previous, "dispatched": True},
+                RunStatus.WAITING,
+                Stage.ACT,
+                resume_at=_dispatch_poll(ctx.goal.config).isoformat(),
+                evidence=None,
+            )
+
+        # Otherwise, continue to evidence collection
         evidence = []
         if mode == "live":
             from .workflows.email import outbound
@@ -515,6 +545,17 @@ def _parse_time(value):
 def _next_poll(config, deadline):
     seconds = max(1.0, float(config.get("observer_interval_seconds", 300)))
     return min(deadline, datetime.now(timezone.utc) + timedelta(seconds=seconds))
+
+
+def _dispatch_poll(config):
+    """Next wake-up while a background dispatch is still pending.
+
+    The runner re-advances the run at resume_at; each re-entry re-checks
+    the dispatch file (is_pending / execute reconciliation), so the poll is
+    a cheap file read and the batch never blocks the runner tick.
+    """
+    seconds = max(5.0, float(config.get("observer_interval_seconds", 300)))
+    return datetime.now(timezone.utc) + timedelta(seconds=seconds)
 
 
 def _compare(value, operator, target):
