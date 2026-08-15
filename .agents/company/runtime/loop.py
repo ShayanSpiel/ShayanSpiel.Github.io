@@ -549,12 +549,12 @@ class Runtime:
             "message": result.message, "payload": result.payload})
         run = self.store.run(cycle["id"])
         current_evidence = list(self.store.evidence(cycle["id"]))
-        for learning in result.learnings:
+        for learning in (result.learnings or ()):
             memory = eligible_memory(learning, current_evidence, goal, run)
             if memory:
                 self.store.learn(goal.owner_id, goal.id, memory["claim"],
                                  memory["evidence"], memory["confidence"])
-        for evidence in result.evidence:
+        for evidence in (result.evidence or ()):
             self.store.add_evidence(goal.id, cycle["id"], evidence["kind"],
                                     evidence.get("source", goal.owner_id), evidence.get("payload", {}),
                                     evidence.get("validity", self.store.run(cycle["id"])["evidence_validity"]))
