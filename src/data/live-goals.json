@@ -236,7 +236,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-15T03:45:53.655667+00:00"
+      "updated_at": "2026-08-15T04:06:37.674160+00:00"
     },
     {
       "created_at": "2026-08-10T14:42:53.516527+00:00",
@@ -1357,7 +1357,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-15T03:43:49.172466+00:00"
+      "updated_at": "2026-08-15T04:04:29.880384+00:00"
     },
     {
       "created_at": "2026-08-15T00:32:48.129043+00:00",
@@ -1400,7 +1400,7 @@
     },
     {
       "created_at": "2026-08-15T02:42:04.953786+00:00",
-      "goal_status": "active",
+      "goal_status": "paused",
       "id": "goal-email-send-20260815-b6",
       "metric": "reply_rate",
       "name": "English outbound send batch 6: next 50 from remaining queue",
@@ -1409,11 +1409,11 @@
       "run_status": "failed",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-15T03:50:19.631721+00:00"
+      "updated_at": "2026-08-15T03:58:10.366516+00:00"
     },
     {
       "created_at": "2026-08-15T03:10:46.410099+00:00",
-      "goal_status": "active",
+      "goal_status": "paused",
       "id": "goal-email-send-20260815-b7",
       "metric": "reply_rate",
       "name": "English outbound send batch 7: next 50 from remaining queue",
@@ -1422,7 +1422,7 @@
       "run_status": "waiting",
       "stage": "ACT",
       "target": 0.3,
-      "updated_at": "2026-08-15T03:43:49.292891+00:00"
+      "updated_at": "2026-08-15T03:58:10.389042+00:00"
     },
     {
       "created_at": "2026-08-15T03:22:50.223477+00:00",
@@ -1449,6 +1449,32 @@
       "stage": "ACT",
       "target": true,
       "updated_at": "2026-08-15T03:39:39.190607+00:00"
+    },
+    {
+      "created_at": "2026-08-15T03:58:10.423951+00:00",
+      "goal_status": "active",
+      "id": "goal-async-dispatch-sqlite-thread-20260815",
+      "metric": "acceptance_tests_passed",
+      "name": "Repair async-dispatch worker SQLite cross-thread failure",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "run_status": "blocked",
+      "stage": "ACT",
+      "target": true,
+      "updated_at": "2026-08-15T03:59:03.788080+00:00"
+    },
+    {
+      "created_at": "2026-08-15T03:58:29.373786+00:00",
+      "goal_status": "achieved",
+      "id": "goal-runner-watchdog-supervision-20260815",
+      "metric": "acceptance_tests_passed",
+      "name": "Runner watchdog: heartbeat, stuck-run detection, down alerts",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "run_status": "completed",
+      "stage": "OBSERVE",
+      "target": true,
+      "updated_at": "2026-08-15T04:09:49.256821+00:00"
     }
   ],
   "heartbeat": {
@@ -1459,18 +1485,18 @@
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-15T03:45:53.657253+00:00"
+    "updated_at": "2026-08-15T04:06:37.677181+00:00"
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-15T02:42:04.953786+00:00",
-      "goal_id": "goal-email-send-20260815-b6",
-      "goal_name": "English outbound send batch 6: next 50 from remaining queue",
+      "created_at": "2026-08-14T00:17:41.770320+00:00",
+      "goal_id": "goal-email-campaign-20260810",
+      "goal_name": "Resume daily English outbound to 30% reply rate",
       "owner_id": "outbound",
-      "run_id": "run-0e93fa8686",
-      "run_status": "failed",
+      "run_id": "run-bf91da1096",
+      "run_status": "waiting",
       "stage": "EVALUATE",
-      "updated_at": "2026-08-15T03:50:19.632979+00:00"
+      "updated_at": "2026-08-15T04:06:37.677181+00:00"
     },
     "heartbeat": {
       "goal_id": "goal-email-campaign-20260810",
@@ -1480,22 +1506,22 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-15T03:45:53.657253+00:00"
+      "updated_at": "2026-08-15T04:06:37.677181+00:00"
     },
-    "last_activity_at": "2026-08-15T03:50:19.632979+00:00",
-    "last_sync_at": "2026-08-15T03:50:19.685843+00:00",
+    "last_activity_at": "2026-08-15T04:09:49.258141+00:00",
+    "last_sync_at": "2026-08-15T04:09:49.282365+00:00",
     "state": "running"
   },
   "totals": {
-    "approvals": 118,
-    "decisions": 238,
-    "evidence": 2232,
+    "approvals": 122,
+    "decisions": 244,
+    "evidence": 2241,
     "goals_abandoned": 12,
-    "goals_achieved": 81,
-    "goals_active": 13,
-    "goals_total": 110,
+    "goals_achieved": 82,
+    "goals_active": 12,
+    "goals_total": 112,
     "hypotheses": 34,
     "memory_claims": 5,
-    "runs": 123
+    "runs": 125
   }
 }
