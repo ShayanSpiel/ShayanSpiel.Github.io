@@ -227,7 +227,7 @@
       "created_at": "2026-08-10T14:42:53.503744+00:00",
       "display_title": "Improve qualified outbound conversations",
       "display_title_fa": "گفت‌وگوهای فروش باکیفیت رو بیشتر کنیم",
-      "goal_status": "active",
+      "goal_status": "paused",
       "id": "goal-email-campaign-20260810",
       "metric": "reply_rate",
       "name": "Resume daily English outbound to 30% reply rate",
@@ -236,7 +236,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-15T12:10:12.079692+00:00"
+      "updated_at": "2026-08-15T12:21:55.089203+00:00"
     },
     {
       "created_at": "2026-08-10T14:42:53.516527+00:00",
@@ -1348,7 +1348,7 @@
     },
     {
       "created_at": "2026-08-14T22:09:14.548799+00:00",
-      "goal_status": "active",
+      "goal_status": "paused",
       "id": "goal-email-send-20260815-b5",
       "metric": "reply_rate",
       "name": "English outbound send batch 5: next 50 from remaining queue",
@@ -1357,7 +1357,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-15T12:09:47.876762+00:00"
+      "updated_at": "2026-08-15T12:21:55.098080+00:00"
     },
     {
       "created_at": "2026-08-15T00:32:48.129043+00:00",
@@ -1400,7 +1400,7 @@
     },
     {
       "created_at": "2026-08-15T02:42:04.953786+00:00",
-      "goal_status": "active",
+      "goal_status": "paused",
       "id": "goal-email-send-20260815-b6",
       "metric": "reply_rate",
       "name": "English outbound send batch 6: next 50 from remaining queue",
@@ -1409,11 +1409,11 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-15T12:10:01.216456+00:00"
+      "updated_at": "2026-08-15T12:21:55.102481+00:00"
     },
     {
       "created_at": "2026-08-15T03:10:46.410099+00:00",
-      "goal_status": "active",
+      "goal_status": "paused",
       "id": "goal-email-send-20260815-b7",
       "metric": "reply_rate",
       "name": "English outbound send batch 7: next 50 from remaining queue",
@@ -1422,7 +1422,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-15T12:10:08.475081+00:00"
+      "updated_at": "2026-08-15T12:21:55.106981+00:00"
     },
     {
       "created_at": "2026-08-15T03:22:50.223477+00:00",
@@ -1501,53 +1501,79 @@
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-15T12:10:10.895601+00:00"
+    },
+    {
+      "created_at": "2026-08-15T12:22:33.925837+00:00",
+      "goal_status": "achieved",
+      "id": "goal-email-send-idempotency-20260815",
+      "metric": "acceptance_tests_passed",
+      "name": "Outbound send-path idempotency: unique batch allocation + submission registry",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "run_status": "completed",
+      "stage": "OBSERVE",
+      "target": true,
+      "updated_at": "2026-08-15T12:57:56.799442+00:00"
+    },
+    {
+      "created_at": "2026-08-15T12:45:59.208300+00:00",
+      "goal_status": "active",
+      "id": "goal-chat-visible-supervision-20260815",
+      "metric": "acceptance_tests_passed",
+      "name": "Chat-visible supervision: scheduled progress digest + post-completion follow-up",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "run_status": "blocked",
+      "stage": "ACT",
+      "target": true,
+      "updated_at": "2026-08-15T12:46:05.947486+00:00"
     }
   ],
   "heartbeat": {
-    "goal_id": "goal-email-campaign-20260810",
-    "goal_name": "Resume daily English outbound to 30% reply rate",
-    "metric": "reply_rate",
-    "operator": "ge",
+    "goal_id": "goal-content-growth-operations-v1-20260812",
+    "goal_name": "Operate the content growth program toward 200 daily visits and 10 daily services leads",
+    "metric": "all_children_achieved",
+    "operator": "eq",
     "run_status": "waiting",
-    "stage": "EVALUATE",
-    "target": 0.3,
-    "updated_at": "2026-08-15T12:10:12.081939+00:00"
+    "stage": "OBSERVE",
+    "target": true,
+    "updated_at": "2026-08-13T23:42:08.305471+00:00"
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-14T00:17:41.770320+00:00",
-      "goal_id": "goal-email-campaign-20260810",
-      "goal_name": "Resume daily English outbound to 30% reply rate",
-      "owner_id": "outbound",
-      "run_id": "run-bf91da1096",
-      "run_status": "waiting",
-      "stage": "EVALUATE",
-      "updated_at": "2026-08-15T12:10:12.081939+00:00"
+      "created_at": "2026-08-15T12:45:59.208300+00:00",
+      "goal_id": "goal-chat-visible-supervision-20260815",
+      "goal_name": "Chat-visible supervision: scheduled progress digest + post-completion follow-up",
+      "owner_id": "system-improvement",
+      "run_id": "run-c82502e842",
+      "run_status": "blocked",
+      "stage": "ACT",
+      "updated_at": "2026-08-15T12:46:05.948383+00:00"
     },
     "heartbeat": {
-      "goal_id": "goal-email-campaign-20260810",
-      "goal_name": "Resume daily English outbound to 30% reply rate",
-      "metric": "reply_rate",
-      "operator": "ge",
+      "goal_id": "goal-content-growth-operations-v1-20260812",
+      "goal_name": "Operate the content growth program toward 200 daily visits and 10 daily services leads",
+      "metric": "all_children_achieved",
+      "operator": "eq",
       "run_status": "waiting",
-      "stage": "EVALUATE",
-      "target": 0.3,
-      "updated_at": "2026-08-15T12:10:12.081939+00:00"
+      "stage": "OBSERVE",
+      "target": true,
+      "updated_at": "2026-08-13T23:42:08.305471+00:00"
     },
-    "last_activity_at": "2026-08-15T12:10:12.081939+00:00",
-    "last_sync_at": "2026-08-15T12:10:12.110687+00:00",
+    "last_activity_at": "2026-08-15T12:57:56.800770+00:00",
+    "last_sync_at": "2026-08-15T12:57:56.818797+00:00",
     "state": "running"
   },
   "totals": {
-    "approvals": 126,
-    "decisions": 250,
-    "evidence": 2981,
+    "approvals": 128,
+    "decisions": 256,
+    "evidence": 2994,
     "goals_abandoned": 12,
-    "goals_achieved": 86,
-    "goals_active": 12,
-    "goals_total": 114,
+    "goals_achieved": 87,
+    "goals_active": 9,
+    "goals_total": 116,
     "hypotheses": 34,
     "memory_claims": 5,
-    "runs": 127
+    "runs": 129
   }
 }
