@@ -68,3 +68,20 @@ Ledger of record: `.spielos/state/outbound/metrics.json` -> `replies`.
   green); prefer corporate domains with established MX for future cohorts.
 - Gate behavior validated end-to-end: block on breach -> owner remediation
   (suppression) -> downgrade -> continue. No reputation damage.
+
+### 6. INTERESTED — implementation-viability question (qualified inbound)
+- Lead EN-1358 · Sami Ghaith, Founder & Managing Director · SDG Accountant
+  (Canada, accounting & bookkeeping — owner-confirmed segment)
+- Outcome: interested — "Can you build it out using our Ring Central?"
+  (received 2026-08-14T13:31:06+00:00 UTC; owner-relayed 2026-08-15)
+- Email in thread: "Manual loop at SDG Accountant" (researched-personal /
+  offer-1, sent 2026-08-14T03:39:17+00:00 UTC via Brevo, generic-workflow
+  subject bank) — the researched single-loop hook.
+- Classification: Q1 / implementation-viability — buyer wants SpielOS built
+  on their stack; post-fit signal, candidate for booked-calls pipeline.
+- Company kind (owner-confirmed): accounting & bookkeeping firm — added to
+  canonical ICP main business types (2026-08-15).
+- Lesson: a specific named operational loop converts ("Manual loop at X").
+  Locked as research rule 5 (per-lead manual-loop hook) — see
+  `.agents/company/departments/outbound/strategy.md`.
+- Full CRM-ready record: `assets/outbound-proof-2026-08-15-sdg-accountant.md`.

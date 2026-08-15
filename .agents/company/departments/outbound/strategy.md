@@ -83,6 +83,14 @@ Research rules for every new lead (apply at qualification, write into the row):
    - R5 follow-up later / revisit
 4. **Lead editor in Notes** after any reply: outcome + class + date, so the
    master carries feedback into re-qualification.
+5. **Manual-loop hook (locked 2026-08-15)** — every lead gets ONE researched, named
+   operational loop in `research_fact` (what the loop is, where it runs, who does it
+   by hand). This is the proven converting hook: "Manual loop at SDG Accountant"
+   (EN-1358, researched-personal) produced a qualified reply 2026-08-14 —
+   "Can you build it out using our Ring Central?" (interested, accounting &
+   bookkeeping, owner-confirmed). Continue defaulting the researched single-loop
+   pain paragraph; keep subject family "Manual loop / One workflow / Repetitive work
+   at {company}" in the generic-workflow bank.
 
 ## OOO auto-reply handling (v1 — 2026-08-11)
 1. An out-of-office auto-reply CONFIRMS deliverability: the mailbox is live.

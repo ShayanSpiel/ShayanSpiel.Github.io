@@ -15,7 +15,8 @@ harness builders. Owner directive 2026-08-08.
 Established online businesses and service providers that already have real customers,
 an active website/product, and a working sales or delivery funnel — but are doing too
 much repetitive knowledge-work by hand. They have high-volume operational workflows
-(intake, delivery, support, reporting, scheduling, triage) where replacing or
+(intake, delivery, support, reporting, scheduling, triage,
+bookkeeping runs, reconciliations, payroll, filing) where replacing or
 augmenting manual work with AI agents meaningfully reduces cost, speeds delivery, or
 doubles throughput. Typically **$1M–$25M+ annual revenue**.
 
@@ -28,6 +29,7 @@ Main business types:
 - Consultancies
 - Coaches / education businesses
 - Online service businesses
+- Accounting & bookkeeping firms
 - Product businesses / SaaS with a clear operational workflow to automate
 
 **Buyer:** the person who owns the operation and the money — owner, CEO, COO, or
@@ -62,6 +64,8 @@ bullet below is never a target, regardless of score:
 - Outbound execution details (target countries, verification tiers, lead flow, scoring)
   live in `.agents/company/departments/outbound/strategy.md`, which implements this profile and nothing
   more.
+- Buyer-fit proof lives in `.agents/company/assets/` (outbound-proof files); listed
+  segments are validated by real owner-operator replies.
 - The site's published copy must always speak to this buyer: an operator solving
   repetitive work for an established business — never a technical founder building a
   harness.
