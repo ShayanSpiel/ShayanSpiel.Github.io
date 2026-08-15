@@ -1305,20 +1305,20 @@
       "run_status": "waiting",
       "stage": "OBSERVE",
       "target": 3,
-      "updated_at": "2026-08-15T01:46:02.986971+00:00"
+      "updated_at": "2026-08-15T01:57:51.078873+00:00"
     },
     {
       "created_at": "2026-08-14T21:56:34.516762+00:00",
-      "goal_status": "active",
+      "goal_status": "achieved",
       "id": "goal-runner-persistence-20260815",
       "metric": "acceptance_tests_passed",
       "name": "Runner persistence, reboot recovery, notifications, watcher-as-retry-helper",
       "operator": "eq",
       "owner_id": "system-improvement",
-      "run_status": "blocked",
-      "stage": "ACT",
+      "run_status": "completed",
+      "stage": "OBSERVE",
       "target": true,
-      "updated_at": "2026-08-14T22:19:17.394111+00:00"
+      "updated_at": "2026-08-15T02:01:58.708836+00:00"
     },
     {
       "created_at": "2026-08-14T21:57:22.140776+00:00",
@@ -1387,47 +1387,47 @@
     }
   ],
   "heartbeat": {
-    "goal_id": "goal-email-campaign-20260810",
-    "goal_name": "Resume daily English outbound to 30% reply rate",
-    "metric": "reply_rate",
+    "goal_id": "goal-booked-calls-primary-20260815",
+    "goal_name": "3 booked calls per day",
+    "metric": "booked_calls",
     "operator": "ge",
     "run_status": "waiting",
-    "stage": "EVALUATE",
-    "target": 0.3,
-    "updated_at": "2026-08-15T01:56:55.453695+00:00"
+    "stage": "OBSERVE",
+    "target": 3,
+    "updated_at": "2026-08-15T01:57:51.079633+00:00"
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-14T00:17:41.770320+00:00",
-      "goal_id": "goal-email-campaign-20260810",
-      "goal_name": "Resume daily English outbound to 30% reply rate",
-      "owner_id": "outbound",
-      "run_id": "run-bf91da1096",
+      "created_at": "2026-08-14T21:52:27.077779+00:00",
+      "goal_id": "goal-booked-calls-primary-20260815",
+      "goal_name": "3 booked calls per day",
+      "owner_id": "director",
+      "run_id": "run-fc3707e9c3",
       "run_status": "waiting",
-      "stage": "EVALUATE",
-      "updated_at": "2026-08-15T01:56:55.453695+00:00"
+      "stage": "OBSERVE",
+      "updated_at": "2026-08-15T01:57:51.079633+00:00"
     },
     "heartbeat": {
-      "goal_id": "goal-email-campaign-20260810",
-      "goal_name": "Resume daily English outbound to 30% reply rate",
-      "metric": "reply_rate",
+      "goal_id": "goal-booked-calls-primary-20260815",
+      "goal_name": "3 booked calls per day",
+      "metric": "booked_calls",
       "operator": "ge",
       "run_status": "waiting",
-      "stage": "EVALUATE",
-      "target": 0.3,
-      "updated_at": "2026-08-15T01:56:55.453695+00:00"
+      "stage": "OBSERVE",
+      "target": 3,
+      "updated_at": "2026-08-15T01:57:51.079633+00:00"
     },
-    "last_activity_at": "2026-08-15T01:57:47.434039+00:00",
-    "last_sync_at": "2026-08-15T01:57:47.445317+00:00",
+    "last_activity_at": "2026-08-15T02:01:58.710049+00:00",
+    "last_sync_at": "2026-08-15T02:01:58.721233+00:00",
     "state": "running"
   },
   "totals": {
     "approvals": 111,
-    "decisions": 224,
-    "evidence": 2198,
+    "decisions": 225,
+    "evidence": 2200,
     "goals_abandoned": 12,
-    "goals_achieved": 77,
-    "goals_active": 12,
+    "goals_achieved": 78,
+    "goals_active": 11,
     "goals_total": 105,
     "hypotheses": 34,
     "memory_claims": 5,
