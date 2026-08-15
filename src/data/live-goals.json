@@ -1400,7 +1400,7 @@
     },
     {
       "created_at": "2026-08-15T02:42:04.953786+00:00",
-      "goal_status": "paused",
+      "goal_status": "active",
       "id": "goal-email-send-20260815-b6",
       "metric": "reply_rate",
       "name": "English outbound send batch 6: next 50 from remaining queue",
@@ -1409,11 +1409,11 @@
       "run_status": "failed",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-15T03:58:10.366516+00:00"
+      "updated_at": "2026-08-15T04:14:10.873278+00:00"
     },
     {
       "created_at": "2026-08-15T03:10:46.410099+00:00",
-      "goal_status": "paused",
+      "goal_status": "active",
       "id": "goal-email-send-20260815-b7",
       "metric": "reply_rate",
       "name": "English outbound send batch 7: next 50 from remaining queue",
@@ -1422,7 +1422,7 @@
       "run_status": "waiting",
       "stage": "ACT",
       "target": 0.3,
-      "updated_at": "2026-08-15T03:58:10.389042+00:00"
+      "updated_at": "2026-08-15T04:14:11.741146+00:00"
     },
     {
       "created_at": "2026-08-15T03:22:50.223477+00:00",
@@ -1439,16 +1439,16 @@
     },
     {
       "created_at": "2026-08-15T03:24:24.969844+00:00",
-      "goal_status": "active",
+      "goal_status": "achieved",
       "id": "goal-booked-calls-metering-20260815",
       "metric": "acceptance_tests_passed",
       "name": "Meter owner-confirmed booked_call evidence on director goals",
       "operator": "eq",
       "owner_id": "system-improvement",
-      "run_status": "blocked",
-      "stage": "ACT",
+      "run_status": "completed",
+      "stage": "OBSERVE",
       "target": true,
-      "updated_at": "2026-08-15T03:39:39.190607+00:00"
+      "updated_at": "2026-08-15T04:12:23.120116+00:00"
     },
     {
       "created_at": "2026-08-15T03:58:10.423951+00:00",
@@ -1478,47 +1478,47 @@
     }
   ],
   "heartbeat": {
-    "goal_id": "goal-email-campaign-20260810",
-    "goal_name": "Resume daily English outbound to 30% reply rate",
+    "goal_id": "goal-email-send-20260815-b7",
+    "goal_name": "English outbound send batch 7: next 50 from remaining queue",
     "metric": "reply_rate",
     "operator": "ge",
     "run_status": "waiting",
-    "stage": "EVALUATE",
+    "stage": "ACT",
     "target": 0.3,
-    "updated_at": "2026-08-15T04:12:06.440487+00:00"
+    "updated_at": "2026-08-15T04:14:11.743959+00:00"
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-14T00:17:41.770320+00:00",
-      "goal_id": "goal-email-campaign-20260810",
-      "goal_name": "Resume daily English outbound to 30% reply rate",
+      "created_at": "2026-08-15T03:10:46.410099+00:00",
+      "goal_id": "goal-email-send-20260815-b7",
+      "goal_name": "English outbound send batch 7: next 50 from remaining queue",
       "owner_id": "outbound",
-      "run_id": "run-bf91da1096",
+      "run_id": "run-72aa423fd8",
       "run_status": "waiting",
-      "stage": "EVALUATE",
-      "updated_at": "2026-08-15T04:12:06.440487+00:00"
+      "stage": "ACT",
+      "updated_at": "2026-08-15T04:14:11.743959+00:00"
     },
     "heartbeat": {
-      "goal_id": "goal-email-campaign-20260810",
-      "goal_name": "Resume daily English outbound to 30% reply rate",
+      "goal_id": "goal-email-send-20260815-b7",
+      "goal_name": "English outbound send batch 7: next 50 from remaining queue",
       "metric": "reply_rate",
       "operator": "ge",
       "run_status": "waiting",
-      "stage": "EVALUATE",
+      "stage": "ACT",
       "target": 0.3,
-      "updated_at": "2026-08-15T04:12:06.440487+00:00"
+      "updated_at": "2026-08-15T04:14:11.743959+00:00"
     },
-    "last_activity_at": "2026-08-15T04:12:06.440487+00:00",
-    "last_sync_at": "2026-08-15T04:12:06.472888+00:00",
+    "last_activity_at": "2026-08-15T04:14:11.743959+00:00",
+    "last_sync_at": "2026-08-15T04:14:11.936876+00:00",
     "state": "running"
   },
   "totals": {
     "approvals": 122,
     "decisions": 244,
-    "evidence": 2244,
+    "evidence": 2245,
     "goals_abandoned": 12,
-    "goals_achieved": 83,
-    "goals_active": 11,
+    "goals_achieved": 84,
+    "goals_active": 12,
     "goals_total": 112,
     "hypotheses": 34,
     "memory_claims": 5,
