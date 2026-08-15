@@ -1,37 +1,37 @@
 {
   "current_run": {
-    "created_at": "2026-08-14T00:17:41.770320+00:00",
-    "goal_id": "goal-email-campaign-20260810",
-    "goal_name": "Resume daily English outbound to 30% reply rate",
-    "owner_id": "outbound",
-    "run_id": "run-bf91da1096",
+    "created_at": "2026-08-14T21:52:27.077779+00:00",
+    "goal_id": "goal-booked-calls-primary-20260815",
+    "goal_name": "3 booked calls per day",
+    "owner_id": "director",
+    "run_id": "run-fc3707e9c3",
     "run_status": "waiting",
-    "stage": "EVALUATE",
-    "updated_at": "2026-08-15T02:09:36.340595+00:00"
+    "stage": "OBSERVE",
+    "updated_at": "2026-08-15T02:22:10.579425+00:00"
   },
   "heartbeat": {
-    "goal_id": "goal-email-campaign-20260810",
-    "goal_name": "Resume daily English outbound to 30% reply rate",
-    "metric": "reply_rate",
+    "goal_id": "goal-booked-calls-primary-20260815",
+    "goal_name": "3 booked calls per day",
+    "metric": "booked_calls",
     "operator": "ge",
     "run_status": "waiting",
-    "stage": "EVALUATE",
-    "target": 0.3,
-    "updated_at": "2026-08-15T02:09:36.340595+00:00"
+    "stage": "OBSERVE",
+    "target": 3,
+    "updated_at": "2026-08-15T02:22:10.579425+00:00"
   },
-  "last_activity_at": "2026-08-15T02:10:00.642276+00:00",
-  "last_sync_at": "2026-08-15T02:10:00.652963+00:00",
+  "last_activity_at": "2026-08-15T02:22:42.659153+00:00",
+  "last_sync_at": "2026-08-15T02:22:42.670461+00:00",
   "state": "running",
   "totals": {
-    "approvals": 111,
-    "decisions": 226,
-    "evidence": 2206,
+    "approvals": 112,
+    "decisions": 231,
+    "evidence": 2215,
     "goals_abandoned": 12,
-    "goals_achieved": 79,
+    "goals_achieved": 80,
     "goals_active": 10,
-    "goals_total": 105,
+    "goals_total": 106,
     "hypotheses": 34,
     "memory_claims": 5,
-    "runs": 118
+    "runs": 119
   }
 }
