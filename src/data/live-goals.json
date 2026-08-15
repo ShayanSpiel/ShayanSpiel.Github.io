@@ -236,7 +236,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-15T04:06:37.674160+00:00"
+      "updated_at": "2026-08-15T04:12:06.438852+00:00"
     },
     {
       "created_at": "2026-08-10T14:42:53.516527+00:00",
@@ -1357,7 +1357,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-15T04:04:29.880384+00:00"
+      "updated_at": "2026-08-15T04:10:48.988862+00:00"
     },
     {
       "created_at": "2026-08-15T00:32:48.129043+00:00",
@@ -1452,16 +1452,16 @@
     },
     {
       "created_at": "2026-08-15T03:58:10.423951+00:00",
-      "goal_status": "active",
+      "goal_status": "achieved",
       "id": "goal-async-dispatch-sqlite-thread-20260815",
       "metric": "acceptance_tests_passed",
       "name": "Repair async-dispatch worker SQLite cross-thread failure",
       "operator": "eq",
       "owner_id": "system-improvement",
-      "run_status": "blocked",
-      "stage": "ACT",
+      "run_status": "completed",
+      "stage": "OBSERVE",
       "target": true,
-      "updated_at": "2026-08-15T03:59:03.788080+00:00"
+      "updated_at": "2026-08-15T04:10:40.251694+00:00"
     },
     {
       "created_at": "2026-08-15T03:58:29.373786+00:00",
@@ -1485,7 +1485,7 @@
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-15T04:06:37.677181+00:00"
+    "updated_at": "2026-08-15T04:12:06.440487+00:00"
   },
   "runtime_state": {
     "current_run": {
@@ -1496,7 +1496,7 @@
       "run_id": "run-bf91da1096",
       "run_status": "waiting",
       "stage": "EVALUATE",
-      "updated_at": "2026-08-15T04:06:37.677181+00:00"
+      "updated_at": "2026-08-15T04:12:06.440487+00:00"
     },
     "heartbeat": {
       "goal_id": "goal-email-campaign-20260810",
@@ -1506,19 +1506,19 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-15T04:06:37.677181+00:00"
+      "updated_at": "2026-08-15T04:12:06.440487+00:00"
     },
-    "last_activity_at": "2026-08-15T04:09:49.258141+00:00",
-    "last_sync_at": "2026-08-15T04:09:49.282365+00:00",
+    "last_activity_at": "2026-08-15T04:12:06.440487+00:00",
+    "last_sync_at": "2026-08-15T04:12:06.472888+00:00",
     "state": "running"
   },
   "totals": {
     "approvals": 122,
     "decisions": 244,
-    "evidence": 2241,
+    "evidence": 2244,
     "goals_abandoned": 12,
-    "goals_achieved": 82,
-    "goals_active": 12,
+    "goals_achieved": 83,
+    "goals_active": 11,
     "goals_total": 112,
     "hypotheses": 34,
     "memory_claims": 5,
