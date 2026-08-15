@@ -236,7 +236,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-15T02:22:10.329329+00:00"
+      "updated_at": "2026-08-15T02:48:20.917084+00:00"
     },
     {
       "created_at": "2026-08-10T14:42:53.516527+00:00",
@@ -1302,10 +1302,10 @@
       "name": "3 booked calls per day",
       "operator": "ge",
       "owner_id": "director",
-      "run_status": "waiting",
-      "stage": "OBSERVE",
+      "run_status": "blocked",
+      "stage": "EVALUATE",
       "target": 3,
-      "updated_at": "2026-08-15T02:22:10.578382+00:00"
+      "updated_at": "2026-08-15T02:28:20.655507+00:00"
     },
     {
       "created_at": "2026-08-14T21:56:34.516762+00:00",
@@ -1357,7 +1357,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-15T02:20:56.832909+00:00"
+      "updated_at": "2026-08-15T02:47:14.292771+00:00"
     },
     {
       "created_at": "2026-08-15T00:32:48.129043+00:00",
@@ -1397,53 +1397,105 @@
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-15T02:22:42.658306+00:00"
+    },
+    {
+      "created_at": "2026-08-15T02:42:04.953786+00:00",
+      "goal_status": "active",
+      "id": "goal-email-send-20260815-b6",
+      "metric": "reply_rate",
+      "name": "English outbound send batch 6: next 50 from remaining queue",
+      "operator": "ge",
+      "owner_id": "outbound",
+      "run_status": "waiting",
+      "stage": "ACT",
+      "target": 0.3,
+      "updated_at": "2026-08-15T03:35:16.715254+00:00"
+    },
+    {
+      "created_at": "2026-08-15T03:10:46.410099+00:00",
+      "goal_status": "active",
+      "id": "goal-email-send-20260815-b7",
+      "metric": "reply_rate",
+      "name": "English outbound send batch 7: next 50 from remaining queue",
+      "operator": "ge",
+      "owner_id": "outbound",
+      "run_status": "waiting",
+      "stage": "ACT",
+      "target": 0.3,
+      "updated_at": "2026-08-15T03:12:55.649345+00:00"
+    },
+    {
+      "created_at": "2026-08-15T03:22:50.223477+00:00",
+      "goal_status": "achieved",
+      "id": "goal-async-dispatch-persist-20260815",
+      "metric": "acceptance_tests_passed",
+      "name": "Repair async-dispatch WAITING persistence (evidence=None crash)",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "run_status": "completed",
+      "stage": "OBSERVE",
+      "target": true,
+      "updated_at": "2026-08-15T03:36:44.371363+00:00"
+    },
+    {
+      "created_at": "2026-08-15T03:24:24.969844+00:00",
+      "goal_status": "active",
+      "id": "goal-booked-calls-metering-20260815",
+      "metric": "acceptance_tests_passed",
+      "name": "Meter owner-confirmed booked_call evidence on director goals",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "run_status": "awaiting_approval",
+      "stage": "ACT",
+      "target": true,
+      "updated_at": "2026-08-15T03:26:02.182612+00:00"
     }
   ],
   "heartbeat": {
-    "goal_id": "goal-booked-calls-primary-20260815",
-    "goal_name": "3 booked calls per day",
-    "metric": "booked_calls",
+    "goal_id": "goal-email-send-20260815-b6",
+    "goal_name": "English outbound send batch 6: next 50 from remaining queue",
+    "metric": "reply_rate",
     "operator": "ge",
     "run_status": "waiting",
-    "stage": "OBSERVE",
-    "target": 3,
-    "updated_at": "2026-08-15T02:22:10.579425+00:00"
+    "stage": "ACT",
+    "target": 0.3,
+    "updated_at": "2026-08-15T03:35:16.716426+00:00"
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-14T21:52:27.077779+00:00",
-      "goal_id": "goal-booked-calls-primary-20260815",
-      "goal_name": "3 booked calls per day",
-      "owner_id": "director",
-      "run_id": "run-fc3707e9c3",
+      "created_at": "2026-08-15T02:42:04.953786+00:00",
+      "goal_id": "goal-email-send-20260815-b6",
+      "goal_name": "English outbound send batch 6: next 50 from remaining queue",
+      "owner_id": "outbound",
+      "run_id": "run-0e93fa8686",
       "run_status": "waiting",
-      "stage": "OBSERVE",
-      "updated_at": "2026-08-15T02:22:10.579425+00:00"
+      "stage": "ACT",
+      "updated_at": "2026-08-15T03:35:16.716426+00:00"
     },
     "heartbeat": {
-      "goal_id": "goal-booked-calls-primary-20260815",
-      "goal_name": "3 booked calls per day",
-      "metric": "booked_calls",
+      "goal_id": "goal-email-send-20260815-b6",
+      "goal_name": "English outbound send batch 6: next 50 from remaining queue",
+      "metric": "reply_rate",
       "operator": "ge",
       "run_status": "waiting",
-      "stage": "OBSERVE",
-      "target": 3,
-      "updated_at": "2026-08-15T02:22:10.579425+00:00"
+      "stage": "ACT",
+      "target": 0.3,
+      "updated_at": "2026-08-15T03:35:16.716426+00:00"
     },
-    "last_activity_at": "2026-08-15T02:22:42.659153+00:00",
-    "last_sync_at": "2026-08-15T02:22:42.670461+00:00",
+    "last_activity_at": "2026-08-15T03:36:44.372749+00:00",
+    "last_sync_at": "2026-08-15T03:36:44.391918+00:00",
     "state": "running"
   },
   "totals": {
-    "approvals": 112,
-    "decisions": 231,
-    "evidence": 2215,
+    "approvals": 118,
+    "decisions": 238,
+    "evidence": 2230,
     "goals_abandoned": 12,
-    "goals_achieved": 80,
-    "goals_active": 10,
-    "goals_total": 106,
+    "goals_achieved": 81,
+    "goals_active": 13,
+    "goals_total": 110,
     "hypotheses": 34,
     "memory_claims": 5,
-    "runs": 119
+    "runs": 123
   }
 }
