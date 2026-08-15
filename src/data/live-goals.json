@@ -236,7 +236,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-15T13:55:19.807864+00:00"
+      "updated_at": "2026-08-15T16:01:00.669109+00:00"
     },
     {
       "created_at": "2026-08-10T14:42:53.516527+00:00",
@@ -1357,7 +1357,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-15T13:54:34.828330+00:00"
+      "updated_at": "2026-08-15T15:59:30.127630+00:00"
     },
     {
       "created_at": "2026-08-15T00:32:48.129043+00:00",
@@ -1409,7 +1409,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-15T13:54:49.589438+00:00"
+      "updated_at": "2026-08-15T15:59:44.908028+00:00"
     },
     {
       "created_at": "2026-08-15T03:10:46.410099+00:00",
@@ -1422,7 +1422,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-15T13:55:04.287545+00:00"
+      "updated_at": "2026-08-15T16:00:45.201363+00:00"
     },
     {
       "created_at": "2026-08-15T03:22:50.223477+00:00",
@@ -1552,7 +1552,7 @@
       "run_status": "blocked",
       "stage": "ACT",
       "target": true,
-      "updated_at": "2026-08-15T13:55:45.708327+00:00"
+      "updated_at": "2026-08-15T14:00:43.104078+00:00"
     },
     {
       "created_at": "2026-08-15T13:56:56.616392+00:00",
@@ -1588,10 +1588,23 @@
       "name": "Watchdog v2 executor: OS supervisor + live HUD ticker + retry ledger",
       "operator": "ge",
       "owner_id": "system-improvement",
-      "run_status": "running",
-      "stage": "DECIDE",
+      "run_status": "blocked",
+      "stage": "ACT",
       "target": 1,
-      "updated_at": "2026-08-15T13:58:36.887491+00:00"
+      "updated_at": "2026-08-15T13:58:51.554540+00:00"
+    },
+    {
+      "created_at": "2026-08-15T14:00:53.497135+00:00",
+      "goal_status": "achieved",
+      "id": "goal-seo-check-stub-detection-v1-20260815",
+      "metric": "acceptance_tests_passed",
+      "name": "Extend seo-check redirect-stub detection to /about/ and /fa/about/",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "run_status": "completed",
+      "stage": "OBSERVE",
+      "target": true,
+      "updated_at": "2026-08-15T16:01:09.976084+00:00"
     }
   ],
   "heartbeat": {
@@ -1602,18 +1615,18 @@
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-15T13:55:19.809477+00:00"
+    "updated_at": "2026-08-15T16:01:00.670614+00:00"
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-15T13:58:36.445013+00:00",
-      "goal_id": "goal-577aaacc7d",
-      "goal_name": "Watchdog v2 executor: OS supervisor + live HUD ticker + retry ledger",
-      "owner_id": "system-improvement",
-      "run_id": "run-579c4be269",
-      "run_status": "running",
-      "stage": "DECIDE",
-      "updated_at": "2026-08-15T13:58:36.888517+00:00"
+      "created_at": "2026-08-14T00:17:41.770320+00:00",
+      "goal_id": "goal-email-campaign-20260810",
+      "goal_name": "Resume daily English outbound to 30% reply rate",
+      "owner_id": "outbound",
+      "run_id": "run-bf91da1096",
+      "run_status": "waiting",
+      "stage": "EVALUATE",
+      "updated_at": "2026-08-15T16:01:00.670614+00:00"
     },
     "heartbeat": {
       "goal_id": "goal-email-campaign-20260810",
@@ -1623,22 +1636,22 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-15T13:55:19.809477+00:00"
+      "updated_at": "2026-08-15T16:01:00.670614+00:00"
     },
-    "last_activity_at": "2026-08-15T13:58:36.888517+00:00",
-    "last_sync_at": "2026-08-15T13:58:36.906865+00:00",
+    "last_activity_at": "2026-08-15T16:01:09.976985+00:00",
+    "last_sync_at": "2026-08-15T16:01:09.988767+00:00",
     "state": "running"
   },
   "totals": {
-    "approvals": 131,
-    "decisions": 263,
-    "evidence": 3048,
+    "approvals": 135,
+    "decisions": 269,
+    "evidence": 3182,
     "goals_abandoned": 13,
-    "goals_achieved": 89,
+    "goals_achieved": 90,
     "goals_active": 15,
-    "goals_total": 121,
+    "goals_total": 122,
     "hypotheses": 35,
     "memory_claims": 5,
-    "runs": 134
+    "runs": 136
   }
 }
