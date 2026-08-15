@@ -11,6 +11,12 @@ const REPORTABLE = new Set([
   "goal_expired",
 ])
 
+type NotificationItem = {
+  id: string
+  kind: string
+  payload?: { approval_interaction?: Record<string, unknown> }
+}
+
 export const SpielOSNotifications: Plugin = async ({ client, directory, $ }) => {
   const shell = $.cwd(directory).env({
     ...process.env,
@@ -25,24 +31,33 @@ export const SpielOSNotifications: Plugin = async ({ client, directory, $ }) => 
     checking = true
     try {
       const status = JSON.parse(
-        await shell`python3 -B -m company runner status`.text(),
-      ) as { enabled?: boolean }
+        await shell`python3 -B -m company runner status --json`.text(),
+      ) as { enabled?: boolean; running?: boolean }
       if (status.enabled === false) return
-      await shell`python3 -B -m company runner tick`.quiet().nothrow()
-      const raw = await shell`python3 -B -m company notifications list --status pending --limit 100`.text()
-      const pending = (JSON.parse(raw) as Array<{
-        id: string
-        kind: string
-        payload?: { approval_interaction?: Record<string, unknown> }
-      }>).filter(
+      // The daemon watch loop owns the tick while it is running; only tick
+      // ourselves when no daemon is around, so the two never race the lease.
+      if (status.running !== true) {
+        await shell`python3 -B -m company runner tick`.quiet().nothrow()
+      }
+      const pendingRaw = await shell`python3 -B -m company notifications list --status pending --limit 100 --json`.text()
+      const deliveredRaw = await shell`python3 -B -m company notifications list --status delivered --limit 100 --json`.text()
+      const byID = new Map<string, NotificationItem>()
+      for (const item of [
+        ...(JSON.parse(deliveredRaw) as NotificationItem[]),
+        ...(JSON.parse(pendingRaw) as NotificationItem[]),
+      ]) {
+        // Pending wins on duplicate ids: it is the fresher state.
+        byID.set(item.id, item)
+      }
+      const recent = [...byID.values()].filter(
         (item) => REPORTABLE.has(item.kind),
       )
-      const pendingIDs = new Set(pending.map((item) => item.id))
+      const recentIDs = new Set(recent.map((item) => item.id))
       for (const id of prompted.keys()) {
-        if (!pendingIDs.has(id)) prompted.delete(id)
+        if (!recentIDs.has(id)) prompted.delete(id)
       }
       const now = Date.now()
-      const fresh = pending.filter((item) => now - (prompted.get(item.id) ?? 0) > 300_000)
+      const fresh = recent.filter((item) => now - (prompted.get(item.id) ?? 0) > 300_000)
       if (!fresh.length) return
       fresh.forEach((item) => prompted.set(item.id, now))
       const ids = fresh.map((item) => item.id)
