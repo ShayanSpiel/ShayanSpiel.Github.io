@@ -227,7 +227,7 @@
       "created_at": "2026-08-10T14:42:53.503744+00:00",
       "display_title": "Improve qualified outbound conversations",
       "display_title_fa": "گفت‌وگوهای فروش باکیفیت رو بیشتر کنیم",
-      "goal_status": "active",
+      "goal_status": "paused",
       "id": "goal-email-campaign-20260810",
       "metric": "reply_rate",
       "name": "Resume daily English outbound to 30% reply rate",
@@ -236,7 +236,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-15T04:15:34.370737+00:00"
+      "updated_at": "2026-08-15T04:23:50.151933+00:00"
     },
     {
       "created_at": "2026-08-10T14:42:53.516527+00:00",
@@ -1357,7 +1357,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-15T04:10:48.988862+00:00"
+      "updated_at": "2026-08-15T05:01:04.742763+00:00"
     },
     {
       "created_at": "2026-08-15T00:32:48.129043+00:00",
@@ -1406,10 +1406,10 @@
       "name": "English outbound send batch 6: next 50 from remaining queue",
       "operator": "ge",
       "owner_id": "outbound",
-      "run_status": "running",
-      "stage": "DECIDE",
+      "run_status": "waiting",
+      "stage": "ACT",
       "target": 0.3,
-      "updated_at": "2026-08-15T04:16:45.005310+00:00"
+      "updated_at": "2026-08-15T05:01:04.829187+00:00"
     },
     {
       "created_at": "2026-08-15T03:10:46.410099+00:00",
@@ -1422,7 +1422,7 @@
       "run_status": "waiting",
       "stage": "ACT",
       "target": 0.3,
-      "updated_at": "2026-08-15T04:14:11.741146+00:00"
+      "updated_at": "2026-08-15T05:01:05.074541+00:00"
     },
     {
       "created_at": "2026-08-15T03:22:50.223477+00:00",
@@ -1475,53 +1475,66 @@
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-15T04:09:49.256821+00:00"
+    },
+    {
+      "created_at": "2026-08-15T04:28:51.181597+00:00",
+      "goal_status": "achieved",
+      "id": "goal-runner-wedge-hardening-20260815",
+      "metric": "acceptance_tests_passed",
+      "name": "Runner wedge hardening: campaign measure crash + watchdog gaps",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "run_status": "completed",
+      "stage": "OBSERVE",
+      "target": true,
+      "updated_at": "2026-08-15T05:04:36.432829+00:00"
     }
   ],
   "heartbeat": {
-    "goal_id": "goal-email-campaign-20260810",
-    "goal_name": "Resume daily English outbound to 30% reply rate",
+    "goal_id": "goal-email-send-20260815-b7",
+    "goal_name": "English outbound send batch 7: next 50 from remaining queue",
     "metric": "reply_rate",
     "operator": "ge",
     "run_status": "waiting",
-    "stage": "EVALUATE",
+    "stage": "ACT",
     "target": 0.3,
-    "updated_at": "2026-08-15T04:15:34.373386+00:00"
+    "updated_at": "2026-08-15T05:01:05.075568+00:00"
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-15T02:42:04.953786+00:00",
-      "goal_id": "goal-email-send-20260815-b6",
-      "goal_name": "English outbound send batch 6: next 50 from remaining queue",
+      "created_at": "2026-08-15T03:10:46.410099+00:00",
+      "goal_id": "goal-email-send-20260815-b7",
+      "goal_name": "English outbound send batch 7: next 50 from remaining queue",
       "owner_id": "outbound",
-      "run_id": "run-0e93fa8686",
-      "run_status": "running",
-      "stage": "DECIDE",
-      "updated_at": "2026-08-15T04:16:45.006738+00:00"
+      "run_id": "run-72aa423fd8",
+      "run_status": "waiting",
+      "stage": "ACT",
+      "updated_at": "2026-08-15T05:01:05.075568+00:00"
     },
     "heartbeat": {
-      "goal_id": "goal-email-campaign-20260810",
-      "goal_name": "Resume daily English outbound to 30% reply rate",
+      "goal_id": "goal-email-send-20260815-b7",
+      "goal_name": "English outbound send batch 7: next 50 from remaining queue",
       "metric": "reply_rate",
       "operator": "ge",
       "run_status": "waiting",
-      "stage": "EVALUATE",
+      "stage": "ACT",
       "target": 0.3,
-      "updated_at": "2026-08-15T04:15:34.373386+00:00"
+      "updated_at": "2026-08-15T05:01:05.075568+00:00"
     },
-    "last_activity_at": "2026-08-15T04:16:45.006738+00:00",
-    "last_sync_at": "2026-08-15T04:16:45.021703+00:00",
+    "last_activity_at": "2026-08-15T05:04:36.434345+00:00",
+    "last_sync_at": "2026-08-15T05:04:36.451185+00:00",
     "state": "running"
   },
   "totals": {
-    "approvals": 122,
-    "decisions": 244,
-    "evidence": 2246,
+    "approvals": 124,
+    "decisions": 247,
+    "evidence": 2257,
     "goals_abandoned": 12,
-    "goals_achieved": 84,
-    "goals_active": 12,
-    "goals_total": 112,
+    "goals_achieved": 85,
+    "goals_active": 11,
+    "goals_total": 113,
     "hypotheses": 34,
     "memory_claims": 5,
-    "runs": 125
+    "runs": 126
   }
 }

@@ -1,37 +1,37 @@
 {
   "current_run": {
-    "created_at": "2026-08-15T02:42:04.953786+00:00",
-    "goal_id": "goal-email-send-20260815-b6",
-    "goal_name": "English outbound send batch 6: next 50 from remaining queue",
+    "created_at": "2026-08-15T03:10:46.410099+00:00",
+    "goal_id": "goal-email-send-20260815-b7",
+    "goal_name": "English outbound send batch 7: next 50 from remaining queue",
     "owner_id": "outbound",
-    "run_id": "run-0e93fa8686",
-    "run_status": "running",
-    "stage": "DECIDE",
-    "updated_at": "2026-08-15T04:16:45.006738+00:00"
+    "run_id": "run-72aa423fd8",
+    "run_status": "waiting",
+    "stage": "ACT",
+    "updated_at": "2026-08-15T05:01:05.075568+00:00"
   },
   "heartbeat": {
-    "goal_id": "goal-email-campaign-20260810",
-    "goal_name": "Resume daily English outbound to 30% reply rate",
+    "goal_id": "goal-email-send-20260815-b7",
+    "goal_name": "English outbound send batch 7: next 50 from remaining queue",
     "metric": "reply_rate",
     "operator": "ge",
     "run_status": "waiting",
-    "stage": "EVALUATE",
+    "stage": "ACT",
     "target": 0.3,
-    "updated_at": "2026-08-15T04:15:34.373386+00:00"
+    "updated_at": "2026-08-15T05:01:05.075568+00:00"
   },
-  "last_activity_at": "2026-08-15T04:16:45.006738+00:00",
-  "last_sync_at": "2026-08-15T04:16:45.021703+00:00",
+  "last_activity_at": "2026-08-15T05:04:36.434345+00:00",
+  "last_sync_at": "2026-08-15T05:04:36.451185+00:00",
   "state": "running",
   "totals": {
-    "approvals": 122,
-    "decisions": 244,
-    "evidence": 2246,
+    "approvals": 124,
+    "decisions": 247,
+    "evidence": 2257,
     "goals_abandoned": 12,
-    "goals_achieved": 84,
-    "goals_active": 12,
-    "goals_total": 112,
+    "goals_achieved": 85,
+    "goals_active": 11,
+    "goals_total": 113,
     "hypotheses": 34,
     "memory_claims": 5,
-    "runs": 125
+    "runs": 126
   }
 }
