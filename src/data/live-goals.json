@@ -1302,10 +1302,10 @@
       "name": "3 booked calls per day",
       "operator": "ge",
       "owner_id": "director",
-      "run_status": "waiting",
-      "stage": "OBSERVE",
+      "run_status": "blocked",
+      "stage": "EVALUATE",
       "target": 3,
-      "updated_at": "2026-08-16T17:41:36.727852+00:00"
+      "updated_at": "2026-08-16T19:52:54.421189+00:00"
     },
     {
       "created_at": "2026-08-14T21:56:34.516762+00:00",
@@ -1357,7 +1357,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-16T19:51:04.270126+00:00"
+      "updated_at": "2026-08-16T20:30:19.760771+00:00"
     },
     {
       "created_at": "2026-08-15T00:32:48.129043+00:00",
@@ -1409,7 +1409,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-16T19:51:15.778928+00:00"
+      "updated_at": "2026-08-16T20:30:50.639133+00:00"
     },
     {
       "created_at": "2026-08-15T03:10:46.410099+00:00",
@@ -1422,7 +1422,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-16T19:50:04.514381+00:00"
+      "updated_at": "2026-08-16T20:35:34.083226+00:00"
     },
     {
       "created_at": "2026-08-15T03:22:50.223477+00:00",
@@ -1647,16 +1647,16 @@
     },
     {
       "created_at": "2026-08-16T16:36:12.507205+00:00",
-      "goal_status": "active",
+      "goal_status": "abandoned",
       "id": "goal-0db6b0a1b4",
       "metric": "acceptance_tests_passed",
       "name": "Harden spielos.xyz DNS for email deliverability (Mailgun SPF, DMARC, TLS-RPT, MTA-STS)",
       "operator": "eq",
       "owner_id": "system-improvement",
-      "run_status": "blocked",
+      "run_status": "completed",
       "stage": "ACT",
       "target": true,
-      "updated_at": "2026-08-16T16:46:32.496331+00:00"
+      "updated_at": "2026-08-16T20:35:25.876406+00:00"
     },
     {
       "created_at": "2026-08-16T17:29:22.274233+00:00",
@@ -1667,9 +1667,9 @@
       "operator": "ge",
       "owner_id": "outbound",
       "run_status": "waiting",
-      "stage": "ACT",
+      "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-16T19:51:15.865545+00:00"
+      "updated_at": "2026-08-16T20:30:50.761971+00:00"
     },
     {
       "created_at": "2026-08-16T17:33:41.901657+00:00",
@@ -1696,53 +1696,79 @@
       "stage": "OBSERVE",
       "target": "True",
       "updated_at": "2026-08-16T19:41:14.564487+00:00"
-    }
-  ],
-  "heartbeat": {
-    "goal_id": "goal-email-send-20260816-b8",
-    "goal_name": "English outbound send batch 8: next 50 from remaining queue",
-    "metric": "reply_rate",
-    "operator": "ge",
-    "run_status": "waiting",
-    "stage": "ACT",
-    "target": 0.3,
-    "updated_at": "2026-08-16T19:51:15.866327+00:00"
-  },
-  "runtime_state": {
-    "current_run": {
-      "created_at": "2026-08-16T17:29:22.274233+00:00",
-      "goal_id": "goal-email-send-20260816-b8",
-      "goal_name": "English outbound send batch 8: next 50 from remaining queue",
-      "owner_id": "outbound",
-      "run_id": "run-1c65a9f3d3",
-      "run_status": "waiting",
-      "stage": "ACT",
-      "updated_at": "2026-08-16T19:51:15.866327+00:00"
     },
-    "heartbeat": {
-      "goal_id": "goal-email-send-20260816-b8",
-      "goal_name": "English outbound send batch 8: next 50 from remaining queue",
+    {
+      "created_at": "2026-08-16T19:59:11.048214+00:00",
+      "goal_status": "active",
+      "id": "goal-email-send-20260816-b9",
       "metric": "reply_rate",
+      "name": "English outbound send batch 9: next 50 from remaining queue",
       "operator": "ge",
+      "owner_id": "outbound",
       "run_status": "waiting",
       "stage": "ACT",
       "target": 0.3,
-      "updated_at": "2026-08-16T19:51:15.866327+00:00"
+      "updated_at": "2026-08-16T20:29:51.498128+00:00"
     },
-    "last_activity_at": "2026-08-16T19:52:50.519341+00:00",
-    "last_sync_at": "2026-08-16T19:52:50.533603+00:00",
+    {
+      "created_at": "2026-08-16T20:17:05.408366+00:00",
+      "goal_status": "active",
+      "id": "goal-email-send-20260816-b10",
+      "metric": "reply_rate",
+      "name": "English outbound send batch 10: next 50 from remaining queue",
+      "operator": "ge",
+      "owner_id": "outbound",
+      "run_status": "waiting",
+      "stage": "ACT",
+      "target": 0.3,
+      "updated_at": "2026-08-16T20:33:12.089526+00:00"
+    }
+  ],
+  "heartbeat": {
+    "goal_id": "goal-email-send-20260815-b7",
+    "goal_name": "English outbound send batch 7: next 50 from remaining queue",
+    "metric": "reply_rate",
+    "operator": "ge",
+    "run_status": "waiting",
+    "stage": "EVALUATE",
+    "target": 0.3,
+    "updated_at": "2026-08-16T20:35:34.085128+00:00"
+  },
+  "runtime_state": {
+    "current_run": {
+      "created_at": "2026-08-15T03:10:46.410099+00:00",
+      "goal_id": "goal-email-send-20260815-b7",
+      "goal_name": "English outbound send batch 7: next 50 from remaining queue",
+      "owner_id": "outbound",
+      "run_id": "run-72aa423fd8",
+      "run_status": "waiting",
+      "stage": "EVALUATE",
+      "updated_at": "2026-08-16T20:35:34.085128+00:00"
+    },
+    "heartbeat": {
+      "goal_id": "goal-email-send-20260815-b7",
+      "goal_name": "English outbound send batch 7: next 50 from remaining queue",
+      "metric": "reply_rate",
+      "operator": "ge",
+      "run_status": "waiting",
+      "stage": "EVALUATE",
+      "target": 0.3,
+      "updated_at": "2026-08-16T20:35:34.085128+00:00"
+    },
+    "last_activity_at": "2026-08-16T20:35:34.085128+00:00",
+    "last_sync_at": "2026-08-16T20:35:34.117714+00:00",
     "state": "running"
   },
   "totals": {
-    "approvals": 144,
-    "decisions": 289,
-    "evidence": 4196,
-    "goals_abandoned": 13,
+    "approvals": 146,
+    "decisions": 290,
+    "evidence": 4272,
+    "goals_abandoned": 14,
     "goals_achieved": 96,
-    "goals_active": 16,
-    "goals_total": 129,
+    "goals_active": 17,
+    "goals_total": 131,
     "hypotheses": 35,
     "memory_claims": 5,
-    "runs": 143
+    "runs": 145
   }
 }
