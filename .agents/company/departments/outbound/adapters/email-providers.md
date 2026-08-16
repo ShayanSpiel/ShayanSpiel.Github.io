@@ -39,3 +39,23 @@ next UTC day. Per-provider daily caps: `PROVIDER_DAILY_CAPS` in `.env`
    and `company status GOAL_ID` through the repository runtime command.
 3. There is no channel daemon to restart; each company-runtime step reloads
    the provider configuration.
+
+## Deliverability hardening (2026-08-16)
+
+Director audit + owner-approved change task `change-0893155801` (goal-0db6b0a1b4).
+Main-zone `spielos.xyz` DNS updated in Cloudflare (zone `e64f6a563bf4f3b6a07dbb82b4b96543`):
+
+- **SPF** now: `v=spf1 include:_spf.mx.cloudflare.net include:relay.resend.net include:spf.brevo.com include:mailgun.org ~all`
+  (added `include:mailgun.org` — Mailgun is an active sender From `shayan@spielos.xyz`)
+- **DMARC** hardened at `_dmarc.spielos.xyz`:
+  `v=DMARC1; p=quarantine; sp=quarantine; pct=100; fo=1; rf=afrf; ri=86400; rua=mailto:shayan@spielos.xyz`
+- **TLS-RPT** added at `_smtp._tls.spielos.xyz`:
+  `v=TLSRPTv1; rua=mailto:shayan@spielos.xyz`
+- **MTA-STS** added: TXT `_mta-sts.spielos.xyz` `v=STSv1; id=20260816`, CNAME
+  `mta-sts.spielos.xyz -> spielos.xyz` (proxied), policy served at
+  `https://mta-sts.spielos.xyz/.well-known/mta-sts.txt` from
+  `public/.well-known/mta-sts.txt` (mode enforce, mx route1/2/3.mx.cloudflare.net,
+  max_age 86400). GitHub Pages CNAME file extended to serve the `mta-sts` host.
+
+DKIM by provider: Resend (`resend._domainkey`) ✅ · Brevo (`brevo1/brevo2` CNAMEs
+to brevosend) ✅ · Mailgun on `mg.spielos.xyz` (`krs._domainkey` + SPF include:mailgun.org) ✅.
