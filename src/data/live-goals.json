@@ -1305,7 +1305,7 @@
       "run_status": "waiting",
       "stage": "OBSERVE",
       "target": 3,
-      "updated_at": "2026-08-16T17:34:16.121988+00:00"
+      "updated_at": "2026-08-16T17:41:36.727852+00:00"
     },
     {
       "created_at": "2026-08-14T21:56:34.516762+00:00",
@@ -1357,7 +1357,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-16T17:41:03.306254+00:00"
+      "updated_at": "2026-08-16T19:39:41.521491+00:00"
     },
     {
       "created_at": "2026-08-15T00:32:48.129043+00:00",
@@ -1409,7 +1409,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-16T17:36:35.568201+00:00"
+      "updated_at": "2026-08-16T19:39:56.615716+00:00"
     },
     {
       "created_at": "2026-08-15T03:10:46.410099+00:00",
@@ -1422,7 +1422,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-16T17:40:47.461458+00:00"
+      "updated_at": "2026-08-16T19:39:09.874551+00:00"
     },
     {
       "created_at": "2026-08-15T03:22:50.223477+00:00",
@@ -1669,7 +1669,7 @@
       "run_status": "waiting",
       "stage": "ACT",
       "target": 0.3,
-      "updated_at": "2026-08-16T17:40:04.459006+00:00"
+      "updated_at": "2026-08-16T19:39:56.699832+00:00"
     },
     {
       "created_at": "2026-08-16T17:33:41.901657+00:00",
@@ -1686,60 +1686,60 @@
     },
     {
       "created_at": "2026-08-16T17:35:32.378913+00:00",
-      "goal_status": "active",
+      "goal_status": "achieved",
       "id": "goal-director-next-hypothesis-bridge-v1-20260816",
       "metric": "acceptance_tests_passed",
       "name": "Director bridge: derive next hypothesis and auto-continue after a finished child",
       "operator": "eq",
       "owner_id": "system-improvement",
-      "run_status": "blocked",
-      "stage": "ACT",
+      "run_status": "completed",
+      "stage": "OBSERVE",
       "target": "True",
-      "updated_at": "2026-08-16T17:36:35.772167+00:00"
+      "updated_at": "2026-08-16T19:41:14.564487+00:00"
     }
   ],
   "heartbeat": {
-    "goal_id": "goal-email-send-20260815-b5",
-    "goal_name": "English outbound send batch 5: next 50 from remaining queue",
+    "goal_id": "goal-email-send-20260816-b8",
+    "goal_name": "English outbound send batch 8: next 50 from remaining queue",
     "metric": "reply_rate",
     "operator": "ge",
     "run_status": "waiting",
-    "stage": "EVALUATE",
+    "stage": "ACT",
     "target": 0.3,
-    "updated_at": "2026-08-16T17:41:03.307580+00:00"
+    "updated_at": "2026-08-16T19:39:56.700539+00:00"
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-14T22:09:14.548799+00:00",
-      "goal_id": "goal-email-send-20260815-b5",
-      "goal_name": "English outbound send batch 5: next 50 from remaining queue",
+      "created_at": "2026-08-16T17:29:22.274233+00:00",
+      "goal_id": "goal-email-send-20260816-b8",
+      "goal_name": "English outbound send batch 8: next 50 from remaining queue",
       "owner_id": "outbound",
-      "run_id": "run-1d08860f95",
+      "run_id": "run-1c65a9f3d3",
       "run_status": "waiting",
-      "stage": "EVALUATE",
-      "updated_at": "2026-08-16T17:41:03.307580+00:00"
+      "stage": "ACT",
+      "updated_at": "2026-08-16T19:39:56.700539+00:00"
     },
     "heartbeat": {
-      "goal_id": "goal-email-send-20260815-b5",
-      "goal_name": "English outbound send batch 5: next 50 from remaining queue",
+      "goal_id": "goal-email-send-20260816-b8",
+      "goal_name": "English outbound send batch 8: next 50 from remaining queue",
       "metric": "reply_rate",
       "operator": "ge",
       "run_status": "waiting",
-      "stage": "EVALUATE",
+      "stage": "ACT",
       "target": 0.3,
-      "updated_at": "2026-08-16T17:41:03.307580+00:00"
+      "updated_at": "2026-08-16T19:39:56.700539+00:00"
     },
-    "last_activity_at": "2026-08-16T17:41:32.827438+00:00",
-    "last_sync_at": "2026-08-16T17:41:32.841922+00:00",
+    "last_activity_at": "2026-08-16T19:41:14.565672+00:00",
+    "last_sync_at": "2026-08-16T19:41:14.582931+00:00",
     "state": "running"
   },
   "totals": {
     "approvals": 144,
-    "decisions": 288,
-    "evidence": 4112,
+    "decisions": 289,
+    "evidence": 4189,
     "goals_abandoned": 13,
-    "goals_achieved": 94,
-    "goals_active": 18,
+    "goals_achieved": 95,
+    "goals_active": 17,
     "goals_total": 129,
     "hypotheses": 35,
     "memory_claims": 5,
