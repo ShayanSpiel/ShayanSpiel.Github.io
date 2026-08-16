@@ -1305,7 +1305,7 @@
       "run_status": "waiting",
       "stage": "OBSERVE",
       "target": 3,
-      "updated_at": "2026-08-16T01:51:53.860878+00:00"
+      "updated_at": "2026-08-16T17:34:16.121988+00:00"
     },
     {
       "created_at": "2026-08-14T21:56:34.516762+00:00",
@@ -1357,7 +1357,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-16T08:47:43.112364+00:00"
+      "updated_at": "2026-08-16T17:41:03.306254+00:00"
     },
     {
       "created_at": "2026-08-15T00:32:48.129043+00:00",
@@ -1409,7 +1409,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-16T11:09:17.947262+00:00"
+      "updated_at": "2026-08-16T17:36:35.568201+00:00"
     },
     {
       "created_at": "2026-08-15T03:10:46.410099+00:00",
@@ -1422,7 +1422,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-16T11:10:08.418829+00:00"
+      "updated_at": "2026-08-16T17:40:47.461458+00:00"
     },
     {
       "created_at": "2026-08-15T03:22:50.223477+00:00",
@@ -1634,63 +1634,115 @@
     },
     {
       "created_at": "2026-08-16T01:49:08.489119+00:00",
-      "goal_status": "active",
+      "goal_status": "achieved",
       "id": "goal-7bbd594426",
       "metric": "acceptance_tests_passed",
       "name": "Deploy full lead database + send history to Attio CRM (tracking backbone)",
       "operator": "eq",
       "owner_id": "system-improvement",
+      "run_status": "completed",
+      "stage": "OBSERVE",
+      "target": "True",
+      "updated_at": "2026-08-16T17:41:32.826570+00:00"
+    },
+    {
+      "created_at": "2026-08-16T16:36:12.507205+00:00",
+      "goal_status": "active",
+      "id": "goal-0db6b0a1b4",
+      "metric": "acceptance_tests_passed",
+      "name": "Harden spielos.xyz DNS for email deliverability (Mailgun SPF, DMARC, TLS-RPT, MTA-STS)",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "run_status": "blocked",
+      "stage": "ACT",
+      "target": true,
+      "updated_at": "2026-08-16T16:46:32.496331+00:00"
+    },
+    {
+      "created_at": "2026-08-16T17:29:22.274233+00:00",
+      "goal_status": "active",
+      "id": "goal-email-send-20260816-b8",
+      "metric": "reply_rate",
+      "name": "English outbound send batch 8: next 50 from remaining queue",
+      "operator": "ge",
+      "owner_id": "outbound",
+      "run_status": "waiting",
+      "stage": "ACT",
+      "target": 0.3,
+      "updated_at": "2026-08-16T17:40:04.459006+00:00"
+    },
+    {
+      "created_at": "2026-08-16T17:33:41.901657+00:00",
+      "goal_status": "active",
+      "id": "goal-outbound-crm-sync-20260816",
+      "metric": "acceptance_tests_passed",
+      "name": "Outbound CRM state sync adapter: push sent/reply/booked-call state from send engine to Attio after each batch",
+      "operator": "eq",
+      "owner_id": "system-improvement",
       "run_status": "blocked",
       "stage": "ACT",
       "target": "True",
-      "updated_at": "2026-08-16T01:51:53.374283+00:00"
+      "updated_at": "2026-08-16T17:34:15.786473+00:00"
+    },
+    {
+      "created_at": "2026-08-16T17:35:32.378913+00:00",
+      "goal_status": "active",
+      "id": "goal-director-next-hypothesis-bridge-v1-20260816",
+      "metric": "acceptance_tests_passed",
+      "name": "Director bridge: derive next hypothesis and auto-continue after a finished child",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "run_status": "blocked",
+      "stage": "ACT",
+      "target": "True",
+      "updated_at": "2026-08-16T17:36:35.772167+00:00"
     }
   ],
   "heartbeat": {
-    "goal_id": "goal-email-send-20260815-b7",
-    "goal_name": "English outbound send batch 7: next 50 from remaining queue",
+    "goal_id": "goal-email-send-20260815-b5",
+    "goal_name": "English outbound send batch 5: next 50 from remaining queue",
     "metric": "reply_rate",
     "operator": "ge",
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-16T11:10:08.421225+00:00"
+    "updated_at": "2026-08-16T17:41:03.307580+00:00"
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-15T03:10:46.410099+00:00",
-      "goal_id": "goal-email-send-20260815-b7",
-      "goal_name": "English outbound send batch 7: next 50 from remaining queue",
+      "created_at": "2026-08-14T22:09:14.548799+00:00",
+      "goal_id": "goal-email-send-20260815-b5",
+      "goal_name": "English outbound send batch 5: next 50 from remaining queue",
       "owner_id": "outbound",
-      "run_id": "run-72aa423fd8",
+      "run_id": "run-1d08860f95",
       "run_status": "waiting",
       "stage": "EVALUATE",
-      "updated_at": "2026-08-16T11:10:08.421225+00:00"
+      "updated_at": "2026-08-16T17:41:03.307580+00:00"
     },
     "heartbeat": {
-      "goal_id": "goal-email-send-20260815-b7",
-      "goal_name": "English outbound send batch 7: next 50 from remaining queue",
+      "goal_id": "goal-email-send-20260815-b5",
+      "goal_name": "English outbound send batch 5: next 50 from remaining queue",
       "metric": "reply_rate",
       "operator": "ge",
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-16T11:10:08.421225+00:00"
+      "updated_at": "2026-08-16T17:41:03.307580+00:00"
     },
-    "last_activity_at": "2026-08-16T11:10:51.889738+00:00",
-    "last_sync_at": "2026-08-16T11:10:51.963315+00:00",
+    "last_activity_at": "2026-08-16T17:41:32.827438+00:00",
+    "last_sync_at": "2026-08-16T17:41:32.841922+00:00",
     "state": "running"
   },
   "totals": {
-    "approvals": 139,
-    "decisions": 279,
-    "evidence": 3885,
+    "approvals": 144,
+    "decisions": 288,
+    "evidence": 4112,
     "goals_abandoned": 13,
-    "goals_achieved": 93,
-    "goals_active": 15,
-    "goals_total": 125,
+    "goals_achieved": 94,
+    "goals_active": 18,
+    "goals_total": 129,
     "hypotheses": 35,
     "memory_claims": 5,
-    "runs": 139
+    "runs": 143
   }
 }
