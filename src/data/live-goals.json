@@ -1838,7 +1838,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-17T14:58:32.098801+00:00"
+      "updated_at": "2026-08-17T15:03:49.547583+00:00"
     },
     {
       "created_at": "2026-08-16T20:17:05.408366+00:00",
@@ -2038,14 +2038,14 @@
     }
   ],
   "heartbeat": {
-    "goal_id": "goal-email-send-20260816-b8",
-    "goal_name": "English outbound send batch 8: next 50 from remaining queue",
+    "goal_id": "goal-email-send-20260816-b9",
+    "goal_name": "English outbound send batch 9: next 50 from remaining queue",
     "metric": "reply_rate",
     "operator": "ge",
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-17T15:00:02.703467+00:00"
+    "updated_at": "2026-08-17T15:03:49.549334+00:00"
   },
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
@@ -2058,33 +2058,33 @@
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-17T15:01:11.780146+00:00",
-      "goal_id": "goal-analytics-fullfunnel-v1-20260817",
-      "goal_name": "Full-funnel analytics: live Buffer metrics + PostHog warehouse events (MCP on OpenCode) into funnel-analysis",
-      "owner_id": "system-improvement",
-      "run_id": "run-ad6459f857",
-      "run_status": "blocked",
+      "created_at": "2026-08-16T19:59:11.048214+00:00",
+      "goal_id": "goal-email-send-20260816-b9",
+      "goal_name": "English outbound send batch 9: next 50 from remaining queue",
+      "owner_id": "outbound",
+      "run_id": "run-9c354df46c",
+      "run_status": "waiting",
       "stage": "EVALUATE",
-      "updated_at": "2026-08-17T15:03:48.886484+00:00"
+      "updated_at": "2026-08-17T15:03:49.549334+00:00"
     },
     "heartbeat": {
-      "goal_id": "goal-email-send-20260816-b8",
-      "goal_name": "English outbound send batch 8: next 50 from remaining queue",
+      "goal_id": "goal-email-send-20260816-b9",
+      "goal_name": "English outbound send batch 9: next 50 from remaining queue",
       "metric": "reply_rate",
       "operator": "ge",
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-17T15:00:02.703467+00:00"
+      "updated_at": "2026-08-17T15:03:49.549334+00:00"
     },
-    "last_activity_at": "2026-08-17T15:03:48.886484+00:00",
-    "last_sync_at": "2026-08-17T15:03:48.931505+00:00",
+    "last_activity_at": "2026-08-17T15:03:49.549334+00:00",
+    "last_sync_at": "2026-08-17T15:03:49.571965+00:00",
     "state": "running"
   },
   "totals": {
     "approvals": 163,
     "decisions": 318,
-    "evidence": 4912,
+    "evidence": 4913,
     "goals_abandoned": 18,
     "goals_achieved": 102,
     "goals_active": 20,
