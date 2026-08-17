@@ -1409,7 +1409,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-17T09:50:38.975123+00:00"
+      "updated_at": "2026-08-17T09:56:16.985092+00:00"
     },
     {
       "created_at": "2026-08-15T03:10:46.410099+00:00",
@@ -1422,7 +1422,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-17T09:45:26.388617+00:00"
+      "updated_at": "2026-08-17T09:56:31.358291+00:00"
     },
     {
       "created_at": "2026-08-15T03:22:50.223477+00:00",
@@ -1669,7 +1669,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-17T09:47:37.016786+00:00"
+      "updated_at": "2026-08-17T09:58:10.605342+00:00"
     },
     {
       "created_at": "2026-08-16T17:33:41.901657+00:00",
@@ -1708,7 +1708,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-17T09:48:37.724686+00:00"
+      "updated_at": "2026-08-17T09:59:14.787742+00:00"
     },
     {
       "created_at": "2026-08-16T20:17:05.408366+00:00",
@@ -1721,7 +1721,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-17T09:49:02.167978+00:00"
+      "updated_at": "2026-08-17T09:59:40.920662+00:00"
     },
     {
       "created_at": "2026-08-17T00:12:28.586808+00:00",
@@ -1734,7 +1734,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-17T09:45:40.905289+00:00"
+      "updated_at": "2026-08-17T09:56:50.840118+00:00"
     },
     {
       "created_at": "2026-08-17T08:52:19.667740+00:00",
@@ -1790,16 +1790,16 @@
     },
     {
       "created_at": "2026-08-17T09:50:24.159695+00:00",
-      "goal_status": "active",
+      "goal_status": "achieved",
       "id": "goal-content-funnel-batches-20260817",
       "metric": "funnel_reports",
       "name": "Funnel analysis: batch-01 & batch-03 evidence through 2026-08-17",
       "operator": "ge",
       "owner_id": "analytics",
-      "run_status": "idle",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": 1,
-      "updated_at": "2026-08-17T09:50:24.159695+00:00"
+      "updated_at": "2026-08-17T09:59:53.224803+00:00"
     },
     {
       "created_at": "2026-08-17T09:50:24.172479+00:00",
@@ -1809,54 +1809,54 @@
       "name": "Produce Batch 4 Threads and YouTube Shorts — evidence continuation (batch-03 handoff-exception cells)",
       "operator": "ge",
       "owner_id": "content",
-      "run_status": "running",
-      "stage": "DECIDE",
+      "run_status": "blocked",
+      "stage": "ACT",
       "target": 1,
-      "updated_at": "2026-08-17T09:50:38.194976+00:00"
+      "updated_at": "2026-08-17T09:50:41.228059+00:00"
     }
   ],
   "heartbeat": {
-    "goal_id": "goal-email-send-20260815-b6",
-    "goal_name": "English outbound send batch 6: next 50 from remaining queue",
+    "goal_id": "goal-email-send-20260816-b10",
+    "goal_name": "English outbound send batch 10: next 50 from remaining queue",
     "metric": "reply_rate",
     "operator": "ge",
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-17T09:50:38.976740+00:00"
+    "updated_at": "2026-08-17T09:59:40.922059+00:00"
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-15T02:42:04.953786+00:00",
-      "goal_id": "goal-email-send-20260815-b6",
-      "goal_name": "English outbound send batch 6: next 50 from remaining queue",
+      "created_at": "2026-08-16T20:17:05.408366+00:00",
+      "goal_id": "goal-email-send-20260816-b10",
+      "goal_name": "English outbound send batch 10: next 50 from remaining queue",
       "owner_id": "outbound",
-      "run_id": "run-0e93fa8686",
+      "run_id": "run-a9e673a30a",
       "run_status": "waiting",
       "stage": "EVALUATE",
-      "updated_at": "2026-08-17T09:50:38.976740+00:00"
+      "updated_at": "2026-08-17T09:59:40.922059+00:00"
     },
     "heartbeat": {
-      "goal_id": "goal-email-send-20260815-b6",
-      "goal_name": "English outbound send batch 6: next 50 from remaining queue",
+      "goal_id": "goal-email-send-20260816-b10",
+      "goal_name": "English outbound send batch 10: next 50 from remaining queue",
       "metric": "reply_rate",
       "operator": "ge",
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-17T09:50:38.976740+00:00"
+      "updated_at": "2026-08-17T09:59:40.922059+00:00"
     },
-    "last_activity_at": "2026-08-17T09:50:38.976740+00:00",
-    "last_sync_at": "2026-08-17T09:50:39.000895+00:00",
+    "last_activity_at": "2026-08-17T09:59:53.225970+00:00",
+    "last_sync_at": "2026-08-17T09:59:53.240481+00:00",
     "state": "running"
   },
   "totals": {
     "approvals": 152,
-    "decisions": 298,
-    "evidence": 4778,
+    "decisions": 301,
+    "evidence": 4792,
     "goals_abandoned": 17,
-    "goals_achieved": 98,
-    "goals_active": 19,
+    "goals_achieved": 99,
+    "goals_active": 18,
     "goals_total": 138,
     "hypotheses": 36,
     "memory_claims": 5,
