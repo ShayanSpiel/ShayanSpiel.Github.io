@@ -37,7 +37,7 @@ instead of restating the architecture.
 This is Shayan Spiel's founder-led buyer and lead-conversion website for SpielOS.
 The commercial objective is to turn qualified visitors into implementation leads
 and product buyers through the services, Agent Brief, and contact flows.
-The former waitlist destination has been replaced by the Architecture page and
+The former waitlist destination has been replaced by the Features page and
 is not part of the site's conversion path.
 
 ## Protected scope
@@ -79,7 +79,7 @@ belong under `.spielos/artifacts/`, not strategy, assets, or skills.
 | `/contact/` | `src/pages/contact.astro` | Business contact form (EN) |
 | `/services/` | `src/pages/services.astro` | Buyer-facing AI implementation offer (EN) |
 | `/services/agent-brief/` | `src/pages/services/agent-brief.astro` | Agent Brief experience (EN) |
-| `/architecture/` | `src/pages/architecture.astro` | Buyer-facing company architecture (EN) |
+| `/architecture/` | `src/pages/architecture.astro` | 301 redirect to `/features/` |
 | `/live/` | `src/pages/live.astro` | Plain-language live company record (EN) |
 | `/waitlist/` | `src/pages/waitlist.astro` | 301 redirect to `/architecture/` |
 | `/about/` | `src/pages/about.astro` | 301 redirect to `/founder/` |
@@ -89,10 +89,11 @@ belong under `.spielos/artifacts/`, not strategy, assets, or skills.
 | `/fa/notes/` | `src/pages/fa/notes/index.astro` | Notes index (FA) |
 | `/fa/notes/[slug]/` | `src/pages/fa/notes/[...slug].astro` | Individual note pages (FA) |
 | `/fa/contact/` | `src/pages/fa/contact.astro` | Contact form (FA) |
-| `/fa/architecture/` | `src/pages/fa/architecture.astro` | Buyer-facing company architecture (FA) |
+| `/fa/architecture/` | `src/pages/fa/architecture.astro` | 301 redirect to `/fa/features/` |
 | `/fa/live/` | `src/pages/fa/live.astro` | Plain-language live company record (FA) |
 | `/fa/waitlist/` | `src/pages/fa/waitlist.astro` | 301 redirect to `/fa/architecture/` |
-| `/features/` | `src/pages/features/index.astro` | 301 redirect to `/architecture/` |
+| `/fa/features/` | `src/pages/fa/features/index.astro` | Buyer-facing features — company lego blocks (FA) |
+| `/features/` | `src/pages/features/index.astro` | Buyer-facing features — company lego blocks (EN) |
 | `/features/chat/` | `src/pages/features/chat/index.astro` | Chat hub — execution modes (EN) |
 | `/features/chat/director-mode/` | `src/pages/features/chat/director-mode.astro` | Director Mode — long-running agent sessions (EN) |
 | `/features/chat/direct-mode/` | `src/pages/features/chat/direct-mode.astro` | Direct Mode — workflow execution and scheduling (EN) |
@@ -170,7 +171,7 @@ Persian headings use heavier font-weight (h1=800, h2=700, h3+=600) via `[dir="rt
 
 Single source of truth: `src/config.ts` → `NAV_LINKS`.
 
-Default nav: Services → `/services/`, Architecture → `/architecture/`, Live →
+Default nav: Services → `/services/`, Features → `/features/`, Live →
 `/live/`, Notes → `/notes/`, Founder → `/founder/`.
 Primary navbar CTA: Request an Agent Brief → `/services/agent-brief/#request`.
 The Agent Brief experience remains at `/services/agent-brief/` and in the
@@ -182,7 +183,7 @@ The retired showcase navigation is not used by any active route.
 
 Single source of truth: `src/config.ts` → `FOOTER_LINKS`.
 
-Default footer: SpielOS, Agent Brief, Services, Architecture, Live, Notes, Founder, Contact.
+Default footer: SpielOS, Agent Brief, Services, Features, Live, Notes, Founder, Contact.
 Social icons: X, GitHub.
 Copyright: dynamic year, "SpielOS is independently built by Shayan Spiel."
 

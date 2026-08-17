@@ -8,10 +8,10 @@ const dist = join(root, "dist");
 const read = (route) => readFileSync(join(dist, route, "index.html"), "utf8");
 
 test("core conversion routes build in English and Persian", () => {
-  for (const route of ["", "services", "services/agent-brief", "architecture", "live", "fa", "fa/services", "fa/services/agent-brief", "fa/architecture", "fa/live"]) {
+  for (const route of ["", "services", "services/agent-brief", "features", "architecture", "live", "fa", "fa/services", "fa/services/agent-brief", "fa/features", "fa/architecture", "fa/live"]) {
     assert.ok(existsSync(join(dist, route, "index.html")), `${route || "/"} must build`);
   }
-  for (const route of ["fa", "fa/services", "fa/services/agent-brief", "fa/architecture", "fa/live"]) {
+  for (const route of ["fa", "fa/services", "fa/services/agent-brief", "fa/features", "fa/architecture", "fa/live"]) {
     assert.match(read(route), /<html lang="fa" dir="rtl"/);
   }
 });
@@ -19,8 +19,8 @@ test("core conversion routes build in English and Persian", () => {
 test("navigation exposes the fixed information architecture and one-click form", () => {
   const en = read("");
   const fa = read("fa");
-  for (const href of ["/services/", "/architecture/", "/live/", "/notes/", "/founder/"]) assert.match(en, new RegExp(`href="${href}"`));
-  for (const href of ["/fa/services/", "/fa/architecture/", "/fa/live/", "/fa/notes/", "/fa/founder/"]) assert.match(fa, new RegExp(`href="${href}"`));
+  for (const href of ["/services/", "/features/", "/live/", "/notes/", "/founder/"]) assert.match(en, new RegExp(`href="${href}"`));
+  for (const href of ["/fa/services/", "/fa/features/", "/fa/live/", "/fa/notes/", "/fa/founder/"]) assert.match(fa, new RegExp(`href="${href}"`));
   assert.match(en, /href="\/services\/agent-brief\/#request"/);
   assert.match(fa, /href="\/fa\/services\/agent-brief\/#request"/);
 });
@@ -35,13 +35,13 @@ test("home has valid buyer links and the required schema types", () => {
   }
 });
 
-test("Architecture presents the canonical loop and seven company parts", () => {
-  const en = read("architecture");
-  const fa = read("fa/architecture");
+test("Features presents the canonical loop and seven company parts", () => {
+  const en = read("features");
+  const fa = read("fa/features");
   for (const label of ["Goal", "Observe", "Decide", "Act", "Evaluate", "Department", "Workflow", "Agent", "Skill", "Connection", "Artifact"]) {
     assert.match(en, new RegExp(`>${label}<`));
   }
-  assert.match(en, /harness-architecture-og-1200x630\.png/);
+  assert.match(en, /assets\/og\/features\.png/);
   assert.match(en, /href="\/live\/"/);
   assert.match(en, /href="\/services\/agent-brief\/#request"/);
   assert.match(fa, /هدف/);
@@ -52,9 +52,9 @@ test("Architecture presents the canonical loop and seven company parts", () => {
 test("retired hubs redirect directly to localized Architecture", () => {
   for (const [route, target] of [
     ["waitlist", "/architecture/"],
-    ["features", "/architecture/"],
+    ["architecture", "/features/"],
     ["fa/waitlist", "/fa/architecture/"],
-    ["fa/features", "/fa/architecture/"],
+    ["fa/architecture", "/fa/features/"],
   ]) {
     const html = read(route);
     assert.match(html, new RegExp(`http-equiv="refresh" content="0;url=${target}"`));
@@ -71,10 +71,10 @@ test("legacy feature detail pages remain available but noindex", () => {
 
 test("sitemap includes localized core pages and excludes redirects and noindex details", () => {
   const sitemap = readFileSync(join(dist, "sitemap.xml"), "utf8");
-  for (const route of ["/architecture/", "/fa/architecture/", "/live/", "/fa/live/", "/services/", "/fa/services/"]) {
+  for (const route of ["/features/", "/fa/features/", "/live/", "/fa/live/", "/services/", "/fa/services/"]) {
     assert.match(sitemap, new RegExp(`https:\\/\\/spielos\\.xyz${route.replaceAll("/", "\\/")}`));
   }
-  for (const route of ["/waitlist/", "/fa/waitlist/", "/features/", "/fa/features/", "/features/chat/"]) {
+  for (const route of ["/waitlist/", "/fa/waitlist/", "/architecture/", "/fa/architecture/", "/features/chat/"]) {
     assert.doesNotMatch(sitemap, new RegExp(`https:\\/\\/spielos\\.xyz${route.replaceAll("/", "\\/")}`));
   }
 });
@@ -188,7 +188,7 @@ test("Live leads with active business work, north star, hierarchy, and visible s
 });
 
 test("conversion pages preserve the distinctive grid, light, and connected-progress language", () => {
-  for (const route of ["", "services", "services/agent-brief", "architecture", "live"]) {
+  for (const route of ["", "services", "services/agent-brief", "features", "live"]) {
     const html = read(route);
     assert.match(html, /hero-grid/);
     assert.match(html, /text-primary/);
@@ -196,7 +196,7 @@ test("conversion pages preserve the distinctive grid, light, and connected-progr
   assert.match(read(""), /jl-wrap/);
   assert.match(read("services"), /service-rail/);
   assert.match(read("services/agent-brief"), /brief-rail/);
-  assert.match(read("architecture"), /department-canvas/);
+  assert.match(read("features"), /department-canvas/);
 });
 
 test("new conversion source uses Boxicons, semantic tokens, and no em dash", () => {
@@ -204,7 +204,7 @@ test("new conversion source uses Boxicons, semantic tokens, and no em dash", () 
     "src/pages/index.astro",
     "src/pages/services.astro",
     "src/pages/services/agent-brief.astro",
-    "src/pages/architecture.astro",
+    "src/pages/features/index.astro",
     "src/pages/live.astro",
     "src/components/AgentBriefForm.astro",
     "src/components/architecture/DepartmentMap.astro",

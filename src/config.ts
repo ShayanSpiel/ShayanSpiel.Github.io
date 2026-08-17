@@ -101,7 +101,7 @@ export const FORMS = {
 };
 
 // Compatibility alias for older imports. The public waitlist route now redirects here.
-export const WAITLIST_URL = "/architecture/";
+export const WAITLIST_URL = "/features/";
 export const SERVICES_PATH = "/services/";
 // Legacy path retired after conversion migration: AGENT_BRIEFING_PATH = "/services/#agent-briefing"
 export const AGENT_BRIEFING_PATH = "/services/agent-brief/#request";
@@ -118,7 +118,7 @@ export interface NavLink {
 export const NAV_LINKS: { default: NavLink[]; showcase: NavLink[] } = {
   default: [
     { label: "Services", href: "/services/" },
-    { label: "Architecture", href: "/architecture/" },
+    { label: "Features", href: "/features/" },
     { label: "Live", href: "/live/", live: true },
     { label: "Notes", href: "/notes/" },
     { label: "Founder", href: "/founder/" },
@@ -134,7 +134,7 @@ export const FOOTER_LINKS = {
   default: [
     { label: "Agent Brief", href: AGENT_BRIEF_REQUEST_PATH },
     { label: "Services", href: "/services/" },
-    { label: "Architecture", href: "/architecture/" },
+    { label: "Features", href: "/features/" },
     { label: "Live", href: "/live/" },
     { label: "Notes", href: "/notes/" },
     { label: "Founder", href: "/founder/" },

@@ -91,10 +91,10 @@ if (!/<loc>https:\/\/spielos\.xyz/.test(raw)) {
 console.log("postbuild-sitemap: dist/sitemap.xml OK");
 
 const redirectShells = [
-  { source: "architecture/index.html", destination: "waitlist/index.html", target: "/architecture/" },
-  { source: "architecture/index.html", destination: "features/index.html", target: "/architecture/" },
-  { source: "fa/architecture/index.html", destination: "fa/waitlist/index.html", target: "/fa/architecture/" },
-  { source: "fa/architecture/index.html", destination: "fa/features/index.html", target: "/fa/architecture/" },
+  { source: "features/index.html", destination: "architecture/index.html", target: "/features/" },
+  { source: "features/index.html", destination: "waitlist/index.html", target: "/architecture/" },
+  { source: "fa/features/index.html", destination: "fa/architecture/index.html", target: "/fa/features/" },
+  { source: "fa/features/index.html", destination: "fa/waitlist/index.html", target: "/fa/architecture/" },
 ];
 
 for (const { source, destination, target } of redirectShells) {
@@ -108,6 +108,10 @@ for (const { source, destination, target } of redirectShells) {
   html = html.replace(
     "<head>",
     `<head><meta http-equiv="refresh" content="0;url=${target}">`,
+  );
+  html = html.replace(
+    /<link rel="canonical"[^>]*>/,
+    `<link rel="canonical" href="https://spielos.xyz${target}">`,
   );
   writeFileSync(destinationPath, html);
 }
