@@ -1023,16 +1023,16 @@
       "created_at": "2026-08-13T02:43:28.844798+00:00",
       "display_title": "Prepare the next educational content package",
       "display_title_fa": "بسته بعدی محتوای آموزشی رو آماده کنیم",
-      "goal_status": "active",
+      "goal_status": "abandoned",
       "id": "goal-content-batch02-package-v1-20260813",
       "metric": "published_items",
       "name": "Prepare and present the Batch 2 Threads and YouTube Shorts package",
       "operator": "ge",
       "owner_id": "content",
-      "run_status": "blocked",
+      "run_status": "completed",
       "stage": "ACT",
       "target": 1,
-      "updated_at": "2026-08-14 00:57:44"
+      "updated_at": "2026-08-17T09:47:17.366945+00:00"
     },
     {
       "created_at": "2026-08-13T11:16:19.514261+00:00",
@@ -1409,7 +1409,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-17T09:39:10.537567+00:00"
+      "updated_at": "2026-08-17T09:44:56.408958+00:00"
     },
     {
       "created_at": "2026-08-15T03:10:46.410099+00:00",
@@ -1422,7 +1422,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-17T09:40:01.106937+00:00"
+      "updated_at": "2026-08-17T09:45:26.388617+00:00"
     },
     {
       "created_at": "2026-08-15T03:22:50.223477+00:00",
@@ -1669,7 +1669,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-17T09:42:19.685639+00:00"
+      "updated_at": "2026-08-17T09:47:37.016786+00:00"
     },
     {
       "created_at": "2026-08-16T17:33:41.901657+00:00",
@@ -1734,7 +1734,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-17T09:40:18.816230+00:00"
+      "updated_at": "2026-08-17T09:45:40.905289+00:00"
     },
     {
       "created_at": "2026-08-17T08:52:19.667740+00:00",
@@ -1751,16 +1751,16 @@
     },
     {
       "created_at": "2026-08-17T09:09:56.895317+00:00",
-      "goal_status": "active",
+      "goal_status": "achieved",
       "id": "goal-content-publish-workflow-v1-20260817",
       "metric": "acceptance_tests_passed",
       "name": "Clean content publish workflow: scheduled==published commitment, pre-dispatch duplicate guard, receipt finality",
       "operator": "eq",
       "owner_id": "system-improvement",
-      "run_status": "blocked",
-      "stage": "ACT",
+      "run_status": "completed",
+      "stage": "OBSERVE",
       "target": true,
-      "updated_at": "2026-08-17T09:14:16.617481+00:00"
+      "updated_at": "2026-08-17T09:45:44.918742+00:00"
     },
     {
       "created_at": "2026-08-17T09:34:48.485530+00:00",
@@ -1790,47 +1790,47 @@
     }
   ],
   "heartbeat": {
-    "goal_id": "goal-email-send-20260816-b10",
-    "goal_name": "English outbound send batch 10: next 50 from remaining queue",
+    "goal_id": "goal-email-send-20260816-b8",
+    "goal_name": "English outbound send batch 8: next 50 from remaining queue",
     "metric": "reply_rate",
     "operator": "ge",
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-17T09:43:45.521530+00:00"
+    "updated_at": "2026-08-17T09:47:37.018224+00:00"
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-16T20:17:05.408366+00:00",
-      "goal_id": "goal-email-send-20260816-b10",
-      "goal_name": "English outbound send batch 10: next 50 from remaining queue",
+      "created_at": "2026-08-16T17:29:22.274233+00:00",
+      "goal_id": "goal-email-send-20260816-b8",
+      "goal_name": "English outbound send batch 8: next 50 from remaining queue",
       "owner_id": "outbound",
-      "run_id": "run-a9e673a30a",
+      "run_id": "run-1c65a9f3d3",
       "run_status": "waiting",
       "stage": "EVALUATE",
-      "updated_at": "2026-08-17T09:43:45.521530+00:00"
+      "updated_at": "2026-08-17T09:47:37.018224+00:00"
     },
     "heartbeat": {
-      "goal_id": "goal-email-send-20260816-b10",
-      "goal_name": "English outbound send batch 10: next 50 from remaining queue",
+      "goal_id": "goal-email-send-20260816-b8",
+      "goal_name": "English outbound send batch 8: next 50 from remaining queue",
       "metric": "reply_rate",
       "operator": "ge",
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-17T09:43:45.521530+00:00"
+      "updated_at": "2026-08-17T09:47:37.018224+00:00"
     },
-    "last_activity_at": "2026-08-17T09:44:24.392762+00:00",
-    "last_sync_at": "2026-08-17T09:44:24.406503+00:00",
+    "last_activity_at": "2026-08-17T09:47:37.018224+00:00",
+    "last_sync_at": "2026-08-17T09:47:37.034567+00:00",
     "state": "running"
   },
   "totals": {
     "approvals": 152,
     "decisions": 298,
-    "evidence": 4767,
-    "goals_abandoned": 15,
-    "goals_achieved": 97,
-    "goals_active": 20,
+    "evidence": 4774,
+    "goals_abandoned": 16,
+    "goals_achieved": 98,
+    "goals_active": 18,
     "goals_total": 136,
     "hypotheses": 35,
     "memory_claims": 5,
