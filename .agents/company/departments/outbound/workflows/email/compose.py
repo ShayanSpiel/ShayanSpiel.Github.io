@@ -16,6 +16,11 @@ retired "supervised AI employees" offer line is replaced by four A/B variants
 in the composed email features so reply-rate A/B is measurable per variant.
 validators.py mechanically bans the retired phrase so it can never ship again
 from any render path.
+
+SPAM (owner rule 2026-08-10): the Rule 6 banned vocabulary (SPAM_WORDS) is a
+hard ban — render_checked rejects any English subject/body containing one and
+validators.py flags it mechanically, so spammy phrasing never reaches the
+REVIEW gate.
 """
 
 import html as html_mod
@@ -58,6 +63,23 @@ FORBIDDEN_OBSERVATIONS = (
 # from STRICT compose or the legacy template ladder.
 FORBIDDEN_OFFER_PHRASES = (
     "supervised ai employees",
+)
+
+# Spam-word hard ban (outbound-email SKILL.md, Part 1 Rule 6): the banned
+# vocabulary and classic spam triggers must never appear in a rendered
+# English subject/body. render_checked rejects English renders containing
+# one; VALIDATE flags it mechanically (code "spam_word") so the human
+# REVIEW gate never sees spammy copy even from a hand-edited template.
+SPAM_WORDS = (
+    # Rule 6 hard-banned words.
+    "leverage", "streamline", "optimize", "elevate", "empower",
+    "ai-powered", "cutting-edge", "game-changing", "revolutionary",
+    "i wanted to reach out", "i'm reaching out", "i am reaching out",
+    "hope this finds you well", "circle back", "2x output", "half the cost",
+    "cost-effective",
+    # Deceptive-urgency and fake-scarcity triggers.
+    "act now", "limited time", "click here", "buy now",
+    "only 3 slots", "free trial", "no obligation",
 )
 
 # Owner direction 2026-08-10 offer variants — the company line is "building
@@ -260,6 +282,11 @@ def render_checked(contact: dict, seq: int = 0) -> tuple:
         return None, None, None, f"body {words} words > 85"
     if "\u2014" in subject + text_only:
         return None, None, None, "em dash found"
+    if lang == "English":
+        lower_copy = (subject + " " + text_only).casefold()
+        hit = next((w for w in SPAM_WORDS if w in lower_copy), None)
+        if hit:
+            return None, None, None, f"spam word {hit!r} found"
     if lang == "English" and "http" in subject + html_only:
         return None, None, None, "external link found"
     if not subject or not body_html or not body_text:

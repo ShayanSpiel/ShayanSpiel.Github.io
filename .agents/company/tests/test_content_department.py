@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[3]
 
 class LeanContentDepartmentTests(unittest.TestCase):
     def manifests(self):
-        return [json.loads((ROOT / f".spielos/artifacts/content-growth-20260812/batch-{number:02d}-campaign.json").read_text())
+        return [json.loads((ROOT / f".spielos/artifacts/content-growth-20260812/batch-{number:02d}/campaign-approved.json").read_text())
                 for number in (2, 3)]
 
     def test_batch_two_uses_the_lean_strategy_contract(self):

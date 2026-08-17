@@ -19,25 +19,32 @@ Intended API contract (implementer must make every test pass by editing ONLY
 1. The plugin check reads BOTH `--status pending` and `--status delivered`
    notifications, merges them by id (pending wins on duplicates), keeps the
    REPORTABLE kind filter, the 300_000 ms (5-minute) per-id re-prompt throttle,
-   the approval_required wake-up, and the toast.
+   the approval_required wake-up, and the chat surface.
 2. The plugin skips its own `company runner tick` while the runner daemon is
    running (`runner status --json` reports `running: true`), keeping the
    `enabled === false` guard; the notifications read still happens when the
    daemon is running.
-3. The plugin lifecycle (dispose, session.idle event, command.execute.before
-   stop/start hooks) is unchanged in intent.
+3. The plugin lifecycle (cleanup, session.idle event, runner-down /
+   loop-wedged chat alerts) is unchanged in intent.
 
 Goal-runner-watchdog-supervision-20260815 extends the surface contract:
 
 4. The plugin INVERTS the silent skip: when the polled runner status says not
    running, or the daemon's heartbeat stamp
-   (.spielos/state/runner.heartbeat) is older than HEARTBEAT_STALE_MS
-   (75_000 ms), it surfaces a chat-visible runner-down alert (toast +
-   director wake-up) throttled by the same 300_000 ms re-prompt window via
-   the synthetic "runner-down" key, and that key survives the id prune.
+   (.spielos/state/runner.heartbeat) is older than ALIVE_STALE_MS (45_000 ms),
+   it surfaces a chat-visible runner-down alert throttled by the same
+   300_000 ms re-prompt window via the synthetic "runner-down" key, and that
+   key survives the id prune.
 5. The REPORTABLE kind set additionally accepts the runtime watchdog kinds
    `runner_down` and `stuck_goal`, and action_required payloads carrying a
    `watchdog.signal` marker are surfaced with the watchdog titles.
+
+CORRECTED PREMISE (Director evidence 2026-08-15): the app is opencode2 V2
+(0.0.0-next-17444), so the V1 surfaces (`client.session.promptAsync`,
+`client.tui.showToast`, `command.execute.before`, `$` BunShell) do not exist
+in the V2 server Context and are replaced by `ctx.session.prompt` /
+`ctx.session.synthetic` / `ctx.event.subscribe()`; daemon lifecycle moved to
+the OS supervisor (supervisor.py). The behavioral contract above is unchanged.
 
 This suite is hermetic and static: it only reads the plugin source file from
 the repo and asserts the required behaviors exist in the source. No network, no
@@ -71,10 +78,10 @@ class NotificationSurfaceContractTests(unittest.TestCase):
         """Lines of the `check` function only (where the queries live)."""
         start = next(
             i for i, line in enumerate(self.lines)
-            if line.startswith("  const check = async () => {"))
+            if line.strip().startswith("const check = async () => {"))
         end = next(
             i for i, line in enumerate(self.lines)
-            if line.startswith("  const timer = setInterval(check"))
+            if line.strip().startswith("const timer = setInterval("))
         return self.lines[start:end]
 
     def test_plugin_source_file_exists(self):
@@ -84,8 +91,8 @@ class NotificationSurfaceContractTests(unittest.TestCase):
 
     def test_check_queries_both_pending_and_delivered(self):
         body = "\n".join(self.check_body())
-        self.assertIn("--status pending", body)
-        self.assertIn("--status delivered", body)
+        self.assertIn('"--status", "pending"', body)
+        self.assertIn('"--status", "delivered"', body)
 
     def test_pending_and_delivered_merged_by_id_with_pending_winning(self):
         self.assertIn("byID.set(item.id, item)", self.source)
@@ -97,14 +104,15 @@ class NotificationSurfaceContractTests(unittest.TestCase):
         )
 
     def test_reprompt_throttle_constant_present(self):
+        self.assertIn("REPROMPT_THROTTLE_MS", self.source)
         self.assertIn("300_000", self.source)
         # The throttle is applied as the existing 5-minute re-prompt window.
-        self.assertIn("> 300_000", self.source)
+        self.assertIn("> REPROMPT_THROTTLE_MS", self.source)
 
     def test_tick_skipped_when_daemon_state_running(self):
         body = self.check_body()
         tick_index = next(
-            i for i, line in enumerate(body) if "company runner tick" in line)
+            i for i, line in enumerate(body) if '"runner", "tick"' in line)
         guard_index = next(
             i for i, line in enumerate(body[:tick_index])
             if "running" in line and line.strip().startswith("if ("))
@@ -125,7 +133,7 @@ class NotificationSurfaceContractTests(unittest.TestCase):
             i for i, line in enumerate(body)
             if "status.running" in line and line.strip().startswith("if ("))
         guard_indent = indent_of(body[guard_index])
-        for needle in ("--status pending", "--status delivered"):
+        for needle in ('"--status", "pending"', '"--status", "delivered"'):
             query_index = next(i for i, line in enumerate(body) if needle in line)
             # Queries run after the guard, at the check-body indent level, so
             # they are NOT skipped when the daemon is running.
@@ -142,44 +150,71 @@ class NotificationSurfaceContractTests(unittest.TestCase):
 
     def test_approval_required_wakeup_intact(self):
         self.assertIn('item.kind === "approval_required"', self.source)
-        self.assertIn("client.session.promptAsync", self.source)
-        self.assertIn('agent: "director"', self.source)
+        self.assertIn("ctx.session.prompt", self.source)
         self.assertIn(
             "Immediately invoke the native question tool", self.source)
         self.assertIn("approval_interaction", self.source)
 
-    def test_toast_and_lifecycle_contract_intact(self):
-        self.assertIn("client.tui.showToast", self.source)
-        self.assertIn("dispose", self.source)
-        self.assertIn("clearInterval(timer)", self.source)
+    def test_lifecycle_contract_intact_v2(self):
+        # V2 lifecycle: event subscription drives session.idle; timers are
+        # cleared by the setup cleanup. The V1-only surfaces (toast, command
+        # hook, BunShell) are gone from the V2 server Context.
+        self.assertIn("ctx.event.subscribe()", self.source)
         self.assertIn("session.idle", self.source)
-        self.assertIn("command.execute.before", self.source)
-        self.assertIn("company runner stop", self.source)
-        self.assertIn("company runner enable", self.source)
+        self.assertIn("clearInterval(timer)", self.source)
+        self.assertIn("clearInterval(hudTimer)", self.source)
+        self.assertIn("return async () => {", self.source)
+        self.assertNotIn("client.tui.showToast", self.source)
+        self.assertNotIn("command.execute.before", self.source)
 
-    def test_heartbeat_stale_threshold_and_path_present(self):
-        self.assertIn("HEARTBEAT_STALE_MS", self.source)
+    def test_heartbeat_two_signal_thresholds_and_path_present(self):
+        # Wedge hardening (2026-08-15): the heartbeat is TWO signals —
+        # alive_at (heartbeat thread, every 10s) for process liveness and
+        # last_tick (per watch cycle) for loop progress. A long measure tick
+        # must never false-alarm runner-down (alive_at stays fresh), while a
+        # wedged loop is caught by a stale last_tick.
+        self.assertIn("ALIVE_STALE_MS", self.source)
+        self.assertIn("45_000", self.source)
+        self.assertIn("LOOP_STALE_MS", self.source)
         self.assertIn("75_000", self.source)
         self.assertIn(".spielos/state/runner.heartbeat", self.source)
+        # The heartbeat reader parses BOTH signals (heartbeatAgeMs is outside
+        # the check body, so assert on the full source here).
+        self.assertIn("parsed.alive_at", self.source)
+        self.assertIn("parsed.last_tick", self.source)
+        body = "\n".join(self.check_body())
+        self.assertIn("alive > ALIVE_STALE_MS", body)
+        self.assertIn("tick > LOOP_STALE_MS", body)
 
     def test_runner_down_detection_inverts_silent_skip(self):
         body = "\n".join(self.check_body())
-        # The alert condition combines the polled status with heartbeat age.
+        # The alert condition combines the polled status with the PROCESS
+        # signal (alive_at from the dedicated heartbeat thread). The early
+        # return must NOT fire when the runner is down: fresh notifications
+        # are skipped but the runner-down alert still runs.
         self.assertIn("status.running !== true", body)
-        self.assertIn("heartbeatAge !== null && heartbeatAge > HEARTBEAT_STALE_MS", body)
-        # The early return must NOT fire when the runner is down: fresh
-        # notifications are skipped but the runner-down alert still runs.
+        self.assertIn("alive !== null && alive > ALIVE_STALE_MS", body)
         self.assertIn("if (!fresh.length && !runnerDown) return", body)
         # Throttled by the same 300_000 ms re-prompt window via a synthetic key.
         self.assertIn('prompted.get("runner-down")', body)
         self.assertIn('prompted.set("runner-down", now)', body)
-        self.assertIn("> 300_000", body)
+        self.assertIn("> REPROMPT_THROTTLE_MS", body)
+
+    def test_wedged_loop_signal_surfaces_distinct_alert(self):
+        # alive_at fresh + last_tick stale = wedged serial loop (the 2026-08-15
+        # wedge), a different failure than a dead process: own throttle key,
+        # own chat alert text.
+        body = "\n".join(self.check_body())
+        self.assertIn("loopWedged", body)
+        self.assertIn("tick > LOOP_STALE_MS", body)
+        self.assertIn('prompted.get("loop-wedged")', body)
+        self.assertIn('prompted.set("loop-wedged", now)', body)
+        self.assertIn("SpielOS runner loop wedged", body)
 
     def test_runner_down_alert_surfaces_in_chat(self):
         body = "\n".join(self.check_body())
-        self.assertIn('title: "SpielOS runner down"', body)
+        self.assertIn("SpielOS runner down", body)
         self.assertIn("company runner start", body)
-        self.assertIn('variant: "warning"', body)
 
     def test_runner_down_key_survives_prompted_prune(self):
         # The synthesized key is not a notification id; the prune must skip it
@@ -194,6 +229,14 @@ class NotificationSurfaceContractTests(unittest.TestCase):
         # Runtime watchdog notifications ride the action_required kind with a
         # payload watchdog.signal marker; the plugin types surface it.
         self.assertIn("watchdog?.signal", self.source)
+
+    def test_hud_ticker_reads_live_status_surface(self):
+        # Watchdog v2 HUD: the ticker reads the daemon's live_status.json and
+        # injects a compact line via session.synthetic on its own cadence.
+        self.assertIn(".spielos/state/live_status.json", self.source)
+        self.assertIn("ctx.session.synthetic", self.source)
+        self.assertIn("buildHudTicker", self.source)
+        self.assertIn("HUD_TICKER_INTERVAL_MS", self.source)
 
 
 if __name__ == "__main__":

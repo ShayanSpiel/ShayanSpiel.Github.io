@@ -123,6 +123,20 @@ def build_parser():
     listed.add_argument("--json", action="store_true")
     acknowledge = notification_commands.add_parser("ack"); acknowledge.add_argument("notification_id")
     acknowledge.add_argument("--json", action="store_true")
+    dispatch = commands.add_parser("dispatch", help="record and read dispatch retry attempts (Watchdog v2 retry ledger)")
+    dispatch_commands = dispatch.add_subparsers(dest="dispatch_command", required=True)
+    record = dispatch_commands.add_parser("record")
+    record.add_argument("goal_id")
+    record.add_argument("--run", required=True)
+    record.add_argument("--attempt", type=int, required=True)
+    record.add_argument("--status", required=True)
+    record.add_argument("--next-retry-at")
+    record.add_argument("--error")
+    record.add_argument("--json", action="store_true")
+    dispatch_list = dispatch_commands.add_parser("list")
+    dispatch_list.add_argument("--goal")
+    dispatch_list.add_argument("--limit", type=int, default=20)
+    dispatch_list.add_argument("--json", action="store_true")
     tasks = commands.add_parser("tasks", help="list durable employee work orders")
     tasks.add_argument("work_order_id", nargs="?")
     tasks.add_argument("--status", choices=("active", "open", "claimed", "done", "cancelled"),
@@ -164,6 +178,8 @@ def _runtime_mode(args) -> str | None:
     if args.command == "goal" and getattr(args, "goal_command", None) in {"list", "show"}:
         return "read"
     if args.command == "notifications" and args.notification_command == "list":
+        return "read"
+    if args.command == "dispatch" and args.dispatch_command == "list":
         return "read"
     if args.command == "tasks" and not getattr(args, "claim", None) and not getattr(args, "complete", None):
         return "read"
@@ -321,6 +337,14 @@ def main(argv=None):
                 output = runtime.store.notifications(args.status, args.limit)
             else:
                 output = runtime.store.acknowledge_notification(args.notification_id)
+        elif args.command == "dispatch":
+            if args.dispatch_command == "record":
+                output = runtime.store.record_dispatch_retry(
+                    args.goal_id, args.run, args.attempt, args.status,
+                    first_error=args.error, next_retry_at=args.next_retry_at)
+            else:
+                output = runtime.store.dispatch_retries(
+                    goal_id=args.goal, limit=args.limit)
         elif args.command == "tasks":
             if args.claim or args.complete:
                 if not args.work_order_id:
@@ -577,6 +601,10 @@ def _render_default(args, output) -> str:
         if args.notification_command == "ack":
             return render_notification_ack(output)
         return render_notifications_list(output)
+    if command == "dispatch":
+        if args.dispatch_command == "record":
+            return render_dispatch_record(output)
+        return render_dispatch_list(output)
     if command == "evidence":
         kind = "reply" if args.evidence_command == "reply" else args.kind
         return render_goal_state(f"Evidence added: {kind}", output)

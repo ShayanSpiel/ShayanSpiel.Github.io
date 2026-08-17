@@ -9,6 +9,8 @@ Covered:
   - pick_queue honors cohort_filters.language (English-only, case-insensitive);
   - the new agentic subject additions are present in the content banks;
   - rendered English bodies stay <= 85 words;
+  - the no-em-dash and no-spam-words constraints hold at both layers:
+    render_checked normalizes/rejects and validators flag them mechanically;
   - validators mechanically ban the retired offer phrase (code retired_offer).
 
 Hermetic: synthetic contacts only; read_contacts and the sent log are mocked;
@@ -161,6 +163,65 @@ class WordBudgetTests(unittest.TestCase):
             self.assertIsNone(reason, f"seq={seq} must pass the word gate")
             text_only = text.replace(SIGNATURE_TEXT, "").strip()
             self.assertLessEqual(len(text_only.split()), 85, f"seq={seq}")
+
+
+class MechanicalConstraintTests(unittest.TestCase):
+    """The no-em-dash and no-spam-words rules enforced at both layers:
+    render_checked (skip with reason) and validators (mechanical flag)."""
+
+    def test_render_normalizes_em_dash_out_of_hypothesis_and_ships_clean(self):
+        contact = dict(RESEARCHED, pain_hypothesis=(
+            "Acme UK staffs 40 agency clients across the UK \u2014 the "
+            "shortlist coordination is likely still handled by hand"))
+        subject, html, text, reason = compose.render_checked(contact, seq=0)
+        self.assertIsNone(reason)
+        self.assertNotIn("\u2014", subject + text)
+
+    def test_validator_flags_an_em_dash_artifact(self):
+        batch = {"emails": [{
+            "lead_id": "L2", "subject": "Staffing loop at Acme",
+            "body_html": "<p>hi</p>",
+            "body_text": "I build agentic departments \u2014 one workflow at a time.",
+        }]}
+        issues = validate(None, batch)
+        self.assertTrue(any(i["code"] == "em_dash" for i in issues))
+
+    def test_render_rejects_english_body_with_spam_word(self):
+        contact = dict(RESEARCHED, pain_hypothesis=(
+            "Acme UK staffs 40 agency clients across the UK, and the "
+            "shortlist coordination is likely still handled by hand, so "
+            "they want to streamline the stage"))
+        _s, _h, _t, reason = compose.render_checked(contact, seq=0)
+        self.assertIsNotNone(reason)
+        self.assertIn("spam word", reason)
+
+    def test_render_rejects_english_subject_with_spam_word(self):
+        contact = dict(RESEARCHED, pain_hypothesis=(
+            "Acme UK staffs 40 agency clients across the UK, and the "
+            "shortlist coordination is likely still handled by hand"))
+        with unittest.mock.patch.object(
+                content, "subject_bank_for",
+                return_value=["Limited time at {company}"]):
+            _s, _h, _t, reason = compose.render_checked(contact, seq=0)
+        self.assertIsNotNone(reason)
+        self.assertIn("spam word", reason)
+
+    def test_validator_flags_spam_word_in_artifact(self):
+        batch = {"emails": [{
+            "lead_id": "L3", "subject": "Staffing loop at Acme",
+            "body_html": "<p>hi</p>",
+            "body_text": "Hope this finds you well, I build agentic departments.",
+        }]}
+        issues = validate(None, batch)
+        self.assertTrue(any(i["code"] == "spam_word" for i in issues))
+
+    def test_clean_english_render_and_artifact_carry_no_spam_words(self):
+        _s, html, text, reason = compose.render_checked(RESEARCHED, seq=0)
+        self.assertIsNone(reason)
+        batch = {"emails": [{"lead_id": RESEARCHED["lead_id"],
+                             "subject": _s, "body_html": html, "body_text": text}]}
+        issues = validate(None, batch)
+        self.assertFalse(any(i["code"] == "spam_word" for i in issues), issues)
 
 
 class RetiredOfferValidatorTests(unittest.TestCase):

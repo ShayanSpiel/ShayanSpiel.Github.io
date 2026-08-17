@@ -37,6 +37,13 @@ _CONNECTIONS = {
             ("send", "delivery_events", "reply_events"),
             ("direct",), True, ("EMAIL_PROVIDER",),
         ),
+        ConnectionSpec(
+            "attio",
+            "Attio CRM through the active OpenCode host OAuth MCP at https://mcp.attio.com/mcp.",
+            ("records_query", "records_search", "records_create", "records_update",
+             "list_entries", "notes"),
+            ("opencode",),
+        ),
     )
 }
 

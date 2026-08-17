@@ -4,14 +4,16 @@
 Every prepared email must pass these before it reaches the human REVIEW
 gate. This is the machine checkpoint that caught the 2026-08-09 class of
 bug (segment-generic fallback copy shipping because the human rubber-
-stamped the preview). Issues are {lead_id, code, message, skippable}:
-skippable issues drop that email from the batch; structural issues hold
-the batch for owner attention.
+stamped the preview). It also enforces the 2026-08-10 mechanical bans:
+the retired "supervised AI employees" offer line (retired_offer) and the
+Rule 6 spam vocabulary (spam_word) never reach the gate. Issues are
+{lead_id, code, message, skippable}: skippable issues drop that email from
+the batch; structural issues hold the batch for owner attention.
 """
 
 import re
 
-from .compose import FORBIDDEN_OBSERVATIONS, FORBIDDEN_OFFER_PHRASES
+from .compose import FORBIDDEN_OBSERVATIONS, FORBIDDEN_OFFER_PHRASES, SPAM_WORDS
 from .templates import SIGNATURE_HTML, SIGNATURE_TEXT
 
 
@@ -41,6 +43,11 @@ def validate(ctx, batch: dict) -> list:
             if phrase in lower:
                 issues.append({"lead_id": lead_id, "code": "retired_offer",
                                "message": f"retired offer phrase detected: {phrase!r}",
+                               "skippable": True})
+        for word in SPAM_WORDS:
+            if word in lower:
+                issues.append({"lead_id": lead_id, "code": "spam_word",
+                               "message": f"spam word detected: {word!r}",
                                "skippable": True})
 
         words = len(body_text.split())

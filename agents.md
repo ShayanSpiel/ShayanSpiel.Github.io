@@ -82,9 +82,9 @@ belong under `.spielos/artifacts/`, not strategy, assets, or skills.
 | `/architecture/` | `src/pages/architecture.astro` | Buyer-facing company architecture (EN) |
 | `/live/` | `src/pages/live.astro` | Plain-language live company record (EN) |
 | `/waitlist/` | `src/pages/waitlist.astro` | 301 redirect to `/architecture/` |
-| `/about/` | `src/pages/about.astro` | SpielOS about page (EN) |
+| `/about/` | `src/pages/about.astro` | 301 redirect to `/founder/` |
 | `/fa/` | `src/pages/fa/index.astro` | Homepage (FA) |
-| `/fa/about/` | `src/pages/fa/about.astro` | About page (FA) |
+| `/fa/about/` | `src/pages/fa/about.astro` | 301 redirect to `/fa/founder/` |
 | `/fa/founder/` | `src/pages/fa/founder.astro` | Founder story (FA) |
 | `/fa/notes/` | `src/pages/fa/notes/index.astro` | Notes index (FA) |
 | `/fa/notes/[slug]/` | `src/pages/fa/notes/[...slug].astro` | Individual note pages (FA) |

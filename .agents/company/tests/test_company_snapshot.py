@@ -1,9 +1,11 @@
 import io
+import json
 import sqlite3
 import tempfile
 import unittest
-from contextlib import redirect_stdout
+from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
+from unittest.mock import patch
 
 from company.__main__ import main
 from company.runtime.loop import Runtime
@@ -95,6 +97,180 @@ class CompanySnapshotTests(unittest.TestCase):
             self.runtime.set_goal_status(goal["id"], GoalStatus.ABANDONED)
         output = self.capture("status", "--history", "--limit", "2")
         self.assertEqual(2, output.count("(`goal-history-"))
+
+
+class CardOutputTests(unittest.TestCase):
+    """Every user-facing command prints a card-style render by default (`# title`
+    plus `- ` bullet items), keeps a parseable --json view, and `company status
+    --raw` stays token-identical in shape."""
+
+    def setUp(self):
+        self.directory = tempfile.TemporaryDirectory()
+        self.db = Path(self.directory.name) / "company.sqlite"
+        self.runtime = Runtime(self.db)
+
+    def tearDown(self):
+        self.directory.cleanup()
+
+    def capture(self, *arguments, expect=0):
+        output = io.StringIO()
+        with redirect_stdout(output):
+            code = main(["--db", str(self.db), *arguments])
+        self.assertEqual(expect, code)
+        return output.getvalue()
+
+    def capture_error(self, *arguments):
+        error = io.StringIO()
+        with redirect_stderr(error):
+            code = main(["--db", str(self.db), *arguments])
+        return code, error.getvalue()
+
+    def goal(self, goal_id="goal-card", name="Card goal"):
+        return self.runtime.create_goal(
+            goal_id=goal_id, name=name, owner_id="content",
+            metric="content_packages", operator="ge", target=1,
+            config={"workflow": "content-package"})
+
+    def assert_card(self, output, title_prefix):
+        self.assertTrue(output.startswith(f"# {title_prefix}"), output)
+        self.assertIn("\n- ", output)
+
+    def test_goal_commands_render_cards_by_default(self):
+        self.goal()
+        created = self.capture(
+            "goal", "create", "--name", "Second goal", "--owner", "content",
+            "--metric", "content_packages", "--target", "1",
+            "--config", '{"workflow":"content-package"}')
+        self.assert_card(created, "Goal created:")
+        listed = self.capture("goal", "list")
+        self.assert_card(listed, "Goals (")
+        self.assertIn("goal-card", listed)
+        shown = self.capture("goal", "show", "goal-card")
+        self.assert_card(shown, "Card goal")
+
+    def test_goal_views_keep_parseable_json_shapes(self):
+        self.goal()
+        listed = json.loads(self.capture("goal", "list", "--json"))
+        self.assertIsInstance(listed, list)
+        self.assertEqual("goal-card", listed[0]["id"])
+        shown = json.loads(self.capture("goal", "show", "goal-card", "--json"))
+        self.assertEqual("goal-card", shown["goal"]["id"])
+        created = json.loads(self.capture(
+            "goal", "create", "--name", "Json goal", "--owner", "content",
+            "--metric", "content_packages", "--target", "1", "--json",
+            "--config", '{"workflow":"content-package"}'))
+        self.assertEqual("active", created["goal_status"])
+
+    def test_notifications_list_and_ack_render_cards(self):
+        self.goal()
+        note = self.runtime.store.notify(
+            "goal-card", self.runtime.store.cycle("goal-card")["id"],
+            "blocked", {"result": {"message": "Executor needed"}})
+        listed = self.capture("notifications", "list")
+        self.assert_card(listed, "Notifications (")
+        self.assertIn(note["id"], listed)
+        self.assertIn("Executor needed", listed)
+        rows = json.loads(self.capture(
+            "notifications", "list", "--status", "pending", "--limit", "100", "--json"))
+        self.assertEqual(note["id"], rows[0]["id"])
+        acked = self.capture("notifications", "ack", note["id"])
+        self.assert_card(acked, "Notification acknowledged")
+        self.assertIn("delivered", acked)
+        self.assertEqual([], json.loads(self.capture(
+            "notifications", "list", "--status", "pending", "--limit", "100", "--json")))
+
+    def test_departments_and_strategy_render_cards(self):
+        departments = self.capture("departments")
+        self.assert_card(departments, "Departments (")
+        packages = self.capture("department", "list")
+        self.assert_card(packages, "Department packages (")
+        rows = json.loads(self.capture("department", "list", "--json"))
+        self.assertTrue(rows)
+        self.assertIn("id", rows[0])
+        strategy = self.capture("strategy")
+        self.assert_card(strategy, "Strategy kernel")
+        kernel = json.loads(self.capture("strategy", "--json"))
+        self.assertIn("views", kernel)
+        context = self.capture("strategy", "--topic", "outbound")
+        self.assert_card(context, "Strategy context:")
+
+    def test_runner_status_start_stop_render_cards(self):
+        value = {"enabled": True, "running": False, "pid": None,
+                 "started_at": None, "pid_path": "/tmp/p", "log_path": "/tmp/l",
+                 "db_path": "/tmp/d"}
+        with patch("company.__main__.RunnerService.status", return_value=value):
+            output = self.capture("runner", "status")
+        self.assert_card(output, "Runner status")
+        with patch("company.__main__.RunnerService.status", return_value=value):
+            parsed = json.loads(self.capture("runner", "status", "--json"))
+        self.assertFalse(parsed["running"])
+        with patch("company.__main__.RunnerService.stop", return_value=value):
+            stopped = self.capture("runner", "stop")
+        self.assert_card(stopped, "Runner stopped")
+        with patch("company.__main__.RunnerService.start",
+                   return_value={**value, "running": True, "pid": 4242}):
+            started = self.capture("runner", "start")
+        self.assert_card(started, "Runner started")
+
+    def test_transitions_render_cards(self):
+        goal = self.goal()
+        paused = self.capture("pause", goal["id"])
+        self.assert_card(paused, "Paused:")
+        self.assertIn("`paused`", paused)
+        resumed = self.capture("resume", goal["id"])
+        self.assert_card(resumed, "Resumed:")
+        state = json.loads(self.capture("resume", goal["id"], "--json"))
+        self.assertEqual("active", state["goal"]["goal_status"])
+        abandoned = self.capture("abandon", goal["id"])
+        self.assert_card(abandoned, "Abandoned:")
+        once = self.capture("once", goal["id"])
+        self.assert_card(once, "Run once:")
+
+    def test_evidence_and_change_complete_render_cards(self):
+        goal = self.goal()
+        added = self.capture("evidence", "add", goal["id"], "--kind", "draft",
+                             "--source", "manual_test", "--payload", '{"note":"ok"}')
+        self.assert_card(added, "Evidence added: draft")
+        rows = json.loads(self.capture(
+            "evidence", "add", goal["id"], "--kind", "draft",
+            "--source", "manual_test", "--payload", '{"note":"ok"}', "--json"))
+        self.assertEqual(goal["id"], rows["goal"]["id"])
+        cycle = self.runtime.store.cycle(goal["id"])
+        with sqlite3.connect(self.db) as con:
+            con.execute("""INSERT INTO change_tasks
+                (id,goal_id,run_id,owner_id,from_version,target_version,problem,
+                 allowed_files_json,acceptance_tests_json,status,result_json,
+                 originating_run_id,created_at,updated_at,change_kind,specification_json)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                ("change-card", goal["id"], cycle["id"], "company-runtime",
+                 "5.2.0", "5.3.0", "card smoke", '["f"]', '["cmd"]', "approved",
+                 '{}', "run-card", cycle["created_at"], cycle["created_at"],
+                 "repair", '{}'))
+        completed = self.capture("change", "complete", "change-card", "--passed",
+                                 "--result", '{"acceptance": ["ok"], "changed": ["f"]}')
+        self.assert_card(completed, "Change complete:")
+
+    def test_status_raw_and_json_shapes_stay_stable(self):
+        self.goal()
+        raw = json.loads(self.capture("status", "--raw", "goal-card"))
+        self.assertEqual(
+            {"goal", "cycle", "run", "evidence", "decisions", "evaluation",
+             "latest_result", "change_tasks", "work_orders", "children",
+             "pending_notifications"},
+            set(raw))
+        self.assertNotIn("why_next", raw["cycle"])
+        compact = json.loads(self.capture("status", "goal-card", "--json"))
+        self.assertEqual({"goal", "attention", "unread_results", "work_orders"},
+                         set(compact))
+
+    def test_errors_print_readable_messages_on_stderr(self):
+        code, error = self.capture_error("status", "goal-missing")
+        self.assertEqual(1, code)
+        self.assertIn("company: unknown goal: goal-missing", error)
+        self.assertNotIn('"error"', error)
+        code, error = self.capture_error("status", "goal-missing", "--json")
+        self.assertEqual(1, code)
+        self.assertEqual("unknown goal: goal-missing", json.loads(error)["error"])
 
 
 class TerminalStateTests(unittest.TestCase):

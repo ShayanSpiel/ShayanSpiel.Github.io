@@ -76,8 +76,7 @@ def campaign_manifest():
             design = {
                 "template_id": "harness-architecture" if platform == "threads" else "scenario-b",
                 "theme": ["gruvbox-dark", "gruvbox-light", "blue-dark", "monochrome-dark", "black-gold-dark"][sequence - 1],
-                "surface": "background", "color_role": "primary", "alignment": "center",
-                "layout": f"journey-variant-{sequence}", "size_preset": preset,
+                "size_preset": preset,
                 "eyebrow": "SpielOS · supervised AI workflows",
                 "title_lines": [f"Operational context {sequence}.", "One clear workflow."],
                 "accent_line": 1,
@@ -322,7 +321,6 @@ class CampaignHandoffContractTests(unittest.TestCase):
                         rendition["asset"]["sha256"],
                         f"{label}: deployed file does not match the approved manifest checksum")
 
-
     def test_identity_or_approval_drift_is_rejected(self):
         designed = accept_design_order(campaign_manifest())
         assets = [
@@ -336,26 +334,33 @@ class CampaignHandoffContractTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "identity"):
             apply_render_report(designed, report)
 
-    def test_renderers_consume_campaign_data_instead_of_batch_specific_copy(self):
-        templates = [
-            ROOT / ".agents/company/departments/design/templates/social/harness-architecture.html",
-            ROOT / ".agents/company/departments/design/templates/video/scenario-b.html",
-            ROOT / ".agents/company/departments/design/templates/video/scenario-c.html",
-        ]
-        template_source = "\n".join(path.read_text() for path in templates)
-        renderer_source = "\n".join((ROOT / path).read_text() for path in
-                                    ("scripts/render-design.js", "scripts/render-video.js"))
-        self.assertNotIn("batch-01.json", template_source)
-        self.assertIn("__applyCampaignRendition", template_source)
-        self.assertIn("CAMPAIGN_MANIFEST", renderer_source)
-        self.assertIn("CAMPAIGN_ITEM_ID", renderer_source)
+    def test_video_templates_are_batch1_flat_with_a_still_only_thumbnail_title(self):
+        template_source = "\n".join(
+            (ROOT / path).read_text() for path in (
+                ".agents/company/departments/design/templates/video/scenario-b.html",
+                ".agents/company/departments/design/templates/video/scenario-c.html",
+            )
+        )
+        # Batch-1 flat composition: no campaign-scene mounts, no panel/scrim
+        # contrast cards, no campaign-label pills around the title.
+        for stale in ("campaign-scene", "campaign-label", "__applyCampaignRendition",
+                      "visual.headline", "visual.supporting_text", "spoken_display_alignment"):
+            self.assertNotIn(stale, template_source)
+        for marker in ("hook-main", "cta-url", "spielos.xyz/services"):
+            self.assertIn(marker, template_source)
+        # Optional Shorts thumbnail title renders ONLY on the still frame.
+        for marker in ("thumb-title", "__setStillTitle"):
+            self.assertIn(marker, template_source)
+        renderer_source = (ROOT / "scripts/render-video.js").read_text()
+        self.assertIn("--still", renderer_source)
+        self.assertIn("campaignThumbnailTitle", renderer_source)
 
     def test_creative_identity_is_derived_not_entered_by_a_department(self):
         manifest = campaign_manifest()
         item = manifest["items"][0]
         design = item["renditions"]["threads"]["design"]
         first = creative_signature(manifest["campaign_id"], item["item_id"], "threads", design)
-        design["layout"] = "new-layout"
+        design["title_lines"] = ["A different title line."]
         second = creative_signature(manifest["campaign_id"], item["item_id"], "threads", design)
         self.assertNotEqual(first, second)
 
@@ -426,6 +431,35 @@ class CampaignHandoffContractTests(unittest.TestCase):
         self.assertTrue(any("YouTube Shorts copy must not contain a URL" in error for error in errors))
         self.assertTrue(any("must not include the fifth-item" in error for error in errors))
         self.assertTrue(any("must end with the fifth-item" in error for error in errors))
+
+    def test_youtube_thumbnail_title_is_optional_bounded_and_public_only(self):
+        manifest = campaign_manifest()
+        youtube = manifest["items"][0]["renditions"]["youtube"]
+        # Absent title stays valid (optional).
+        self.assertEqual(validate_campaign(manifest, "strategy"), [])
+        # A 2-3 word title is the intended use and passes.
+        youtube["design"]["thumbnail_title"] = "AI works alone"
+        self.assertEqual(validate_campaign(manifest, "strategy"), [])
+        # Up to five words is allowed.
+        youtube["design"]["thumbnail_title"] = "one two three four five"
+        self.assertEqual(validate_campaign(manifest, "strategy"), [])
+        # Six words are rejected.
+        youtube["design"]["thumbnail_title"] = "one two three four five six"
+        errors = validate_campaign(manifest, "strategy")
+        self.assertTrue(any("thumbnail_title must be 1-5 words" in error for error in errors))
+        # URLs and UTM parameters are rejected.
+        youtube["design"]["thumbnail_title"] = "see spielos.xyz"
+        errors = validate_campaign(manifest, "strategy")
+        self.assertTrue(any("must not contain a URL or UTM parameters" in error for error in errors))
+        # Internal production language is rejected.
+        youtube["design"]["thumbnail_title"] = "batch review"
+        errors = validate_campaign(manifest, "strategy")
+        self.assertTrue(any("thumbnail_title exposes internal production language: batch" in error for error in errors))
+        # The field is a YouTube-only design field: Threads ignores it.
+        threads = manifest["items"][0]["renditions"]["threads"]
+        threads["design"]["thumbnail_title"] = "not validated here"
+        youtube["design"]["thumbnail_title"] = "AI works alone"
+        self.assertEqual(validate_campaign(manifest, "strategy"), [])
 
 if __name__ == "__main__":
     unittest.main()

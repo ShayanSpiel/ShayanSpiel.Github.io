@@ -28,6 +28,16 @@ VARIATION_FIELDS = ("format", "layout", "theme", "background", "color_role", "al
 SEMANTIC_COLOR_ROLES = {"primary", "accent", "purple", "info", "success", "warning"}
 SEMANTIC_BACKGROUNDS = {"background", "panel", "panel-raised", "panel-strong", "panel-deep"}
 
+PUBLICATION_RECEIPT_CONTRACT = (
+    "dispatch = publish commitment: every accepted dispatch result is a Buffer "
+    "commitment (scheduled or sent), so scheduled == published for the experiment "
+    "loop. A valid publication_receipt requires ok:true, per-item provider post "
+    "ids, and a commitment_type of scheduled or sent; it is FINAL and never "
+    "reverted to reopen dispatch. The next-batch experiment advances on "
+    "commitment while measure/evaluate still use the sent-window evidence; "
+    "measurement never reopens a committed batch."
+)
+
 
 def _compact(value: Any) -> str:
     return re.sub(r"\s+", " ", str(value or "").strip().lower())
@@ -196,8 +206,11 @@ def ready_campaign_package(package: dict[str, Any]) -> dict[str, Any]:
 
 class ContentDepartment(EvidenceDepartment, Department):
     id = department_id = "content"
-    version = "3.3.1"
-    description = "Carries one short customer-first idea through platform-native copy, Design, approval, Buffer delivery, and measurement without exposing production metadata to the writer."
+    version = "3.4.0"
+    description = ("Carries one short customer-first idea through platform-native copy, Design, approval, "
+                   "Buffer delivery, and measurement without exposing production metadata to the writer. "
+                   "Dispatch commits a batch to publish (scheduled == published) and a valid publication "
+                   "receipt is final.")
     agent_ids = ("content-strategist", "content-writer", "publisher")
     production_ready = True
     workflows = (
@@ -232,7 +245,8 @@ class ContentDepartment(EvidenceDepartment, Department):
         ),
         WorkflowSpec(
             "content-campaign",
-            "Carry five short one-idea customer briefs through native Threads and YouTube renditions, Design, one batch approval, Buffer delivery, and measurement.",
+            ("Carry five short one-idea customer briefs through native Threads and YouTube renditions, "
+             "Design, one batch approval, Buffer delivery, and measurement. " + PUBLICATION_RECEIPT_CONTRACT),
             ("strategy", "design_order", "render_handoff", "quality_gate", "approve", "dispatch", "measure", "evaluate"),
             ("content-strategist", "content-writer", "publisher"), ("copywriting-en", "spielos-ui", "video-creation"),
             ("publish",), ("campaign_manifest", "design_order", "render_report", "campaign_ready", "publication_receipt", "funnel_report", "optimization_decision"), ("buffer",),

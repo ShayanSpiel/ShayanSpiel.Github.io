@@ -30,11 +30,25 @@ Use the shortest shape that carries the idea:
 3. An optional natural SpielOS bridge.
 4. An optional platform-native CTA.
 
+
 The reference standard is: clear claim, readable spacing, short bullets when
 useful, one product bridge, and the link separated from the argument.
 
 Do not force SpielOS, a CTA, a link, proof, or a company promise into every
 piece. Remove any sentence that does not strengthen the one idea.
+
+## Writing rules:
+
+1. Use present tense where possible.
+2. Use active voice.
+3. Prefer simple verb tenses.
+4. Replace adverbs with stronger verbs when possible.
+5. Keep sentences short and easy to scan.
+6. Use simple, concrete vocabulary around a 3rd–5th grade reading level.
+7. Prefer positive, direct phrasing.
+8. Remove repetition and redundant words.
+9. Delete any word or sentence that can be removed without losing meaning.
+10. Preserve the original meaning, specificity, and important nuance.
 
 ## SpielOS reminder
 

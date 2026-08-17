@@ -8,14 +8,15 @@ from .alignment import (
 from .models import GoalHandler, GoalStatus, RunStatus, Stage, StageResult
 from .strategic import strategic_frontier
 from .truth import (
-    accepted_validities, child_supports_parent, derive_evaluation_validity,
+    DIRECTOR_ROLLUPS, accepted_validities, child_supports_parent,
+    derive_evaluation_validity,
 )
 
 
 class Director(GoalHandler):
     id = "director"
     description = "Coordinates child goals while preserving their state and approvals."
-    version = "2.7.0"
+    version = "2.8.0"
     goal_schema = {
         "metrics": ["all_children_achieved", "achieved_children", "reply_rate", "sales", "booked_calls"],
         "config": {"accepted_evidence_validity": {"type": "array"}},
@@ -119,6 +120,19 @@ class Director(GoalHandler):
             return StageResult("choose_intervention", payload,
                                decision={"type": "dispatch", "rationale": "Next active child can progress",
                                          "payload": payload})
+        carried = (ctx.cycle.get("run") or {}).get("changed_variables") or {}
+        carried_hypothesis = (carried or {}).get("next_hypothesis")
+        data_action = dict(ctx.cycle.get("data") or {}).get("action") or {}
+        if (carried_hypothesis and not data_action.get("child_id")
+                and not any(c["goal_status"] == "active" for c in children)):
+            spec = _concrete_test_spec(ctx.goal, ctx.cycle.get("run") or {},
+                                       children, carried_hypothesis)
+            if spec:
+                payload = {"action": "test_next_hypothesis", "child_spec": spec}
+                return StageResult("choose_intervention", payload,
+                                   decision={"type": "test_next_hypothesis",
+                                             "rationale": "Test the carried hypothesis with a concrete child task",
+                                             "payload": payload})
         completed = [c for c in children if c["cycle"]["run_status"] == "completed"]
         if completed:
             payload = {"action": "evaluate_children",
@@ -200,6 +214,30 @@ class Director(GoalHandler):
             return StageResult("wait_for_children", decision, RunStatus.WAITING,
                                Stage.OBSERVE, resume_at=decision.get("resume_at"),
                                message="Director is waiting for child evidence or a child transition")
+        if decision.get("action") == "test_next_hypothesis":
+            if not ctx.create_child_goal or not ctx.dispatch_goal:
+                return StageResult("execute", {"error": "child creator or dispatcher unavailable"},
+                                   RunStatus.FAILED, Stage.ACT)
+            child = ctx.create_child_goal(decision.get("child_spec") or {})
+            outcome = ctx.dispatch_goal(child["id"])
+            child_cycle = outcome["cycle"]
+            if child_cycle["run_status"] in {"blocked", "failed"}:
+                return StageResult(
+                    "review_child", {"child_id": child["id"], "outcome": outcome},
+                    RunStatus.WAITING, Stage.OBSERVE, resume_at=None,
+                    attention={"child_id": child["id"],
+                               "child_status": child_cycle["run_status"],
+                               "required_user_action": (
+                                   f"Review hypothesis test child {child['id']}; "
+                                   "the parent metric is not satisfied")},
+                    message=f"Hypothesis test child {child['id']} needs attention ({child_cycle['run_status']})")
+            if child_cycle["run_status"] == "completed":
+                return StageResult("execute", {"child_id": child["id"], "outcome": outcome},
+                                   message="Hypothesis test child completed in-step")
+            return StageResult("wait_for_child", {"child_id": child["id"], "outcome": outcome},
+                               RunStatus.WAITING, Stage.OBSERVE,
+                               resume_at=child_cycle.get("resume_at"),
+                               message="Parent waits for the hypothesis test child")
         return StageResult("execute", {"action": decision.get("action")})
 
     def evaluate(self, ctx, action_result):
@@ -251,11 +289,29 @@ class Director(GoalHandler):
             return StageResult("goal_check", payload, RunStatus.COMPLETED, goal_status=GoalStatus.ACHIEVED,
                                evaluation=evaluation, message="Director goal achieved")
         if not any(child["goal_status"] == "active" for child in children):
+            data_action = dict((ctx.cycle.get("data") or {}).get("action") or {})
+            if data_action.get("child_id"):
+                evaluation["next_experiment"] = {"action": "reobserve_children"}
+                return StageResult("goal_check", payload, RunStatus.COMPLETED, Stage.EVALUATE,
+                                   evaluation=evaluation,
+                                   next_run={"run_type": "evaluation",
+                                             "evidence_validity": validity},
+                                   message="Hypothesis test dispatched; re-observing child evidence on the next run")
+            derived = _derive_next_hypothesis(supporting, ctx.goal, measured)
+            if derived:
+                evaluation["next_experiment"] = derived["experiment"]
+                return StageResult("goal_check", payload, RunStatus.COMPLETED, Stage.EVALUATE,
+                                   evaluation=evaluation,
+                                   next_run={"run_type": "business_experiment",
+                                             "hypothesis": derived["hypothesis"],
+                                             "changed_variables": derived["changed_variables"],
+                                             "evidence_validity": validity},
+                                   message="Director derived the next hypothesis from completed child evidence; continuing automatically")
             evaluation["verdict"] = "blocked"
-            evaluation["next_experiment"] = {"action": "set_or_reopen_child_goal"}
+            evaluation["next_experiment"] = {}
             return StageResult("goal_check", payload, RunStatus.BLOCKED, Stage.EVALUATE,
                                evaluation=evaluation,
-                               message="Director goal is unmet and no active child can continue")
+                               message="Director cannot derive the next experiment from completed child work; external input is required")
         return StageResult("goal_check", payload, RunStatus.COMPLETED, evaluation=evaluation,
                            next_run={"run_type": "evaluation",
                                      "evidence_validity": validity},
@@ -336,3 +392,68 @@ def _runnable(child):
     if cycle["run_status"] != "waiting" or not cycle.get("resume_at"):
         return False
     return datetime.fromisoformat(cycle["resume_at"]) <= datetime.now(timezone.utc)
+
+
+def _derive_next_hypothesis(supporting, goal, measured):
+    """Next experiment hypothesis derived from the completed run's evidence.
+
+    Returns None when no accepted business evidence supports a next step; only
+    then does the Director treat the gap as a genuine external blocker.
+    """
+    if not supporting:
+        return None
+    source = supporting[-1]
+    run = source.get("run") or {}
+    changed = run.get("changed_variables") or {}
+    variable = goal.metric
+    if isinstance(changed, dict) and changed:
+        variable = next(iter(changed))
+    hypothesis = {
+        "statement": (
+            f"Continue the {source.get('owner_id')} line that produced "
+            f"{goal.metric}={measured}: a fresh experiment on '{variable}' moves "
+            f"{goal.metric} from {measured} toward target {goal.target}."),
+        "variable": variable,
+        "prediction": f"{goal.metric} reaches {goal.target} after the next child experiment.",
+    }
+    return {
+        "hypothesis": hypothesis,
+        "experiment": {
+            "action": "test_next_hypothesis",
+            "change_one_variable": variable,
+            "hypothesis": dict(hypothesis),
+        },
+        "changed_variables": {"next_hypothesis": hypothesis},
+    }
+
+
+def _concrete_test_spec(goal, run, children, hypothesis):
+    """Concrete child task that tests the carried hypothesis (no clone/template)."""
+    accepted = accepted_validities(goal, run)
+    sources = [c for c in (children or [])
+               if c.get("goal_status") == "achieved"
+               and ((c.get("evaluation") or {}).get("validity")
+                    or (c.get("run") or {}).get("evidence_validity")) in accepted]
+    if not sources:
+        return None
+    source = sources[-1]
+    variable = (hypothesis or {}).get("variable") or goal.metric
+    return {
+        "name": f"Test hypothesis: {variable}",
+        "owner_id": source["owner_id"],
+        "metric": source["metric"],
+        "operator": source["operator"],
+        "target": source["target"],
+        "config": {
+            "purpose": "test_next_hypothesis",
+            "hypothesis": dict(hypothesis or {}),
+            "lineage": {
+                "reason": "test_next_hypothesis",
+                "originating_goal_id": goal.id,
+                "originating_run_id": run.get("id") if isinstance(run, dict) else None,
+                "source_child_id": source["id"],
+            },
+        },
+        "run_type": "business_experiment",
+        "evidence_validity": "business",
+    }
