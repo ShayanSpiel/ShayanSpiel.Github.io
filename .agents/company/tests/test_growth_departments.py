@@ -1,8 +1,13 @@
 import json
 import unittest
 from pathlib import Path
+from unittest.mock import patch
+from urllib.error import HTTPError
 
 from company.connections import connection, connections
+from company.departments.analytics.posthog import (
+    PostHogClient, PostHogError, consume_batch_evidence, posthog_token,
+)
 from company.departments.seo.keywords import build_opportunities
 from company.runtime.catalog import catalog
 from company.runtime.models import Department, GoalContext, Goal
@@ -174,6 +179,203 @@ class DesignContractTests(unittest.TestCase):
         self.assertEqual("unknown", values[0]["demand_status"])
         self.assertIsNone(values[0]["impressions"])
         self.assertEqual("measured", values[1]["demand_status"])
+
+
+class PostHogWarehouseTests(unittest.TestCase):
+    """Read-only PostHog warehouse wiring (v1.3.0)."""
+
+    def test_posthog_token_is_never_hardcoded_in_source(self):
+        source = Path(__file__).parents[1] / "departments/analytics/posthog.py"
+        self.assertNotIn("phc_1osIFVXYDFr7Z00RN5gRaF4kRfZ1safm9c7NswRfKpm",
+                         source.read_text())
+
+    @patch.dict("os.environ", {"POSTHOG_PROJECT_TOKEN": "phc_test"}, clear=False)
+    def test_posthog_token_reads_from_environment_or_env_file(self):
+        self.assertEqual("phc_test", posthog_token())
+
+    @patch.dict("os.environ", {"POSTHOG_PROJECT_TOKEN": "phc_test"}, clear=False)
+    def test_posthog_client_sends_read_only_warehouse_request(self):
+        captured = {}
+
+        class FakeResponse:
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *args):
+                return False
+
+            def read(self):
+                return json.dumps({
+                    "columns": ["event", "c"],
+                    "rows": [["content_landing", 4]],
+                    "types": ["string", "UInt64"], "query_id": "q1",
+                }).encode("utf-8")
+
+        def fake_urlopen(request, timeout=30):
+            captured["url"] = request.full_url
+            captured["method"] = request.get_method()
+            captured["key"] = next(
+                (value for name, value in request.header_items()
+                 if name.lower() == "x-project-api-key"), None)
+            captured["body"] = json.loads(request.data.decode("utf-8"))
+            return FakeResponse()
+
+        client = PostHogClient()
+        with patch("company.departments.analytics.posthog.urlopen",
+                   side_effect=fake_urlopen):
+            rows = client.rows("select event, count() as c from events group by event")
+
+        self.assertEqual("https://us.posthog.com/api/warehouse/query/", captured["url"])
+        self.assertEqual("POST", captured["method"])
+        self.assertEqual("phc_test", captured["key"])
+        self.assertEqual("HogQLQuery", captured["body"]["query"]["kind"])
+        self.assertEqual([{"event": "content_landing", "c": 4}], rows["rows"])
+        self.assertEqual("q1", rows["query_id"])
+
+    @patch.dict("os.environ", {"POSTHOG_PROJECT_TOKEN": "phc_test"}, clear=False)
+    def test_event_counts_labels_missing_events_never_zero(self):
+        client = PostHogClient()
+        client.rows = lambda hogql, timeout=30: {
+            "query_id": "q1", "columns": ["event", "c"],
+            "rows": [{"event": "content_landing", "c": 3}],
+        }
+
+        result = client.event_counts()
+
+        self.assertTrue(result["ok"])
+        self.assertEqual({"content_landing": 3}, result["events"])
+        self.assertEqual(["cta_clicked", "lead_form_success"], result["missing_events"])
+        self.assertNotIn("lead_form_success", result["events"])
+
+    @patch.dict("os.environ", {"POSTHOG_PROJECT_TOKEN": "phc_test"}, clear=False)
+    def test_warehouse_http_error_raises_safe_read_only_error(self):
+        client = PostHogClient()
+
+        def boom(request, timeout=30):
+            raise HTTPError("https://us.posthog.com/api/warehouse/query/",
+                            401, "Unauthorized", {}, None)
+
+        with patch("company.departments.analytics.posthog.urlopen",
+                   side_effect=boom):
+            with self.assertRaisesRegex(PostHogError, "HTTP 401"):
+                client.query("select 1")
+
+
+class FunnelConsumptionTests(unittest.TestCase):
+    """funnel-analysis consumes refreshed Buffer + PostHog warehouse per batch."""
+
+    @staticmethod
+    def _refresh(posts):
+        return {"ok": True, "count": len(posts),
+                "window": {"stale_after_hours": 6.0},
+                "posts": posts, "rate_limits": {}}
+
+    def test_consume_batch_evidence_joins_buffer_and_posthog_on_join_keys(self):
+        receipts = [
+            {"item_id": "batch-01-item-01", "platform": "threads",
+             "content_id": "batch-01-item-01-threads",
+             "creative_signature": "sig-t", "provider_post_id": "post-1"},
+            {"item_id": "batch-01-item-01", "platform": "youtube",
+             "content_id": "batch-01-item-01-youtube",
+             "creative_signature": "sig-y", "provider_post_id": "post-2"},
+        ]
+        refresh = self._refresh([
+            {"post_id": "post-1", "status": "sent", "channel_service": "threads",
+             "metrics": {"views": 60, "likes": 1, "replies": 0, "reposts": None,
+                         "shares": None, "followers": 1},
+             "metrics_updated_at": "2026-08-17T09:00:00Z", "staleness": "fresh",
+             "missing_metrics": ["reposts", "shares"]},
+            {"post_id": "post-2", "status": "sent", "channel_service": "youtube",
+             "metrics": {"views": 70, "likes": 2, "replies": 0, "reposts": None,
+                         "shares": None, "followers": None},
+             "metrics_updated_at": "2026-08-17T09:00:00Z", "staleness": "fresh",
+             "missing_metrics": ["reposts", "shares", "followers"]},
+        ])
+        events = {"events": {"content_landing": 5, "cta_clicked": 1,
+                             "lead_form_success": 1}, "missing_events": []}
+
+        evidence = consume_batch_evidence(
+            campaign_id="content-leads-20260812", batch_id="batch-01",
+            delivery_receipts=receipts, buffer_refresh=refresh,
+            posthog_events=events,
+            evidence_window={"since": "2026-08-17T00:00:00Z",
+                             "until": "2026-08-18T00:00:00Z"})
+
+        self.assertEqual(
+            ["campaign_id", "batch_id", "item_id", "content_id", "creative_signature"],
+            evidence["join_keys"])
+        self.assertEqual(130, evidence["funnel"]["platform_views"]["value"])
+        self.assertFalse(evidence["funnel"]["platform_views"]["missing"])
+        self.assertEqual(5, evidence["funnel"]["content_landings"]["value"])
+        self.assertEqual(1, evidence["funnel"]["service_cta_clicks"]["value"])
+        self.assertEqual(1, evidence["funnel"]["leads"]["value"])
+        self.assertEqual(5 / 130, evidence["funnel"]["ctr"])
+        self.assertTrue(evidence["technical_only"])
+        self.assertIn("Missing counts are labeled missing, never zero",
+                      evidence["honesty_rules"])
+        self.assertEqual("buffer_refresh", evidence["funnel"]["platform_views"]["source"])
+        self.assertEqual("posthog_warehouse", evidence["funnel"]["leads"]["source"])
+
+    def test_consume_batch_evidence_never_invents_zero_counts(self):
+        receipts = [
+            {"item_id": "batch-01-item-01", "platform": "threads",
+             "content_id": "batch-01-item-01-threads",
+             "creative_signature": "sig-t", "provider_post_id": "post-1"},
+        ]
+        refresh = self._refresh([
+            {"post_id": "post-1", "status": "sent", "channel_service": "threads",
+             "metrics": {"views": None, "likes": None, "replies": None,
+                         "reposts": None, "shares": None, "followers": None},
+             "metrics_updated_at": None, "staleness": "missing",
+             "missing_metrics": ["views", "likes", "replies", "reposts",
+                                 "shares", "followers"]},
+        ])
+        events = {"events": {}, "missing_events": ["content_landing", "cta_clicked",
+                                                   "lead_form_success"]}
+
+        evidence = consume_batch_evidence(
+            campaign_id="content-leads-20260812", batch_id="batch-01",
+            delivery_receipts=receipts, buffer_refresh=refresh,
+            posthog_events=events)
+
+        funnel = evidence["funnel"]
+        self.assertTrue(funnel["platform_views"]["missing"])
+        self.assertIsNone(funnel["platform_views"]["value"])
+        self.assertTrue(funnel["leads"]["missing"])
+        self.assertIsNone(funnel["leads"]["value"])
+        self.assertIsNone(funnel["ctr"])
+        self.assertEqual(["content_landing", "cta_clicked", "lead_form_success"],
+                         evidence["posthog_warehouse"]["missing_events"])
+        self.assertIn("batch-01-item-01-threads:views",
+                      evidence["buffer_refresh"]["missing_metric_labels"])
+        self.assertEqual({"batch-01-item-01-threads": "missing"},
+                         evidence["buffer_refresh"]["staleness_by_rendition"])
+
+    def test_consume_batch_evidence_marks_stale_refreshes(self):
+        receipts = [
+            {"item_id": "batch-01-item-01", "platform": "youtube",
+             "content_id": "batch-01-item-01-youtube",
+             "creative_signature": "sig-y", "provider_post_id": "post-2"},
+        ]
+        refresh = self._refresh([
+            {"post_id": "post-2", "status": "sent", "channel_service": "youtube",
+             "metrics": {"views": 23, "likes": None, "replies": None,
+                         "reposts": None, "shares": None, "followers": None},
+             "metrics_updated_at": "2026-08-13T08:00:00Z", "staleness": "stale",
+             "missing_metrics": ["likes", "replies", "reposts", "shares",
+                                 "followers"]},
+        ])
+        events = {"events": {"content_landing": 2}, "missing_events": ["cta_clicked",
+                                                                      "lead_form_success"]}
+
+        evidence = consume_batch_evidence(
+            campaign_id="content-leads-20260812", batch_id="batch-01",
+            delivery_receipts=receipts, buffer_refresh=refresh,
+            posthog_events=events)
+
+        self.assertEqual(["post-2"], evidence["buffer_refresh"]["stale_post_ids"])
+        self.assertEqual("stale",
+                         evidence["buffer_refresh"]["staleness_by_rendition"]["batch-01-item-01-youtube"])
 
 
 if __name__ == "__main__":

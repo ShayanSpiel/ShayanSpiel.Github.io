@@ -49,6 +49,22 @@ Single source of truth: `src/config.ts` → `ANALYTICS`:
 
 Never duplicate analytics IDs in page components. All analytics lives in BaseLayout (global) or the analytics skill's shared utilities.
 
+### Server-side read credentials
+
+The live PostHog read channel is the **PostHog MCP with OAuth** (`opencode.json`
+→ `mcp.servers.posthog`, `type: remote`, `https://mcp.posthog.com/mcp`, OAuth
+enabled). The endpoint's protected-resource metadata names authorization
+server `https://oauth.posthog.com`; OpenCode performs PKCE and stores the
+credentials outside project config. The owner completes the one-time browser
+authorization (e.g. `opencode mcp` / the OpenCode interface MCP auth flow);
+after that, agents call read-only HogQL through the `posthog_*` MCP tools.
+Never hardcode credentials in code, config, or docs.
+`POSTHOG_PROJECT_TOKEN` in `.spielos/.env` is a `phc_` client-side project
+key: it is NOT accepted by the MCP or the server-side Query API, so it must
+not be used to claim live reads. `posthog.py` unit helpers read the token from
+`.spielos/.env` only as a deterministic interface and require a valid
+server-side credential (personal API key) to work live.
+
 ## Loading model
 
 BaseLayout loads analytics in this order:
@@ -70,6 +86,82 @@ BaseLayout loads analytics in this order:
 - If a GTM container is ever added, keep `gtmId` in config and load the GTM snippet instead of the direct gtag loader — never run both.
 - Document whether direct gtag or GTM owns Google tracking. Never load both.
 - No duplicate GA4, GTM, or PostHog loaders.
+
+## PostHog warehouse reads (read-only)
+
+The website-sided funnel is read back only through read-only channels — never
+by scraping the browser and never by writing to the warehouse.
+
+### Read surfaces (owner directive 2026-08-17: PostHog OAuth MCP)
+
+1. **PostHog MCP over OAuth (the live read channel)**: `opencode.json`
+   registers the server under `mcp.servers.posthog` (`type: remote`,
+   `https://mcp.posthog.com/mcp`, OAuth enabled — no Bearer header). OpenCode
+   discovers the authorization server from the RFC 9728 protected-resource
+   metadata and runs PKCE; after the one-time browser authorization the
+   `posthog_*` tools are available to agents. No project token is involved.
+2. **Deterministic HogQL helpers** (unit-tested, not a live channel by
+   themselves): `.agents/company/departments/analytics/posthog.py` —
+   `PostHogClient.query / .rows / .event_counts` (read-only) plus
+   `consume_batch_evidence(...)`, which joins refreshed Buffer per-post
+   metrics and PostHog event counts per batch on the campaign join keys.
+   Live use requires a valid server-side credential (personal API key);
+   the `phc_` project key is rejected (the warehouse Query API 404s for this
+   project). Use these helpers instead of hand-rolled requests; never inline
+   credentials.
+
+### Funnel events consumed per batch
+
+The canonical stage events live in
+`.agents/company/departments/analytics/funnel.json` (company truth); the
+site funnel trio consumed per batch is `content_landing` (attention),
+`cta_clicked` (engagement), and `lead_form_success` (lead). The full stage set
+for segmentation and diagnosis:
+
+| Stage | Events |
+|---|---|
+| attention | `$pageview`, `content_landing`, `content_impression` |
+| engagement | `content_engagement`, `cta_clicked` |
+| intent | `lead_form_start` |
+| lead | `lead_form_submit`, `lead_form_success` |
+| qualified | `qualified_lead` |
+| conversation | `booked_call` |
+| revenue | `sale` |
+
+Campaign attribution reads must preserve funnel.json `required_properties`:
+`locale`, `page_path`, `landing_path`, `source`, `medium`, `campaign`,
+`campaign_id`, `batch_id`, `item_id`, `content_id`, `platform`,
+`creative_signature`, `batch_number`, `batch_item`, `hook_id`,
+`narrative_type`. Filter counts by the lowercase UTM properties
+(`utm_campaign`, `utm_content`, ...) with the same values the campaign
+destinations carry.
+
+### Honesty rules
+
+- **Missing counts are labeled `missing`, never zero.** An event absent from a
+  warehouse group-by means it was not captured, not that zero people acted;
+  an engagement metric Buffer has not exposed is missing, not zero.
+- Only consented, non-PII events are read or counted (see Consent
+  architecture below; no form fields or contact details).
+- Refreshed Buffer per-post metrics and warehouse event counts are
+  `technical_only` delivery evidence. Business learning (the measured handoff
+  and next-batch hypothesis) requires complete comparing evidence; incomplete
+  batches stay labeled incomplete and never convert machinery evidence into a
+  market or positioning conclusion.
+- `debug_mode` and the MCP server are tooling; they never change what the site
+  captures without a separate, documented consent/debug configuration change.
+
+### Verification
+
+Run the live read-only proof exactly once per change:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=.agents python3 -B -c "import json,os,urllib.request; tok=os.environ.get(\"POSTHOG_PROJECT_TOKEN\",\"<token from .spielos/.env>\"); req=urllib.request.Request(\"https://us.posthog.com/api/warehouse/query/\", data=json.dumps({\"query\":{\"kind\":\"HogQLQuery\",\"query\":\"select event, count() as c from events group by event order by c desc limit 10\"}}).encode(), headers={\"Content-Type\":\"application/json\",\"X-Project-API-Key\":tok}); print(json.load(urllib.request.urlopen(req, timeout=30)))"
+```
+
+The response lists the actual event names and counts in the project. Record
+them as `technical_only` evidence; never fabricate event names or counts if the
+read fails.
 
 ## Consent architecture
 

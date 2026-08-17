@@ -1,5 +1,15 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "default_agent": "director",
-  "plugin": ["./.opencode/plugins/spielos-notifications.ts"]
+  "plugin": [
+    "./.opencode/plugins/spielos-notifications.ts"
+  ],
+  "mcp": {
+    "servers": {
+      "posthog": {
+        "type": "remote",
+        "url": "https://mcp.posthog.com/mcp"
+      }
+    }
+  }
 }

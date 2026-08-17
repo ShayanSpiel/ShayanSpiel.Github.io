@@ -1,15 +1,17 @@
+import io
 import os
 import json
 import re
 import unittest
+from datetime import datetime, timezone
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
 from company.connections.buffer import (
-    BufferClient, BufferError, _content_matches, _env_values, _post_metrics,
-    _publication_input, _public_https_url, _queue_report, commitment_type,
-    content_fingerprint, dispatch,
+    BufferClient, BufferError, _content_matches, _env_values, _metrics_campaign_report,
+    _post_metrics, _publication_input, _public_https_url, _queue_report, commitment_type,
+    content_fingerprint, dispatch, main, metric_staleness,
 )
 from company.departments.campaign_contract import apply_render_report, approve_rendered_campaign
 from company.departments.design.department import accept_design_order, render_report
@@ -322,6 +324,105 @@ class BufferConnectionTests(unittest.TestCase):
         self.assertEqual("One clear workflow", report["channels"]["ch-1"][0]["text_excerpt"])
         self.assertEqual(["https://cdn.example.com/a.png"],
                          report["channels"]["ch-1"][0]["media_urls"])
+
+
+class BufferMetricsRefreshTests(unittest.TestCase):
+    """Read-only live engagement refresh used by funnel analysis (v1.3.0)."""
+
+    @patch.dict(os.environ, {"BUFFER_API_KEY": "test-token"}, clear=False)
+    def test_campaign_posts_selects_metrics_and_applies_window(self):
+        client = BufferClient()
+        seen = {}
+
+        def fake_graphql(query):
+            seen["query"] = query
+            return {"posts": {"edges": [
+                {"node": {"id": "p1", "status": "sent", "channelId": "ch-1",
+                          "createdAt": "2026-08-17T08:00:00Z", "dueAt": "2026-08-16T09:00:00Z",
+                          "metrics": [{"type": "views", "name": "Views", "value": 70}],
+                          "metricsUpdatedAt": "2026-08-17T09:00:00Z"}},
+                {"node": {"id": "p2", "status": "sent", "channelId": "ch-1",
+                          "createdAt": "2026-08-10T08:00:00Z", "dueAt": "2026-08-10T09:00:00Z",
+                          "metrics": [{"type": "likes", "name": "Likes", "value": 2}],
+                          "metricsUpdatedAt": "2026-08-10T09:00:00Z"}},
+                {"node": {"id": "d1", "status": "draft", "channelId": "ch-1",
+                          "createdAt": "2026-08-17T07:00:00Z", "dueAt": None,
+                          "metrics": [], "metricsUpdatedAt": None}},
+            ]}}
+
+        client.graphql = fake_graphql
+        posts = client.campaign_posts(["channel-1"], since="2026-08-15T00:00:00Z")
+
+        # p2 predates the window; p1 (sent) and d1 (draft) both fall inside it.
+        self.assertEqual({"p1", "d1"}, {post["id"] for post in posts})
+        self.assertIn("createdAt", seen["query"])
+        self.assertIn("metrics { type name value unit } metricsUpdatedAt", seen["query"])
+        # The reference queue read stays metric-free and untouched for the guard.
+        queue = client.queue_posts(["channel-1"])
+        self.assertEqual({"p1", "p2", "d1"}, {post["id"] for post in queue})
+        self.assertNotIn("metricsUpdatedAt", seen["query"])
+        self.assertNotIn("createdAt", seen["query"])
+
+    @patch.dict(os.environ, {"BUFFER_API_KEY": "test-token"}, clear=False)
+    def test_campaign_posts_window_uses_due_at_when_created_at_absent(self):
+        client = BufferClient()
+        client.graphql = lambda query: {"posts": {"edges": [
+            {"node": {"id": "p1", "status": "sent", "createdAt": None,
+                      "dueAt": "2026-08-16T09:00:00Z", "metrics": [], "metricsUpdatedAt": None}},
+        ]}}
+        self.assertEqual(["p1"], [post["id"]
+                                  for post in client.campaign_posts(until="2026-08-17T00:00:00Z")])
+        self.assertEqual([], client.campaign_posts(since="2026-08-17T00:00:00Z"))
+
+    def test_metric_staleness_flags_fresh_stale_and_missing(self):
+        now = datetime(2026, 8, 17, 12, 0, tzinfo=timezone.utc)
+        self.assertEqual("fresh", metric_staleness("2026-08-17T10:00:00Z", 6, now=now))
+        self.assertEqual("stale", metric_staleness("2026-08-17T05:00:00Z", 6, now=now))
+        self.assertEqual("missing", metric_staleness(None, 6, now=now))
+
+    def test_metrics_campaign_report_labels_missing_counts_not_zero(self):
+        client = object.__new__(BufferClient)
+        client.last_rate_limits = {"x-ratelimit-remaining": "96"}
+        client.campaign_posts = lambda ids, since=None, until=None: [
+            {"id": "p1", "channelId": "ch-1", "channelService": "threads", "status": "sent",
+             "createdAt": "2026-08-17T08:00:00Z", "dueAt": None, "sentAt": "2026-08-17T08:00:00Z",
+             "metrics": [{"type": "views", "name": "Views", "value": 60},
+                         {"type": "likes", "name": "Likes", "value": 1}],
+             "metricsUpdatedAt": "2026-08-17T09:00:00Z"},
+        ]
+        now = datetime(2026, 8, 17, 12, 0, tzinfo=timezone.utc)
+
+        report = _metrics_campaign_report(client, ["ch-1"], stale_after_hours=6, now=now)
+
+        self.assertTrue(report["ok"])
+        self.assertEqual(1, report["count"])
+        post = report["posts"][0]
+        self.assertEqual(60, post["metrics"]["views"])
+        self.assertEqual(1, post["metrics"]["likes"])
+        self.assertIsNone(post["metrics"]["replies"])
+        self.assertEqual(["replies", "reposts", "shares", "followers"],
+                         post["missing_metrics"])
+        self.assertEqual("fresh", post["staleness"])
+        self.assertNotIn(0, post["metrics"].values())  # missing is None, never zero
+        self.assertEqual("96", report["rate_limits"]["x-ratelimit-remaining"])
+
+    @patch.dict(os.environ, {"BUFFER_API_KEY": "test-token"}, clear=False)
+    def test_metrics_campaign_cli_is_read_only_and_reports_window(self):
+        client = object.__new__(BufferClient)
+        client.last_rate_limits = {}
+        client.campaign_posts = lambda ids, since=None, until=None: []
+
+        with patch("company.connections.buffer.BufferClient", return_value=client):
+            with patch("sys.stdout", new_callable=io.StringIO) as out:
+                code = main(["--metrics-campaign", "--since", "2026-08-01T00:00:00Z"])
+
+        self.assertEqual(0, code)
+        self.assertIn('"ok": true', out.getvalue())
+        self.assertIn("2026-08-01T00:00:00Z", out.getvalue())
+
+    def test_window_flags_are_rejected_without_metrics_campaign(self):
+        with self.assertRaises(SystemExit):
+            main(["--queue", "--since", "2026-08-01T00:00:00Z"])
 
 
 if __name__ == "__main__":

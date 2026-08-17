@@ -10,6 +10,14 @@ is already committed; `dispatch()` returns ok:true only when every requested
 post is committed by Buffer (scheduled or sent) with per-item provider post ids
 and a commitment_type, so a draft-only or partial result never produces a valid
 receipt. `--queue` lists the real queue read-only for pre-dispatch verification.
+
+`--metrics-campaign` is the read-only engagement refresh used by funnel
+analysis: it lists campaign posts per channel inside an optional createdAt/dueAt
+window and returns the LIVE per-post metrics (views, likes, replies, reposts,
+shares, followers where the platform exposes them) together with
+metricsUpdatedAt staleness, so send-time snapshots replace themselves when
+refreshed data exists. ZERO write side effects; the duplicate guard and receipt
+semantics are untouched.
 """
 
 from __future__ import annotations
@@ -19,6 +27,7 @@ import ipaddress
 import json
 import os
 import re
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
@@ -163,6 +172,80 @@ def _rate_limits(headers: Any) -> dict[str, str]:
             if "rate" in str(key).lower() or "limit" in str(key).lower()}
 
 
+def _posts_query(organization_id: str, channel_ids: list[str] | None,
+                 with_metrics: bool) -> str:
+    """Build the read-only posts query; with_metrics adds live engagement fields."""
+    ids = [str(item) for item in (channel_ids or [])]
+    filter_clause = ""
+    if ids:
+        rendered = ", ".join(_graphql_string(item) for item in ids)
+        filter_clause = f", filter: {{ channelIds: [{rendered}] }}"
+    date_fields = " createdAt" if with_metrics else ""
+    metrics_fields = " metrics { type name value unit } metricsUpdatedAt" if with_metrics else ""
+    return """query GetPosts {
+      posts(input: { organizationId: %s%s }) {
+        edges { node { id status dueAt sentAt%s channelId channelService text assets { id mimeType source }%s } }
+      }
+    }""" % (_graphql_string(organization_id), filter_clause, date_fields, metrics_fields)
+
+
+def _iso_datetime(value: Any) -> datetime | None:
+    """Parse an ISO-8601 Buffer timestamp; returns None when unparseable."""
+    if not value:
+        return None
+    try:
+        return datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    except ValueError:
+        return None
+
+
+def _window_allows(value: Any, since: str | None, until: str | None) -> bool:
+    """True when an ISO timestamp sits inside the optional createdAt/dueAt window."""
+    if not since and not until:
+        return True
+    parsed = _iso_datetime(value)
+    if parsed is None:
+        return False
+    if since:
+        start = _iso_datetime(since)
+        if start is None or parsed < start:
+            return False
+    if until:
+        end = _iso_datetime(until)
+        if end is None or parsed >= end:
+            return False
+    return True
+
+
+METRICS_KEYS = ("views", "likes", "replies", "reposts", "shares", "followers")
+
+
+def _normalize_metrics(metrics: list[dict[str, Any]]) -> dict[str, Any]:
+    """Map Buffer PostMetric entries to canonical keys; absent metrics stay None."""
+    by_key: dict[str, Any] = {}
+    for metric in metrics or []:
+        key = str(metric.get("type") or metric.get("name") or "").strip().lower()
+        if key in METRICS_KEYS:
+            by_key.setdefault(key, metric.get("value"))
+    return {key: by_key.get(key) for key in METRICS_KEYS}
+
+
+def metric_staleness(metrics_updated_at: Any, stale_after_hours: float,
+                     now: datetime | None = None) -> str:
+    """fresh|stale|missing verdict for a post's metricsUpdatedAt.
+
+    missing: no metricsUpdatedAt (platform never reported engagement yet);
+    fresh: the refresh timestamp is younger than stale_after_hours;
+    stale: the last refresh lag is older than stale_after_hours and the
+    reported numbers may no longer reflect the live engagement.
+    """
+    updated = _iso_datetime(metrics_updated_at)
+    if updated is None:
+        return "missing"
+    age = (now or datetime.now(timezone.utc)) - updated
+    return "fresh" if age < timedelta(hours=float(stale_after_hours)) else "stale"
+
+
 class BufferClient:
     def __init__(self, api_key: str | None = None, organization_id: str | None = None):
         values = environment()
@@ -218,21 +301,37 @@ class BufferClient:
         --queue command need: id, status, dueAt, sentAt, channelId,
         channelService, text, and asset public URLs.
         """
-        ids = [str(item) for item in (channel_ids or [])]
-        filter_clause = ""
-        if ids:
-            rendered = ", ".join(_graphql_string(item) for item in ids)
-            filter_clause = f", filter: {{ channelIds: [{rendered}] }}"
-        query = """query GetPosts {
-          posts(input: { organizationId: %s%s }) {
-            edges { node { id status dueAt sentAt channelId channelService text assets { id mimeType source } } }
-          }
-        }""" % (_graphql_string(self.organization_id), filter_clause)
+        query = _posts_query(self.organization_id, channel_ids, with_metrics=False)
         edges = self.graphql(query).get("posts") or {}
         posts: list[dict[str, Any]] = []
         for edge in edges.get("edges") or []:
             node = edge.get("node") or {}
             if node.get("status") in statuses:
+                posts.append(node)
+        return posts
+
+    def campaign_posts(self, channel_ids: list[str] | None = None,
+                       statuses: tuple[str, ...] = ("scheduled", "sent", "draft"),
+                       since: str | None = None, until: str | None = None) -> list[dict[str, Any]]:
+        """Read campaign posts per channel inside a createdAt/dueAt window; never writes.
+
+        Same read-only queue read as queue_posts but also returns createdAt and
+        the LIVE per-post metrics (Post.metrics: type/name/value/unit) plus
+        metricsUpdatedAt so funnel analysis can refresh engagement instead of
+        trusting the send-time snapshot. Window filtering uses createdAt when
+        present, otherwise dueAt; a post with neither timestamp inside the
+        window is excluded from the read.
+        """
+        query = _posts_query(self.organization_id, channel_ids, with_metrics=True)
+        edges = self.graphql(query).get("posts") or {}
+        posts: list[dict[str, Any]] = []
+        for edge in edges.get("edges") or []:
+            node = edge.get("node") or {}
+            if node.get("status") not in statuses:
+                continue
+            created = node.get("createdAt")
+            due = node.get("dueAt")
+            if _window_allows(created or due, since, until):
                 posts.append(node)
         return posts
 
@@ -537,6 +636,42 @@ def _queue_report(client: BufferClient, channel_ids: list[str] | None = None) ->
             "rate_limits": client.last_rate_limits}
 
 
+def _metrics_campaign_report(client: BufferClient, channel_ids: list[str] | None = None,
+                             since: str | None = None, until: str | None = None,
+                             stale_after_hours: float = 6.0,
+                             now: datetime | None = None) -> dict[str, Any]:
+    """Read-only live engagement refresh for funnel analysis; never writes.
+
+    Lists campaign posts per channel inside the optional createdAt/dueAt window
+    and returns the refreshed per-post metrics (views, likes, replies, reposts,
+    shares, followers where exposed), metricsUpdatedAt staleness, and which
+    metrics are missing. Missing counts are labeled missing (None), never zero,
+    because an absent metric means the platform has not exposed it yet.
+    """
+    posts = client.campaign_posts(channel_ids, since=since, until=until)
+    refreshed = []
+    for post in posts:
+        metrics = _normalize_metrics(post.get("metrics") or [])
+        updated_at = post.get("metricsUpdatedAt")
+        refreshed.append({
+            "post_id": post.get("id"),
+            "channel_id": post.get("channelId"),
+            "channel_service": post.get("channelService"),
+            "status": post.get("status"),
+            "created_at": post.get("createdAt"),
+            "due_at": post.get("dueAt"),
+            "sent_at": post.get("sentAt"),
+            "metrics": metrics,
+            "metrics_updated_at": updated_at,
+            "staleness": metric_staleness(updated_at, stale_after_hours, now=now),
+            "missing_metrics": [key for key, value in metrics.items() if value is None],
+        })
+    return {"ok": True, "count": len(refreshed),
+            "window": {"since": since, "until": until,
+                       "stale_after_hours": stale_after_hours},
+            "posts": refreshed, "rate_limits": client.last_rate_limits}
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Safe direct Buffer Connection")
     parser.add_argument("--check", action="store_true", help="List connected channels; never writes")
@@ -545,18 +680,32 @@ def main(argv: list[str] | None = None) -> int:
                         help="Read one Buffer post's status and metrics; repeat for multiple posts")
     parser.add_argument("--queue", action="store_true",
                         help="List scheduled/sent/draft posts in the real Buffer queue; never writes")
+    parser.add_argument("--metrics-campaign", action="store_true",
+                        help="Refresh live per-post engagement metrics for campaign posts in a date window; never writes")
     parser.add_argument("--channel", metavar="CHANNEL_ID", action="append",
-                        help="Restrict --queue to channel ids; repeat for multiple")
+                        help="Restrict --queue or --metrics-campaign to channel ids; repeat for multiple")
+    parser.add_argument("--since", metavar="ISO",
+                        help="With --metrics-campaign: include posts created/due at or after this ISO-8601 time")
+    parser.add_argument("--until", metavar="ISO",
+                        help="With --metrics-campaign: include posts created/due before this ISO-8601 time")
+    parser.add_argument("--stale-after-hours", type=float, default=None,
+                        help="With --metrics-campaign: a post's metrics are stale when metricsUpdatedAt is older than this (default 6)")
     args = parser.parse_args(argv)
-    selected = int(args.check) + int(args.probe_draft) + int(bool(args.metrics)) + int(args.queue)
+    selected = int(args.check) + int(args.probe_draft) + int(bool(args.metrics)) + int(args.queue) + int(args.metrics_campaign)
     if selected != 1:
-        parser.error("choose exactly one of --check, --probe-draft, --metrics, or --queue")
+        parser.error("choose exactly one of --check, --probe-draft, --metrics, --queue, or --metrics-campaign")
+    if (args.since or args.until or args.stale_after_hours is not None) and not args.metrics_campaign:
+        parser.error("--since, --until, and --stale-after-hours apply only to --metrics-campaign")
     try:
         client = BufferClient()
         if args.probe_draft:
             result = _probe_draft(client)
         elif args.metrics:
             result = _post_metrics(client, args.metrics)
+        elif args.metrics_campaign:
+            result = _metrics_campaign_report(client, args.channel, since=args.since,
+                                              until=args.until,
+                                              stale_after_hours=args.stale_after_hours or 6.0)
         elif args.queue:
             result = _queue_report(client, args.channel)
         else:

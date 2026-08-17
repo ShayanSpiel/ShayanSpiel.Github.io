@@ -48,8 +48,8 @@ def campaign_funnel_report(manifest: dict[str, Any], report: dict[str, Any]) -> 
 
 class AnalyticsDepartment(EvidenceDepartment, Department):
     id = department_id = "analytics"
-    version = "3.1.0"
-    description = "Joins full-funnel evidence by campaign identity and supports evidence-scaled one-to-three-variable decisions with explicit cells, thresholds, and effect analysis."
+    version = "3.2.0"
+    description = "Joins full-funnel evidence by campaign identity: refreshed Buffer per-post engagement plus read-only PostHog warehouse events per batch, with evidence-scaled one-to-three-variable decisions and explicit cells, thresholds, and effect analysis."
     agent_ids = ("analytics-operator", "cro-optimizer")
     production_ready = True
     workflows = (
@@ -64,9 +64,9 @@ class AnalyticsDepartment(EvidenceDepartment, Department):
         ),
         WorkflowSpec(
             "funnel-analysis",
-            "Measure one delivered campaign from platform view through attributed lead using its preserved join keys.",
+            "Measure one delivered campaign from platform view through attributed lead using refreshed Buffer per-post metrics and read-only PostHog warehouse events on its preserved join keys.",
             ("validate", "query", "segment", "diagnose", "report"), ("analytics-operator",),
-            ("analytics",), (), ("publication_receipt", "posthog_query", "funnel_report", "optimization_decision"), ("posthog",),
+            ("analytics",), (), ("publication_receipt", "buffer_metrics", "posthog_query", "funnel_report", "optimization_decision"), ("posthog",),
             graph=(WorkflowStep("report", "employee", "analytics-operator",
                                 produces=("funnel_report",), skill_ids=("analytics",),
                                 connection_ids=("posthog",)),),
