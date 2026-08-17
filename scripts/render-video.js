@@ -30,9 +30,6 @@ import { createServer } from "http";
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const ROOT = resolve(__dirname, "..");
 const TEMPLATE_ROOT = join(ROOT, ".agents/company/departments/design/templates/video");
-const CAMPAIGN_MANIFEST = process.env.CAMPAIGN_MANIFEST
-  ? resolve(process.env.CAMPAIGN_MANIFEST) : null;
-const CAMPAIGN_ITEM_ID = process.env.CAMPAIGN_ITEM_ID || "";
 
 /* ── Aspect ratios ── */
 const ASPECTS = {
@@ -54,6 +51,10 @@ const scenarioKey = checkOnly ? "b" : (process.argv[2] || "b");
 const aspectKey = process.argv[3] || "landscape";
 const fps = parseInt(process.argv[4] || "30", 10);
 const customOutput = process.argv[5];
+const stillOnly = process.argv.includes("--still");
+const titleArgIdx = process.argv.indexOf("--title");
+const campaignThumbnailTitle = (titleArgIdx !== -1 && process.argv[titleArgIdx + 1])
+  ? process.argv[titleArgIdx + 1] : (process.env.THUMBNAIL_TITLE || "");
 
 if (!SCENARIOS[scenarioKey]) {
   console.error(`Unknown scenario: ${scenarioKey}. Use: ${Object.keys(SCENARIOS).join(", ")}`);
@@ -69,12 +70,6 @@ const { file: scenarioFile, name: scenarioName } = SCENARIOS[scenarioKey];
 const NARRATION_PATH = join(TEMPLATE_ROOT, "narration.json");
 
 function renderTiming() {
-  if (CAMPAIGN_MANIFEST && CAMPAIGN_ITEM_ID) {
-    const manifest = JSON.parse(readFileSync(CAMPAIGN_MANIFEST, "utf8"));
-    const item = (manifest.items || []).find((entry) => entry.item_id === CAMPAIGN_ITEM_ID);
-    const timing = item?.renditions?.youtube?.narration?.scene_timing;
-    if (timing?.duration) return timing;
-  }
   const narration = JSON.parse(readFileSync(NARRATION_PATH, "utf8"));
   return narration.scene_timing?.[scenarioKey];
 }
@@ -90,7 +85,9 @@ const totalFrames = Math.ceil(fps * durationSec);
 const animFile = join(TEMPLATE_ROOT, scenarioFile);
 const outputFile = customOutput
   ? resolve(customOutput)
-  : join(ROOT, `public/videos/spielos-${scenarioName}-${label}.mp4`);
+  : (stillOnly
+      ? join(ROOT, `public/videos/spielos-${scenarioName}-${label}-still.png`)
+      : join(ROOT, `public/videos/spielos-${scenarioName}-${label}.mp4`));
 const framesDir = join(resolve(outputFile, ".."), `.frames-${scenarioName}-${label}`);
 
 /* ═══ Owner contract gate (--check) ═══
@@ -180,70 +177,19 @@ function checkStaticFiles(failures) {
     const path = join(TEMPLATE_ROOT, scenario.file);
     if (!existsSync(path)) { failures.push(`${key}: missing ${path}`); continue; }
     const source = readFileSync(path, "utf8");
-    for (const required of ["window.__setFrame", "boxicons.min.css", "journey-fill", "goal-ring", "favicons/favicon.svg", "campaign-support", "<html", "</html>", "getPointAtLength", "narration.json"]) {
+    for (const required of ["window.__setFrame", "boxicons.min.css", "journey-fill", "goal-ring", "favicons/favicon.svg", "spielos.xyz/services", "<html", "</html>", "getPointAtLength", "narration.json", "thumb-title", "__setStillTitle"]) {
       if (!source.includes(required)) failures.push(`${key}: template missing ${required}`);
     }
-    if (!source.includes("__applyCampaignRendition")) failures.push(`${key}: template lacks the shared campaign rendition handoff`);
+    for (const forbidden of ["campaign-scene", "campaign-label", "__applyCampaignRendition", "visual.headline", "visual.supporting_text", "spoken_display_alignment", "batch-01.json"]) {
+      if (source.includes(forbidden)) failures.push(`${key}: template must not contain campaign machinery "${forbidden}"`);
+    }
     for (const stale of ["Employees using AI separately", "Repeated prompts, copied context", "One assistant doing everything", "Hire a role", "AI directs", "Build your own AI department"]) {
       if (source.includes(stale)) failures.push(`${key}: template retains legacy fixed scene copy: ${stale}`);
     }
-    for (const required of ["visual.headline", "visual.supporting_text", "visual.component", "visual.icon", "visual.labels", "Displayed headline must equal spoken text"]) {
-      if (!source.includes(required)) failures.push(`${key}: campaign scene control missing ${required}`);
-    }
-    if (source.includes("batch-01.json")) failures.push(`${key}: template is coupled to a hardcoded campaign batch`);
     for (const bad of ["ringPulse", "music-ambient", "music_direction", "music_duck_db", "am_michael", "atempo=", "stationTimes", "0-3.5s", "0-2.34s"]) {
       if (source.includes(bad)) failures.push(`${key}: template contains stale "${bad}"`);
     }
   }
-}
-
-function campaignVideoOrder(manifestPath, itemId) {
-  if (!manifestPath || !itemId) return null;
-  const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
-  const item = (manifest.items || []).find((entry) => entry.item_id === itemId);
-  if (!item) throw new Error(`Campaign item not found: ${itemId}`);
-  const rendition = item.renditions?.youtube;
-  if (!rendition?.design || !rendition?.narration) throw new Error(`YouTube Design/narration order missing for ${itemId}`);
-  if (rendition.narration.scene_control_version !== "1.0") throw new Error(`YouTube scene control contract missing for ${itemId}`);
-  for (const scene of rendition.narration.scenes || []) {
-    const spoken = String(scene.text || "").trim().toLowerCase();
-    const displayed = String(scene.visual?.headline || "").trim().toLowerCase();
-    const urlAligned = scene.visual?.spoken_display_alignment === "url-pronunciation" &&
-      scene.visual?.component === "cta" && displayed === "spielos.xyz/services" &&
-      spoken === "go to spielos dot xyz slash services.";
-    if ((!displayed || displayed !== spoken) && !urlAligned) {
-      throw new Error(`Spoken/displayed scene mismatch for ${itemId}/${scene.id}`);
-    }
-  }
-  return { campaign_id: manifest.campaign_id, batch_id: manifest.batch_id, item_id: item.item_id,
-    content_id: rendition.content_id, design: rendition.design, narration: rendition.narration };
-}
-
-function checkVideoOrder(key) {
-  const narration = JSON.parse(readFileSync(NARRATION_PATH, "utf8"));
-  const ids = key === "b" ? ["hook", "pain", "promise", "pillars", "director", "cta"] : ["hook", "build", "live", "director", "cta"];
-  const texts = key === "b"
-    ? ["Context first.", "The work is visible.", "SpielOS connects it.", "Goal. Department. Workflow.", "Evidence stays visible.", "SpielOS dot xyz slash services."]
-    : ["Context first.", "The decision is visible.", "SpielOS records the rule.", "Evidence decides next.", "SpielOS dot xyz slash services."];
-  return { campaign_id: "contract-check", batch_id: "contract-check-batch", item_id: "contract-check-item",
-    content_id: "contract-check-item-youtube", design: {
-      template_id: `scenario-${key}`, theme: "gruvbox-dark", surface: "background", color_role: "primary",
-      alignment: "center", layout: "journey", size_preset: "youtube-shorts",
-      eyebrow: "SpielOS campaign contract", title_lines: ["Context first.", "One clear workflow."],
-      supporting_text: "One campaign identity survives every handoff.",
-    }, narration: { scene_control_version: "1.0", scenes: texts.map((text, index) => ({ id: ids[index], text, visual: {
-      eyebrow: index === 0 ? "SpielOS campaign" : "Current system",
-      headline: text, supporting_text: "One controlled scene from one campaign Artifact.",
-      component: index === texts.length - 1 ? "cta" : "statement", icon: index === texts.length - 1 ? "bx-link" : "bx-task",
-      labels: index === texts.length - 1 ? ["Services"] : ["Goal", "Department", "Workflow"],
-    } })),
-      scene_timing: narration.scene_timing[key] } };
-}
-
-async function applyCampaignOrder(page, order) {
-  await page.waitForFunction(() => typeof window.__applyCampaignRendition === "function", { timeout: 8000 });
-  await page.evaluate((value) => window.__applyCampaignRendition(value), order);
-  await page.waitForFunction(() => document.documentElement.dataset.templateReady === "true", { timeout: 8000 });
 }
 
 /* Clip provenance (owner contract №1): the per-generation voice manifest in
@@ -288,7 +234,6 @@ async function videoRenderGate(baseUrl, browser, scenarioKey) {
   await page.setViewport({ width: 1920, height: 1080, deviceScaleFactor: 1 });
   const templateUrl = `${baseUrl}/.agents/company/departments/design/templates/video/${SCENARIOS[scenarioKey].file}`;
   await page.goto(templateUrl, { waitUntil: "networkidle0", timeout: 30000 });
-  await applyCampaignOrder(page, checkVideoOrder(scenarioKey));
   await page.evaluate(() => document.fonts.ready);
   try {
     await page.waitForFunction(
@@ -306,7 +251,7 @@ async function videoRenderGate(baseUrl, browser, scenarioKey) {
   const errs = await page.evaluate((key) => {
     const out = [];
     if (!document.fonts.check("800 16px Outfit")) out.push("Outfit 800 NOT loaded in render (system-font fallback)");
-    const title = document.querySelector(".campaign-headline, .hook-main");
+    const title = document.querySelector(".hook-main");
     if (title) {
       const cs = getComputedStyle(title);
       if (!cs.fontFamily.includes("Outfit")) out.push(`title font-family ${cs.fontFamily} (expected Outfit)`);
@@ -353,7 +298,7 @@ async function runChecks() {
   checkStaticFiles(failures);
   checkClipProvenance(failures);
   if (failures.length) { console.error(failures.join("\n")); process.exit(1); }
-  console.log("Static video contract OK: ONE voice + narration-led readable timing + narration-only + one-shot node pulses");
+  console.log("Static video contract OK: ONE voice + measured timing + narration-only + one-shot node pulses");
 
   const { server, url: baseUrl } = await startServer();
   let browser;
@@ -378,12 +323,14 @@ async function runChecks() {
   process.exit(0);
 }
 
-/* ── Verify FFmpeg ── */
-try {
-  execSync("ffmpeg -version", { stdio: "ignore" });
-} catch {
-  console.error("FFmpeg not found. Install: brew install ffmpeg");
-  process.exit(1);
+/* ── Verify FFmpeg (video mode only; --still writes one PNG) ── */
+if (!stillOnly) {
+  try {
+    execSync("ffmpeg -version", { stdio: "ignore" });
+  } catch {
+    console.error("FFmpeg not found. Install: brew install ffmpeg");
+    process.exit(1);
+  }
 }
 
 if (!existsSync(animFile)) {
@@ -395,10 +342,12 @@ console.log(`\n  Rendering ${scenarioName} @ ${width}x${height} ${fps}fps (${dur
 console.log(`  Total frames: ${totalFrames}`);
 console.log(`  Output: ${outputFile}\n`);
 
-if (existsSync(framesDir)) {
-  rmSync(framesDir, { recursive: true });
+if (!stillOnly) {
+  if (existsSync(framesDir)) {
+    rmSync(framesDir, { recursive: true });
+  }
+  mkdirSync(framesDir, { recursive: true });
 }
-mkdirSync(framesDir, { recursive: true });
 
 /* ── MIME types ── */
 const MIME = {
@@ -470,13 +419,26 @@ async function render() {
   const templateUrl = `${baseUrl}/.agents/company/departments/design/templates/video/${scenarioFile}`;
   console.log(`  Loading: ${templateUrl}`);
   await page.goto(templateUrl, { waitUntil: "networkidle0", timeout: 30000 });
-  const order = campaignVideoOrder(CAMPAIGN_MANIFEST, CAMPAIGN_ITEM_ID);
-  if (!order && process.env.LEGACY_VIDEO_RENDER !== "1") {
-    throw new Error("Set CAMPAIGN_MANIFEST and CAMPAIGN_ITEM_ID; campaign video renders cannot use template-owned copy");
-  }
-  if (order) await applyCampaignOrder(page, order);
   await page.evaluate(() => document.fonts.ready);
   await new Promise((r) => setTimeout(r, 800));
+
+  if (stillOnly) {
+    await page.evaluate((t) => { window.__setStillTitle(t || ""); }, campaignThumbnailTitle);
+    const stillFrame = await page.evaluate((fps) => {
+      const sc = (window.__timing && window.__timing.scenes) || [];
+      const t = sc.length ? Math.min(sc[0].start + 1.5, (sc[1]?.start ?? sc[0].end) - 0.2) : 1.5;
+      return Math.max(0, Math.round(t * fps));
+    }, fps);
+    await page.evaluate((f, fps) => { window.__setFrame(f, fps); }, stillFrame, fps);
+    await new Promise((r) => setTimeout(r, 120));
+    const outputDir = resolve(outputFile, "..");
+    if (!existsSync(outputDir)) mkdirSync(outputDir, { recursive: true });
+    await page.screenshot({ path: outputFile, type: "png" });
+    console.log(`\n  Still saved: ${outputFile}\n`);
+    await browser.close();
+    server.close();
+    process.exit(0);
+  }
 
   console.log("  Capturing frames...");
 
@@ -543,9 +505,10 @@ async function render() {
   console.log(`\n  Done! ${outputFile} (${sizeMB} MB)\n`);
 }
 
-/* Dispatch last: every module-scope const (NARRATION_PATH, MANIFEST_PATH, …)
-   must be initialized before runChecks()/render() are invoked, or --check dies
-   on a temporal dead zone ReferenceError. */
+/* Dispatch last: every module-scope const (NARRATION_PATH, BRAND_MOTION,
+   PRODUCTION_CSS, MANIFEST_PATH, …) must be initialized before
+   runChecks()/render() are invoked, or --check dies on a temporal dead
+   zone ReferenceError. */
 if (checkOnly) {
   runChecks().catch((err) => { console.error(err); process.exit(1); });
 } else {

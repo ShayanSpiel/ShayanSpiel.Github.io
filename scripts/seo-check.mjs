@@ -41,9 +41,11 @@ function meta(html, pattern) {
 
 const isRealPage = (path) => {
   const rel = path.replace(dist, "");
-  // 301 redirect stubs (posts → notes, shayan → founder)
+  // 301 redirect stubs (posts → notes, shayan → founder, about → founder)
   if (rel.startsWith("/posts/") || rel === "/posts/index.html") return false;
   if (rel.startsWith("/shayan/")) return false;
+  if (rel.startsWith("/about/")) return false;
+  if (rel.startsWith("/fa/about/")) return false;
   // static assets / legacy noindex pages
   if (rel.startsWith("/assets/")) return false;
   if (rel.startsWith("/SpielOS/")) return false;
@@ -190,7 +192,6 @@ const expectSchema = {
   "/index.html": ["Person", "WebSite", "SoftwareApplication", "BreadcrumbList"],
   "/fa/index.html": ["Person", "WebSite", "SoftwareApplication", "BreadcrumbList"],
   "/founder/index.html": ["Person", "BreadcrumbList"],
-  "/about/index.html": ["BreadcrumbList"],
   "/contact/index.html": ["BreadcrumbList"],
   "/notes/index.html": ["CollectionPage", "BreadcrumbList"],
   "/fa/notes/index.html": ["CollectionPage", "BreadcrumbList"],
