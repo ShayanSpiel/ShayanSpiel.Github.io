@@ -2066,28 +2066,28 @@
     },
     {
       "created_at": "2026-08-17T16:54:31.733432+00:00",
-      "goal_status": "active",
+      "goal_status": "achieved",
       "id": "goal-live-heartbeat-current-work-v1-20260817",
       "metric": "acceptance_tests_passed",
       "name": "Make the /live heartbeat show the company's actual current work (any goal type)",
       "operator": "eq",
       "owner_id": "system-improvement",
       "parent_id": null,
-      "run_status": "blocked",
-      "stage": "ACT",
+      "run_status": "completed",
+      "stage": "OBSERVE",
       "target": true,
-      "updated_at": "2026-08-17T17:22:23.872377+00:00"
+      "updated_at": "2026-08-17T17:27:05.674238+00:00"
     }
   ],
   "heartbeat": {
-    "goal_id": "goal-live-heartbeat-current-work-v1-20260817",
-    "goal_name": "Make the /live heartbeat show the company's actual current work (any goal type)",
+    "goal_id": "goal-evals-llm-judge-framework-v1-20260817",
+    "goal_name": "Reusable evals (LLM-as-judge) harness framework + top-10 content/ICP standards wired into the campaign quality gate; batch-04 copy re-produced against its briefs with the judge active",
     "metric": "acceptance_tests_passed",
     "operator": "eq",
     "run_status": "blocked",
     "stage": "ACT",
-    "target": true,
-    "updated_at": "2026-08-17T17:22:23.873294+00:00"
+    "target": "True",
+    "updated_at": "2026-08-17T16:32:03.335583+00:00"
   },
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
@@ -2100,36 +2100,36 @@
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-17T16:54:31.733432+00:00",
-      "goal_id": "goal-live-heartbeat-current-work-v1-20260817",
-      "goal_name": "Make the /live heartbeat show the company's actual current work (any goal type)",
+      "created_at": "2026-08-17T16:20:49.574202+00:00",
+      "goal_id": "goal-evals-llm-judge-framework-v1-20260817",
+      "goal_name": "Reusable evals (LLM-as-judge) harness framework + top-10 content/ICP standards wired into the campaign quality gate; batch-04 copy re-produced against its briefs with the judge active",
       "owner_id": "system-improvement",
-      "run_id": "run-46392a50b2",
+      "run_id": "run-62b664c599",
       "run_status": "blocked",
       "stage": "ACT",
-      "updated_at": "2026-08-17T17:22:23.873294+00:00"
+      "updated_at": "2026-08-17T16:32:03.335583+00:00"
     },
     "heartbeat": {
-      "goal_id": "goal-live-heartbeat-current-work-v1-20260817",
-      "goal_name": "Make the /live heartbeat show the company's actual current work (any goal type)",
+      "goal_id": "goal-evals-llm-judge-framework-v1-20260817",
+      "goal_name": "Reusable evals (LLM-as-judge) harness framework + top-10 content/ICP standards wired into the campaign quality gate; batch-04 copy re-produced against its briefs with the judge active",
       "metric": "acceptance_tests_passed",
       "operator": "eq",
       "run_status": "blocked",
       "stage": "ACT",
-      "target": true,
-      "updated_at": "2026-08-17T17:22:23.873294+00:00"
+      "target": "True",
+      "updated_at": "2026-08-17T16:32:03.335583+00:00"
     },
-    "last_activity_at": "2026-08-17T17:22:23.873294+00:00",
-    "last_sync_at": "2026-08-17T17:23:25.781577+00:00",
+    "last_activity_at": "2026-08-17T17:27:05.675844+00:00",
+    "last_sync_at": "2026-08-17T17:27:05.696850+00:00",
     "state": "running"
   },
   "totals": {
     "approvals": 170,
     "decisions": 328,
-    "evidence": 4928,
+    "evidence": 4930,
     "goals_abandoned": 18,
-    "goals_achieved": 104,
-    "goals_active": 21,
+    "goals_achieved": 105,
+    "goals_active": 20,
     "goals_total": 147,
     "hypotheses": 38,
     "memory_claims": 5,
