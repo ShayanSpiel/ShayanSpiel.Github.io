@@ -1708,7 +1708,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-17T09:43:19.142118+00:00"
+      "updated_at": "2026-08-17T09:48:37.724686+00:00"
     },
     {
       "created_at": "2026-08-16T20:17:05.408366+00:00",
@@ -1721,7 +1721,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-17T09:43:45.519585+00:00"
+      "updated_at": "2026-08-17T09:49:02.167978+00:00"
     },
     {
       "created_at": "2026-08-17T00:12:28.586808+00:00",
@@ -1777,60 +1777,60 @@
     },
     {
       "created_at": "2026-08-17T09:39:29.644935+00:00",
-      "goal_status": "active",
+      "goal_status": "abandoned",
       "id": "goal-site-deploy-publish-v1-20260817",
       "metric": "all_children_achieved",
       "name": "Publish website branch and working tree to production; restore deployed /live",
       "operator": "ge",
       "owner_id": "director",
-      "run_status": "blocked",
+      "run_status": "completed",
       "stage": "DECIDE",
       "target": 1,
-      "updated_at": "2026-08-17T09:39:31.227115+00:00"
+      "updated_at": "2026-08-17T09:48:26.290993+00:00"
     }
   ],
   "heartbeat": {
-    "goal_id": "goal-email-send-20260816-b8",
-    "goal_name": "English outbound send batch 8: next 50 from remaining queue",
+    "goal_id": "goal-email-send-20260816-b10",
+    "goal_name": "English outbound send batch 10: next 50 from remaining queue",
     "metric": "reply_rate",
     "operator": "ge",
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-17T09:47:37.018224+00:00"
+    "updated_at": "2026-08-17T09:49:02.170128+00:00"
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-16T17:29:22.274233+00:00",
-      "goal_id": "goal-email-send-20260816-b8",
-      "goal_name": "English outbound send batch 8: next 50 from remaining queue",
+      "created_at": "2026-08-16T20:17:05.408366+00:00",
+      "goal_id": "goal-email-send-20260816-b10",
+      "goal_name": "English outbound send batch 10: next 50 from remaining queue",
       "owner_id": "outbound",
-      "run_id": "run-1c65a9f3d3",
+      "run_id": "run-a9e673a30a",
       "run_status": "waiting",
       "stage": "EVALUATE",
-      "updated_at": "2026-08-17T09:47:37.018224+00:00"
+      "updated_at": "2026-08-17T09:49:02.170128+00:00"
     },
     "heartbeat": {
-      "goal_id": "goal-email-send-20260816-b8",
-      "goal_name": "English outbound send batch 8: next 50 from remaining queue",
+      "goal_id": "goal-email-send-20260816-b10",
+      "goal_name": "English outbound send batch 10: next 50 from remaining queue",
       "metric": "reply_rate",
       "operator": "ge",
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-17T09:47:37.018224+00:00"
+      "updated_at": "2026-08-17T09:49:02.170128+00:00"
     },
-    "last_activity_at": "2026-08-17T09:47:37.018224+00:00",
-    "last_sync_at": "2026-08-17T09:47:37.034567+00:00",
+    "last_activity_at": "2026-08-17T09:49:02.170128+00:00",
+    "last_sync_at": "2026-08-17T09:49:02.221601+00:00",
     "state": "running"
   },
   "totals": {
     "approvals": 152,
     "decisions": 298,
-    "evidence": 4774,
-    "goals_abandoned": 16,
+    "evidence": 4777,
+    "goals_abandoned": 17,
     "goals_achieved": 98,
-    "goals_active": 18,
+    "goals_active": 17,
     "goals_total": 136,
     "hypotheses": 35,
     "memory_claims": 5,
