@@ -7,7 +7,7 @@
     "run_id": "run-a9e673a30a",
     "run_status": "waiting",
     "stage": "EVALUATE",
-    "updated_at": "2026-08-17T09:59:40.922059+00:00"
+    "updated_at": "2026-08-17T10:31:41.247906+00:00"
   },
   "heartbeat": {
     "goal_id": "goal-email-send-20260816-b10",
@@ -17,21 +17,30 @@
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-17T09:59:40.922059+00:00"
+    "updated_at": "2026-08-17T10:31:41.247906+00:00"
   },
-  "last_activity_at": "2026-08-17T09:59:53.225970+00:00",
-  "last_sync_at": "2026-08-17T09:59:53.240481+00:00",
+  "last_activity_at": "2026-08-17T10:31:41.247906+00:00",
+  "last_sync_at": "2026-08-17T10:31:41.295051+00:00",
+  "northstar": {
+    "goal_id": "goal-booked-calls-primary-20260815",
+    "goal_name": "3 booked calls per day",
+    "goal_status": "active",
+    "metric": "booked_calls",
+    "operator": "ge",
+    "target": 3,
+    "updated_at": "2026-08-16T19:52:54.421189+00:00"
+  },
   "state": "running",
   "totals": {
-    "approvals": 152,
-    "decisions": 301,
-    "evidence": 4792,
-    "goals_abandoned": 17,
+    "approvals": 156,
+    "decisions": 310,
+    "evidence": 4832,
+    "goals_abandoned": 18,
     "goals_achieved": 99,
-    "goals_active": 18,
-    "goals_total": 138,
+    "goals_active": 20,
+    "goals_total": 143,
     "hypotheses": 36,
     "memory_claims": 5,
-    "runs": 153
+    "runs": 158
   }
 }
