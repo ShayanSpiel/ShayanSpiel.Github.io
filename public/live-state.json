@@ -1,26 +1,31 @@
 {
   "current_run": {
-    "created_at": "2026-08-17T16:20:49.574202+00:00",
-    "goal_id": "goal-evals-llm-judge-framework-v1-20260817",
-    "goal_name": "Reusable evals (LLM-as-judge) harness framework + top-10 content/ICP standards wired into the campaign quality gate; batch-04 copy re-produced against its briefs with the judge active",
+    "created_at": "2026-08-17T19:31:33.663356+00:00",
+    "goal_id": "goal-live-page-user-hygiene-v1-20260817",
+    "goal_name": "Live page: user-facing heartbeat hygiene + true recency timeline + redeploy",
     "owner_id": "system-improvement",
-    "run_id": "run-62b664c599",
+    "run_id": "run-a78a8aceae",
     "run_status": "blocked",
     "stage": "ACT",
-    "updated_at": "2026-08-17T16:32:03.335583+00:00"
+    "updated_at": "2026-08-17T19:35:01.863530+00:00"
   },
   "heartbeat": {
-    "goal_id": "goal-evals-llm-judge-framework-v1-20260817",
-    "goal_name": "Reusable evals (LLM-as-judge) harness framework + top-10 content/ICP standards wired into the campaign quality gate; batch-04 copy re-produced against its briefs with the judge active",
+    "business_value": null,
+    "business_value_fa": null,
+    "display_title": null,
+    "display_title_fa": null,
+    "goal_id": "goal-live-page-user-hygiene-v1-20260817",
+    "goal_name": "Live page: user-facing heartbeat hygiene + true recency timeline + redeploy",
     "metric": "acceptance_tests_passed",
     "operator": "eq",
+    "owner_id": "system-improvement",
     "run_status": "blocked",
     "stage": "ACT",
-    "target": "True",
-    "updated_at": "2026-08-17T16:32:03.335583+00:00"
+    "target": true,
+    "updated_at": "2026-08-17T19:35:01.863530+00:00"
   },
-  "last_activity_at": "2026-08-17T17:27:05.675844+00:00",
-  "last_sync_at": "2026-08-17T17:27:05.696850+00:00",
+  "last_activity_at": "2026-08-17T19:45:17.474654+00:00",
+  "last_sync_at": "2026-08-17T19:45:17.492682+00:00",
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
     "goal_name": "3 booked calls per day",
@@ -32,15 +37,15 @@
   },
   "state": "running",
   "totals": {
-    "approvals": 170,
-    "decisions": 328,
-    "evidence": 4930,
+    "approvals": 172,
+    "decisions": 331,
+    "evidence": 4934,
     "goals_abandoned": 18,
-    "goals_achieved": 105,
+    "goals_achieved": 106,
     "goals_active": 20,
-    "goals_total": 147,
-    "hypotheses": 38,
+    "goals_total": 148,
+    "hypotheses": 39,
     "memory_claims": 5,
-    "runs": 164
+    "runs": 165
   }
 }
