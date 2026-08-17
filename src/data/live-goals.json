@@ -1409,7 +1409,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-17T09:07:31.693301+00:00"
+      "updated_at": "2026-08-17T09:39:10.537567+00:00"
     },
     {
       "created_at": "2026-08-15T03:10:46.410099+00:00",
@@ -1422,7 +1422,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-17T09:08:11.214960+00:00"
+      "updated_at": "2026-08-17T09:40:01.106937+00:00"
     },
     {
       "created_at": "2026-08-15T03:22:50.223477+00:00",
@@ -1669,7 +1669,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-17T09:10:19.487745+00:00"
+      "updated_at": "2026-08-17T09:36:53.346714+00:00"
     },
     {
       "created_at": "2026-08-16T17:33:41.901657+00:00",
@@ -1708,7 +1708,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-17T09:05:58.951858+00:00"
+      "updated_at": "2026-08-17T09:37:44.446163+00:00"
     },
     {
       "created_at": "2026-08-16T20:17:05.408366+00:00",
@@ -1721,7 +1721,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-17T09:06:48.571559+00:00"
+      "updated_at": "2026-08-17T09:38:27.369723+00:00"
     },
     {
       "created_at": "2026-08-17T00:12:28.586808+00:00",
@@ -1734,7 +1734,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-17T09:08:25.644516+00:00"
+      "updated_at": "2026-08-17T09:40:18.816230+00:00"
     },
     {
       "created_at": "2026-08-17T08:52:19.667740+00:00",
@@ -1751,63 +1751,89 @@
     },
     {
       "created_at": "2026-08-17T09:09:56.895317+00:00",
-      "goal_status": "proposed",
+      "goal_status": "active",
       "id": "goal-content-publish-workflow-v1-20260817",
       "metric": "acceptance_tests_passed",
       "name": "Clean content publish workflow: scheduled==published commitment, pre-dispatch duplicate guard, receipt finality",
       "operator": "eq",
       "owner_id": "system-improvement",
-      "run_status": "awaiting_approval",
-      "stage": "DECIDE",
+      "run_status": "blocked",
+      "stage": "ACT",
       "target": true,
-      "updated_at": "2026-08-17T09:09:56.900941+00:00"
+      "updated_at": "2026-08-17T09:14:16.617481+00:00"
+    },
+    {
+      "created_at": "2026-08-17T09:34:48.485530+00:00",
+      "goal_status": "active",
+      "id": "goal-content-batch02-resign-v1-20260817",
+      "metric": "acceptance_tests_passed",
+      "name": "Re-sign batch-02 manifest under current contract and retire stale flat manifests",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "run_status": "blocked",
+      "stage": "ACT",
+      "target": true,
+      "updated_at": "2026-08-17T09:40:27.335567+00:00"
+    },
+    {
+      "created_at": "2026-08-17T09:39:29.644935+00:00",
+      "goal_status": "active",
+      "id": "goal-site-deploy-publish-v1-20260817",
+      "metric": "all_children_achieved",
+      "name": "Publish website branch and working tree to production; restore deployed /live",
+      "operator": "ge",
+      "owner_id": "director",
+      "run_status": "blocked",
+      "stage": "DECIDE",
+      "target": 1,
+      "updated_at": "2026-08-17T09:39:31.227115+00:00"
     }
   ],
   "heartbeat": {
-    "goal_id": "goal-email-send-20260816-b8",
-    "goal_name": "English outbound send batch 8: next 50 from remaining queue",
+    "goal_id": "goal-email-send-20260817-b11",
+    "goal_name": "English outbound send batch 11: next 50 from remaining queue",
     "metric": "reply_rate",
     "operator": "ge",
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-17T09:10:19.489755+00:00"
+    "updated_at": "2026-08-17T09:40:18.818288+00:00"
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-16T17:29:22.274233+00:00",
-      "goal_id": "goal-email-send-20260816-b8",
-      "goal_name": "English outbound send batch 8: next 50 from remaining queue",
-      "owner_id": "outbound",
-      "run_id": "run-1c65a9f3d3",
-      "run_status": "waiting",
-      "stage": "EVALUATE",
-      "updated_at": "2026-08-17T09:10:19.489755+00:00"
+      "created_at": "2026-08-17T09:34:48.485530+00:00",
+      "goal_id": "goal-content-batch02-resign-v1-20260817",
+      "goal_name": "Re-sign batch-02 manifest under current contract and retire stale flat manifests",
+      "owner_id": "system-improvement",
+      "run_id": "run-ff14f2d466",
+      "run_status": "blocked",
+      "stage": "ACT",
+      "updated_at": "2026-08-17T09:40:27.335963+00:00"
     },
     "heartbeat": {
-      "goal_id": "goal-email-send-20260816-b8",
-      "goal_name": "English outbound send batch 8: next 50 from remaining queue",
+      "goal_id": "goal-email-send-20260817-b11",
+      "goal_name": "English outbound send batch 11: next 50 from remaining queue",
       "metric": "reply_rate",
       "operator": "ge",
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-17T09:10:19.489755+00:00"
+      "updated_at": "2026-08-17T09:40:18.818288+00:00"
     },
-    "last_activity_at": "2026-08-17T09:10:19.489755+00:00",
-    "last_sync_at": "2026-08-17T09:10:19.532270+00:00",
+    "last_activity_at": "2026-08-17T09:40:27.335963+00:00",
+    "last_sync_at": "2026-08-17T09:40:27.347679+00:00",
     "state": "running"
   },
   "totals": {
-    "approvals": 148,
-    "decisions": 293,
-    "evidence": 4725,
+    "approvals": 152,
+    "decisions": 298,
+    "evidence": 4763,
     "goals_abandoned": 15,
     "goals_achieved": 96,
-    "goals_active": 18,
-    "goals_total": 134,
+    "goals_active": 21,
+    "goals_total": 136,
     "hypotheses": 35,
     "memory_claims": 5,
-    "runs": 149
+    "runs": 151
   }
 }
