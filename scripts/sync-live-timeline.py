@@ -10,7 +10,8 @@ deterministic, idempotent JSON snapshots:
                      runs, evidence, decisions, approvals, hypotheses,
                      memory_claims },
          "goals":  [ { id, name, owner_id, goal_status, metric, operator,
-                       target (decoded), created_at, updated_at,
+                       target (decoded), parent_id (goals.parent_id, may be
+                       null), created_at, updated_at,
                        stage (latest cycle stage when present) }, ... ],
          "runtime_state": { state ("running" | "resting"),
                             current_run (most recently updated in-flight
@@ -22,17 +23,25 @@ deterministic, idempotent JSON snapshots:
                             stage, run_status, updated_at) or null,
                             last_activity_at (max updated_at across
                             goals and cycles), last_sync_at (ISO) },
-         "heartbeat": same heartbeat object at the snapshot top level }
+         "heartbeat": same heartbeat object at the snapshot top level,
+         "northstar": the company NORTH STAR goal: the active goal whose id
+                      contains "-primary-" (e.g. goal-booked-calls-primary-
+                      20260815), falling back to the director-owned active
+                      goal with metric booked_calls or sales, else null.
+                      Shape: goal_id, goal_name, metric, operator, target,
+                      goal_status, updated_at }
 
   2. public/live-state.json (served at /live-state.json, polled by the page):
-       { state, current_run, heartbeat, last_activity_at, last_sync_at,
-         totals }
+       { state, current_run, heartbeat, northstar, last_activity_at,
+         last_sync_at, totals }
 
   state is "running" when any cycle joined to an active goal has run_status
   in ("idle", "waiting"), otherwise "resting". heartbeat is the active
   business goal (goal_status = "active", owner_id in director/email/outbound)
   whose most recently updated cycle has run_status in ("idle", "waiting"),
-  or null when no business goal is in flight.
+  or null when no business goal is in flight. northstar is derived
+  independently of cycles (see _northstar) and mirrors the primary goal the
+  whole company is working toward.
 
 Deterministic: goals are ordered by (created_at, id); keys are sorted.
 Idempotent: when the serialized output equals the current file content the
@@ -62,7 +71,7 @@ DEFAULT_STATE = REPO_ROOT / "public" / "live-state.json"
 
 _GOAL_COLUMNS = (
     "id, name, owner_id, goal_status, metric, operator, "
-    "target_json, created_at, updated_at"
+    "target_json, parent_id, created_at, updated_at"
 )
 
 
@@ -190,6 +199,44 @@ def _runtime_state(conn: sqlite3.Connection) -> Dict[str, Any]:
 _BUSINESS_OWNERS = ("director", "email", "outbound")
 
 
+def _northstar(conn: sqlite3.Connection) -> Optional[Dict[str, Any]]:
+    """The company NORTH STAR goal: the active primary goal.
+
+    Priority:
+      1. active goal whose id contains "-primary-" (the explicit primary
+         goal, e.g. goal-booked-calls-primary-20260815);
+      2. director-owned active goal with metric booked_calls or sales;
+      3. null.
+
+    Unlike heartbeat, northstar does not depend on an in-flight cycle — the
+    primary goal is shown even while the company is resting.
+    """
+    row = conn.execute(
+        "SELECT id, name, metric, operator, target_json, goal_status, "
+        "updated_at FROM goals WHERE goal_status = 'active' "
+        "AND id LIKE '%-primary-%' "
+        "ORDER BY updated_at DESC, id DESC LIMIT 1"
+    ).fetchone()
+    if row is None:
+        row = conn.execute(
+            "SELECT id, name, metric, operator, target_json, goal_status, "
+            "updated_at FROM goals WHERE goal_status = 'active' "
+            "AND owner_id = 'director' AND metric IN ('booked_calls', 'sales') "
+            "ORDER BY updated_at DESC, id DESC LIMIT 1"
+        ).fetchone()
+    if row is None:
+        return None
+    return {
+        "goal_id": row["id"],
+        "goal_name": row["name"],
+        "metric": row["metric"],
+        "operator": row["operator"],
+        "target": _decode_target(row["target_json"]),
+        "goal_status": row["goal_status"],
+        "updated_at": row["updated_at"],
+    }
+
+
 def _heartbeat(conn: sqlite3.Connection) -> Optional[Dict[str, Any]]:
     """The active BUSINESS goal with the most recently updated in-flight cycle.
 
@@ -300,10 +347,11 @@ def sync_live(
 ) -> Dict[str, Any]:
     """Read the runtime DB and write the deterministic /live snapshots.
 
-    Writes src/data/live-goals.json (totals + goals + runtime_state) and
-    public/live-state.json (runtime state + totals for client polling).
-    Files are written only when their content changed (no mtime churn when
-    the state is unchanged). Returns the goals snapshot dict.
+    Writes src/data/live-goals.json (totals + goals + runtime_state +
+    heartbeat + northstar) and public/live-state.json (runtime state +
+    totals + northstar for client polling). Files are written only when
+    their content changed (no mtime churn when the state is unchanged).
+    Returns the goals snapshot dict.
     """
     db = Path(db_path) if db_path else DEFAULT_DB
     out = Path(out_path) if out_path else DEFAULT_OUT
@@ -338,6 +386,7 @@ def sync_live(
         }
 
         runtime_state = _runtime_state(conn)
+        northstar = _northstar(conn)
 
         snapshot = {
             "totals": totals,
@@ -351,6 +400,7 @@ def sync_live(
                     "metric": row["metric"],
                     "operator": row["operator"],
                     "target": _decode_target(row["target_json"]),
+                    "parent_id": row["parent_id"],
                     "created_at": row["created_at"],
                     "updated_at": row["updated_at"],
                     "stage": cycles.get(row["id"], {}).get("stage"),
@@ -360,6 +410,7 @@ def sync_live(
             ],
             "runtime_state": runtime_state,
             "heartbeat": runtime_state["heartbeat"],
+            "northstar": northstar,
         }
     finally:
         conn.close()
@@ -368,6 +419,7 @@ def sync_live(
         "state": runtime_state["state"],
         "current_run": runtime_state["current_run"],
         "heartbeat": runtime_state["heartbeat"],
+        "northstar": northstar,
         "last_activity_at": runtime_state["last_activity_at"],
         "last_sync_at": runtime_state["last_sync_at"],
         "totals": totals,
