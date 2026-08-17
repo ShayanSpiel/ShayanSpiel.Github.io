@@ -1,13 +1,13 @@
 {
   "current_run": {
-    "created_at": "2026-08-17T15:29:21.301072+00:00",
-    "goal_id": "goal-live-page-clarity-v1-20260817",
-    "goal_name": "Simplify the /live page to one heartbeat card, one northstar, and clean sections",
-    "owner_id": "system-improvement",
-    "run_id": "run-032910b48b",
-    "run_status": "idle",
-    "stage": "OBSERVE",
-    "updated_at": "2026-08-17T15:29:51.280862+00:00"
+    "created_at": "2026-08-17T00:12:28.586808+00:00",
+    "goal_id": "goal-email-send-20260817-b11",
+    "goal_name": "English outbound send batch 11: next 50 from remaining queue",
+    "owner_id": "outbound",
+    "run_id": "run-57e68969b9",
+    "run_status": "waiting",
+    "stage": "EVALUATE",
+    "updated_at": "2026-08-17T15:13:24.869553+00:00"
   },
   "heartbeat": {
     "goal_id": "goal-email-send-20260817-b11",
@@ -19,8 +19,8 @@
     "target": 0.3,
     "updated_at": "2026-08-17T15:13:24.869553+00:00"
   },
-  "last_activity_at": "2026-08-17T15:32:33.894616+00:00",
-  "last_sync_at": "2026-08-17T15:32:33.914846+00:00",
+  "last_activity_at": "2026-08-17T15:54:56.423531+00:00",
+  "last_sync_at": "2026-08-17T15:54:56.444477+00:00",
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
     "goal_name": "3 booked calls per day",
@@ -32,12 +32,12 @@
   },
   "state": "running",
   "totals": {
-    "approvals": 165,
-    "decisions": 321,
-    "evidence": 4922,
+    "approvals": 166,
+    "decisions": 322,
+    "evidence": 4925,
     "goals_abandoned": 18,
-    "goals_achieved": 103,
-    "goals_active": 20,
+    "goals_achieved": 104,
+    "goals_active": 19,
     "goals_total": 145,
     "hypotheses": 37,
     "memory_claims": 5,
