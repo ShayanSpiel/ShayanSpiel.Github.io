@@ -151,9 +151,9 @@ def _runtime_state(conn: sqlite3.Connection) -> Dict[str, Any]:
     state is "running" when any cycle of an active goal has run_status in
     ("idle", "waiting"), otherwise "resting". current_run is the most
     recently updated in-flight (not completed) cycle, or null. heartbeat is
-    the active BUSINESS goal with the most recently updated in-flight
-    cycle, or null. last_activity is the max updated_at across goals and
-    cycles.
+    the company's most recently updated in-flight cycle of any active
+    goal -- the actual current work (owner directive 2026-08-17) -- or null.
+    last_activity is the max updated_at across goals and cycles.
     """
     running = conn.execute(
         "SELECT 1 FROM cycles c JOIN goals g ON g.id = c.goal_id "
@@ -196,9 +196,6 @@ def _runtime_state(conn: sqlite3.Connection) -> Dict[str, Any]:
     }
 
 
-_BUSINESS_OWNERS = ("director", "email", "outbound")
-
-
 def _northstar(conn: sqlite3.Connection) -> Optional[Dict[str, Any]]:
     """The company NORTH STAR goal: the active primary goal.
 
@@ -238,20 +235,21 @@ def _northstar(conn: sqlite3.Connection) -> Optional[Dict[str, Any]]:
 
 
 def _heartbeat(conn: sqlite3.Connection) -> Optional[Dict[str, Any]]:
-    """The active BUSINESS goal with the most recently updated in-flight cycle.
+    """The company's most recent live run -- any goal type.
 
-    Business goals are owned by director/email/outbound. In-flight means the
-    goal's cycle has run_status in ("idle", "waiting"). Returns null when no
-    business goal is in flight.
+    Owner directive 2026-08-17: the heartbeat must show the company's actual
+    current work, not the most recently touched queued business run. It now
+    mirrors current_run semantics: the most recently updated non-completed
+    cycle of any active goal (business or system-improvement), enriched with
+    the goal's metric and target so the heartbeat tile reads like a goal.
+    Returns null when no goal has a non-completed cycle (genuinely resting).
     """
     row = conn.execute(
         "SELECT g.id AS goal_id, g.name AS goal_name, g.metric, g.operator, "
         "g.target_json, c.stage, c.run_status, c.updated_at "
         "FROM cycles c JOIN goals g ON g.id = c.goal_id "
-        "WHERE g.goal_status = 'active' AND g.owner_id IN (?, ?, ?) "
-        "AND c.run_status IN ('idle', 'waiting') "
-        "ORDER BY c.updated_at DESC, c.id DESC LIMIT 1",
-        _BUSINESS_OWNERS,
+        "WHERE g.goal_status = 'active' AND c.run_status != 'completed' "
+        "ORDER BY c.updated_at DESC, c.id DESC LIMIT 1"
     ).fetchone()
     if row is None:
         return None

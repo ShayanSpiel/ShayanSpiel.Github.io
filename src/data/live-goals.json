@@ -2049,17 +2049,45 @@
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-17T15:54:56.422181+00:00"
+    },
+    {
+      "created_at": "2026-08-17T16:20:49.574202+00:00",
+      "goal_status": "active",
+      "id": "goal-evals-llm-judge-framework-v1-20260817",
+      "metric": "acceptance_tests_passed",
+      "name": "Reusable evals (LLM-as-judge) harness framework + top-10 content/ICP standards wired into the campaign quality gate; batch-04 copy re-produced against its briefs with the judge active",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "parent_id": null,
+      "run_status": "blocked",
+      "stage": "ACT",
+      "target": "True",
+      "updated_at": "2026-08-17T16:32:03.334649+00:00"
+    },
+    {
+      "created_at": "2026-08-17T16:54:31.733432+00:00",
+      "goal_status": "active",
+      "id": "goal-live-heartbeat-current-work-v1-20260817",
+      "metric": "acceptance_tests_passed",
+      "name": "Make the /live heartbeat show the company's actual current work (any goal type)",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "parent_id": null,
+      "run_status": "blocked",
+      "stage": "ACT",
+      "target": true,
+      "updated_at": "2026-08-17T17:22:23.872377+00:00"
     }
   ],
   "heartbeat": {
-    "goal_id": "goal-email-send-20260817-b11",
-    "goal_name": "English outbound send batch 11: next 50 from remaining queue",
-    "metric": "reply_rate",
-    "operator": "ge",
-    "run_status": "waiting",
-    "stage": "EVALUATE",
-    "target": 0.3,
-    "updated_at": "2026-08-17T15:13:24.869553+00:00"
+    "goal_id": "goal-live-heartbeat-current-work-v1-20260817",
+    "goal_name": "Make the /live heartbeat show the company's actual current work (any goal type)",
+    "metric": "acceptance_tests_passed",
+    "operator": "eq",
+    "run_status": "blocked",
+    "stage": "ACT",
+    "target": true,
+    "updated_at": "2026-08-17T17:22:23.873294+00:00"
   },
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
@@ -2072,39 +2100,39 @@
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-17T00:12:28.586808+00:00",
-      "goal_id": "goal-email-send-20260817-b11",
-      "goal_name": "English outbound send batch 11: next 50 from remaining queue",
-      "owner_id": "outbound",
-      "run_id": "run-57e68969b9",
-      "run_status": "waiting",
-      "stage": "EVALUATE",
-      "updated_at": "2026-08-17T15:13:24.869553+00:00"
+      "created_at": "2026-08-17T16:54:31.733432+00:00",
+      "goal_id": "goal-live-heartbeat-current-work-v1-20260817",
+      "goal_name": "Make the /live heartbeat show the company's actual current work (any goal type)",
+      "owner_id": "system-improvement",
+      "run_id": "run-46392a50b2",
+      "run_status": "blocked",
+      "stage": "ACT",
+      "updated_at": "2026-08-17T17:22:23.873294+00:00"
     },
     "heartbeat": {
-      "goal_id": "goal-email-send-20260817-b11",
-      "goal_name": "English outbound send batch 11: next 50 from remaining queue",
-      "metric": "reply_rate",
-      "operator": "ge",
-      "run_status": "waiting",
-      "stage": "EVALUATE",
-      "target": 0.3,
-      "updated_at": "2026-08-17T15:13:24.869553+00:00"
+      "goal_id": "goal-live-heartbeat-current-work-v1-20260817",
+      "goal_name": "Make the /live heartbeat show the company's actual current work (any goal type)",
+      "metric": "acceptance_tests_passed",
+      "operator": "eq",
+      "run_status": "blocked",
+      "stage": "ACT",
+      "target": true,
+      "updated_at": "2026-08-17T17:22:23.873294+00:00"
     },
-    "last_activity_at": "2026-08-17T15:54:56.423531+00:00",
-    "last_sync_at": "2026-08-17T15:54:56.444477+00:00",
+    "last_activity_at": "2026-08-17T17:22:23.873294+00:00",
+    "last_sync_at": "2026-08-17T17:23:25.781577+00:00",
     "state": "running"
   },
   "totals": {
-    "approvals": 166,
-    "decisions": 322,
-    "evidence": 4925,
+    "approvals": 170,
+    "decisions": 328,
+    "evidence": 4928,
     "goals_abandoned": 18,
     "goals_achieved": 104,
-    "goals_active": 19,
-    "goals_total": 145,
-    "hypotheses": 37,
+    "goals_active": 21,
+    "goals_total": 147,
+    "hypotheses": 38,
     "memory_claims": 5,
-    "runs": 162
+    "runs": 164
   }
 }
