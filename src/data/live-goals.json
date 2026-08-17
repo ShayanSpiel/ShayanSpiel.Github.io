@@ -2010,17 +2010,17 @@
     },
     {
       "created_at": "2026-08-17T10:08:32.985993+00:00",
-      "goal_status": "active",
+      "goal_status": "achieved",
       "id": "goal-artifact-layout-clean-v1-20260817",
       "metric": "acceptance_tests_passed",
       "name": "Canonical per-batch artifact layout: strategy / copy / assets(threads,shorts) / status scannable in one sight",
       "operator": "eq",
       "owner_id": "system-improvement",
       "parent_id": null,
-      "run_status": "blocked",
-      "stage": "ACT",
+      "run_status": "completed",
+      "stage": "OBSERVE",
       "target": true,
-      "updated_at": "2026-08-17T10:32:35.454228+00:00"
+      "updated_at": "2026-08-17T15:03:03.040170+00:00"
     },
     {
       "created_at": "2026-08-17T10:32:18.067767+00:00",
@@ -2032,9 +2032,9 @@
       "owner_id": "system-improvement",
       "parent_id": null,
       "run_status": "blocked",
-      "stage": "ACT",
+      "stage": "EVALUATE",
       "target": true,
-      "updated_at": "2026-08-17T10:32:36.002062+00:00"
+      "updated_at": "2026-08-17T15:03:48.884337+00:00"
     }
   ],
   "heartbeat": {
@@ -2058,14 +2058,14 @@
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-16T17:29:22.274233+00:00",
-      "goal_id": "goal-email-send-20260816-b8",
-      "goal_name": "English outbound send batch 8: next 50 from remaining queue",
-      "owner_id": "outbound",
-      "run_id": "run-1c65a9f3d3",
-      "run_status": "waiting",
+      "created_at": "2026-08-17T15:01:11.780146+00:00",
+      "goal_id": "goal-analytics-fullfunnel-v1-20260817",
+      "goal_name": "Full-funnel analytics: live Buffer metrics + PostHog warehouse events (MCP on OpenCode) into funnel-analysis",
+      "owner_id": "system-improvement",
+      "run_id": "run-ad6459f857",
+      "run_status": "blocked",
       "stage": "EVALUATE",
-      "updated_at": "2026-08-17T15:00:02.703467+00:00"
+      "updated_at": "2026-08-17T15:03:48.886484+00:00"
     },
     "heartbeat": {
       "goal_id": "goal-email-send-20260816-b8",
@@ -2077,20 +2077,20 @@
       "target": 0.3,
       "updated_at": "2026-08-17T15:00:02.703467+00:00"
     },
-    "last_activity_at": "2026-08-17T15:00:57.099933+00:00",
-    "last_sync_at": "2026-08-17T15:00:57.165509+00:00",
+    "last_activity_at": "2026-08-17T15:03:48.886484+00:00",
+    "last_sync_at": "2026-08-17T15:03:48.931505+00:00",
     "state": "running"
   },
   "totals": {
-    "approvals": 162,
-    "decisions": 317,
-    "evidence": 4908,
+    "approvals": 163,
+    "decisions": 318,
+    "evidence": 4912,
     "goals_abandoned": 18,
-    "goals_achieved": 101,
-    "goals_active": 21,
+    "goals_achieved": 102,
+    "goals_active": 20,
     "goals_total": 144,
     "hypotheses": 36,
     "memory_claims": 5,
-    "runs": 159
+    "runs": 160
   }
 }
