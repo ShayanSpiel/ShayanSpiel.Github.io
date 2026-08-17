@@ -27,6 +27,7 @@ from .models import (
     ApprovalPolicy, GoalContext, Goal, GoalStatus, RetryPolicy, RunStatus,
     Stage, StageResult,
 )
+from .notifications import followup_payload, terminal_state_payload
 from .memory import eligible_memory
 from .strategy import select_strategy_context
 from .registry import handlers as installed_handlers
@@ -316,6 +317,15 @@ class Runtime:
         if goal.get("deadline") and datetime.now(timezone.utc) >= _timestamp(goal["deadline"]):
             self.store.set_goal_status(goal_id, GoalStatus.EXPIRED.value)
             self.store.event(goal_id, self.store.cycle(goal_id)["id"], "goal.expired", {"deadline": goal["deadline"]})
+            cycle = self.store.cycle(goal_id)
+            terminal = terminal_state_payload(
+                goal=goal, cycle=cycle, goal_status=GoalStatus.EXPIRED.value,
+                message=(f"goal {goal_id} expired: deadline {goal['deadline']} "
+                         "passed before the target was reached"))
+            self.store.notify(goal_id, cycle["id"], "goal_expired", terminal)
+            self.store.notify(goal_id, cycle["id"], "goal_completed_followup",
+                              followup_payload(terminal, goal=goal,
+                                               goal_status=GoalStatus.EXPIRED.value))
             return self.status(goal_id)
         if goal["goal_status"] == "proposed":
             raise RuntimeError(
@@ -586,8 +596,16 @@ class Runtime:
         elif result.run_status in (RunStatus.BLOCKED, RunStatus.FAILED):
             self.store.notify(goal.id, cycle["id"], result.run_status.value, payload)
         if goal_status in TERMINAL:
-            self.store.notify(goal.id, cycle["id"], f"goal_{goal_status}",
-                              self._notification_payload(goal, cycle, result, next_stage, work_order))
+            terminal = self._notification_payload(
+                goal, cycle, result, next_stage, work_order)
+            self.store.notify(goal.id, cycle["id"], f"goal_{goal_status}", terminal)
+            # Terminal follow-up (goal-chat-visible-supervision-20260815): the
+            # goal_<status> row alone goes silent once delivered; a follow-up
+            # carrying a recommended next action surfaces a concrete step into
+            # the chat instead.
+            self.store.notify(goal.id, cycle["id"], "goal_completed_followup",
+                              followup_payload(terminal, goal=goal,
+                                               goal_status=goal_status))
         elif stage is Stage.EVALUATE and result.run_status is RunStatus.COMPLETED:
             self.store.notify(goal.id, cycle["id"], "run_completed",
                               self._notification_payload(goal, cycle, result, next_stage, work_order))
@@ -847,6 +865,21 @@ class Runtime:
         if status is GoalStatus.ACTIVE and previous in TERMINAL:
             self.store.new_cycle(goal_id)
         self.store.event(goal_id, self.store.cycle(goal_id)["id"], f"goal.{status.value}", {})
+        if status.value in TERMINAL:
+            # Terminal follow-up (goal-chat-visible-supervision-20260815):
+            # abandoned/expired/achieved goals emit goal_<status> plus a
+            # follow-up carrying a recommended next action (owner abandon and
+            # deadline expiry do not pass through _persist, so they get the
+            # same notification pair here).
+            row = self.store.goal(goal_id)
+            cycle = self.store.cycle(goal_id)
+            terminal = terminal_state_payload(
+                goal=row, cycle=cycle, goal_status=status.value,
+                message=f"goal {goal_id} reached {status.value}")
+            self.store.notify(goal_id, cycle["id"], f"goal_{status.value}", terminal)
+            self.store.notify(goal_id, cycle["id"], "goal_completed_followup",
+                              followup_payload(terminal, goal=row,
+                                               goal_status=status.value))
         if status in {GoalStatus.PAUSED, GoalStatus.ABANDONED, GoalStatus.EXPIRED, GoalStatus.ACHIEVED}:
             self._halt_descendants(goal_id)
             if status is GoalStatus.PAUSED:

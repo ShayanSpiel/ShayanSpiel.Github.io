@@ -5,6 +5,7 @@ import os
 import sqlite3
 import subprocess
 import tempfile
+import time
 import unittest
 from contextlib import ExitStack, redirect_stdout, contextmanager
 from datetime import datetime, timedelta, timezone
@@ -19,6 +20,7 @@ from company.runtime.models import GoalHandler, GoalContext, Goal, GoalStatus, R
 from company.runtime.runner import Runner
 from company.runtime.service import RunnerService
 from company.runtime.store import Store
+from company.runtime import loop as runtime_loop
 from company.runtime.loop import (Runtime, _completed_failed_runs, _env_file_value,
                                   _live_fingerprint, _live_push_gate)
 from company.__main__ import main, render_report
@@ -675,16 +677,20 @@ class DirectorIdentityContractTests(unittest.TestCase):
         self.assertIn("Route unrelated repository implementation", prompt)
         self.assertIn("request_user_input", prompt)
 
-    def test_opencode_notification_hook_uses_native_question_and_honors_stop(self):
+    def test_opencode_notification_hook_uses_native_question_and_chat_surface(self):
         root = Path(__file__).resolve().parents[3]
         config = (root / "opencode.json").read_text()
         plugin = (root / ".opencode/plugins/spielos-notifications.ts").read_text()
         self.assertIn("spielos-notifications.ts", config)
         self.assertIn('event.type === "session.idle"', plugin)
-        self.assertIn('input.command === "stop"', plugin)
-        self.assertIn("company runner stop", plugin)
-        self.assertIn("promptAsync", plugin)
-        self.assertIn('agent: "director"', plugin)
+        # V2 contract (opencode2, 0.0.0-next-17444): the approval wake-up uses
+        # ctx.session.prompt (no agent field, no V1 promptAsync) and the
+        # stop/start interception hook does not exist in the V2 CommandDomain
+        # — daemon lifecycle belongs to the OS supervisor.
+        self.assertIn("ctx.session.prompt", plugin)
+        self.assertNotIn("promptAsync", plugin)
+        self.assertNotIn("command.execute.before", plugin)
+        self.assertIn("supervisor.py", plugin)
         self.assertIn("native question tool", plugin)
 
     def test_system_improvement_groups_safe_permissions(self):
@@ -1218,3 +1224,70 @@ class LivePushTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class LivePushBoundTests(unittest.TestCase):
+    """company-runtime 5.4.0: live sync/push never block a goal transition."""
+
+    def runtime(self, registry):
+        self.temp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+        return Runtime(Path(self.temp.name) / "state.sqlite", registry)
+
+    def test_git_subprocess_is_bounded(self):
+        with patch("company.runtime.loop.subprocess.run") as run:
+            run.return_value = SimpleNamespace(returncode=0, stdout="", stderr="")
+            runtime_loop._run_git(["status"])
+        self.assertIn("timeout", run.call_args.kwargs)
+        self.assertLessEqual(run.call_args.kwargs["timeout"], 30)
+
+    def test_hanging_push_never_blocks_transition(self):
+        runtime = self.runtime({"immediate_test": ImmediateHandler()})
+        stub = SimpleNamespace(
+            sync_live=lambda db, out, quiet: {"runtime_state": {"state": "x"}})
+        started = time.monotonic()
+        with patch("company.runtime.loop._load_live_sync", return_value=stub), \
+             patch("company.runtime.loop._live_push_gate", return_value=True), \
+             patch("company.runtime.loop._git_push_sequence",
+                   side_effect=subprocess.TimeoutExpired(cmd=["git", "push"], timeout=1)):
+            runtime._sync_live_snapshot()  # must not raise and must return fast
+        self.assertLess(time.monotonic() - started, 5)
+
+    def test_hanging_sync_never_blocks_transition(self):
+        runtime = self.runtime({"immediate_test": ImmediateHandler()})
+        stub = SimpleNamespace(sync_live=lambda db, out, quiet: time.sleep(60))
+        started = time.monotonic()
+        with patch("company.runtime.loop._load_live_sync", return_value=stub), \
+             patch.object(Runtime, "_maybe_push_live_snapshot") as pushed, \
+             patch("company.runtime.loop.LIVE_SYNC_TIMEOUT_S", 1):
+            runtime._sync_live_snapshot()  # bounded: returns after ~1s
+        self.assertLess(time.monotonic() - started, 5)
+        pushed.assert_not_called()
+
+    def test_stale_running_cycle_resumes_but_live_lease_blocks(self):
+        runtime = self.runtime({"immediate_test": ImmediateHandler()})
+        runner = Runner(runtime)
+
+        stale = runtime.create_goal(name="Stale", owner_id="immediate_test",
+                                    metric="done", operator="eq", target=True, config={})
+        cycle = runtime.store.cycle(stale["id"])
+        runtime.store.update_cycle(cycle["id"], stage="ACT", step="execute",
+                                   run_status="running", resume_at=None,
+                                   data=cycle.get("data") or {})
+        row = {"goal": runtime.status(stale["id"])["goal"],
+               "cycle": runtime.store.cycle(stale["id"])}
+        self.assertTrue(runner._runnable(row), "stale running cycle must be runnable")
+        resumed = runtime.once(stale["id"], holder="company-runner")
+        self.assertEqual(resumed["goal"]["goal_status"], "achieved")
+
+        live = runtime.create_goal(name="Live", owner_id="immediate_test",
+                                   metric="done", operator="eq", target=True, config={})
+        cycle = runtime.store.cycle(live["id"])
+        runtime.store.update_cycle(cycle["id"], stage="ACT", step="execute",
+                                   run_status="running", resume_at=None,
+                                   data=cycle.get("data") or {})
+        runtime.store.acquire(live["id"], "ghost-client", seconds=60)
+        row = {"goal": runtime.status(live["id"])["goal"],
+               "cycle": runtime.store.cycle(live["id"])}
+        self.assertFalse(runner._runnable(row), "live lease must block a second client")
+        runtime.store.release(live["id"], "ghost-client")

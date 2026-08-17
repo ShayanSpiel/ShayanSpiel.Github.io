@@ -5,6 +5,8 @@ import unittest
 from pathlib import Path
 
 from company.departments.design.department import DesignDepartment
+from company.connections import connection, connections
+from company.runtime.catalog import catalog
 from company.runtime.contracts import agent_shortfall, validate_goal_request
 from company.runtime.loop import Runtime
 from company.runtime.registry import departments
@@ -114,6 +116,50 @@ class CatalogWorkOrderTests(unittest.TestCase):
                 runtime.complete_work_order(order["id"], "host-a", [{
                     "kind": "unrelated", "payload": {},
                 }])
+
+
+class AttioConnectionContractTests(unittest.TestCase):
+    """Acceptance contract for the attio host-first OAuth CRM Connection."""
+
+    def test_attio_is_registered_in_the_connections_registry(self):
+        self.assertIn("attio", connections())
+        item = connection("attio")
+        self.assertEqual("attio", item.id)
+        self.assertIn("mcp.attio.com/mcp", item.description)
+
+    def test_attio_is_host_first_opencode_oauth_with_no_secret(self):
+        item = connection("attio")
+        self.assertIn("opencode", item.hosts)
+        self.assertFalse(item.unattended)
+        self.assertEqual((), item.required_environment)
+
+    def test_attio_capabilities_cover_read_and_write(self):
+        item = connection("attio")
+        read = {"records_query", "records_search", "list_entries", "notes"}
+        write = {"records_create", "records_update"}
+        self.assertTrue(read.intersection(item.capabilities))
+        self.assertTrue(write.intersection(item.capabilities))
+
+    def test_attio_catalog_entry_validates_with_zero_defects(self):
+        entries = {item["id"]: item for item in catalog()["connections"]}
+        self.assertIn("attio", entries)
+        entry = entries["attio"]
+        self.assertEqual({"id", "description", "capabilities", "hosts",
+                          "unattended", "required_environment"}, set(entry))
+        defects = []
+        if entry["id"] != "attio":
+            defects.append("unexpected id")
+        if not entry["description"]:
+            defects.append("missing description")
+        if not entry["capabilities"]:
+            defects.append("missing capabilities")
+        if "opencode" not in entry["hosts"]:
+            defects.append("opencode host missing")
+        if entry["unattended"]:
+            defects.append("unattended flag set")
+        if entry["required_environment"]:
+            defects.append("unexpected required environment")
+        self.assertEqual([], defects)
 
 
 if __name__ == "__main__":

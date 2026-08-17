@@ -19,11 +19,15 @@ Intended API contract (implementer must make every test pass by editing ONLY
 
 2. Stall detection: `Runner._check_stalled` flags (a) an active goal whose
    `waiting` cycle has a `resume_at` in the past with no advancement since
-   (cycle `updated_at` not after `resume_at`, past the grace window) and
-   (b) an async dispatch file under `.spielos/state/outbound/async/` pending
-   beyond the stale threshold, and emits an `action_required` notification
-   whose payload carries `watchdog.signal == "stuck_goal"` plus the goal id,
-   run id, why, and what to do.
+   (cycle `updated_at` not after `resume_at`, past the grace window),
+   (b) an active goal whose lease is held past the grace with no cycle
+   advancement (wedged tick), and (c) an async dispatch file under
+   `.spielos/state/outbound/async/` that is pending with no live worker
+   (started before this runner generation, past the dead-worker grace) —
+   removed for re-dispatch, or pending beyond the stale threshold — and
+   emits an `action_required` notification whose payload carries
+   `watchdog.signal == "stuck_goal"` plus the goal id, run id, why, and
+   what to do.
 
 3. Dead-daemon signal: a stale heartbeat age produces the `runner_down` signal
    via `runner_down_signal` / `Runner.runner_down`, and the watch loop emits a
@@ -202,7 +206,13 @@ class WatchdogTests(unittest.TestCase):
                         (later, cycle["id"]))
         self.assertEqual([], self.runner._check_stalled())
 
-    def test_stale_pending_dispatch_emits_stuck_goal_notification(self):  # expected after implementation
+    def test_dead_worker_pending_dispatch_recovered_and_emitted(self):  # expected after implementation
+        # Wedge hardening (2026-08-15): a pending dispatch older than the
+        # dead-worker grace AND older than this runner generation has no live
+        # worker thread — it is recovered immediately (removed for
+        # re-dispatch) instead of parking until the 1-hour stale threshold.
+        # The removal is exactly the manual cleanup from the incident, made
+        # automatic; the notification explains why the file is gone.
         goal = self.parked_goal()
         dispatch_dir = self.runtime.store.path.parent / "outbound" / "async" / goal["id"]
         dispatch_dir.mkdir(parents=True, exist_ok=True)
@@ -211,6 +221,9 @@ class WatchdogTests(unittest.TestCase):
             "status": "pending", "started_at": started.isoformat()}))
         emitted = self.runner._check_stalled()
         self.assertEqual(emitted, [goal["id"]])
+        self.assertFalse(
+            (dispatch_dir / "b6.json").exists(),
+            "dead-worker pending dispatch must be removed for re-dispatch")
         pending = [row for row in self.runtime.store.notifications("pending")
                    if row["goal_id"] == goal["id"]
                    and row["kind"] == "action_required"]
@@ -218,7 +231,7 @@ class WatchdogTests(unittest.TestCase):
         payload = pending[0]["payload"]
         self.assertEqual(payload["watchdog"]["signal"], "stuck_goal")
         self.assertEqual(payload["watchdog"]["reason"],
-                         "async dispatch pending beyond stale threshold")
+                         "async dispatch worker died; pending file removed for re-dispatch")
         self.assertEqual(payload["watchdog"]["batch_id"], "b6")
         self.assertIn("company once " + goal["id"], payload["required_user_action"])
 

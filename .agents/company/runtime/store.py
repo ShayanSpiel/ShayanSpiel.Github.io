@@ -318,6 +318,18 @@ class Store:
                     ON work_orders(status, created_at);
                 CREATE INDEX IF NOT EXISTS idx_work_orders_goal_run
                     ON work_orders(goal_id, run_id, status);
+                CREATE TABLE IF NOT EXISTS dispatch_retries (
+                    goal_id TEXT NOT NULL,
+                    run_id TEXT NOT NULL,
+                    attempt INTEGER NOT NULL,
+                    status TEXT NOT NULL,
+                    first_error TEXT,
+                    next_retry_at TEXT,
+                    updated_at TEXT NOT NULL,
+                    PRIMARY KEY(goal_id, run_id, attempt)
+                );
+                CREATE INDEX IF NOT EXISTS idx_dispatch_retries_updated
+                    ON dispatch_retries(updated_at DESC);
             """)
             change_columns = {row[1] for row in con.execute("PRAGMA table_info(change_tasks)")}
             if "change_kind" not in change_columns:
@@ -871,6 +883,59 @@ class Store:
         if not value:
             raise KeyError(f"unknown notification: {notification_id}")
         return value
+
+    def record_dispatch_retry(self, goal_id: str, run_id: str, attempt: int, status: str,
+                              *, first_error: str | None = None,
+                              next_retry_at: str | None = None) -> dict:
+        """Upsert one dispatch retry attempt (Watchdog v2 retry ledger).
+
+        ``attempt`` is the retry sequence number; ``status`` is free-form
+        (retrying/failed/succeeded/...); ``next_retry_at`` is an ISO timestamp
+        of the next scheduled attempt when one exists. ``first_error`` is
+        preserved from the FIRST attempt of the (goal, run) pair so the ledger
+        keeps the original failure even after later attempts upsert fresh rows
+        (the live HUD surfaces the newest row's first_error).
+        """
+        stamp = now()
+        with self.connect() as con:
+            # Pair-level original error: the earliest attempt's first_error
+            # wins for every row of the (goal, run) pair. NULL on the earliest
+            # row falls back to the error passed for this attempt.
+            earliest = con.execute(
+                """SELECT first_error FROM dispatch_retries
+                   WHERE goal_id=? AND run_id=?
+                   ORDER BY attempt ASC LIMIT 1""",
+                (goal_id, run_id)).fetchone()
+            pair_first_error = (earliest[0] if earliest and earliest[0]
+                                 else first_error)
+            con.execute("""INSERT INTO dispatch_retries
+                (goal_id,run_id,attempt,status,first_error,next_retry_at,updated_at)
+                VALUES (?,?,?,?,?,?,?)
+                ON CONFLICT(goal_id,run_id,attempt) DO UPDATE SET
+                    status=excluded.status,
+                    first_error=COALESCE(dispatch_retries.first_error,excluded.first_error),
+                    next_retry_at=excluded.next_retry_at,
+                    updated_at=excluded.updated_at""",
+                (goal_id, run_id, attempt, status, pair_first_error,
+                 next_retry_at, stamp))
+            row = con.execute("""SELECT * FROM dispatch_retries
+                WHERE goal_id=? AND run_id=? AND attempt=?""",
+                (goal_id, run_id, attempt)).fetchone()
+        return self._decode(row)
+
+    def dispatch_retries(self, goal_id: str | None = None, limit: int = 20) -> list[dict]:
+        """Read the retry ledger newest-first, optionally scoped to a goal."""
+        clauses, parameters = [], []
+        if goal_id:
+            clauses.append("goal_id=?")
+            parameters.append(goal_id)
+        where = f"WHERE {' AND '.join(clauses)}" if clauses else ""
+        parameters.append(max(1, min(int(limit), 100)))
+        with self.connect() as con:
+            rows = con.execute(f"""SELECT * FROM dispatch_retries
+                {where} ORDER BY updated_at DESC,attempt DESC LIMIT ?""",
+                parameters).fetchall()
+        return [self._decode(row) for row in rows]
 
     def wake_goal(self, goal_id: str, reason: str) -> bool:
         """Return a waiting parent to OBSERVE, or make an evidence wait due now.

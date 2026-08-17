@@ -33,23 +33,43 @@ function checkNarrationContract(failures) {
   for (const bad of ["music_direction", "music_duck_db", "music-ambient", "voice_audition", "audition_voices", "voice_candidates"]) {
     if (raw.includes(bad)) failures.push(`narration.json: music/audition remnant "${bad}"`);
   }
+  const voices = new Set();
   for (const s of ["b", "c"]) {
     const st = narration.scene_timing?.[s];
     if (!st?.generated_at) { failures.push(`narration.json: scenario ${s} has no measured scene_timing — run scripts/tts-gemini.js first (speech first, then scenes)`); continue; }
     if (!st.voice || st.voice !== voice) failures.push(`narration.json: scenario ${s} scene_timing.voice=${st.voice} ≠ voice_selection=${voice} (mixed generations)`);
+    voices.add(st.voice);
     const scenes = st.scenes || [];
     if (scenes.length < 4) { failures.push(`narration.json: scenario ${s} has ${scenes.length} scenes`); continue; }
+    // narration-led-v2 (speech measured inside each scene, one narration-led
+    // duration under 60s) or the legacy <=14.9s measured-window contract.
+    const narrationLed = st.timing_contract === "narration-led-v2";
     let prev = -0.001;
     for (const sc of scenes) {
-      if (typeof sc.start !== "number" || typeof sc.end !== "number" || sc.start < prev || sc.end <= sc.start) {
-        failures.push(`narration.json: scenario ${s} scene ${sc.scene} window not monotonic/measured (${sc.start}→${sc.end})`);
+      const invalidBase = typeof sc.start !== "number" || typeof sc.end !== "number"
+        || sc.start < prev || sc.end <= sc.start;
+      const invalidNarrationLed = narrationLed && (typeof sc.speech_start !== "number"
+        || typeof sc.speech_end !== "number" || sc.speech_start <= sc.start
+        || sc.speech_end <= sc.speech_start || sc.end <= sc.speech_end);
+      if (invalidBase || invalidNarrationLed) {
+        failures.push(`narration.json: scenario ${s} scene ${sc.scene} window not measured/monotonic (${sc.start}→${sc.end})`);
+        break;
+      }
+      const minimum = sc === scenes[scenes.length - 1] ? 4 : 3;
+      if (narrationLed && sc.end - sc.start + 0.001 < minimum) {
+        failures.push(`narration.json: scenario ${s} scene ${sc.scene} is shorter than the ${minimum}s readability minimum`);
         break;
       }
       prev = sc.start;
     }
     const last = scenes[scenes.length - 1];
-    if (last && last.end > 14.9) failures.push(`narration.json: scenario ${s} overruns 14.9s (${last.end}s) — tighten the TEXT, never cut speech`);
+    if (narrationLed && (!Number.isFinite(st.duration) || Math.abs(st.duration - last?.end) > 0.02 || st.duration >= 60)) {
+      failures.push(`narration.json: scenario ${s} needs one narration-led duration under 60s matching its final scene`);
+    } else if (!narrationLed && last && last.end > 14.9) {
+      failures.push(`narration.json: scenario ${s} overruns 14.9s (${last.end}s) — tighten the TEXT, never cut speech`);
+    }
   }
+  if (voices.size > 1) failures.push(`narration.json: ${voices.size} different voices across scenarios (${[...voices].join(", ")}) — ONE voice required`);
 }
 
 function validateStatic(failures) {

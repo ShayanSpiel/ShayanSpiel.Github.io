@@ -21,7 +21,7 @@ class GrowthDepartmentTests(unittest.TestCase):
         self.assertNotIn("tools", value)
         self.assertNotIn("control_engines", value)
         self.assertEqual("interpreter", value["runtime"]["department_runtime"])
-        self.assertEqual({"buffer", "posthog", "search-console", "website", "web-research",
+        self.assertEqual({"attio", "buffer", "posthog", "search-console", "website", "web-research",
                           "email-delivery"},
                          {item["id"] for item in value["connections"]})
         known_connections = {item["id"] for item in value["connections"]}
@@ -140,18 +140,27 @@ class DesignContractTests(unittest.TestCase):
         self.assertIn((False, True, False), ratios)
         self.assertIn((False, False, True), ratios)
 
-    def test_campaign_video_templates_have_no_legacy_scene_copy_or_spoken_pronunciation_instruction(self):
+    def test_campaign_video_templates_are_restored_batch1_flat_with_still_thumbnail_titles(self):
         root = Path(__file__).parents[3]
         sources = "\n".join((root / path).read_text() for path in (
             ".agents/company/departments/design/templates/video/scenario-b.html",
             ".agents/company/departments/design/templates/video/scenario-c.html",
         ))
+        # Owner order 2026-08-13: revert the contrast/placement experiment.
+        # Templates are batch-1 flat again: no campaign scene machinery, no
+        # visual.* contract fields, no stale legacy fixed scene copy.
         for stale in ("Employees using AI separately", "Repeated prompts, copied context",
                       "One assistant doing everything", "Hire a role", "AI directs"):
             self.assertNotIn(stale, sources)
         for field in ("visual.headline", "visual.supporting_text", "visual.component",
                       "visual.icon", "visual.labels"):
-            self.assertIn(field, sources)
+            self.assertNotIn(field, sources)
+        for machinery in ("campaign-scene", "campaign-label", "__applyCampaignRendition",
+                          "spoken_display_alignment"):
+            self.assertNotIn(machinery, sources)
+        for marker in ("hook-main", "cta-url", "spielos.xyz/services",
+                       "thumb-title", "__setStillTitle"):
+            self.assertIn(marker, sources)
         tts = (root / "scripts/tts-gemini.js").read_text()
         self.assertNotIn("SpielOS (pronounced", tts)
         self.assertIn('[/SpielOS/g, "Shpeel O S"]', tts)

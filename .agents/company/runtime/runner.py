@@ -11,6 +11,7 @@ from pathlib import Path
 
 from .alignment import approval_key
 from .loop import Runtime
+from .notifications import digest_payload
 from .service import automation_enabled
 
 # Watchdog constants. The runner is its own watchdog: the watch loop stamps a
@@ -52,6 +53,30 @@ DISPATCH_DEAD_WORKER_GRACE_SECONDS = 90
 # per goal/run/kind, but re-stamping it refreshes created_at).
 SEND_ACTIVITY_CHECK_INTERVAL_SECONDS = 300  # dedicated send-scan limiter
 SEND_STALL_GRACE_SECONDS = 900              # pending w/o a new send -> alert
+# Scheduled progress digest (goal-chat-visible-supervision-20260815): the
+# runner's watch loop emits one company-wide ``watchdog_digest`` notification
+# at most once per digest interval while ANY goal is active, so supervision is
+# visibly present inside the chat on a schedule even when no event fires. The
+# last-emitted stamp is durable (state file beside the heartbeat), so a daemon
+# restart inside the interval never re-emits and an interval that elapsed while
+# the daemon was down produces exactly one digest on the next watch cycle.
+DIGEST_INTERVAL_SECONDS = 900               # default 15 minutes
+DIGEST_FILENAME = "runner_digest.json"      # durable last-emitted stamp
+DIGEST_RECENT_TERMINAL_LIMIT = 5            # last N terminal outcomes shown
+DIGEST_PENDING_SCAN_LIMIT = 100             # pending rows scanned for approvals
+# Watchdog v2 live HUD (goal-577aaacc7d / change-7cc84900b7): the daemon
+# watch loop writes ``live_status.json`` beside the heartbeat once per cycle
+# so the OpenCode plugin HUD ticker and any external reader can render a live
+# countdown surface (heartbeat ages, next digest, goal resume countdowns,
+# pending approvals, retry ledger, watchdog incidents tail) without running
+# company CLI queries. Written ONLY from the daemon watch path — standalone
+# ``tick()`` calls must never refresh it (same rule as the heartbeat), or a
+# fallback tick would mask a dead daemon's stale surface.
+LIVE_STATUS_FILENAME = "live_status.json"
+LIVE_STATUS_RECENT_TERMINAL_LIMIT = 3       # last N terminal outcomes shown
+LIVE_STATUS_RETRY_LIMIT = 5                 # newest retry ledger rows shown
+LIVE_STATUS_INCIDENTS_TAIL = 3              # last N watchdog incidents shown
+INCIDENTS_FILENAME = "watchdog_incidents.jsonl"
 
 
 def heartbeat_age(heartbeat_path, now=None) -> float | None:
@@ -163,7 +188,8 @@ class Runner:
                  lease_held_grace_seconds: float = LEASE_HELD_GRACE_SECONDS,
                  dead_worker_grace_seconds: float = DISPATCH_DEAD_WORKER_GRACE_SECONDS,
                  send_activity_check_interval_seconds: float = SEND_ACTIVITY_CHECK_INTERVAL_SECONDS,
-                 send_stall_grace_seconds: float = SEND_STALL_GRACE_SECONDS):
+                 send_stall_grace_seconds: float = SEND_STALL_GRACE_SECONDS,
+                 digest_interval_seconds: float = DIGEST_INTERVAL_SECONDS):
         self.runtime = runtime
         self._stall_check_interval_seconds = stall_check_interval_seconds
         self._stall_grace_seconds = stall_grace_seconds
@@ -173,6 +199,7 @@ class Runner:
         self._dead_worker_grace_seconds = dead_worker_grace_seconds
         self._send_activity_check_interval_seconds = send_activity_check_interval_seconds
         self._send_stall_grace_seconds = send_stall_grace_seconds
+        self._digest_interval_seconds = digest_interval_seconds
         self._last_stall_check = 0.0
         self._last_send_activity_check = 0.0
         self._active_goal_id = None
@@ -245,6 +272,104 @@ class Runner:
     def _stop_heartbeat_thread(self) -> None:
         self._hb_stop.set()
 
+    # ------------------------------------------------------------------ #
+    # Live status surface (Watchdog v2)                                  #
+    # ------------------------------------------------------------------ #
+
+    def live_status_path(self) -> Path:
+        """The live HUD file lives beside the heartbeat (.spielos/state)."""
+        return self.runtime.store.path.parent / LIVE_STATUS_FILENAME
+
+    def _write_live_status(self, now=None) -> None:
+        """Refresh ``live_status.json`` (daemon watch path only).
+
+        Best-effort like the heartbeat: a failed write must never break the
+        watch loop — the HUD is a surface, not a liveness signal. Standalone
+        ``tick()`` calls never reach here (see module constants).
+        """
+        now = now or datetime.now(timezone.utc)
+        try:
+            path = self.live_status_path()
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(json.dumps(self._live_status_payload(now)) + "\n",
+                            encoding="utf-8")
+        except Exception:  # pragma: no cover - cosmetic surface; never kill the daemon
+            pass
+
+    def _live_status_payload(self, now: datetime) -> dict:
+        """Bounded projection for the HUD: heartbeat ages, digest countdown,
+        active goal resume countdowns, pending approvals, recent terminals,
+        retry ledger, and the watchdog incident tail."""
+        rows = self.runtime.list_goals()
+        active = [row for row in rows if row["goal"]["goal_status"] == "active"]
+        active_goals = []
+        for row in active:
+            cycle = row["cycle"]
+            resume_in_seconds = None
+            resume_at = cycle.get("resume_at")
+            if resume_at:
+                parsed = self._parse_dt(resume_at)
+                if parsed is not None:
+                    resume_in_seconds = round((parsed - now).total_seconds())
+            active_goals.append({
+                "goal_id": row["goal"]["id"], "name": row["goal"]["name"],
+                "stage": cycle["stage"], "step": cycle["step"],
+                "run_status": cycle["run_status"], "resume_at": resume_at,
+                "resume_in_seconds": resume_in_seconds,
+            })
+        approvals = [
+            row for row in self.runtime.store.notifications(
+                "pending", DIGEST_PENDING_SCAN_LIMIT)
+            if row["kind"] == "approval_required"]
+        recent_terminals = [
+            {"goal_id": row["id"], "name": row["name"],
+             "goal_status": row["goal_status"]}
+            for row in self.runtime.store.goal_summaries(
+                statuses=("achieved", "abandoned", "expired"),
+                limit=LIVE_STATUS_RECENT_TERMINAL_LIMIT)]
+        retry_ledger = [
+            {"goal_id": row["goal_id"], "run_id": row["run_id"],
+             "attempt": row["attempt"], "status": row["status"],
+             "first_error": row.get("first_error"),
+             "next_retry_at": row.get("next_retry_at"),
+             "updated_at": row["updated_at"]}
+            for row in self.runtime.store.dispatch_retries(
+                limit=LIVE_STATUS_RETRY_LIMIT)]
+        next_digest_at = None
+        if active:
+            last = self._last_digest_emitted_at()
+            if last is None:
+                # No digest yet this period: the first one is due now.
+                next_digest_at = now.isoformat()
+            else:
+                next_digest_at = (last + timedelta(
+                    seconds=self._digest_interval_seconds)).isoformat()
+        return {
+            "ts": now.isoformat(),
+            "heartbeat": dict(self._hb_payload),
+            "next_digest_at": next_digest_at,
+            "active_goals": active_goals,
+            "pending_approvals": len(approvals),
+            "recent_terminals": recent_terminals,
+            "retry_ledger": retry_ledger,
+            "incidents_tail": self._incidents_tail(),
+        }
+
+    def _incidents_tail(self, limit: int = LIVE_STATUS_INCIDENTS_TAIL) -> list[dict]:
+        """Last ``limit`` parsed lines of the watchdog incident JSONL."""
+        path = self.runtime.store.path.parent / INCIDENTS_FILENAME
+        try:
+            lines = path.read_text(encoding="utf-8").splitlines()
+        except OSError:
+            return []
+        tail = []
+        for line in lines[-max(1, limit):]:
+            try:
+                tail.append(json.loads(line))
+            except (ValueError, json.JSONDecodeError):  # pragma: no cover - defensive
+                continue
+        return tail
+
     def heartbeat_age(self, now=None) -> float | None:
         return heartbeat_age(self.heartbeat_path(), now=now)
 
@@ -289,6 +414,10 @@ class Runner:
         try:
             while max_ticks is None or ticks < max_ticks:
                 self.write_heartbeat()
+                # Live HUD surface: refreshed once per watch cycle, only from
+                # the daemon path (tick() never writes it). Bounded content;
+                # best-effort write.
+                self._write_live_status()
                 try:
                     result = self.tick(goal_id)
                     pending = tuple(item["id"] for item in result["pending_notifications"])
@@ -297,6 +426,10 @@ class Runner:
                     previous_pending = pending
                     ticks += 1
                     self._check_stalled(goal_id)
+                    # Scheduled progress digest: emitted by the daemon watch
+                    # loop (not the plugin) so supervision stays visible on a
+                    # schedule while goals are active, independently of events.
+                    self._maybe_emit_digest(goal_id)
                 except Exception as exc:
                     # Best-effort: tell the world the watch loop is dying before
                     # the daemon exits. The heartbeat reader remains the primary
@@ -638,6 +771,102 @@ class Runner:
         if parsed.tzinfo is None:
             parsed = parsed.replace(tzinfo=timezone.utc)
         return parsed
+
+    # ------------------------------------------------------------------ #
+    # Scheduled progress digest (goal-chat-visible-supervision-20260815)  #
+    # ------------------------------------------------------------------ #
+
+    def digest_marker_path(self) -> Path:
+        """Durable last-emitted stamp for the progress digest.
+
+        Lives beside the heartbeat file, so the cadence survives daemon
+        restarts: a restart inside the interval must not re-emit, and an
+        interval that elapsed while the daemon was down must produce exactly
+        one digest on the next watch cycle.
+        """
+        return self.runtime.store.path.parent / DIGEST_FILENAME
+
+    def _last_digest_emitted_at(self) -> datetime | None:
+        try:
+            data = json.loads(self.digest_marker_path().read_text(encoding="utf-8"))
+        except (OSError, ValueError, json.JSONDecodeError):
+            return None
+        if not isinstance(data, dict):
+            return None
+        return self._parse_dt(data.get("last_emitted_at"))
+
+    def _stamp_digest(self, emitted_at: datetime) -> None:
+        """Record the last digest emission. Best-effort: a failed write only
+        delays the next digest by one interval (the store row still exists)."""
+        try:
+            path = self.digest_marker_path()
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(json.dumps({
+                "last_emitted_at": emitted_at.isoformat(),
+                "interval_seconds": self._digest_interval_seconds,
+            }) + "\n", encoding="utf-8")
+        except OSError:  # pragma: no cover - defensive; not a liveness signal
+            pass
+
+    def _maybe_emit_digest(self, goal_id: str | None = None, now=None) -> list[str]:
+        """Emit one company-wide ``watchdog_digest`` per digest interval.
+
+        Fires while at least one goal in the runner's scope is active
+        (``goal_status == "active"``). The last-emitted stamp is durable, so
+        a daemon restart inside the interval re-emits nothing. With no active
+        goals nothing is emitted and the stamp is not advanced, so the first
+        digest of a newly active period is immediately due. Returns the goal
+        ids the digest was attached to (empty list => nothing emitted).
+        """
+        now = now or datetime.now(timezone.utc)
+        rows = self._scope_rows(goal_id, self.runtime.list_goals())
+        active = [row for row in rows if row["goal"]["goal_status"] == "active"]
+        if not active:
+            return []
+        last = self._last_digest_emitted_at()
+        if (last is not None
+                and (now - last).total_seconds() < self._digest_interval_seconds):
+            return []
+        anchor = active[0]  # deterministic: store.goals() orders by created_at
+        self.runtime.store.notify(anchor["goal"]["id"], anchor["cycle"]["id"],
+                                  "watchdog_digest", self._digest_payload(active, now))
+        self._stamp_digest(now)
+        return [anchor["goal"]["id"]]
+
+    def _digest_payload(self, active: list[dict], now: datetime) -> dict:
+        """Digest payload: active goals with stage/step, last tick and
+        resume_at; pending approvals; recent terminal outcomes; blockers."""
+        approvals = [
+            {"goal_id": row["goal_id"], "run_id": row["run_id"],
+             "created_at": row["created_at"]}
+            for row in self.runtime.store.notifications("pending",
+                                                        DIGEST_PENDING_SCAN_LIMIT)
+            if row["kind"] == "approval_required"]
+        recent_terminal = [
+            {"goal_id": row["id"], "name": row["name"],
+             "goal_status": row["goal_status"]}
+            for row in self.runtime.store.goal_summaries(
+                statuses=("achieved", "abandoned", "expired"),
+                limit=DIGEST_RECENT_TERMINAL_LIMIT)]
+        blockers = [
+            {"goal_id": row["goal"]["id"], "name": row["goal"]["name"],
+             "run_status": row["cycle"]["run_status"]}
+            for row in active
+            if row["cycle"]["run_status"] in {"blocked", "failed"}]
+        return digest_payload(
+            emitted_at=now.isoformat(),
+            interval_seconds=self._digest_interval_seconds,
+            active_goals=[
+                {"goal_id": row["goal"]["id"], "name": row["goal"]["name"],
+                 "owner_id": row["goal"]["owner_id"],
+                 "stage": row["cycle"]["stage"], "step": row["cycle"]["step"],
+                 "run_status": row["cycle"]["run_status"],
+                 "resume_at": row["cycle"].get("resume_at"),
+                 "last_tick_at": row["cycle"].get("updated_at")}
+                for row in active],
+            pending_approvals=approvals,
+            recent_terminal=recent_terminal,
+            blockers=blockers)
 
     def _emit_stuck_goal(self, goal: dict, cycle: dict, *, reason: str,
                          detail: dict) -> dict:

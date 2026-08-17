@@ -39,20 +39,9 @@ body { font-family: var(--font); color: var(--fg); -webkit-font-smoothing: antia
 /* The same flat goal line is the visual signature across SpielOS motion;
    the shared journey/goal/footer styles live in brand-motion.css. */
 
-.r { opacity:0; transform:translateY(20px); filter:blur(3px); transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1), filter 0.6s cubic-bezier(0.16,1,0.3,1); }
+.r { opacity:0; transform:translateY(20px); filter:blur(3px); transition: opacity 0.6s cubic-bezier(0.16,1,0.3,1), transform 0.6s cubic-bezier(0.16,1,0.3,1), filter 0.4s cubic-bezier(0.16,1,0.3,1); }
 .r.show { opacity:1; transform:translateY(0); filter:blur(0); }
 .d1{transition-delay:.06s}.d2{transition-delay:.12s}.d3{transition-delay:.18s}
-
-/* Campaign-controlled motion primitives. The selected campaign Artifact owns
-   every displayed word, component type, icon, label, and spoken scene. */
-.campaign-scene { width:min(88%,900px); text-align:center; display:flex; flex-direction:column; align-items:center; }
-.campaign-icon { width:72px; height:72px; display:flex; align-items:center; justify-content:center; border-radius:var(--radius-lg); background:var(--primary-soft); color:var(--primary); font-size:36px; margin-bottom:24px; }
-.campaign-eyebrow { font-family:var(--mono); font-size:clamp(.85rem,1.5vw,1.1rem); color:var(--primary); text-transform:uppercase; letter-spacing:.12em; margin-bottom:20px; }
-.campaign-headline { max-width:14ch; font-size:clamp(3rem,8vw,6rem); font-weight:800; color:var(--fg0); line-height:1.02; letter-spacing:-.045em; text-align:center; }
-.campaign-support { max-width:34ch; margin-top:24px; font-size:clamp(1.05rem,2vw,1.45rem); color:var(--fg4); line-height:1.45; }
-.campaign-labels { display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:12px; margin-top:28px; }
-.campaign-label { padding:10px 16px; border:1px solid var(--border); border-radius:var(--radius-pill); background:var(--panel); font-family:var(--mono); font-size:clamp(.8rem,1.4vw,1rem); color:var(--fg1); }
-@media (orientation:portrait) { .campaign-scene{width:90%}.campaign-icon{width:96px;height:96px;font-size:48px}.campaign-headline{font-size:clamp(4rem,10vw,7rem);max-width:12ch}.campaign-support{font-size:clamp(1.4rem,3vw,2rem)}.campaign-label{font-size:1.25rem;padding:14px 20px} }
 
 /* ═══ S1: HOOK ═══ */
 .hook { text-align:center; z-index:10; padding:0 8%; }
@@ -177,33 +166,88 @@ body { font-family: var(--font); color: var(--fg); -webkit-font-smoothing: antia
   </g>
 </svg>
 
+
+<!-- Thumbnail still title — populated ONLY by render-video.js --still
+     through window.__setStillTitle; hidden during the video itself. -->
+<div class="thumb-title" id="thumb-title"></div>
+
 <div class="video-brand-footer"><span class="brand-lockup"><img src="/public/assets/favicons/favicon.svg" alt="">spielos.xyz</span></div>
 
-<!-- Empty controlled mounts: no template-owned campaign copy survives. -->
-<div class="scene" id="s1"><div class="campaign-scene"><div class="campaign-icon r" id="h0"><i class="bx"></i></div><div class="campaign-eyebrow r" id="h1"></div><div class="campaign-headline r" id="h2"></div><div class="campaign-support r d1" id="h3"></div><div class="campaign-labels r d2" id="h4"></div></div></div>
-<div class="scene" id="s2"><div class="campaign-scene"><div class="campaign-icon r" id="bs0"><i class="bx"></i></div><div class="campaign-eyebrow r" id="bs1"></div><div class="campaign-headline r" id="bs2"></div><div class="campaign-support r d1" id="bs3"></div><div class="campaign-labels r d2" id="bs4"></div></div></div>
-<div class="scene" id="s3"><div class="campaign-scene"><div class="campaign-icon r" id="l0"><i class="bx"></i></div><div class="campaign-eyebrow r" id="l1"></div><div class="campaign-headline r" id="l2"></div><div class="campaign-support r d1" id="l3"></div><div class="campaign-labels r d2" id="l4"></div></div></div>
-<div class="scene" id="s4"><div class="campaign-scene"><div class="campaign-icon r" id="dc0"><i class="bx"></i></div><div class="campaign-eyebrow r" id="dc1"></div><div class="campaign-headline r" id="dc2"></div><div class="campaign-support r d1" id="dc3"></div><div class="campaign-labels r d2" id="dc4"></div></div></div>
-<div class="scene" id="s5"><div class="campaign-scene"><div class="campaign-icon r" id="ct0"><i class="bx"></i></div><div class="campaign-eyebrow r" id="ct1"></div><div class="campaign-headline r" id="ct2"></div><div class="campaign-support r d1" id="ct3"></div><div class="campaign-labels r d2" id="ct4"></div></div></div>
+<!-- S1: HOOK -->
+<div class="scene" id="s1">
+  <div class="hook">
+    <div class="hook-main r" id="h1">What if your AI employees</div>
+    <div class="hook-main r d1" id="h2">could work <span class="accent">like a real team?</span></div>
+  </div>
+</div>
+
+<!-- S2: BUILD -->
+<div class="scene" id="s2">
+  <div class="build">
+    <div class="build-list">
+      <div class="build-step" id="bs0">
+        <div class="build-num" style="background:var(--primary-soft);color:var(--primary)">01</div>
+        <div class="build-body"><div class="build-title">Name the role</div><div class="build-desc">Write the job, personality, and rules</div></div>
+        <div class="build-icon" style="background:var(--primary-soft);color:var(--primary)"><i class="bx bx-group" style="font-size:13px"></i></div>
+      </div>
+      <div class="build-step" id="bs1">
+        <div class="build-num" style="background:var(--accent-soft);color:var(--accent)">02</div>
+        <div class="build-body"><div class="build-title">Give instructions & tools</div><div class="build-desc">Connect Google, Notion, Slack, or any API</div></div>
+        <div class="build-icon" style="background:var(--accent-soft);color:var(--accent)"><i class="bx bx-link" style="font-size:13px"></i></div>
+      </div>
+      <div class="build-step" id="bs2">
+        <div class="build-num" style="background:var(--warning-soft);color:var(--warning)">03</div>
+        <div class="build-body"><div class="build-title">Set quality standards</div><div class="build-desc">QA checkpoints in any workflow</div></div>
+        <div class="build-icon" style="background:var(--warning-soft);color:var(--warning)"><i class="bx bx-check-square" style="font-size:13px"></i></div>
+      </div>
+      <div class="build-step" id="bs3">
+        <div class="build-num" style="background:var(--purple-soft);color:var(--purple)">04</div>
+        <div class="build-body"><div class="build-title">Connect into workflows</div><div class="build-desc">Chain roles into multi-step pipelines</div></div>
+        <div class="build-icon" style="background:var(--purple-soft);color:var(--purple)"><i class="bx bx-network-chart" style="font-size:13px"></i></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- S3: LIVE -->
+<div class="scene" id="s3">
+  <div class="live">
+    <div class="live-main r" id="l1">Your AI department</div>
+    <div class="live-main r d1" id="l2">is <span class="accent">live.</span></div>
+  </div>
+</div>
+
+<!-- S4: DIRECTOR -->
+<div class="scene" id="s4">
+  <div class="director">
+    <div class="hook-main r" id="dc1">Director mode: <span style="color:var(--fg4)">you choose.</span></div>
+    <div class="dir-panels">
+      <div class="dir-card" id="dc-0">
+        <div class="dir-card-icon" style="background:var(--primary-soft);color:var(--primary)"><i class="bx bx-user" style="font-size:17px"></i></div>
+        <div class="dir-card-title">You direct</div>
+        <div class="dir-card-desc">Manual approval at every step</div>
+      </div>
+      <div class="dir-card" id="dc-1">
+        <div class="dir-card-icon" style="background:var(--purple-soft);color:var(--purple)"><i class="bx bx-brain" style="font-size:17px"></i></div>
+        <div class="dir-card-title">AI runs it</div>
+        <div class="dir-card-desc">Autonomous team execution</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- S5: CTA -->
+<div class="scene" id="s5">
+  <div class="cta">
+    <div class="cta-badge r" id="ct0"><span class="cta-dot"></span> AI agent implementation</div>
+    <div class="cta-title r d1" id="ct1">Build your first <span class="accent">AI department.</span></div>
+    <div class="cta-url r d2" id="ct2"><span class="p">$</span> spielos.xyz/services</div>
+  </div>
+</div>
 
 <script>
-window.__t=0;window.__fps=30;window.__duration=0;
+window.__t=0;window.__fps=30;window.__duration=15;
 window.__setFrame=function(f,fps){window.__fps=fps||30;window.__t=f/window.__fps};
-window.__applyCampaignRendition=function(order){
-  if(!order||!order.design||!order.narration){document.documentElement.dataset.templateReady='error';throw new Error('Typed campaign video rendition required')}
-  var mounts=[['h0','h1','h2','h3','h4'],['bs0','bs1','bs2','bs3','bs4'],['l0','l1','l2','l3','l4'],['dc0','dc1','dc2','dc3','dc4'],['ct0','ct1','ct2','ct3','ct4']];
-  if(!order.narration.scenes||order.narration.scenes.length!==mounts.length)throw new Error('Every motion scene requires one campaign-controlled source');
-  order.narration.scenes.forEach(function(scene,index){var visual=scene.visual||{},ids=mounts[index],icon=document.querySelector('#'+ids[0]+' i'),spoken=String(scene.text||'').trim().toLowerCase(),displayed=String(visual.headline||'').trim().toLowerCase(),urlAligned=visual.spoken_display_alignment==='url-pronunciation'&&visual.component==='cta'&&displayed==='spielos.xyz/services'&&spoken==='go to spielos dot xyz slash services.';if((!displayed||displayed!==spoken)&&!urlAligned)throw new Error('Displayed headline must equal spoken text or declare the URL pronunciation alignment');document.getElementById(ids[0]).dataset.component=visual.component;icon.className='bx '+visual.icon;document.getElementById(ids[1]).textContent=visual.eyebrow;document.getElementById(ids[2]).textContent=visual.headline;document.getElementById(ids[3]).textContent=visual.supporting_text;document.getElementById(ids[4]).replaceChildren.apply(document.getElementById(ids[4]),(visual.labels||[]).map(function(label){var el=document.createElement('span');el.className='campaign-label';el.textContent=label;return el}))});
-  document.documentElement.dataset.theme=order.design.theme;
-  document.body.dataset.campaignId=order.campaign_id;
-  document.body.dataset.batchId=order.batch_id;
-  document.body.dataset.itemId=order.item_id;
-  document.body.dataset.contentId=order.content_id;
-  if(order.narration.scene_timing){window.__timing=order.narration.scene_timing;window.__duration=order.narration.scene_timing.duration||0}
-  document.title='SpielOS — '+order.narration.scenes[0].visual.headline;
-  document.documentElement.dataset.templateReady='true';
-};
-document.documentElement.dataset.templateReady='waiting';
 
 /* Measured scene schedule (owner contract №2: speech first, then scenes).
    Loaded from narration.json, written by scripts/tts-gemini.js from the real
@@ -215,9 +259,17 @@ fetch('/.agents/company/departments/design/templates/video/narration.json')
   .then(function(r){return r.json()})
   .then(function(d){
     var tm=(d.scene_timing&&d.scene_timing.c)||null;
-    if(tm&&tm.voice&&tm.scenes&&tm.scenes.length){window.__timing=tm;window.__duration=tm.duration||0}else window.__timingError=true;
+    if(tm&&tm.voice&&tm.scenes&&tm.scenes.length) window.__timing=tm; else window.__timingError=true;
   })
   .catch(function(){window.__timingError=true});
+
+
+window.__setStillTitle=function(text){
+  var el=document.getElementById('thumb-title');
+  if(!el)return;
+  el.textContent=text||'';
+  el.classList.toggle('show', !!(text&&text.trim()));
+};
 
 function act(id){document.querySelectorAll('.scene').forEach(function(s){s.classList.toggle('active',s.id===id)})}
 function tog(id,v){var e=document.getElementById(id);if(e)e.classList.toggle('show',v)}
@@ -303,18 +355,17 @@ function tick(){
   document.getElementById('journey-goal').classList.toggle('show',goalReached);
   document.getElementById('portrait-goal').classList.toggle('show',goalReached);
 
-  /* Scenes use narration-led readable windows; the last scene holds to the
-     measured dynamic duration. */
+  /* Scenes — windows from the measured schedule; the last scene holds to 15s. */
   var idx=-1;
   for(var i=0;i<sc.length;i++){
     if(t>=sc[i].start&&(i===sc.length-1||t<sc[i+1].start)){idx=i;break;}
   }
   var s0=idx>=0?sc[idx].start:0;
-  if(idx===0){act('s1');for(var a=0;a<5;a++)tog('h'+a,t>s0+0.08+a*0.18)}
-  if(idx===1){act('s2');for(var b=0;b<5;b++)tog('bs'+b,t>s0+0.08+b*0.18)}
-  if(idx===2){act('s3');for(var c=0;c<5;c++)tog('l'+c,t>s0+0.08+c*0.18)}
-  if(idx===3){act('s4');for(var d=0;d<5;d++)tog('dc'+d,t>s0+0.08+d*0.18)}
-  if(idx===4){act('s5');for(var e=0;e<5;e++)tog('ct'+e,t>s0+0.08+e*0.18)}
+  if(idx===0){act('s1');tog('h1',t>s0+0.25);tog('h2',t>s0+0.7)}
+  if(idx===1){act('s2');for(var i=0;i<4;i++)tog('bs'+i,t>s0+0.25+i*0.55)}
+  if(idx===2){act('s3');tog('l1',t>s0+0.2);tog('l2',t>s0+0.6)}
+  if(idx===3){act('s4');tog('dc1',t>s0+0.2);tog('dc-0',t>s0+0.55);tog('dc-1',t>s0+1.05)}
+  if(idx===4){act('s5');tog('ct0',t>s0+0.05);tog('ct1',t>s0+0.2);tog('ct2',t>s0+0.45)}
   if(idx<0)act('none');
 
   requestAnimationFrame(tick);

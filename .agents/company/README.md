@@ -354,6 +354,15 @@ approval again. Expanding files, diagnosis, or side effects needs a new
 approval or a new Goal. The local evaluation never satisfies a parent business
 metric.
 
+The `/live` snapshot sync and push are strictly best-effort and bounded:
+`sync-live-timeline.py` runs with a 15-second hard bound and every git
+subprocess with a 20-second hard bound (`LIVE_SYNC_TIMEOUT_S` and
+`LIVE_PUSH_GIT_TIMEOUT_S` in `runtime/loop.py`). A hung network, remote lock,
+or filesystem logs a warning and never blocks a goal transition. A cycle left
+mid-flight in `running` state by a killed client resumes on the next tick once
+its lease expires — the pull worker treats a `running` cycle without a live
+lease as runnable (`store.live_lease`).
+
 ## OpenCode permission policy
 
 Company agents run with free-run shell permissions in OpenCode (V2

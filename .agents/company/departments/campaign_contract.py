@@ -27,13 +27,12 @@ PHASES = ("strategy", "designed", "rendered", "approved", "delivered", "measured
 SPIELOS_NOTE = "This is SpielOS, An AI company running itself."  # legacy packages
 SPIELOS_REMINDER = "SpielOS is running itself — an AI company."
 LINK_IN_BIO = "Link in bio."
+YOUTUBE_CATEGORY_ID = "28"  # Science & Technology — Buffer YoutubePostMetadataInput.categoryId
 INTERNAL_COPY_TERMS = {
     "approval record", "batch", "campaign artifact", "campaign handoff",
     "content dispatch", "content department", "creative signature", "harness rule",
     "review gate", "runtime",
 }
-SEMANTIC_SURFACES = {"background", "panel", "panel-raised", "panel-strong", "panel-deep"}
-SEMANTIC_COLORS = {"primary", "accent", "purple", "info", "success", "warning"}
 STRATEGY_REFS = {
     "icp": ".agents/company/strategy/icp.md",
     "positioning": ".agents/company/strategy/positioning.md",
@@ -42,8 +41,7 @@ STRATEGY_REFS = {
 EXPERIMENT_TYPES = {"single-variable", "a/b", "factorial", "funnel"}
 EXPERIMENT_SCOPES = {"cross-channel-creative", "website-cro"}
 EXPERIMENT_VARIABLES = {
-    "hook", "context_framing", "cta", "theme", "background_surface",
-    "color_role", "title_hierarchy", "alignment_layout",
+    "hook", "context_framing", "cta", "theme",
     "narration_opening", "offer_framing", "website_copy",
 }
 PRIMARY_METRICS = {
@@ -110,8 +108,6 @@ def creative_signature(campaign_id: str, item_id: str, platform: str,
     controlled = {
         "campaign_id": campaign_id, "item_id": item_id, "platform": platform,
         "template_id": design.get("template_id"), "theme": design.get("theme"),
-        "surface": design.get("surface"), "color_role": design.get("color_role"),
-        "alignment": design.get("alignment"), "layout": design.get("layout"),
         "title_lines": design.get("title_lines"),
     }
     raw = json.dumps(controlled, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
@@ -303,17 +299,13 @@ def _validate_optimization_decision(manifest: dict[str, Any], decision: dict[str
 def _validate_design(design: dict[str, Any], platform: str, prefix: str,
                      errors: list[str]) -> None:
     rule = PLATFORM_CONTRACT[platform]
-    required = ("template_id", "theme", "surface", "color_role", "alignment",
-                "layout", "size_preset", "title_lines", "eyebrow", "supporting_text")
+    required = ("template_id", "theme", "size_preset", "title_lines",
+                "eyebrow", "supporting_text")
     for field in required:
         if not design.get(field):
             errors.append(f"{prefix}.design.{field} is required")
     if design.get("size_preset") != rule["size_preset"]:
         errors.append(f"{prefix}.design.size_preset must be {rule['size_preset']}")
-    if design.get("surface") not in SEMANTIC_SURFACES:
-        errors.append(f"{prefix}.design.surface must be a semantic surface token")
-    if design.get("color_role") not in SEMANTIC_COLORS:
-        errors.append(f"{prefix}.design.color_role must be a semantic color token")
     raw = json.dumps(design).lower()
     if "#" in raw or "rgb(" in raw or "hsl(" in raw:
         errors.append(f"{prefix}.design must not contain raw colors")
@@ -329,6 +321,18 @@ def _validate_design(design: dict[str, Any], platform: str, prefix: str,
     lines = design.get("title_lines") or []
     if not isinstance(lines, list) or not 1 <= len(lines) <= 3 or any(not _text(line) for line in lines):
         errors.append(f"{prefix}.design.title_lines must contain one to three readable lines")
+    if platform == "youtube":
+        thumbnail_title = design.get("thumbnail_title")
+        if thumbnail_title not in (None, ""):
+            words = _text(thumbnail_title).split()
+            if not 1 <= len(words) <= 5:
+                errors.append(f"{prefix}.design.thumbnail_title must be 1-5 words")
+            compact_title = _text(thumbnail_title).casefold()
+            if re.search(r"https?://|utm_|\b[a-z0-9-]+\.(?:xyz|com|net|org|io|ai|dev|co)\b", compact_title):
+                errors.append(f"{prefix}.design.thumbnail_title must not contain a URL or UTM parameters")
+            for term in INTERNAL_COPY_TERMS:
+                if re.search(rf"\b{re.escape(term)}\b", compact_title):
+                    errors.append(f"{prefix}.design.thumbnail_title exposes internal production language: {term}")
 
 
 def _validate_rendition(manifest: dict[str, Any], item: dict[str, Any],
@@ -555,6 +559,12 @@ def publication_package(manifest: dict[str, Any]) -> dict[str, Any]:
                 "assets": [{"type": rendition["asset"]["type"],
                             "url": rendition["asset"]["public_url"]}],
                 "mode": rendition.get("delivery_mode", "queue"),
+                "metadata": (None if platform == "threads" else {
+                    "youtube": {
+                        "title": _text(" ".join(rendition["design"].get("title_lines") or [])),
+                        "categoryId": YOUTUBE_CATEGORY_ID,
+                    }
+                }),
             })
     return {"schema_version": SCHEMA_VERSION, "campaign_id": manifest["campaign_id"],
             "batch_id": manifest["batch_id"], "approval_required": True, "posts": posts}

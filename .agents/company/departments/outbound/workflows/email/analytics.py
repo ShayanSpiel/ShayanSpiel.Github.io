@@ -35,6 +35,9 @@ Usage (via outbound.py):
 """
 
 import json
+import os
+import threading
+import time as _time
 from datetime import datetime, timedelta, timezone
 
 from . import config, providers
@@ -42,6 +45,45 @@ from . import config, providers
 
 def cap_status_supported() -> bool:
     return providers.cap_status()
+
+# Wedge hardening (2026-08-15 incident): the campaign measure path calls
+# collect() from the serial watch loop. Provider calls used to be unbounded —
+# a stalled HTTPS connection held the daemon's only thread forever (the
+# campaign lease was acquired and never renewed) and a killed daemon left
+# metrics.json torn mid-write, which then silently killed the next daemon
+# generation on json.load (JSONDecodeError with no traceback). Bounds:
+#   - every provider call runs on a daemon thread with a hard timeout;
+#   - the whole collect pass has a deadline and stops fetching past it;
+#   - metrics.json is written atomically (tmp + rename) and read defensively.
+PROVIDER_CALL_TIMEOUT_SECONDS = 12.0
+COLLECT_DEADLINE_SECONDS = 40.0
+
+
+def _bounded_call(fn, timeout: float, *args, **kwargs):
+    """Run fn on a daemon thread with a hard timeout.
+
+    Returns (result, timed_out). A timed-out worker is abandoned (daemon
+    thread — same pattern as runtime.loop._bounded_sync): the caller treats
+    the call as failed and moves on, so one stalled provider endpoint can
+    never wedge the serial watch loop. Exceptions from the worker propagate
+    to the caller exactly as a direct call would.
+    """
+    result: dict = {}
+
+    def _run():
+        try:
+            result["value"] = fn(*args, **kwargs)
+        except Exception as exc:  # propagate to the caller
+            result["error"] = exc
+
+    worker = threading.Thread(target=_run, daemon=True)
+    worker.start()
+    worker.join(timeout=timeout)
+    if worker.is_alive():
+        return None, True
+    if "error" in result:
+        raise result["error"]
+    return result.get("value"), False
 
 # last_event values that mean the email reached the recipient's mail server
 _DELIVERED = {"delivered", "opened", "clicked", "complained"}
@@ -59,15 +101,32 @@ _AUTO_REPLY_KEYWORDS = tuple(
 
 def load_metrics() -> dict:
     if config.METRICS_PATH.exists():
-        with open(config.METRICS_PATH) as f:
-            return json.load(f)
+        try:
+            with open(config.METRICS_PATH) as f:
+                return json.load(f)
+        except (OSError, ValueError):
+            # A torn file (killed writer) or concurrent rewrite must never
+            # crash the measure path: return the empty ledger and let the
+            # next collect refetch and atomically rewrite it. Self-healing,
+            # never a lie — aggregate treats missing records as unknown.
+            return {"last_check": None, "emails": {}, "replies": [],
+                    "collapsed_received_ids": []}
     return {"last_check": None, "emails": {}, "replies": [],
             "collapsed_received_ids": []}
 
 
 def save_metrics(metrics: dict) -> None:
-    with open(config.METRICS_PATH, "w") as f:
+    """Atomic write (tmp + rename): a reader can never see a torn file.
+
+    The 2026-08-15 incident killed daemon 69670 mid-write, leaving
+    metrics.json torn; daemon 70146 then died silently on json.load
+    (JSONDecodeError, no traceback). tmp + rename keeps the previous good
+    file in place until the new one is complete.
+    """
+    tmp = config.METRICS_PATH.with_suffix(".json.tmp")
+    with open(tmp, "w") as f:
         json.dump(metrics, f, indent=2, default=str)
+    os.replace(tmp, config.METRICS_PATH)
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
@@ -135,8 +194,9 @@ def resolve_missing_ids(log: dict) -> dict:
     missing = [s for s in log.get("sent", []) if not _valid_id(s.get("provider_id") or s.get("resend_id"))]
     if not missing:
         return {}
-    listing = providers.list_sent_emails()
-    if listing.get("error"):
+    listing, _timed_out = _bounded_call(
+        providers.list_sent_emails, PROVIDER_CALL_TIMEOUT_SECONDS)
+    if _timed_out or not listing or listing.get("error"):
         return {}
     resolved = {}
     for s in missing:
@@ -153,14 +213,22 @@ def resolve_missing_ids(log: dict) -> dict:
     return resolved
 
 
-def collect(log: dict, force: bool = False):
+def collect(log: dict, force: bool = False, deadline: float = None):
     """Fetch the latest provider status for every sent email (and detect
     replies via the receiving API). Returns (metrics, ran) — ran is False
-    when the scheduled check is not due yet."""
+    when the scheduled check is not due yet.
+
+    Wedge bound (2026-08-15 incident): every provider call runs through
+    _bounded_call (PROVIDER_CALL_TIMEOUT_SECONDS) and the whole pass stops
+    fetching past `deadline` (COLLECT_DEADLINE_SECONDS from entry), so a
+    stalled HTTPS connection can slow a measure but never hold the serial
+    watch loop forever."""
     metrics = load_metrics()
     if not is_due(metrics, force):
         return metrics, False
 
+    if deadline is None:
+        deadline = _time.time() + COLLECT_DEADLINE_SECONDS
     resolved = resolve_missing_ids(log)
     emails = metrics.setdefault("emails", {})
     checked_at = datetime.now(timezone.utc).isoformat()
@@ -172,8 +240,9 @@ def collect(log: dict, force: bool = False):
     # send (~8s each individually was making a full collect take an hour).
     resend_map = {}
     try:
-        listing = providers.list_sent_emails()
-        if not listing.get("error"):
+        listing, _timed_out = _bounded_call(
+            providers.list_sent_emails, PROVIDER_CALL_TIMEOUT_SECONDS)
+        if not _timed_out and listing and not listing.get("error"):
             resend_map = {
                 e.get("id"): e.get("last_event")
                 for e in (listing.get("data") or []) if e.get("id")
@@ -190,6 +259,12 @@ def collect(log: dict, force: bool = False):
     window_start = (datetime.now(timezone.utc) - timedelta(hours=48)).isoformat()
 
     for s in log.get("sent", []):
+        # DEADLINE (wedge hardening 2026-08-15): once the pass deadline is
+        # past, stop fetching — remaining sends keep their stored status and
+        # the next scheduled collect refetches them. The resend fast path and
+        # reply sync above/below still run; only slow per-email fetches stop.
+        if _time.time() >= deadline:
+            break
         lead_id = s["lead_id"]
         email_id = s.get("provider_id") or s.get("resend_id")
         if not _valid_id(email_id):
@@ -202,7 +277,6 @@ def collect(log: dict, force: bool = False):
             continue
 
         provider = s.get("provider") or ""
-        import time as _time
         rec_prev = emails.get(lead_id, {})
         prev_status = str(rec_prev.get("status") or "")
         prev_check = rec_prev.get("checked_at") or ""
@@ -228,14 +302,33 @@ def collect(log: dict, force: bool = False):
             continue
         else:
             for _attempt in range(2):  # flaky outbound network — one cheap retry
-                status = providers.fetch_email_status(email_id, provider=provider or "")
+                status, _timed_out = _bounded_call(
+                    providers.fetch_email_status,
+                    PROVIDER_CALL_TIMEOUT_SECONDS,
+                    email_id, provider=provider or "")
+                if _timed_out:
+                    # Bound exceeded: abandon this email, keep its stored
+                    # status, and move on — a stalled provider endpoint must
+                    # never hold the serial watch loop (2026-08-15 incident).
+                    # No retry: a timed-out call already burned the budget.
+                    status = {"error": "timeout"}
+                    break
                 if not status.get("error"):
                     break
                 _time.sleep(5)
         if status.get("error"):
             event = None
-            code = status.get("status")
-            err = f"{code}:{status.get('message') or ''}"[:200]
+            if status.get("error") == "timeout":
+                # Bound exceeded (2026-08-15 wedge): record WHY the status is
+                # unknown instead of the previous "None:" noise — a silent
+                # unknown was exactly how daemon 70146's death stayed
+                # invisible in the metrics.
+                code = "timeout"
+                err = (f"timeout: provider call exceeded "
+                       f"{PROVIDER_CALL_TIMEOUT_SECONDS:.0f}s")
+            else:
+                code = status.get("status")
+                err = f"{code}:{status.get('message') or ''}"[:200]
             denied = code in (401, 403, 404)
         else:
             event = status.get("last_event") or "unknown"
@@ -281,7 +374,7 @@ def collect(log: dict, force: bool = False):
             pass
 
     metrics["last_check"] = checked_at
-    sync_replies(log, metrics)
+    sync_replies(log, metrics, deadline=deadline)
     save_metrics(metrics)
     return metrics, True
 
@@ -318,12 +411,17 @@ def _is_auto_reply(subject: str) -> bool:
     return classify_reply_kind(subject) == "auto"
 
 
-def sync_replies(log: dict, metrics: dict) -> int:
+def sync_replies(log: dict, metrics: dict, deadline: float = None) -> int:
     """Pull received emails from the provider and record those that match a
     sent lead as replies (deduped by received email id). Auto-replies are
     recorded with kind="auto" using reliable signals (subject prefix, subject
     keywords, Auto-Submitted / X-Autoreply headers when the capture path
     exposes them). Returns the number of newly recorded.
+
+    Wedge bound (2026-08-15): the listing runs through _bounded_call, and
+    when a collect deadline is supplied the fetch is skipped entirely once
+    the deadline is past — a stalled measure must never hold the serial
+    watch loop, and the reply sync is part of that measure pass.
 
     Tombstone guard (owner evidence 2026-08-11, change-b28800611b): a message
     whose received_id is in metrics.collapsed_received_ids was collapsed away
@@ -332,8 +430,11 @@ def sync_replies(log: dict, metrics: dict) -> int:
     This path only READS tombstones; only the recheck ever adds to them."""
     if not providers.cap_received():
         return 0
-    listing = providers.list_received_emails()
-    if listing.get("error"):
+    if deadline is not None and _time.time() >= deadline:
+        return 0  # collect pass deadline reached — no more fetching
+    listing, _timed_out = _bounded_call(
+        providers.list_received_emails, PROVIDER_CALL_TIMEOUT_SECONDS)
+    if _timed_out or not listing or listing.get("error"):
         return 0
 
     sent_by_email = {s["email"]: s for s in log.get("sent", [])}

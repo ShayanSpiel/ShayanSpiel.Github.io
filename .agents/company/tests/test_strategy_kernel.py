@@ -110,6 +110,12 @@ class StrategyKernelTests(unittest.TestCase):
         captured = io.StringIO()
         with redirect_stdout(captured):
             self.assertEqual(0, main(["strategy"]))
+        card = captured.getvalue()
+        self.assertTrue(card.startswith("# Strategy kernel"), card)
+        self.assertIn("\n- ", card)
+        captured = io.StringIO()
+        with redirect_stdout(captured):
+            self.assertEqual(0, main(["strategy", "--json"]))
         payload = json.loads(captured.getvalue())
         self.assertEqual("proposal_only_owner_authorized", payload["mutation"])
         self.assertEqual(before, source_hashes())

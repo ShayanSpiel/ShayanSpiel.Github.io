@@ -3,6 +3,13 @@
 Buffer accepts public media URLs rather than binary uploads. This module keeps
 the credential local, validates that constraint before a request, and exposes a
 small explicit surface for the Content publisher and connection self-tests.
+
+Dispatch contract: a pre-dispatch duplicate guard queries the real Buffer queue
+(scheduled/sent/draft) and aborts with zero posts created when any package item
+is already committed; `dispatch()` returns ok:true only when every requested
+post is committed by Buffer (scheduled or sent) with per-item provider post ids
+and a commitment_type, so a draft-only or partial result never produces a valid
+receipt. `--queue` lists the real queue read-only for pre-dispatch verification.
 """
 
 from __future__ import annotations
@@ -86,6 +93,70 @@ def _normalize_caption(value: str) -> str:
     return str(value).replace("\\r\\n", "\n").replace("\\n", "\n").replace("\\r", "\n")
 
 
+def _normalize_fingerprint_text(value: str) -> str:
+    """Collapse every whitespace run to one space for stable content matching."""
+    return re.sub(r"\s+", " ", str(value or "")).strip()
+
+
+def _media_public_urls(item: dict[str, Any]) -> tuple[str, ...]:
+    """Sorted, deduplicated public media URLs for one post or delivery item."""
+    urls: list[str] = []
+    for asset in item.get("assets") or []:
+        url = str(asset.get("source") or asset.get("url") or "").strip()
+        if url:
+            urls.append(url)
+    return tuple(sorted(set(urls)))
+
+
+def content_fingerprint(item: dict[str, Any]) -> str:
+    """Stable duplicate identity for one Buffer post or delivery item.
+
+    creative_signature when present + normalized text + sorted public media
+    URLs. Whitespace runs collapse so copy re-flowing never changes the
+    identity; the signature keeps distinct renditions of the same copy apart
+    whenever both sides carry one.
+    """
+    parts: list[str] = []
+    signature = str(item.get("creative_signature") or "").strip()
+    if signature:
+        parts.append(f"sig:{signature}")
+    parts.append(f"text:{_normalize_fingerprint_text(item.get('text') or item.get('description') or '')}")
+    parts.extend(f"media:{url}" for url in _media_public_urls(item))
+    return "|".join(parts)
+
+
+def _content_matches(package_item: dict[str, Any], queue_post: dict[str, Any]) -> bool:
+    """True when a delivery item is already committed in the real Buffer queue.
+
+    The creative signature must agree whenever BOTH sides carry one (Buffer
+    queue nodes never do); the normalized text and the public media URLs must
+    match exactly so whitespace or line-break differences cannot hide a
+    duplicate.
+    """
+    package_signature = str(package_item.get("creative_signature") or "").strip()
+    queue_signature = str(queue_post.get("creative_signature") or "").strip()
+    if package_signature and queue_signature and package_signature != queue_signature:
+        return False
+    if (_normalize_fingerprint_text(package_item.get("text") or "")
+            != _normalize_fingerprint_text(queue_post.get("text") or "")):
+        return False
+    return _media_public_urls(package_item) == _media_public_urls(queue_post)
+
+
+COMMITTED_STATUSES = frozenset({"scheduled", "sent"})
+
+
+def commitment_type(status: str | None) -> str | None:
+    """Map a Buffer post status to its publish commitment, or None.
+
+    scheduled and sent are committed publication states; draft (and error,
+    needs_approval, sending) are NOT publish commitments. A draft-only result
+    must never produce a valid receipt.
+    """
+    normalized = str(status or "").lower()
+    return normalized if normalized in COMMITTED_STATUSES else None
+
+
 def _rate_limits(headers: Any) -> dict[str, str]:
     items = headers.items() if hasattr(headers, "items") else []
     return {str(key): str(value) for key, value in items
@@ -138,8 +209,36 @@ class BufferClient:
         }""" % _graphql_string(post_id)
         return self.graphql(query).get("post")
 
+    def queue_posts(self, channel_ids: list[str] | None = None,
+                    statuses: tuple[str, ...] = ("scheduled", "sent", "draft")) -> list[dict[str, Any]]:
+        """Read the real Buffer posting queue; never writes.
+
+        Returns scheduled/sent/draft posts for the named channels (all channels
+        when omitted) with the fields the duplicate guard and the read-only
+        --queue command need: id, status, dueAt, sentAt, channelId,
+        channelService, text, and asset public URLs.
+        """
+        ids = [str(item) for item in (channel_ids or [])]
+        filter_clause = ""
+        if ids:
+            rendered = ", ".join(_graphql_string(item) for item in ids)
+            filter_clause = f", filter: {{ channelIds: [{rendered}] }}"
+        query = """query GetPosts {
+          posts(input: { organizationId: %s%s }) {
+            edges { node { id status dueAt sentAt channelId channelService text assets { id mimeType source } } }
+          }
+        }""" % (_graphql_string(self.organization_id), filter_clause)
+        edges = self.graphql(query).get("posts") or {}
+        posts: list[dict[str, Any]] = []
+        for edge in edges.get("edges") or []:
+            node = edge.get("node") or {}
+            if node.get("status") in statuses:
+                posts.append(node)
+        return posts
+
     def create_post(self, *, channel_id: str, text: str, mode: str = "draft",
-                    due_at: str | None = None, assets: list[dict[str, str]] | None = None) -> dict[str, Any]:
+                    due_at: str | None = None, assets: list[dict[str, str]] | None = None,
+                    metadata: dict[str, Any] | None = None) -> dict[str, Any]:
         modes = {"draft": "addToQueue", "queue": "addToQueue", "scheduled": "customScheduled", "now": "shareNow"}
         if mode not in modes:
             raise BufferError("Buffer mode must be draft, queue, scheduled, or now")
@@ -161,6 +260,14 @@ class BufferClient:
             rendered_assets.append(f"{{ {kind}: {{ url: {_graphql_string(url)} }} }}")
         if rendered_assets:
             fields.append("assets: [" + ", ".join(rendered_assets) + "]")
+        youtube = (metadata or {}).get("youtube") if isinstance(metadata, dict) else None
+        if youtube:
+            title = str(youtube.get("title") or "").strip()
+            category_id = str(youtube.get("categoryId") or "").strip()
+            if not title or not category_id:
+                raise BufferError("YouTube posts need metadata.youtube.title and categoryId")
+            fields.append(f"metadata: {{ youtube: {{ title: {_graphql_string(title)}, "
+                          f"categoryId: {_graphql_string(category_id)} }} }}")
         query = """mutation CreatePost {
           createPost(input: { %s }) {
             ... on PostActionSuccess { post { id text channelId dueAt status assets { id mimeType source } } }
@@ -283,13 +390,59 @@ def _publication_input(package: dict[str, Any]) -> dict[str, Any]:
         raise BufferError(str(error)) from error
 
 
-def dispatch(package: dict[str, Any], execution_mode: str) -> dict[str, Any]:
-    """Dispatch an already-approved publisher package; never infer a channel or text."""
+def _guard_duplicates(client: BufferClient, posts: list[dict[str, Any]]) -> dict[str, Any] | None:
+    """Pre-flight duplicate check against the real Buffer queue.
+
+    Returns None when the package is clear to create; otherwise an ok:false
+    result with zero posts created and the already-committed queue post ids.
+    The guard is fail-closed: any match blocks the whole package so a
+    re-dispatch can never duplicate content that is already committed.
+    """
+    channel_ids = sorted({str(item["channel_id"]) for item in posts})
+    queue = client.queue_posts(channel_ids)
+    matches: list[dict[str, Any]] = []
+    for item in posts:
+        for queued in queue:
+            if not _content_matches(item, queued):
+                continue
+            matches.append({
+                "item_id": item.get("item_id"), "content_id": item.get("content_id"),
+                "platform": item.get("platform"),
+                "creative_signature": item.get("creative_signature"),
+                "fingerprint": content_fingerprint(item),
+                "queue_post_id": queued.get("id"), "queue_status": queued.get("status"),
+            })
+    if not matches:
+        return None
+    return {
+        "ok": False,
+        "message": "Buffer queue already contains this package content; refusing duplicate dispatch",
+        "duplicate_guard": "blocked",
+        "existing_post_ids": sorted({str(match["queue_post_id"]) for match in matches}),
+        "matches": matches,
+        "rate_limits": client.last_rate_limits,
+    }
+
+
+def dispatch(package: dict[str, Any], execution_mode: str, *,
+             client: BufferClient | None = None) -> dict[str, Any]:
+    """Dispatch an already-approved publisher package; never infer a channel or text.
+
+    Receipt semantics: ok:true ONLY when every requested post is committed by
+    Buffer (status scheduled or sent) with per-item provider post ids and a
+    commitment_type of "scheduled" or "sent". A pre-dispatch duplicate guard
+    queries the real Buffer queue first and aborts with zero posts created if
+    any package item is already committed. ok:false means zero or partial
+    creation: no receipt, no goal achievement.
+    """
     if execution_mode != "live":
         return {"ok": False, "message": "Buffer dispatch is a dry run; no post was created"}
-    client = BufferClient()
+    client = client or BufferClient()
     publication = _publication_input(package)
     posts = _delivery_posts(publication, client)
+    blocked = _guard_duplicates(client, posts)
+    if blocked is not None:
+        return blocked
     channel_ids = [str(item["channel_id"]) for item in posts]
     capacity = client.available_capacity(sorted(set(channel_ids)))
     requested = {channel_id: channel_ids.count(channel_id) for channel_id in set(channel_ids)}
@@ -304,7 +457,8 @@ def dispatch(package: dict[str, Any], execution_mode: str) -> dict[str, Any]:
         created_post = client.create_post(channel_id=item["channel_id"], text=item["text"],
                                           mode=str(item.get("mode") or "draft"),
                                           due_at=item.get("due_at") or item.get("dueAt"),
-                                          assets=list(item.get("assets") or []))
+                                          assets=list(item.get("assets") or []),
+                                          metadata=item.get("metadata"))
         created.append(created_post)
         receipts.append({
             "campaign_id": item.get("campaign_id"), "batch_id": item.get("batch_id"),
@@ -313,8 +467,21 @@ def dispatch(package: dict[str, Any], execution_mode: str) -> dict[str, Any]:
             "platform": item.get("platform"), "approval_id": item.get("approval_id"),
             "provider_post_id": created_post.get("id"), "verified": bool(created_post.get("id")),
             "status": created_post.get("status"),
+            "commitment_type": commitment_type(created_post.get("status")),
         })
     limits = client.posting_limits(sorted(set(channel_ids)))
+    if not all(receipt["commitment_type"] for receipt in receipts):
+        return {
+            "ok": False,
+            "message": ("Buffer did not commit every requested post; only scheduled/sent are "
+                        "publish commitments, draft/error results are not"),
+            "created_posts": created,
+            "uncommitted": [{"item_id": receipt["item_id"], "platform": receipt["platform"],
+                             "provider_post_id": receipt["provider_post_id"],
+                             "status": receipt["status"]} for receipt in receipts
+                            if not receipt["commitment_type"]],
+            "posting_limits": limits, "rate_limits": client.last_rate_limits,
+        }
     return {"ok": True, "post": created[0] if len(created) == 1 else None, "posts": created,
             "campaign_id": publication.get("campaign_id"), "batch_id": publication.get("batch_id"),
             "delivery_receipts": receipts,
@@ -333,16 +500,67 @@ def _probe_draft(client: BufferClient) -> dict[str, Any]:
             "deleted_id": deleted_id, "rate_limits": client.last_rate_limits}
 
 
+def _post_metrics(client: BufferClient, post_ids: list[str]) -> dict[str, Any]:
+    """Read post status and metrics without returning post copy or credentials."""
+    posts = []
+    for post_id in post_ids:
+        post = client.post(post_id)
+        if not post:
+            posts.append({"post_id": post_id, "found": False})
+            continue
+        posts.append({
+            "post_id": str(post.get("id") or post_id),
+            "found": True,
+            "channel_id": post.get("channelId"),
+            "due_at": post.get("dueAt"),
+            "status": post.get("status"),
+            "metrics": list(post.get("metrics") or []),
+            "metrics_updated_at": post.get("metricsUpdatedAt"),
+        })
+    return {"ok": True, "posts": posts, "rate_limits": client.last_rate_limits}
+
+
+def _queue_report(client: BufferClient, channel_ids: list[str] | None = None) -> dict[str, Any]:
+    """Read-only queue listing for pre-dispatch verification and evidence."""
+    posts = client.queue_posts(channel_ids)
+    per_channel: dict[str, list[dict[str, Any]]] = {}
+    for post in posts:
+        channel_id = str(post.get("channelId") or post.get("channelService") or "unknown")
+        text = _normalize_fingerprint_text(post.get("text") or "")
+        per_channel.setdefault(channel_id, []).append({
+            "id": post.get("id"), "status": post.get("status"),
+            "due_at": post.get("dueAt"), "sent_at": post.get("sentAt"),
+            "text_excerpt": text[:120] + ("…" if len(text) > 120 else ""),
+            "media_urls": list(_media_public_urls(post)),
+        })
+    return {"ok": True, "count": len(posts), "channels": per_channel,
+            "rate_limits": client.last_rate_limits}
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Safe direct Buffer Connection")
     parser.add_argument("--check", action="store_true", help="List connected channels; never writes")
     parser.add_argument("--probe-draft", action="store_true", help="Create, verify, and delete one Threads draft")
+    parser.add_argument("--metrics", metavar="POST_ID", action="append",
+                        help="Read one Buffer post's status and metrics; repeat for multiple posts")
+    parser.add_argument("--queue", action="store_true",
+                        help="List scheduled/sent/draft posts in the real Buffer queue; never writes")
+    parser.add_argument("--channel", metavar="CHANNEL_ID", action="append",
+                        help="Restrict --queue to channel ids; repeat for multiple")
     args = parser.parse_args(argv)
-    if not args.check and not args.probe_draft:
-        parser.error("choose --check or --probe-draft")
+    selected = int(args.check) + int(args.probe_draft) + int(bool(args.metrics)) + int(args.queue)
+    if selected != 1:
+        parser.error("choose exactly one of --check, --probe-draft, --metrics, or --queue")
     try:
         client = BufferClient()
-        result = _probe_draft(client) if args.probe_draft else client.health_check()
+        if args.probe_draft:
+            result = _probe_draft(client)
+        elif args.metrics:
+            result = _post_metrics(client, args.metrics)
+        elif args.queue:
+            result = _queue_report(client, args.channel)
+        else:
+            result = client.health_check()
     except BufferError as error:
         print(json.dumps({"ok": False, "error": str(error)}))
         return 1

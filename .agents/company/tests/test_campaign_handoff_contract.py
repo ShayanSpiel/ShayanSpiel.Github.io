@@ -1,3 +1,6 @@
+import hashlib
+import json
+import subprocess
 import unittest
 from pathlib import Path
 
@@ -21,6 +24,40 @@ from company.departments.design.department import accept_design_order, render_re
 ROOT = Path(__file__).resolve().parents[3]
 
 
+def promoted_filename_cases():
+    """Evaluate the promotion script's canonical filename builder over
+    representative renderer basenames and return the built names.
+
+    Mirrors the batch-02/03 Threads PNG naming from render-design.js
+    (`{content_id}-{size_preset}-{W}x{H}.png`) and the YouTube `video.mp4`
+    fallback, plus degenerate basenames that carry the content_id mid-string.
+    """
+    node_script = r"""
+    import { publicAssetFilename } from './scripts/promote-campaign-assets.mjs';
+    const cases = [
+      ['batch-03-item-04-threads', '.spielos/artifacts/content-growth-20260812/batch-03/threads/batch-03-item-04-threads-threads-portrait-1080x1350.png'],
+      ['batch-03-item-04-youtube', '.spielos/artifacts/content-growth-20260812/batch-03/youtube-shorts/batch-03-item-04/video.mp4'],
+      ['batch-02-item-01-threads', '.spielos/artifacts/content-growth-20260812/batch-02/threads/batch-02-item-01-threads-threads-portrait-1080x1350.png'],
+      ['batch-02-item-01-youtube', '.spielos/artifacts/content-growth-20260812/batch-02/youtube-shorts/batch-02-item-01/video.mp4'],
+      ['plain-item-threads', '/tmp/render/video.mp4'],
+      ['mid-string-id', '/tmp/render/prefix-mid-string-id-suffix.png'],
+    ];
+    const names = cases.map(([contentId, localPath]) => ({
+      content_id: contentId,
+      basename: localPath.split('/').pop(),
+      name: publicAssetFilename(contentId, localPath),
+    }));
+    process.stdout.write(JSON.stringify(names));
+    """
+    result = subprocess.run(
+        ["node", "--input-type=module", "-e", node_script],
+        cwd=ROOT, capture_output=True, text=True,
+    )
+    if result.returncode != 0:
+        raise AssertionError(f"promoted filename check failed: {result.stderr}")
+    return json.loads(result.stdout)
+
+
 def campaign_manifest():
     campaign_id = "content-leads-20260812"
     items = []
@@ -39,8 +76,7 @@ def campaign_manifest():
             design = {
                 "template_id": "harness-architecture" if platform == "threads" else "scenario-b",
                 "theme": ["gruvbox-dark", "gruvbox-light", "blue-dark", "monochrome-dark", "black-gold-dark"][sequence - 1],
-                "surface": "background", "color_role": "primary", "alignment": "center",
-                "layout": f"journey-variant-{sequence}", "size_preset": preset,
+                "size_preset": preset,
                 "eyebrow": "SpielOS · supervised AI workflows",
                 "title_lines": [f"Operational context {sequence}.", "One clear workflow."],
                 "accent_line": 1,
@@ -242,6 +278,49 @@ class CampaignHandoffContractTests(unittest.TestCase):
         self.assertEqual(report["ctr"], 0.05)
         self.assertEqual(report["lead_conversion_rate"], 0.05)
 
+    def test_promoted_public_urls_never_repeat_the_content_id_segment(self):
+        # (a) The promotion script's canonical filename builder must never
+        # repeat the content_id segment — the batch-02/03 regression where
+        # Threads PNG basenames that already start with `{content_id}-` were
+        # prefixed again, producing doubled URLs that broke Buffer media fetch.
+        for case in promoted_filename_cases():
+            content_id = case["content_id"]
+            basename = case["basename"]
+            name = case["name"]
+            self.assertNotIn(f"{content_id}-{content_id}", name,
+                             f"doubled content_id segment for {basename}")
+            if content_id in basename:
+                self.assertEqual(name, basename,
+                                 "basename already carrying the content_id must stay canonical")
+            else:
+                self.assertEqual(name, f"{content_id}-{basename}",
+                                 "identity-less basenames get a single clean prefix")
+            self.assertLessEqual(name.count(content_id), 1)
+
+        # (b) Approved batch-02/03 manifests: every announced public_url
+        # contains exactly one content_id segment and the announced URL points
+        # at the deployed public file, byte-for-byte.
+        for batch in ("batch-02", "batch-03"):
+            manifest = json.loads(
+                (ROOT / f".spielos/artifacts/content-growth-20260812/{batch}/campaign-approved.json").read_text())
+            self.assertEqual(manifest["phase"], "approved")
+            for item in manifest["items"]:
+                for platform, rendition in item["renditions"].items():
+                    content_id = rendition["content_id"]
+                    url = rendition["asset"]["public_url"]
+                    label = f"{batch}/{item['item_id']}/{platform}"
+                    self.assertEqual(url.count(content_id), 1,
+                                     f"{label}: public_url must contain exactly one content_id segment: {url}")
+                    relative = url.replace("https://spielos.xyz", "", 1).lstrip("/")
+                    deployed = ROOT / "public" / relative
+                    self.assertTrue(deployed.is_file(),
+                                    f"{label}: announced URL has no deployed file: {url}")
+                    self.assertEqual(deployed.name, url.rsplit("/", 1)[-1])
+                    self.assertEqual(
+                        hashlib.sha256(deployed.read_bytes()).hexdigest(),
+                        rendition["asset"]["sha256"],
+                        f"{label}: deployed file does not match the approved manifest checksum")
+
     def test_identity_or_approval_drift_is_rejected(self):
         designed = accept_design_order(campaign_manifest())
         assets = [
@@ -255,26 +334,33 @@ class CampaignHandoffContractTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "identity"):
             apply_render_report(designed, report)
 
-    def test_renderers_consume_campaign_data_instead_of_batch_specific_copy(self):
-        templates = [
-            ROOT / ".agents/company/departments/design/templates/social/harness-architecture.html",
-            ROOT / ".agents/company/departments/design/templates/video/scenario-b.html",
-            ROOT / ".agents/company/departments/design/templates/video/scenario-c.html",
-        ]
-        template_source = "\n".join(path.read_text() for path in templates)
-        renderer_source = "\n".join((ROOT / path).read_text() for path in
-                                    ("scripts/render-design.js", "scripts/render-video.js"))
-        self.assertNotIn("batch-01.json", template_source)
-        self.assertIn("__applyCampaignRendition", template_source)
-        self.assertIn("CAMPAIGN_MANIFEST", renderer_source)
-        self.assertIn("CAMPAIGN_ITEM_ID", renderer_source)
+    def test_video_templates_are_batch1_flat_with_a_still_only_thumbnail_title(self):
+        template_source = "\n".join(
+            (ROOT / path).read_text() for path in (
+                ".agents/company/departments/design/templates/video/scenario-b.html",
+                ".agents/company/departments/design/templates/video/scenario-c.html",
+            )
+        )
+        # Batch-1 flat composition: no campaign-scene mounts, no panel/scrim
+        # contrast cards, no campaign-label pills around the title.
+        for stale in ("campaign-scene", "campaign-label", "__applyCampaignRendition",
+                      "visual.headline", "visual.supporting_text", "spoken_display_alignment"):
+            self.assertNotIn(stale, template_source)
+        for marker in ("hook-main", "cta-url", "spielos.xyz/services"):
+            self.assertIn(marker, template_source)
+        # Optional Shorts thumbnail title renders ONLY on the still frame.
+        for marker in ("thumb-title", "__setStillTitle"):
+            self.assertIn(marker, template_source)
+        renderer_source = (ROOT / "scripts/render-video.js").read_text()
+        self.assertIn("--still", renderer_source)
+        self.assertIn("campaignThumbnailTitle", renderer_source)
 
     def test_creative_identity_is_derived_not_entered_by_a_department(self):
         manifest = campaign_manifest()
         item = manifest["items"][0]
         design = item["renditions"]["threads"]["design"]
         first = creative_signature(manifest["campaign_id"], item["item_id"], "threads", design)
-        design["layout"] = "new-layout"
+        design["title_lines"] = ["A different title line."]
         second = creative_signature(manifest["campaign_id"], item["item_id"], "threads", design)
         self.assertNotEqual(first, second)
 
@@ -345,6 +431,35 @@ class CampaignHandoffContractTests(unittest.TestCase):
         self.assertTrue(any("YouTube Shorts copy must not contain a URL" in error for error in errors))
         self.assertTrue(any("must not include the fifth-item" in error for error in errors))
         self.assertTrue(any("must end with the fifth-item" in error for error in errors))
+
+    def test_youtube_thumbnail_title_is_optional_bounded_and_public_only(self):
+        manifest = campaign_manifest()
+        youtube = manifest["items"][0]["renditions"]["youtube"]
+        # Absent title stays valid (optional).
+        self.assertEqual(validate_campaign(manifest, "strategy"), [])
+        # A 2-3 word title is the intended use and passes.
+        youtube["design"]["thumbnail_title"] = "AI works alone"
+        self.assertEqual(validate_campaign(manifest, "strategy"), [])
+        # Up to five words is allowed.
+        youtube["design"]["thumbnail_title"] = "one two three four five"
+        self.assertEqual(validate_campaign(manifest, "strategy"), [])
+        # Six words are rejected.
+        youtube["design"]["thumbnail_title"] = "one two three four five six"
+        errors = validate_campaign(manifest, "strategy")
+        self.assertTrue(any("thumbnail_title must be 1-5 words" in error for error in errors))
+        # URLs and UTM parameters are rejected.
+        youtube["design"]["thumbnail_title"] = "see spielos.xyz"
+        errors = validate_campaign(manifest, "strategy")
+        self.assertTrue(any("must not contain a URL or UTM parameters" in error for error in errors))
+        # Internal production language is rejected.
+        youtube["design"]["thumbnail_title"] = "batch review"
+        errors = validate_campaign(manifest, "strategy")
+        self.assertTrue(any("thumbnail_title exposes internal production language: batch" in error for error in errors))
+        # The field is a YouTube-only design field: Threads ignores it.
+        threads = manifest["items"][0]["renditions"]["threads"]
+        threads["design"]["thumbnail_title"] = "not validated here"
+        youtube["design"]["thumbnail_title"] = "AI works alone"
+        self.assertEqual(validate_campaign(manifest, "strategy"), [])
 
 if __name__ == "__main__":
     unittest.main()

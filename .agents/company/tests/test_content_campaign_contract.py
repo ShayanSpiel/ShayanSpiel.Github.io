@@ -55,6 +55,19 @@ class ContentCampaignContractTests(unittest.TestCase):
         self.assertIn("content-campaign", content)
         self.assertIn("dailyPostingLimits", (ROOT / ".agents/company/connections/buffer.py").read_text())
 
+    def test_dispatch_is_publish_commitment_with_final_receipt(self):
+        """The clean workflow contract: scheduled == published, final receipt."""
+        content = (ROOT / ".agents/company/departments/content/department.py").read_text()
+        buffer = (ROOT / ".agents/company/connections/buffer.py").read_text()
+        self.assertIn('version = "3.4.0"', content)
+        self.assertIn("PUBLICATION_RECEIPT_CONTRACT", content)
+        self.assertIn("scheduled == published", content)
+        self.assertIn("commitment_type", content)
+        self.assertIn("ok:true", content)
+        self.assertIn("duplicate_guard", buffer)
+        self.assertIn("--queue", buffer)
+        self.assertIn("commitment_type", buffer)
+
 
 if __name__ == "__main__":
     unittest.main()
