@@ -1,7 +1,7 @@
 ---
 import ContactModal from "../components/ContactModal.astro";
 import LiveTimeline, { type LiveGoal } from "../components/live/LiveTimeline.astro";
-import LiveStatus, { type Heartbeat } from "../components/live/LiveStatus.astro";
+import LiveStatus, { type Heartbeat, type Northstar } from "../components/live/LiveStatus.astro";
 import LiveStats, { type LiveTotals } from "../components/live/LiveStats.astro";
 import SectionHeader from "../components/sections/SectionHeader.astro";
 import OperatingLoop from "../components/architecture/OperatingLoop.astro";
@@ -13,15 +13,32 @@ import snapshot from "../data/live-goals.json";
 
 export interface Props { locale?: Locale; }
 const { locale = "en" } = Astro.props;
-const data = snapshot as unknown as { goals: LiveGoal[]; totals: LiveTotals; runtime_state?: { state?: "running" | "resting"; heartbeat?: Heartbeat | null; last_activity_at?: string | null; last_sync_at?: string } };
+const data = snapshot as unknown as {
+  goals: LiveGoal[];
+  totals: LiveTotals;
+  northstar?: Northstar | null;
+  runtime_state?: { state?: "running" | "resting"; heartbeat?: Heartbeat | null; last_activity_at?: string | null; last_sync_at?: string };
+};
 const state = data.runtime_state?.state ?? "resting";
 const heartbeat = data.runtime_state?.heartbeat ?? null;
-const metricLabel = (metric: string) => metric === "reply_rate" ? t(locale, "live.metric.replyRate") : metric;
-const heartbeatText = (hb: Heartbeat) => {
-  const operator = hb.operator === "ge" ? "≥" : hb.operator === "le" ? "≤" : hb.operator === "eq" ? "=" : hb.operator;
-  const target = hb.metric === "reply_rate" && typeof hb.target === "number" ? `${Math.round(hb.target * 100)}%` : String(hb.target);
-  return t(locale, "live.entry.metric", { metric: metricLabel(hb.metric), operator, target });
+const northstar = data.northstar ?? null;
+const metricLabel = (metric: string) =>
+  metric === "reply_rate" ? t(locale, "live.metric.replyRate") :
+  metric === "booked_calls" ? t(locale, "live.metric.bookedCalls") : metric;
+const formatTarget = (metric: string, target: number | boolean | string) =>
+  metric === "reply_rate" && typeof target === "number" ? `${Math.round(target * 100)}%` :
+  typeof target === "boolean" ? t(locale, target ? "live.target.yes" : "live.target.no") :
+  String(target);
+const metricText = (entry: { metric: string; operator: string; target: number | boolean | string }) => {
+  const operator = entry.operator === "ge" ? "≥" : entry.operator === "le" ? "≤" : entry.operator === "eq" ? "=" : entry.operator;
+  const target = formatTarget(entry.metric, entry.target);
+  return typeof entry.target === "boolean"
+    ? `${metricLabel(entry.metric)} ${target}`
+    : t(locale, "live.entry.metric", { metric: metricLabel(entry.metric), operator, target });
 };
+const heartbeatText = (hb: Heartbeat) => metricText(hb);
+const northstarText = (n: Northstar) => metricText(n);
+const statusText = (status: string) => t(locale, `live.status.${status}`);
 const lastActivityText = data.runtime_state?.last_activity_at
   ? t(locale, "live.state.lastActivity", { time: new Intl.DateTimeFormat(locale === "fa" ? "fa-IR-u-ca-gregory" : "en-US", { dateStyle: "medium", timeStyle: "short" }).format(new Date(data.runtime_state.last_activity_at)) })
   : "";
@@ -34,16 +51,16 @@ const breadcrumbJsonLd = {
   ],
 };
 const vocab = [
-  { icon: "bx-bullseye", color: "primary", titleKey: "live.vocab.goal.title", descKey: "live.vocab.goal.desc" },
-  { icon: "bx-group", color: "accent", titleKey: "live.vocab.department.title", descKey: "live.vocab.department.desc" },
-  { icon: "bx-run", color: "purple", titleKey: "live.vocab.run.title", descKey: "live.vocab.run.desc" },
-  { icon: "bx-slider", color: "warning", titleKey: "live.vocab.improvement.title", descKey: "live.vocab.improvement.desc" },
+  { icon: "bx-bullseye", tile: "bg-primary-soft text-primary", gradient: "from-primary via-accent to-transparent", titleKey: "live.vocab.goal.title", descKey: "live.vocab.goal.desc" },
+  { icon: "bx-group", tile: "bg-accent-soft text-accent", gradient: "from-accent via-purple to-transparent", titleKey: "live.vocab.department.title", descKey: "live.vocab.department.desc" },
+  { icon: "bx-run", tile: "bg-purple-soft text-purple", gradient: "from-purple via-warning to-transparent", titleKey: "live.vocab.run.title", descKey: "live.vocab.run.desc" },
+  { icon: "bx-slider", tile: "bg-warning-soft text-warning", gradient: "from-warning via-primary to-transparent", titleKey: "live.vocab.improvement.title", descKey: "live.vocab.improvement.desc" },
 ];
 const howTo = [
-  { icon: "bx-bullseye", color: "primary", titleKey: "live.howto.goal.title", descKey: "live.howto.goal.desc" },
-  { icon: "bx-revision", color: "accent", titleKey: "live.howto.run.title", descKey: "live.howto.run.desc" },
-  { icon: "bx-slider", color: "purple", titleKey: "live.howto.improvement.title", descKey: "live.howto.improvement.desc" },
-  { icon: "bx-file", color: "success", titleKey: "live.howto.evidence.title", descKey: "live.howto.evidence.desc" },
+  { icon: "bx-bullseye", tile: "bg-primary-soft text-primary", gradient: "from-primary via-accent to-transparent", titleKey: "live.howto.goal.title", descKey: "live.howto.goal.desc" },
+  { icon: "bx-revision", tile: "bg-accent-soft text-accent", gradient: "from-accent via-purple to-transparent", titleKey: "live.howto.run.title", descKey: "live.howto.run.desc" },
+  { icon: "bx-slider", tile: "bg-purple-soft text-purple", gradient: "from-purple via-success to-transparent", titleKey: "live.howto.improvement.title", descKey: "live.howto.improvement.desc" },
+  { icon: "bx-file", tile: "bg-success-soft text-success", gradient: "from-success via-accent to-transparent", titleKey: "live.howto.evidence.title", descKey: "live.howto.evidence.desc" },
 ];
 ---
 
@@ -58,7 +75,7 @@ const howTo = [
       <h1 class="mt-4 text-4xl font-extrabold leading-tightest tracking-tight text-foreground-strong sm:text-6xl">{t(locale, "conversion.live.hero.titleLead")}<br /><span class="text-primary">{t(locale, "conversion.live.hero.titleAccent")}</span></h1>
       <p class="mx-auto mt-6 max-w-3xl text-base leading-relaxed text-muted-foreground">{t(locale, "conversion.live.hero.body")}</p>
       <div class="mx-auto mt-8 max-w-3xl text-start">
-        <LiveStatus locale={locale} state={state} heartbeat={heartbeat} heartbeatText={heartbeatText} lastActivityText={lastActivityText} />
+        <LiveStatus locale={locale} state={state} heartbeat={heartbeat} northstar={northstar} heartbeatText={heartbeatText} northstarText={northstarText} statusText={statusText} lastActivityText={lastActivityText} />
       </div>
       <div class="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
         <a href={localizePath("/services/agent-brief/#request", locale)} data-open-contact-modal data-cta-location="live_hero" class="inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground">{t(locale, "cta.requestAgentBrief")}</a>
@@ -74,8 +91,8 @@ const howTo = [
       <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" data-aos="fade-up">
         {vocab.map((item) => (
           <article class="group relative overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
-            <div class:list={["absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-" + item.color + " to-transparent"]}></div>
-            <div class:list={["mb-4 flex h-10 w-10 items-center justify-center rounded-md bg-" + item.color + "-soft"]}><i class:list={["bx", item.icon, "text-" + item.color, "icon-xl"]} aria-hidden="true"></i></div>
+            <div class:list={["absolute inset-x-0 top-0 h-px bg-gradient-to-r opacity-80", item.gradient]} aria-hidden="true"></div>
+            <div class:list={["mb-4 flex h-10 w-10 items-center justify-center rounded-md", item.tile]}><i class:list={["bx", item.icon, "icon-xl"]} aria-hidden="true"></i></div>
             <h3 class="text-sm font-semibold text-foreground-strong">{t(locale, item.titleKey)}</h3>
             <p class="mt-2 text-xs leading-relaxed text-muted-foreground">{t(locale, item.descKey)}</p>
           </article>
@@ -96,9 +113,10 @@ const howTo = [
       <SectionHeader label={t(locale, "live.howto.label")} title={t(locale, "live.howto.title")} description={t(locale, "live.howto.desc")} />
       <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" data-aos="fade-up">
         {howTo.map((item, index) => (
-          <article class="relative rounded-lg border border-border bg-panel p-5 shadow-panel">
-            <span class="absolute end-4 top-4 font-mono text-2xs text-foreground-muted">0{index + 1}</span>
-            <div class:list={["mb-4 flex h-10 w-10 items-center justify-center rounded-md bg-" + item.color + "-soft"]}><i class:list={["bx", item.icon, "text-" + item.color, "icon-xl"]} aria-hidden="true"></i></div>
+          <article class="relative overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel">
+            <div class:list={["absolute inset-x-0 top-0 h-px bg-gradient-to-r opacity-80", item.gradient]} aria-hidden="true"></div>
+            <span class="absolute end-4 top-4 text-2xs text-foreground-muted">0{index + 1}</span>
+            <div class:list={["mb-4 flex h-10 w-10 items-center justify-center rounded-md", item.tile]}><i class:list={["bx", item.icon, "icon-xl"]} aria-hidden="true"></i></div>
             <h3 class="text-sm font-semibold text-foreground-strong">{t(locale, item.titleKey)}</h3>
             <p class="mt-2 text-xs leading-relaxed text-muted-foreground">{t(locale, item.descKey)}</p>
           </article>

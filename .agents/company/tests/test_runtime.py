@@ -923,7 +923,8 @@ class PlainLanguageProjectionTests(unittest.TestCase):
 
 class LivePushTests(unittest.TestCase):
     """SPIELOS_LIVE_PUSH gate: fingerprint + 120s debounce + light git push
-    for the /live snapshot. Default OFF; every git failure is non-fatal."""
+    for the /live snapshot, plus a best-effort HEAD:main fast-forward so
+    GitHub Pages deploys. Default OFF; every git failure is non-fatal."""
 
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
@@ -991,7 +992,8 @@ class LivePushTests(unittest.TestCase):
         expected = [["git", "add", str(self.out), str(self.state_out)],
                     ["git", "diff", "--cached", "--quiet"],
                     ["git", "commit", "-m", "live: sync runtime state"],
-                    ["git", "push", "origin", "HEAD"]] * 2
+                    ["git", "push", "origin", "HEAD"],
+                    ["git", "push", "origin", "HEAD:main"]] * 2
         self.assertEqual(expected, calls)
         marker = json.loads(self.marker.read_text(encoding="utf-8"))
         self.assertEqual("resting|1|0", marker["fingerprint"])
@@ -1015,7 +1017,7 @@ class LivePushTests(unittest.TestCase):
                 {"runtime_state": {"state": "resting"},
                  "totals": {"goals_achieved": 1, "goals_abandoned": 1}})
         pushes = [call for call in calls if call[:2] != ["git", "diff"]]
-        self.assertEqual(6, len(pushes))  # add + commit + push per push
+        self.assertEqual(8, len(pushes))  # add + commit + HEAD push + main push per push
         marker = json.loads(self.marker.read_text(encoding="utf-8"))
         self.assertEqual("resting|2|0", marker["fingerprint"])
 
@@ -1040,7 +1042,7 @@ class LivePushTests(unittest.TestCase):
             frozen[0] = frozen[0] + timedelta(seconds=121)
             runtime._maybe_push_live_snapshot(snapshot)  # 1 completed run now
         pushes = [call for call in calls if call[:2] != ["git", "diff"]]
-        self.assertEqual(6, len(pushes))
+        self.assertEqual(8, len(pushes))
         marker = json.loads(self.marker.read_text(encoding="utf-8"))
         self.assertEqual("resting|0|1", marker["fingerprint"])
 
@@ -1109,12 +1111,49 @@ class LivePushTests(unittest.TestCase):
         self.assertFalse(self.marker.exists())  # marker written only after success
         self.assertTrue(any("live push" in line for line in logs.output))
 
+    def test_main_ref_rejection_is_non_fatal_and_marker_still_written(self):
+        """A rejected HEAD:main push logs a warning but never raises; the
+        snapshot is already on the current branch, so the push completes."""
+        runtime = self.runtime()
+        running = {"runtime_state": {"state": "running"},
+                   "totals": {"goals_achieved": 1, "goals_abandoned": 0}}
+        calls = []
+
+        def reject_non_ff_push(args, check=True):
+            calls.append(list(args))
+            if list(args[:2]) == ["git", "diff"]:
+                return SimpleNamespace(returncode=1)
+            if list(args) == ["git", "push", "origin", "HEAD:main"]:
+                raise subprocess.CalledProcessError(
+                    128, args, b"",
+                    b"! [rejected] HEAD -> main (non-fast-forward)")
+            return SimpleNamespace(returncode=0)
+
+        with ExitStack() as stack:
+            frozen = stack.enter_context(self.clock())
+            stack.enter_context(self.enabled())
+            stack.enter_context(patch("company.runtime.loop._run_git",
+                                      side_effect=reject_non_ff_push))
+            for item in self.live_push_patches(runtime.store.path):
+                stack.enter_context(item)
+            with self.assertLogs("company.runtime.loop", level="WARNING") as logs:
+                runtime._maybe_push_live_snapshot(running)  # must not raise
+        self.assertIn(["git", "push", "origin", "HEAD:main"], calls)
+        self.assertIn(["git", "push", "origin", "HEAD"], calls)
+        self.assertTrue(any("origin main" in line for line in logs.output))
+        marker = json.loads(self.marker.read_text(encoding="utf-8"))
+        self.assertEqual("running|1|0", marker["fingerprint"])
+
     def test_debounce_blocks_pushes_within_120_seconds(self):
         runtime = self.runtime()
         running = {"runtime_state": {"state": "running"},
                    "totals": {"goals_achieved": 0, "goals_abandoned": 0}}
         resting = {"runtime_state": {"state": "resting"},
                    "totals": {"goals_achieved": 0, "goals_abandoned": 0}}
+
+        def push_count(calls):
+            return sum(1 for call in calls if list(call[:2]) == ["git", "push"])
+
         calls = []
         with ExitStack() as stack:
             frozen = stack.enter_context(self.clock())
@@ -1125,13 +1164,13 @@ class LivePushTests(unittest.TestCase):
                 stack.enter_context(item)
             runtime._maybe_push_live_snapshot(running)  # push 1 at T0
             runtime._maybe_push_live_snapshot(resting)  # changed but 0s < 120s -> skip
-            self.assertEqual(1, len(calls) // 3)
+            self.assertEqual(2, push_count(calls))  # HEAD + main push for push 1
             frozen[0] = frozen[0] + timedelta(seconds=120)  # exactly 120s -> allowed
             runtime._maybe_push_live_snapshot(resting)  # push 2
-            self.assertEqual(2, len(calls) // 3)
+            self.assertEqual(4, push_count(calls))
             frozen[0] = frozen[0] + timedelta(seconds=119)  # 119s since push 2 -> skip
             runtime._maybe_push_live_snapshot(running)  # changed again, debounced
-            self.assertEqual(2, len(calls) // 3)
+            self.assertEqual(4, push_count(calls))
 
     def test_skips_when_nothing_to_commit(self):
         runtime = self.runtime()
@@ -1167,13 +1206,14 @@ class LivePushTests(unittest.TestCase):
             self.assertEqual([["git", "add", str(self.out)],
                               ["git", "diff", "--cached", "--quiet"],
                               ["git", "commit", "-m", "live: sync runtime state"],
-                              ["git", "push", "origin", "HEAD"]], calls)
+                              ["git", "push", "origin", "HEAD"],
+                              ["git", "push", "origin", "HEAD:main"]], calls)
             self.out.unlink()  # now neither snapshot file exists
             frozen[0] = frozen[0] + timedelta(seconds=121)
             runtime._maybe_push_live_snapshot(
                 {"runtime_state": {"state": "resting"},
                  "totals": {"goals_achieved": 0, "goals_abandoned": 0}})
-        self.assertEqual(4, len(calls))  # no new git calls without files to stage
+        self.assertEqual(5, len(calls))  # no new git calls without files to stage
 
     def test_fingerprint_combines_state_terminal_goals_and_runs(self):
         runtime = self.runtime()

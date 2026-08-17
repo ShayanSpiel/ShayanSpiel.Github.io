@@ -13,6 +13,7 @@ export interface LiveGoal {
   metric: string;
   operator: string;
   target: number | boolean | string;
+  parent_id?: string | null;
   created_at: string;
   updated_at: string;
   stage?: string | null;
@@ -20,10 +21,14 @@ export interface LiveGoal {
 }
 
 export interface Props { locale?: Locale; goals: LiveGoal[]; }
+
 const { locale = "en", goals } = Astro.props;
+const VISIBLE_LIMIT = 10;
+
 const active = goals.filter((goal) => goal.goal_status === "active");
-const business = active.filter((goal) => goal.owner_id !== "system-improvement").sort((a, b) => b.updated_at.localeCompare(a.updated_at));
-const improvements = active.filter((goal) => goal.owner_id === "system-improvement").sort((a, b) => b.updated_at.localeCompare(a.updated_at));
+const business = active.filter((goal) => goal.owner_id !== "system-improvement");
+const improvements = active.filter((goal) => goal.owner_id === "system-improvement");
+
 const formatter = new Intl.DateTimeFormat(locale === "fa" ? "fa-IR-u-ca-gregory" : "en-US", { dateStyle: "medium", timeStyle: "short", timeZone: "UTC" });
 const faDigits = "۰۱۲۳۴۵۶۷۸۹";
 const localNumber = (value: string) => locale === "fa" ? value.replace(/\d/g, (digit) => faDigits[Number(digit)]) : value;
@@ -32,61 +37,194 @@ const titleFor = (goal: LiveGoal) => locale === "fa" ? (goal.display_title_fa ||
 const valueFor = (goal: LiveGoal, improvement = false) => locale === "fa" ? (goal.business_value_fa || goal.business_value || t(locale, improvement ? "live.company.improvementWhy" : "live.company.defaultWhy")) : (goal.business_value || t(locale, improvement ? "live.company.improvementWhy" : "live.company.defaultWhy"));
 const nextKey = (status?: string | null) => status === "awaiting_approval" ? "approval" : status === "blocked" ? "blocked" : status === "waiting" ? "waiting" : "continue";
 const operatorText = (operator: string) => operator === "ge" ? "≥" : operator === "le" ? "≤" : operator === "eq" ? "=" : operator;
-const targetText = (goal: LiveGoal) => goal.metric === "reply_rate" && typeof goal.target === "number" ? `${Math.round(goal.target * 100)}%` : String(goal.target);
+const metricLabel = (metric: string) =>
+  metric === "reply_rate" ? t(locale, "live.metric.replyRate") :
+  metric === "booked_calls" ? t(locale, "live.metric.bookedCalls") :
+  metric === "published_items" ? t(locale, "live.metric.publishedItems") :
+  metric === "achieved_children" ? t(locale, "live.metric.achievedChildren") :
+  metric === "all_children_achieved" ? t(locale, "live.metric.allChildrenAchieved") :
+  metric === "acceptance_tests_passed" ? t(locale, "live.metric.acceptanceTestsPassed") : metric;
+const targetText = (goal: LiveGoal) => goal.metric === "reply_rate" && typeof goal.target === "number" ? `${Math.round(goal.target * 100)}%` : typeof goal.target === "boolean" ? t(locale, goal.target ? "live.target.yes" : "live.target.no") : String(goal.target);
+const metricText = (goal: LiveGoal) => t(locale, "live.entry.metric", { metric: metricLabel(goal.metric), operator: operatorText(goal.operator), target: targetText(goal) });
+const statusText = (status: string) => t(locale, `live.status.${status}`) || status;
+
+/** Top-level goals for one section: no parent, or a parent outside the
+ *  section's active set (orphans stay visible so nothing disappears). */
+const topLevel = (goals: LiveGoal[]) => {
+  const ids = new Set(goals.map((goal) => goal.id));
+  return goals
+    .filter((goal) => !goal.parent_id || !ids.has(goal.parent_id))
+    .sort((a, b) => b.updated_at.localeCompare(a.updated_at));
+};
+
+/** Map parent_id -> active child goals (children of active parents only). */
+const childrenByParent = (goals: LiveGoal[]) => {
+  const ids = new Set(goals.map((goal) => goal.id));
+  const map = new Map<string, LiveGoal[]>();
+  for (const goal of goals) {
+    if (!goal.parent_id || !ids.has(goal.parent_id)) continue;
+    const group = map.get(goal.parent_id) || [];
+    group.push(goal);
+    map.set(goal.parent_id, group);
+  }
+  for (const group of map.values()) group.sort((a, b) => b.updated_at.localeCompare(a.updated_at));
+  return map;
+};
+
+const businessTop = topLevel(business);
+const improvementTop = topLevel(improvements);
+const businessChildren = childrenByParent(business);
+const improvementChildren = childrenByParent(improvements);
 ---
 
 <div id="live-company-view">
+  <!-- BUSINESS WORK: the goals moving the business forward. -->
   <section aria-labelledby="business-work-heading">
     <div class="mb-6">
       <h2 id="business-work-heading" class="text-2xl font-bold tracking-tight text-foreground-strong">{t(locale, "live.company.businessTitle")}</h2>
       <p class="mt-2 text-sm leading-relaxed text-muted-foreground">{t(locale, "live.company.businessDesc")}</p>
     </div>
-    <ol class="live-business-timeline">
-      {business.length === 0 && <p class="rounded-md border border-border bg-panel p-5 text-sm text-muted-foreground">{t(locale, "live.company.noActive")}</p>}
-      {business.map((goal) => (
-        <li class="live-business-entry relative border-s-2 border-border pb-7 ps-7 last:pb-0" data-aos="fade-up">
+    <ol class="live-business-timeline" data-live-load-more="business" data-live-load-more-count={String(Math.max(0, businessTop.length - VISIBLE_LIMIT))}>
+      {businessTop.length === 0 && <p class="rounded-md border border-border bg-panel p-5 text-sm text-muted-foreground">{t(locale, "live.company.noActive")}</p>}
+      {businessTop.map((goal, index) => (
+        <li class="live-business-entry relative border-s-2 border-border pb-7 ps-7 last:pb-0" data-live-more-item="business" data-aos="fade-up" hidden={index >= VISIBLE_LIMIT}>
           <span class="live-timeline-node absolute -start-[9px] top-5 flex h-4 w-4 items-center justify-center rounded-full border-2 border-warning bg-background shadow-[0_0_18px_var(--warning-soft)]" aria-hidden="true"><span class="h-1.5 w-1.5 rounded-full bg-warning"></span></span>
-        <article class="group relative overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-0.5 hover:border-border-strong sm:p-6">
-          <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-primary via-accent to-transparent opacity-80"></div>
-          <h3 class="text-lg font-semibold leading-snug text-foreground-strong">{titleFor(goal)}</h3>
-          <dl class="mt-5 grid gap-4 sm:grid-cols-2">
-            <div><dt class="text-2xs font-semibold uppercase tracking-wider text-foreground-muted">{t(locale, "live.company.why")}</dt><dd class="mt-1 text-xs leading-relaxed text-muted-foreground">{valueFor(goal)}</dd></div>
-            <div><dt class="text-2xs font-semibold uppercase tracking-wider text-foreground-muted">{t(locale, "live.company.department")}</dt><dd class="mt-1 text-xs text-muted-foreground">{t(locale, departmentKey(goal.owner_id))}</dd></div>
-            <div><dt class="text-2xs font-semibold uppercase tracking-wider text-foreground-muted">{t(locale, "live.company.status")}</dt><dd class="mt-1 text-xs text-warning">{t(locale, `live.status.${goal.goal_status}`)}</dd></div>
-            <div><dt class="text-2xs font-semibold uppercase tracking-wider text-foreground-muted">{t(locale, "live.company.result")}</dt><dd class="mt-1 text-xs text-muted-foreground">{t(locale, "live.company.measuring")}</dd></div>
-            <div><dt class="text-2xs font-semibold uppercase tracking-wider text-foreground-muted">{t(locale, "live.company.next")}</dt><dd class="mt-1 text-xs text-muted-foreground">{t(locale, `live.company.next.${nextKey(goal.run_status)}`)}</dd></div>
-            <div><dt class="text-2xs font-semibold uppercase tracking-wider text-foreground-muted">{t(locale, "live.company.updated")}</dt><dd class="mt-1 text-xs text-muted-foreground"><time datetime={goal.updated_at}>{localNumber(formatter.format(new Date(goal.updated_at)))}</time></dd></div>
-          </dl>
-          <details class="mt-5 border-t border-border pt-4" data-live-system-details>
-            <summary class="cursor-pointer text-xs font-semibold text-primary">{t(locale, "live.company.details")}</summary>
-            <dl class="mt-4 grid gap-3 rounded-md bg-panel-raised p-4 font-mono text-2xs text-muted-foreground sm:grid-cols-2">
-              <div><dt>{t(locale, "live.company.canonical")}</dt><dd class="mt-1 text-foreground">{goal.name}</dd></div>
-              <div><dt>{t(locale, "live.company.identifier")}</dt><dd class="mt-1 break-all text-foreground">{goal.id}</dd></div>
-              <div><dt>{t(locale, "live.company.systemState")}</dt><dd class="mt-1 text-foreground">{goal.stage || t(locale, "live.company.unknown")} · {goal.run_status || t(locale, "live.company.unknown")}</dd></div>
-              <div><dt>{t(locale, "live.company.metric")}</dt><dd class="mt-1 text-foreground">{goal.metric} {operatorText(goal.operator)} {targetText(goal)}</dd></div>
+          <article class="group relative overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-0.5 hover:border-border-strong sm:p-6" data-live-parent-id={goal.id}>
+            <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-primary via-accent to-transparent opacity-80" aria-hidden="true"></div>
+            <div class="flex flex-wrap items-start gap-3">
+              <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-primary-soft text-primary" aria-hidden="true"><i class="bx bx-bullseye icon-xl"></i></span>
+              <div class="min-w-0 flex-1">
+                <h3 class="text-lg font-semibold leading-snug text-foreground-strong">{titleFor(goal)}</h3>
+                <p class="mt-1 text-xs text-muted-foreground"><span class="font-semibold text-foreground-muted">{t(locale, "live.company.canonical")}:</span> {goal.name}</p>
+              </div>
+              <span class="inline-flex shrink-0 items-center gap-1.5 rounded-sm border border-border bg-panel px-2.5 py-1 text-2xs font-medium text-warning">
+                <i class="bx bx-time-five icon-sm" aria-hidden="true"></i>
+                <span>{statusText(goal.goal_status)}</span>
+              </span>
+            </div>
+            <p class="mt-3">
+              <span class="inline-flex items-center gap-1.5 rounded-sm bg-primary-soft px-2 py-1 text-xs font-semibold text-foreground-strong">
+                <i class="bx bx-target-lock icon-sm text-primary" aria-hidden="true"></i>
+                <span>{metricText(goal)}</span>
+              </span>
+            </p>
+            <p class="mt-3 text-xs leading-relaxed text-muted-foreground">{valueFor(goal)}</p>
+            <dl class="mt-4 grid gap-3 text-2xs text-muted-foreground sm:grid-cols-2">
+              <div><dt class="font-semibold uppercase tracking-wider text-foreground-muted">{t(locale, "live.company.department")}</dt><dd class="mt-1 text-foreground">{t(locale, departmentKey(goal.owner_id))}</dd></div>
+              <div><dt class="font-semibold uppercase tracking-wider text-foreground-muted">{t(locale, "live.company.result")}</dt><dd class="mt-1 text-foreground">{t(locale, "live.company.measuring")}</dd></div>
+              <div><dt class="font-semibold uppercase tracking-wider text-foreground-muted">{t(locale, "live.company.next")}</dt><dd class="mt-1 text-foreground">{t(locale, `live.company.next.${nextKey(goal.run_status)}`)}</dd></div>
+              <div><dt class="font-semibold uppercase tracking-wider text-foreground-muted">{t(locale, "live.company.updated")}</dt><dd class="mt-1 text-foreground"><time datetime={goal.updated_at}>{localNumber(formatter.format(new Date(goal.updated_at)))}</time></dd></div>
             </dl>
-          </details>
-        </article>
+            <details class="mt-4 border-t border-border pt-3" data-live-system-details>
+              <summary class="cursor-pointer text-xs font-semibold text-primary">{t(locale, "live.company.details")}</summary>
+              <dl class="mt-3 grid gap-3 rounded-md bg-panel-raised p-4 text-2xs text-muted-foreground sm:grid-cols-2">
+                <div><dt>{t(locale, "live.company.identifier")}</dt><dd class="mt-1 break-all font-mono text-foreground">{goal.id}</dd></div>
+                <div><dt>{t(locale, "live.company.systemState")}</dt><dd class="mt-1 text-foreground">{goal.stage || t(locale, "live.company.unknown")} · {goal.run_status || t(locale, "live.company.unknown")}</dd></div>
+              </dl>
+            </details>
+            {businessChildren.get(goal.id)?.length ?
+              <div class="mt-4 space-y-2">
+                {businessChildren.get(goal.id)!.map((child) => (
+                  <div class="relative rounded-md border border-border bg-panel-raised p-4" data-live-child>
+                    <p class="text-2xs font-semibold uppercase tracking-wider text-primary">{t(locale, "live.company.supports", { title: titleFor(goal) })}</p>
+                    <h4 class="mt-1 text-sm font-semibold leading-snug text-foreground-strong">{titleFor(child)}</h4>
+                    <p class="mt-1 text-xs text-muted-foreground">
+                      <span class="font-semibold text-foreground-strong">{metricText(child)}</span>
+                      <span class="mx-1" aria-hidden="true">·</span>
+                      <span>{valueFor(child)}</span>
+                    </p>
+                    <p class="mt-1.5 text-2xs text-muted-foreground">
+                      <span class="font-semibold text-foreground-muted">{t(locale, "live.company.canonical")}:</span> {child.name}
+                      <span class="mx-1" aria-hidden="true">·</span>
+                      <span class="font-mono">{child.id}</span>
+                    </p>
+                  </div>
+                ))}
+              </div>
+            : null}
+          </article>
         </li>
       ))}
     </ol>
+    {businessTop.length > VISIBLE_LIMIT && (
+      <div class="mt-2 text-center">
+        <button type="button" class="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-border bg-panel px-6 text-sm font-semibold text-primary hover:border-border-strong hover:bg-panel-raised" data-live-load-more="business" data-live-load-more-button>
+          <i class="bx bx-plus icon-base" aria-hidden="true"></i>
+          {t(locale, "live.company.loadMoreBusiness")} ({localNumber(String(businessTop.length - VISIBLE_LIMIT))})
+        </button>
+      </div>
+    )}
   </section>
 
-  <details class="mt-10 rounded-lg border border-border bg-panel" data-improvement-section>
-    <summary class="cursor-pointer p-5 sm:p-6">
-      <span class="block text-lg font-bold text-foreground-strong">{t(locale, "live.company.improvementTitle")}</span>
-      <span class="mt-1 block text-xs leading-relaxed text-muted-foreground">{t(locale, "live.company.improvementDesc")}</span>
-    </summary>
-    <div class="space-y-4 border-t border-border p-5 sm:p-6">
-      {improvements.map((goal) => (
-        <article class="rounded-md border border-border bg-panel-raised p-5">
-          <h3 class="text-sm font-semibold text-foreground-strong">{titleFor(goal)}</h3>
-          <p class="mt-2 text-xs leading-relaxed text-muted-foreground">{valueFor(goal, true)}</p>
-          <details class="mt-4" data-live-system-details><summary class="cursor-pointer text-xs font-semibold text-primary">{t(locale, "live.company.details")}</summary><div class="mt-3 rounded-md bg-background p-3 font-mono text-2xs text-muted-foreground"><p>{goal.name}</p><p class="mt-1 break-all">{goal.id}</p><p class="mt-1">{goal.stage || t(locale, "live.company.unknown")} · {goal.run_status || t(locale, "live.company.unknown")}</p></div></details>
+  <!-- SELF-IMPROVEMENT: bounded changes to SpielOS itself, kept separate
+       from business results. A full section, not a collapsed list. -->
+  <section id="live-improvement" class="mt-14" data-improvement-section aria-labelledby="improvement-work-heading">
+    <div class="mb-6">
+      <p class="text-2xs font-semibold uppercase tracking-widest text-purple">{t(locale, "live.company.improvementLabel")}</p>
+      <h2 id="improvement-work-heading" class="mt-2 text-2xl font-bold tracking-tight text-foreground-strong">{t(locale, "live.company.improvementTitle")}</h2>
+      <p class="mt-2 text-sm leading-relaxed text-muted-foreground">{t(locale, "live.company.improvementDesc")}</p>
+    </div>
+    <div class="space-y-4" data-live-load-more="improvement" data-live-load-more-count={String(Math.max(0, improvementTop.length - VISIBLE_LIMIT))}>
+      {improvementTop.map((goal, index) => (
+        <article class="group relative overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-0.5 hover:border-border-strong sm:p-6" data-live-more-item="improvement" data-live-parent-id={goal.id} hidden={index >= VISIBLE_LIMIT}>
+          <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-purple via-warning to-transparent opacity-80" aria-hidden="true"></div>
+          <div class="flex flex-wrap items-start gap-3">
+            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-purple-soft text-purple" aria-hidden="true"><i class="bx bx-slider icon-xl"></i></span>
+            <div class="min-w-0 flex-1">
+              <h3 class="text-lg font-semibold leading-snug text-foreground-strong">{titleFor(goal)}</h3>
+              <p class="mt-1 text-xs text-muted-foreground"><span class="font-semibold text-foreground-muted">{t(locale, "live.company.canonical")}:</span> {goal.name}</p>
+            </div>
+            <span class="inline-flex shrink-0 items-center gap-1.5 rounded-sm border border-border bg-panel px-2.5 py-1 text-2xs font-medium text-warning">
+              <i class="bx bx-time-five icon-sm" aria-hidden="true"></i>
+              <span>{statusText(goal.goal_status)}</span>
+            </span>
+          </div>
+          <p class="mt-3">
+            <span class="inline-flex items-center gap-1.5 rounded-sm bg-purple-soft px-2 py-1 text-xs font-semibold text-foreground-strong">
+              <i class="bx bx-target-lock icon-sm text-purple" aria-hidden="true"></i>
+              <span>{metricText(goal)}</span>
+            </span>
+          </p>
+          <p class="mt-3 text-xs leading-relaxed text-muted-foreground">{valueFor(goal, true)}</p>
+          <details class="mt-4 border-t border-border pt-3" data-live-system-details>
+            <summary class="cursor-pointer text-xs font-semibold text-purple">{t(locale, "live.company.details")}</summary>
+            <dl class="mt-3 grid gap-3 rounded-md bg-panel-raised p-4 text-2xs text-muted-foreground sm:grid-cols-2">
+              <div><dt>{t(locale, "live.company.identifier")}</dt><dd class="mt-1 break-all font-mono text-foreground">{goal.id}</dd></div>
+              <div><dt>{t(locale, "live.company.systemState")}</dt><dd class="mt-1 text-foreground">{goal.stage || t(locale, "live.company.unknown")} · {goal.run_status || t(locale, "live.company.unknown")}</dd></div>
+            </dl>
+          </details>
+          {improvementChildren.get(goal.id)?.length ?
+            <div class="mt-4 space-y-2">
+              {improvementChildren.get(goal.id)!.map((child) => (
+                <div class="relative rounded-md border border-border bg-panel-raised p-4" data-live-child>
+                  <p class="text-2xs font-semibold uppercase tracking-wider text-purple">{t(locale, "live.company.supports", { title: titleFor(goal) })}</p>
+                  <h4 class="mt-1 text-sm font-semibold leading-snug text-foreground-strong">{titleFor(child)}</h4>
+                  <p class="mt-1 text-xs text-muted-foreground">
+                    <span class="font-semibold text-foreground-strong">{metricText(child)}</span>
+                    <span class="mx-1" aria-hidden="true">·</span>
+                    <span>{valueFor(child, true)}</span>
+                  </p>
+                  <p class="mt-1.5 text-2xs text-muted-foreground">
+                    <span class="font-semibold text-foreground-muted">{t(locale, "live.company.canonical")}:</span> {child.name}
+                    <span class="mx-1" aria-hidden="true">·</span>
+                    <span class="font-mono">{child.id}</span>
+                  </p>
+                </div>
+              ))}
+            </div>
+          : null}
         </article>
       ))}
     </div>
-  </details>
+    {improvementTop.length > VISIBLE_LIMIT && (
+      <div class="mt-4 text-center">
+        <button type="button" class="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-border bg-panel px-6 text-sm font-semibold text-purple hover:border-border-strong hover:bg-panel-raised" data-live-load-more="improvement" data-live-load-more-button>
+          <i class="bx bx-plus icon-base" aria-hidden="true"></i>
+          {t(locale, "live.company.loadMoreImprovement")} ({localNumber(String(improvementTop.length - VISIBLE_LIMIT))})
+        </button>
+      </div>
+    )}
+  </section>
 </div>
 
 <style>
@@ -113,6 +251,20 @@ const targetText = (goal: LiveGoal) => goal.metric === "reply_rate" && typeof go
       if (!(details instanceof HTMLDetailsElement) || !details.open) return;
       const tracker = (window as typeof window & { spielosTrack?: (name: string, properties: Record<string, string>) => void }).spielosTrack;
       if (typeof tracker === "function") tracker("live_system_details_expanded", { page: window.location.pathname });
+    });
+  });
+
+  // Load-more: reveal the remaining entries of a scope and hide the button.
+  document.querySelectorAll("[data-live-load-more-button]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const scope = button.getAttribute("data-live-load-more");
+      if (!scope) return;
+      document.querySelectorAll(`[data-live-more-item="${scope}"]`).forEach((item) => {
+        (item as HTMLElement).hidden = false;
+      });
+      (button as HTMLElement).hidden = true;
+      const tracker = (window as typeof window & { spielosTrack?: (name: string, properties: Record<string, string>) => void }).spielosTrack;
+      if (typeof tracker === "function") tracker("live_timeline_load_more", { scope, page: window.location.pathname });
     });
   });
 </script>

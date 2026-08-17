@@ -57,7 +57,10 @@ LIVE_SYNC_OUT = "src/data/live-goals.json"
 # Live push (goal-ed500b0c63): commit + push the /live snapshot when the
 # company is actually active. Gated by SPIELOS_LIVE_PUSH (env var, falling
 # back to a value parsed from .spielos/.env), debounced 120s, non-fatal.
-# Default OFF; never force-pushes and never stages unrelated files.
+# The snapshot commit is pushed to the current branch and then, as a
+# best-effort extra step, fast-forwarded to origin main (HEAD:main) so the
+# GitHub Pages deploy triggers. Default OFF; never force-pushes and never
+# stages unrelated files.
 LIVE_PUSH_ENV = "SPIELOS_LIVE_PUSH"
 LIVE_PUSH_ENV_FILE = ".spielos/.env"
 LIVE_PUSH_MARKER = ".spielos/state/.live_push_state.json"
@@ -204,11 +207,16 @@ def _bounded_sync(module, timeout=None):
 
 
 def _git_push_sequence() -> bool:
-    """git add (only existing snapshot files) -> commit -> push origin HEAD.
+    """git add (only existing snapshot files) -> commit -> push origin HEAD,
+    then a best-effort fast-forward push of HEAD to origin main.
 
-    Returns True when a push actually happened. Returns False (skip and
-    stop) when there is nothing to commit. Raises on any git failure; the
-    caller logs the warning and the goal transition continues.
+    The HEAD:main step exists because GitHub Pages only deploys on push to
+    main, so the snapshot commit must reach main for the /live page to
+    update. Returns True when a push actually happened. Returns False
+    (skip and stop) when there is nothing to commit. Raises on any git
+    failure of the HEAD push; the caller logs the warning and the goal
+    transition continues. The HEAD:main push is strictly best-effort and
+    never raises.
     """
     candidates = [path for path in (LIVE_SYNC_OUT, LIVE_PUSH_STATE_OUT)
                   if Path(path).is_file()]
@@ -224,7 +232,24 @@ def _git_push_sequence() -> bool:
         raise RuntimeError(f"git diff --cached --quiet exited {staged.returncode}")
     _run_git(["git", "commit", "-m", "live: sync runtime state"])
     _run_git(["git", "push", "origin", "HEAD"])
+    _push_live_main_ref()
     return True
+
+
+def _push_live_main_ref() -> None:
+    """Best-effort: fast-forward the /live snapshot commit to origin main.
+
+    Pushing HEAD:main keeps origin main in sync with the branch carrying
+    the snapshot commit, which triggers the GitHub Pages deploy. Any git
+    failure — a remote non-fast-forward rejection, a hang past the hard
+    timeout, a missing remote — logs a warning and never raises: the
+    snapshot is already committed and pushed to the current branch, so the
+    goal transition must not be blocked by this extra best-effort step.
+    """
+    try:
+        _run_git(["git", "push", "origin", "HEAD:main"])
+    except Exception as exc:  # best-effort; never blocks the transition
+        logger.warning("live push to origin main skipped (non-fatal): %s", exc)
 
 
 def _write_live_push_marker(path: str, fingerprint: str) -> None:

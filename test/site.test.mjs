@@ -94,10 +94,10 @@ test("Agent Brief uses one shared native three-field form with safe analytics", 
   assert.match(source, /window\.spielosTrack\(name, \{ form_type: 'agent_brief', page: page, locale: locale, location: formLocation \}\)/);
 });
 
-test("Live leads with active business work and hides technical records by default", () => {
+test("Live leads with active business work, north star, hierarchy, and visible self-improvement", () => {
   const en = read("live");
   const fa = read("fa/live");
-  for (const id of ["live-status-root", "live-model", "live-stats", "live-howto", "live-timeline"]) {
+  for (const id of ["live-status-root", "live-northstar", "live-model", "live-stats", "live-howto", "live-timeline", "live-improvement"]) {
     assert.match(en, new RegExp(`id="${id}"`), `${id} must remain part of the Live experience`);
   }
   assert.match(en, /live-hb-ring/);
@@ -106,8 +106,13 @@ test("Live leads with active business work and hides technical records by defaul
   assert.match(en, /id="live-company-view"/);
   assert.match(en, /aria-labelledby="business-work-heading"/);
   assert.match(en, /data-live-system-details/);
-  assert.match(en, /data-improvement-section/);
-  assert.doesNotMatch(en, /<details[^>]*data-improvement-section[^>]*open/);
+  // Self-improvement is a full section now, never a collapsed details.
+  assert.match(en, /<section[^>]*data-improvement-section/);
+  assert.doesNotMatch(en, /<details[^>]*data-improvement-section/);
+  // Hierarchy and load-more behavior are part of the timeline surface.
+  assert.match(en, /data-live-child/);
+  assert.match(en, /data-live-load-more="business"/);
+  assert.match(en, /data-live-load-more="improvement"/);
   assert.match(en, /Still being measured/);
   assert.match(en, /href="\/services\/agent-brief\/#request"/);
   assert.match(fa, /هنوز در حال اندازه‌گیریه/);
