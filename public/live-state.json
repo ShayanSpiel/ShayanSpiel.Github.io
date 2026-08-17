@@ -1,26 +1,26 @@
 {
   "current_run": {
-    "created_at": "2026-08-15T02:42:04.953786+00:00",
-    "goal_id": "goal-email-send-20260815-b6",
-    "goal_name": "English outbound send batch 6: next 50 from remaining queue",
+    "created_at": "2026-08-16T17:29:22.274233+00:00",
+    "goal_id": "goal-email-send-20260816-b8",
+    "goal_name": "English outbound send batch 8: next 50 from remaining queue",
     "owner_id": "outbound",
-    "run_id": "run-0e93fa8686",
+    "run_id": "run-1c65a9f3d3",
     "run_status": "waiting",
     "stage": "EVALUATE",
-    "updated_at": "2026-08-17T11:55:18.359744+00:00"
+    "updated_at": "2026-08-17T13:37:50.499181+00:00"
   },
   "heartbeat": {
-    "goal_id": "goal-email-send-20260815-b6",
-    "goal_name": "English outbound send batch 6: next 50 from remaining queue",
+    "goal_id": "goal-email-send-20260816-b8",
+    "goal_name": "English outbound send batch 8: next 50 from remaining queue",
     "metric": "reply_rate",
     "operator": "ge",
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-17T11:55:18.359744+00:00"
+    "updated_at": "2026-08-17T13:37:50.499181+00:00"
   },
-  "last_activity_at": "2026-08-17T12:12:01.847087+00:00",
-  "last_sync_at": "2026-08-17T12:12:01.922631+00:00",
+  "last_activity_at": "2026-08-17T13:37:50.499181+00:00",
+  "last_sync_at": "2026-08-17T13:37:50.598151+00:00",
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
     "goal_name": "3 booked calls per day",
@@ -34,7 +34,7 @@
   "totals": {
     "approvals": 162,
     "decisions": 317,
-    "evidence": 4866,
+    "evidence": 4867,
     "goals_abandoned": 18,
     "goals_achieved": 99,
     "goals_active": 23,
