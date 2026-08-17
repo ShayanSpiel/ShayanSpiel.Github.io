@@ -4,12 +4,17 @@ import { type Locale, t } from "../../i18n/translations";
 export interface Heartbeat {
   goal_id: string;
   goal_name: string;
+  owner_id?: string | null;
   metric: string;
   operator: string;
   target: number | boolean | string;
   stage?: string | null;
   run_status?: string | null;
   updated_at: string;
+  display_title?: string | null;
+  display_title_fa?: string | null;
+  business_value?: string | null;
+  business_value_fa?: string | null;
 }
 
 export interface Northstar {
@@ -49,6 +54,35 @@ const {
 
 const hasHeartbeat = Boolean(heartbeat);
 const hasNorthstar = Boolean(northstar);
+
+/** Metrics that read as a human result for buyers. Everything else
+ *  (acceptance_tests_passed, achieved_children, ...) stays inside the
+ *  collapsed system details. */
+const USER_FACING_METRICS = new Set(["reply_rate", "booked_calls", "published_items"]);
+const humanMetric = (hb: Heartbeat | null) => (hb && USER_FACING_METRICS.has(hb.metric) ? heartbeatText(hb) : "");
+
+/** The visible title is public copy when available; otherwise a generic
+ *  human phrase -- never the raw canonical goal name on a buyer card. */
+const heartbeatTitle = (hb: Heartbeat | null) => {
+  if (!hb) return "";
+  const copy = locale === "fa" ? (hb.display_title_fa || hb.display_title) : hb.display_title;
+  if (copy) return copy;
+  return hb.owner_id === "system-improvement"
+    ? t(locale, "live.heartbeat.systemImprovement")
+    : t(locale, "live.heartbeat.businessWork");
+};
+
+/** The visible sub-line is the human result when the metric is user-facing,
+ *  otherwise the public business value, otherwise empty (technical detail). */
+const heartbeatBody = (hb: Heartbeat | null) => {
+  const metricLine = humanMetric(hb);
+  if (metricLine) return metricLine;
+  if (hb) {
+    const copy = locale === "fa" ? (hb.business_value_fa || hb.business_value) : hb.business_value;
+    if (copy) return copy;
+  }
+  return "";
+};
 ---
 
 <!-- ONE company-heartbeat card: the north star goal on top, the current
@@ -111,18 +145,24 @@ const hasNorthstar = Boolean(northstar);
             <i id="live-status-state-icon" class:list={["bx", hasHeartbeat ? "bx-run text-primary" : "bx-time-five text-muted-foreground", "icon-sm"]} aria-hidden="true"></i>
             <span id="live-status-state-label-text">{t(locale, hasHeartbeat ? "live.state.running" : "live.state.resting")}</span>
           </span>
-          <span id="live-status-stage" class:list={["inline-flex items-center rounded-sm border border-border bg-panel px-2.5 py-1 text-2xs font-medium text-muted-foreground", !hasHeartbeat && "hidden"]}>
-            <span data-heartbeat-stage={heartbeat?.stage ?? ""}>{heartbeat?.stage ?? ""}</span>
-          </span>
         </span>
-        <span class="mt-2 block text-sm font-semibold leading-snug text-foreground-strong" data-heartbeat-goal={heartbeat?.goal_name ?? ""}>{heartbeat?.goal_name ?? ""}</span>
-        <span class="mt-1 block text-xs text-muted-foreground" data-heartbeat-metric={hasHeartbeat && heartbeat ? heartbeatText(heartbeat) : ""}>{hasHeartbeat && heartbeat ? heartbeatText(heartbeat) : ""}</span>
+        <span class="mt-2 block text-sm font-semibold leading-snug text-foreground-strong" data-heartbeat-goal={hasHeartbeat ? heartbeatTitle(heartbeat) : ""}>{hasHeartbeat ? heartbeatTitle(heartbeat) : ""}</span>
+        <span class:list={["mt-1 block text-xs text-muted-foreground", hasHeartbeat && !heartbeatBody(heartbeat) && "hidden"]} data-heartbeat-metric={hasHeartbeat ? heartbeatBody(heartbeat) : ""}>{hasHeartbeat ? heartbeatBody(heartbeat) : ""}</span>
         <span id="live-status-resting" class:list={["mt-1 block text-xs leading-relaxed text-muted-foreground", hasHeartbeat && "hidden"]}>
           {t(locale, "live.heartbeat.resting")}
         </span>
         <span id="live-status-activity" class:list={["mt-1 block text-xs text-muted-foreground", !lastActivityText && "hidden"]}>
           {lastActivityText}
         </span>
+        <details class:list={["mt-3 border-t border-border pt-3", !hasHeartbeat && "hidden"]} data-live-system-details>
+          <summary class="cursor-pointer text-xs font-semibold text-primary">{t(locale, "live.company.details")}</summary>
+          <dl class="mt-3 grid gap-3 rounded-md bg-panel-raised p-4 text-2xs text-muted-foreground sm:grid-cols-2">
+            <div><dt>{t(locale, "live.company.identifier")}</dt><dd class="mt-1 break-all font-mono text-foreground" data-heartbeat-detail-id>{heartbeat?.goal_id ?? ""}</dd></div>
+            <div><dt>{t(locale, "live.company.canonical")}</dt><dd class="mt-1 break-all text-foreground" data-heartbeat-detail-goal>{heartbeat?.goal_name ?? ""}</dd></div>
+            <div><dt>{t(locale, "live.company.systemState")}</dt><dd class="mt-1 text-foreground"><span data-heartbeat-stage>{heartbeat?.stage ?? t(locale, "live.company.unknown")}</span> · <span data-heartbeat-run-status>{heartbeat?.run_status ?? t(locale, "live.company.unknown")}</span></dd></div>
+            <div><dt>{t(locale, "live.company.metric")}</dt><dd class="mt-1 text-foreground" data-heartbeat-detail-metric>{hasHeartbeat && heartbeat ? heartbeatText(heartbeat) : ""}</dd></div>
+          </dl>
+        </details>
       </span>
     </div>
 

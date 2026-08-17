@@ -149,6 +149,11 @@ const howTo = [
     restingLabel: t(locale, "live.state.resting"),
     restingText: t(locale, "live.heartbeat.resting"),
     replyRateLabel: t(locale, "live.metric.replyRate"),
+    bookedCallsLabel: t(locale, "live.metric.bookedCalls"),
+    publishedItemsLabel: t(locale, "live.metric.publishedItems"),
+    systemImprovementLabel: t(locale, "live.heartbeat.systemImprovement"),
+    businessWorkLabel: t(locale, "live.heartbeat.businessWork"),
+    unknownLabel: t(locale, "live.company.unknown"),
     metricTemplate: t(locale, "live.entry.metric"),
     activityTemplate: t(locale, "live.state.lastActivity"),
     localeCode: locale === "fa" ? "fa-IR-u-ca-gregory" : "en-US",
@@ -161,16 +166,33 @@ const howTo = [
       var tile = root.querySelector('.live-hb-tile');
       var goal = root.querySelector('[data-heartbeat-goal]');
       var metric = root.querySelector('[data-heartbeat-metric]');
-      var stageWrap = document.getElementById('live-status-stage');
-      var stage = root.querySelector('[data-heartbeat-stage]');
       var resting = document.getElementById('live-status-resting');
       var activity = document.getElementById('live-status-activity');
+      var detailWrap = root.querySelector('[data-live-system-details]');
+      var detailId = root.querySelector('[data-heartbeat-detail-id]');
+      var detailGoal = root.querySelector('[data-heartbeat-detail-goal]');
+      var detailStage = root.querySelector('[data-heartbeat-stage]');
+      var detailRunStatus = root.querySelector('[data-heartbeat-run-status]');
+      var detailMetric = root.querySelector('[data-heartbeat-detail-metric]');
+      var userFacing = { reply_rate: replyRateLabel, booked_calls: bookedCallsLabel, published_items: publishedItemsLabel };
       function metricText(heartbeat) {
         if (!heartbeat) return '';
         var operator = heartbeat.operator === 'ge' ? '≥' : heartbeat.operator === 'le' ? '≤' : heartbeat.operator === 'eq' ? '=' : heartbeat.operator;
-        var metricName = heartbeat.metric === 'reply_rate' ? replyRateLabel : heartbeat.metric;
+        var metricName = userFacing[heartbeat.metric] || heartbeat.metric;
         var target = heartbeat.metric === 'reply_rate' && typeof heartbeat.target === 'number' ? Math.round(heartbeat.target * 100) + '%' : String(heartbeat.target);
         return metricTemplate.replace('{metric}', metricName).replace('{operator}', operator).replace('{target}', target);
+      }
+      function titleFor(heartbeat) {
+        if (!heartbeat) return '';
+        var copy = localeCode === 'fa-IR-u-ca-gregory' ? (heartbeat.display_title_fa || heartbeat.display_title) : heartbeat.display_title;
+        if (copy) return copy;
+        return heartbeat.owner_id === 'system-improvement' ? systemImprovementLabel : businessWorkLabel;
+      }
+      function bodyFor(heartbeat) {
+        if (!heartbeat) return '';
+        if (userFacing[heartbeat.metric]) return metricText(heartbeat);
+        var copy = localeCode === 'fa-IR-u-ca-gregory' ? (heartbeat.business_value_fa || heartbeat.business_value) : heartbeat.business_value;
+        return copy || '';
       }
       function apply(data) {
         var running = data && data.state === 'running' && data.heartbeat;
@@ -187,10 +209,12 @@ const howTo = [
           tile.classList.toggle('bg-destructive-soft', !running);
           tile.classList.toggle('text-destructive', !running);
         }
-        if (goal) goal.textContent = heartbeat ? heartbeat.goal_name : '';
-        if (metric) metric.textContent = metricText(heartbeat);
-        if (stage) stage.textContent = heartbeat && heartbeat.stage ? heartbeat.stage : '';
-        if (stageWrap) stageWrap.classList.toggle('hidden', !(heartbeat && heartbeat.stage));
+        if (goal) goal.textContent = heartbeat ? titleFor(heartbeat) : '';
+        if (metric) {
+          var body = heartbeat ? bodyFor(heartbeat) : '';
+          metric.textContent = body;
+          metric.classList.toggle('hidden', !body);
+        }
         if (resting) {
           resting.textContent = restingText;
           resting.classList.toggle('hidden', !!running);
@@ -204,6 +228,12 @@ const howTo = [
           activity.textContent = activityText;
           activity.classList.toggle('hidden', !activityText);
         }
+        if (detailWrap) detailWrap.classList.toggle('hidden', !heartbeat);
+        if (detailId) detailId.textContent = heartbeat ? heartbeat.goal_id : '';
+        if (detailGoal) detailGoal.textContent = heartbeat ? heartbeat.goal_name : '';
+        if (detailStage) detailStage.textContent = heartbeat ? (heartbeat.stage || unknownLabel) : '';
+        if (detailRunStatus) detailRunStatus.textContent = heartbeat ? (heartbeat.run_status || unknownLabel) : '';
+        if (detailMetric) detailMetric.textContent = heartbeat ? metricText(heartbeat) : '';
       }
       function poll() { fetch('/live-state.json?t=' + Date.now(), { cache: 'no-store' }).then(function (response) { if (!response.ok) throw new Error('status'); return response.json(); }).then(apply).catch(function () {}); }
       poll();

@@ -97,6 +97,8 @@ test("Agent Brief uses one shared native three-field form with safe analytics", 
 test("Live leads with active business work, north star, hierarchy, and visible self-improvement", () => {
   const en = read("live");
   const fa = read("fa/live");
+  const snapshot = JSON.parse(readFileSync(join(root, "src/data/live-goals.json"), "utf8"));
+  const byId = new Map(snapshot.goals.map((g) => [g.id, g]));
   for (const id of ["live-status-root", "live-northstar", "live-model", "live-stats", "live-howto", "live-timeline", "live-improvement"]) {
     assert.match(en, new RegExp(`id="${id}"`), `${id} must remain part of the Live experience`);
   }
@@ -116,6 +118,73 @@ test("Live leads with active business work, north star, hierarchy, and visible s
   assert.match(en, /Still being measured/);
   assert.match(en, /href="\/services\/agent-brief\/#request"/);
   assert.match(fa, /هنوز در حال اندازه‌گیریه/);
+
+  // User-facing hygiene: raw system technicals must never render on the open
+  // page. Any technical metric string may only live inside a collapsed
+  // `<details data-live-system-details>` block.
+  assert.doesNotMatch(en, /acceptance_tests_passed/, "raw system metric must not leak outside collapsed details");
+  assert.doesNotMatch(fa, /acceptance_tests_passed/, "raw system metric must not leak outside collapsed details");
+  for (const html of [en, fa]) {
+    const open = html.replace(/<details\b[^>]*data-live-system-details[\s\S]*?<\/details>/g, "");
+    assert.doesNotMatch(open, /acceptance_tests_passed|achieved_children|all_children_achieved/, "technical metric strings only inside collapsed system details");
+  }
+  // The heartbeat card shows human copy, never the raw canonical goal name or
+  // a raw stage chip as the visible heading. Assertions are structural so the
+  // live daemon can advance the heartbeat without flaking the test.
+  const heartbeat = snapshot.runtime_state && snapshot.runtime_state.heartbeat;
+  if (heartbeat) {
+    const goal = byId.get(heartbeat.goal_id);
+    const visibleTitle = (en.match(/data-heartbeat-goal="([^"]*)"/) || [])[1];
+    const allowedTitles = new Set([
+      "Working toward the next company goal",
+      "Improving how SpielOS works",
+    ]);
+    for (const g of snapshot.goals) {
+      if (g.display_title) allowedTitles.add(g.display_title);
+      if (g.display_title_fa) allowedTitles.add(g.display_title_fa);
+    }
+    assert.ok(allowedTitles.has(visibleTitle), "heartbeat heading must be a human phrase or public copy");
+    if (goal) {
+      assert.notEqual(visibleTitle, goal.name, "raw canonical goal name must never be the heartbeat heading");
+    }
+    const visibleMetric = (en.match(/data-heartbeat-metric="([^"]*)"/) || [])[1];
+    const userMetricLabels = ["Reply Rate", "Booked calls", "Published items"];
+    assert.ok(
+      !visibleMetric || userMetricLabels.some((l) => visibleMetric.startsWith(l)) || (goal && (goal.business_value || goal.business_value_fa)),
+      "visible heartbeat sub-line must be a user-facing metric or public business value"
+    );
+  }
+
+  // Recency: the timeline stamps and orders cards by the freshest activity in
+  // each goal subtree (children included), never the stale goal-row time.
+  // These assertions are deliberately structural (not exact timestamps): the
+  // live runner advances cycles, so the built page and the regenerated
+  // snapshot can differ by seconds while the invariant still holds.
+  // A parent whose children ran today must show a fresher Updated stamp than
+  // its own goal-row timestamp, and its subtree must really be freshest.
+  const campaign = byId.get("goal-email-campaign-20260810");
+  if (campaign) {
+    const kidsLatest = snapshot.goals
+      .filter((g) => g.parent_id === campaign.id)
+      .map((k) => k.latest_activity_at || k.updated_at)
+      .filter(Boolean);
+    const subtreeFresh = (kidsLatest.length ? [...kidsLatest, campaign.latest_activity_at, campaign.updated_at].filter(Boolean).sort().pop() : campaign.latest_activity_at);
+    assert.ok(subtreeFresh && subtreeFresh > campaign.updated_at, "snapshot must propagate freshest subtree activity to parents");
+    const cardStart = en.indexOf('data-live-parent-id="goal-email-campaign-20260810"');
+    const campaignCard = en.slice(cardStart, en.indexOf("</article>", cardStart));
+    // The built card's stamp must NOT be the stale goal-row time; it must be
+    // today's subtree activity (the day the children actually ran).
+    assert.doesNotMatch(campaignCard, new RegExp(`<time datetime="${campaign.updated_at}"`), "stale goal-row time must not drive the parent Updated stamp");
+    assert.match(campaignCard, /<time datetime="2026-08-17T/, "parent Updated stamp must reflect today's subtree activity");
+  }
+
+  // Ordering: the freshest-subtree business parent must rank before a goal
+  // whose own row is newer but whose subtree has been idle.
+  const campaignIdx = en.indexOf('data-live-parent-id="goal-email-campaign-20260810"');
+  const contentIdx = en.indexOf('data-live-parent-id="goal-content-batch04-package-v1-20260817"');
+  if (campaignIdx !== -1 && contentIdx !== -1) {
+    assert.ok(campaignIdx < contentIdx, "freshest-subtree parent must rank above older business goals");
+  }
 });
 
 test("conversion pages preserve the distinctive grid, light, and connected-progress language", () => {

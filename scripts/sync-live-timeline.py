@@ -105,6 +105,44 @@ def _latest_cycles(conn: sqlite3.Connection) -> Dict[str, Dict[str, str]]:
     return latest
 
 
+def _cycle_latest_updated(conn: sqlite3.Connection) -> Dict[str, str]:
+    """Map goal_id to the freshest cycle updated_at (real activity time)."""
+    freshest: Dict[str, str] = {}
+    for row in conn.execute(
+        "SELECT goal_id, updated_at FROM cycles ORDER BY updated_at DESC"
+    ):
+        if row["goal_id"] not in freshest:
+            freshest[row["goal_id"]] = row["updated_at"]
+    return freshest
+
+
+def _subtree_latest(goals, per_goal_base: Dict[str, str]) -> Dict[str, str]:
+    """Map goal_id to the freshest updated_at across its whole subtree.
+
+    A parent card's recency must reflect its children and grandchildren, or a
+    calm parent with an active child would sink below truly idle goals.
+    """
+    children: Dict[str, list] = {}
+    for row in goals:
+        parent = row["parent_id"]
+        if parent:
+            children.setdefault(parent, []).append(row["id"])
+    memo: Dict[str, str] = {}
+
+    def latest(goal_id: str) -> str:
+        if goal_id in memo:
+            return memo[goal_id]
+        best = per_goal_base.get(goal_id, "")
+        for child in children.get(goal_id, []):
+            best = max(best, latest(child))
+        memo[goal_id] = best
+        return best
+
+    for row in goals:
+        latest(row["id"])
+    return memo
+
+
 # Buyer-readable labels are explicit public copy, never inferred by the sync.
 # Raw canonical titles remain in `name` and are shown in system details.
 _PUBLIC_GOAL_COPY: Dict[str, Dict[str, str]] = {
@@ -245,23 +283,29 @@ def _heartbeat(conn: sqlite3.Connection) -> Optional[Dict[str, Any]]:
     Returns null when no goal has a non-completed cycle (genuinely resting).
     """
     row = conn.execute(
-        "SELECT g.id AS goal_id, g.name AS goal_name, g.metric, g.operator, "
-        "g.target_json, c.stage, c.run_status, c.updated_at "
+        "SELECT g.id AS goal_id, g.name AS goal_name, g.owner_id, g.metric, "
+        "g.operator, g.target_json, c.stage, c.run_status, c.updated_at "
         "FROM cycles c JOIN goals g ON g.id = c.goal_id "
         "WHERE g.goal_status = 'active' AND c.run_status != 'completed' "
         "ORDER BY c.updated_at DESC, c.id DESC LIMIT 1"
     ).fetchone()
     if row is None:
         return None
+    public = _PUBLIC_GOAL_COPY.get(row["goal_id"], {})
     return {
         "goal_id": row["goal_id"],
         "goal_name": row["goal_name"],
+        "owner_id": row["owner_id"],
         "metric": row["metric"],
         "operator": row["operator"],
         "target": _decode_target(row["target_json"]),
         "stage": row["stage"],
         "run_status": row["run_status"],
         "updated_at": row["updated_at"],
+        "display_title": public.get("display_title"),
+        "display_title_fa": public.get("display_title_fa"),
+        "business_value": public.get("business_value"),
+        "business_value_fa": public.get("business_value_fa"),
     }
 
 
@@ -363,6 +407,12 @@ def sync_live(
             f"SELECT {_GOAL_COLUMNS} FROM goals ORDER BY created_at, id"
         ).fetchall()
         cycles = _latest_cycles(conn)
+        cycle_fresh = _cycle_latest_updated(conn)
+        per_goal_base = {
+            row["id"]: max(row["updated_at"], cycle_fresh.get(row["id"], ""))
+            for row in goals
+        }
+        subtree_fresh = _subtree_latest(goals, per_goal_base)
 
         status_counts: Dict[str, int] = {}
         for row in goals:
@@ -401,6 +451,7 @@ def sync_live(
                     "parent_id": row["parent_id"],
                     "created_at": row["created_at"],
                     "updated_at": row["updated_at"],
+                    "latest_activity_at": subtree_fresh.get(row["id"], row["updated_at"]),
                     "stage": cycles.get(row["id"], {}).get("stage"),
                     "run_status": cycles.get(row["id"], {}).get("run_status"),
                 }
