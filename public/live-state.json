@@ -7,7 +7,7 @@
     "run_id": "run-1c65a9f3d3",
     "run_status": "waiting",
     "stage": "EVALUATE",
-    "updated_at": "2026-08-17T14:54:42.051580+00:00"
+    "updated_at": "2026-08-17T15:00:02.703467+00:00"
   },
   "heartbeat": {
     "goal_id": "goal-email-send-20260816-b8",
@@ -17,10 +17,10 @@
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-17T14:54:42.051580+00:00"
+    "updated_at": "2026-08-17T15:00:02.703467+00:00"
   },
-  "last_activity_at": "2026-08-17T14:54:42.051580+00:00",
-  "last_sync_at": "2026-08-17T14:54:42.142055+00:00",
+  "last_activity_at": "2026-08-17T15:00:57.099933+00:00",
+  "last_sync_at": "2026-08-17T15:00:57.165509+00:00",
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
     "goal_name": "3 booked calls per day",
@@ -34,10 +34,10 @@
   "totals": {
     "approvals": 162,
     "decisions": 317,
-    "evidence": 4901,
+    "evidence": 4908,
     "goals_abandoned": 18,
-    "goals_achieved": 100,
-    "goals_active": 22,
+    "goals_achieved": 101,
+    "goals_active": 21,
     "goals_total": 144,
     "hypotheses": 36,
     "memory_claims": 5,
