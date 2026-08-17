@@ -29,3 +29,8 @@ Thumbs.db
 *.pyc
 *.pid
 *.out
+
+# Company runtime DB + internal agent state — local only, never publish
+.spielos/*.sqlite
+.spielos/*.sqlite-*
+.agents/.spielos/
