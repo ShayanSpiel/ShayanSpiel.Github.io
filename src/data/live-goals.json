@@ -1409,7 +1409,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-17T09:44:56.408958+00:00"
+      "updated_at": "2026-08-17T09:50:38.975123+00:00"
     },
     {
       "created_at": "2026-08-15T03:10:46.410099+00:00",
@@ -1816,44 +1816,44 @@
     }
   ],
   "heartbeat": {
-    "goal_id": "goal-email-send-20260816-b10",
-    "goal_name": "English outbound send batch 10: next 50 from remaining queue",
+    "goal_id": "goal-email-send-20260815-b6",
+    "goal_name": "English outbound send batch 6: next 50 from remaining queue",
     "metric": "reply_rate",
     "operator": "ge",
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-17T09:49:02.170128+00:00"
+    "updated_at": "2026-08-17T09:50:38.976740+00:00"
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-17T09:50:24.172479+00:00",
-      "goal_id": "goal-content-batch04-package-v1-20260817",
-      "goal_name": "Produce Batch 4 Threads and YouTube Shorts — evidence continuation (batch-03 handoff-exception cells)",
-      "owner_id": "content",
-      "run_id": "run-470e0a5fdc",
-      "run_status": "running",
-      "stage": "DECIDE",
-      "updated_at": "2026-08-17T09:50:38.195738+00:00"
+      "created_at": "2026-08-15T02:42:04.953786+00:00",
+      "goal_id": "goal-email-send-20260815-b6",
+      "goal_name": "English outbound send batch 6: next 50 from remaining queue",
+      "owner_id": "outbound",
+      "run_id": "run-0e93fa8686",
+      "run_status": "waiting",
+      "stage": "EVALUATE",
+      "updated_at": "2026-08-17T09:50:38.976740+00:00"
     },
     "heartbeat": {
-      "goal_id": "goal-email-send-20260816-b10",
-      "goal_name": "English outbound send batch 10: next 50 from remaining queue",
+      "goal_id": "goal-email-send-20260815-b6",
+      "goal_name": "English outbound send batch 6: next 50 from remaining queue",
       "metric": "reply_rate",
       "operator": "ge",
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-17T09:49:02.170128+00:00"
+      "updated_at": "2026-08-17T09:50:38.976740+00:00"
     },
-    "last_activity_at": "2026-08-17T09:50:38.195738+00:00",
-    "last_sync_at": "2026-08-17T09:50:38.205485+00:00",
+    "last_activity_at": "2026-08-17T09:50:38.976740+00:00",
+    "last_sync_at": "2026-08-17T09:50:39.000895+00:00",
     "state": "running"
   },
   "totals": {
     "approvals": 152,
     "decisions": 298,
-    "evidence": 4777,
+    "evidence": 4778,
     "goals_abandoned": 17,
     "goals_achieved": 98,
     "goals_active": 19,
