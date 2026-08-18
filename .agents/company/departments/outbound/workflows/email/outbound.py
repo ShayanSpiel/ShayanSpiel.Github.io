@@ -12,6 +12,7 @@ master lead database stays in .spielos/data/outbound/.
 
 import json
 import os
+import tempfile
 from datetime import datetime, timezone
 
 from . import config
@@ -81,12 +82,24 @@ def load_sent_log() -> dict:
 
 
 def save_sent_log(log: dict):
-    """Atomic write (tmp + rename) — a torn file must never reach the next
-    reader."""
-    tmp = config.SENT_LOG_PATH.with_suffix(".json.tmp")
-    with open(tmp, "w") as f:
-        json.dump(log, f, indent=2, default=str)
-    os.replace(tmp, config.SENT_LOG_PATH)
+    """Atomic write (unique tmp + rename) — a torn file must never reach the
+    next reader, and concurrent workers never collide on one shared temp path.
+    The temp file is unique per writer (same directory, so os.replace stays
+    atomic) and is cleaned up if the write fails."""
+    fd, tmp = tempfile.mkstemp(
+        dir=str(config.SENT_LOG_PATH.parent),
+        prefix=config.SENT_LOG_PATH.name + ".",
+        suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w") as f:
+            json.dump(log, f, indent=2, default=str)
+        os.replace(tmp, config.SENT_LOG_PATH)
+    except BaseException:
+        try:
+            os.unlink(tmp)
+        except OSError:
+            pass
+        raise
 
 
 def already_sent(lead_id: str, log: dict) -> bool:

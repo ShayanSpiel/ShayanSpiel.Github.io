@@ -463,6 +463,11 @@ class OutboundStore:
                 (lead_id,)).fetchone()
             if row is not None and self._submission_active(
                     row, cooldown_seconds, now_iso):
+                # End the read transaction before returning: BEGIN IMMEDIATE was
+                # taken above and every exit path must commit or roll back so
+                # the shared check_same_thread=False connection never leaks an
+                # open transaction that breaks the next worker's BEGIN IMMEDIATE.
+                self.db.rollback()
                 return {"claimed": False,
                         "submission": self._submission(row)}
             attempts = (int(row["attempts"]) + 1) if row is not None else 1
