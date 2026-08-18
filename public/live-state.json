@@ -1,31 +1,31 @@
 {
   "current_run": {
-    "created_at": "2026-08-17T19:54:01.781741+00:00",
-    "goal_id": "goal-7343d9eee5",
-    "goal_name": "English outbound send batch 16: next 50 from remaining queue",
+    "created_at": "2026-08-16T17:29:22.274233+00:00",
+    "goal_id": "goal-email-send-20260816-b8",
+    "goal_name": "English outbound send batch 8: next 50 from remaining queue",
     "owner_id": "outbound",
-    "run_id": "run-4e1b1cbde4",
+    "run_id": "run-1c65a9f3d3",
     "run_status": "waiting",
-    "stage": "ACT",
-    "updated_at": "2026-08-18T00:56:55.739607+00:00"
+    "stage": "EVALUATE",
+    "updated_at": "2026-08-18T01:25:55.744945+00:00"
   },
   "heartbeat": {
     "business_value": null,
     "business_value_fa": null,
     "display_title": null,
     "display_title_fa": null,
-    "goal_id": "goal-7343d9eee5",
-    "goal_name": "English outbound send batch 16: next 50 from remaining queue",
+    "goal_id": "goal-email-send-20260816-b8",
+    "goal_name": "English outbound send batch 8: next 50 from remaining queue",
     "metric": "reply_rate",
     "operator": "ge",
     "owner_id": "outbound",
     "run_status": "waiting",
-    "stage": "ACT",
+    "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-18T00:56:55.739607+00:00"
+    "updated_at": "2026-08-18T01:25:55.744945+00:00"
   },
-  "last_activity_at": "2026-08-18T00:57:39.097096+00:00",
-  "last_sync_at": "2026-08-18T00:57:39.114165+00:00",
+  "last_activity_at": "2026-08-18T01:26:08.282257+00:00",
+  "last_sync_at": "2026-08-18T01:26:08.297889+00:00",
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
     "goal_name": "3 booked calls per day",
@@ -37,15 +37,15 @@
   },
   "state": "running",
   "totals": {
-    "approvals": 181,
-    "decisions": 340,
-    "evidence": 5006,
+    "approvals": 183,
+    "decisions": 343,
+    "evidence": 5029,
     "goals_abandoned": 18,
-    "goals_achieved": 112,
+    "goals_achieved": 113,
     "goals_active": 23,
-    "goals_total": 157,
-    "hypotheses": 40,
+    "goals_total": 158,
+    "hypotheses": 41,
     "memory_claims": 5,
-    "runs": 175
+    "runs": 176
   }
 }
