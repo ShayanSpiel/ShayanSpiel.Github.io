@@ -38,10 +38,6 @@ const metricText = (entry: { metric: string; operator: string; target: number | 
 };
 const heartbeatText = (hb: Heartbeat) => metricText(hb);
 const northstarText = (n: Northstar) => metricText(n);
-const statusText = (status: string) => t(locale, `live.status.${status}`);
-const lastActivityText = data.runtime_state?.last_activity_at
-  ? t(locale, "live.state.lastActivity", { time: new Intl.DateTimeFormat(locale === "fa" ? "fa-IR-u-ca-gregory" : "en-US", { dateStyle: "medium", timeStyle: "short" }).format(new Date(data.runtime_state.last_activity_at)) })
-  : "";
 const breadcrumbJsonLd = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
@@ -75,7 +71,7 @@ const howTo = [
       <h1 class="mt-4 text-4xl font-extrabold leading-tightest tracking-tight text-foreground-strong sm:text-6xl">{t(locale, "conversion.live.hero.titleLead")}<br /><span class="text-primary">{t(locale, "conversion.live.hero.titleAccent")}</span></h1>
       <p class="mx-auto mt-6 max-w-3xl text-base leading-relaxed text-muted-foreground">{t(locale, "conversion.live.hero.body")}</p>
       <div class="mx-auto mt-8 max-w-3xl text-start">
-        <LiveStatus locale={locale} state={state} heartbeat={heartbeat} northstar={northstar} heartbeatText={heartbeatText} northstarText={northstarText} statusText={statusText} lastActivityText={lastActivityText} />
+        <LiveStatus locale={locale} state={state} heartbeat={heartbeat} northstar={northstar} heartbeatText={heartbeatText} northstarText={northstarText} />
       </div>
       <div class="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
         <a href={localizePath("/services/agent-brief/#request", locale)} data-open-contact-modal data-cta-location="live_hero" class="inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground">{t(locale, "cta.requestAgentBrief")}</a>
@@ -145,35 +141,22 @@ const howTo = [
   <ContactModal locale={locale} />
   <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
   <script is:inline define:vars={{
-    runningLabel: t(locale, "live.state.running"),
-    restingLabel: t(locale, "live.state.resting"),
     restingText: t(locale, "live.heartbeat.resting"),
     replyRateLabel: t(locale, "live.metric.replyRate"),
     bookedCallsLabel: t(locale, "live.metric.bookedCalls"),
     publishedItemsLabel: t(locale, "live.metric.publishedItems"),
     systemImprovementLabel: t(locale, "live.heartbeat.systemImprovement"),
     businessWorkLabel: t(locale, "live.heartbeat.businessWork"),
-    unknownLabel: t(locale, "live.company.unknown"),
     metricTemplate: t(locale, "live.entry.metric"),
-    activityTemplate: t(locale, "live.state.lastActivity"),
     localeCode: locale === "fa" ? "fa-IR-u-ca-gregory" : "en-US",
   }}>
     (function () {
       var root = document.getElementById('live-status-root');
       if (!root) return;
-      var label = document.getElementById('live-status-state-label-text');
-      var icon = document.getElementById('live-status-state-icon');
       var tile = root.querySelector('.live-hb-tile');
       var goal = root.querySelector('[data-heartbeat-goal]');
       var metric = root.querySelector('[data-heartbeat-metric]');
       var resting = document.getElementById('live-status-resting');
-      var activity = document.getElementById('live-status-activity');
-      var detailWrap = root.querySelector('[data-live-system-details]');
-      var detailId = root.querySelector('[data-heartbeat-detail-id]');
-      var detailGoal = root.querySelector('[data-heartbeat-detail-goal]');
-      var detailStage = root.querySelector('[data-heartbeat-stage]');
-      var detailRunStatus = root.querySelector('[data-heartbeat-run-status]');
-      var detailMetric = root.querySelector('[data-heartbeat-detail-metric]');
       var userFacing = { reply_rate: replyRateLabel, booked_calls: bookedCallsLabel, published_items: publishedItemsLabel };
       function metricText(heartbeat) {
         if (!heartbeat) return '';
@@ -201,8 +184,6 @@ const howTo = [
         root.setAttribute('data-heartbeat-state', running ? 'running' : 'resting');
         root.classList.toggle('live-state-running', !!running);
         root.classList.toggle('live-state-resting', !running);
-        if (label) label.textContent = running ? runningLabel : restingLabel;
-        if (icon) icon.className = 'bx ' + (running ? 'bx-run text-primary' : 'bx-time-five text-muted-foreground') + ' icon-sm';
         if (tile) {
           tile.classList.toggle('bg-success-soft', !!running);
           tile.classList.toggle('text-success', !!running);
@@ -219,21 +200,6 @@ const howTo = [
           resting.textContent = restingText;
           resting.classList.toggle('hidden', !!running);
         }
-        if (activity) {
-          var activityText = '';
-          if (data && data.last_activity_at) {
-            var formatted = new Intl.DateTimeFormat(localeCode, { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(data.last_activity_at));
-            activityText = activityTemplate.replace('{time}', formatted);
-          }
-          activity.textContent = activityText;
-          activity.classList.toggle('hidden', !activityText);
-        }
-        if (detailWrap) detailWrap.classList.toggle('hidden', !heartbeat);
-        if (detailId) detailId.textContent = heartbeat ? heartbeat.goal_id : '';
-        if (detailGoal) detailGoal.textContent = heartbeat ? heartbeat.goal_name : '';
-        if (detailStage) detailStage.textContent = heartbeat ? (heartbeat.stage || unknownLabel) : '';
-        if (detailRunStatus) detailRunStatus.textContent = heartbeat ? (heartbeat.run_status || unknownLabel) : '';
-        if (detailMetric) detailMetric.textContent = heartbeat ? metricText(heartbeat) : '';
       }
       function poll() { fetch('/live-state.json?t=' + Date.now(), { cache: 'no-store' }).then(function (response) { if (!response.ok) throw new Error('status'); return response.json(); }).then(apply).catch(function () {}); }
       poll();

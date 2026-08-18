@@ -143,6 +143,22 @@ test("Live leads with active business work, north star, hierarchy, and visible s
   // Self-improvement is a full section now, never a collapsed details.
   assert.match(en, /<section[^>]*data-improvement-section/);
   assert.doesNotMatch(en, /<details[^>]*data-improvement-section/);
+  // Heartbeat card is ONE clickable card: centered north star, magical
+  // heartbeat, View Activity on the right of the same line. No system-details
+  // block, no running/resting chip, no last-activity line.
+  const cardStart = en.indexOf('id="live-status-root"');
+  const cardEnd = en.indexOf('<section id="live-model"');
+  const card = en.slice(cardStart, cardEnd);
+  assert.ok(cardStart !== -1 && cardEnd !== -1, "heartbeat card region must exist");
+  assert.match(card, /data-live-card-link/);
+  assert.match(card, /href="#live-timeline"/);
+  assert.match(card, /id="live-northstar"[^>]*text-center/);
+  assert.match(card, /data-live-view-activity/);
+  assert.match(card, /data-live-view-activity[^>]*ms-auto/);
+  assert.doesNotMatch(card, /data-live-system-details/, "heartbeat card must not carry collapsed system details");
+  assert.doesNotMatch(card, /live-status-state-label-text|data-live-state-label/, "state chip removed from heartbeat card");
+  assert.doesNotMatch(card, /live-status-activity/, "last-activity line removed from heartbeat card");
+  assert.match(card, /View Activity/);
   // Hierarchy and load-more behavior are part of the timeline surface.
   assert.match(en, /data-live-child/);
   assert.match(en, /data-live-load-more="business"/);
@@ -150,6 +166,7 @@ test("Live leads with active business work, north star, hierarchy, and visible s
   assert.match(en, /Still being measured/);
   assert.match(en, /href="\/services\/agent-brief\/#request"/);
   assert.match(fa, /هنوز در حال اندازه‌گیریه/);
+  assert.match(fa, /مشاهده فعالیت/);
 
   // Contract: raw technical metric strings may only live inside the
   // collapsed `<details data-live-system-details>` block -- never in the open
@@ -280,6 +297,7 @@ test("new conversion source uses Boxicons, semantic tokens, and no em dash", () 
     "src/components/features/FeatureHero.astro",
     "src/components/features/FeatureCTA.astro",
     "src/components/live/LiveTimeline.astro",
+    "src/components/live/LiveStatus.astro",
   ];
   const source = files.map((file) => readFileSync(join(root, file), "utf8")).join("\n");
   assert.doesNotMatch(source, /<svg\b/i);
