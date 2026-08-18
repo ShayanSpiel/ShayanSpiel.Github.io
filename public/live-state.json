@@ -6,8 +6,8 @@
     "owner_id": "outbound",
     "run_id": "run-7bef25b0a7",
     "run_status": "waiting",
-    "stage": "ACT",
-    "updated_at": "2026-08-18T20:18:15.910671+00:00"
+    "stage": "EVALUATE",
+    "updated_at": "2026-08-18T20:29:47.210841+00:00"
   },
   "heartbeat": {
     "business_value": null,
@@ -20,12 +20,12 @@
     "operator": "ge",
     "owner_id": "outbound",
     "run_status": "waiting",
-    "stage": "ACT",
+    "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-18T20:18:15.910671+00:00"
+    "updated_at": "2026-08-18T20:29:47.210841+00:00"
   },
-  "last_activity_at": "2026-08-18T20:18:15.910671+00:00",
-  "last_sync_at": "2026-08-18T20:18:16.083541+00:00",
+  "last_activity_at": "2026-08-18T20:31:09.946066+00:00",
+  "last_sync_at": "2026-08-18T20:31:10.008666+00:00",
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
     "goal_name": "3 booked calls per day",
@@ -37,15 +37,15 @@
   },
   "state": "running",
   "totals": {
-    "approvals": 196,
-    "decisions": 364,
-    "evidence": 6045,
+    "approvals": 198,
+    "decisions": 367,
+    "evidence": 6066,
     "goals_abandoned": 19,
     "goals_achieved": 120,
-    "goals_active": 25,
-    "goals_total": 168,
+    "goals_active": 26,
+    "goals_total": 169,
     "hypotheses": 44,
     "memory_claims": 5,
-    "runs": 187
+    "runs": 188
   }
 }
