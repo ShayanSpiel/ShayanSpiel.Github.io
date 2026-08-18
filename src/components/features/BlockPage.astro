@@ -12,6 +12,17 @@ export interface Props {
 }
 
 const { locale = "en", block } = Astro.props;
+const blockColors: Record<typeof block, string> = {
+  director: "primary",
+  departments: "accent",
+  workflows: "purple",
+  agents: "success",
+  skills: "warning",
+  evals: "info",
+  connections: "accent",
+  artifacts: "primary",
+};
+const color = blockColors[block];
 const k = (suffix: string) => `features.blocks.${block}.${suffix}`;
 const steps = t(locale, k("how.steps")).split(" · ");
 const points = t(locale, k("what.points")).split(" · ");
@@ -45,14 +56,20 @@ const ctaDesc = t(locale, k("cta.desc"));
   <section class="relative py-24 sm:py-32">
     <div class="mx-auto max-w-6xl px-6">
       <SectionHeader title={whatTitle} description={whatDesc} />
-      <ul class="mx-auto grid max-w-4xl gap-3 sm:grid-cols-2" data-aos="fade-up">
-        {points.map((point) => (
-          <li class="flex items-start gap-3 rounded-md border border-border bg-panel p-4 text-xs leading-relaxed text-muted-foreground">
-            <i class="bx bx-check-square mt-0.5 text-success icon-md" aria-hidden="true"></i>
-            <span>{point}</span>
-          </li>
-        ))}
-      </ul>
+      <div class="block-canvas relative overflow-hidden rounded-xl border border-border bg-panel p-5 shadow-panel sm:p-8" data-aos="fade-up">
+        <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
+        <div class="absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 glow-blob opacity-10"></div>
+        <ul class="relative mx-auto grid max-w-4xl gap-3 sm:grid-cols-2">
+          {points.map((point) => (
+            <li class:list={["flex items-start gap-3 rounded-md border bg-panel-raised p-4 transition-all hover:-translate-y-1 hover:border-border-strong hover:shadow-panel", `border-${color}/30`]}>
+              <span class:list={["flex h-9 w-9 shrink-0 items-center justify-center rounded-md", `bg-${color}-soft`, `text-${color}`]}>
+                <i class="bx bx-check-square icon-md" aria-hidden="true"></i>
+              </span>
+              <span class="pt-1 text-xs leading-relaxed text-muted-foreground">{point}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   </section>
 
@@ -60,8 +77,13 @@ const ctaDesc = t(locale, k("cta.desc"));
     <div class="absolute inset-0 bg-panel-deep/50"></div>
     <div class="relative mx-auto max-w-6xl px-6">
       <SectionHeader title={realTitle} />
-      <div class="mx-auto max-w-4xl rounded-lg border border-border bg-panel p-6" data-aos="fade-up">
-        <p class="text-sm leading-relaxed text-muted-foreground">{realBody}</p>
+      <div class="block-canvas relative overflow-hidden rounded-xl border border-border bg-panel p-6 shadow-panel sm:p-10" data-aos="fade-up">
+        <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
+        <div class="absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 glow-blob opacity-10"></div>
+        <div class="relative mx-auto flex max-w-4xl gap-4">
+          <span class:list={["mt-1 h-auto w-1 shrink-0 rounded-full", `bg-${color}`]} aria-hidden="true"></span>
+          <p class="text-sm leading-relaxed text-muted-foreground">{realBody}</p>
+        </div>
       </div>
     </div>
   </section>
@@ -69,16 +91,58 @@ const ctaDesc = t(locale, k("cta.desc"));
   <section class="relative py-24 sm:py-32">
     <div class="mx-auto max-w-4xl px-6">
       <SectionHeader title={howTitle} />
-      <ol class="divide-y divide-border rounded-lg border border-border bg-panel" data-aos="fade-up">
-        {steps.map((step, index) => (
-          <li class="grid gap-2 py-4 sm:grid-cols-[2.5rem_1fr] sm:px-6 px-4">
-            <span class="flex h-8 w-8 items-center justify-center rounded-md bg-primary-soft text-xs font-bold text-primary">{index + 1}</span>
-            <p class="text-xs leading-relaxed text-muted-foreground">{step}</p>
-          </li>
-        ))}
-      </ol>
+      <div class="block-canvas relative overflow-hidden rounded-xl border border-border bg-panel p-5 shadow-panel sm:p-8" data-aos="fade-up">
+        <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
+        <div class="absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 glow-blob opacity-10"></div>
+        <ol class="block-rail relative mx-auto max-w-2xl">
+          {steps.map((step, index) => (
+            <li class="relative flex gap-4 py-3">
+              <div class:list={["relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-md border bg-panel-raised", index === 0 ? `border-${color} text-${color} shadow-[0_0_20px_var(--primary-soft)]` : "border-border text-muted-foreground"]}>
+                <span class="text-xs font-bold">{index + 1}</span>
+              </div>
+              <div class="pt-1">
+                <p class="text-xs leading-relaxed text-muted-foreground">{step}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
     </div>
   </section>
 
   <FeatureCTA title={ctaTitle} description={ctaDesc} locale={locale} />
 </FeaturesLayout>
+
+<style is:global>
+  /* Tinted border utilities (Tailwind cannot opacity-modify a bare CSS var,
+     so these are provided explicitly against the semantic tokens). */
+
+  .border-primary\/30 { border-color: color-mix(in oklab, var(--primary) 30%, transparent); }
+  .border-accent\/30 { border-color: color-mix(in oklab, var(--accent) 30%, transparent); }
+  .border-purple\/30 { border-color: color-mix(in oklab, var(--purple) 30%, transparent); }
+  .border-success\/30 { border-color: color-mix(in oklab, var(--success) 30%, transparent); }
+  .border-warning\/30 { border-color: color-mix(in oklab, var(--warning) 30%, transparent); }
+  .border-info\/30 { border-color: color-mix(in oklab, var(--info) 30%, transparent); }
+  .border-accent { border-color: var(--accent); }
+  .border-purple { border-color: var(--purple); }
+  .border-success { border-color: var(--success); }
+  .border-info { border-color: var(--info); }
+  .bg-accent { background-color: var(--accent); }
+  .bg-purple { background-color: var(--purple); }
+  .bg-info { background-color: var(--info); }
+  .text-info { color: var(--info); }
+  .bg-info-soft { background-color: var(--info-soft); }
+
+
+  .block-rail::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: 1.1rem;
+    top: 1.25rem;
+    bottom: 1.25rem;
+    width: 2px;
+    border-radius: var(--radius-pill);
+    background: linear-gradient(to bottom, var(--primary), var(--accent));
+    opacity: 0.6;
+  }
+</style>

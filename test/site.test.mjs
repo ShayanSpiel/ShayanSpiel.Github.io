@@ -230,6 +230,41 @@ test("conversion pages preserve the distinctive grid, light, and connected-progr
   assert.match(read("features"), /department-canvas/);
 });
 
+test("features design language: composed canvases, per-block color identity, and step rails render EN+FA", () => {
+  const blocks = ["director", "departments", "workflows", "agents", "skills", "evals", "connections", "artifacts"];
+  const hub = read("features");
+  // Hub lower sections are composed canvases with connector rails, not flat cards
+  assert.match(hub, /tree-canvas/);
+  assert.match(hub, /tree-rail/);
+  assert.match(hub, /control-canvas/);
+  assert.match(hub, /control-rail/);
+  assert.match(hub, /example-canvas/);
+  assert.match(hub, /example-rail/);
+  // Per-block color identity on the tree cards (incl. the info color that Tailwind never emits)
+  assert.match(hub, /text-info/);
+  assert.match(hub, /bg-info-soft/);
+  assert.match(hub, /border-info\/30/);
+  assert.match(hub, /border-primary\/30/);
+  // Block pages: composed canvas + step rail on every real block, EN and FA
+  for (const b of blocks) {
+    const en = read(`features/${b}`);
+    const fa = read(`fa/features/${b}`);
+    assert.match(en, /block-canvas/);
+    assert.match(en, /block-rail/);
+    assert.match(fa, /block-canvas/);
+    assert.match(fa, /block-rail/);
+  }
+  // The tinted border utilities exist in the rendered page styles (Astro inlines
+  // page-global styles into the HTML, so assert against the built markup).
+  assert.match(hub, /border-primary\\\/30\{border-color:color-mix/);
+  assert.match(hub, /border-info\\\/30\{border-color:color-mix/);
+  assert.match(hub, /\.text-info\{color:var\(--info\)/);
+  assert.match(hub, /\.bg-info-soft\{background-color:var\(--info-soft\)/);
+  const firstBlock = read("features/evals");
+  assert.match(firstBlock, /border-primary\\\/30\{border-color:color-mix/);
+  assert.match(firstBlock, /border-info\\\/30\{border-color:color-mix/);
+});
+
 test("new conversion source uses Boxicons, semantic tokens, and no em dash", () => {
   const files = [
     "src/pages/index.astro",
@@ -240,6 +275,10 @@ test("new conversion source uses Boxicons, semantic tokens, and no em dash", () 
     "src/components/AgentBriefForm.astro",
     "src/components/architecture/DepartmentMap.astro",
     "src/components/architecture/OperatingLoop.astro",
+    "src/components/features/BlockPage.astro",
+    "src/components/features/FeatureNav.astro",
+    "src/components/features/FeatureHero.astro",
+    "src/components/features/FeatureCTA.astro",
     "src/components/live/LiveTimeline.astro",
   ];
   const source = files.map((file) => readFileSync(join(root, file), "utf8")).join("\n");
