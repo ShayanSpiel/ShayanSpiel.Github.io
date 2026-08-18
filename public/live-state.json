@@ -1,31 +1,31 @@
 {
   "current_run": {
-    "created_at": "2026-08-16T17:29:22.274233+00:00",
-    "goal_id": "goal-email-send-20260816-b8",
-    "goal_name": "English outbound send batch 8: next 50 from remaining queue",
-    "owner_id": "outbound",
-    "run_id": "run-1c65a9f3d3",
-    "run_status": "waiting",
+    "created_at": "2026-08-18T19:43:00.392716+00:00",
+    "goal_id": "goal-design-analytics-test-repair-20260818",
+    "goal_name": "Reconcile test_growth_departments.py with design 14-archetype registry (3.4.0) and analytics schema 1.5.0",
+    "owner_id": "system-improvement",
+    "run_id": "run-5c05441448",
+    "run_status": "idle",
     "stage": "EVALUATE",
-    "updated_at": "2026-08-18T19:21:55.547019+00:00"
+    "updated_at": "2026-08-18T20:05:18.602355+00:00"
   },
   "heartbeat": {
     "business_value": null,
     "business_value_fa": null,
     "display_title": null,
     "display_title_fa": null,
-    "goal_id": "goal-email-send-20260816-b8",
-    "goal_name": "English outbound send batch 8: next 50 from remaining queue",
-    "metric": "reply_rate",
-    "operator": "ge",
-    "owner_id": "outbound",
-    "run_status": "waiting",
+    "goal_id": "goal-design-analytics-test-repair-20260818",
+    "goal_name": "Reconcile test_growth_departments.py with design 14-archetype registry (3.4.0) and analytics schema 1.5.0",
+    "metric": "acceptance_tests_passed",
+    "operator": "eq",
+    "owner_id": "system-improvement",
+    "run_status": "idle",
     "stage": "EVALUATE",
-    "target": 0.3,
-    "updated_at": "2026-08-18T19:21:55.547019+00:00"
+    "target": true,
+    "updated_at": "2026-08-18T20:05:18.602355+00:00"
   },
-  "last_activity_at": "2026-08-18T19:21:55.547019+00:00",
-  "last_sync_at": "2026-08-18T19:21:55.582686+00:00",
+  "last_activity_at": "2026-08-18T20:10:17.003683+00:00",
+  "last_sync_at": "2026-08-18T20:10:17.027371+00:00",
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
     "goal_name": "3 booked calls per day",
@@ -37,15 +37,15 @@
   },
   "state": "running",
   "totals": {
-    "approvals": 190,
-    "decisions": 357,
-    "evidence": 5996,
+    "approvals": 195,
+    "decisions": 364,
+    "evidence": 6045,
     "goals_abandoned": 19,
-    "goals_achieved": 118,
-    "goals_active": 24,
-    "goals_total": 165,
-    "hypotheses": 43,
+    "goals_achieved": 119,
+    "goals_active": 26,
+    "goals_total": 168,
+    "hypotheses": 44,
     "memory_claims": 5,
-    "runs": 183
+    "runs": 187
   }
 }
