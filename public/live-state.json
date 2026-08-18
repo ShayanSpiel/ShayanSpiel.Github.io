@@ -1,31 +1,31 @@
 {
   "current_run": {
-    "created_at": "2026-08-17T19:53:45.793409+00:00",
-    "goal_id": "goal-08b1335fde",
-    "goal_name": "English outbound send batch 15: next 50 from remaining queue",
+    "created_at": "2026-08-17T19:54:01.781741+00:00",
+    "goal_id": "goal-7343d9eee5",
+    "goal_name": "English outbound send batch 16: next 50 from remaining queue",
     "owner_id": "outbound",
-    "run_id": "run-c9ee3f4cc3",
+    "run_id": "run-4e1b1cbde4",
     "run_status": "waiting",
     "stage": "EVALUATE",
-    "updated_at": "2026-08-18T02:25:15.492218+00:00"
+    "updated_at": "2026-08-18T02:59:30.826866+00:00"
   },
   "heartbeat": {
     "business_value": null,
     "business_value_fa": null,
     "display_title": null,
     "display_title_fa": null,
-    "goal_id": "goal-08b1335fde",
-    "goal_name": "English outbound send batch 15: next 50 from remaining queue",
+    "goal_id": "goal-7343d9eee5",
+    "goal_name": "English outbound send batch 16: next 50 from remaining queue",
     "metric": "reply_rate",
     "operator": "ge",
     "owner_id": "outbound",
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-18T02:25:15.492218+00:00"
+    "updated_at": "2026-08-18T02:59:30.826866+00:00"
   },
-  "last_activity_at": "2026-08-18T02:25:37.552730+00:00",
-  "last_sync_at": "2026-08-18T02:25:37.600664+00:00",
+  "last_activity_at": "2026-08-18T02:59:54.309425+00:00",
+  "last_sync_at": "2026-08-18T02:59:54.348023+00:00",
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
     "goal_name": "3 booked calls per day",
@@ -37,15 +37,15 @@
   },
   "state": "running",
   "totals": {
-    "approvals": 185,
-    "decisions": 347,
-    "evidence": 5177,
+    "approvals": 186,
+    "decisions": 349,
+    "evidence": 5263,
     "goals_abandoned": 18,
-    "goals_achieved": 115,
+    "goals_achieved": 116,
     "goals_active": 23,
-    "goals_total": 160,
+    "goals_total": 161,
     "hypotheses": 41,
     "memory_claims": 5,
-    "runs": 178
+    "runs": 179
   }
 }
