@@ -10,18 +10,16 @@ import { type Locale, t } from "../../i18n/translations";
 
 export interface Props { locale?: Locale; }
 const { locale = "en" } = Astro.props;
-const vocabulary = ["goal", "department", "workflow", "agent", "skill", "connection", "artifact"];
 const controls = ["persistentGoals", "humanApproval", "controlledAccess", "visibleEvidence", "evaluation", "separateWork"];
-const legoBlocks = [
-  { icon: "group", iconBg: "bg-primary-soft", iconText: "text-primary", titleKey: "features.lego.departments.title", descKey: "features.lego.departments.desc", href: "/features/harness/" },
-  { icon: "task", iconBg: "bg-success-soft", iconText: "text-success", titleKey: "features.lego.evals.title", descKey: "features.lego.evals.desc", href: "/features/harness/evals/" },
-  { icon: "user", iconBg: "bg-accent-soft", iconText: "text-accent", titleKey: "features.lego.agents.title", descKey: "features.lego.agents.desc", href: "/features/harness/agents/" },
-  { icon: "slider", iconBg: "bg-purple-soft", iconText: "text-purple", titleKey: "features.lego.director.title", descKey: "features.lego.director.desc", href: "/features/chat/director-mode/" },
-  { icon: "link", iconBg: "bg-warning-soft", iconText: "text-warning", titleKey: "features.lego.skills.title", descKey: "features.lego.skills.desc", href: "/features/harness/skills/" },
-  { icon: "network-chart", iconBg: "bg-info-soft", iconText: "text-info", titleKey: "features.lego.workflows.title", descKey: "features.lego.workflows.desc", href: "/features/harness/workflows/" },
-  { icon: "globe", iconBg: "bg-success-soft", iconText: "text-success", titleKey: "features.lego.connections.title", descKey: "features.lego.connections.desc", href: "/features/infrastructure/connections/" },
-  { icon: "data", iconBg: "bg-accent-soft", iconText: "text-accent", titleKey: "features.lego.providers.title", descKey: "features.lego.providers.desc", href: "/features/infrastructure/providers/" },
-  { icon: "file", iconBg: "bg-primary-soft", iconText: "text-primary", titleKey: "features.lego.context.title", descKey: "features.lego.context.desc", href: "/features/context/" },
+const tree = [
+  { icon: "bx-slider", key: "director", href: "/features/director/" },
+  { icon: "bx-group", key: "departments", href: "/features/departments/" },
+  { icon: "bx-network-chart", key: "workflows", href: "/features/workflows/" },
+  { icon: "bx-user", key: "agents", href: "/features/agents/" },
+  { icon: "bx-link", key: "skills", href: "/features/skills/" },
+  { icon: "bx-task", key: "evals", href: "/features/evals/" },
+  { icon: "bx-globe", key: "connections", href: "/features/connections/" },
+  { icon: "bx-file", key: "artifacts", href: "/features/artifacts/" },
 ];
 const breadcrumbJsonLd = {
   "@context": "https://schema.org",
@@ -60,56 +58,26 @@ const breadcrumbJsonLd = {
   <section class="relative overflow-hidden py-24 sm:py-32">
     <div class="absolute inset-0 bg-panel-deep/50"></div>
     <div class="relative mx-auto max-w-6xl px-6">
-      <SectionHeader label={t(locale, "features.lego.label")} title={t(locale, "features.lego.title")} description={t(locale, "features.lego.desc")} />
-      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" data-aos="fade-up">
-        {legoBlocks.map((block) => (
-          <a href={localizePath(block.href, locale)} class="group block">
-            <div class="relative rounded-md border border-border bg-panel p-5 transition-all group-hover:border-border-strong group-hover:bg-panel-raised">
-              <div class={`flex h-9 w-9 items-center justify-center rounded-md ${block.iconBg} mb-3`}>
-                <i class={`bx bx-${block.icon} ${block.iconText} icon-xl`}></i>
-              </div>
-              <h3 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, block.titleKey)}</h3>
-              <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, block.descKey)}</p>
-              <span class="absolute top-5 start-5 text-2xs text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100">
-                <i class="bx bx-chevron-right rtl-flip icon-md"></i>
-              </span>
-            </div>
-          </a>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <section class="relative py-24 sm:py-32">
-    <div class="mx-auto max-w-6xl px-6">
       <SectionHeader title={t(locale, "architecture.department.heading")} description={t(locale, "architecture.department.body")} />
       <DepartmentMap locale={locale} />
     </div>
   </section>
 
-  <section class="relative overflow-hidden py-24 sm:py-32">
-    <div class="absolute inset-0 bg-panel-deep/50"></div>
-    <div class="relative mx-auto max-w-6xl px-6">
-      <SectionHeader title={t(locale, "features.vocabulary.heading")} />
-      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" data-aos="fade-up">
-        {vocabulary.map((item) => (
-          <div class="rounded-md border border-border bg-panel p-5">
-            <h3 class="text-sm font-semibold text-foreground-strong">{t(locale, `architecture.vocabulary.${item}.title`)}</h3>
-            <p class="mt-2 text-xs leading-relaxed text-muted-foreground">{t(locale, `architecture.vocabulary.${item}.desc`)}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-
   <section class="relative py-24 sm:py-32">
     <div class="mx-auto max-w-6xl px-6">
-      <SectionHeader label={t(locale, "features.foundation.label")} title={t(locale, "features.foundation.title")} description={t(locale, "features.foundation.desc")} />
-      <div class="mx-auto max-w-3xl rounded-md border border-border bg-panel p-6" data-aos="fade-up">
-        <p class="text-xs leading-relaxed text-muted-foreground">{t(locale, "features.foundation.body")}</p>
-        <div class="mt-4 flex flex-wrap gap-2">
-          {["Codex", "OpenCode"].map((name) => <span class="inline-flex items-center gap-1.5 rounded-sm bg-panel-raised px-2 py-1 text-2xs font-semibold text-foreground-strong"><i class="bx bx-purchase-tag icon-sm text-primary" aria-hidden="true"></i>{name}</span>)}
-        </div>
+      <SectionHeader title={t(locale, "features.tree.heading")} description={t(locale, "features.tree.body")} />
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4" data-aos="fade-up">
+        {tree.map((node) => (
+          <a href={localizePath(node.href, locale)} class="group h-full">
+            <div class="flex h-full flex-col rounded-md border border-border bg-panel p-5 transition-all group-hover:border-border-strong group-hover:bg-panel-raised">
+              <div class="mb-3 flex h-9 w-9 items-center justify-center rounded-md bg-primary-soft">
+                <i class={`${node.icon} text-primary icon-xl`} aria-hidden="true"></i>
+              </div>
+              <h3 class="text-sm font-semibold text-foreground-strong">{t(locale, `features.tree.${node.key}.title`)}</h3>
+              <p class="mt-2 text-xs leading-relaxed text-muted-foreground">{t(locale, `features.tree.${node.key}.desc`)}</p>
+            </div>
+          </a>
+        ))}
       </div>
     </div>
   </section>

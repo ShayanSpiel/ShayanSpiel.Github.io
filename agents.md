@@ -93,22 +93,30 @@ belong under `.spielos/artifacts/`, not strategy, assets, or skills.
 | `/fa/live/` | `src/pages/fa/live.astro` | Plain-language live company record (FA) |
 | `/fa/waitlist/` | `src/pages/fa/waitlist.astro` | 301 redirect to `/fa/architecture/` |
 | `/fa/features/` | `src/pages/fa/features/index.astro` | Buyer-facing features — company lego blocks (FA) |
-| `/features/` | `src/pages/features/index.astro` | Buyer-facing features — company lego blocks (EN) |
-| `/features/chat/` | `src/pages/features/chat/index.astro` | Chat hub — execution modes (EN) |
-| `/features/chat/director-mode/` | `src/pages/features/chat/director-mode.astro` | Director Mode — long-running agent sessions (EN) |
-| `/features/chat/direct-mode/` | `src/pages/features/chat/direct-mode.astro` | Direct Mode — workflow execution and scheduling (EN) |
-| `/features/context/` | `src/pages/features/context/index.astro` | Context hub — files, strategy, memory (EN) |
-| `/features/context/files/` | `src/pages/features/context/files.astro` | Files — agent knowledge base (EN) |
-| `/features/context/strategy/` | `src/pages/features/context/strategy.astro` | Strategy — prompt and instruction management (EN) |
-| `/features/context/memory/` | `src/pages/features/context/memory.astro` | Memory and Dreaming — persistent agent memory (EN) |
-| `/features/harness/` | `src/pages/features/harness/index.astro` | Harness hub — agents, skills, workflows, evals (EN) |
-| `/features/harness/agents/` | `src/pages/features/harness/agents.astro` | Agents — AI employees and roles (EN) |
-| `/features/harness/skills/` | `src/pages/features/harness/skills.astro` | Skills — reusable agent capabilities (EN) |
-| `/features/harness/workflows/` | `src/pages/features/harness/workflows.astro` | Workflows — multi-agent pipelines (EN) |
-| `/features/harness/evals/` | `src/pages/features/harness/evals.astro` | Evals — agent quality testing (EN) |
-| `/features/infrastructure/` | `src/pages/features/infrastructure/index.astro` | Infrastructure hub — providers and connections (EN) |
-| `/features/infrastructure/providers/` | `src/pages/features/infrastructure/providers.astro` | Providers — model and LLM selection (EN) |
-| `/features/infrastructure/connections/` | `src/pages/features/infrastructure/connections.astro` | Connections — MCP, OAuth, API integrations (EN) |
+| `/features/` | `src/pages/features/index.astro` | Buyer-facing features — the one loop and eight real blocks (EN) |
+| `/features/director/` | `src/pages/features/director.astro` | Director — the role that owns goals, approvals, evidence, and reports (EN) |
+| `/features/departments/` | `src/pages/features/departments.astro` | Departments — reusable business capabilities (EN) |
+| `/features/workflows/` | `src/pages/features/workflows.astro` | Workflows — repeatable playbooks inside a Department (EN) |
+| `/features/agents/` | `src/pages/features/agents.astro` | Agents — bounded executors for workflow steps (EN) |
+| `/features/skills/` | `src/pages/features/skills.astro` | Skills — reusable methods agents follow (EN) |
+| `/features/evals/` | `src/pages/features/evals.astro` | Evals — LLM-as-judge quality gates (EN) |
+| `/features/connections/` | `src/pages/features/connections.astro` | Connections — approved access to external systems (EN) |
+| `/features/artifacts/` | `src/pages/features/artifacts.astro` | Artifacts — output and evidence from every run (EN) |
+| `/features/chat/` | `src/pages/features/chat/index.astro` | 301 redirect to `/features/director/` |
+| `/features/chat/director-mode/` | `src/pages/features/chat/director-mode.astro` | 301 redirect to `/features/director/` |
+| `/features/chat/direct-mode/` | `src/pages/features/chat/direct-mode.astro` | 301 redirect to `/features/workflows/` |
+| `/features/context/` | `src/pages/features/context/index.astro` | 301 redirect to `/features/` |
+| `/features/context/files/` | `src/pages/features/context/files.astro` | 301 redirect to `/features/` |
+| `/features/context/strategy/` | `src/pages/features/context/strategy.astro` | 301 redirect to `/features/` |
+| `/features/context/memory/` | `src/pages/features/context/memory.astro` | 301 redirect to `/features/` |
+| `/features/harness/` | `src/pages/features/harness/index.astro` | 301 redirect to `/features/` |
+| `/features/harness/agents/` | `src/pages/features/harness/agents.astro` | 301 redirect to `/features/agents/` |
+| `/features/harness/skills/` | `src/pages/features/harness/skills.astro` | 301 redirect to `/features/skills/` |
+| `/features/harness/workflows/` | `src/pages/features/harness/workflows.astro` | 301 redirect to `/features/workflows/` |
+| `/features/harness/evals/` | `src/pages/features/harness/evals.astro` | 301 redirect to `/features/evals/` |
+| `/features/infrastructure/` | `src/pages/features/infrastructure/index.astro` | 301 redirect to `/features/` |
+| `/features/infrastructure/providers/` | `src/pages/features/infrastructure/providers.astro` | 301 redirect to `/features/` |
+| `/features/infrastructure/connections/` | `src/pages/features/infrastructure/connections.astro` | 301 redirect to `/features/connections/` |
 | `/use-cases/` | `src/pages/use-cases/index.astro` | Use cases hub (EN) |
 | `/spielos-v1/` | `src/pages/spielos-v1.astro` | Archived legacy product page (`noindex`) |
 | `/shayan/` | `src/pages/shayan.astro` | 301 redirect to `/founder/` |

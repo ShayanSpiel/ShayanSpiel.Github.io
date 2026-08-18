@@ -1,0 +1,84 @@
+---
+import FeaturesLayout from "../../layouts/FeaturesLayout.astro";
+import FeatureHero from "../../components/features/FeatureHero.astro";
+import FeatureCTA from "../../components/features/FeatureCTA.astro";
+import SectionHeader from "../../components/sections/SectionHeader.astro";
+import { type Locale, t } from "../../i18n/translations";
+import { localizePath } from "../../i18n";
+
+export interface Props {
+  locale?: Locale;
+  block: "director" | "departments" | "workflows" | "agents" | "skills" | "evals" | "connections" | "artifacts";
+}
+
+const { locale = "en", block } = Astro.props;
+const k = (suffix: string) => `features.blocks.${block}.${suffix}`;
+const steps = t(locale, k("how.steps")).split(" · ");
+const points = t(locale, k("what.points")).split(" · ");
+const title = t(locale, k("pageTitle"));
+const desc = t(locale, k("pageDesc"));
+const label = t(locale, k("label"));
+const heroTitle = t(locale, k("hero.title"));
+const heroDesc = t(locale, k("hero.desc"));
+const whatTitle = t(locale, k("what.title"));
+const whatDesc = t(locale, k("what.desc"));
+const realTitle = t(locale, k("real.title"));
+const realBody = t(locale, k("real.body"));
+const howTitle = t(locale, k("how.title"));
+const ctaTitle = t(locale, k("cta.title"));
+const ctaDesc = t(locale, k("cta.desc"));
+---
+
+<FeaturesLayout title={title} description={desc} image="/assets/og/features.png" locale={locale}>
+  <FeatureHero
+    locale={locale}
+    breadcrumbs={[
+      { label: t(locale, "nav.features"), href: "/features/" },
+      { label: label },
+    ]}
+    label={label}
+    title={heroTitle}
+    description={heroDesc}
+    cta={{ label: t(locale, "cta.requestAgentBrief"), href: localizePath("/services/agent-brief/#request", locale) }}
+  />
+
+  <section class="relative py-24 sm:py-32">
+    <div class="mx-auto max-w-6xl px-6">
+      <SectionHeader title={whatTitle} description={whatDesc} />
+      <ul class="mx-auto grid max-w-4xl gap-3 sm:grid-cols-2" data-aos="fade-up">
+        {points.map((point) => (
+          <li class="flex items-start gap-3 rounded-md border border-border bg-panel p-4 text-xs leading-relaxed text-muted-foreground">
+            <i class="bx bx-check-square mt-0.5 text-success icon-md" aria-hidden="true"></i>
+            <span>{point}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="relative overflow-hidden py-24 sm:py-32">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="relative mx-auto max-w-6xl px-6">
+      <SectionHeader title={realTitle} />
+      <div class="mx-auto max-w-4xl rounded-lg border border-border bg-panel p-6" data-aos="fade-up">
+        <p class="text-sm leading-relaxed text-muted-foreground">{realBody}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative py-24 sm:py-32">
+    <div class="mx-auto max-w-4xl px-6">
+      <SectionHeader title={howTitle} />
+      <ol class="divide-y divide-border rounded-lg border border-border bg-panel" data-aos="fade-up">
+        {steps.map((step, index) => (
+          <li class="grid gap-2 py-4 sm:grid-cols-[2.5rem_1fr] sm:px-6 px-4">
+            <span class="flex h-8 w-8 items-center justify-center rounded-md bg-primary-soft text-xs font-bold text-primary">{index + 1}</span>
+            <p class="text-xs leading-relaxed text-muted-foreground">{step}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <FeatureCTA title={ctaTitle} description={ctaDesc} locale={locale} />
+</FeaturesLayout>

@@ -8,59 +8,24 @@ export interface Props {
 }
 
 const { locale = "en", currentPath } = Astro.props;
-const isRtl = locale === "fa";
-const hiddenTranslate = isRtl ? "translate-x-[-100%]" : "translate-x-full";
 
 function isActive(href: string): boolean {
   const localized = localizePath(href, locale);
   return currentPath === localized || currentPath.startsWith(localized + "/");
 }
 
-const layers = [
-  {
-    icon: "bx-message-rounded",
-    color: "primary",
-    titleKey: "features.layers.chat.title",
-    hubHref: "/features/chat/",
-    items: [
-      { titleKey: "features.chat.directorMode.title", href: "/features/chat/director-mode/" },
-      { titleKey: "features.chat.directMode.title", href: "/features/chat/direct-mode/" },
-    ],
-  },
-  {
-    icon: "bx-file",
-    color: "accent",
-    titleKey: "features.layers.context.title",
-    hubHref: "/features/context/",
-    items: [
-      { titleKey: "features.context.files.title", href: "/features/context/files/" },
-      { titleKey: "features.context.strategy.title", href: "/features/context/strategy/" },
-      { titleKey: "features.context.memory.title", href: "/features/context/memory/" },
-    ],
-  },
-  {
-    icon: "bx-slider",
-    color: "purple",
-    titleKey: "features.layers.harness.title",
-    hubHref: "/features/harness/",
-    items: [
-      { titleKey: "features.harness.agents.title", href: "/features/harness/agents/" },
-      { titleKey: "features.harness.skills.title", href: "/features/harness/skills/" },
-      { titleKey: "features.harness.workflows.title", href: "/features/harness/workflows/" },
-      { titleKey: "features.harness.evals.title", href: "/features/harness/evals/" },
-    ],
-  },
-  {
-    icon: "bx-server",
-    color: "success",
-    titleKey: "features.layers.infrastructure.title",
-    hubHref: "/features/infrastructure/",
-    items: [
-      { titleKey: "features.infrastructure.providers.title", href: "/features/infrastructure/providers/" },
-      { titleKey: "features.infrastructure.connections.title", href: "/features/infrastructure/connections/" },
-    ],
-  },
+const tree = [
+  { icon: "bx-slider", color: "primary", titleKey: "features.blocks.director.short", href: "/features/director/" },
+  { icon: "bx-group", color: "accent", titleKey: "features.blocks.departments.short", href: "/features/departments/" },
+  { icon: "bx-network-chart", color: "purple", titleKey: "features.blocks.workflows.short", href: "/features/workflows/" },
+  { icon: "bx-user", color: "success", titleKey: "features.blocks.agents.short", href: "/features/agents/" },
+  { icon: "bx-link", color: "warning", titleKey: "features.blocks.skills.short", href: "/features/skills/" },
+  { icon: "bx-task", color: "info", titleKey: "features.blocks.evals.short", href: "/features/evals/" },
+  { icon: "bx-globe", color: "accent", titleKey: "features.blocks.connections.short", href: "/features/connections/" },
+  { icon: "bx-file", color: "primary", titleKey: "features.blocks.artifacts.short", href: "/features/artifacts/" },
 ];
+const isRtl = locale === "fa";
+const hiddenTf = isRtl ? "translateX(-100%)" : "translateX(100%)";
 ---
 
 <!-- Mobile toggle button -->
@@ -105,49 +70,17 @@ const layers = [
     </button>
   </div>
   <nav class="p-4 space-y-1" aria-label={t(locale, "common.navAria")}>
-    <a
-      href={localizePath("/features/", locale)}
-      class:list={[
-        "flex items-center gap-2.5 rounded-md px-3 py-2 text-sm transition-colors",
-        currentPath === localizePath("/features/", locale)
-          ? "bg-primary-soft text-primary font-medium"
-          : "text-muted-foreground hover:text-foreground hover:bg-panel-raised",
-      ]}
-    >
-      <i class="bx bx-home icon-lg"></i>
-      {t(locale, "nav.features")}
-    </a>
-
-    {layers.map((layer) => (
-      <div>
-        <a
-          href={localizePath(layer.hubHref, locale)}
-          class:list={[
-            "flex items-center gap-2.5 rounded-md px-3 py-2 text-sm transition-colors",
-            isActive(layer.hubHref) && !layer.items.some(item => isActive(item.href))
-              ? `bg-${layer.color}-soft text-${layer.color} font-medium`
-              : "text-foreground hover:bg-panel-raised",
-          ]}
-        >
-          <i class={`bx ${layer.icon} icon-lg`}></i>
-          {t(locale, layer.titleKey)}
-        </a>
-        <div class="ms-4 border-s border-border ps-3 mt-1 space-y-0.5">
-          {layer.items.map((item) => (
-            <a
-              href={localizePath(item.href, locale)}
-              class:list={[
-                "block rounded-md px-3 py-1.5 text-xs transition-colors",
-                isActive(item.href)
-                  ? `bg-${layer.color}-soft text-${layer.color} font-medium`
-                  : "text-muted-foreground hover:text-foreground hover:bg-panel-raised",
-              ]}
-            >
-              {t(locale, item.titleKey)}
-            </a>
-          ))}
-        </div>
-      </div>
+    {tree.map((node) => (
+      <a
+        href={localizePath(node.href, locale)}
+        class:list={[
+          "flex items-center gap-2.5 rounded-md px-3 py-2 text-sm transition-colors",
+          isActive(node.href) ? "bg-primary-soft text-primary font-medium" : "text-muted-foreground hover:text-foreground hover:bg-panel-raised",
+        ]}
+      >
+        <i class={`bx ${node.icon} icon-lg`} style={`color: var(--${node.color})`}></i>
+        {t(locale, node.titleKey)}
+      </a>
     ))}
   </nav>
 </aside>
@@ -165,7 +98,7 @@ const layers = [
       href={localizePath("/features/", locale)}
       class:list={[
         "flex items-center gap-2.5 rounded-md px-3 py-2 text-sm transition-colors",
-        currentPath === localizePath("/features/", locale)
+        isActive("/features/") && !tree.some((node) => isActive(node.href))
           ? "bg-primary-soft text-primary font-medium"
           : "text-muted-foreground hover:text-foreground hover:bg-panel-raised",
       ]}
@@ -173,37 +106,17 @@ const layers = [
       <i class="bx bx-home icon-lg"></i>
       {t(locale, "nav.features")}
     </a>
-
-    {layers.map((layer) => (
-      <div>
-        <a
-          href={localizePath(layer.hubHref, locale)}
-          class:list={[
-            "flex items-center gap-2.5 rounded-md px-3 py-2 text-sm transition-colors",
-            isActive(layer.hubHref) && !layer.items.some(item => isActive(item.href))
-              ? `bg-${layer.color}-soft text-${layer.color} font-medium`
-              : "text-foreground hover:bg-panel-raised",
-          ]}
-        >
-          <i class={`bx ${layer.icon} icon-lg`}></i>
-          {t(locale, layer.titleKey)}
-        </a>
-        <div class="ms-4 border-s border-border ps-3 mt-1 space-y-0.5">
-          {layer.items.map((item) => (
-            <a
-              href={localizePath(item.href, locale)}
-              class:list={[
-                "block rounded-md px-3 py-1.5 text-xs transition-colors",
-                isActive(item.href)
-                  ? `bg-${layer.color}-soft text-${layer.color} font-medium`
-                  : "text-muted-foreground hover:text-foreground hover:bg-panel-raised",
-              ]}
-            >
-              {t(locale, item.titleKey)}
-            </a>
-          ))}
-        </div>
-      </div>
+    {tree.map((node) => (
+      <a
+        href={localizePath(node.href, locale)}
+        class:list={[
+          "flex items-center gap-2.5 rounded-md px-3 py-2 text-sm transition-colors",
+          isActive(node.href) ? "bg-primary-soft text-primary font-medium" : "text-muted-foreground hover:text-foreground hover:bg-panel-raised",
+        ]}
+      >
+        <i class={`bx ${node.icon} icon-lg`} style={`color: var(--${node.color})`}></i>
+        {t(locale, node.titleKey)}
+      </a>
     ))}
   </nav>
 </aside>
@@ -216,10 +129,8 @@ const layers = [
   var closeBtn = document.getElementById('feature-nav-close');
   var icon = document.getElementById('feature-nav-icon');
   if (!toggle || !mobile || !backdrop || !closeBtn || !icon) return;
-
   var isRtl = document.documentElement.dir === 'rtl';
   var hiddenTf = isRtl ? 'translateX(-100%)' : 'translateX(100%)';
-
   function open() {
     mobile.style.transform = 'translateX(0)';
     backdrop.classList.remove('opacity-0', 'pointer-events-none');
@@ -228,7 +139,6 @@ const layers = [
     icon.className = 'bx bx-x';
     document.body.style.overflow = 'hidden';
   }
-
   function close() {
     mobile.style.transform = hiddenTf;
     backdrop.classList.add('opacity-0', 'pointer-events-none');
@@ -237,26 +147,14 @@ const layers = [
     icon.className = 'bx bx-menu';
     document.body.style.overflow = '';
   }
-
   toggle.addEventListener('click', function() {
-    if (mobile.style.transform === 'translateX(0)' || mobile.style.transform === '') {
-      close();
-    } else {
-      open();
-    }
+    if (mobile.style.transform === 'translateX(0)' || mobile.style.transform === '') close();
+    else open();
   });
-
   closeBtn.addEventListener('click', close);
   backdrop.addEventListener('click', close);
-
-  mobile.querySelectorAll('a').forEach(function(link) {
-    link.addEventListener('click', close);
-  });
-
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') close();
-  });
-
+  mobile.querySelectorAll('a').forEach(function(link) { link.addEventListener('click', close); });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close(); });
   var footer = document.querySelector('footer');
   if (footer) {
     var footerObs = new IntersectionObserver(function(entries) {

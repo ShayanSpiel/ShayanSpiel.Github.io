@@ -1,0 +1,6 @@
+---
+import BlockPage from "../../components/features/BlockPage.astro";
+export interface Props { locale?: "en" | "fa"; }
+const { locale = "en" } = Astro.props;
+---
+<BlockPage block="departments" locale={locale} />
