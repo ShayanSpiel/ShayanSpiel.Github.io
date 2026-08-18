@@ -263,7 +263,7 @@
       "display_title_fa": "گفت‌وگوهای فروش باکیفیت رو بیشتر کنیم",
       "goal_status": "active",
       "id": "goal-email-campaign-20260810",
-      "latest_activity_at": "2026-08-18T22:42:14.848988+00:00",
+      "latest_activity_at": "2026-08-18T23:39:36.915099+00:00",
       "metric": "reply_rate",
       "name": "Resume daily English outbound to 30% reply rate",
       "operator": "ge",
@@ -1989,7 +1989,7 @@
       "created_at": "2026-08-17T00:12:28.586808+00:00",
       "goal_status": "active",
       "id": "goal-email-send-20260817-b11",
-      "latest_activity_at": "2026-08-18T22:39:32.541002+00:00",
+      "latest_activity_at": "2026-08-18T23:36:20.664405+00:00",
       "metric": "reply_rate",
       "name": "English outbound send batch 11: next 50 from remaining queue",
       "operator": "ge",
@@ -1998,7 +1998,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-18T22:39:32.538719+00:00"
+      "updated_at": "2026-08-18T23:36:20.662483+00:00"
     },
     {
       "created_at": "2026-08-17T08:52:19.667740+00:00",
@@ -2244,7 +2244,7 @@
       "created_at": "2026-08-17T19:51:08.295426+00:00",
       "goal_status": "active",
       "id": "goal-14d1161822",
-      "latest_activity_at": "2026-08-18T22:38:39.436847+00:00",
+      "latest_activity_at": "2026-08-18T23:36:58.056992+00:00",
       "metric": "reply_rate",
       "name": "English outbound send batch 12: next 50 from remaining queue",
       "operator": "ge",
@@ -2253,13 +2253,13 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-18T22:38:39.434685+00:00"
+      "updated_at": "2026-08-18T23:36:58.055734+00:00"
     },
     {
       "created_at": "2026-08-17T19:51:41.046747+00:00",
       "goal_status": "active",
       "id": "goal-f8d3802362",
-      "latest_activity_at": "2026-08-18T22:40:12.319556+00:00",
+      "latest_activity_at": "2026-08-18T23:34:22.587425+00:00",
       "metric": "reply_rate",
       "name": "English outbound send batch 13: next 50 from remaining queue",
       "operator": "ge",
@@ -2268,13 +2268,13 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-18T22:40:12.317556+00:00"
+      "updated_at": "2026-08-18T23:34:22.585960+00:00"
     },
     {
       "created_at": "2026-08-17T19:53:37.098577+00:00",
       "goal_status": "active",
       "id": "goal-ac3fc07c3a",
-      "latest_activity_at": "2026-08-18T22:41:04.193213+00:00",
+      "latest_activity_at": "2026-08-18T23:34:57.914988+00:00",
       "metric": "reply_rate",
       "name": "English outbound send batch 14: next 50 from remaining queue",
       "operator": "ge",
@@ -2283,13 +2283,13 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-18T22:41:04.191246+00:00"
+      "updated_at": "2026-08-18T23:34:57.913318+00:00"
     },
     {
       "created_at": "2026-08-17T19:53:45.793409+00:00",
       "goal_status": "active",
       "id": "goal-08b1335fde",
-      "latest_activity_at": "2026-08-18T22:42:14.848988+00:00",
+      "latest_activity_at": "2026-08-18T23:37:26.652178+00:00",
       "metric": "reply_rate",
       "name": "English outbound send batch 15: next 50 from remaining queue",
       "operator": "ge",
@@ -2298,13 +2298,13 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-18T22:42:14.847233+00:00"
+      "updated_at": "2026-08-18T23:37:26.649932+00:00"
     },
     {
       "created_at": "2026-08-17T19:54:01.781741+00:00",
       "goal_status": "active",
       "id": "goal-7343d9eee5",
-      "latest_activity_at": "2026-08-18T22:36:55.900206+00:00",
+      "latest_activity_at": "2026-08-18T23:39:36.915099+00:00",
       "metric": "reply_rate",
       "name": "English outbound send batch 16: next 50 from remaining queue",
       "operator": "ge",
@@ -2313,7 +2313,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-18T22:36:55.898160+00:00"
+      "updated_at": "2026-08-18T23:39:36.912527+00:00"
     },
     {
       "created_at": "2026-08-17T22:25:56.465464+00:00",
@@ -2514,7 +2514,7 @@
       "created_at": "2026-08-18T19:31:45.542525+00:00",
       "goal_status": "active",
       "id": "goal-f170ce6fbd",
-      "latest_activity_at": "2026-08-18T22:37:15.203745+00:00",
+      "latest_activity_at": "2026-08-18T23:36:01.717386+00:00",
       "metric": "reply_rate",
       "name": "English outbound send batch 17: proven-pattern 36 (Milsted/WS content-prepped)",
       "operator": "ge",
@@ -2523,7 +2523,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-18T22:37:15.201837+00:00"
+      "updated_at": "2026-08-18T23:36:01.715937+00:00"
     },
     {
       "created_at": "2026-08-18T19:43:00.392716+00:00",
@@ -2614,6 +2614,36 @@
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-18T22:38:36.330029+00:00"
+    },
+    {
+      "created_at": "2026-08-18T22:42:40.446722+00:00",
+      "goal_status": "abandoned",
+      "id": "goal-live-design-cases-pages-20260819",
+      "latest_activity_at": "2026-08-18T23:38:50.375130+00:00",
+      "metric": "acceptance_tests_passed",
+      "name": "Live Design use-case pages + template gallery + How-it-works navbar (build-driven marketing asset)",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "parent_id": null,
+      "run_status": "completed",
+      "stage": "ACT",
+      "target": true,
+      "updated_at": "2026-08-18T23:38:50.375130+00:00"
+    },
+    {
+      "created_at": "2026-08-18T23:39:02.067690+00:00",
+      "goal_status": "proposed",
+      "id": "goal-live-design-cases-verify-20260819",
+      "latest_activity_at": "2026-08-18T23:39:02.075773+00:00",
+      "metric": "acceptance_tests_passed",
+      "name": "Live Design use-case pages + template gallery + How-it-works navbar — acceptance verify with corrected build-output paths",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "parent_id": null,
+      "run_status": "awaiting_approval",
+      "stage": "DECIDE",
+      "target": true,
+      "updated_at": "2026-08-18T23:39:02.074973+00:00"
     }
   ],
   "heartbeat": {
@@ -2621,15 +2651,15 @@
     "business_value_fa": null,
     "display_title": null,
     "display_title_fa": null,
-    "goal_id": "goal-08b1335fde",
-    "goal_name": "English outbound send batch 15: next 50 from remaining queue",
+    "goal_id": "goal-7343d9eee5",
+    "goal_name": "English outbound send batch 16: next 50 from remaining queue",
     "metric": "reply_rate",
     "operator": "ge",
     "owner_id": "outbound",
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-18T22:42:14.848988+00:00"
+    "updated_at": "2026-08-18T23:39:36.915099+00:00"
   },
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
@@ -2642,44 +2672,44 @@
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-17T19:53:45.793409+00:00",
-      "goal_id": "goal-08b1335fde",
-      "goal_name": "English outbound send batch 15: next 50 from remaining queue",
+      "created_at": "2026-08-17T19:54:01.781741+00:00",
+      "goal_id": "goal-7343d9eee5",
+      "goal_name": "English outbound send batch 16: next 50 from remaining queue",
       "owner_id": "outbound",
-      "run_id": "run-c9ee3f4cc3",
+      "run_id": "run-4e1b1cbde4",
       "run_status": "waiting",
       "stage": "EVALUATE",
-      "updated_at": "2026-08-18T22:42:14.848988+00:00"
+      "updated_at": "2026-08-18T23:39:36.915099+00:00"
     },
     "heartbeat": {
       "business_value": null,
       "business_value_fa": null,
       "display_title": null,
       "display_title_fa": null,
-      "goal_id": "goal-08b1335fde",
-      "goal_name": "English outbound send batch 15: next 50 from remaining queue",
+      "goal_id": "goal-7343d9eee5",
+      "goal_name": "English outbound send batch 16: next 50 from remaining queue",
       "metric": "reply_rate",
       "operator": "ge",
       "owner_id": "outbound",
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-18T22:42:14.848988+00:00"
+      "updated_at": "2026-08-18T23:39:36.915099+00:00"
     },
-    "last_activity_at": "2026-08-18T22:42:14.848988+00:00",
-    "last_sync_at": "2026-08-18T22:42:14.868689+00:00",
+    "last_activity_at": "2026-08-18T23:39:36.915099+00:00",
+    "last_sync_at": "2026-08-18T23:39:36.976091+00:00",
     "state": "running"
   },
   "totals": {
-    "approvals": 204,
-    "decisions": 376,
-    "evidence": 6248,
-    "goals_abandoned": 19,
+    "approvals": 207,
+    "decisions": 381,
+    "evidence": 6317,
+    "goals_abandoned": 20,
     "goals_achieved": 124,
     "goals_active": 26,
-    "goals_total": 173,
+    "goals_total": 175,
     "hypotheses": 44,
     "memory_claims": 5,
-    "runs": 192
+    "runs": 195
   }
 }
