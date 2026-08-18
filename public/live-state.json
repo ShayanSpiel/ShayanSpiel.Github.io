@@ -6,8 +6,8 @@
     "owner_id": "system-improvement",
     "run_id": "run-6df92a7ac1",
     "run_status": "running",
-    "stage": "DECIDE",
-    "updated_at": "2026-08-18T23:40:01.947195+00:00"
+    "stage": "ACT",
+    "updated_at": "2026-08-18T23:40:22.143205+00:00"
   },
   "heartbeat": {
     "business_value": null,
@@ -20,12 +20,12 @@
     "operator": "eq",
     "owner_id": "system-improvement",
     "run_status": "running",
-    "stage": "DECIDE",
+    "stage": "ACT",
     "target": true,
-    "updated_at": "2026-08-18T23:40:01.947195+00:00"
+    "updated_at": "2026-08-18T23:40:22.143205+00:00"
   },
-  "last_activity_at": "2026-08-18T23:40:01.947195+00:00",
-  "last_sync_at": "2026-08-18T23:40:01.964500+00:00",
+  "last_activity_at": "2026-08-18T23:40:22.143205+00:00",
+  "last_sync_at": "2026-08-18T23:40:22.187398+00:00",
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
     "goal_name": "3 booked calls per day",
@@ -38,7 +38,7 @@
   "state": "running",
   "totals": {
     "approvals": 208,
-    "decisions": 382,
+    "decisions": 383,
     "evidence": 6318,
     "goals_abandoned": 20,
     "goals_achieved": 124,
