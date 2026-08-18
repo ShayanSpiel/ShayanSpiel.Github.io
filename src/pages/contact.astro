@@ -96,10 +96,26 @@ const breadcrumbJsonLd = {
         if (!form || !btn || !text || !spinner || !errorEl || !successState) return;
 
         var originalText = text.textContent;
+        var locale = document.documentElement.lang || 'en';
+        var page = window.location.pathname;
+        var started = false;
+
+        function track(name) {
+          if (typeof window.spielosTrack === 'function') {
+            window.spielosTrack(name, { form_type: 'contact', page: page, locale: locale, location: 'inline' });
+          }
+        }
+
+        track('lead_form_view');
+        form.addEventListener('input', function () {
+          if (started) return;
+          started = true;
+          track('lead_form_start');
+        });
 
         form.addEventListener('submit', async function(e) {
           e.preventDefault();
-          if (typeof window.spielosTrack === 'function') window.spielosTrack('lead_form_submit', { form_type: 'contact' });
+          track('lead_form_submit');
           errorEl.classList.add('hidden');
           btn.disabled = true;
           btn.classList.add('opacity-70', 'cursor-not-allowed');
@@ -120,14 +136,14 @@ const breadcrumbJsonLd = {
             if (response.ok) {
               form.classList.add('hidden');
               successState.classList.remove('hidden');
-              if (typeof window.spielosTrack === 'function') window.spielosTrack('lead_form_success', { form_type: 'contact' });
+              track('lead_form_success');
             } else {
               throw new Error('Submission failed');
             }
           } catch (err) {
             errorEl.textContent = 'Something went wrong. Please try again or email us directly.';
             errorEl.classList.remove('hidden');
-            if (typeof window.spielosTrack === 'function') window.spielosTrack('lead_form_error', { form_type: 'contact' });
+            track('lead_form_error');
             btn.disabled = false;
             btn.classList.remove('opacity-70', 'cursor-not-allowed');
             text.textContent = originalText;
