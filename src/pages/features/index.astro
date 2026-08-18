@@ -10,16 +10,31 @@ import { type Locale, t } from "../../i18n/translations";
 
 export interface Props { locale?: Locale; }
 const { locale = "en" } = Astro.props;
-const controls = ["persistentGoals", "humanApproval", "controlledAccess", "visibleEvidence", "evaluation", "separateWork"];
+const controls = [
+  { key: "persistentGoals", icon: "bx-bullseye" },
+  { key: "humanApproval", icon: "bx-user-check" },
+  { key: "controlledAccess", icon: "bx-lock-alt" },
+  { key: "visibleEvidence", icon: "bx-show" },
+  { key: "evaluation", icon: "bx-check-shield" },
+  { key: "separateWork", icon: "bx-columns" },
+];
 const tree = [
-  { icon: "bx-slider", key: "director", href: "/features/director/" },
-  { icon: "bx-group", key: "departments", href: "/features/departments/" },
-  { icon: "bx-network-chart", key: "workflows", href: "/features/workflows/" },
-  { icon: "bx-user", key: "agents", href: "/features/agents/" },
-  { icon: "bx-link", key: "skills", href: "/features/skills/" },
-  { icon: "bx-task", key: "evals", href: "/features/evals/" },
-  { icon: "bx-globe", key: "connections", href: "/features/connections/" },
-  { icon: "bx-file", key: "artifacts", href: "/features/artifacts/" },
+  { icon: "bx-slider", color: "primary", key: "director", href: "/features/director/" },
+  { icon: "bx-group", color: "accent", key: "departments", href: "/features/departments/" },
+  { icon: "bx-network-chart", color: "purple", key: "workflows", href: "/features/workflows/" },
+  { icon: "bx-user", color: "success", key: "agents", href: "/features/agents/" },
+  { icon: "bx-link", color: "warning", key: "skills", href: "/features/skills/" },
+  { icon: "bx-task", color: "info", key: "evals", href: "/features/evals/" },
+  { icon: "bx-globe", color: "accent", key: "connections", href: "/features/connections/" },
+  { icon: "bx-file", color: "primary", key: "artifacts", href: "/features/artifacts/" },
+];
+const exampleSteps = [
+  { key: "goal", icon: "bx-bullseye", color: "primary" },
+  { key: "observe", icon: "bx-search", color: "primary" },
+  { key: "decide", icon: "bx-task", color: "primary" },
+  { key: "act", icon: "bx-play", color: "muted" },
+  { key: "evaluate", icon: "bx-check-square", color: "muted" },
+  { key: "artifacts", icon: "bx-file", color: "success" },
 ];
 const breadcrumbJsonLd = {
   "@context": "https://schema.org",
@@ -66,18 +81,23 @@ const breadcrumbJsonLd = {
   <section class="relative py-24 sm:py-32">
     <div class="mx-auto max-w-6xl px-6">
       <SectionHeader title={t(locale, "features.tree.heading")} description={t(locale, "features.tree.body")} />
-      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4" data-aos="fade-up">
-        {tree.map((node) => (
-          <a href={localizePath(node.href, locale)} class="group h-full">
-            <div class="flex h-full flex-col rounded-md border border-border bg-panel p-5 transition-all group-hover:border-border-strong group-hover:bg-panel-raised">
-              <div class="mb-3 flex h-9 w-9 items-center justify-center rounded-md bg-primary-soft">
-                <i class={`${node.icon} text-primary icon-xl`} aria-hidden="true"></i>
+      <div class="tree-canvas relative overflow-hidden rounded-xl border border-border bg-panel p-5 shadow-panel sm:p-8" data-aos="fade-up">
+        <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
+        <div class="absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 glow-blob opacity-10"></div>
+        <div class="tree-rail relative grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {tree.map((node) => (
+            <a href={localizePath(node.href, locale)} class:list={["group relative rounded-md border bg-panel-raised p-5 transition-all hover:-translate-y-1 hover:border-border-strong hover:shadow-panel", `border-${node.color}/30`]}>
+              <div class:list={["mb-3 flex h-10 w-10 items-center justify-center rounded-md", `bg-${node.color}-soft`, `text-${node.color}`]}>
+                <i class:list={["bx", node.icon, "icon-xl"]} aria-hidden="true"></i>
               </div>
               <h3 class="text-sm font-semibold text-foreground-strong">{t(locale, `features.tree.${node.key}.title`)}</h3>
               <p class="mt-2 text-xs leading-relaxed text-muted-foreground">{t(locale, `features.tree.${node.key}.desc`)}</p>
-            </div>
-          </a>
-        ))}
+              <span class="mt-4 inline-flex h-5 w-5 items-center justify-center rounded-md bg-primary-soft text-primary opacity-0 transition-all group-hover:opacity-100">
+                <i class="bx bx-chevron-right rtl-flip icon-sm" aria-hidden="true"></i>
+              </span>
+            </a>
+          ))}
+        </div>
       </div>
     </div>
   </section>
@@ -86,17 +106,42 @@ const breadcrumbJsonLd = {
     <div class="absolute inset-0 bg-panel-deep/50"></div>
     <div class="relative mx-auto max-w-6xl px-6">
       <SectionHeader title={t(locale, "architecture.control.heading")} description={t(locale, "architecture.control.body")} />
-      <ul class="mx-auto grid max-w-4xl gap-3 sm:grid-cols-2" data-aos="fade-up">
-        {controls.map((control) => <li class="flex gap-3 rounded-md border border-border bg-panel p-4 text-xs leading-relaxed text-muted-foreground"><i class="bx bx-check-square mt-0.5 text-success icon-md" aria-hidden="true"></i>{t(locale, `architecture.control.${control}`)}</li>)}
-      </ul>
+      <div class="control-canvas relative overflow-hidden rounded-xl border border-border bg-panel p-5 shadow-panel sm:p-8" data-aos="fade-up">
+        <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
+        <div class="absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 glow-blob opacity-10"></div>
+        <ul class="control-rail relative mx-auto grid max-w-4xl gap-3 sm:grid-cols-2">
+          {controls.map((control) => (
+            <li class="flex items-start gap-3 rounded-md border border-border bg-panel-raised p-4 transition-all hover:-translate-y-1 hover:border-border-strong hover:shadow-panel">
+              <span class:list={["flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary-soft"]}>
+                <i class:list={["bx", control.icon, "text-primary icon-md"]} aria-hidden="true"></i>
+              </span>
+              <span class="text-xs leading-relaxed text-muted-foreground">{t(locale, `architecture.control.${control.key}`)}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   </section>
 
   <section class="relative py-24 sm:py-32">
     <div class="mx-auto max-w-4xl px-6">
       <SectionHeader title={t(locale, "architecture.example.heading")} description={t(locale, "architecture.example.body")} />
-      <div class="rounded-lg border border-border bg-panel p-6" data-aos="fade-up">
-        {(["goal", "observe", "decide", "act", "evaluate", "artifacts"] as const).map((step) => <div class="grid gap-2 border-b border-border py-4 last:border-0 sm:grid-cols-[7rem_1fr]"><h3 class="text-xs font-semibold text-primary">{t(locale, `architecture.example.${step}.title`)}</h3><p class="text-xs leading-relaxed text-muted-foreground">{t(locale, `architecture.example.${step}.desc`)}</p></div>)}
+      <div class="example-canvas relative overflow-hidden rounded-xl border border-border bg-panel p-5 shadow-panel sm:p-8" data-aos="fade-up">
+        <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
+        <div class="absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 glow-blob opacity-10"></div>
+        <ol class="example-rail relative mx-auto max-w-2xl">
+          {exampleSteps.map((step, index) => (
+            <li class="relative flex gap-4 py-3">
+              <div class:list={["relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-md border bg-panel-raised", step.color === "primary" ? "border-primary text-primary shadow-[0_0_20px_var(--primary-soft)]" : step.color === "success" ? "border-success text-success" : "border-border text-muted-foreground"]}>
+                <span class="text-xs font-bold">{index + 1}</span>
+              </div>
+              <div class="pt-0.5">
+                <h3 class="text-xs font-semibold text-foreground-strong">{t(locale, `architecture.example.${step.key}.title`)}</h3>
+                <p class="mt-1 text-xs leading-relaxed text-muted-foreground">{t(locale, `architecture.example.${step.key}.desc`)}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
       </div>
       <div class="mt-8 text-center"><a href={localizePath("/live/", locale)} class="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:opacity-80">{t(locale, "architecture.example.cta")}<i class="bx bx-chevron-right rtl-flip icon-md" aria-hidden="true"></i></a></div>
     </div>
@@ -118,3 +163,57 @@ const breadcrumbJsonLd = {
     document.querySelectorAll("[data-features-brief]").forEach(function (link) { link.addEventListener("click", function () { if (typeof window.spielosTrack === "function") window.spielosTrack("cta_clicked", { cta_type: "features_brief" }); }); });
   </script>
 </Page>
+
+<style is:global>
+  /* Tinted border utilities (Tailwind cannot opacity-modify a bare CSS var,
+     so these are provided explicitly against the semantic tokens). */
+
+  .border-primary\/30 { border-color: color-mix(in oklab, var(--primary) 30%, transparent); }
+  .border-accent\/30 { border-color: color-mix(in oklab, var(--accent) 30%, transparent); }
+  .border-purple\/30 { border-color: color-mix(in oklab, var(--purple) 30%, transparent); }
+  .border-success\/30 { border-color: color-mix(in oklab, var(--success) 30%, transparent); }
+  .border-warning\/30 { border-color: color-mix(in oklab, var(--warning) 30%, transparent); }
+  .border-info\/30 { border-color: color-mix(in oklab, var(--info) 30%, transparent); }
+  .border-accent { border-color: var(--accent); }
+  .border-purple { border-color: var(--purple); }
+  .border-success { border-color: var(--success); }
+  .border-info { border-color: var(--info); }
+  .bg-accent { background-color: var(--accent); }
+  .bg-purple { background-color: var(--purple); }
+  .bg-info { background-color: var(--info); }
+  .text-info { color: var(--info); }
+  .bg-info-soft { background-color: var(--info-soft); }
+
+
+  .tree-rail::before {
+    content: "";
+    position: absolute;
+    inset-inline: 9%;
+    top: -1.25rem;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--primary), var(--accent), transparent);
+    opacity: 0.8;
+  }
+
+  .control-rail::before {
+    content: "";
+    position: absolute;
+    inset-inline: 9%;
+    top: -1.25rem;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--accent), var(--primary), transparent);
+    opacity: 0.8;
+  }
+
+  .example-rail::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: 1.1rem;
+    top: 1.25rem;
+    bottom: 1.25rem;
+    width: 2px;
+    border-radius: var(--radius-pill);
+    background: linear-gradient(to bottom, var(--primary), var(--accent));
+    opacity: 0.6;
+  }
+</style>
