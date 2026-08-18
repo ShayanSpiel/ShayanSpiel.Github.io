@@ -8,10 +8,12 @@ const dist = join(root, "dist");
 const read = (route) => readFileSync(join(dist, route, "index.html"), "utf8");
 
 test("core conversion routes build in English and Persian", () => {
-  for (const route of ["", "services", "services/agent-brief", "features", "architecture", "live", "fa", "fa/services", "fa/services/agent-brief", "fa/features", "fa/architecture", "fa/live"]) {
+  const enRoutes = ["", "services", "services/agent-brief", "features", "architecture", "live", ...["director", "departments", "workflows", "agents", "skills", "evals", "connections", "artifacts"].map((b) => `features/${b}`)];
+  const faRoutes = ["fa", "fa/services", "fa/services/agent-brief", "fa/features", "fa/architecture", "fa/live", ...["director", "departments", "workflows", "agents", "skills", "evals", "connections", "artifacts"].map((b) => `fa/features/${b}`)];
+  for (const route of [...enRoutes, ...faRoutes]) {
     assert.ok(existsSync(join(dist, route, "index.html")), `${route || "/"} must build`);
   }
-  for (const route of ["fa", "fa/services", "fa/services/agent-brief", "fa/features", "fa/architecture", "fa/live"]) {
+  for (const route of faRoutes) {
     assert.match(read(route), /<html lang="fa" dir="rtl"/);
   }
 });
@@ -35,11 +37,18 @@ test("home has valid buyer links and the required schema types", () => {
   }
 });
 
-test("Features presents the canonical loop and seven company parts", () => {
+test("Features presents the canonical loop and the company tree with Evals", () => {
   const en = read("features");
   const fa = read("fa/features");
-  for (const label of ["Goal", "Observe", "Decide", "Act", "Evaluate", "Department", "Workflow", "Agent", "Skill", "Connection", "Artifact"]) {
-    assert.match(en, new RegExp(`>${label}<`));
+  const loopLabels = ["Goal", "Observe", "Decide", "Act", "Evaluate"];
+  const mapLabels = ["Department", "Workflow", "Agent", "Skill", "Connection", "Artifact", "Evals"];
+  const treeLabels = [["Director", "director"], ["Departments", "departments"], ["Workflows", "workflows"], ["Agents", "agents"], ["Skills", "skills"], ["Evals", "evals"], ["Connections", "connections"], ["Artifacts", "artifacts"]];
+  for (const label of [...loopLabels, ...mapLabels]) {
+    assert.match(en, new RegExp(`>\s*${label}\s*<`));
+  }
+  for (const [label, slug] of treeLabels) {
+    assert.match(en, new RegExp(`>\s*${label}\s*<`));
+    assert.match(en, new RegExp(`href="/features/${slug}/"`));
   }
   assert.match(en, /assets\/og\/features\.png/);
   assert.match(en, /href="\/live\/"/);
@@ -47,6 +56,7 @@ test("Features presents the canonical loop and seven company parts", () => {
   assert.match(fa, /هدف/);
   assert.match(fa, /دپارتمان/);
   assert.match(fa, /ورک‌فلو/);
+  assert.match(fa, /ارزیابی‌ها/);
 });
 
 test("retired hubs redirect directly to localized Architecture", () => {
@@ -63,19 +73,41 @@ test("retired hubs redirect directly to localized Architecture", () => {
   }
 });
 
-test("legacy feature detail pages remain available but noindex", () => {
-  for (const route of ["features/chat", "features/context", "features/harness", "features/infrastructure/providers", "fa/features/chat", "fa/features/context", "fa/features/harness", "fa/features/infrastructure/providers"]) {
-    assert.match(read(route), /<meta name="robots" content="noindex, follow">/);
+test("fictional feature pages redirect 301 to the real blocks and stay noindex", () => {
+  const redirects = [
+    ["features/chat", "/features/director/"],
+    ["features/chat/director-mode", "/features/director/"],
+    ["features/chat/direct-mode", "/features/workflows/"],
+    ["features/context", "/features/"],
+    ["features/harness/agents", "/features/agents/"],
+    ["features/harness/skills", "/features/skills/"],
+    ["features/harness/workflows", "/features/workflows/"],
+    ["features/harness/evals", "/features/evals/"],
+    ["features/infrastructure/connections", "/features/connections/"],
+    ["features/infrastructure/providers", "/features/"],
+    ["fa/features/chat", "/fa/features/director/"],
+    ["fa/features/context", "/fa/features/"],
+    ["fa/features/harness/evals", "/fa/features/evals/"],
+    ["fa/features/infrastructure/providers", "/fa/features/"],
+  ];
+  for (const [route, target] of redirects) {
+    const html = read(route);
+    assert.match(html, new RegExp(`http-equiv="refresh" content="0;url=${target}"`));
+    assert.match(html, /<meta name="robots" content="noindex">/);
+    assert.match(html, new RegExp(`<link rel="canonical" href="https://spielos.xyz${target}"`));
   }
 });
 
 test("sitemap includes localized core pages and excludes redirects and noindex details", () => {
   const sitemap = readFileSync(join(dist, "sitemap.xml"), "utf8");
-  for (const route of ["/features/", "/fa/features/", "/live/", "/fa/live/", "/services/", "/fa/services/"]) {
-    assert.match(sitemap, new RegExp(`https:\\/\\/spielos\\.xyz${route.replaceAll("/", "\\/")}`));
+  const blocks = ["director", "departments", "workflows", "agents", "skills", "evals", "connections", "artifacts"];
+  const included = ["/features/", "/fa/features/", "/live/", "/fa/live/", "/services/", "/fa/services/", ...blocks.map((b) => `/features/${b}/`), ...blocks.map((b) => `/fa/features/${b}/`)];
+  for (const route of included) {
+    assert.match(sitemap, new RegExp(`https:\\/\\/spielos\\.xyz${route.replaceAll("/", "\\/")}`), `${route} must be in the sitemap`);
   }
-  for (const route of ["/waitlist/", "/fa/waitlist/", "/architecture/", "/fa/architecture/", "/features/chat/"]) {
-    assert.doesNotMatch(sitemap, new RegExp(`https:\\/\\/spielos\\.xyz${route.replaceAll("/", "\\/")}`));
+  const excluded = ["/waitlist/", "/fa/waitlist/", "/architecture/", "/fa/architecture/", "/features/chat/", "/features/context/", "/features/harness/evals/", "/features/infrastructure/providers/", "/fa/features/chat/", "/fa/features/harness/"];
+  for (const route of excluded) {
+    assert.doesNotMatch(sitemap, new RegExp(`https:\\/\\/spielos\\.xyz${route.replaceAll("/", "\\/")}`), `${route} must not be in the sitemap`);
   }
 });
 
@@ -119,11 +151,10 @@ test("Live leads with active business work, north star, hierarchy, and visible s
   assert.match(en, /href="\/services\/agent-brief\/#request"/);
   assert.match(fa, /هنوز در حال اندازه‌گیریه/);
 
-  // User-facing hygiene: raw system technicals must never render on the open
-  // page. Any technical metric string may only live inside a collapsed
-  // `<details data-live-system-details>` block.
-  assert.doesNotMatch(en, /acceptance_tests_passed/, "raw system metric must not leak outside collapsed details");
-  assert.doesNotMatch(fa, /acceptance_tests_passed/, "raw system metric must not leak outside collapsed details");
+  // Contract: raw technical metric strings may only live inside the
+  // collapsed `<details data-live-system-details>` block -- never in the open
+  // page. Strip those details and assert the open page stays clean, so live
+  // data can honestly advance to any current run (including system repairs).
   for (const html of [en, fa]) {
     const open = html.replace(/<details\b[^>]*data-live-system-details[\s\S]*?<\/details>/g, "");
     assert.doesNotMatch(open, /acceptance_tests_passed|achieved_children|all_children_achieved/, "technical metric strings only inside collapsed system details");
@@ -175,7 +206,7 @@ test("Live leads with active business work, north star, hierarchy, and visible s
     // The built card's stamp must NOT be the stale goal-row time; it must be
     // today's subtree activity (the day the children actually ran).
     assert.doesNotMatch(campaignCard, new RegExp(`<time datetime="${campaign.updated_at}"`), "stale goal-row time must not drive the parent Updated stamp");
-    assert.match(campaignCard, /<time datetime="2026-08-17T/, "parent Updated stamp must reflect today's subtree activity");
+    assert.match(campaignCard, new RegExp(`<time datetime="${subtreeFresh.slice(0, 10)}T`), "parent Updated stamp must reflect the freshest subtree activity day");
   }
 
   // Ordering: the freshest-subtree business parent must rank before a goal

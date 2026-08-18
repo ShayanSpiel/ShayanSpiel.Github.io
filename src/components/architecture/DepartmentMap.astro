@@ -10,6 +10,7 @@ const parts = [
   { icon: "bx-network-chart", key: "architecture.map.workflow", color: "primary" },
   { icon: "bx-user", key: "architecture.map.agent", color: "accent" },
   { icon: "bx-task", key: "architecture.map.skill", color: "purple" },
+  { icon: "bx-check-shield", key: "architecture.map.evals", color: "info" },
   { icon: "bx-link", key: "architecture.map.connection", color: "warning" },
   { icon: "bx-file", key: "architecture.map.artifact", color: "success" },
 ];
@@ -25,7 +26,7 @@ const parts = [
     </div>
     <p class="mt-3 text-xs leading-relaxed text-muted-foreground">{t(locale, "architecture.map.departmentDesc")}</p>
   </div>
-  <div class="department-branches relative mx-auto mt-10 grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-5">
+  <div class="department-branches relative mx-auto mt-10 grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
     {parts.map((part, index) => (
       <div class:list={["relative rounded-md border bg-panel-raised p-3 text-center transition-all hover:-translate-y-1 hover:border-border-strong", index === parts.length - 1 ? "col-span-2 sm:col-span-1" : "", index % 2 === 0 ? "border-primary/30" : "border-accent/30"]}>
         <i class:list={["bx", part.icon, `text-${part.color}`, "icon-xl"]} aria-hidden="true"></i>
