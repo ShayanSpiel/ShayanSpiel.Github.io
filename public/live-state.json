@@ -1,31 +1,31 @@
 {
   "current_run": {
-    "created_at": "2026-08-17T19:54:01.781741+00:00",
-    "goal_id": "goal-7343d9eee5",
-    "goal_name": "English outbound send batch 16: next 50 from remaining queue",
-    "owner_id": "outbound",
-    "run_id": "run-4e1b1cbde4",
-    "run_status": "waiting",
-    "stage": "EVALUATE",
-    "updated_at": "2026-08-18T02:59:30.826866+00:00"
+    "created_at": "2026-08-18T16:05:21.850375+00:00",
+    "goal_id": "goal-bbdb31c1b0",
+    "goal_name": "Enforce proven-pattern gates in compose (reject bulk/seg-generic leads)",
+    "owner_id": "system-improvement",
+    "run_id": "run-7189a851aa",
+    "run_status": "blocked",
+    "stage": "ACT",
+    "updated_at": "2026-08-18T16:25:43.865883+00:00"
   },
   "heartbeat": {
     "business_value": null,
     "business_value_fa": null,
     "display_title": null,
     "display_title_fa": null,
-    "goal_id": "goal-7343d9eee5",
-    "goal_name": "English outbound send batch 16: next 50 from remaining queue",
-    "metric": "reply_rate",
+    "goal_id": "goal-bbdb31c1b0",
+    "goal_name": "Enforce proven-pattern gates in compose (reject bulk/seg-generic leads)",
+    "metric": "acceptance_tests_passed",
     "operator": "ge",
-    "owner_id": "outbound",
-    "run_status": "waiting",
-    "stage": "EVALUATE",
-    "target": 0.3,
-    "updated_at": "2026-08-18T02:59:30.826866+00:00"
+    "owner_id": "system-improvement",
+    "run_status": "blocked",
+    "stage": "ACT",
+    "target": 2,
+    "updated_at": "2026-08-18T16:25:43.865883+00:00"
   },
-  "last_activity_at": "2026-08-18T02:59:54.309425+00:00",
-  "last_sync_at": "2026-08-18T02:59:54.348023+00:00",
+  "last_activity_at": "2026-08-18T16:26:17.859255+00:00",
+  "last_sync_at": "2026-08-18T16:26:17.895705+00:00",
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
     "goal_name": "3 booked calls per day",
@@ -37,15 +37,15 @@
   },
   "state": "running",
   "totals": {
-    "approvals": 186,
-    "decisions": 349,
-    "evidence": 5263,
+    "approvals": 188,
+    "decisions": 354,
+    "evidence": 5831,
     "goals_abandoned": 18,
-    "goals_achieved": 116,
-    "goals_active": 23,
-    "goals_total": 161,
-    "hypotheses": 41,
+    "goals_achieved": 117,
+    "goals_active": 25,
+    "goals_total": 164,
+    "hypotheses": 43,
     "memory_claims": 5,
-    "runs": 179
+    "runs": 182
   }
 }
