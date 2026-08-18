@@ -2634,16 +2634,16 @@
       "created_at": "2026-08-18T23:39:02.067690+00:00",
       "goal_status": "active",
       "id": "goal-live-design-cases-verify-20260819",
-      "latest_activity_at": "2026-08-18T23:40:42.329587+00:00",
+      "latest_activity_at": "2026-08-18T23:41:10.770873+00:00",
       "metric": "acceptance_tests_passed",
       "name": "Live Design use-case pages + template gallery + How-it-works navbar — acceptance verify with corrected build-output paths",
       "operator": "eq",
       "owner_id": "system-improvement",
       "parent_id": null,
-      "run_status": "awaiting_approval",
+      "run_status": "blocked",
       "stage": "ACT",
       "target": true,
-      "updated_at": "2026-08-18T23:40:42.328652+00:00"
+      "updated_at": "2026-08-18T23:41:10.770203+00:00"
     }
   ],
   "heartbeat": {
@@ -2656,10 +2656,10 @@
     "metric": "acceptance_tests_passed",
     "operator": "eq",
     "owner_id": "system-improvement",
-    "run_status": "awaiting_approval",
+    "run_status": "blocked",
     "stage": "ACT",
     "target": true,
-    "updated_at": "2026-08-18T23:40:42.329587+00:00"
+    "updated_at": "2026-08-18T23:41:10.770873+00:00"
   },
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
@@ -2677,9 +2677,9 @@
       "goal_name": "Live Design use-case pages + template gallery + How-it-works navbar — acceptance verify with corrected build-output paths",
       "owner_id": "system-improvement",
       "run_id": "run-6df92a7ac1",
-      "run_status": "awaiting_approval",
+      "run_status": "blocked",
       "stage": "ACT",
-      "updated_at": "2026-08-18T23:40:42.329587+00:00"
+      "updated_at": "2026-08-18T23:41:10.770873+00:00"
     },
     "heartbeat": {
       "business_value": null,
@@ -2691,17 +2691,17 @@
       "metric": "acceptance_tests_passed",
       "operator": "eq",
       "owner_id": "system-improvement",
-      "run_status": "awaiting_approval",
+      "run_status": "blocked",
       "stage": "ACT",
       "target": true,
-      "updated_at": "2026-08-18T23:40:42.329587+00:00"
+      "updated_at": "2026-08-18T23:41:10.770873+00:00"
     },
-    "last_activity_at": "2026-08-18T23:40:42.329587+00:00",
-    "last_sync_at": "2026-08-18T23:40:42.352414+00:00",
+    "last_activity_at": "2026-08-18T23:41:10.770873+00:00",
+    "last_sync_at": "2026-08-18T23:41:10.784983+00:00",
     "state": "running"
   },
   "totals": {
-    "approvals": 208,
+    "approvals": 209,
     "decisions": 383,
     "evidence": 6319,
     "goals_abandoned": 20,
