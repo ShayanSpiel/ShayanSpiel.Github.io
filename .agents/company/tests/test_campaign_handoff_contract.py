@@ -60,6 +60,15 @@ def promoted_filename_cases():
 
 def campaign_manifest():
     campaign_id = "content-leads-20260812"
+    # Valid archetype rotation enforced by the design gate (change
+    # change-e69f419da9): threads uses all four social archetypes with one
+    # bounded round-robin repeat on item 05; youtube picks five unique shorts
+    # archetypes. Both platform sequences pass no-batch-repeats, round-robin
+    # balance, and bounded cell balance.
+    threads_rotation = ("harness-architecture", "single-fact", "list-checklist",
+                        "testimonial-pull-quote", "harness-architecture")
+    youtube_rotation = ("scenario-b", "scenario-c", "contrast-text",
+                        "storyboard", "data-card")
     items = []
     for sequence in range(1, 6):
         item_id = f"batch-01-item-{sequence:02d}"
@@ -74,7 +83,7 @@ def campaign_manifest():
                 f"&utm_campaign={campaign_id}&utm_content={content_id}"
             )
             design = {
-                "template_id": "harness-architecture" if platform == "threads" else "scenario-b",
+                "template_id": (threads_rotation if platform == "threads" else youtube_rotation)[sequence - 1],
                 "theme": ["gruvbox-dark", "gruvbox-light", "blue-dark", "monochrome-dark", "black-gold-dark"][sequence - 1],
                 "size_preset": preset,
                 "eyebrow": "SpielOS · supervised AI workflows",
@@ -277,6 +286,56 @@ class CampaignHandoffContractTests(unittest.TestCase):
                          ["designed", "rendered", "approved", "delivered", "measured", "evaluated"])
         self.assertEqual(report["ctr"], 0.05)
         self.assertEqual(report["lead_conversion_rate"], 0.05)
+
+    def test_funnel_report_forwards_the_template_breakdown(self):
+        strategy = campaign_manifest()
+        designed = accept_design_order(strategy)
+        assets = [
+            {"item_id": item["item_id"], "platform": platform,
+             "type": "image" if platform == "threads" else "video",
+             "local_path": "asset", "sha256": "sha", "render_report_id": "render"}
+            for item in designed["items"] for platform in ("threads", "youtube")
+        ]
+        rendered = apply_render_report(designed, render_report(designed, assets))
+        approvals = [
+            {"item_id": item["item_id"], "platform": platform, "status": "approved",
+             "approval_id": f"approval-{item['item_id']}-{platform}",
+             "public_url": f"https://cdn.spielos.xyz/{item['item_id']}-{platform}.asset"}
+            for item in rendered["items"] for platform in ("threads", "youtube")
+        ]
+        approved = approve_rendered_campaign(rendered, approvals)
+        package = publication_package(approved)
+        receipts = [
+            {**{key: post[key] for key in ("campaign_id", "batch_id", "item_id", "content_id", "creative_signature", "platform", "approval_id")},
+             "provider_post_id": f"buffer-{post['content_id']}", "verified": True, "status": "scheduled"}
+            for post in package["posts"]
+        ]
+        delivered = apply_delivery_receipts(approved, receipts)
+        breakdown = {
+            "basis": "manifest item design orders joined to per-post Buffer rows",
+            "website_events": "batch-level only: never per-template attribution without per-post tracking",
+            "per_template": [{"template_id": "scenario-b", "platform": "youtube",
+                              "posts": 2, "views": 13, "missing": False}],
+        }
+        report = campaign_funnel_report(delivered, {
+            "content_ids": [post["content_id"] for post in package["posts"]],
+            "evidence_complete": True, "evidence_window": "24h",
+            "platform_views": 2000, "content_landings": 100,
+            "service_cta_clicks": 20, "leads": 5,
+            "template_breakdown": breakdown,
+            "experiment_cells": [
+                {"cell_id": "control-hook", "sample_size": 1000},
+                {"cell_id": "variant-hook", "sample_size": 1000},
+            ],
+            "effects": [],
+        })
+        # The analytics handoff forwards the breakdown unchanged (passthrough;
+        # canonical funnel math untouched) and the measured Artifact keeps it.
+        self.assertEqual(breakdown, report["template_breakdown"])
+        self.assertEqual(0.05, report["ctr"])
+        measured = apply_funnel_report(delivered, report)
+        self.assertEqual(validate_campaign(measured, "measured"), [])
+        self.assertEqual(breakdown, measured["measurement"]["report"]["template_breakdown"])
 
     def test_promoted_public_urls_never_repeat_the_content_id_segment(self):
         # (a) The promotion script's canonical filename builder must never

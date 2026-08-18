@@ -69,3 +69,21 @@ bullet below is never a target, regardless of score:
 - The site's published copy must always speak to this buyer: an operator solving
   repetitive work for an established business — never a technical founder building a
   harness.
+
+## Validated buyer pattern (proof, locked 2026-08-18 — goal-40946f9dab)
+
+The proven converting buyer is an **owner-operator (Founder / Managing
+Director) at an established service business with a named, observable manual
+operational loop** — validated by two qualified real replies:
+
+- EN-1358 SDG Accountant — accounting & bookkeeping (owner, Canada) —
+  interested, "Can you build it out using our Ring Central?" (proof:
+  `.agents/company/assets/outbound-proof-2026-08-15-sdg-accountant.md`)
+- EN-1157 Sigma Recruitment — recruitment & staffing (owner, UK) — accepted,
+  demo request.
+
+By contrast, 324 emails from a bulk framework contact list (same segments,
+51% open rate) produced 0 replies — the buyer is NOT "a name on a list"; it
+is the operator who owns a manual loop. All future outbound qualification and
+site copy must hold this pattern. Execution rules: Outbound Department
+strategy PROVEN PATTERN (RULES 1–4).

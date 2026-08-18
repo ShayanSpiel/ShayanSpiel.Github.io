@@ -4,6 +4,7 @@ import FeatureHero from "../../components/features/FeatureHero.astro";
 import FeatureCTA from "../../components/features/FeatureCTA.astro";
 import { type Locale, t } from "../../i18n/translations";
 import { SITE } from "../../config";
+import { localizePath } from "../../i18n";
 
 export interface Props {
   locale?: Locale;
@@ -22,10 +23,41 @@ const { locale = "en" } = Astro.props;
   >
   <FeatureHero
     locale={locale}
-    breadcrumbs={[{ label: "Use Cases" }]}
+    breadcrumbs={[{ label: t(locale, "nav.usecases") }]}
     title={t(locale, "useCases.hero.title")}
     description={t(locale, "useCases.hero.desc")}
   />
+
+  <section class="relative py-20 sm:py-24">
+    <div class="mx-auto max-w-6xl px-6">
+      <div class="relative overflow-hidden rounded-xl border border-border bg-panel p-6 shadow-panel sm:p-10" data-aos="fade-up">
+        <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-accent via-purple to-transparent opacity-80" aria-hidden="true"></div>
+        <div class="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
+          <div class="max-w-2xl">
+            <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-md bg-accent-soft text-accent">
+              <i class="bx bx-palette icon-2xl" aria-hidden="true"></i>
+            </div>
+            <h2 class="text-lg font-semibold text-foreground-strong mb-2">{t(locale, "useCases.card.design.title")}</h2>
+            <p class="text-sm text-muted-foreground leading-relaxed">{t(locale, "useCases.card.design.desc")}</p>
+          </div>
+          <div class="flex shrink-0 flex-wrap gap-3">
+            <a
+              href={localizePath("/use-cases/design/", locale)}
+              class="inline-flex items-center justify-center rounded-md border border-border bg-panel px-5 h-10 text-sm font-medium hover:bg-panel-raised hover:border-border-strong transition-all"
+            >
+              {t(locale, "useCases.card.design.case")}
+            </a>
+            <a
+              href={localizePath("/use-cases/design/gallery/", locale)}
+              class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-5 h-10 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all"
+            >
+              {t(locale, "useCases.card.design.gallery")}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <section class="relative py-24 sm:py-32">
     <div class="mx-auto max-w-3xl px-6">

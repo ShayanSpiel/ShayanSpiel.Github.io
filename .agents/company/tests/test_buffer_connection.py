@@ -364,6 +364,70 @@ class BufferMetricsRefreshTests(unittest.TestCase):
         self.assertNotIn("createdAt", seen["query"])
 
     @patch.dict(os.environ, {"BUFFER_API_KEY": "test-token"}, clear=False)
+    def test_campaign_posts_walks_pages_and_deduplicates(self):
+        """The metrics read pages past Buffer's newest-page cap (batch-01 fix)."""
+        client = BufferClient()
+        calls = []
+
+        def fake_graphql(query):
+            calls.append(query)
+            if "after: \"cursor-1\"" in query:
+                return {"posts": {"edges": [
+                    {"node": {"id": "old-1", "status": "sent", "channelId": "ch-1",
+                              "createdAt": "2026-08-12T20:00:00Z", "dueAt": None,
+                              "metrics": [{"type": "views", "value": 65}],
+                              "metricsUpdatedAt": "2026-08-17T05:00:00Z"}},
+                ]}}
+            return {"posts": {"pageInfo": {"hasNextPage": True, "endCursor": "cursor-1"},
+                              "edges": [
+                                  {"node": {"id": "new-1", "status": "sent", "channelId": "ch-1",
+                                            "createdAt": "2026-08-17T08:00:00Z", "dueAt": None,
+                                            "metrics": [], "metricsUpdatedAt": None}},
+                                  # duplicate of a node that also appears on page 2
+                                  {"node": {"id": "old-1", "status": "sent", "channelId": "ch-1",
+                                            "createdAt": "2026-08-12T20:00:00Z", "dueAt": None,
+                                            "metrics": [], "metricsUpdatedAt": None}},
+                              ]}}
+
+        client.graphql = fake_graphql
+        posts = client.campaign_posts()
+
+        self.assertEqual({"new-1", "old-1"}, {post["id"] for post in posts})
+        self.assertEqual(2, len(posts))  # deduplicated across pages
+        self.assertEqual(65, next(p["metrics"][0]["value"] for p in posts if p["id"] == "old-1"))
+        self.assertIn("pageInfo { hasNextPage endCursor }", calls[0])
+        self.assertIn("after: \"cursor-1\"", calls[1])
+
+    @patch.dict(os.environ, {"BUFFER_API_KEY": "test-token"}, clear=False)
+    def test_metrics_campaign_report_maps_buffer_native_reactions_and_comments(self):
+        """Buffer's reactions/comments types populate likes/replies on the funnel keys."""
+        client = object.__new__(BufferClient)
+        client.last_rate_limits = {}
+        client.campaign_posts = lambda ids, since=None, until=None: [
+            {"id": "p1", "channelId": "ch-1", "channelService": "threads", "status": "sent",
+             "createdAt": "2026-08-14T12:53:21Z", "dueAt": None,
+             "sentAt": "2026-08-14T12:53:21Z",
+             "metrics": [{"type": "views", "name": "Views", "value": 65},
+                         {"type": "reactions", "name": "Reactions", "value": 2},
+                         {"type": "comments", "name": "Comments", "value": 1},
+                         {"type": "reposts", "name": "Reposts", "value": 0}],
+             "metricsUpdatedAt": "2026-08-17T05:11:04Z"},
+        ]
+        now = datetime(2026, 8, 17, 12, 0, tzinfo=timezone.utc)
+
+        report = _metrics_campaign_report(client, ["ch-1"], stale_after_hours=6, now=now)
+
+        post = report["posts"][0]
+        self.assertEqual(65, post["metrics"]["views"])
+        self.assertEqual(2, post["metrics"]["likes"])
+        self.assertEqual(1, post["metrics"]["replies"])
+        self.assertEqual(0, post["metrics"]["reposts"])  # real platform-reported zero
+        self.assertIsNone(post["metrics"]["shares"])
+        self.assertIsNone(post["metrics"]["followers"])
+        # Absent platform counts stay None (missing), never an invented zero.
+        self.assertEqual(["shares", "followers"], post["missing_metrics"])
+
+    @patch.dict(os.environ, {"BUFFER_API_KEY": "test-token"}, clear=False)
     def test_campaign_posts_window_uses_due_at_when_created_at_absent(self):
         client = BufferClient()
         client.graphql = lambda query: {"posts": {"edges": [

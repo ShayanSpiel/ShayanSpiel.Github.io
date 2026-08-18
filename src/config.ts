@@ -108,17 +108,39 @@ export const AGENT_BRIEFING_PATH = "/services/agent-brief/#request";
 /** Canonical Agent Brief request form destination (inline form on the Agent Brief page). */
 export const AGENT_BRIEF_REQUEST_PATH = "/services/agent-brief/#request";
 
+export interface NavChildLink {
+  label: string;
+  href: string;
+  /** Renders a small liveness ping dot beside the label. */
+  live?: boolean;
+  /** Nested grandchild links (e.g. Design under Use Cases). */
+  children?: NavChildLink[];
+}
+
 export interface NavLink {
   label: string;
   href: string;
   /** Renders a small liveness ping dot beside the label. */
   live?: boolean;
+  /** Nested child links rendered as a dropdown group (desktop) / accordion (mobile). */
+  children?: NavChildLink[];
 }
 
 export const NAV_LINKS: { default: NavLink[]; showcase: NavLink[] } = {
   default: [
     { label: "Services", href: "/services/" },
-    { label: "Features", href: "/features/" },
+    {
+      label: "How it works",
+      href: "/features/",
+      children: [
+        { label: "Features", href: "/features/" },
+        {
+          label: "Use Cases",
+          href: "/use-cases/",
+          children: [{ label: "Design", href: "/use-cases/design/" }],
+        },
+      ],
+    },
     { label: "Live", href: "/live/", live: true },
     { label: "Notes", href: "/notes/" },
     { label: "Founder", href: "/founder/" },

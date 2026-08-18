@@ -148,6 +148,21 @@ def build_parser():
     tasks.add_argument("--complete", metavar="WORKER_ID")
     tasks.add_argument("--evidence", default="[]",
                        help="JSON array of {kind,source?,payload?,validity?}")
+    evals = commands.add_parser("eval", help="reusable LLM-as-judge eval suites")
+    eval_commands = evals.add_subparsers(dest="eval_command", required=True)
+    eval_list = eval_commands.add_parser("list")
+    eval_list.add_argument("--json", action="store_true")
+    eval_run = eval_commands.add_parser("run")
+    eval_run.add_argument("suite_id")
+    eval_run.add_argument("--payload", required=True,
+                          help="path to the payload JSON (e.g. campaign-approved.json)")
+    eval_run.add_argument("--judge-response",
+                          help="path to a JSON document of judge verdicts; "
+                               "without it the command renders the request and reads verdicts from stdin")
+    eval_run.add_argument("--goal", help="goal_id to attach the eval_report evidence to")
+    eval_run.add_argument("--validity", choices=("business", "technical_only"),
+                          help="override the suite's recorded evidence validity")
+    eval_run.add_argument("--json", action="store_true")
     return parser
 
 
@@ -183,6 +198,8 @@ def _runtime_mode(args) -> str | None:
         return "read"
     if args.command == "tasks" and not getattr(args, "claim", None) and not getattr(args, "complete", None):
         return "read"
+    if args.command == "eval" and args.eval_command == "list":
+        return None
     return "write"
 
 
@@ -190,6 +207,7 @@ def main(argv=None):
     args = build_parser().parse_args(argv)
     mode = _runtime_mode(args)
     runtime = Runtime(args.db, readonly=(mode == "read")) if mode else None
+    exit_code = 0
     try:
         if args.command == "departments":
             output = [{"id": key, "version": value.version, "description": value.description,
@@ -371,6 +389,49 @@ def main(argv=None):
             if not args.json and not args.work_order_id:
                 print(render_tasks(output))
                 return 0
+        elif args.command == "eval":
+            from .evals import (
+                get_suite, render_request, report_to_evidence, run_suite,
+                suite_spec, suites as installed_eval_suites,
+            )
+            if args.eval_command == "list":
+                output = {"evals": [suite_spec(suite) for suite in
+                                     sorted(installed_eval_suites().values(),
+                                            key=lambda item: item.id)]}
+            else:
+                suite = get_suite(args.suite_id)
+                payload = json.loads(Path(args.payload).read_text())
+                if not isinstance(payload, dict):
+                    raise ValueError("eval payload must be a JSON object")
+                request = render_request(suite, payload)
+                if args.judge_response:
+                    verdicts_raw = json.loads(Path(args.judge_response).read_text())
+                else:
+                    # Interact: render the structured request, then read the
+                    # agent-written verdict document from stdin.
+                    print(json.dumps(request, indent=2, ensure_ascii=False))
+                    print("\nJudge the request above. Paste the verdict JSON "
+                          "document, then end input (Ctrl-D / EOF).",
+                          file=sys.stderr)
+                    raw = sys.stdin.read()
+                    if not raw.strip():
+                        raise ValueError(
+                            "no judge response received; re-run with "
+                            "--judge-response <path> or paste verdict JSON on stdin")
+                    verdicts_raw = json.loads(raw)
+                report = run_suite(suite, payload, verdicts_raw,
+                                   validity=args.validity)
+                evidence_id = None
+                if args.goal:
+                    state = runtime.add_evidence(
+                        args.goal, kind="eval_report", source=f"evals:{suite.id}",
+                        payload=report_to_evidence(report), validity=report.validity)
+                    evidence_id = (state["evidence"] or [{}])[-1].get("id")
+                output = {"request": request, "report": report_to_evidence(report),
+                          "goal": args.goal, "evidence_id": evidence_id}
+                # A failing eval is a failed gate: exit non-zero so pipelines
+                # (and the acceptance test) can rely on the exit code.
+                exit_code = 0 if report.overall else 1
         else:
             state = runtime.status(args.goal_id)
             output = {**state, "events": runtime.store.events(args.goal_id, args.events),
@@ -382,7 +443,7 @@ def main(argv=None):
             print(json.dumps(output, indent=2, ensure_ascii=False, default=str))
         else:
             print(_render_default(args, output))
-        return 0
+        return exit_code
     except (KeyError, RuntimeError, ValueError, json.JSONDecodeError,
             sqlite3.OperationalError) as exc:
         message = str(exc).strip("'")
@@ -608,6 +669,10 @@ def _render_default(args, output) -> str:
     if command == "evidence":
         kind = "reply" if args.evidence_command == "reply" else args.kind
         return render_goal_state(f"Evidence added: {kind}", output)
+    if command == "eval":
+        if args.eval_command == "list":
+            return render_evals_list(output)
+        return render_evals_run(output)
     if command == "change":
         return render_goal_state(f"Change complete: {output['goal']['name']}", output)
     if command == "runner":
@@ -760,6 +825,47 @@ def render_runner(title, value):
                   f"- Log: `{value.get('log_path')}`",
                   "",
                   "Start automation with `company runner start`."]
+    return "\n".join(lines) + "\n"
+
+
+def render_evals_list(value):
+    """Card for `company eval list`."""
+    items = value.get("evals") or []
+    lines = [f"# Eval suites ({len(items)})", ""]
+    for suite in items:
+        criteria = suite.get("criteria") or []
+        lines.append(f"- `{suite['id']}` · {suite['name']}")
+        lines.append(f"  - department `{suite['department_id']}` · payload "
+                     f"`{suite['payload_kind']}` · {len(criteria)} criteria · "
+                     f"validity `{suite['validity']}`")
+        for criterion in criteria:
+            lines.append(f"  - `{criterion['id']}` — {criterion['name']} "
+                         f"({criterion['source']}, {criterion['severity']})")
+    lines += ["", "Run one suite with `company eval run SUITE_ID --payload PATH`."]
+    return "\n".join(lines) + "\n"
+
+
+def render_evals_run(value):
+    """Card for `company eval run`: per-item verdict summary with pass/fail."""
+    report = value.get("report") or {}
+    request = value.get("request") or {}
+    items = report.get("per_item") or {}
+    lines = [f"# Eval report: {report.get('suite_id')}",
+             "",
+             f"- Payload: `{report.get('payload_id')}` · kind `{report.get('payload_kind')}`",
+             f"- Overall: `{'pass' if report.get('overall') else 'FAIL'}` ",
+             f"- Thresholds: `{report.get('thresholds')}`",
+             f"- Judge: `{report.get('judge_connector')}` · validity "
+             f"`{report.get('validity')}` · {report.get('generated_at')}"]
+    if value.get("evidence_id"):
+        lines.append(f"- Evidence: `{value['evidence_id']}` on goal `{value['goal']}`")
+    lines += ["", "## Per item"]
+    for item_id, verdicts in items.items():
+        state = "pass" if report.get("per_item_pass", {}).get(item_id) else "FAIL"
+        lines.append(f"- {item_id}: `{state}`")
+        for verdict in verdicts.values():
+            marker = "ok " if verdict.get("pass") else "FAIL"
+            lines.append(f"  - [{marker}] {verdict['criterion_id']}: {verdict['reason']}")
     return "\n".join(lines) + "\n"
 
 

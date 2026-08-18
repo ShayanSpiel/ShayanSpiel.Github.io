@@ -118,6 +118,10 @@ belong under `.spielos/artifacts/`, not strategy, assets, or skills.
 | `/features/infrastructure/providers/` | `src/pages/features/infrastructure/providers.astro` | 301 redirect to `/features/` |
 | `/features/infrastructure/connections/` | `src/pages/features/infrastructure/connections.astro` | 301 redirect to `/features/connections/` |
 | `/use-cases/` | `src/pages/use-cases/index.astro` | Use cases hub (EN) |
+| `/use-cases/design/` | `src/pages/use-cases/design/index.astro` | Live Design department use case (EN) |
+| `/use-cases/design/gallery/` | `src/pages/use-cases/design/gallery.astro` | Build-driven Design template gallery (EN) |
+| `/fa/use-cases/design/` | `src/pages/fa/use-cases/design/index.astro` | Live Design department use case (FA) |
+| `/fa/use-cases/design/gallery/` | `src/pages/fa/use-cases/design/gallery.astro` | Build-driven Design template gallery (FA) |
 | `/spielos-v1/` | `src/pages/spielos-v1.astro` | Archived legacy product page (`noindex`) |
 | `/shayan/` | `src/pages/shayan.astro` | 301 redirect to `/founder/` |
 | `/posts/` | `src/pages/posts/index.astro` | 301 redirect to `/notes/` |
@@ -179,8 +183,13 @@ Persian headings use heavier font-weight (h1=800, h2=700, h3+=600) via `[dir="rt
 
 Single source of truth: `src/config.ts` → `NAV_LINKS`.
 
-Default nav: Services → `/services/`, Features → `/features/`, Live →
-`/live/`, Notes → `/notes/`, Founder → `/founder/`.
+Default nav: Services → `/services/`, How it works → `/features/` (dropdown:
+Features → `/features/`, Use Cases → `/use-cases/` with Design →
+`/use-cases/design/`), Live → `/live/`, Notes → `/notes/`,
+Founder → `/founder/`.
+The How it works dropdown is rendered by `src/components/Nav.astro` from the
+nested `NavLink.children` model in `src/config.ts` (desktop hover/focus
+dropdown, mobile accordion, RTL-aware).
 Primary navbar CTA: Request an Agent Brief → `/services/agent-brief/#request`.
 The Agent Brief experience remains at `/services/agent-brief/` and in the
 services page.

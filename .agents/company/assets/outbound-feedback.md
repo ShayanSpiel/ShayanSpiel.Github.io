@@ -85,3 +85,26 @@ Ledger of record: `.spielos/state/outbound/metrics.json` -> `replies`.
   Locked as research rule 5 (per-lead manual-loop hook) — see
   `.agents/company/departments/outbound/strategy.md`.
 - Full CRM-ready record: `assets/outbound-proof-2026-08-15-sdg-accountant.md`.
+
+## NEW LEARNING (locked 2026-08-18 — goal-40946f9dab)
+
+### The proven pattern vs the bulk-list drought
+- **Converts:** per-lead researched manual-loop hooks on researched sources.
+  - EN-1358 SDG Accountant (Director web research + source URL; subject
+    "Manual loop at SDG Accountant"; per-lead pain on compliance/document
+    gathering) → interested reply, qualified, owner-confirmed.
+  - EN-1157 Sigma Recruitment (company website research; subject
+    "Staffing loop at Sigma Recruitment"; shortlist-stage pain; "Reply map"
+    CTA) → accepted reply, demo request.
+- **Does not convert:** single-source bulk framework lists with
+  segment-generic pain. The GCA framework public supplier contacts run
+  (324 emails, EN-14xx/15xx/18xx) returned **0 replies / 3 clicks despite
+  51% opens**. Opens held, replies died → the failure is source + research
+  quality, NOT deliverability.
+- **Buyer pattern:** owner-operator (Founder/Managing Director) at an
+  established service business with a named manual operational loop.
+- **Rule:** encoded in `.agents/company/departments/outbound/strategy.md`
+  (PROVEN PATTERN, RULES 1–4): researched source required, bulk lists
+  non-sendable without per-lead research, researched-personal is the only
+  variant, and any lead missing the researched loop gate is skipped
+  ("unprepared") — non-sendable by rule.

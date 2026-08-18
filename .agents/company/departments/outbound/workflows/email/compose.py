@@ -21,6 +21,17 @@ SPAM (owner rule 2026-08-10): the Rule 6 banned vocabulary (SPAM_WORDS) is a
 hard ban — render_checked rejects any English subject/body containing one and
 validators.py flags it mechanically, so spammy phrasing never reaches the
 REVIEW gate.
+
+PROVEN PATTERN (owner rule 2026-08-18, goal-bbdb31c1b0): the only sendable
+English class is a researched owner-operator lead with firm-specific pain and
+a per-lead hook (strategy.md PROVEN PATTERN RULES 1-4, locked 2026-08-18).
+The bulk-framework anti-pattern — list-signature titles ("Named framework
+contact"), segment-generic pain repeated verbatim across leads, and GCA CSV
+bulk sources — produced 0 replies / 3 clicks at 51% opens (324-run) and is
+rejected here as "unprepared" so it can never reach an inbox. The proven
+class (EN-1358 SDG Accountant, EN-1157 Sigma Recruitment) still composes.
+The Persian template ladder is untouched: the gate guards the English STRICT
+path only.
 """
 
 import html as html_mod
@@ -92,6 +103,110 @@ OFFER_VARIANTS = (
     "I build agentic departments: your ops workflow running as supervised agents, a person in the loop on every step.",
     "I build agentic companies and departments. One workflow at a time, supervised by your team, starting with the most manual loop at {company}.",
 )
+
+
+# ── Proven-pattern gate (owner rule 2026-08-18, goal-bbdb31c1b0) ──────────────
+# strategy.md PROVEN PATTERN RULES 1-4 (locked 2026-08-18): a lead is
+# NON-SENDABLE ("unprepared") until it has a real owner-operator title, a
+# firm-specific pain_hypothesis, a per-lead hook, and a researched source.
+# The 324-run GCA bulk cohort (EN-1419/1508/1834 style) — title "Named
+# framework contact", segment-generic verbatim pain, source "GCA framework
+# public supplier contacts" CSV — produced 0 replies / 3 clicks at 51% opens;
+# those signatures are rejected deterministically here.
+
+# Titles that identify a bulk-list export row rather than an owner-operator.
+# A lead whose title/role is one of these has no real title to greet and is
+# treated exactly like a missing title.
+_LIST_SIGNATURE_TITLE_MARKERS = (
+    "named framework contact",
+    "framework contact",
+    "named contact",
+    "list contact",
+    "supplier contact",
+    "bulk contact",
+)
+
+# Framework/list identifiers used by bulk supplier exports (GCA CSVs:
+# RM6281, RM6376, RM6281:2, RM6376%3A1 ...). Present in a pain hypothesis or
+# source URL, they mark segment-generic/bulk-list data, not per-lead research.
+_FRAMEWORK_ID_RE = re.compile(r"RM\d+[:]?\d*", re.IGNORECASE)
+
+# Bulk-list source signatures (RULE 1.2): a public framework/supplier export
+# is not a sendable source by itself. Company-website and Director-web-
+# research sources never match these.
+_BULK_SOURCE_MARKERS = (
+    "gca ",
+    "framework public supplier",
+    "framework supplier contacts",
+    "public supplier contacts",
+    "supplier contacts",
+    "bulk framework",
+    "bulk list",
+    "csv export",
+    "public supplier list",
+)
+
+
+def _normalize_pain(text: str) -> str:
+    """Task-specified normalization for comparing pain hypotheses: lowercase
+    and strip every non-alphanumeric character."""
+    return re.sub(r"[^a-z0-9]+", "", (text or "").casefold())
+
+
+# Known segment-generic pain signatures: verbatim sentences repeated across
+# bulk leads (0-reply GCA cohort) plus the FORBIDDEN_OBSERVATIONS sentences
+# that must never appear in a render. Stored normalized; a pain is rejected
+# when its normalized form matches one of these exactly OR contains an
+# RM#### framework identifier. Template sentences with {placeholders} are
+# excluded — their literal form never appears in a real pain.
+SEGMENT_GENERIC_PAINS = frozenset(
+    _normalize_pain(p) for p in FORBIDDEN_OBSERVATIONS if "{" not in p
+) | frozenset(_normalize_pain(p) for p in (
+    # 324-run GCA cohort (EN-1419/EN-1834, EN-1508): segment-generic pain
+    # repeated verbatim across leads, 0 replies / 3 clicks at 51% opens.
+    "Clinical and healthcare staffing runs on manual candidate sourcing, "
+    "compliance handling and placement administration per role.",
+    "Supply teacher and support staff placement runs on manual candidate "
+    "matching, school chasing and compliance tracking per booking.",
+))
+
+
+def _source_is_bulk_list(contact: dict) -> bool:
+    """True when source/source_url identifies an unresearched bulk export
+    (GCA framework CSV pattern and similar), not a per-lead researched
+    source. RULE 1.2: bulk lists are not a sendable source by themselves."""
+    src = (contact.get("source") or "").casefold()
+    url = (contact.get("source_url") or "").casefold()
+    if any(m in src for m in _BULK_SOURCE_MARKERS):
+        return True
+    if url:
+        if ".csv" in url or "lot-suppliers" in url or "/agreements/" in url:
+            return True
+        if _FRAMEWORK_ID_RE.search(url):
+            return True
+    return False
+
+
+def _proven_pattern_violation(contact: dict) -> str | None:
+    """STRICT proven-pattern gate (strategy.md RULES 1-4, locked 2026-08-18):
+    a sendable English lead must have a real owner-operator title, a
+    firm-specific pain, and a researched (non-bulk) source. Returns an
+    'unprepared' skip reason, or None when the lead may proceed to compose."""
+    title = (contact.get("title") or "").casefold()
+    if any(m in title for m in _LIST_SIGNATURE_TITLE_MARKERS):
+        return ("unprepared: title is a list/framework signature with no real "
+                "owner-operator title — prepare content before send")
+    pain = (contact.get("pain_hypothesis") or "").strip()
+    if pain and (
+        _FRAMEWORK_ID_RE.search(pain)
+        or _normalize_pain(pain) in SEGMENT_GENERIC_PAINS
+    ):
+        return ("unprepared: pain_hypothesis is segment-generic, not "
+                "firm-specific — prepare content before send")
+    if _source_is_bulk_list(contact):
+        return ("unprepared: source is an unresearched bulk supplier list — "
+                "prepare content before send")
+    return None
 
 
 def offer_variant_index(seq: int) -> int:
@@ -244,7 +359,9 @@ def compose_researched(contact: dict, label: str, seq: int = 0) -> dict | None:
 
 def render_checked(contact: dict, seq: int = 0) -> tuple:
     """Render subject/body for one lead. STRICT: an English lead is sent ONLY
-    when the research columns compose real content (parseable hook +
+    when it clears the proven-pattern gate (real owner-operator title,
+    firm-specific pain, researched non-bulk source; strategy.md RULES 1-4)
+    AND the research columns compose real content (parseable hook +
     pain_hypothesis, never a placeholder). No research -> skip with a reason.
     Persian leads use the prepared Persian template ladder.
     Returns (subject, html, text, reason) — reason None means sendable."""
@@ -254,6 +371,9 @@ def render_checked(contact: dict, seq: int = 0) -> tuple:
 
     lang = str(contact.get("language") or "English").strip()
     if lang == "English":
+        violation = _proven_pattern_violation(contact)
+        if violation:
+            return (None, None, None, violation)
         composed = compose_researched(contact, label, seq)
         if composed is None:
             return (None, None, None,

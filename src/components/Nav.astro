@@ -14,15 +14,42 @@ const { links, cta, locale = "en" } = Astro.props;
 
 const currentPath = Astro.url.pathname;
 
-const navLinks = links || NAV_LINKS.default.map(link => ({
-  href: localizePath(link.href, locale),
-  label: t(locale, `nav.${link.label.toLowerCase().replace(/\s+/g, '')}`) || link.label,
-  live: Boolean(link.live),
-}));
+const navKey = (label: string) => `nav.${label.toLowerCase().replace(/\s+/g, "")}`;
+
+const toChild = (child: { label: string; href: string; live?: boolean; children?: { label: string; href: string; live?: boolean; children?: never }[] }) => ({
+  href: localizePath(child.href, locale),
+  label: t(locale, navKey(child.label)) || child.label,
+  live: Boolean(child.live),
+  children: (child.children || []).map((grand) => ({
+    href: localizePath(grand.href, locale),
+    label: t(locale, navKey(grand.label)) || grand.label,
+    live: Boolean(grand.live),
+  })),
+});
+
+const navLinks = links
+  ? links.map((link) => ({
+      href: localizePath(link.href, locale),
+      label: t(locale, navKey(link.label)) || link.label,
+      live: Boolean(link.live),
+      children: (link.children || []).map(toChild),
+    }))
+  : NAV_LINKS.default.map((link) => ({
+      href: localizePath(link.href, locale),
+      label: t(locale, navKey(link.label)) || link.label,
+      live: Boolean(link.live),
+      children: (link.children || []).map(toChild),
+    }));
 const ctaLink = cta || { label: t(locale, "cta.requestAgentBrief"), href: AGENT_BRIEF_REQUEST_PATH };
 
 const normalize = (p: string) => p.replace(/\/+$/, "") || "/";
 const isCurrent = (href: string) => normalize(href) === normalize(currentPath);
+/** A group (or child with children) counts as active when the current page is
+ *  the group href or any descendant. */
+const isDescendant = (href: string) => normalize(currentPath).startsWith(normalize(href));
+const isGroupActive = (href: string, children: { href: string }[]) =>
+  isDescendant(href) || children.some((child) => isDescendant(child.href));
+const ariaCurrent = (href: string) => (isCurrent(href) ? "page" : undefined);
 ---
 
 <nav
@@ -41,20 +68,92 @@ const isCurrent = (href: string) => normalize(href) === normalize(currentPath);
     </a>
 
     <div class="hidden md:flex items-center gap-5 lg:gap-8 absolute left-1/2 -translate-x-1/2">
-      {navLinks.map((link) => (
-        <a
-          href={link.href}
-          aria-current={isCurrent(link.href) ? "page" : undefined}
-          class:list={[
-            "text-xs text-muted-foreground hover:text-foreground transition-colors",
-            link.live && "inline-flex items-center gap-1.5",
-            isCurrent(link.href) && "text-foreground font-medium",
-          ]}
-        >
-          {link.live && <span class="nav-live-dot" aria-hidden="true"></span>}
-          {link.label}
-        </a>
-      ))}
+      {navLinks.map((link) =>
+        link.children && link.children.length > 0 ? (
+          <div class="nav-group relative" data-nav-group>
+            <a
+              href={link.href}
+              aria-haspopup="true"
+              aria-expanded="false"
+              data-nav-trigger
+              class:list={[
+                "inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors rounded-sm",
+                isGroupActive(link.href, link.children) && "text-foreground font-medium",
+              ]}
+            >
+              {link.live && <span class="nav-live-dot" aria-hidden="true"></span>}
+              {link.label}
+              <i class="bx bx-chevron-down rtl-flip icon-sm nav-group-chevron" aria-hidden="true"></i>
+            </a>
+            <div class="nav-popover absolute start-0 top-full mt-2 w-60 rounded-md border border-border bg-panel shadow-popover p-1.5" role="menu" aria-label={link.label}>
+              {link.children.map((child) =>
+                child.children && child.children.length > 0 ? (
+                  <div class="nav-subgroup relative rounded-md" data-nav-subgroup>
+                    <a
+                      href={child.href}
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                      data-nav-subtrigger
+                      role="menuitem"
+                      aria-current={ariaCurrent(child.href)}
+                      class:list={[
+                        "flex items-center gap-1.5 rounded-md px-3 py-2 text-xs text-muted-foreground hover:text-foreground hover:bg-panel-raised transition-colors",
+                        isDescendant(child.href) && "text-foreground font-medium",
+                      ]}
+                    >
+                      {child.live && <span class="nav-live-dot" aria-hidden="true"></span>}
+                      {child.label}
+                      <i class="bx bx-chevron-right rtl-flip icon-sm ms-auto nav-group-chevron" aria-hidden="true"></i>
+                    </a>
+                    <div class="nav-flyout absolute start-full top-0 ms-1 w-48 rounded-md border border-border bg-panel shadow-popover p-1.5" role="menu" aria-label={child.label}>
+                      {child.children.map((grand) => (
+                        <a
+                          href={grand.href}
+                          role="menuitem"
+                          aria-current={ariaCurrent(grand.href)}
+                          class:list={[
+                            "flex items-center gap-1.5 rounded-md px-3 py-2 text-xs text-muted-foreground hover:text-foreground hover:bg-panel-raised transition-colors",
+                            isCurrent(grand.href) && "text-foreground font-medium",
+                          ]}
+                        >
+                          {grand.live && <span class="nav-live-dot" aria-hidden="true"></span>}
+                          {grand.label}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <a
+                    href={child.href}
+                    role="menuitem"
+                    aria-current={ariaCurrent(child.href)}
+                    class:list={[
+                      "flex items-center gap-1.5 rounded-md px-3 py-2 text-xs text-muted-foreground hover:text-foreground hover:bg-panel-raised transition-colors",
+                      isCurrent(child.href) && "text-foreground font-medium",
+                    ]}
+                  >
+                    {child.live && <span class="nav-live-dot" aria-hidden="true"></span>}
+                    {child.label}
+                  </a>
+                )
+              )}
+            </div>
+          </div>
+        ) : (
+          <a
+            href={link.href}
+            aria-current={isCurrent(link.href) ? "page" : undefined}
+            class:list={[
+              "text-xs text-muted-foreground hover:text-foreground transition-colors",
+              link.live && "inline-flex items-center gap-1.5",
+              isCurrent(link.href) && "text-foreground font-medium",
+            ]}
+          >
+            {link.live && <span class="nav-live-dot" aria-hidden="true"></span>}
+            {link.label}
+          </a>
+        )
+      )}
     </div>
 
     <div class="flex items-center gap-3 relative z-10 shrink-0">
@@ -81,20 +180,82 @@ const isCurrent = (href: string) => normalize(href) === normalize(currentPath);
 
   <div class="hidden md:hidden" id="nav-mobile-menu" role="dialog" aria-modal="true" aria-label={t(locale, "common.navAria")} tabindex="-1">
     <div class="nav-mobile-panel px-6 pb-6 pt-3 space-y-1">
-      {navLinks.map((link) => (
-        <a
-          href={link.href}
-          aria-current={isCurrent(link.href) ? "page" : undefined}
-          class:list={[
-            "rounded-md px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-panel-raised transition-colors",
-            link.live ? "flex items-center gap-1.5" : "block",
-            isCurrent(link.href) && "bg-panel-raised text-foreground font-medium",
-          ]}
-        >
-          {link.live && <span class="nav-live-dot" aria-hidden="true"></span>}
-          {link.label}
-        </a>
-      ))}
+      {navLinks.map((link) =>
+        link.children && link.children.length > 0 ? (
+          <div class="nav-mobile-group">
+            <button
+              type="button"
+              class="flex w-full items-center gap-1.5 rounded-md px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-panel-raised transition-colors"
+              aria-expanded="false"
+              aria-controls={`nav-mobile-group-${link.label.toLowerCase().replace(/\s+/g, "")}`}
+              data-nav-accordion
+            >
+              {link.live && <span class="nav-live-dot" aria-hidden="true"></span>}
+              {link.label}
+              <i class="bx bx-chevron-down rtl-flip icon-sm ms-auto nav-mobile-chevron" aria-hidden="true"></i>
+            </button>
+            <div id={`nav-mobile-group-${link.label.toLowerCase().replace(/\s+/g, "")}`} class="hidden ps-3 mt-1 space-y-1 border-s border-border">
+              {link.children.map((child) =>
+                child.children && child.children.length > 0 ? (
+                  <div class="nav-mobile-group">
+                    <button
+                      type="button"
+                      class="flex w-full items-center gap-1.5 rounded-md px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-panel-raised transition-colors"
+                      aria-expanded="false"
+                      aria-controls={`nav-mobile-group-${child.label.toLowerCase().replace(/\s+/g, "")}`}
+                      data-nav-accordion
+                    >
+                      {child.live && <span class="nav-live-dot" aria-hidden="true"></span>}
+                      {child.label}
+                      <i class="bx bx-chevron-down rtl-flip icon-sm ms-auto nav-mobile-chevron" aria-hidden="true"></i>
+                    </button>
+                    <div id={`nav-mobile-group-${child.label.toLowerCase().replace(/\s+/g, "")}`} class="hidden ps-3 mt-1 space-y-1 border-s border-border">
+                      {child.children.map((grand) => (
+                        <a
+                          href={grand.href}
+                          aria-current={ariaCurrent(grand.href)}
+                          class:list={[
+                            "flex items-center gap-1.5 rounded-md px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-panel-raised transition-colors",
+                            isCurrent(grand.href) && "bg-panel-raised text-foreground font-medium",
+                          ]}
+                        >
+                          {grand.live && <span class="nav-live-dot" aria-hidden="true"></span>}
+                          {grand.label}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <a
+                    href={child.href}
+                    aria-current={ariaCurrent(child.href)}
+                    class:list={[
+                      "block rounded-md px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-panel-raised transition-colors",
+                      isCurrent(child.href) && "bg-panel-raised text-foreground font-medium",
+                    ]}
+                  >
+                    {child.live && <span class="nav-live-dot" aria-hidden="true"></span>}
+                    {child.label}
+                  </a>
+                )
+              )}
+            </div>
+          </div>
+        ) : (
+          <a
+            href={link.href}
+            aria-current={isCurrent(link.href) ? "page" : undefined}
+            class:list={[
+              "rounded-md px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-panel-raised transition-colors",
+              link.live ? "flex items-center gap-1.5" : "block",
+              isCurrent(link.href) && "bg-panel-raised text-foreground font-medium",
+            ]}
+          >
+            {link.live && <span class="nav-live-dot" aria-hidden="true"></span>}
+            {link.label}
+          </a>
+        )
+      )}
       <a
         href={localizePath(ctaLink.href, locale)}
         data-open-contact-modal
@@ -123,12 +284,90 @@ const isCurrent = (href: string) => normalize(href) === normalize(currentPath);
   window.addEventListener('scroll', updateNav, { passive: true });
   updateNav();
 
+  /* ---- Desktop dropdown: hover + focus-within (CSS), Esc to close, and a
+       tap-toggle for coarse pointers (touch laptops/tablets) that cannot
+       hover. Max depth 2 is covered statically below. ---- */
+  function setGroupExpanded(group, expanded) {
+    var trigger = group.querySelector('[data-nav-trigger], [data-nav-subtrigger]');
+    if (trigger) trigger.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+    var chevron = group.querySelector('.nav-group-chevron');
+    if (chevron) chevron.classList.toggle('nav-chevron-open', !!expanded);
+  }
+
+  var groups = Array.prototype.slice.call(document.querySelectorAll('[data-nav-group]'));
+  var subgroups = Array.prototype.slice.call(document.querySelectorAll('[data-nav-subgroup]'));
+  var allGroups = groups.concat(subgroups);
+
+  function syncGroup(group) {
+    var popover = group.querySelector(':scope > .nav-popover, :scope > .nav-flyout');
+    if (!popover) return;
+    var hovered = group.matches(':hover');
+    var focused = group.contains(document.activeElement);
+    var forced = group.getAttribute('data-nav-open') === 'true';
+    setGroupExpanded(group, hovered || focused || forced);
+  }
+
+  allGroups.forEach(function (group) {
+    var trigger = group.querySelector('[data-nav-trigger], [data-nav-subtrigger]');
+    if (!trigger) return;
+    trigger.addEventListener('click', function (e) {
+      // Coarse pointers get a tap-toggle instead of instant navigation.
+      if (window.matchMedia && window.matchMedia('(hover: none)').matches) {
+        e.preventDefault();
+        var open = group.getAttribute('data-nav-open') === 'true';
+        group.setAttribute('data-nav-open', open ? 'false' : 'true');
+        setGroupExpanded(group, !open);
+      }
+    });
+    ['mouseenter', 'mouseleave', 'focusin', 'focusout'].forEach(function (ev) {
+      group.addEventListener(ev, function () { syncGroup(group); });
+    });
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    var active = document.activeElement;
+    var group = active && active.closest ? active.closest('[data-nav-group], [data-nav-subgroup]') : null;
+    if (group) {
+      var trigger = group.querySelector('[data-nav-trigger], [data-nav-subtrigger]');
+      group.setAttribute('data-nav-open', 'false');
+      if (trigger && typeof trigger.focus === 'function') {
+        trigger.focus();
+        // Blur closes the CSS focus-within trail so the popover hides.
+        setTimeout(function () { trigger.blur(); syncGroup(group); }, 0);
+      }
+    }
+  });
+
+  document.addEventListener('click', function (e) {
+    if (nav && !(e.target.closest && e.target.closest('#site-nav'))) {
+      allGroups.forEach(function (group) {
+        group.setAttribute('data-nav-open', 'false');
+        setGroupExpanded(group, false);
+      });
+    }
+  });
+
   if (!toggle || !menu) return;
 
   function setIcons(open) {
     var icon = toggle.querySelector('i');
     if (icon) icon.className = open ? 'bx bx-x' : 'bx bx-menu';
   }
+
+  /* ---- Mobile accordions: expand/collapse each group panel ---- */
+  var toggles = Array.prototype.slice.call(document.querySelectorAll('[data-nav-accordion]'));
+  toggles.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var target = document.getElementById(btn.getAttribute('aria-controls'));
+      if (!target) return;
+      var open = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', open ? 'false' : 'true');
+      target.classList.toggle('hidden', open);
+      var chevron = btn.querySelector('.nav-mobile-chevron');
+      if (chevron) chevron.classList.toggle('nav-chevron-open', !open);
+    });
+  });
 
   function menuFocusables() {
     return Array.prototype.slice.call(
@@ -217,6 +456,52 @@ const isCurrent = (href: string) => normalize(href) === normalize(currentPath);
 
   :root[data-theme*="light"] #site-nav[data-scrolled="true"] {
     background: rgba(255, 255, 255, 0.7);
+  }
+
+  /* Desktop dropdown: hidden by default, revealed on hover or keyboard focus
+     (focus-within), and by the tap-toggle class for coarse pointers. */
+  .nav-group > .nav-popover,
+  .nav-subgroup > .nav-flyout {
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(4px);
+    pointer-events: none;
+    transition: opacity var(--duration-fast) var(--ease), transform var(--duration-fast) var(--ease), visibility var(--duration-fast) var(--ease);
+    z-index: 70;
+  }
+  .nav-group:hover > .nav-popover,
+  .nav-group:focus-within > .nav-popover,
+  .nav-group[data-nav-open="true"] > .nav-popover,
+  .nav-subgroup:hover > .nav-flyout,
+  .nav-subgroup:focus-within > .nav-flyout,
+  .nav-subgroup[data-nav-open="true"] > .nav-flyout {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .nav-group-chevron,
+  .nav-mobile-chevron {
+    transition: transform var(--duration-fast) var(--ease);
+  }
+  .nav-chevron-open {
+    transform: rotate(180deg);
+  }
+  /* Row chevrons inside the popover rotate on hover so the flyout direction
+     reads as "more". */
+  .nav-subgroup:hover .nav-group-chevron,
+  .nav-subgroup:focus-within .nav-group-chevron,
+  .nav-subgroup[data-nav-open="true"] .nav-group-chevron {
+    transform: translateX(2px);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .nav-group > .nav-popover,
+    .nav-subgroup > .nav-flyout,
+    .nav-group-chevron,
+    .nav-mobile-chevron {
+      transition: none;
+    }
   }
 
   /* Mobile menu: opaque full-screen panel clearly separated from page content. */

@@ -4,6 +4,7 @@ from pathlib import Path
 
 from ..agents import agents as installed_agents
 from ..connections import connections as installed_connections
+from ..evals import suite_spec as eval_suite_spec, suites as installed_eval_suites
 from .package import package_spec, validate_package
 from .registry import departments as installed_departments
 from .strategy import strategy_kernel_summary
@@ -46,5 +47,6 @@ def catalog():
         "agents": [vars(item) for _, item in sorted(installed_agents().items())],
         "skills": _skills(),
         "connections": [vars(item) for _, item in sorted(installed_connections().items())],
+        "evals": [eval_suite_spec(item) for _, item in sorted(installed_eval_suites().items())],
         "artifact_authority": ".spielos/artifacts/",
     }

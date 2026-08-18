@@ -204,14 +204,55 @@ def ready_campaign_package(package: dict[str, Any]) -> dict[str, Any]:
             "quality_gate": "passed", "next_phase": "approved"}
 
 
+def _eval_gate_errors(evidence: list[dict[str, Any]], package: dict[str, Any],
+                      suite_ids: tuple[str, ...] = ()) -> list[str]:
+    """Require a passing eval_report for every declared eval suite.
+
+    Mechanical validation never reads copy for clarity; the LLM-as-judge
+    eval_report is the copy-quality gate.  A campaign cannot produce
+    campaign_ready without an eval_report evidence (kind eval_report) whose
+    suite_id is declared, whose payload_id matches the batch, and whose
+    overall verdict is pass.  Failures are reported as attention errors that
+    name the failed criteria.
+    """
+    errors: list[str] = []
+    batch_id = str(package.get("batch_id") or "")
+    reports = [item.get("payload") or {} for item in evidence
+               if item.get("kind") == "eval_report"]
+    for suite_id in suite_ids:
+        matches = [report for report in reports if report.get("suite_id") == suite_id]
+        if not matches:
+            errors.append(
+                f"eval_report for suite '{suite_id}' is required before campaign_ready")
+            continue
+        report = matches[-1]
+        if report.get("payload_id") != batch_id:
+            errors.append(
+                f"eval_report '{suite_id}' payload_id must match batch_id {batch_id}")
+        if not report.get("overall"):
+            failed = [
+                f"{item_id}:{criterion_id}"
+                for item_id, verdicts in (report.get("per_item") or {}).items()
+                for criterion_id, verdict in (verdicts or {}).items()
+                if isinstance(verdict, dict) and not verdict.get("pass")
+            ]
+            detail = ", ".join(failed[:12]) if failed else "no criteria passed"
+            errors.append(f"eval_report '{suite_id}' failed: {detail}")
+    return errors
+
+
 class ContentDepartment(EvidenceDepartment, Department):
     id = department_id = "content"
-    version = "3.4.0"
-    description = ("Carries one short customer-first idea through platform-native copy, Design, approval, "
-                   "Buffer delivery, and measurement without exposing production metadata to the writer. "
-                   "Dispatch commits a batch to publish (scheduled == published) and a valid publication "
-                   "receipt is final.")
+    version = "3.5.0"
+    description = ("Carries one short customer-first idea through platform-native copy, a judge-enforced "
+                   "LLM-as-judge quality gate, Design, approval, Buffer delivery, and measurement without "
+                   "exposing production metadata to the writer. Dispatch commits a batch to publish "
+                   "(scheduled == published) and a valid publication receipt is final.")
     agent_ids = ("content-strategist", "content-writer", "publisher")
+    # Eval suites whose passing eval_report evidence the quality_gate requires.
+    # Suites are defined in departments/content/evals.py (Lego contract: any
+    # department may declare its own suites the same way).
+    eval_suites = ("content-copy-top10",)
     production_ready = True
     workflows = (
         WorkflowSpec(
@@ -310,6 +351,9 @@ class ContentDepartment(EvidenceDepartment, Department):
         errors = validate_campaign_package(package, packages[:-1])
         if errors:
             return {"run_status": "blocked", "message": "Campaign quality gate needs changes", "attention": {"errors": errors}}
+        eval_errors = _eval_gate_errors(evidence, package, tuple(getattr(self, "eval_suites", ()) or ()))
+        if eval_errors:
+            return {"run_status": "blocked", "message": "Campaign quality gate needs changes", "attention": {"errors": eval_errors}}
         ready = ready_campaign_package(package)
         return {"message": "Campaign quality gate passed", "evidence": [{
             "kind": "campaign_ready", "source": "content-quality-gate", "validity": "technical_only", "payload": ready,

@@ -22,8 +22,13 @@ Does NOT own:
 
 Before creating videos, read:
 
+- `.agents/company/departments/design/templates/registry.json` — the template archetype registry (ids, kinds, files, legacy flags, research maps)
 - `.agents/company/departments/design/templates/video/scenario-b.html` — Before/After template
 - `.agents/company/departments/design/templates/video/scenario-c.html` — Build It template
+- `.agents/company/departments/design/templates/video/contrast-text.html` — Contrast statement archetype
+- `.agents/company/departments/design/templates/video/storyboard.html` — Three-frame storyboard archetype
+- `.agents/company/departments/design/templates/video/data-card.html` — Hero statistic archetype
+- `.agents/company/departments/design/templates/video/question-hook.html` — Open-loop question archetype
 - `.agents/company/departments/design/templates/video/brand-motion.css` — shared flat journey-line, bullseye goal, and brand-footer motion layer
 - `.agents/company/departments/design/templates/video/narration.json` — persona pin, tone contract, script, provider chain, measured scene_timing, and narration-only mix brief
 - `.agents/company/strategy/voice.md` — canonical One Idea Hierarchy
@@ -31,6 +36,35 @@ Before creating videos, read:
 - `scripts/tts-providers.js` — provider chain (Gemini → Mistral → Cartesia → ElevenLabs), voice pins, `--check`/`--list`/`--probe`
 - `scripts/render-video.js` — Puppeteer + FFmpeg renderer (and the owner-contract `--check` gate)
 - `.agents/company/departments/design/system/production.css` — tokens + website fonts resolved for the render context
+
+## Template selection (per-item, no batch repeats)
+
+Every registered Shorts archetype is a flat motion template with its own
+measured `scene_timing` key in `narration.json` (`b`, `c`, `d`, `e`, `f`,
+`g` for `scenario-b`, `scenario-c`, `contrast-text`, `storyboard`,
+`data-card`, `question-hook`). The renderer's scenario keys (`b`/`c`) are
+unchanged; a new archetype renders once its key is produced by the
+measurement path.
+
+Selection rule (owner directive 2026-08-17, full detail in
+`.agents/company/departments/design/README.md`):
+
+1. **One archetype per item_id.** The design handoff picks an archetype per
+   item, never a batch-wide template.
+2. **No batch repeats one template.** Within one batch, a template_id is used
+   at most once per platform; larger batches round-robin across all
+   archetypes.
+3. **Balance both experiment cells.** Alternate/round-robin archetypes across
+   item_ids so the control and variant cells get a comparable mix of
+   template families.
+4. **Legacy templates stay.** `scenario-b` and `scenario-c` remain registered
+   and usable; they are members of the rotation, never removed or renamed.
+5. **Narration stays one persona.** Whichever archetype is selected, the
+   narration contract is unchanged: one pinned masculine persona through the
+   provider chain, measured scene timing, narration-only mix.
+
+The archetype choice is a design-system decision (semantic tokens, flat
+composition, boxicons only); it never changes the creative contract above.
 
 ---
 

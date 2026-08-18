@@ -43,6 +43,115 @@ The shared flat motion/brand layer lives in
 `templates/video/brand-motion.css` (journey line, bullseye goal, safe-area
 brand footer); video templates link it and keep only per-scenario overrides.
 
+## Template archetype registry
+
+`templates/registry.json` is the machine-readable authority for every
+registered creative archetype (schema v1.0). It lists each archetype's id,
+kind (`shorts` | `social`), template file, legacy flag, description, and a
+research_map pointing at the sourced findings behind it. The research that
+drives the archetype choices is business evidence in
+`.spielos/artifacts/content-growth-20260812/research/shortform-template-research-20260817.md`
+(sources with URLs and dates; per-archetype performance remains an open
+experiment — the funnel goal owns that question).
+
+Registered archetypes (14):
+
+| id | kind | file | legacy |
+|---|---|---|---|
+| `scenario-b` | shorts | `templates/video/scenario-b.html` | yes (never remove/rename) |
+| `scenario-c` | shorts | `templates/video/scenario-c.html` | yes (never remove/rename) |
+| `contrast-text` | shorts | `templates/video/contrast-text.html` | no |
+| `storyboard` | shorts | `templates/video/storyboard.html` | no |
+| `data-card` | shorts | `templates/video/data-card.html` | no |
+| `question-hook` | shorts | `templates/video/question-hook.html` | no |
+| `harness-architecture` | social | `templates/social/harness-architecture.html` | yes (never remove/rename) |
+| `single-fact` | social | `templates/social/single-fact.html` | no |
+| `list-checklist` | social | `templates/social/list-checklist.html` | no |
+| `testimonial-pull-quote` | social | `templates/social/testimonial-pull-quote.html` | no |
+| `loop-rail` | shorts | `templates/video/loop-rail.html` | no |
+| `heartbeat` | shorts | `templates/video/heartbeat.html` | no |
+| `department-map` | social | `templates/social/department-map.html` | no |
+| `agent-brief` | social | `templates/social/agent-brief.html` | no |
+
+### Per-item selection rule (owner directive 2026-08-17)
+
+Repetition caused the batch-02 quality rejection, so the design handoff
+selects an archetype per item, never a batch-wide template:
+
+1. **One archetype per item_id per platform.** Every item gets exactly one
+   Shorts archetype and one Threads/social archetype.
+2. **No batch repeats one template.** A template_id may appear only once per
+   platform within a batch (batch size ≤ registry count; larger batches
+   repeat by round-robin across ALL archetypes, never the same template
+   twice in a row).
+3. **Balance both experiment cells.** The handoff alternates/round-robins
+   archetypes across item_ids and balances the archetype mix between the
+   control and variant cells of the active experiment, so no cell is starved
+   of a template family.
+4. **Legacy templates stay registered and usable.** `scenario-b`,
+   `scenario-c`, and `harness-architecture` are never removed or renamed
+   (tests assert they exist) — they are simply members of the rotation now.
+5. **Registration requires a real template.** A new archetype may only be
+   added with an existing, parseable HTML template and a documented research
+   mapping in the research brief.
+
+**Mechanically enforced at the gate (design department 3.4.0, change
+`change-e69f419da9`).** `validate_design_order` now rejects a violating
+design order with a clear error — there is no silent fallback to legacy
+templates. The gate reads `templates/registry.json` (read-only, this README's
+authority) and checks per platform:
+
+- the item's `template_id` is a **registered archetype of the platform's
+  kind** (shorts for YouTube, social for Threads);
+- **no batch repeats** when the batch fits the registry count (a unique
+  template_id per item);
+- **bounded round-robin balance** for larger batches: every archetype of the
+  kind may appear at most one more time than any other, and the same
+  template never repeats twice in a row;
+- **bounded cell balance**: items are assigned to the declared experiment
+  cells cycled in item order (alternating control/variant for two-cell
+  campaigns), and every cell with two or more items must see at least two
+  distinct archetypes per platform — a cell collapsed to a single archetype
+  family is rejected.
+
+The quality gate, ICP rules, and the registry's 14 selectable archetypes are
+unchanged; legacy templates remain valid registry entries that follow the
+same rotation rule.
+
+### Creative-variety-v2 archetypes (design 3.4.0)
+
+Four archetypes were added 2026-08-18 from the owner-confirmed
+creative-variety-v2 gallery (goal-creative-variety-v2-20260818 and polish run
+`run-86882a9306`; vision QA all PASS in
+`.spielos/artifacts/template-preview-20260817/vision-verdicts-20260818.md`):
+
+- `loop-rail` (shorts) — centered five-column OperatingLoop rail,
+  GOAL → OBSERVE → DECIDE → ACT → EVALUATE nodes on a gradient progress
+  line. Content-relevance: **process/loop content**.
+- `heartbeat` (shorts) — live heartbeat card with a centered north star,
+  a run row, and a 2×2 stat grid. Content-relevance: **live-ops content**.
+- `department-map` (social) — DepartmentMap hub with a branch tile grid.
+  Content-relevance: **system/harness content**.
+- `agent-brief` (social) — seven-step Agent Brief pipeline with a flat
+  deliverable/milestone showcase rail (no form UI). Content-relevance:
+  **brief/request content**.
+
+The content-relevance field in `registry.json` states the confirmed guidance
+for which content each new archetype should carry; the design gate selects
+archetypes per item within that guidance. Residual (documented, not a
+registration blocker): `scene_timing.h` and `scene_timing.i` are not yet in
+`narration.json` — the blocked TTS pipeline goal
+(`goal-tts-voice-contract-20260812`) owns measuring them, so until it lands
+those two templates degrade to placeholder timing exactly as previewed.
+
+Video archetypes are flat motion compositions (virtual clock, measured
+`scene_timing` key per archetype in `narration.json`, scene system, semantic
+tokens, one-persona narration); social archetypes are flat canvases
+(`__applyCampaignRendition`, journey signature, semantic tokens, boxicons
+only). New files must pass the registry validation in
+`.agents/company/tests/test_harness_structure.py` (exists, parseable HTML,
+boxicons only with no `bx-*-circle` variants, semantic tokens only).
+
 ## Owner creative contract (2026-08-11 review + 2026-08-12 owner direction)
 
 The review gates are encoded in `scripts/render-design.js --check` and

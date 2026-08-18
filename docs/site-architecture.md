@@ -64,7 +64,43 @@ Qualified buyer conversation
 
 `/use-cases/`, `/contact/thank-you/`, `/fa/contact/thank-you/`, and archived
 product pages are not indexable. They may remain crawlable so search engines
-can process their robots directives.
+can process their robots directives. The Design use-case pages under
+`/use-cases/design/` are indexable per the Indexation policy below.
+
+## Use-case pages and the build-driven gallery
+
+The Design use case lives on two routes:
+
+- `/use-cases/design/` - the department case: how it works, workflows,
+  agents, skills, connections, artifacts, and the Changes-live registry panel.
+  Indexable, with EN/FA canonical and hreflang pairs and breadcrumb JSON-LD.
+- `/use-cases/design/gallery/` - a categorized template gallery that is
+  rebuilt from the live registry at every deploy, showing every registered
+  Design archetype: motion (kind `shorts`) and stills (kind `social`), plus
+  the legacy core set and badges for New (v3.4 additions via
+  `content_relevance`) and Preview (unconfirmed, `confirmed: false`).
+
+Persian thin wrappers at `/fa/use-cases/design/` and
+`/fa/use-cases/design/gallery/` pass `locale="fa"` to the same components.
+
+Build data flow for the gallery:
+
+1. Archive list is read from
+   `.agents/company/departments/design/templates/registry.json` at build time
+   (`readFileSync` in `gallery.astro`) - it is never hardcoded on the page,
+   and the registry itself is read-only for the site.
+2. Committed renders under `public/design-gallery/` are matched by archetype
+   `id`: MP4 + JPEG poster for motion, PNG for stills. Entries without a
+   render fall back to a polished icon card.
+3. Rebuilding the site after a registry change updates the public gallery
+   automatically. Badges and composition-source lines come from the registry
+   entry plus `useCases.design.gallery.*` translations.
+
+Navigation: the default nav renders a How it works dropdown (Features,
+Use Cases with a Design flyout) from the nested `NavLink.children` model in
+`src/config.ts`; `src/components/Nav.astro` renders it (desktop
+hover/focus-within with tap-toggle for coarse pointers, mobile accordion,
+RTL-aware). The Live dot and the Agent Brief CTA are preserved.
 
 ## Shared sources of truth
 

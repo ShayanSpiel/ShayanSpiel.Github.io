@@ -72,4 +72,13 @@ Every fifth paired social idea uses the canonical SpielOS reminder from
 - No unsupported claim.
 - No literal `\n` or `\r`.
 
+Before a campaign can advance, the judge-enforced rubric
+`content-copy-top10` (`.agents/company/departments/content/evals.py`) applies
+the ten ICP-grounded criteria above — `one_reader`, `one_moment`, `one_idea`,
+`understandable_without_spielos`, `buyer_language`, `sharp_opening`,
+`honest_claims`, `platform_native`, `flow_brevity`, `fifth_item_reminder` —
+per item against the brief and both renditions. Run it with
+`company eval run content-copy-top10 --payload <campaign>.json`; a failing
+criterion must be fixed in the copy, never waived.
+
 Return only the final copy unless notes are requested.

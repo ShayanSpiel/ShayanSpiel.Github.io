@@ -10,7 +10,11 @@ from ...runtime.models import Department, WorkflowSpec, WorkflowStep
 
 
 def campaign_funnel_report(manifest: dict[str, Any], report: dict[str, Any]) -> dict[str, Any]:
-    """Attach canonical funnel math only when delivery identity is complete."""
+    """Attach canonical funnel math only when delivery identity is complete.
+
+    The per-template `template_breakdown` from the report is forwarded
+    as-is (no math change); website funnel events stay batch-level only.
+    """
     errors = validate_campaign(manifest, "delivered")
     if errors:
         raise ValueError("Analytics requires a valid delivered campaign: " + "; ".join(errors))
@@ -43,12 +47,13 @@ def campaign_funnel_report(manifest: dict[str, Any], report: dict[str, Any]) -> 
             "join_keys": list((manifest.get("measurement") or {}).get("join_keys") or []),
             "content_ids": sorted(observed_identity),
             "experiment_evidence": experiment_evidence,
+            "template_breakdown": report.get("template_breakdown"),
             **funnel_metrics(report)}
 
 
 class AnalyticsDepartment(EvidenceDepartment, Department):
     id = department_id = "analytics"
-    version = "3.2.0"
+    version = "3.3.0"
     description = "Joins full-funnel evidence by campaign identity: refreshed Buffer per-post engagement plus read-only PostHog warehouse events per batch, with evidence-scaled one-to-three-variable decisions and explicit cells, thresholds, and effect analysis."
     agent_ids = ("analytics-operator", "cro-optimizer")
     production_ready = True

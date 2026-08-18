@@ -16,8 +16,15 @@ analysis: it lists campaign posts per channel inside an optional createdAt/dueAt
 window and returns the LIVE per-post metrics (views, likes, replies, reposts,
 shares, followers where the platform exposes them) together with
 metricsUpdatedAt staleness, so send-time snapshots replace themselves when
-refreshed data exists. ZERO write side effects; the duplicate guard and receipt
-semantics are untouched.
+refreshed data exists. Buffer reports the platform-native metric types `views`,
+`reactions` (likes), `comments` (replies), `reposts`, plus service extras
+(`clicks`, `impressions`, `quotes`, `engagementRate`); the normalization maps
+`reactions` -> likes and `comments` -> replies so the canonical funnel keys are
+populated, while counts the platform does not expose stay `missing`, never
+zero. The read pages through Buffer's cursor-based posts connection
+(`first`/`after`/`pageInfo`) so campaign posts beyond the first page (for
+example batch-01) are reachable. ZERO write side effects; the duplicate guard
+and receipt semantics are untouched.
 """
 
 from __future__ import annotations
@@ -173,20 +180,32 @@ def _rate_limits(headers: Any) -> dict[str, str]:
 
 
 def _posts_query(organization_id: str, channel_ids: list[str] | None,
-                 with_metrics: bool) -> str:
-    """Build the read-only posts query; with_metrics adds live engagement fields."""
+                 with_metrics: bool, after: str | None = None,
+                 first: int = 100) -> str:
+    """Build the read-only posts query; with_metrics adds live engagement fields.
+
+    Paging walks Buffer's cursor-based posts connection: `first`/`after` are
+    top-level Query.posts arguments and `pageInfo` reports whether another page
+    exists, so campaign posts beyond the newest page (e.g. batch-01) stay
+    reachable instead of silently dropping out of the read.
+    """
     ids = [str(item) for item in (channel_ids or [])]
     filter_clause = ""
     if ids:
         rendered = ", ".join(_graphql_string(item) for item in ids)
         filter_clause = f", filter: {{ channelIds: [{rendered}] }}"
+    paging = ""
+    if after is not None:
+        paging += f"after: {_graphql_string(after)}, "
+    paging += f"first: {int(first)}, "
     date_fields = " createdAt" if with_metrics else ""
     metrics_fields = " metrics { type name value unit } metricsUpdatedAt" if with_metrics else ""
     return """query GetPosts {
-      posts(input: { organizationId: %s%s }) {
-        edges { node { id status dueAt sentAt%s channelId channelService text assets { id mimeType source }%s } }
+      posts(%sinput: { organizationId: %s%s }) {
+        pageInfo { hasNextPage endCursor }
+        edges { cursor node { id status dueAt sentAt%s channelId channelService text assets { id mimeType source }%s } }
       }
-    }""" % (_graphql_string(organization_id), filter_clause, date_fields, metrics_fields)
+    }""" % (paging, _graphql_string(organization_id), filter_clause, date_fields, metrics_fields)
 
 
 def _iso_datetime(value: Any) -> datetime | None:
@@ -217,14 +236,62 @@ def _window_allows(value: Any, since: str | None, until: str | None) -> bool:
     return True
 
 
+MAX_POST_PAGES = 200  # defensive cap; real org has far fewer pages
+
+
+def _walk_posts(client: BufferClient, channel_ids: list[str] | None,
+                with_metrics: bool) -> list[dict[str, Any]]:
+    """Walk every page of the cursor-based posts connection, deduplicated by id.
+
+    Buffer returns only one page per request; without paging, campaign posts
+    older than the newest page silently drop out of the read. This helper
+    follows `pageInfo.endCursor` until `hasNextPage` is false (with a defensive
+    page cap) and merges nodes by post id so the queue/guard and metrics reads
+    see the complete post set.
+    """
+    seen: dict[str, dict[str, Any]] = {}
+    cursor: str | None = None
+    for _ in range(MAX_POST_PAGES):
+        query = _posts_query(client.organization_id, channel_ids, with_metrics,
+                             after=cursor)
+        result = client.graphql(query).get("posts") or {}
+        for edge in result.get("edges") or []:
+            node = edge.get("node") or {}
+            post_id = str(node.get("id") or "")
+            if not post_id:
+                continue
+            existing = seen.get(post_id)
+            if existing is None:
+                seen[post_id] = node
+            elif with_metrics and not existing.get("metrics") and node.get("metrics"):
+                # A later page may carry the metrics-bearing node while the
+                # first-seen duplicate is metric-free; keep the richer node.
+                seen[post_id] = node
+        page_info = result.get("pageInfo") or {}
+        if not page_info.get("hasNextPage"):
+            break
+        cursor = page_info.get("endCursor")
+        if not cursor:
+            break
+    return list(seen.values())
+
+
 METRICS_KEYS = ("views", "likes", "replies", "reposts", "shares", "followers")
+
+# Buffer's platform-native PostMetric types mapped onto the canonical funnel
+# metric keys. `reactions` (Threads/YouTube likes) -> likes and `comments`
+# (Threads/YouTube replies) -> replies so the funnel keys are populated with the
+# same platform engagement; counts no platform exposes (e.g. followers/shares)
+# stay missing, never zero.
+BUFFER_METRIC_ALIASES = {"reactions": "likes", "comments": "replies"}
 
 
 def _normalize_metrics(metrics: list[dict[str, Any]]) -> dict[str, Any]:
     """Map Buffer PostMetric entries to canonical keys; absent metrics stay None."""
     by_key: dict[str, Any] = {}
     for metric in metrics or []:
-        key = str(metric.get("type") or metric.get("name") or "").strip().lower()
+        raw = str(metric.get("type") or metric.get("name") or "").strip().lower()
+        key = BUFFER_METRIC_ALIASES.get(raw, raw)
         if key in METRICS_KEYS:
             by_key.setdefault(key, metric.get("value"))
     return {key: by_key.get(key) for key in METRICS_KEYS}
@@ -299,13 +366,12 @@ class BufferClient:
         Returns scheduled/sent/draft posts for the named channels (all channels
         when omitted) with the fields the duplicate guard and the read-only
         --queue command need: id, status, dueAt, sentAt, channelId,
-        channelService, text, and asset public URLs.
+        channelService, text, and asset public URLs. Walks every page of the
+        posts connection so posts beyond the newest page are included.
         """
-        query = _posts_query(self.organization_id, channel_ids, with_metrics=False)
-        edges = self.graphql(query).get("posts") or {}
+        post_nodes = _walk_posts(self, channel_ids, with_metrics=False)
         posts: list[dict[str, Any]] = []
-        for edge in edges.get("edges") or []:
-            node = edge.get("node") or {}
+        for node in post_nodes:
             if node.get("status") in statuses:
                 posts.append(node)
         return posts
@@ -315,18 +381,17 @@ class BufferClient:
                        since: str | None = None, until: str | None = None) -> list[dict[str, Any]]:
         """Read campaign posts per channel inside a createdAt/dueAt window; never writes.
 
-        Same read-only queue read as queue_posts but also returns createdAt and
-        the LIVE per-post metrics (Post.metrics: type/name/value/unit) plus
-        metricsUpdatedAt so funnel analysis can refresh engagement instead of
-        trusting the send-time snapshot. Window filtering uses createdAt when
-        present, otherwise dueAt; a post with neither timestamp inside the
-        window is excluded from the read.
+        Same read-only queue read as queue_posts (every page of the posts
+        connection) but also returns createdAt and the LIVE per-post metrics
+        (Post.metrics: type/name/value/unit) plus metricsUpdatedAt so funnel
+        analysis can refresh engagement instead of trusting the send-time
+        snapshot. Window filtering uses createdAt when present, otherwise dueAt;
+        a post with neither timestamp inside the window is excluded from the
+        read.
         """
-        query = _posts_query(self.organization_id, channel_ids, with_metrics=True)
-        edges = self.graphql(query).get("posts") or {}
+        post_nodes = _walk_posts(self, channel_ids, with_metrics=True)
         posts: list[dict[str, Any]] = []
-        for edge in edges.get("edges") or []:
-            node = edge.get("node") or {}
+        for node in post_nodes:
             if node.get("status") not in statuses:
                 continue
             created = node.get("createdAt")
@@ -642,10 +707,12 @@ def _metrics_campaign_report(client: BufferClient, channel_ids: list[str] | None
                              now: datetime | None = None) -> dict[str, Any]:
     """Read-only live engagement refresh for funnel analysis; never writes.
 
-    Lists campaign posts per channel inside the optional createdAt/dueAt window
-    and returns the refreshed per-post metrics (views, likes, replies, reposts,
-    shares, followers where exposed), metricsUpdatedAt staleness, and which
-    metrics are missing. Missing counts are labeled missing (None), never zero,
+    Walks every page of the posts connection and lists campaign posts per
+    channel inside the optional createdAt/dueAt window, returning the refreshed
+    per-post metrics (views, likes, replies, reposts, shares, followers where
+    the platform exposes them), metricsUpdatedAt staleness, and which metrics
+    are missing. Buffer's native `reactions`/`comments` types map to
+    likes/replies; missing counts are labeled missing (None), never zero,
     because an absent metric means the platform has not exposed it yet.
     """
     posts = client.campaign_posts(channel_ids, since=since, until=until)
