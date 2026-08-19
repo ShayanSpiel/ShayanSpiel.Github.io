@@ -1,31 +1,31 @@
 {
   "current_run": {
-    "created_at": "2026-08-17T19:54:01.781741+00:00",
-    "goal_id": "goal-7343d9eee5",
-    "goal_name": "English outbound send batch 16: next 50 from remaining queue",
+    "created_at": "2026-08-17T19:53:37.098577+00:00",
+    "goal_id": "goal-ac3fc07c3a",
+    "goal_name": "English outbound send batch 14: next 50 from remaining queue",
     "owner_id": "outbound",
-    "run_id": "run-4e1b1cbde4",
+    "run_id": "run-db6b809604",
     "run_status": "waiting",
     "stage": "EVALUATE",
-    "updated_at": "2026-08-18T23:55:37.459297+00:00"
+    "updated_at": "2026-08-19T00:35:01.325486+00:00"
   },
   "heartbeat": {
     "business_value": null,
     "business_value_fa": null,
     "display_title": null,
     "display_title_fa": null,
-    "goal_id": "goal-7343d9eee5",
-    "goal_name": "English outbound send batch 16: next 50 from remaining queue",
+    "goal_id": "goal-ac3fc07c3a",
+    "goal_name": "English outbound send batch 14: next 50 from remaining queue",
     "metric": "reply_rate",
     "operator": "ge",
     "owner_id": "outbound",
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-18T23:55:37.459297+00:00"
+    "updated_at": "2026-08-19T00:35:01.325486+00:00"
   },
-  "last_activity_at": "2026-08-18T23:55:37.459297+00:00",
-  "last_sync_at": "2026-08-18T23:55:37.528230+00:00",
+  "last_activity_at": "2026-08-19T00:36:15.919724+00:00",
+  "last_sync_at": "2026-08-19T00:36:15.951208+00:00",
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
     "goal_name": "3 booked calls per day",
@@ -37,15 +37,15 @@
   },
   "state": "running",
   "totals": {
-    "approvals": 209,
-    "decisions": 383,
-    "evidence": 6340,
+    "approvals": 216,
+    "decisions": 395,
+    "evidence": 6398,
     "goals_abandoned": 20,
-    "goals_achieved": 125,
-    "goals_active": 26,
-    "goals_total": 175,
+    "goals_achieved": 126,
+    "goals_active": 30,
+    "goals_total": 179,
     "hypotheses": 44,
     "memory_claims": 5,
-    "runs": 195
+    "runs": 199
   }
 }
