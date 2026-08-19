@@ -112,7 +112,9 @@ export const SERVICES_PATH = "/services/";
 // preconnect load site-wide so the popup opens as fast as possible.
 export const BOOKING_URL = "https://cal.com/shayanspiel/15min?overlayCalendar=true";
 export const BOOKING_LINK = "shayanspiel/15min";
-export const BOOKING_CONFIG = { layout: "month_view", theme: "dark" } as const;
+// ui.color-scheme keeps the embed canvas dark so no white frame shows
+// around the booking shell even when the visitor OS prefers light.
+export const BOOKING_CONFIG = { layout: "month_view", theme: "dark", "ui.color-scheme": "dark" } as const;
 
 // The Agent Brief request form was removed; the Agent Brief page is now purely
 // informational, so the canonical destination is the page itself (no #request).
