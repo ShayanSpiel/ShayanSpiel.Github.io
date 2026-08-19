@@ -1,0 +1,187 @@
+---
+/**
+ * JourneySignature — the site mirror of the Design department journey
+ * signature (family geometry in .agents/company/departments/design/system/
+ * journey-signature.css and the heartbeat template): ONE smooth wandering
+ * goal line built from pure cubic chains with continuous tangents (no sharp
+ * kinks), dashed muted route ahead, solid primary traveled fill, nodes that
+ * ride ON the path at every segment joint, and the route ENDING AT a flat
+ * bullseye. Static by default, token colors, RTL-safe, no labels on nodes.
+ *
+ * Every geometry is FULL-EXTENT: the route starts at a real node and flows
+ * into the flat bullseye at its end, so no placement ever shows a line that
+ * cuts off halfway. The component fills its parent container (position:
+ * absolute inset 0), and the page sizes that container: full-height
+ * sidebars (hero-right), full-width aspect bands (band), corner surfaces
+ * (corner), and the homepage rail (rail, with scroll-driven draw).
+ *
+ * Radii are tuned per preset so nodes and the bullseye render at the same
+ * quiet scale as the confirmed design renders (node ring ≈ 7–8px screen
+ * radius, bullseye outer ring ≈ 13–17px). Strokes are thin and constant:
+ * the CSS uses vector-effect: non-scaling-stroke (1px dashed route,
+ * 1.5px solid traveled) so every placement reads crisp at any container
+ * size.
+ */
+import "../styles/journey-signature.css";
+
+export type JourneyVariant = "rail" | "hero-right" | "band" | "corner";
+
+export interface JourneyGeometry {
+  viewBox: string;
+  /** A single smooth cubic chain; nodes and goal sit on it. */
+  path: string;
+  /** Node points [x, y] that ride exactly ON the path (start + joints). */
+  nodes: Array<[number, number]>;
+  /** Flat bullseye [x, y] — the path ends at its center. */
+  goal: [number, number];
+  preserveAspectRatio: string;
+  /** Rendered radii per preset (user units ≈ screen px at preset scale). */
+  radii: { ring: number; dot: number; goal: number; goalInner: number; core: number };
+}
+
+export interface Props {
+  variant?: JourneyVariant;
+  /** Kept for API compatibility; gradients were removed for flat primary. */
+  gradientId?: string;
+  /** Subtle halo on node dots only (default off — reference is flat). */
+  glow?: boolean;
+  /** Override the burned-in geometry for a bespoke placement. */
+  geometry?: JourneyGeometry;
+}
+
+/* Homepage rail (viewport-fixed, ~80px wide): a gentle vertical S-wave.
+   Pure C chain, vertical tangents at every joint — no kinks. Ends at the
+   bullseye at the bottom. */
+const RAIL: JourneyGeometry = {
+  viewBox: "0 0 200 1000",
+  path:
+    "M 100 24" +
+    " C 100 84, 78 108, 78 174" +
+    " C 78 240, 126 268, 126 340" +
+    " C 126 412, 72 436, 72 508" +
+    " C 72 580, 124 606, 124 676" +
+    " C 124 746, 74 770, 74 840" +
+    " C 74 900, 100 950, 100 1000",
+  nodes: [
+    [100, 24],
+    [78, 174],
+    [126, 340],
+    [72, 508],
+    [124, 676],
+    [74, 840],
+  ],
+  goal: [100, 1000],
+  preserveAspectRatio: "xMidYMin slice",
+  radii: { ring: 10, dot: 4, goal: 24, goalInner: 14, core: 6 },
+};
+
+/* Full-extent hero sidebar: starts at the bottom-left edge and flows into
+   the flat bullseye at the top-right. Every joint keeps its tangent. */
+const HERO_RIGHT: JourneyGeometry = {
+  viewBox: "0 0 480 900",
+  path:
+    "M 36 872" +
+    " C 130 866, 148 770, 232 710" +
+    " C 312 652, 196 585, 238 500" +
+    " C 282 412, 330 372, 268 285" +
+    " C 205 196, 148 178, 252 122" +
+    " C 310 92, 340 78, 430 86",
+  nodes: [
+    [36, 872],
+    [232, 710],
+    [238, 500],
+    [268, 285],
+    [252, 122],
+  ],
+  goal: [430, 86],
+  preserveAspectRatio: "xMidYMid meet",
+  radii: { ring: 12, dot: 5, goal: 26, goalInner: 16, core: 6 },
+};
+
+/* Full-extent horizontal band: runs from the left edge into the flat
+   bullseye at the right edge. Place in a full-width container with a
+   ~12:1 viewBox aspect so it spans edge to edge. */
+const BAND: JourneyGeometry = {
+  viewBox: "0 0 1000 125",
+  path:
+    "M 10 84" +
+    " C 100 94, 150 58, 240 54" +
+    " C 330 50, 360 92, 455 96" +
+    " C 550 100, 580 44, 675 46" +
+    " C 770 48, 800 88, 905 84" +
+    " C 945 82, 972 72, 984 58",
+  nodes: [
+    [10, 84],
+    [240, 54],
+    [455, 96],
+    [675, 46],
+  ],
+  goal: [984, 58],
+  preserveAspectRatio: "xMidYMid slice",
+  radii: { ring: 7, dot: 3, goal: 13, goalInner: 8, core: 4 },
+};
+
+/* Full-extent corner surface: flows from its bottom-left into the flat
+   bullseye near the top-right corner, fully inside the viewBox. */
+const CORNER: JourneyGeometry = {
+  viewBox: "0 0 260 420",
+  path:
+    "M 14 406" +
+    " C 90 410, 105 340, 175 322" +
+    " C 235 306, 205 225, 225 170" +
+    " C 238 132, 234 96, 234 58",
+  nodes: [
+    [14, 406],
+    [175, 322],
+    [225, 170],
+  ],
+  goal: [234, 58],
+  preserveAspectRatio: "xMidYMid meet",
+  radii: { ring: 10, dot: 4, goal: 22, goalInner: 13, core: 5 },
+};
+
+const PRESETS: Record<JourneyVariant, JourneyGeometry> = {
+  rail: RAIL,
+  "hero-right": HERO_RIGHT,
+  band: BAND,
+  corner: CORNER,
+};
+
+const { variant = "rail", glow = false, geometry } = Astro.props;
+const g = geometry ?? PRESETS[variant];
+const { ring, dot, goal, goalInner, core } = g.radii;
+/* Static placements show ~70% traveled solid + the final ~30% as the
+   dashed route ahead, exactly like the confirmed design renders. The
+   homepage rail keeps its scroll-driven reveal instead (no pathLength). */
+const staticFill = variant !== "rail";
+---
+
+<div
+  class:list={["journey-signature", `journey-variant-${variant}`, glow && "journey-signature--glow"]}
+  aria-hidden="true"
+>
+  <svg
+    class="journey-svg"
+    viewBox={g.viewBox}
+    preserveAspectRatio={g.preserveAspectRatio}
+    focusable="false"
+  >
+    <path class="journey-path" d={g.path} />
+    <path
+      class:list={["journey-path-fill", staticFill && "journey-static-fill"]}
+      d={g.path}
+      {...(staticFill ? { pathLength: "100" } : {})}
+    />
+    {g.nodes.map(([nx, ny]) => (
+      <g class="journey-node" transform={`translate(${nx} ${ny})`}>
+        <circle class="node-ring" r={ring} />
+        <circle class="node-dot" r={dot} />
+      </g>
+    ))}
+    <g class="journey-goal" transform={`translate(${g.goal[0]} ${g.goal[1]})`}>
+      <circle class="goal-ring" r={goal} />
+      <circle class="goal-ring-inner" r={goalInner} />
+      <circle class="goal-core" r={core} />
+    </g>
+  </svg>
+</div>
