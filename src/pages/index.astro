@@ -1,11 +1,11 @@
 ---
 import { getCollection } from "astro:content";
-import ContactModal from "../components/ContactModal.astro";
 import JourneyLine from "../components/JourneyLine.astro";
+import JourneySignature from "../components/JourneySignature.astro";
 import OperatingLoop from "../components/architecture/OperatingLoop.astro";
 import SectionHeader from "../components/sections/SectionHeader.astro";
 import Page from "../layouts/Page.astro";
-import { AUTHOR, FOUNDER, SITE } from "../config";
+import { AUTHOR, FOUNDER, SITE, BOOKING_LINK, BOOKING_CONFIG } from "../config";
 import { localizePath } from "../i18n";
 import { type Locale, t } from "../i18n/translations";
 import snapshot from "../data/live-goals.json";
@@ -45,7 +45,7 @@ const workCards = ["requests", "reports", "intake", "checks"];
       <p class="mx-auto mt-6 max-w-3xl text-base leading-relaxed text-muted-foreground">{t(locale, "conversion.home.hero.body")}</p>
       <p class="mt-4 text-sm font-medium text-foreground">{t(locale, "conversion.home.hero.support")}</p>
       <div class="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
-        <a href={localizePath("/services/agent-brief/#request", locale)} data-open-contact-modal data-cta-location="home_hero" class="inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground transition-all hover:brightness-110">{t(locale, "cta.requestAgentBrief")}</a>
+        <button type="button" data-cal-link={BOOKING_LINK} data-cal-config={JSON.stringify(BOOKING_CONFIG)} data-cal-cta data-cta-location="home_hero" class="inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground transition-all hover:brightness-110">{t(locale, "cta.bookDiscoveryCall")}</button>
         <a href={localizePath("/live/", locale)} class="inline-flex h-11 items-center justify-center rounded-md border border-border bg-panel px-6 text-sm font-medium transition-all hover:border-border-strong hover:bg-panel-raised">{t(locale, "conversion.home.hero.secondary")}</a>
       </div>
     </div>
@@ -62,6 +62,9 @@ const workCards = ["requests", "reports", "intake", "checks"];
 
   <section class="relative overflow-hidden py-24 sm:py-32">
     <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="absolute inset-x-0 bottom-0 z-0 aspect-[12/1] opacity-35">
+      <JourneySignature variant="band" gradientId="home-band-grad" />
+    </div>
     <div class="relative mx-auto max-w-6xl px-6">
       <SectionHeader label={t(locale, "conversion.home.mechanism.label")} title={t(locale, "conversion.home.mechanism.title")} description={t(locale, "conversion.home.mechanism.body")} />
       <OperatingLoop locale={locale} />
@@ -79,17 +82,16 @@ const workCards = ["requests", "reports", "intake", "checks"];
 
   <section class="relative overflow-hidden py-24 sm:py-32">
     <div class="absolute inset-0 bg-panel-deep/50"></div>
-    <div class="relative mx-auto max-w-6xl px-6"><SectionHeader label={t(locale, "conversion.home.path.label")} title={t(locale, "conversion.home.path.title")} description={t(locale, "conversion.home.path.body")} /><div class="flex justify-center gap-3" data-aos="fade-up"><a href={localizePath("/services/agent-brief/#request", locale)} data-open-contact-modal class="inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground">{t(locale, "cta.requestAgentBrief")}</a><a href={localizePath("/services/", locale)} class="inline-flex h-11 items-center justify-center rounded-md border border-border bg-panel px-6 text-sm font-medium">{t(locale, "conversion.home.path.secondary")}</a></div></div>
+    <div class="relative mx-auto max-w-6xl px-6"><SectionHeader label={t(locale, "conversion.home.path.label")} title={t(locale, "conversion.home.path.title")} description={t(locale, "conversion.home.path.body")} /><div class="flex justify-center gap-3" data-aos="fade-up"><button type="button" data-cal-link={BOOKING_LINK} data-cal-config={JSON.stringify(BOOKING_CONFIG)} data-cal-cta class="inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground">{t(locale, "cta.bookDiscoveryCall")}</button><a href={localizePath("/services/", locale)} class="inline-flex h-11 items-center justify-center rounded-md border border-border bg-panel px-6 text-sm font-medium">{t(locale, "conversion.home.path.secondary")}</a></div></div>
   </section>
 
-  <section class="relative py-24 sm:py-32"><div class="mx-auto max-w-6xl px-6"><SectionHeader label={t(locale, "conversion.home.brief.label")} title={t(locale, "conversion.home.brief.title")} description={t(locale, "conversion.home.brief.body")} /><div class="flex justify-center gap-3" data-aos="fade-up"><a href={localizePath("/services/agent-brief/#request", locale)} data-open-contact-modal class="inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground">{t(locale, "conversion.home.brief.primary")}</a><a href={localizePath("/services/agent-brief/", locale)} class="inline-flex h-11 items-center justify-center rounded-md border border-border bg-panel px-6 text-sm font-medium">{t(locale, "conversion.home.brief.secondary")}</a></div></div></section>
+  <section class="relative py-24 sm:py-32"><div class="mx-auto max-w-6xl px-6"><SectionHeader label={t(locale, "conversion.home.brief.label")} title={t(locale, "conversion.home.brief.title")} description={t(locale, "conversion.home.brief.body")} /><div class="flex justify-center gap-3" data-aos="fade-up"><button type="button" data-cal-link={BOOKING_LINK} data-cal-config={JSON.stringify(BOOKING_CONFIG)} data-cal-cta class="inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground">{t(locale, "cta.bookDiscoveryCall")}</button><a href={localizePath("/services/agent-brief/", locale)} class="inline-flex h-11 items-center justify-center rounded-md border border-border bg-panel px-6 text-sm font-medium">{t(locale, "conversion.home.brief.secondary")}</a></div></div></section>
 
   <section class="relative overflow-hidden py-24 sm:py-32"><div class="absolute inset-0 bg-panel-deep/50"></div><div class="relative mx-auto max-w-4xl px-6" data-aos="fade-up"><h2 class="text-3xl font-bold tracking-tight text-foreground-strong">{t(locale, "conversion.home.founder.title")}</h2><p class="mt-5 text-base leading-relaxed text-muted-foreground">{t(locale, "conversion.home.founder.body", { years: FOUNDER.experienceYears, products: FOUNDER.productAttempts })}</p><a href={localizePath("/founder/", locale)} class="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-primary hover:opacity-80">{t(locale, "conversion.home.founder.cta")}<i class="bx bx-chevron-right rtl-flip icon-md" aria-hidden="true"></i></a></div></section>
 
   {featuredNotes.length > 0 && <section class="relative py-24 sm:py-32"><div class="mx-auto max-w-6xl px-6"><SectionHeader label={t(locale, "conversion.home.notes.label")} title={t(locale, "conversion.home.notes.title")} /><div class="grid gap-4 md:grid-cols-3" data-aos="fade-up">{featuredNotes.map((note) => note && <a href={localizePath(`/notes/${note.data.permalink.replace(/^\/+|\/+$/g, "")}/`, locale)} class="rounded-md border border-border bg-panel p-5 transition-all hover:border-border-strong hover:bg-panel-raised"><h3 class="text-sm font-semibold text-foreground-strong">{note.data.title}</h3><p class="mt-2 text-xs leading-relaxed text-muted-foreground">{note.data.description}</p></a>)}</div></div></section>}
 
-  <section class="relative overflow-hidden py-24 sm:py-32"><div class="absolute inset-0 bg-panel-deep/50"></div><div class="relative mx-auto max-w-3xl px-6 text-center" data-aos="fade-up"><h2 class="text-3xl font-bold tracking-tight text-foreground-strong sm:text-4xl">{t(locale, "conversion.home.final.title")}</h2><p class="mt-4 text-base leading-relaxed text-muted-foreground">{t(locale, "conversion.home.final.body")}</p><a href={localizePath("/services/agent-brief/#request", locale)} data-open-contact-modal class="mt-8 inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground">{t(locale, "cta.requestAgentBrief")}</a></div></section>
+  <section class="relative overflow-hidden py-24 sm:py-32"><div class="absolute inset-0 bg-panel-deep/50"></div><div class="relative mx-auto max-w-3xl px-6 text-center" data-aos="fade-up"><h2 class="text-3xl font-bold tracking-tight text-foreground-strong sm:text-4xl">{t(locale, "conversion.home.final.title")}</h2><p class="mt-4 text-base leading-relaxed text-muted-foreground">{t(locale, "conversion.home.final.body")}</p><button type="button" data-cal-link={BOOKING_LINK} data-cal-config={JSON.stringify(BOOKING_CONFIG)} data-cal-cta class="mt-8 inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground">{t(locale, "cta.bookDiscoveryCall")}</button></div></section>
 
-  <ContactModal locale={locale} />
   <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 </Page>

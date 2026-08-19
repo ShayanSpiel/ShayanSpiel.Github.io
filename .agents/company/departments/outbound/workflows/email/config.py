@@ -78,6 +78,12 @@ SIGNATURE_SERVICES = os.environ.get(
     "SIGNATURE_SERVICES",
     "https://spielos.xyz/services/?utm_source=outbound-email&utm_medium=email&utm_campaign=outbound-sig",
 ).strip()
+# Discovery Call booking CTA carried by every outbound signature
+# (owner directive 2026-08-19, goal-booking-signature-outbound-20260819).
+SIGNATURE_BOOKING = os.environ.get(
+    "SIGNATURE_BOOKING",
+    "https://cal.com/shayanspiel/15min?utm_source=outbound-email&utm_medium=email&utm_campaign=outbound-sig",
+).strip()
 
 # ── Data ───────────────────────────────────────────────────────────────────────
 def _resolve_path(value: str, default: str, base: Path = DATA_DIR) -> Path:

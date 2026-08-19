@@ -16,6 +16,9 @@ from company.departments.outbound.data import OutboundStore  # noqa: E402
 from company.departments.outbound.workflows.email import compose, decider, evaluator, policy_rules  # noqa: E402
 from company.departments.outbound.workflows.email import config, outbound, providers, report as report_data  # noqa: E402
 from company.departments.outbound.workflows.email.validators import validate  # noqa: E402
+from company.departments.outbound.workflows.email.templates import (  # noqa: E402
+    SIGNATURE_HTML, SIGNATURE_TEXT,
+)
 
 
 def make_ctx():
@@ -98,6 +101,37 @@ class ComposeTests(unittest.TestCase):
         skipped_ids = [s["lead_id"] for s in built["skipped"]]
         self.assertIn("EN-105", skipped_ids)  # same domain as EN-100
         self.assertIn("EN-101", skipped_ids)  # placeholder pain
+
+
+class SignatureBookingTests(unittest.TestCase):
+    """Change change-e7d88c6f5c (goal-booking-signature-outbound-20260819):
+    every composed email carries the Discovery Call booking CTA line and
+    link in both HTML and plain-text signatures, plus the UTM parameters."""
+
+    BOOKING_LINE = "Book a FREE Discovery Call"
+    BOOKING_LINK = "https://cal.com/shayanspiel/15min"
+
+    def test_signature_html_has_booking_line_and_link(self):
+        self.assertIn(self.BOOKING_LINE, SIGNATURE_HTML)
+        self.assertIn(self.BOOKING_LINK, SIGNATURE_HTML)
+
+    def test_signature_text_has_booking_line_and_link(self):
+        self.assertIn(self.BOOKING_LINE, SIGNATURE_TEXT)
+        self.assertIn(self.BOOKING_LINK, SIGNATURE_TEXT)
+
+    def test_booking_link_carries_signature_utm_params(self):
+        for sig in (SIGNATURE_HTML, SIGNATURE_TEXT):
+            self.assertIn("utm_source=outbound-email", sig, sig[:120])
+            self.assertIn("utm_medium=email", sig, sig[:120])
+            self.assertIn("utm_campaign=outbound-sig", sig, sig[:120])
+
+    def test_rendered_email_carries_booking_cta(self):
+        subject, html, text, reason = compose.render_checked(RESEARCHED, seq=0)
+        self.assertIsNone(reason)
+        self.assertIn(self.BOOKING_LINE, html)
+        self.assertIn(self.BOOKING_LINK, html)
+        self.assertIn(self.BOOKING_LINE, text)
+        self.assertIn(self.BOOKING_LINK, text)
 
 
 class ValidatorTests(unittest.TestCase):

@@ -1,12 +1,12 @@
 ---
 import SpielOSLogo from "./SpielOSLogo.astro";
-import { NAV_LINKS, AGENT_BRIEF_REQUEST_PATH, type NavLink } from "../config";
+import { NAV_LINKS, BOOKING_LINK, BOOKING_CONFIG, type NavChildLink, type NavLink } from "../config";
 import { type Locale, t } from "../i18n/translations";
 import { localizePath } from "../i18n";
 
 export interface Props {
   links?: NavLink[];
-  cta?: { label: string; href: string };
+  cta?: { label: string };
   locale?: Locale;
 }
 
@@ -16,10 +16,29 @@ const currentPath = Astro.url.pathname;
 
 const navKey = (label: string) => `nav.${label.toLowerCase().replace(/\s+/g, "")}`;
 
-const toChild = (child: { label: string; href: string; live?: boolean; children?: { label: string; href: string; live?: boolean; children?: never }[] }) => ({
+/** One DISTINCT boxicon per menu item, keyed by route. Every item in the
+ *  mega menu has its own icon; no two items share or resemble each other's. */
+const NAV_ITEM_ICONS: Record<string, string> = {
+  "/features/director": "bx-user",
+  "/features/departments": "bx-group",
+  "/features/workflows": "bx-network-chart",
+  "/features/agents": "bx-bot",
+  "/features/skills": "bx-book",
+  "/features/evals": "bx-task",
+  "/features/connections": "bx-link",
+  "/features/artifacts": "bx-archive",
+  "/use-cases/design": "bx-palette",
+};
+/** Route-key lookup that is locale- and trailing-slash-agnostic so the same
+ *  distinct icon follows each item on both EN and FA pages. */
+const navItemIcon = (href: string) =>
+  NAV_ITEM_ICONS[normalize(href).replace(/^\/(fa|en)(?=\/|$)/, "")] ?? "bx-layer";
+
+const toChild = (child: NavChildLink) => ({
   href: localizePath(child.href, locale),
   label: t(locale, navKey(child.label)) || child.label,
   live: Boolean(child.live),
+  columns: child.columns ?? 1,
   children: (child.children || []).map((grand) => ({
     href: localizePath(grand.href, locale),
     label: t(locale, navKey(grand.label)) || grand.label,
@@ -40,11 +59,11 @@ const navLinks = links
       live: Boolean(link.live),
       children: (link.children || []).map(toChild),
     }));
-const ctaLink = cta || { label: t(locale, "cta.requestAgentBrief"), href: AGENT_BRIEF_REQUEST_PATH };
+const ctaLink = cta || { label: t(locale, "cta.bookDiscoveryCall") };
 
 const normalize = (p: string) => p.replace(/\/+$/, "") || "/";
 const isCurrent = (href: string) => normalize(href) === normalize(currentPath);
-/** A group (or child with children) counts as active when the current page is
+/** A group (or category) counts as active when the current page is
  *  the group href or any descendant. */
 const isDescendant = (href: string) => normalize(currentPath).startsWith(normalize(href));
 const isGroupActive = (href: string, children: { href: string }[]) =>
@@ -70,14 +89,14 @@ const ariaCurrent = (href: string) => (isCurrent(href) ? "page" : undefined);
     <div class="hidden md:flex items-center gap-5 lg:gap-8 absolute left-1/2 -translate-x-1/2">
       {navLinks.map((link) =>
         link.children && link.children.length > 0 ? (
-          <div class="nav-group relative" data-nav-group>
+          <div class="nav-group relative flex items-center" data-nav-group>
             <a
               href={link.href}
               aria-haspopup="true"
               aria-expanded="false"
               data-nav-trigger
               class:list={[
-                "inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors rounded-sm",
+                "inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors rounded-sm",
                 isGroupActive(link.href, link.children) && "text-foreground font-medium",
               ]}
             >
@@ -85,58 +104,35 @@ const ariaCurrent = (href: string) => (isCurrent(href) ? "page" : undefined);
               {link.label}
               <i class="bx bx-chevron-down rtl-flip icon-sm nav-group-chevron" aria-hidden="true"></i>
             </a>
-            <div class="nav-popover absolute start-0 top-full mt-2 w-60 rounded-md border border-border bg-panel shadow-popover p-1.5" role="menu" aria-label={link.label}>
-              {link.children.map((child) =>
-                child.children && child.children.length > 0 ? (
-                  <div class="nav-subgroup relative rounded-md" data-nav-subgroup>
-                    <a
-                      href={child.href}
-                      aria-haspopup="true"
-                      aria-expanded="false"
-                      data-nav-subtrigger
-                      role="menuitem"
-                      aria-current={ariaCurrent(child.href)}
-                      class:list={[
-                        "flex items-center gap-1.5 rounded-md px-3 py-2 text-xs text-muted-foreground hover:text-foreground hover:bg-panel-raised transition-colors",
-                        isDescendant(child.href) && "text-foreground font-medium",
-                      ]}
-                    >
-                      {child.live && <span class="nav-live-dot" aria-hidden="true"></span>}
-                      {child.label}
-                      <i class="bx bx-chevron-right rtl-flip icon-sm ms-auto nav-group-chevron" aria-hidden="true"></i>
-                    </a>
-                    <div class="nav-flyout absolute start-full top-0 ms-1 w-48 rounded-md border border-border bg-panel shadow-popover p-1.5" role="menu" aria-label={child.label}>
-                      {child.children.map((grand) => (
+            <div
+              class="nav-popover absolute start-0 top-full mt-2 w-[30rem] max-w-[calc(100vw-2rem)] rounded-md border border-border bg-panel shadow-popover p-2"
+              role="menu"
+              aria-label={link.label}
+            >
+              <div class="flex gap-3">
+                {link.children.map((child) => (
+                  <div class:list={["nav-cat flex-1 min-w-0", child.columns === 2 ? "pe-2" : "nav-cat-divider w-40 shrink-0 ps-2"]}>
+                    <a href={child.href} role="menuitem" aria-current={isCurrent(child.href) ? "true" : undefined} class:list={["nav-cat-label rounded-sm transition-colors hover:text-foreground", isCurrent(child.href) && "text-foreground"]}>{child.label}</a>
+                    <div class:list={["grid gap-0.5", child.columns === 2 ? "grid-cols-2" : "grid-cols-1"]}>
+                      {(child.children || []).map((grand) => (
                         <a
                           href={grand.href}
                           role="menuitem"
                           aria-current={ariaCurrent(grand.href)}
                           class:list={[
-                            "flex items-center gap-1.5 rounded-md px-3 py-2 text-xs text-muted-foreground hover:text-foreground hover:bg-panel-raised transition-colors",
+                            "flex items-center gap-1.5 rounded-md px-2.5 py-2 text-xs text-muted-foreground hover:text-foreground hover:bg-panel-raised transition-colors",
                             isCurrent(grand.href) && "text-foreground font-medium",
                           ]}
                         >
                           {grand.live && <span class="nav-live-dot" aria-hidden="true"></span>}
+                          <i class={`bx ${navItemIcon(grand.href)} text-primary/80 icon-sm shrink-0`} aria-hidden="true"></i>
                           {grand.label}
                         </a>
                       ))}
                     </div>
                   </div>
-                ) : (
-                  <a
-                    href={child.href}
-                    role="menuitem"
-                    aria-current={ariaCurrent(child.href)}
-                    class:list={[
-                      "flex items-center gap-1.5 rounded-md px-3 py-2 text-xs text-muted-foreground hover:text-foreground hover:bg-panel-raised transition-colors",
-                      isCurrent(child.href) && "text-foreground font-medium",
-                    ]}
-                  >
-                    {child.live && <span class="nav-live-dot" aria-hidden="true"></span>}
-                    {child.label}
-                  </a>
-                )
-              )}
+                ))}
+              </div>
             </div>
           </div>
         ) : (
@@ -157,13 +153,16 @@ const ariaCurrent = (href: string) => (isCurrent(href) ? "page" : undefined);
     </div>
 
     <div class="flex items-center gap-3 relative z-10 shrink-0">
-      <a
-        href={localizePath(ctaLink.href, locale)}
-        data-open-contact-modal
+      <button
+        type="button"
+        data-cal-link={BOOKING_LINK}
+        data-cal-config={JSON.stringify(BOOKING_CONFIG)}
+        data-cal-cta
+        data-cta-location="nav"
         class="hidden sm:inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-4 h-8 text-xs font-medium hover:brightness-110 active:brightness-95 transition-all"
       >
         {ctaLink.label}
-      </a>
+      </button>
 
       <button
         type="button"
@@ -197,33 +196,22 @@ const ariaCurrent = (href: string) => (isCurrent(href) ? "page" : undefined);
             <div id={`nav-mobile-group-${link.label.toLowerCase().replace(/\s+/g, "")}`} class="hidden ps-3 mt-1 space-y-1 border-s border-border">
               {link.children.map((child) =>
                 child.children && child.children.length > 0 ? (
-                  <div class="nav-mobile-group">
-                    <button
-                      type="button"
-                      class="flex w-full items-center gap-1.5 rounded-md px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-panel-raised transition-colors"
-                      aria-expanded="false"
-                      aria-controls={`nav-mobile-group-${child.label.toLowerCase().replace(/\s+/g, "")}`}
-                      data-nav-accordion
-                    >
-                      {child.live && <span class="nav-live-dot" aria-hidden="true"></span>}
-                      {child.label}
-                      <i class="bx bx-chevron-down rtl-flip icon-sm ms-auto nav-mobile-chevron" aria-hidden="true"></i>
-                    </button>
-                    <div id={`nav-mobile-group-${child.label.toLowerCase().replace(/\s+/g, "")}`} class="hidden ps-3 mt-1 space-y-1 border-s border-border">
-                      {child.children.map((grand) => (
-                        <a
-                          href={grand.href}
-                          aria-current={ariaCurrent(grand.href)}
-                          class:list={[
-                            "flex items-center gap-1.5 rounded-md px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-panel-raised transition-colors",
-                            isCurrent(grand.href) && "bg-panel-raised text-foreground font-medium",
-                          ]}
-                        >
-                          {grand.live && <span class="nav-live-dot" aria-hidden="true"></span>}
-                          {grand.label}
-                        </a>
-                      ))}
-                    </div>
+                  <div class="space-y-1" role="group" aria-label={child.label}>
+                    <a href={child.href} aria-current={isCurrent(child.href) ? "true" : undefined} class:list={["nav-mobile-cat-label block rounded-md transition-colors hover:text-foreground", isCurrent(child.href) && "text-foreground"]}>{child.label}</a>
+                    {(child.children || []).map((grand) => (
+                      <a
+                        href={grand.href}
+                        aria-current={ariaCurrent(grand.href)}
+                        class:list={[
+                          "flex items-center gap-1.5 rounded-md px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-panel-raised transition-colors",
+                          isCurrent(grand.href) && "bg-panel-raised text-foreground font-medium",
+                        ]}
+                      >
+                        {grand.live && <span class="nav-live-dot" aria-hidden="true"></span>}
+                        <i class={`bx ${navItemIcon(grand.href)} text-primary/80 icon-sm shrink-0`} aria-hidden="true"></i>
+                        {grand.label}
+                      </a>
+                    ))}
                   </div>
                 ) : (
                   <a
@@ -256,13 +244,16 @@ const ariaCurrent = (href: string) => (isCurrent(href) ? "page" : undefined);
           </a>
         )
       )}
-      <a
-        href={localizePath(ctaLink.href, locale)}
-        data-open-contact-modal
-        class="block mt-2 rounded-md bg-primary text-primary-foreground px-3 py-2 text-sm text-center font-medium"
+      <button
+        type="button"
+        data-cal-link={BOOKING_LINK}
+        data-cal-config={JSON.stringify(BOOKING_CONFIG)}
+        data-cal-cta
+        data-cta-location="nav_mobile"
+        class="block mt-2 w-full rounded-md bg-primary text-primary-foreground px-3 py-2 text-sm text-center font-medium"
       >
         {ctaLink.label}
-      </a>
+      </button>
     </div>
   </div>
 </nav>
@@ -284,22 +275,21 @@ const ariaCurrent = (href: string) => (isCurrent(href) ? "page" : undefined);
   window.addEventListener('scroll', updateNav, { passive: true });
   updateNav();
 
-  /* ---- Desktop dropdown: hover + focus-within (CSS), Esc to close, and a
-       tap-toggle for coarse pointers (touch laptops/tablets) that cannot
-       hover. Max depth 2 is covered statically below. ---- */
+  /* ---- Desktop dropdown: hover-intent + focus-within (CSS), Esc to close,
+       and a tap-toggle for coarse pointers (touch laptops/tablets) that
+       cannot hover. The menu is a FLAT two-category mega menu: no flyouts,
+       no nested sub-menus, so only top-level groups exist. ---- */
   function setGroupExpanded(group, expanded) {
-    var trigger = group.querySelector('[data-nav-trigger], [data-nav-subtrigger]');
+    var trigger = group.querySelector('[data-nav-trigger]');
     if (trigger) trigger.setAttribute('aria-expanded', expanded ? 'true' : 'false');
     var chevron = group.querySelector('.nav-group-chevron');
     if (chevron) chevron.classList.toggle('nav-chevron-open', !!expanded);
   }
 
   var groups = Array.prototype.slice.call(document.querySelectorAll('[data-nav-group]'));
-  var subgroups = Array.prototype.slice.call(document.querySelectorAll('[data-nav-subgroup]'));
-  var allGroups = groups.concat(subgroups);
 
   function syncGroup(group) {
-    var popover = group.querySelector(':scope > .nav-popover, :scope > .nav-flyout');
+    var popover = group.querySelector(':scope > .nav-popover');
     if (!popover) return;
     var hovered = group.matches(':hover');
     var focused = group.contains(document.activeElement);
@@ -307,29 +297,61 @@ const ariaCurrent = (href: string) => (isCurrent(href) ? "page" : undefined);
     setGroupExpanded(group, hovered || focused || forced);
   }
 
-  allGroups.forEach(function (group) {
-    var trigger = group.querySelector('[data-nav-trigger], [data-nav-subtrigger]');
+  /* Hover-intent: a short leave delay that cancels on re-entry. The CSS
+     keeps the popover open while the pointer is over the trigger, the
+     panel, or any menu item, and a transparent bridge pseudoelement covers
+     the trigger-to-panel gap so there is no dead zone. The timer only
+     smooths boundary jitter at the box edges, and it double-checks the real
+     hover/focus state before closing so it can never race a re-entering
+     pointer. */
+  var hoverTimers = Object.create(null);
+  var groupSeq = 0;
+  function scheduleClose(group) {
+    var key = group.getAttribute('data-nav-uid') || (group.setAttribute('data-nav-uid', String(++groupSeq)), String(groupSeq));
+    if (hoverTimers[key]) clearTimeout(hoverTimers[key]);
+    hoverTimers[key] = setTimeout(function () {
+      if (group.matches(':hover') || group.contains(document.activeElement)) return;
+      group.setAttribute('data-nav-open', 'false');
+      setGroupExpanded(group, false);
+    }, 200);
+  }
+  function cancelClose(group) {
+    var key = group.getAttribute('data-nav-uid');
+    if (key && hoverTimers[key]) {
+      clearTimeout(hoverTimers[key]);
+      hoverTimers[key] = null;
+    }
+  }
+
+  groups.forEach(function (group) {
+    var trigger = group.querySelector('[data-nav-trigger]');
     if (!trigger) return;
-    trigger.addEventListener('click', function (e) {
-      // Coarse pointers get a tap-toggle instead of instant navigation.
-      if (window.matchMedia && window.matchMedia('(hover: none)').matches) {
+    // Click always follows the trigger link (hover/focus open the menu on
+    // desktop; tap on coarse pointers navigates straight to the hub page).
+    trigger.addEventListener('click', function () {});
+    // Enter/Space open the menu when it is closed; a second Enter follows
+    // the link. This keeps keyboard-only users on the same hover surface.
+    trigger.addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      var open = group.getAttribute('data-nav-open') === 'true' || group.matches(':hover') || group.matches(':focus-within');
+      if (!open) {
         e.preventDefault();
-        var open = group.getAttribute('data-nav-open') === 'true';
-        group.setAttribute('data-nav-open', open ? 'false' : 'true');
-        setGroupExpanded(group, !open);
+        group.setAttribute('data-nav-open', 'true');
+        setGroupExpanded(group, true);
       }
     });
-    ['mouseenter', 'mouseleave', 'focusin', 'focusout'].forEach(function (ev) {
-      group.addEventListener(ev, function () { syncGroup(group); });
-    });
+    group.addEventListener('mouseenter', function () { cancelClose(group); syncGroup(group); });
+    group.addEventListener('mouseleave', function () { scheduleClose(group); });
+    group.addEventListener('focusin', function () { syncGroup(group); });
+    group.addEventListener('focusout', function () { syncGroup(group); });
   });
 
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
     var active = document.activeElement;
-    var group = active && active.closest ? active.closest('[data-nav-group], [data-nav-subgroup]') : null;
+    var group = active && active.closest ? active.closest('[data-nav-group]') : null;
     if (group) {
-      var trigger = group.querySelector('[data-nav-trigger], [data-nav-subtrigger]');
+      var trigger = group.querySelector('[data-nav-trigger]');
       group.setAttribute('data-nav-open', 'false');
       if (trigger && typeof trigger.focus === 'function') {
         trigger.focus();
@@ -341,7 +363,7 @@ const ariaCurrent = (href: string) => (isCurrent(href) ? "page" : undefined);
 
   document.addEventListener('click', function (e) {
     if (nav && !(e.target.closest && e.target.closest('#site-nav'))) {
-      allGroups.forEach(function (group) {
+      groups.forEach(function (group) {
         group.setAttribute('data-nav-open', 'false');
         setGroupExpanded(group, false);
       });
@@ -459,26 +481,75 @@ const ariaCurrent = (href: string) => (isCurrent(href) ? "page" : undefined);
   }
 
   /* Desktop dropdown: hidden by default, revealed on hover or keyboard focus
-     (focus-within), and by the tap-toggle class for coarse pointers. */
-  .nav-group > .nav-popover,
-  .nav-subgroup > .nav-flyout {
+     (focus-within), and by the tap-toggle class for coarse pointers.
+     Hit-testing relies on `visibility: hidden` alone (hidden elements never
+     receive pointer events), so there is NO pointer-events snap: while the
+     panel is still transitioning closed it stays hoverable, and a pointer
+     that re-enters it re-engages :hover instead of racing the close. */
+  .nav-group > .nav-popover {
     visibility: hidden;
     opacity: 0;
     transform: translateY(4px);
-    pointer-events: none;
     transition: opacity var(--duration-fast) var(--ease), transform var(--duration-fast) var(--ease), visibility var(--duration-fast) var(--ease);
     z-index: 70;
   }
   .nav-group:hover > .nav-popover,
   .nav-group:focus-within > .nav-popover,
-  .nav-group[data-nav-open="true"] > .nav-popover,
-  .nav-subgroup:hover > .nav-flyout,
-  .nav-subgroup:focus-within > .nav-flyout,
-  .nav-subgroup[data-nav-open="true"] > .nav-flyout {
+  .nav-group[data-nav-open="true"] > .nav-popover {
     visibility: visible;
     opacity: 1;
     transform: translateY(0);
-    pointer-events: auto;
+  }
+
+  /* Transparent hit bridge: the panel keeps a small visual gap (mt-2) so it
+     reads as attached-but-separate. The bridge intentionally OVERSHOOTS the
+     gap: it starts a few pixels INSIDE the trigger's own box and extends
+     past the panel's top edge, so there is no dead zone between the trigger
+     bottom and the panel top — the pointer can never leave the :hover region
+     while travelling between them, in either direction or at any speed. */
+  .nav-popover::before {
+    content: "";
+    position: absolute;
+    top: -0.875rem;
+    left: 0;
+    right: 0;
+    height: 0.875rem;
+  }
+
+  /* Flat two-category mega menu: Features column + Use Cases column with a
+     subtle inline divider. Category headers are small uppercase labels. */
+  .nav-cat {
+    min-width: 0;
+  }
+  .nav-cat-divider {
+    border-inline-start: 1px solid var(--border);
+  }
+  .nav-cat-label {
+    padding: 0.25rem 0.5rem 0.375rem;
+    font-size: var(--font-size-2xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted-foreground);
+    user-select: none;
+  }
+  .nav-cat-label:hover {
+    color: var(--foreground);
+  }
+
+  /* Mobile accordion category label: same subtle treatment at the larger
+     mobile text rhythm. */
+  .nav-mobile-cat-label {
+    padding: 0.5rem 0.75rem 0.25rem;
+    font-size: var(--font-size-2xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted-foreground);
+    user-select: none;
+  }
+  .nav-mobile-cat-label:hover {
+    color: var(--foreground);
   }
 
   .nav-group-chevron,
@@ -488,16 +559,8 @@ const ariaCurrent = (href: string) => (isCurrent(href) ? "page" : undefined);
   .nav-chevron-open {
     transform: rotate(180deg);
   }
-  /* Row chevrons inside the popover rotate on hover so the flyout direction
-     reads as "more". */
-  .nav-subgroup:hover .nav-group-chevron,
-  .nav-subgroup:focus-within .nav-group-chevron,
-  .nav-subgroup[data-nav-open="true"] .nav-group-chevron {
-    transform: translateX(2px);
-  }
   @media (prefers-reduced-motion: reduce) {
     .nav-group > .nav-popover,
-    .nav-subgroup > .nav-flyout,
     .nav-group-chevron,
     .nav-mobile-chevron {
       transition: none;

@@ -87,6 +87,18 @@ const lang = locale === "fa" ? "fa" : "en";
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/jetbrains-latin.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/boxicons.woff2" crossorigin />
 
+    <!-- Cal.com native embed (owner directive 2026-08-19 v4, flow.digital
+         pattern): CTAs are data-cal-link triggers that open Cal's booking embed
+         right on the page. Cal's OFFICIAL loader defines window.Cal as a queue
+         immediately and only then loads embed.js, so analytics can register
+         bookingSuccessful before Cal finishes loading and the popup opens as
+         fast as possible. There is NO custom modal wrapper. -->
+    <link rel="preconnect" href="https://app.cal.com" crossorigin />
+    <link rel="dns-prefetch" href="https://app.cal.com" />
+    <script is:inline type="text/javascript">
+      (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(cal, ar); }; const namespace = ar[1]; api.q = api.q || []; typeof namespace === "string" ? (cal.ns[namespace] = api) : (p(cal, api)); return; } p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+    </script>
+
     <!-- hreflang alternates for i18n SEO -->
     {(() => {
       const path = Astro.url.pathname;
@@ -220,6 +232,26 @@ const lang = locale === "fa" ? "fa" : "en";
         }
         window.spielosTrack = track;
 
+        /* ---- Discovery Call booking (owner directive 2026-08-19, v4):
+             every conversion CTA is a native Cal embed trigger
+             (data-cal-link=shayanspiel/15min) that opens Cal's own booking
+             embed (popup) right on the page. This handler only records the
+             click; Cal handles the popup, so there is no preventDefault, no
+             navigation away from the site, no external cal.com tab. ---- */
+        function isBookingTarget(link){
+          if(!link) return false;
+          return !!(link.hasAttribute && link.hasAttribute('data-cal-cta'));
+        }
+
+        /* ---- Successful booking (Cal reports bookingSuccessful on the embed)
+             The Cal.com->Attio sync still captures the booked call separately;
+             this is the page-side funnel event for PostHog/GA. */
+        if(typeof window.Cal === 'function'){
+          window.Cal('on', { action: 'bookingSuccessful', callback: function () {
+            track('booked_call', { page: getPage(), device: getDevice(), locale: getLocale() });
+          } });
+        }
+
         function getPage(){
           return window.location.pathname + window.location.search;
         }
@@ -260,7 +292,7 @@ const lang = locale === "fa" ? "fa" : "en";
           };
         }
 
-        /* ---- CTA clicked (links to /services/ and primary buttons) ---- */
+        /* ---- CTA clicked (booking CTAs, /services/ links, primary buttons) ---- */
         document.addEventListener('click', function(e){
           var el = e.target;
           if(!el || !el.tagName) return;
@@ -268,12 +300,29 @@ const lang = locale === "fa" ? "fa" : "en";
           var link = el.tagName === 'A' ? el : el.closest('a');
           if(link){
             var href = link.getAttribute('href') || '';
+
+            /* Discovery Call booking CTAs: internal link to the on-site
+               /book/ page with the native Cal embed. Record the click as the
+               dedicated PostHog/GA event and let the browser navigate — no
+               overlay, no preventDefault, nothing to wait on. */
+            if(isBookingTarget(link)){
+              track('booking_cta_clicked', {
+                page: getPage(),
+                device: getDevice(),
+                locale: getLocale(),
+                cta_type: 'book_call',
+                location: link.getAttribute('data-cta-location') || 'generic',
+                link_text: (link.textContent || '').trim().substring(0, 100)
+              });
+              return;
+            }
+
             if(href.indexOf('/services/') !== -1){
               track('cta_clicked', {
                 page: getPage(),
                 device: getDevice(),
                 locale: getLocale(),
-                cta_type: href.indexOf('agent-briefing') !== -1 ? 'agent_briefing' : 'services',
+                cta_type: 'services',
                 link_text: (link.textContent || '').trim().substring(0, 100)
               });
             }
@@ -311,12 +360,21 @@ const lang = locale === "fa" ? "fa" : "en";
           var btn = el.tagName === 'BUTTON' ? el : el.closest('button');
           if(btn){
             var classes = btn.className || '';
-            if(btn.hasAttribute('data-open-contact-modal') || classes.indexOf('bg-primary') !== -1){
+            if(btn.hasAttribute('data-cal-cta')){
+              track('booking_cta_clicked', {
+                page: getPage(),
+                device: getDevice(),
+                locale: getLocale(),
+                cta_type: 'book_call',
+                location: btn.getAttribute('data-cta-location') || 'generic',
+                link_text: (btn.textContent || '').trim().substring(0, 100)
+              });
+            } else if(classes.indexOf('bg-primary') !== -1){
               track('cta_clicked', {
                 page: getPage(),
                 device: getDevice(),
                 locale: getLocale(),
-                cta_type: btn.hasAttribute('data-open-contact-modal') ? 'agent_briefing' : 'primary',
+                cta_type: 'primary',
                 link_text: (btn.textContent || '').trim().substring(0, 100)
               });
             }

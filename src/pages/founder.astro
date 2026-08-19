@@ -1,5 +1,6 @@
 ---
 import Page from "../layouts/Page.astro";
+import JourneySignature from "../components/JourneySignature.astro";
 import SocialIcons from "../components/SocialIcons.astro";
 import { SITE, AUTHOR, FOUNDER, AGENT_BRIEFING_PATH } from "../config";
 import { localizePath } from "../i18n";
@@ -85,6 +86,9 @@ const breadcrumbJsonLd = {
   <section class="relative min-h-[70vh] flex items-center justify-center overflow-hidden">
     <div class="absolute inset-0 opacity-[0.03] hero-grid"></div>
     <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] glow-blob opacity-15"></div>
+    <div class="absolute inset-y-0 end-0 z-0 hidden w-72 opacity-70 lg:block xl:w-80">
+      <JourneySignature variant="hero-right" gradientId="founder-hero-grad" />
+    </div>
 
     <div class="relative z-10 mx-auto max-w-3xl px-6 text-center">
       <img src="/assets/avatars/avatar.jpg" alt={AUTHOR.name} width="80" height="80" class="rounded-xl mx-auto mb-6 border border-border shadow-lg" loading="lazy" />
@@ -157,6 +161,9 @@ const breadcrumbJsonLd = {
   <!-- Moving Into Agent Systems -->
   <section class="relative py-24 sm:py-32 overflow-hidden">
     <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="absolute bottom-0 start-0 z-0 hidden w-56 h-80 opacity-50 lg:block">
+      <JourneySignature variant="corner" gradientId="founder-agents-grad" />
+    </div>
     <div class="relative mx-auto max-w-6xl px-6">
       <SectionHeader
         label={t(locale, "founder.agents.label")}
@@ -197,6 +204,9 @@ const breadcrumbJsonLd = {
   <!-- Why SpielOS -->
   <section class="relative py-24 sm:py-32 overflow-hidden">
     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] glow-blob opacity-10"></div>
+    <div class="absolute inset-x-0 top-0 z-0 aspect-[12/1] opacity-35">
+      <JourneySignature variant="band" gradientId="founder-why-grad" />
+    </div>
 
     <div class="relative mx-auto max-w-6xl px-6">
       <SectionHeader

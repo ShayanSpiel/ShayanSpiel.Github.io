@@ -9,12 +9,18 @@ model those rules support.
 The site converts qualified visitors into two outcomes:
 
 1. Buyers who want an AI workflow implemented.
-2. Leads who are not ready to buy but will start a conversation, request an
-   Agent Brief, or continue learning through notes and feature pages.
+2. Leads who are not ready to buy but will start a conversation (Discovery
+   Call), or continue learning through notes and feature pages.
 
-The primary buyer path is `/services/`. The existing Agent Brief experience
-remains available at `/services/agent-brief/` and the services page. Do not
-replace it with a generic CTA page.
+The primary buyer path is `/services/`. Every conversion CTA is a native Cal embed
+trigger — `<button data-cal-link="shayanspiel/15min" data-cal-config='{"layout":"month_view","theme":"dark"}'>`
+(flow.digital pattern) — that opens Cal's booking embed (popup) right on the page:
+no navigation away from the site, no direct cal.com tab, no custom modal wrapper.
+`app.cal.com` embed.js loads site-wide with preconnect so the popup opens as fast
+as possible. The Agent Brief page remains available as an informational experience
+at `/services/agent-brief/` and on the services page; it has no request form. Do
+not replace it with a generic CTA page and do not reintroduce `/book/` navigation
+or direct cal.com links on conversion CTAs.
 The general fallback is `/contact/`. The retired `/waitlist/` route redirects
 directly to `/architecture/`; its Persian equivalent redirects to
 `/fa/architecture/`. The former showcase implementation remains recoverable in
@@ -43,9 +49,9 @@ Founder / operator with repetitive work
         ↓
 Homepage, founder story, notes, Architecture, Live
         ↓
-Services implementation offer and Agent Brief assessment
+Services implementation offer and Agent Brief framework
         ↓
-Agent Brief or contact form
+Discovery Call booking (native Cal embed popup on the page) or contact form
         ↓
 Qualified buyer conversation
 ```
@@ -55,7 +61,7 @@ Qualified buyer conversation
 | Area | Routes | Owner |
 |---|---|---|
 | Positioning | `/`, `/founder/` | Page components + `src/config.ts` |
-| Buyer conversion | `/services/`, `/services/agent-brief/` | Services pages + `ContactModal` |
+| Buyer conversion | `/services/`, `/services/agent-brief/` | Services pages + native Cal embed popup CTAs (`BOOKING_LINK`) |
 | General leads | `/contact/`, `/contact/thank-you/` | Contact page + `FORMS` config |
 | Product education | `/architecture/`, `/live/` | Architecture and Live page components |
 | Founder-led content | `/notes/**` | Notes collection + post components |
@@ -96,11 +102,26 @@ Build data flow for the gallery:
    automatically. Badges and composition-source lines come from the registry
    entry plus `useCases.design.gallery.*` translations.
 
-Navigation: the default nav renders a How it works dropdown (Features,
-Use Cases with a Design flyout) from the nested `NavLink.children` model in
-`src/config.ts`; `src/components/Nav.astro` renders it (desktop
-hover/focus-within with tap-toggle for coarse pointers, mobile accordion,
-RTL-aware). The Live dot and the Agent Brief CTA are preserved.
+Navigation: the default nav renders a How it works dropdown as one flat
+two-category mega menu (Features column: Director, Departments, Workflows,
+Agents, Skills, Evals, Connections, Artifacts; Use Cases column: Design) from
+the `NavLink.children` category model in `src/config.ts`;
+`src/components/Nav.astro` renders it (desktop hover-intent with a leave
+delay and a transparent trigger-to-panel bridge, focus/Enter open, Esc close,
+tap-toggle for coarse pointers, mobile category accordion, RTL-aware). There
+are no second-level sub-menus or flyouts. Every menu item carries its own
+distinct boxicon. The Live dot and the Discovery Call booking CTA are preserved.
+
+Journey signature: `src/components/JourneySignature.astro` + the
+`src/styles/journey-signature.css` token mirror reproduce the Design
+department journey signature (one wandering goal line, dashed muted route
+ahead, solid primary→success traveled fill, nodes on the path, flat
+bullseye). Every placement is full-extent: the route starts at one edge of
+its surface and ends at the opposite edge or boundary. Placements —
+homepage left rail, fixed to the viewport height, with scroll-driven draw
+(`JourneyLine.astro`); full-height hero sidebars (`hero-right`, RTL-aware
+`end-0`); full-width 8:1 aspect bands (`band`); corner surfaces inside cards
+and section corners (`corner`).
 
 ## Shared sources of truth
 
@@ -117,8 +138,12 @@ RTL-aware). The Live dot and the Agent Brief CTA are preserved.
 
 ## Conversion analytics
 
-Conversion events use the generic `lead_*` vocabulary. The active form type is
-`agent_brief`; analytics never include form contents or visitor identity.
+Booking events (PostHog + GA4): `booking_cta_clicked` (with `cta_type: book_call`)
+fires when a visitor clicks any booking CTA; `booked_call` fires when the Cal
+embed (popup) reports a successful booking. The Cal.com-to-Attio sync captures
+the booked call separately for the `booked_calls` metric. `cta_clicked` still
+covers `/services/` and primary-action clicks. Contact submissions use the generic
+`lead_*` vocabulary; analytics never include form contents or visitor identity.
 
 No event may contain email addresses, names, messages, business descriptions,
 or other form contents.

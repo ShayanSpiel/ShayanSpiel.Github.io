@@ -1,6 +1,7 @@
 ---
 import Page from "../layouts/Page.astro";
-import { FORMS, AUTHOR, SITE, SOCIAL } from "../config";
+import JourneySignature from "../components/JourneySignature.astro";
+import { FORMS, AUTHOR, SITE, SOCIAL, BOOKING_LINK, BOOKING_CONFIG } from "../config";
 import { ICONS } from "../lib/icons";
 import { type Locale, t } from "../i18n/translations";
 import { localizePath } from "../i18n";
@@ -36,14 +37,27 @@ const breadcrumbJsonLd = {
   image="/assets/og/contact.png"
   locale={locale}
 >
-  <section class="py-24 sm:py-32">
-    <div class="mx-auto max-w-2xl px-6">
+  <section class="relative py-24 sm:py-32 overflow-hidden">
+    <div class="absolute inset-x-0 top-0 z-0 aspect-[12/1] opacity-35">
+      <JourneySignature variant="band" gradientId="contact-band-grad" />
+    </div>
+    <div class="relative mx-auto max-w-2xl px-6">
       <div class="text-center mb-12" data-aos="fade-up">
         <span class="text-2xs font-semibold uppercase tracking-widest text-primary">{t(locale, "contact.label")}</span>
         <h1 class="mt-3 text-3xl sm:text-4xl font-bold text-foreground-strong tracking-tight">{t(locale, "contact.title")}</h1>
         <p class="mt-4 text-sm text-muted-foreground max-w-lg mx-auto">
           {t(locale, "contact.desc")}
         </p>
+      </div>
+
+      <!-- Primary action: book a free Discovery Call in the calendar overlay. -->
+      <div data-aos="fade-up" class="rounded-lg border border-border bg-panel p-6 sm:p-8 mb-6 text-center">
+        <h2 class="text-lg font-semibold text-foreground-strong">{t(locale, "contact.booking.title")}</h2>
+        <p class="mt-2 text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">{t(locale, "contact.booking.desc")}</p>
+        <button type="button" data-cal-link={BOOKING_LINK} data-cal-config={JSON.stringify(BOOKING_CONFIG)} data-cal-cta data-cta-location="contact_primary" class="mt-6 inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20">
+          {t(locale, "cta.bookDiscoveryCall")}
+        </button>
+        <p class="mt-3 text-xs text-foreground-muted">{t(locale, "contact.booking.fallback")}</p>
       </div>
 
       <div data-aos="fade-up" class="rounded-lg border border-border bg-panel p-6 sm:p-8">

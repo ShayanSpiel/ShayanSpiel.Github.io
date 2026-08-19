@@ -28,7 +28,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from company.departments.outbound.workflows.email import (  # noqa: E402
     compose, config, content, outbound,
 )
-from company.departments.outbound.workflows.email.templates import SIGNATURE_TEXT  # noqa: E402
+from company.departments.outbound.workflows.email.templates import (  # noqa: E402
+    SIGNATURE_HTML, SIGNATURE_TEXT,
+)
 from company.departments.outbound.workflows.email.validators import validate  # noqa: E402
 
 # The real, committed content bank (allowed file for this change) — read-only.
@@ -154,6 +156,29 @@ class SubjectBankTests(unittest.TestCase):
         bank = content.subject_bank_for("generic-workflow")
         self.assertIn("Agentic ops at {company}", bank)
         self.assertIn("Supervised agents at {company}", bank)
+
+
+class SignatureBookingTests(unittest.TestCase):
+    """Change change-e7d88c6f5c (goal-booking-signature-outbound-20260819):
+    every outbound email signature carries the Discovery Call booking CTA
+    line and link, in both HTML and plain-text layers."""
+
+    BOOKING_LINE = "Book a FREE Discovery Call"
+    BOOKING_LINK = "https://cal.com/shayanspiel/15min"
+
+    def test_signature_html_has_booking_line_and_link(self):
+        self.assertIn(self.BOOKING_LINE, SIGNATURE_HTML)
+        self.assertIn(self.BOOKING_LINK, SIGNATURE_HTML)
+
+    def test_signature_text_has_booking_line_and_link(self):
+        self.assertIn(self.BOOKING_LINE, SIGNATURE_TEXT)
+        self.assertIn(self.BOOKING_LINK, SIGNATURE_TEXT)
+
+    def test_booking_link_carries_signature_utm_params(self):
+        for sig in (SIGNATURE_HTML, SIGNATURE_TEXT):
+            self.assertIn("utm_source=outbound-email", sig, sig[:120])
+            self.assertIn("utm_medium=email", sig, sig[:120])
+            self.assertIn("utm_campaign=outbound-sig", sig, sig[:120])
 
 
 class WordBudgetTests(unittest.TestCase):

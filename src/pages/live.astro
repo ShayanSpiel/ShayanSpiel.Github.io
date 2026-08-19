@@ -1,12 +1,12 @@
 ---
-import ContactModal from "../components/ContactModal.astro";
+import JourneySignature from "../components/JourneySignature.astro";
 import LiveTimeline, { type LiveGoal } from "../components/live/LiveTimeline.astro";
 import LiveStatus, { type Heartbeat, type Northstar } from "../components/live/LiveStatus.astro";
 import LiveStats, { type LiveTotals } from "../components/live/LiveStats.astro";
 import SectionHeader from "../components/sections/SectionHeader.astro";
 import OperatingLoop from "../components/architecture/OperatingLoop.astro";
 import Page from "../layouts/Page.astro";
-import { SITE } from "../config";
+import { SITE, BOOKING_LINK, BOOKING_CONFIG } from "../config";
 import { localizePath } from "../i18n";
 import { type Locale, t } from "../i18n/translations";
 import snapshot from "../data/live-goals.json";
@@ -66,6 +66,9 @@ const howTo = [
     <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
     <div class="absolute left-1/2 top-[36%] h-[30rem] w-[46rem] -translate-x-1/2 -translate-y-1/2 glow-blob opacity-20"></div>
     <div class="absolute left-[60%] top-[32%] h-64 w-64 rounded-full opacity-10" style="background: radial-gradient(closest-side, var(--accent), transparent 72%);"></div>
+    <div class="absolute inset-y-0 end-0 z-0 hidden w-80 opacity-60 lg:block xl:w-96">
+      <JourneySignature variant="hero-right" gradientId="live-hero-grad" />
+    </div>
     <div class="relative mx-auto max-w-4xl px-6 text-center" data-aos="fade-up">
       <p class="text-2xs font-semibold uppercase tracking-widest text-primary">{t(locale, "conversion.live.hero.label")}</p>
       <h1 class="mt-4 text-4xl font-extrabold leading-tightest tracking-tight text-foreground-strong sm:text-6xl">{t(locale, "conversion.live.hero.titleLead")}<br /><span class="text-primary">{t(locale, "conversion.live.hero.titleAccent")}</span></h1>
@@ -74,7 +77,7 @@ const howTo = [
         <LiveStatus locale={locale} state={state} heartbeat={heartbeat} northstar={northstar} heartbeatText={heartbeatText} northstarText={northstarText} />
       </div>
       <div class="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
-        <a href={localizePath("/services/agent-brief/#request", locale)} data-open-contact-modal data-cta-location="live_hero" class="inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground">{t(locale, "cta.requestAgentBrief")}</a>
+        <button type="button" data-cal-link={BOOKING_LINK} data-cal-config={JSON.stringify(BOOKING_CONFIG)} data-cal-cta data-cta-location="live_hero" class="inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground">{t(locale, "cta.bookDiscoveryCall")}</button>
         <a href={localizePath("/architecture/", locale)} class="inline-flex h-11 items-center justify-center rounded-md border border-border bg-panel px-6 text-sm font-medium">{t(locale, "conversion.live.hero.secondary")}</a>
       </div>
     </div>
@@ -105,6 +108,9 @@ const howTo = [
 
   <section id="live-howto" class="relative overflow-hidden py-20 sm:py-24">
     <div class="absolute inset-0 bg-panel-deep/35"></div>
+    <div class="absolute bottom-0 start-0 z-0 hidden w-56 h-72 opacity-45 lg:block">
+      <JourneySignature variant="corner" gradientId="live-howto-grad" />
+    </div>
     <div class="relative mx-auto max-w-6xl px-6">
       <SectionHeader label={t(locale, "live.howto.label")} title={t(locale, "live.howto.title")} description={t(locale, "live.howto.desc")} />
       <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" data-aos="fade-up">
@@ -134,11 +140,10 @@ const howTo = [
     <div class="relative mx-auto max-w-3xl px-6 text-center" data-aos="fade-up">
       <h2 class="text-3xl font-bold tracking-tight text-foreground-strong sm:text-4xl">{t(locale, "conversion.live.final.title")}</h2>
       <p class="mt-4 text-base leading-relaxed text-muted-foreground">{t(locale, "conversion.live.final.body")}</p>
-      <a href={localizePath("/services/agent-brief/#request", locale)} data-open-contact-modal data-cta-location="live_final" class="mt-8 inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground">{t(locale, "cta.requestAgentBrief")}</a>
+      <button type="button" data-cal-link={BOOKING_LINK} data-cal-config={JSON.stringify(BOOKING_CONFIG)} data-cal-cta data-cta-location="live_final" class="mt-8 inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground">{t(locale, "cta.bookDiscoveryCall")}</button>
     </div>
   </section>
 
-  <ContactModal locale={locale} />
   <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
   <script is:inline define:vars={{
     restingText: t(locale, "live.heartbeat.resting"),

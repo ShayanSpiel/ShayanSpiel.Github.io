@@ -1,19 +1,16 @@
 ---
 import { type Locale, t } from "../../i18n/translations";
-import { localizePath } from "../../i18n";
-import { AGENT_BRIEFING_PATH } from "../../config";
+import { BOOKING_LINK, BOOKING_CONFIG } from "../../config";
 
 export interface Props {
   locale?: Locale;
   title: string;
   description?: string;
   ctaLabel?: string;
-  ctaHref?: string;
 }
 
-const { locale = "en", title, description, ctaLabel, ctaHref } = Astro.props;
-const href = ctaHref || localizePath(AGENT_BRIEFING_PATH, locale);
-const label = ctaLabel || t(locale, "services.cta.button");
+const { locale = "en", title, description, ctaLabel } = Astro.props;
+const label = ctaLabel || t(locale, "cta.bookDiscoveryCall");
 ---
 
 <section class="relative py-24 sm:py-32 overflow-hidden">
@@ -27,8 +24,15 @@ const label = ctaLabel || t(locale, "services.cta.button");
         {description}
       </p>
     )}
-    <a href={href} class="mt-8 inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20">
+    <button
+      type="button"
+      data-cal-link={BOOKING_LINK}
+      data-cal-config={JSON.stringify(BOOKING_CONFIG)}
+      data-cal-cta
+      data-cta-location="feature_cta"
+      class="mt-8 inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20"
+    >
       {label}
-    </a>
+    </button>
   </div>
 </section>

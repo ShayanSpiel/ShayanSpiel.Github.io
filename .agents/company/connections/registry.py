@@ -32,6 +32,15 @@ _CONNECTIONS = {
             ("search", "open_page", "collect_public_evidence"),
         ),
         ConnectionSpec(
+            "cal-booking",
+            "Cal.com scheduling read for booked Discovery Calls through the official "
+            "API v2 (GET https://api.cal.com/v2/bookings). Reads are direct with the "
+            "local CALCOM_API_KEY; writes stay host-mediated (runtime booked_call "
+            "evidence + attio MCP notes via the outbound calcom_sync adapter).",
+            ("fetch_bookings", "sync_booked_calls", "verify"),
+            ("direct",), True, ("CALCOM_API_KEY",),
+        ),
+        ConnectionSpec(
             "email-delivery",
             "Direct provider delivery required by unattended Outbound runs.",
             ("send", "delivery_events", "reply_events"),

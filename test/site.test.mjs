@@ -18,13 +18,17 @@ test("core conversion routes build in English and Persian", () => {
   }
 });
 
-test("navigation exposes the fixed information architecture and one-click form", () => {
+test("navigation exposes the fixed information architecture and the booking CTA", () => {
   const en = read("");
   const fa = read("fa");
   for (const href of ["/services/", "/features/", "/live/", "/notes/", "/founder/"]) assert.match(en, new RegExp(`href="${href}"`));
   for (const href of ["/fa/services/", "/fa/features/", "/fa/live/", "/fa/notes/", "/fa/founder/"]) assert.match(fa, new RegExp(`href="${href}"`));
-  assert.match(en, /href="\/services\/agent-brief\/#request"/);
-  assert.match(fa, /href="\/fa\/services\/agent-brief\/#request"/);
+  for (const html of [en, fa]) {
+    assert.match(html, /data-cal-link="shayanspiel\/15min"/, "booking CTAs must be native Cal embed triggers");
+    assert.match(html, /data-cal-cta/, "booking CTA trigger marker must be present");
+    assert.match(html, /app\.cal\.com\/embed\/embed\.js/, "Cal embed script must load site-wide for the on-page popup");
+    assert.doesNotMatch(html, /href="\/book\/"/, "no CTA may navigate to /book/");
+  }
 });
 
 test("home has valid buyer links and the required schema types", () => {
@@ -52,7 +56,7 @@ test("Features presents the canonical loop and the company tree with Evals", () 
   }
   assert.match(en, /assets\/og\/features\.png/);
   assert.match(en, /href="\/live\/"/);
-  assert.match(en, /href="\/services\/agent-brief\/#request"/);
+  assert.match(en, /data-cal-link="shayanspiel\/15min"/);
   assert.match(fa, /هدف/);
   assert.match(fa, /دپارتمان/);
   assert.match(fa, /ورک‌فلو/);
@@ -111,19 +115,16 @@ test("sitemap includes localized core pages and excludes redirects and noindex d
   }
 });
 
-test("Agent Brief uses one shared native three-field form with safe analytics", () => {
+test("Agent Brief stays an informational page with a booking CTA and no request form", () => {
   for (const route of ["services/agent-brief", "fa/services/agent-brief"]) {
     const page = read(route);
-    const section = (page.match(/<section id="request"[\s\S]*?<\/section>/) || [""])[0];
-    assert.ok(section, `${route} must contain #request`);
-    assert.match(section, /<form[^>]*method="post"/);
-    assert.equal((section.match(/<(?:input|textarea)[^>]*name="(?:name|email|workflow)"/g) || []).length, 3);
-    assert.match(section, /name="page_path"/);
-    assert.match(section, /name="locale"/);
+    assert.match(page, /brief-rail/, `${route} must keep the brief framework rail`);
+    assert.match(page, /data-cal-link="shayanspiel\/15min"/, `${route} hero must be a native Cal embed booking CTA`);
+    assert.doesNotMatch(page, /<form[^>]*method="post"/, `${route} must not contain a request form`);
+    assert.doesNotMatch(page, /id="request"/, `${route} must not contain the retired #request section`);
   }
-  const source = readFileSync(join(root, "src/components/AgentBriefForm.astro"), "utf8");
-  for (const event of ["lead_form_view", "lead_form_start", "lead_form_submit", "lead_form_success", "lead_form_error"]) assert.match(source, new RegExp(event));
-  assert.match(source, /window\.spielosTrack\(name, \{ form_type: 'agent_brief', page: page, locale: locale, location: formLocation \}\)/);
+  assert.ok(!existsSync(join(root, "src/components/AgentBriefForm.astro")), "AgentBriefForm must be removed");
+  assert.ok(!existsSync(join(root, "src/components/ContactModal.astro")), "ContactModal must be removed");
 });
 
 test("Live leads with active business work, north star, hierarchy, and visible self-improvement", () => {
@@ -164,7 +165,7 @@ test("Live leads with active business work, north star, hierarchy, and visible s
   assert.match(en, /data-live-load-more="business"/);
   assert.match(en, /data-live-load-more="improvement"/);
   assert.match(en, /Still being measured/);
-  assert.match(en, /href="\/services\/agent-brief\/#request"/);
+  assert.match(en, /data-cal-link="shayanspiel\/15min"/);
   assert.match(fa, /هنوز در حال اندازه‌گیریه/);
   assert.match(fa, /مشاهده فعالیت/);
 
@@ -235,6 +236,18 @@ test("Live leads with active business work, north star, hierarchy, and visible s
   }
 });
 
+test("booking CTAs open the Cal embed on the page (flow.digital pattern), no /book/ route and no external cal.com link", () => {
+  for (const route of ["", "fa", "services", "fa/services", "features", "live", "services/agent-brief", "contact", "use-cases", "features/director"]) {
+    const page = read(route);
+    assert.match(page, /data-cal-link="shayanspiel\/15min"/, `${route} must carry native Cal embed booking triggers`);
+    assert.match(page, /data-cal-cta/, `${route} must carry the booking CTA marker`);
+    assert.match(page, /app\.cal\.com\/embed\/embed\.js/, `${route} must load the Cal embed script site-wide`);
+    assert.doesNotMatch(page, /href="\/book\/"/, `${route} must not navigate to /book/`);
+    assert.doesNotMatch(page, /href="https:\/\/cal\.com\/shayanspiel\/15min/, `${route} CTAs must not be external cal.com links`);
+    assert.doesNotMatch(page, /data-open-contact-modal/, `${route} must not wire the retired contact modal`);
+  }
+});
+
 test("conversion pages preserve the distinctive grid, light, and connected-progress language", () => {
   for (const route of ["", "services", "services/agent-brief", "features", "live"]) {
     const html = read(route);
@@ -289,7 +302,6 @@ test("new conversion source uses Boxicons, semantic tokens, and no em dash", () 
     "src/pages/services/agent-brief.astro",
     "src/pages/features/index.astro",
     "src/pages/live.astro",
-    "src/components/AgentBriefForm.astro",
     "src/components/architecture/DepartmentMap.astro",
     "src/components/architecture/OperatingLoop.astro",
     "src/components/features/BlockPage.astro",

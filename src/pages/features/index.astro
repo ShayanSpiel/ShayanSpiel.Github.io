@@ -1,10 +1,10 @@
 ---
 import Page from "../../layouts/Page.astro";
-import ContactModal from "../../components/ContactModal.astro";
+import JourneySignature from "../../components/JourneySignature.astro";
 import DepartmentMap from "../../components/architecture/DepartmentMap.astro";
 import OperatingLoop from "../../components/architecture/OperatingLoop.astro";
 import SectionHeader from "../../components/sections/SectionHeader.astro";
-import { SITE } from "../../config";
+import { SITE, BOOKING_LINK, BOOKING_CONFIG } from "../../config";
 import { localizePath } from "../../i18n";
 import { type Locale, t } from "../../i18n/translations";
 
@@ -52,13 +52,16 @@ const breadcrumbJsonLd = {
     <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
     <div class="absolute left-1/2 top-[42%] h-[32rem] w-[48rem] -translate-x-1/2 -translate-y-1/2 glow-blob opacity-20"></div>
     <div class="absolute left-[58%] top-[38%] h-64 w-64 rounded-full opacity-10" style="background: radial-gradient(closest-side, var(--accent), transparent 72%);"></div>
+    <div class="absolute inset-y-0 end-0 z-0 hidden w-80 opacity-60 lg:block xl:w-96">
+      <JourneySignature variant="hero-right" gradientId="features-hero-grad" />
+    </div>
     <div class="relative mx-auto max-w-4xl px-6 text-center" data-aos="fade-up">
       <p class="text-2xs font-semibold uppercase tracking-widest text-primary">{t(locale, "features.hero.label")}</p>
       <h1 class="mt-4 text-4xl font-extrabold leading-tightest tracking-tight text-foreground-strong sm:text-6xl">{t(locale, "features.hero.titleLead")}<br /><span class="text-primary">{t(locale, "features.hero.titleAccent")}</span></h1>
       <p class="mx-auto mt-6 max-w-3xl text-base leading-relaxed text-muted-foreground">{t(locale, "features.hero.desc")}</p>
       <div class="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
-        <a href={localizePath("/live/", locale)} data-features-live class="inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground transition-all hover:brightness-110">{t(locale, "features.hero.primary")}</a>
-        <a href={localizePath("/services/agent-brief/#request", locale)} data-open-contact-modal data-features-brief class="inline-flex h-11 items-center justify-center rounded-md border border-border bg-panel px-6 text-sm font-medium text-foreground transition-all hover:border-border-strong hover:bg-panel-raised">{t(locale, "features.hero.secondary")}</a>
+        <button type="button" data-cal-link={BOOKING_LINK} data-cal-config={JSON.stringify(BOOKING_CONFIG)} data-cal-cta data-features-brief class="inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground transition-all hover:brightness-110">{t(locale, "cta.bookDiscoveryCall")}</button>
+        <a href={localizePath("/live/", locale)} data-features-live class="inline-flex h-11 items-center justify-center rounded-md border border-border bg-panel px-6 text-sm font-medium text-foreground transition-all hover:border-border-strong hover:bg-panel-raised">{t(locale, "features.hero.primary")}</a>
       </div>
     </div>
   </section>
@@ -84,6 +87,9 @@ const breadcrumbJsonLd = {
       <div class="tree-canvas relative overflow-hidden rounded-xl border border-border bg-panel p-5 shadow-panel sm:p-8" data-aos="fade-up">
         <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
         <div class="absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 glow-blob opacity-10"></div>
+        <div class="absolute end-0 top-0 z-0 hidden w-44 h-64 opacity-30 lg:block">
+          <JourneySignature variant="corner" gradientId="features-tree-grad" glow={false} />
+        </div>
         <div class="tree-rail relative grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {tree.map((node) => (
             <a href={localizePath(node.href, locale)} class:list={["group relative rounded-md border bg-panel-raised p-5 transition-all hover:-translate-y-1 hover:border-border-strong hover:shadow-panel", `border-${node.color}/30`]}>
@@ -152,15 +158,13 @@ const breadcrumbJsonLd = {
     <div class="relative mx-auto max-w-3xl px-6 text-center" data-aos="fade-up">
       <h2 class="text-3xl font-bold tracking-tight text-foreground-strong sm:text-4xl">{t(locale, "architecture.cta.title")}</h2>
       <p class="mt-4 text-base leading-relaxed text-muted-foreground">{t(locale, "architecture.cta.desc")}</p>
-      <a href={localizePath("/services/agent-brief/#request", locale)} data-open-contact-modal class="mt-8 inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground transition-all hover:brightness-110">{t(locale, "cta.requestAgentBrief")}</a>
+      <button type="button" data-cal-link={BOOKING_LINK} data-cal-config={JSON.stringify(BOOKING_CONFIG)} data-cal-cta class="mt-8 inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground transition-all hover:brightness-110">{t(locale, "cta.bookDiscoveryCall")}</button>
     </div>
   </section>
 
-  <ContactModal locale={locale} />
   <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
   <script is:inline>
     document.querySelectorAll("[data-features-live]").forEach(function (link) { link.addEventListener("click", function () { if (typeof window.spielosTrack === "function") window.spielosTrack("cta_clicked", { cta_type: "features_live" }); }); });
-    document.querySelectorAll("[data-features-brief]").forEach(function (link) { link.addEventListener("click", function () { if (typeof window.spielosTrack === "function") window.spielosTrack("cta_clicked", { cta_type: "features_brief" }); }); });
   </script>
 </Page>
 

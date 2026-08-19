@@ -4,7 +4,7 @@ import FeatureHero from "../../components/features/FeatureHero.astro";
 import FeatureCTA from "../../components/features/FeatureCTA.astro";
 import SectionHeader from "../../components/sections/SectionHeader.astro";
 import { type Locale, t } from "../../i18n/translations";
-import { localizePath } from "../../i18n";
+
 
 export interface Props {
   locale?: Locale;
@@ -50,7 +50,7 @@ const ctaDesc = t(locale, k("cta.desc"));
     label={label}
     title={heroTitle}
     description={heroDesc}
-    cta={{ label: t(locale, "cta.requestAgentBrief"), href: localizePath("/services/agent-brief/#request", locale) }}
+    cta={{ label: t(locale, "cta.bookDiscoveryCall") }}
   />
 
   <section class="relative py-24 sm:py-32">

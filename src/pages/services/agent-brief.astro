@@ -1,10 +1,8 @@
 ---
 import Page from "../../layouts/Page.astro";
-import { SITE } from "../../config";
+import { SITE, BOOKING_LINK, BOOKING_CONFIG } from "../../config";
 import { type Locale, t } from "../../i18n/translations";
 import { localizePath } from "../../i18n";
-import ContactModal from "../../components/ContactModal.astro";
-import AgentBriefForm from "../../components/AgentBriefForm.astro";
 
 export interface Props {
   locale?: Locale;
@@ -66,13 +64,13 @@ const breadcrumbJsonLd = {
             <p class="mt-5 text-sm leading-relaxed text-muted-foreground">{t(locale, "agentBrief.hero.body")}</p>
             <p class="mt-3 text-xs font-medium text-foreground">{t(locale, "agentBrief.hero.trust")}</p>
           </div>
-          <a
-            href={localizePath("/services/agent-brief/#request", locale)}
-            data-open-contact-modal
+          <button type="button" data-cal-link={BOOKING_LINK} data-cal-config={JSON.stringify(BOOKING_CONFIG)}
+            data-cal-cta
+            data-cta-location="agent_brief_hero"
             class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-5 h-10 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20 cursor-pointer shrink-0"
           >
-            {t(locale, "cta.requestAgentBrief")}
-          </a>
+            {t(locale, "cta.bookDiscoveryCall")}
+          </button>
         </div>
       </div>
 
@@ -124,17 +122,6 @@ const breadcrumbJsonLd = {
     </div>
   </section>
 
-  <!-- Agent Brief request form (inline, works without JavaScript) -->
-  <section id="request" class="relative pt-8 sm:pt-10 pb-20 sm:pb-24 overflow-hidden">
-    <div class="absolute inset-0 bg-panel-deep/50"></div>
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] glow-blob opacity-10"></div>
-
-    <div class="relative mx-auto max-w-3xl px-6" data-aos="fade-up">
-      <AgentBriefForm id="agent-brief-inline" locale={locale} />
-    </div>
-  </section>
-
-  <ContactModal locale={locale} />
   <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
 </Page>
 

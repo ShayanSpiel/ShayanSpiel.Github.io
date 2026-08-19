@@ -1,90 +1,33 @@
 ---
 /**
- * JourneyLine — scroll-progress line with colored boxicon nodes.
- * SVG path only. HTML icons positioned by JS on scroll.
- * Nodes activate by scroll percentage.
- * Hidden on mobile (< lg).
+ * JourneyLine — the homepage left-side journey rail, upgraded to the exact
+ * Design department journey signature family (see JourneySignature.astro):
+ * one smooth wandering goal line, dashed muted route ahead, solid primary
+ * traveled fill, nodes that ride ON the path, route ending at a flat
+ * bullseye. The only homepage-specific part is the scroll-driven draw of
+ * the travelled fill; the geometry, nodes, and bullseye are the shared
+ * signature. Hidden on mobile (< lg).
  */
-
-const SECTIONS = [
-  { id: "hero",     y: 50,  icon: "bx-bullseye",       color: "primary" },
-  { id: "avatar",   y: 170, icon: "bx-badge-check",    color: "success" },
-  { id: "entry",    y: 290, icon: "bx-network-chart",  color: "primary" },
-  { id: "why",      y: 410, icon: "bx-trending-up",    color: "success" },
-  { id: "proof",    y: 530, icon: "bx-bar-chart-alt-2", color: "accent" },
-  { id: "product",  y: 650, icon: "bx-layer",          color: "purple" },
-  { id: "services", y: 770, icon: "bx-cog",            color: "accent" },
-  { id: "notes",    y: 870, icon: "bx-book",           color: "primary" },
-  { id: "final",    y: 960, icon: "bx-rocket",         color: "primary" },
-];
-
-const PATH =
-  "M 100 0" +
-  " C 100 25, 75 40, 75 50" +
-  " S 75 85, 75 110" +
-  " C 75 130, 125 145, 125 170" +
-  " S 125 200, 125 230" +
-  " C 125 250, 70 265, 70 290" +
-  " S 70 325, 70 350" +
-  " C 70 370, 130 385, 130 410" +
-  " S 130 445, 130 470" +
-  " C 130 490, 70 505, 70 530" +
-  " S 70 565, 70 590" +
-  " C 70 610, 130 625, 130 650" +
-  " S 130 685, 130 710" +
-  " C 130 730, 75 745, 75 770" +
-  " S 75 800, 75 830" +
-  " C 75 845, 100 855, 100 870" +
-  " S 100 915, 100 960" +
-  " L 100 1000";
+import JourneySignature from "./JourneySignature.astro";
 ---
 
 <div class="jl-wrap" aria-hidden="true">
-  <svg viewBox="0 0 200 1000" preserveAspectRatio="xMidYMin slice" class="jl-svg">
-    <defs>
-      <linearGradient id="jl-grad" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="var(--primary)" stop-opacity="0.05" />
-        <stop offset="20%" stop-color="var(--primary)" stop-opacity="0.25" />
-        <stop offset="100%" stop-color="var(--primary)" stop-opacity="0.9" />
-      </linearGradient>
-      <filter id="jl-glow">
-        <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="b" />
-        <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
-      </filter>
-    </defs>
-    <path class="jl-track" d={PATH} fill="none" stroke="var(--border)" stroke-width="2" stroke-dasharray="6 6" />
-    <path class="jl-fill" d={PATH} fill="none" stroke="url(#jl-grad)" stroke-width="2" stroke-linecap="round" filter="url(#jl-glow)" />
-    {SECTIONS.map((s) => (
-      <circle class="jl-anchor" cx="100" cy={s.y} r="1" />
-    ))}
-  </svg>
-
-  <div class="jl-icons">
-    {SECTIONS.map((s) => (
-      <div class:list={["jl-icon", `jl-${s.color}`]} data-s={s.id}>
-        <i class={`bx ${s.icon}`}></i>
-      </div>
-    ))}
-  </div>
+  <JourneySignature variant="rail" gradientId="home-rail-grad" />
 </div>
 
 <script is:inline>
 (function () {
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  var svg = document.querySelector(".jl-svg");
-  var fill = document.querySelector(".jl-fill");
-  if (!svg || !fill) return;
+  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  var wrap = document.querySelector(".jl-wrap");
+  var fill = wrap ? wrap.querySelector(".journey-path-fill") : null;
+  if (!wrap || !fill) return;
 
   var len = fill.getTotalLength();
   fill.style.strokeDasharray = len;
-  fill.style.strokeDashoffset = len;
-
-  var anchors = svg.querySelectorAll(".jl-anchor");
-  var icons = document.querySelectorAll(".jl-icon");
-  var count = icons.length;
-
-  /* hide icons until boxicon font is ready */
-  for (var i = 0; i < count; i++) icons[i].style.visibility = "hidden";
+  /* Start with the first 25% already traveled (like the confirmed renders'
+     traveled + route-ahead composition) and reveal the rest on scroll. */
+  var START_REVEAL = 0.25;
+  fill.style.strokeDashoffset = len * (1 - START_REVEAL);
 
   function tick() {
     var top = window.pageYOffset || document.documentElement.scrollTop;
@@ -94,26 +37,7 @@ const PATH =
     if (max <= 0) return;
 
     var p = Math.min(top / max, 1);
-    fill.style.strokeDashoffset = len * (1 - p);
-
-    for (var i = 0; i < count; i++) {
-      var threshold = i / (count - 1);
-      if (p >= threshold) icons[i].classList.add("active");
-      else icons[i].classList.remove("active");
-
-      var r = anchors[i].getBoundingClientRect();
-      icons[i].style.left = (r.left + r.width / 2) + "px";
-      icons[i].style.top = (r.top + r.height / 2) + "px";
-    }
-  }
-
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(function () {
-      for (var i = 0; i < count; i++) icons[i].style.visibility = "";
-      tick();
-    });
-  } else {
-    for (var i = 0; i < count; i++) icons[i].style.visibility = "";
+    fill.style.strokeDashoffset = len * (1 - START_REVEAL) * (1 - p);
   }
 
   window.addEventListener("scroll", tick, { passive: true });

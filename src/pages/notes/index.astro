@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import Page from "../../layouts/Page.astro";
+import JourneySignature from "../../components/JourneySignature.astro";
 import { SITE, AUTHOR } from "../../config";
 import { type Locale, t } from "../../i18n/translations";
 import { localizePath } from "../../i18n";
@@ -68,8 +69,11 @@ const noResultsLabel = t(locale, "notes.noResults");
   image="/assets/og/blog.png"
   locale={locale}
 >
-  <section class="py-24 sm:py-32">
-    <div class="mx-auto max-w-4xl px-6">
+  <section class="relative py-24 sm:py-32 overflow-hidden">
+    <div class="absolute inset-x-0 bottom-0 z-0 aspect-[12/1] opacity-35">
+      <JourneySignature variant="band" gradientId="notes-band-grad" />
+    </div>
+    <div class="relative mx-auto max-w-4xl px-6">
       <div class="text-center mb-12" data-aos="fade-up">
         <span class="text-2xs font-semibold uppercase tracking-widest text-primary">{t(locale, "notes.label")}</span>
         <h1 class="mt-3 text-3xl sm:text-4xl font-bold text-foreground-strong tracking-tight">{t(locale, "notes.title")}</h1>

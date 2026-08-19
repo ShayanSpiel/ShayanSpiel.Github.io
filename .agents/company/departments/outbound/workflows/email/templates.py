@@ -18,6 +18,7 @@ from .config import (
     SIGNATURE_LINKEDIN,
     SIGNATURE_X,
     SIGNATURE_SERVICES,
+    SIGNATURE_BOOKING,
 )
 
 SIGNATURE_HTML = f"""\
@@ -36,6 +37,9 @@ SIGNATURE_HTML = f"""\
         &nbsp;&middot;&nbsp;
         <a href="{SIGNATURE_SERVICES}" style="color:#333333;text-decoration:none;">spielos.xyz/services</a>
       </div>
+      <div style="margin-top:8px;">
+        <a href="{SIGNATURE_BOOKING}" style="color:#2f81f7;text-decoration:none;font-weight:bold;">Book a FREE Discovery Call</a>
+      </div>
     </td>
   </tr>
 </table>"""
@@ -45,7 +49,8 @@ SIGNATURE_TEXT = f"""\
 {SIGNATURE_TITLE}
 LinkedIn: {SIGNATURE_LINKEDIN}
 X: {SIGNATURE_X}
-{SIGNATURE_SERVICES}"""
+{SIGNATURE_SERVICES}
+Book a FREE Discovery Call: {SIGNATURE_BOOKING}"""
 
 TEMPLATES = {
     "English": [

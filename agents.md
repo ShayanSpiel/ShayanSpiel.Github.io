@@ -48,9 +48,18 @@ rename, move, or modify any file under `src/components/showcase/*`.
 redirect wrappers to their localized Architecture routes. Do not add any other
 behavior to them.
 
-The navbar CTA points to `/services/agent-brief/#request`. The Agent Brief section and page remain
-the existing assessment experience; do not replace them with a generic CTA
-page. The legacy waitlist is not a default CTA.
+Every conversion CTA on the site books a free Discovery Call: the navbar CTA and all
+primary page CTAs are native Cal embed triggers — `<button data-cal-link="shayanspiel/15min"
+data-cal-config='{"layout":"month_view","theme":"dark"}'>` — the flow.digital
+pattern. Clicking a CTA opens Cal's own booking embed (popup) right on the page:
+no navigation away from the site, no direct cal.com tab, no custom modal wrapper.
+`app.cal.com` embed.js loads site-wide with preconnect so the popup opens as fast
+as possible. The Agent Brief page at `/services/agent-brief/` stays a purely
+informational page (framework rail, agent statement, define-together table,
+deliverable section); its hero CTA is also a native Cal embed trigger. Do not
+reintroduce an Agent Brief request form or modal, and do not reintroduce `/book/`
+navigation or direct cal.com links on any conversion CTA. The legacy waitlist is
+not a default CTA.
 
 ## Strategy — single source of truth
 
@@ -183,18 +192,41 @@ Persian headings use heavier font-weight (h1=800, h2=700, h3+=600) via `[dir="rt
 
 Single source of truth: `src/config.ts` → `NAV_LINKS`.
 
-Default nav: Services → `/services/`, How it works → `/features/` (dropdown:
-Features → `/features/`, Use Cases → `/use-cases/` with Design →
-`/use-cases/design/`), Live → `/live/`, Notes → `/notes/`,
-Founder → `/founder/`.
+Default nav: Services → `/services/`, How it works → `/features/` (flat
+two-category dropdown: Features → `/features/` with Director,
+Departments, Workflows, Agents, Skills, Evals, Connections, Artifacts, and
+Use Cases → `/use-cases/` with Design → `/use-cases/design/`), Live →
+`/live/`, Notes → `/notes/`, Founder → `/founder/`.
 The How it works dropdown is rendered by `src/components/Nav.astro` from the
-nested `NavLink.children` model in `src/config.ts` (desktop hover/focus
-dropdown, mobile accordion, RTL-aware).
-Primary navbar CTA: Request an Agent Brief → `/services/agent-brief/#request`.
-The Agent Brief experience remains at `/services/agent-brief/` and in the
-services page.
+`NavLink.children` category model in `src/config.ts`: one flat mega menu with
+no second-level sub-menus or flyouts (desktop hover-intent with a leave-delay
+and a transparent trigger-to-panel bridge, focus/Enter open, Esc close,
+tap-toggle for coarse pointers, mobile category accordion, RTL-aware). Every
+menu item carries its own distinct boxicon from `NAV_ITEM_ICONS`.
+Primary navbar CTA: Book a Discovery Call (FREE) → native Cal embed trigger button
+(`data-cal-link="shayanspiel/15min"`). Clicking it opens Cal's booking embed
+(popup) right on the page — flow.digital pattern — with no navigation away from
+the site and no external cal.com tab. embed.js loads site-wide with preconnect to
+`app.cal.com` so the popup opens as fast as possible. Click tracking fires
+`booking_cta_clicked` (with `cta_type: book_call`) without blocking the popup;
+`booked_call` fires when Cal reports a successful booking. The Agent Brief page
+remains informational at `/services/agent-brief/` and linked from the services
+page.
 
 The retired showcase navigation is not used by any active route.
+
+## Journey signature
+
+`src/components/JourneySignature.astro` + `src/styles/journey-signature.css`
+mirror the Design department journey signature (one wandering goal line, dashed
+muted route ahead, solid primary traveled fill, nodes riding ON the path, flat
+bullseye; static, token colors, RTL-safe). Every placement is full-extent.
+Placements: homepage left rail (`JourneyLine.astro`, keeps the scroll-driven
+draw, hidden on mobile), full-height hero sidebars (`hero-right`), full-width
+8:1 aspect bands between sections (`band`), and corner surfaces inside cards
+(`corner`). All level-1 pages (`/`, `/founder/`, `/notes/`, `/contact/`,
+`/services/`, `/live/`, `/features/`, `/use-cases/`) render at least one
+signature; each instance gets a unique `gradientId`.
 
 ## Footer
 

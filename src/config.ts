@@ -103,18 +103,34 @@ export const FORMS = {
 // Compatibility alias for older imports. The public waitlist route now redirects here.
 export const WAITLIST_URL = "/features/";
 export const SERVICES_PATH = "/services/";
-// Legacy path retired after conversion migration: AGENT_BRIEFING_PATH = "/services/#agent-briefing"
-export const AGENT_BRIEFING_PATH = "/services/agent-brief/#request";
-/** Canonical Agent Brief request form destination (inline form on the Agent Brief page). */
-export const AGENT_BRIEF_REQUEST_PATH = "/services/agent-brief/#request";
+
+// Discovery Call booking (owner directive 2026-08-19, v4 — flow.digital
+// pattern): every conversion CTA is a native Cal embed trigger
+// (<button data-cal-link=shayanspiel/15min data-cal-config='...'>). Clicking it
+// opens Cal's own booking embed (popup) right on the page — no navigation away
+// from the site, no external cal.com tab, no custom modal wrapper. embed.js +
+// preconnect load site-wide so the popup opens as fast as possible.
+export const BOOKING_URL = "https://cal.com/shayanspiel/15min?overlayCalendar=true";
+export const BOOKING_LINK = "shayanspiel/15min";
+export const BOOKING_CONFIG = { layout: "month_view", theme: "dark" } as const;
+
+// The Agent Brief request form was removed; the Agent Brief page is now purely
+// informational, so the canonical destination is the page itself (no #request).
+export const AGENT_BRIEFING_PATH = "/services/agent-brief/";
+export const AGENT_BRIEF_REQUEST_PATH = "/services/agent-brief/";
 
 export interface NavChildLink {
   label: string;
   href: string;
   /** Renders a small liveness ping dot beside the label. */
   live?: boolean;
-  /** Nested grandchild links (e.g. Design under Use Cases). */
+  /** Category block items. The dropdown renders every child-with-children as
+   *  one flat category (header + plain item links). There are NO second-level
+   *  sub-menus or flyouts anywhere in the site navigation. */
   children?: NavChildLink[];
+  /** Desktop presentation: how many columns the category items render in.
+   *  2 = wide two-column grid (Features), 1 = single column (Use Cases). */
+  columns?: 1 | 2;
 }
 
 export interface NavLink {
@@ -122,7 +138,8 @@ export interface NavLink {
   href: string;
   /** Renders a small liveness ping dot beside the label. */
   live?: boolean;
-  /** Nested child links rendered as a dropdown group (desktop) / accordion (mobile). */
+  /** Category blocks rendered as one flat two-column mega menu on desktop
+   *  and tidy grouped accordion items on mobile. */
   children?: NavChildLink[];
 }
 
@@ -133,10 +150,25 @@ export const NAV_LINKS: { default: NavLink[]; showcase: NavLink[] } = {
       label: "How it works",
       href: "/features/",
       children: [
-        { label: "Features", href: "/features/" },
+        {
+          label: "Features",
+          href: "/features/",
+          columns: 2,
+          children: [
+            { label: "Director", href: "/features/director/" },
+            { label: "Departments", href: "/features/departments/" },
+            { label: "Workflows", href: "/features/workflows/" },
+            { label: "Agents", href: "/features/agents/" },
+            { label: "Skills", href: "/features/skills/" },
+            { label: "Evals", href: "/features/evals/" },
+            { label: "Connections", href: "/features/connections/" },
+            { label: "Artifacts", href: "/features/artifacts/" },
+          ],
+        },
         {
           label: "Use Cases",
           href: "/use-cases/",
+          columns: 1,
           children: [{ label: "Design", href: "/use-cases/design/" }],
         },
       ],
