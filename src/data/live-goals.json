@@ -2844,7 +2844,7 @@
       "created_at": "2026-08-19T17:16:37.493171+00:00",
       "goal_status": "active",
       "id": "goal-2676f113ff",
-      "latest_activity_at": "2026-08-19T23:44:26.434359+00:00",
+      "latest_activity_at": "2026-08-19T23:50:18.555905+00:00",
       "metric": "reply_rate",
       "name": "English outbound send batch 21: final 22 from remaining queue (send-all push)",
       "operator": "ge",
@@ -2853,7 +2853,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-19T23:44:26.432599+00:00"
+      "updated_at": "2026-08-19T23:50:18.555331+00:00"
     },
     {
       "created_at": "2026-08-19T17:40:20.472091+00:00",
@@ -2904,16 +2904,16 @@
       "created_at": "2026-08-19T22:56:06.025634+00:00",
       "goal_status": "active",
       "id": "goal-content-regenerate-batch1-v2-20260820",
-      "latest_activity_at": "2026-08-19T23:46:49.619452+00:00",
+      "latest_activity_at": "2026-08-19T23:47:57.620492+00:00",
       "metric": "published_items",
       "name": "Regenerate fresh Batch 1 (Threads images + Shorts) under the schema-1.2 whole-story storytelling contract with clean image evals (replace removed batch)",
       "operator": "ge",
       "owner_id": "content",
       "parent_id": null,
-      "run_status": "failed",
-      "stage": "EVALUATE",
+      "run_status": "awaiting_approval",
+      "stage": "ACT",
       "target": 1,
-      "updated_at": "2026-08-19T23:46:49.618068+00:00"
+      "updated_at": "2026-08-19T23:47:57.618450+00:00"
     }
   ],
   "heartbeat": {
@@ -2921,15 +2921,15 @@
     "business_value_fa": null,
     "display_title": null,
     "display_title_fa": null,
-    "goal_id": "goal-content-regenerate-batch1-v2-20260820",
-    "goal_name": "Regenerate fresh Batch 1 (Threads images + Shorts) under the schema-1.2 whole-story storytelling contract with clean image evals (replace removed batch)",
-    "metric": "published_items",
+    "goal_id": "goal-2676f113ff",
+    "goal_name": "English outbound send batch 21: final 22 from remaining queue (send-all push)",
+    "metric": "reply_rate",
     "operator": "ge",
-    "owner_id": "content",
-    "run_status": "failed",
+    "owner_id": "outbound",
+    "run_status": "waiting",
     "stage": "EVALUATE",
-    "target": 1,
-    "updated_at": "2026-08-19T23:46:49.619452+00:00"
+    "target": 0.3,
+    "updated_at": "2026-08-19T23:50:18.555905+00:00"
   },
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
@@ -2942,38 +2942,38 @@
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-19T22:56:06.025634+00:00",
-      "goal_id": "goal-content-regenerate-batch1-v2-20260820",
-      "goal_name": "Regenerate fresh Batch 1 (Threads images + Shorts) under the schema-1.2 whole-story storytelling contract with clean image evals (replace removed batch)",
-      "owner_id": "content",
-      "run_id": "run-fad7a617f8",
-      "run_status": "failed",
+      "created_at": "2026-08-19T17:16:37.493171+00:00",
+      "goal_id": "goal-2676f113ff",
+      "goal_name": "English outbound send batch 21: final 22 from remaining queue (send-all push)",
+      "owner_id": "outbound",
+      "run_id": "run-c06d21c4f1",
+      "run_status": "waiting",
       "stage": "EVALUATE",
-      "updated_at": "2026-08-19T23:46:49.619452+00:00"
+      "updated_at": "2026-08-19T23:50:18.555905+00:00"
     },
     "heartbeat": {
       "business_value": null,
       "business_value_fa": null,
       "display_title": null,
       "display_title_fa": null,
-      "goal_id": "goal-content-regenerate-batch1-v2-20260820",
-      "goal_name": "Regenerate fresh Batch 1 (Threads images + Shorts) under the schema-1.2 whole-story storytelling contract with clean image evals (replace removed batch)",
-      "metric": "published_items",
+      "goal_id": "goal-2676f113ff",
+      "goal_name": "English outbound send batch 21: final 22 from remaining queue (send-all push)",
+      "metric": "reply_rate",
       "operator": "ge",
-      "owner_id": "content",
-      "run_status": "failed",
+      "owner_id": "outbound",
+      "run_status": "waiting",
       "stage": "EVALUATE",
-      "target": 1,
-      "updated_at": "2026-08-19T23:46:49.619452+00:00"
+      "target": 0.3,
+      "updated_at": "2026-08-19T23:50:18.555905+00:00"
     },
-    "last_activity_at": "2026-08-19T23:46:49.619452+00:00",
-    "last_sync_at": "2026-08-19T23:46:49.647662+00:00",
+    "last_activity_at": "2026-08-19T23:50:18.555905+00:00",
+    "last_sync_at": "2026-08-19T23:50:18.579052+00:00",
     "state": "running"
   },
   "totals": {
     "approvals": 232,
-    "decisions": 425,
-    "evidence": 7436,
+    "decisions": 427,
+    "evidence": 7439,
     "goals_abandoned": 23,
     "goals_achieved": 138,
     "goals_active": 29,
