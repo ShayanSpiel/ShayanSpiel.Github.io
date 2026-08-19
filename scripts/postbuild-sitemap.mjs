@@ -128,23 +128,36 @@ const redirectShells = [
   { source: "fa/features/connections/index.html", destination: "fa/features/infrastructure/connections/index.html", target: "/fa/features/connections/" },
 ];
 
+function minimalRedirectDoc(target) {
+  const fa = target.startsWith("/fa/");
+  const lang = fa ? "fa" : "en";
+  const dir = fa ? "rtl" : "ltr";
+  return `<!DOCTYPE html>
+<html lang="${lang}" dir="${dir}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta http-equiv="refresh" content="0;url=${target}">
+<link rel="canonical" href="https://spielos.xyz${target}">
+<title>Redirecting</title>
+</head>
+<body>
+<p>Redirecting to <a href="${target}">${target}</a>.</p>
+</body>
+</html>
+`;
+}
+
 for (const { source, destination, target } of redirectShells) {
   const sourcePath = join(dist, source);
   const destinationPath = join(dist, destination);
-  let html = readFileSync(sourcePath, "utf8");
-  html = html.replace(
-    /<meta name="robots"[^>]*>/,
-    '<meta name="robots" content="noindex">',
-  );
-  html = html.replace(
-    "<head>",
-    `<head><meta http-equiv="refresh" content="0;url=${target}">`,
-  );
-  html = html.replace(
-    /<link rel="canonical"[^>]*>/,
-    `<link rel="canonical" href="https://spielos.xyz${target}">`,
-  );
-  writeFileSync(destinationPath, html);
+  // Keep the source validation: the destination must be backed by a real page.
+  if (!statSync(sourcePath).isFile()) {
+    console.error(`postbuild-sitemap: redirect source missing: ${sourcePath}`);
+    process.exit(1);
+  }
+  writeFileSync(destinationPath, minimalRedirectDoc(target));
 }
 
 console.log(`postbuild-sitemap: expanded ${redirectShells.length} redirect documents`);
