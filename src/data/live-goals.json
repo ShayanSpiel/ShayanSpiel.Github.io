@@ -263,7 +263,7 @@
       "display_title_fa": "گفت‌وگوهای فروش باکیفیت رو بیشتر کنیم",
       "goal_status": "active",
       "id": "goal-email-campaign-20260810",
-      "latest_activity_at": "2026-08-19T11:30:07.826417+00:00",
+      "latest_activity_at": "2026-08-19T11:32:19.468448+00:00",
       "metric": "reply_rate",
       "name": "Resume daily English outbound to 30% reply rate",
       "operator": "ge",
@@ -1462,18 +1462,18 @@
     },
     {
       "created_at": "2026-08-14T12:46:45.901574+00:00",
-      "goal_status": "active",
+      "goal_status": "abandoned",
       "id": "goal-campaign-asset-url-repair-v1-20260814",
-      "latest_activity_at": "2026-08-17T00:12:20.620202+00:00",
+      "latest_activity_at": "2026-08-19T13:58:21.399170+00:00",
       "metric": "acceptance_tests_passed",
       "name": "Repair campaign asset promotion URL naming and re-promote batch-02/03 assets",
       "operator": "eq",
       "owner_id": "system-improvement",
       "parent_id": null,
-      "run_status": "blocked",
+      "run_status": "completed",
       "stage": "ACT",
       "target": true,
-      "updated_at": "2026-08-17T00:12:20.619223+00:00"
+      "updated_at": "2026-08-19T13:58:21.399170+00:00"
     },
     {
       "created_at": "2026-08-14T18:57:19.245820+00:00",
@@ -1554,7 +1554,7 @@
       "created_at": "2026-08-14T22:09:14.548799+00:00",
       "goal_status": "active",
       "id": "goal-email-send-20260815-b5",
-      "latest_activity_at": "2026-08-19T11:25:54.689952+00:00",
+      "latest_activity_at": "2026-08-19T11:31:37.460111+00:00",
       "metric": "reply_rate",
       "name": "English outbound send batch 5: next 50 from remaining queue",
       "operator": "ge",
@@ -1563,7 +1563,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-19T11:25:54.687829+00:00"
+      "updated_at": "2026-08-19T11:31:37.458529+00:00"
     },
     {
       "created_at": "2026-08-15T00:32:48.129043+00:00",
@@ -2077,18 +2077,18 @@
     },
     {
       "created_at": "2026-08-17T09:50:24.172479+00:00",
-      "goal_status": "active",
+      "goal_status": "abandoned",
       "id": "goal-content-batch04-package-v1-20260817",
-      "latest_activity_at": "2026-08-17T09:50:41.228731+00:00",
+      "latest_activity_at": "2026-08-19T13:58:21.408677+00:00",
       "metric": "published_items",
       "name": "Produce Batch 4 Threads and YouTube Shorts — evidence continuation (batch-03 handoff-exception cells)",
       "operator": "ge",
       "owner_id": "content",
       "parent_id": null,
-      "run_status": "blocked",
+      "run_status": "completed",
       "stage": "ACT",
       "target": 1,
-      "updated_at": "2026-08-17T09:50:41.228059+00:00"
+      "updated_at": "2026-08-19T13:58:21.408677+00:00"
     },
     {
       "created_at": "2026-08-17T10:06:03.331183+00:00",
@@ -2244,7 +2244,7 @@
       "created_at": "2026-08-17T19:51:08.295426+00:00",
       "goal_status": "active",
       "id": "goal-14d1161822",
-      "latest_activity_at": "2026-08-19T11:26:36.097527+00:00",
+      "latest_activity_at": "2026-08-19T11:32:19.468448+00:00",
       "metric": "reply_rate",
       "name": "English outbound send batch 12: next 50 from remaining queue",
       "operator": "ge",
@@ -2253,7 +2253,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-19T11:26:36.095781+00:00"
+      "updated_at": "2026-08-19T11:32:19.466218+00:00"
     },
     {
       "created_at": "2026-08-17T19:51:41.046747+00:00",
@@ -2559,16 +2559,16 @@
       "created_at": "2026-08-18T20:38:59.925330+00:00",
       "goal_status": "active",
       "id": "goal-email-send-20260819-b18",
-      "latest_activity_at": "2026-08-19T11:30:48.352550+00:00",
+      "latest_activity_at": "2026-08-19T13:57:56.341395+00:00",
       "metric": "reply_rate",
       "name": "English outbound send batch 18: proven-pattern unique-domain fill",
       "operator": "ge",
       "owner_id": "outbound",
       "parent_id": null,
-      "run_status": "blocked",
-      "stage": "DECIDE",
+      "run_status": "waiting",
+      "stage": "ACT",
       "target": 0.3,
-      "updated_at": "2026-08-19T10:37:08.671717+00:00"
+      "updated_at": "2026-08-19T13:57:56.337416+00:00"
     },
     {
       "created_at": "2026-08-18T21:05:18.767738+00:00",
@@ -2764,6 +2764,21 @@
       "stage": "OBSERVE",
       "target": "True",
       "updated_at": "2026-08-19T11:30:48.351291+00:00"
+    },
+    {
+      "created_at": "2026-08-19T13:55:19.258369+00:00",
+      "goal_status": "active",
+      "id": "goal-b3699664f7",
+      "latest_activity_at": "2026-08-19T13:58:47.245714+00:00",
+      "metric": "published_items",
+      "name": "Produce fresh Batch 1 Threads and YouTube Shorts from scratch (new campaign, owner confirmation before scheduling)",
+      "operator": "ge",
+      "owner_id": "content",
+      "parent_id": null,
+      "run_status": "running",
+      "stage": "DECIDE",
+      "target": 1,
+      "updated_at": "2026-08-19T13:58:47.245077+00:00"
     }
   ],
   "heartbeat": {
@@ -2771,15 +2786,15 @@
     "business_value_fa": null,
     "display_title": null,
     "display_title_fa": null,
-    "goal_id": "goal-f170ce6fbd",
-    "goal_name": "English outbound send batch 17: proven-pattern 36 (Milsted/WS content-prepped)",
-    "metric": "reply_rate",
+    "goal_id": "goal-b3699664f7",
+    "goal_name": "Produce fresh Batch 1 Threads and YouTube Shorts from scratch (new campaign, owner confirmation before scheduling)",
+    "metric": "published_items",
     "operator": "ge",
-    "owner_id": "outbound",
-    "run_status": "waiting",
-    "stage": "EVALUATE",
-    "target": 0.3,
-    "updated_at": "2026-08-19T11:30:50.136889+00:00"
+    "owner_id": "content",
+    "run_status": "running",
+    "stage": "DECIDE",
+    "target": 1,
+    "updated_at": "2026-08-19T13:58:47.245714+00:00"
   },
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
@@ -2792,44 +2807,44 @@
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-18T19:31:45.542525+00:00",
-      "goal_id": "goal-f170ce6fbd",
-      "goal_name": "English outbound send batch 17: proven-pattern 36 (Milsted/WS content-prepped)",
-      "owner_id": "outbound",
-      "run_id": "run-7bef25b0a7",
-      "run_status": "waiting",
-      "stage": "EVALUATE",
-      "updated_at": "2026-08-19T11:30:50.136889+00:00"
+      "created_at": "2026-08-19T13:55:19.258369+00:00",
+      "goal_id": "goal-b3699664f7",
+      "goal_name": "Produce fresh Batch 1 Threads and YouTube Shorts from scratch (new campaign, owner confirmation before scheduling)",
+      "owner_id": "content",
+      "run_id": "run-0199f900e7",
+      "run_status": "running",
+      "stage": "DECIDE",
+      "updated_at": "2026-08-19T13:58:47.245714+00:00"
     },
     "heartbeat": {
       "business_value": null,
       "business_value_fa": null,
       "display_title": null,
       "display_title_fa": null,
-      "goal_id": "goal-f170ce6fbd",
-      "goal_name": "English outbound send batch 17: proven-pattern 36 (Milsted/WS content-prepped)",
-      "metric": "reply_rate",
+      "goal_id": "goal-b3699664f7",
+      "goal_name": "Produce fresh Batch 1 Threads and YouTube Shorts from scratch (new campaign, owner confirmation before scheduling)",
+      "metric": "published_items",
       "operator": "ge",
-      "owner_id": "outbound",
-      "run_status": "waiting",
-      "stage": "EVALUATE",
-      "target": 0.3,
-      "updated_at": "2026-08-19T11:30:50.136889+00:00"
+      "owner_id": "content",
+      "run_status": "running",
+      "stage": "DECIDE",
+      "target": 1,
+      "updated_at": "2026-08-19T13:58:47.245714+00:00"
     },
-    "last_activity_at": "2026-08-19T11:30:50.136889+00:00",
-    "last_sync_at": "2026-08-19T11:30:50.157000+00:00",
+    "last_activity_at": "2026-08-19T13:58:47.245714+00:00",
+    "last_sync_at": "2026-08-19T13:58:47.259351+00:00",
     "state": "running"
   },
   "totals": {
-    "approvals": 221,
+    "approvals": 222,
     "decisions": 404,
-    "evidence": 6978,
-    "goals_abandoned": 20,
+    "evidence": 6981,
+    "goals_abandoned": 22,
     "goals_achieved": 133,
-    "goals_active": 27,
-    "goals_total": 183,
+    "goals_active": 26,
+    "goals_total": 184,
     "hypotheses": 45,
     "memory_claims": 5,
-    "runs": 203
+    "runs": 204
   }
 }
