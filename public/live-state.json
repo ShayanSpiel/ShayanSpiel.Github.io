@@ -1,31 +1,31 @@
 {
   "current_run": {
-    "created_at": "2026-08-19T17:16:37.304959+00:00",
-    "goal_id": "goal-3fd23da75c",
-    "goal_name": "English outbound send batch 20: next 50 from remaining queue (send-all push)",
+    "created_at": "2026-08-19T17:16:37.493171+00:00",
+    "goal_id": "goal-2676f113ff",
+    "goal_name": "English outbound send batch 21: final 22 from remaining queue (send-all push)",
     "owner_id": "outbound",
-    "run_id": "run-41662f1874",
-    "run_status": "running",
-    "stage": "DECIDE",
-    "updated_at": "2026-08-19T17:17:35.950182+00:00"
+    "run_id": "run-c06d21c4f1",
+    "run_status": "waiting",
+    "stage": "EVALUATE",
+    "updated_at": "2026-08-19T19:00:32.118718+00:00"
   },
   "heartbeat": {
     "business_value": null,
     "business_value_fa": null,
     "display_title": null,
     "display_title_fa": null,
-    "goal_id": "goal-3fd23da75c",
-    "goal_name": "English outbound send batch 20: next 50 from remaining queue (send-all push)",
+    "goal_id": "goal-2676f113ff",
+    "goal_name": "English outbound send batch 21: final 22 from remaining queue (send-all push)",
     "metric": "reply_rate",
     "operator": "ge",
     "owner_id": "outbound",
-    "run_status": "running",
-    "stage": "DECIDE",
+    "run_status": "waiting",
+    "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-19T17:17:35.950182+00:00"
+    "updated_at": "2026-08-19T19:00:32.118718+00:00"
   },
-  "last_activity_at": "2026-08-19T17:17:35.950182+00:00",
-  "last_sync_at": "2026-08-19T17:17:36.077174+00:00",
+  "last_activity_at": "2026-08-19T19:02:34.168727+00:00",
+  "last_sync_at": "2026-08-19T19:02:34.211390+00:00",
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
     "goal_name": "3 booked calls per day",
@@ -37,15 +37,15 @@
   },
   "state": "running",
   "totals": {
-    "approvals": 227,
-    "decisions": 416,
-    "evidence": 7107,
+    "approvals": 230,
+    "decisions": 419,
+    "evidence": 7202,
     "goals_abandoned": 23,
-    "goals_achieved": 136,
-    "goals_active": 27,
-    "goals_total": 189,
-    "hypotheses": 50,
+    "goals_achieved": 137,
+    "goals_active": 28,
+    "goals_total": 191,
+    "hypotheses": 52,
     "memory_claims": 5,
-    "runs": 209
+    "runs": 211
   }
 }
