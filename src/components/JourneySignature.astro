@@ -238,7 +238,7 @@ if (geometry) {
     path,
     nodes: nodesFromPoints,
     goal: goalFromPoints,
-    preserveAspectRatio: parProp ?? "xMidYMid meet",
+    preserveAspectRatio: parProp ?? "xMinYMin meet",
     radii: radiiProp ?? defaultRadii,
   };
   effectiveViewBox = g.viewBox;
@@ -279,7 +279,7 @@ const uid = id ?? `js-${Math.random().toString(36).slice(2, 7)}`;
   >
     <path class="journey-path" d={g.path} />
     <path
-      class:list={["journey-path-fill", !isScroll && "journey-static-fill"]}
+      class:list={["journey-path-fill", !isScroll && !isAuto && "journey-static-fill"]}
       d={g.path}
       {...(usePathLength ? { pathLength: "100" } : {})}
     />

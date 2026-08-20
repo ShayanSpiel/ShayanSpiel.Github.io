@@ -620,6 +620,11 @@ i[class*=" bxs-"] {
   animation: jl-enter 0.6s var(--ease) 0.4s forwards;
 }
 
+[dir="rtl"] .jl-wrap {
+  left: auto;
+  right: 0;
+}
+
 @media (max-width: 1023px) {
   .jl-wrap { display: none; }
 }

@@ -26,9 +26,9 @@
  *     then become colored (primary) sequentially when solid hits them;
  *     delays 0.9s + idx*1.25s (goal last at 5.9s), bullseye last;
  *     tokens var(--duration)/var(--ease). Edge-anchored vertical wander (isolated hero 5-anchors, no gallery mix)
- *     for hero: points [[16,36],[210,220],[460,160],[600,390],[600,545]]
- *     in viewBox 0 0 1200 700 xMidYMid meet - [16,36] start edge merged with left rail
- *     (rail 100,24 but in hero viewBox 1200x700 x=16 y=36 is edge: 16-10=6 >0 margin for ring r=10; visually one), [210,220] left side of title near edge, [460,160]
+ *     for hero: points [[12,28],[210,220],[460,160],[600,390],[600,545]]
+ *     in viewBox 0 0 1200 700 xMinYMin meet - [12,28] start edge-merged with left rail [100,24] as ONE
+ *     (12-10=2px from left edge, 28-10=18≈24 rail y; xMinYMin pins 0,0 to container top-left so both at true viewport edge), [210,220] left side of title near edge, [460,160]
  *     top of eyebrow a little left through center (y 160 < 220 intentional:
  *     eyebrow ABOVE title so node3 above node2 creates S-wander via
  *     Catmull-Rom), [600,390] below title at center, [600,545] goal top side
@@ -62,7 +62,7 @@ export interface Props {
 const {
   points,
   viewBox = "0 0 1200 700",
-  preserveAspectRatio = "xMidYMid meet",
+  preserveAspectRatio = "xMinYMin meet",
   animation = "auto",
   faded = false,
   nodeIcon,
