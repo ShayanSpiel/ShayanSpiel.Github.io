@@ -19,12 +19,15 @@
  *
  * Animation + trigger contract (declared here, implemented in CSS/JS):
  *   animation="scroll" — trigger: window scroll (scrollY / (docHeight-winHeight)),
- *     how: 25% pre-filled (START_REVEAL=0.25) then reveal remainder linearly
- *     on scroll; JS per-instance via uid, guards getTotalLength fallback to
- *     static 70/30 if 0; reduced-motion → static 70/30.
+ *     how: 0% pre-filled (START_REVEAL=0) — at scroll top solid fully hidden
+ *     (only dashed muted route visible), then reveal strictly proportionally
+ *     to scroll with offset = len * (1 - p) where p = scrollY/(docH-winH);
+ *     at p=1 offset 0 = exactly at bullseye, no tail. JS per-instance via uid,
+ *     guards getTotalLength fallback to static 70/30 if 0; reduced-motion → static 70/30.
  *   animation="auto" — trigger: page load (timed CSS), how: dashed muted route
- *     fades in 0.35s, solid primary draws 1.1s (stroke-dasharray:100 offset
- *     100→0 with pathLength="100"), nodes pop in stagger, bullseye pops last;
+ *     fades in 0.35s, solid primary draws 5s (stroke-dasharray:100 offset
+ *     100→0 with pathLength="100"), nodes visible grey then become colored
+ *     when solid hits them (sequential grey→primary), bullseye last;
  *     timing defaults use var(--duration)/var(--ease). Honor prefers-reduced-motion.
  *   animation="static" — no trigger, how: 70% traveled solid + 30% dashed route
  *     ahead (stroke-dasharray 70 100 with pathLength="100"), token-timed if needed.
@@ -309,7 +312,7 @@ const uid = id ?? `js-${Math.random().toString(36).slice(2, 7)}`;
       try { len = fill.getTotalLength(); } catch(e) { len = 0; }
       if (!len || len === 0) return;
       fill.style.strokeDasharray = String(len);
-      var START_REVEAL = 0.25;
+      var START_REVEAL = 0;
       fill.style.strokeDashoffset = String(len * (1 - START_REVEAL));
       function tick(){
         var top = window.pageYOffset || document.documentElement.scrollTop;

@@ -42,10 +42,14 @@ const workCards = [
     <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
     <div class="absolute left-1/2 top-[42%] h-[34rem] w-[52rem] -translate-x-1/2 -translate-y-1/2 glow-blob opacity-20"></div>
     <div class="absolute left-[58%] top-[38%] h-64 w-64 rounded-full opacity-10" style="background: radial-gradient(closest-side, var(--accent), transparent 72%);"></div>
-    <!-- universal journey - templative, isolated, background: START at 64,420 → mids wander horizontally → GOAL bullseye at 1130,260 (margin ≥ outerGoalRadius+8) -->
+    <!-- universal journey - edge-anchored vertical wander (5 points, 5s draw, grey->color)
+         Hero spatial anchors in viewBox 0 0 1200 700:
+         [80,28] edge top (like rail start 100,24), [220,210] left side of title "Build a business" near edge,
+         [440,285] top of eyebrow a little left through center, [600,430] below title at center,
+         [600,560] bullseye top side of CTA button (560+24+8=592<700 margin). Catmull-Rom→cubic pure C chain. -->
     <div class="absolute inset-0 z-0 pointer-events-none">
       <JourneyUniversal
-        points={[[64, 480], [240, 320], [480, 420], [700, 520], [900, 360], [1130, 260]]}
+        points={[[80, 28], [220, 210], [440, 285], [600, 430], [600, 560]]}
         viewBox="0 0 1200 700"
         preserveAspectRatio="xMidYMid meet"
         animation="auto"

@@ -45,10 +45,6 @@
   stroke-dasharray: 70 100;
   stroke-dashoffset: 0;
 }
-.journey-universal--auto .journey-universal-path-fill {
-  stroke-dasharray: 70 100;
-  stroke-dashoffset: 0;
-}
 .journey-universal-node {
   opacity: 0.95;
 }
@@ -83,9 +79,11 @@
 }
 /* auto: hero texts first (AOS 550ms) then dashes -> solid -> nodes -> bullseye
    What triggers: page load (CSS animation, no JS).
-   How: dashes fade in 0.35s, solid draws 1.15s (100→0 with pathLength 100),
-        nodes pop stagger 0.15s each, bullseye pops last.
-   Timing defaults use var(--duration)/var(--ease). */
+   How: dashes fade in 0.35s, solid draws 5s (100→0 with pathLength 100)
+        edge-anchored vertical wander, nodes visible grey at start then
+        become colored sequentially when solid hits them (0.9s + idx*1.25s,
+        goal at 5.9s), bullseye last.
+   Tokens var(--duration)/var(--ease). */
 .journey-universal--auto .journey-universal-path {
   opacity: 0;
   animation: ju-dash-in 0.35s var(--ease) forwards 0.75s;
@@ -93,7 +91,7 @@
 .journey-universal--auto .journey-universal-path-fill {
   stroke-dasharray: 100;
   stroke-dashoffset: 100;
-  animation: ju-draw 1.15s cubic-bezier(0.22, 1, 0.36, 1) forwards 0.9s;
+  animation: ju-draw 5s cubic-bezier(0.22, 1, 0.36, 1) forwards 0.9s;
 }
 .journey-universal--auto .ju-node-pop,
 .journey-universal--auto .ju-goal-pop {
@@ -118,7 +116,68 @@
   from { opacity: 0; transform: scale(0.88); }
   to { opacity: 0.95; transform: scale(1); }
 }
-/* scroll variant initial state until JS sets real length */
+/* grey -> color: nodes visible at start but grey (muted), become primary when solid hits them */
+.journey-universal--auto .journey-universal-node .node-ring {
+  stroke: var(--foreground-muted);
+  opacity: 0.5;
+  animation: ju-node-ring-color 0.4s var(--ease) forwards;
+}
+.journey-universal--auto .journey-universal-node .node-dot {
+  fill: var(--foreground-muted);
+  opacity: 0.9;
+  animation: ju-node-dot-color 0.4s var(--ease) forwards;
+}
+.journey-universal--auto .journey-universal-goal .goal-ring {
+  stroke: var(--foreground-muted);
+  animation: ju-goal-ring-color 0.4s var(--ease) forwards;
+}
+.journey-universal--auto .journey-universal-goal .goal-ring-inner {
+  stroke: var(--foreground-muted);
+  animation: ju-goal-ring-color 0.4s var(--ease) forwards;
+}
+.journey-universal--auto .journey-universal-goal .goal-core {
+  fill: var(--foreground-muted);
+  animation: ju-goal-core-color 0.4s var(--ease) forwards;
+}
+@keyframes ju-node-ring-color {
+  from { stroke: var(--foreground-muted); opacity: 0.5; }
+  to { stroke: var(--primary); opacity: 0.3; }
+}
+@keyframes ju-node-dot-color {
+  from { fill: var(--foreground-muted); }
+  to { fill: var(--primary); }
+}
+@keyframes ju-goal-ring-color {
+  from { stroke: var(--foreground-muted); }
+  to { stroke: var(--primary); }
+}
+@keyframes ju-goal-core-color {
+  from { fill: var(--foreground-muted); }
+  to { fill: var(--primary); }
+}
+/* per-node color delays synchronized to 5s draw: node0 0.9s, node1 2.15s, node2 3.4s, node3 4.65s, goal 5.9s */
+.journey-universal--auto .journey-universal-node:nth-of-type(1) .node-ring,
+.journey-universal--auto .journey-universal-node:nth-of-type(1) .node-dot {
+  animation-delay: 0.9s;
+}
+.journey-universal--auto .journey-universal-node:nth-of-type(2) .node-ring,
+.journey-universal--auto .journey-universal-node:nth-of-type(2) .node-dot {
+  animation-delay: 2.15s;
+}
+.journey-universal--auto .journey-universal-node:nth-of-type(3) .node-ring,
+.journey-universal--auto .journey-universal-node:nth-of-type(3) .node-dot {
+  animation-delay: 3.4s;
+}
+.journey-universal--auto .journey-universal-node:nth-of-type(4) .node-ring,
+.journey-universal--auto .journey-universal-node:nth-of-type(4) .node-dot {
+  animation-delay: 4.65s;
+}
+.journey-universal--auto .journey-universal-goal .goal-ring,
+.journey-universal--auto .journey-universal-goal .goal-ring-inner,
+.journey-universal--auto .journey-universal-goal .goal-core {
+  animation-delay: 5.9s;
+}
+/* scroll variant initial state until JS sets real length — fully hidden at top (START_REVEAL=0) */
 .journey-universal--scroll .journey-universal-path-fill {
   stroke-dasharray: 100000;
   stroke-dashoffset: 100000;
@@ -140,6 +199,24 @@
   .journey-universal--auto .journey-universal-path-fill {
     stroke-dasharray: 70 100 !important;
     stroke-dashoffset: 0 !important;
+  }
+  .journey-universal--auto .journey-universal-node .node-ring {
+    stroke: var(--primary) !important;
+    opacity: 0.3 !important;
+    animation: none !important;
+  }
+  .journey-universal--auto .journey-universal-node .node-dot {
+    fill: var(--primary) !important;
+    animation: none !important;
+  }
+  .journey-universal--auto .journey-universal-goal .goal-ring,
+  .journey-universal--auto .journey-universal-goal .goal-ring-inner {
+    stroke: var(--primary) !important;
+    animation: none !important;
+  }
+  .journey-universal--auto .journey-universal-goal .goal-core {
+    fill: var(--primary) !important;
+    animation: none !important;
   }
 }
 /* RTL: single mirror rule only — avoid double scaleX on full-inset */
