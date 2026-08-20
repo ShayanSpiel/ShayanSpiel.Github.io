@@ -1,31 +1,31 @@
 {
   "current_run": {
-    "created_at": "2026-08-20T20:28:19.488898+00:00",
-    "goal_id": "goal-c9c243e2d5",
-    "goal_name": "Repair video scene flow and evaluation gates before copywriting",
-    "owner_id": "director",
-    "run_id": "run-ba44727ede",
+    "created_at": "2026-08-19T14:29:33.637386+00:00",
+    "goal_id": "goal-de9ae154ee",
+    "goal_name": "English outbound send batch 19: next 50 from remaining queue (send-all push)",
+    "owner_id": "outbound",
+    "run_id": "run-c47e478ee3",
     "run_status": "waiting",
-    "stage": "OBSERVE",
-    "updated_at": "2026-08-20T20:30:10.011487+00:00"
+    "stage": "EVALUATE",
+    "updated_at": "2026-08-20T20:52:20.337684+00:00"
   },
   "heartbeat": {
     "business_value": null,
     "business_value_fa": null,
     "display_title": null,
     "display_title_fa": null,
-    "goal_id": "goal-c9c243e2d5",
-    "goal_name": "Repair video scene flow and evaluation gates before copywriting",
-    "metric": "achieved_children",
+    "goal_id": "goal-de9ae154ee",
+    "goal_name": "English outbound send batch 19: next 50 from remaining queue (send-all push)",
+    "metric": "reply_rate",
     "operator": "ge",
-    "owner_id": "director",
+    "owner_id": "outbound",
     "run_status": "waiting",
-    "stage": "OBSERVE",
-    "target": 1,
-    "updated_at": "2026-08-20T20:30:10.011487+00:00"
+    "stage": "EVALUATE",
+    "target": 0.3,
+    "updated_at": "2026-08-20T20:52:20.337684+00:00"
   },
-  "last_activity_at": "2026-08-20T20:30:48.237199+00:00",
-  "last_sync_at": "2026-08-20T20:30:48.307693+00:00",
+  "last_activity_at": "2026-08-20T20:52:20.337684+00:00",
+  "last_sync_at": "2026-08-20T20:52:20.453314+00:00",
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
     "goal_name": "3 booked calls per day",
@@ -37,15 +37,15 @@
   },
   "state": "running",
   "totals": {
-    "approvals": 244,
-    "decisions": 533,
-    "evidence": 9851,
+    "approvals": 245,
+    "decisions": 537,
+    "evidence": 9873,
     "goals_abandoned": 27,
-    "goals_achieved": 151,
-    "goals_active": 31,
+    "goals_achieved": 152,
+    "goals_active": 30,
     "goals_total": 212,
     "hypotheses": 61,
     "memory_claims": 5,
-    "runs": 232
+    "runs": 233
   }
 }
