@@ -1,8 +1,6 @@
 ---
 import { getCollection } from "astro:content";
-import JourneyLine from "../components/JourneyLine.astro";
-import JourneySignature from "../components/JourneySignature.astro";
-import JourneyUniversal from "../components/JourneyUniversal.astro";
+import HomepageHeroJourney from "../components/HomepageHeroJourney.astro";
 import OperatingLoop from "../components/architecture/OperatingLoop.astro";
 import SectionHeader from "../components/sections/SectionHeader.astro";
 import Page from "../layouts/Page.astro";
@@ -36,28 +34,17 @@ const workCards = [
 ---
 
 <Page title={t(locale, "conversion.home.pageTitle")} description={t(locale, "conversion.home.pageDesc")} image="/assets/og/home.png" locale={locale}>
-  <JourneyLine />
   <section id="hero" class="relative flex min-h-[82vh] items-center overflow-hidden py-24 sm:py-32">
     <div class="absolute inset-0 bg-panel-deep/50"></div>
     <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
     <div class="absolute left-1/2 top-[42%] h-[34rem] w-[52rem] -translate-x-1/2 -translate-y-1/2 glow-blob opacity-20"></div>
     <div class="absolute left-[58%] top-[38%] h-64 w-64 rounded-full opacity-10" style="background: radial-gradient(closest-side, var(--accent), transparent 72%);"></div>
-    <!-- universal journey - isolated hero 5-anchors, no gallery/video template mix (5 points, 5s draw, grey->color)
-         Hero spatial anchors in viewBox 0 0 1200 700 xMinYMin meet (edge-merged: 0,0 locks to container top-left matching fixed left rail top-left):
-          [12,28] start edge-merged with left rail start [100,24] as ONE shared origin (12-10 ring=2px from left edge, 28-10=18≈24 rail y; with xMinYMin meet both at true viewport top-left, read as 1 continuous line),
-          [210,220] node2 left side of title "Build a business" far near edge (x 210 west of content 152, y 220 mid-title),
-          [460,160] node3 top of eyebrow a little left through center (eyebrow label above title at y ~160, x 460 ≈ 600-140, slightly left),
-          [600,390] node4 below title at center (x 600 center, y 390 below title block ~260-340),
-          [600,545] goal bullseye top side of CTA button (x 600 center, y 545 with 545+24+8=577<700 margin above CTA row).
-         Note y ordering 28 -> 220 -> 160 -> 390 -> 545 is intentional: node3 y 160 < node2 y 220 because eyebrow
-         is ABOVE title, so Catmull-Rom segment node2->node3 is an upward S-wander (like left rail / gallery S-wave).
-         Path via Catmull-Rom→cubic pure C chain, continuous tangents, smooth; isolated to src/components+src/pages. xMinYMin meet pins 0,0 to container top-left so hero start [12,28] aligns to rail [100,24]. -->
+    <!-- Homepage hero journey: an isolated five-anchor attention path leading to the CTA. It is independent from the Services rail and the gallery templates. -->
     <div class="absolute inset-0 z-0 pointer-events-none">
-      <JourneyUniversal
-        points={[[12, 28], [210, 220], [460, 160], [600, 390], [600, 545]]}
+      <HomepageHeroJourney
+        points={[[20, 28], [210, 220], [540, 135], [600, 390], [600, 545]]}
         viewBox="0 0 1200 700"
-        preserveAspectRatio="xMinYMin meet"
-        animation="auto"
+        preserveAspectRatio="none"
         faded
       />
     </div>
@@ -93,9 +80,6 @@ const workCards = [
 
   <section class="relative overflow-hidden py-24 sm:py-32">
     <div class="absolute inset-0 bg-panel-deep/50"></div>
-    <div class="absolute inset-x-0 bottom-0 z-0 aspect-[12/1] opacity-35">
-      <JourneySignature variant="band" gradientId="home-band-grad" />
-    </div>
     <div class="relative mx-auto max-w-6xl px-6">
       <SectionHeader label={t(locale, "conversion.home.mechanism.label")} title={t(locale, "conversion.home.mechanism.title")} description={t(locale, "conversion.home.mechanism.body")} />
       <OperatingLoop locale={locale} />
@@ -126,9 +110,6 @@ const workCards = [
 
   <section class="relative overflow-hidden py-24 sm:py-32">
     <div class="absolute inset-0 bg-panel-deep/50"></div>
-    <div class="absolute bottom-0 start-0 z-0 hidden w-56 h-72 opacity-40 lg:block">
-      <JourneySignature variant="corner" gradientId="home-path-grad" />
-    </div>
     <div class="relative mx-auto max-w-6xl px-6">
       <SectionHeader label={t(locale, "conversion.home.path.label")} title={t(locale, "conversion.home.path.title")} description={t(locale, "conversion.home.path.body")} />
       <div class="relative overflow-hidden rounded-xl border border-border bg-panel p-6 shadow-panel sm:p-8" data-aos="fade-up">
@@ -160,9 +141,6 @@ const workCards = [
       <div class="relative overflow-hidden rounded-xl border border-border bg-panel shadow-panel" data-aos="fade-up">
         <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-accent via-primary to-transparent opacity-80" aria-hidden="true"></div>
         <div class="absolute inset-0 opacity-[0.03] hero-grid"></div>
-        <div class="absolute end-0 top-0 z-0 hidden w-56 h-72 opacity-20 lg:block">
-          <JourneySignature variant="corner" gradientId="home-brief-grad" glow={false} />
-        </div>
         <div class="relative grid lg:grid-cols-5">
           <div class="p-6 sm:p-8 lg:col-span-3">
             <p class="text-2xs font-semibold uppercase tracking-widest text-primary mb-3">{t(locale, "conversion.home.brief.previewLabel") ?? "Included in your Agent Brief"}</p>
@@ -186,9 +164,6 @@ const workCards = [
 
   <section class="relative overflow-hidden py-24 sm:py-32">
     <div class="absolute inset-0 bg-panel-deep/50"></div>
-    <div class="absolute inset-x-0 top-0 z-0 aspect-[12/1] opacity-35">
-      <JourneySignature variant="band" gradientId="home-founder-grad" />
-    </div>
     <div class="relative mx-auto max-w-4xl px-6 text-center" data-aos="fade-up">
       <div class="relative overflow-hidden rounded-xl border border-border bg-panel p-6 shadow-panel sm:p-8">
         <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-primary via-accent to-transparent opacity-80" aria-hidden="true"></div>

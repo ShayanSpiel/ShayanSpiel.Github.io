@@ -1,0 +1,96 @@
+/* Homepage left rail: fixed viewport geometry and scroll progress only. */
+.homepage-journey-rail {
+  position: fixed !important;
+  inset-block-start: 0;
+  inset-block-end: 0;
+  inset-inline-start: 0;
+  height: 100vh;
+  height: 100dvh;
+  width: 80px;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.92;
+}
+
+.homepage-journey-rail__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  shape-rendering: geometricPrecision;
+}
+
+.homepage-journey-rail__route {
+  fill: none;
+  stroke: var(--foreground-muted);
+  stroke-width: 1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 9 8;
+  opacity: 0.65;
+  vector-effect: non-scaling-stroke;
+}
+
+.homepage-journey-rail__fill {
+  fill: none;
+  stroke: var(--primary);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.homepage-journey-rail__fill-clip {
+  transition: none;
+}
+
+.homepage-journey-rail__node,
+.homepage-journey-rail__goal {
+  opacity: 0.95;
+}
+
+.homepage-journey-rail__node-ring {
+  fill: none;
+  stroke: var(--primary);
+  stroke-width: 1;
+  opacity: 0.3;
+  vector-effect: non-scaling-stroke;
+}
+
+.homepage-journey-rail__node-dot {
+  fill: var(--primary);
+}
+
+.homepage-journey-rail__goal-ring {
+  fill: var(--background);
+  stroke: var(--primary);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.homepage-journey-rail__goal-inner {
+  fill: none;
+  stroke: var(--primary);
+  stroke-width: 1;
+  opacity: 0.85;
+  vector-effect: non-scaling-stroke;
+}
+
+.homepage-journey-rail__goal-core {
+  fill: var(--primary);
+}
+
+@media (max-width: 1023px) {
+  .homepage-journey-rail {
+    display: none;
+  }
+}
+
+[dir="rtl"] .homepage-journey-rail {
+  inset-inline-start: auto;
+  inset-inline-end: 0;
+}
+
+[dir="rtl"] .homepage-journey-rail__svg {
+  transform: scaleX(-1);
+  transform-origin: center;
+}

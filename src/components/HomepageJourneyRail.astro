@@ -1,0 +1,73 @@
+---
+import "../styles/homepage-journey-rail.css";
+
+const path =
+  "M 100 0" +
+  " C 100 10, 100 18, 100 24" +
+  " C 100 84, 78 108, 78 174" +
+  " C 78 240, 126 268, 126 340" +
+  " C 126 412, 72 436, 72 508" +
+  " C 72 580, 124 606, 124 676" +
+  " C 124 746, 74 770, 74 840" +
+  " C 74 900, 100 880, 100 920";
+const nodes: Array<[number, number]> = [
+  [100, 24],
+  [78, 174],
+  [126, 340],
+  [72, 508],
+  [124, 676],
+  [74, 840],
+];
+const goal: [number, number] = [100, 920];
+const viewBoxHeight = 960;
+const uid = `homepage-journey-rail-${Math.random().toString(36).slice(2, 7)}`;
+---
+
+<div id={uid} class="homepage-journey-rail" aria-hidden="true">
+  <svg class="homepage-journey-rail__svg" viewBox="0 0 200 960" preserveAspectRatio="xMidYMin slice" focusable="false">
+    <defs>
+      <clipPath id={`${uid}-fill-clip`}>
+        <rect class="homepage-journey-rail__fill-clip" x="0" y="0" width="200" height="0" />
+      </clipPath>
+    </defs>
+    <path class="homepage-journey-rail__route" d={path} />
+    <path class="homepage-journey-rail__fill" d={path} clip-path={`url(#${uid}-fill-clip)`} />
+    {nodes.map(([x, y]) => (
+      <g class="homepage-journey-rail__node" transform={`translate(${x} ${y})`}>
+        <circle class="homepage-journey-rail__node-ring" r="10" />
+        <circle class="homepage-journey-rail__node-dot" r="4" />
+      </g>
+    ))}
+    <g class="homepage-journey-rail__goal" transform={`translate(${goal[0]} ${goal[1]})`}>
+      <circle class="homepage-journey-rail__goal-ring" r="24" />
+      <circle class="homepage-journey-rail__goal-inner" r="14" />
+      <circle class="homepage-journey-rail__goal-core" r="6" />
+    </g>
+  </svg>
+</div>
+
+<script is:inline define:vars={{ uid, viewBoxHeight }}>
+  (function (uid, viewBoxHeight) {
+    var root = document.getElementById(uid);
+    var fill = root ? root.querySelector(".homepage-journey-rail__fill") : null;
+    var clipRect = root ? root.querySelector(".homepage-journey-rail__fill-clip") : null;
+    if (!root || !fill || !clipRect) return;
+
+    function update() {
+      var documentHeight = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+      var viewportHeight = window.innerHeight;
+      var scrollable = Math.max(1, documentHeight - viewportHeight);
+      var progress = Math.max(0, Math.min(1, (window.scrollY || window.pageYOffset || 0) / scrollable));
+      clipRect.setAttribute("height", String(viewBoxHeight * progress));
+    }
+
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      clipRect.setAttribute("height", String(viewBoxHeight));
+      return;
+    }
+
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    update();
+  })(uid, viewBoxHeight);
+</script>

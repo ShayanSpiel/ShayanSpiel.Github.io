@@ -217,16 +217,12 @@ The retired showcase navigation is not used by any active route.
 
 ## Journey signature
 
-`src/components/JourneySignature.astro` + `src/styles/journey-signature.css`
-mirror the Design department journey signature (one wandering goal line, dashed
-muted route ahead, solid primary traveled fill, nodes riding ON the path, flat
-bullseye; static, token colors, RTL-safe). Every placement is full-extent.
-Placements: homepage left rail (`JourneyLine.astro`, keeps the scroll-driven
-draw, hidden on mobile), full-height hero sidebars (`hero-right`), full-width
-8:1 aspect bands between sections (`band`), and corner surfaces inside cards
-(`corner`). All level-1 pages (`/`, `/founder/`, `/notes/`, `/contact/`,
-`/services/`, `/live/`, `/features/`, `/use-cases/`) render at least one
-signature; each instance gets a unique `gradientId`.
+The active website journey surfaces are intentionally isolated: the homepage
+hero uses `src/components/HomepageHeroJourney.astro` with its own anchor-timed
+draw, and `/services/` uses `src/components/HomepageJourneyRail.astro` for the
+fixed viewport rail and scroll progress. The old shared background bars and
+generic wrappers were retired; the video gallery keeps its own rendered journey
+assets under the Design department and does not share website DOM or CSS.
 
 ## Footer
 

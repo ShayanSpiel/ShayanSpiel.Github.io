@@ -1,5 +1,4 @@
 ---
-import JourneySignature from "../components/JourneySignature.astro";
 import LiveTimeline, { type LiveGoal } from "../components/live/LiveTimeline.astro";
 import LiveStatus, { type Heartbeat, type Northstar } from "../components/live/LiveStatus.astro";
 import LiveStats, { type LiveTotals } from "../components/live/LiveStats.astro";
@@ -24,7 +23,8 @@ const heartbeat = data.runtime_state?.heartbeat ?? null;
 const northstar = data.northstar ?? null;
 const metricLabel = (metric: string) =>
   metric === "reply_rate" ? t(locale, "live.metric.replyRate") :
-  metric === "booked_calls" ? t(locale, "live.metric.bookedCalls") : metric;
+  metric === "booked_calls" ? t(locale, "live.metric.bookedCalls") :
+  metric === "published_items" ? t(locale, "live.metric.publishedItems") : metric;
 const formatTarget = (metric: string, target: number | boolean | string) =>
   metric === "reply_rate" && typeof target === "number" ? `${Math.round(target * 100)}%` :
   typeof target === "boolean" ? t(locale, target ? "live.target.yes" : "live.target.no") :
@@ -66,9 +66,6 @@ const howTo = [
     <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
     <div class="absolute left-1/2 top-[36%] h-[30rem] w-[46rem] -translate-x-1/2 -translate-y-1/2 glow-blob opacity-20"></div>
     <div class="absolute left-[60%] top-[32%] h-64 w-64 rounded-full opacity-10" style="background: radial-gradient(closest-side, var(--accent), transparent 72%);"></div>
-    <div class="absolute inset-y-0 end-0 z-0 hidden w-80 opacity-60 lg:block xl:w-96">
-      <JourneySignature variant="hero-right" gradientId="live-hero-grad" />
-    </div>
     <div class="relative mx-auto max-w-4xl px-6 text-center" data-aos="fade-up">
       <p class="text-2xs font-semibold uppercase tracking-widest text-primary">{t(locale, "conversion.live.hero.label")}</p>
       <h1 class="mt-4 text-4xl font-extrabold leading-tightest tracking-tight text-foreground-strong sm:text-6xl">{t(locale, "conversion.live.hero.titleLead")}<br /><span class="text-primary">{t(locale, "conversion.live.hero.titleAccent")}</span></h1>
@@ -108,9 +105,6 @@ const howTo = [
 
   <section id="live-howto" class="relative overflow-hidden py-20 sm:py-24">
     <div class="absolute inset-0 bg-panel-deep/35"></div>
-    <div class="absolute bottom-0 start-0 z-0 hidden w-56 h-72 opacity-45 lg:block">
-      <JourneySignature variant="corner" gradientId="live-howto-grad" />
-    </div>
     <div class="relative mx-auto max-w-6xl px-6">
       <SectionHeader label={t(locale, "live.howto.label")} title={t(locale, "live.howto.title")} description={t(locale, "live.howto.desc")} />
       <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" data-aos="fade-up">

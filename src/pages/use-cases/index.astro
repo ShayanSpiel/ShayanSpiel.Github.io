@@ -2,9 +2,7 @@
 import Page from "../../layouts/Page.astro";
 import FeatureHero from "../../components/features/FeatureHero.astro";
 import FeatureCTA from "../../components/features/FeatureCTA.astro";
-import JourneySignature from "../../components/JourneySignature.astro";
 import { type Locale, t } from "../../i18n/translations";
-import { SITE } from "../../config";
 import { localizePath } from "../../i18n";
 
 export interface Props {
@@ -30,15 +28,9 @@ const { locale = "en" } = Astro.props;
   />
 
   <section class="relative overflow-hidden py-20 sm:py-24">
-    <div class="absolute inset-x-0 top-0 z-0 aspect-[12/1] opacity-30">
-      <JourneySignature variant="band" gradientId="use-cases-band-grad" />
-    </div>
     <div class="relative mx-auto max-w-6xl px-6">
       <div class="relative overflow-hidden rounded-xl border border-border bg-panel p-6 shadow-panel sm:p-10" data-aos="fade-up">
         <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-accent via-purple to-transparent opacity-80" aria-hidden="true"></div>
-        <div class="absolute end-0 top-0 z-0 hidden w-44 h-64 opacity-30 lg:block">
-          <JourneySignature variant="corner" gradientId="use-cases-card-grad" glow={false} />
-        </div>
         <div class="relative flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
           <div class="max-w-2xl">
             <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-md bg-accent-soft text-accent">

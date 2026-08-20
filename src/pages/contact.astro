@@ -1,6 +1,5 @@
 ---
 import Page from "../layouts/Page.astro";
-import JourneySignature from "../components/JourneySignature.astro";
 import { FORMS, AUTHOR, SITE, SOCIAL, BOOKING_LINK, BOOKING_CONFIG } from "../config";
 import { ICONS } from "../lib/icons";
 import { type Locale, t } from "../i18n/translations";
@@ -38,9 +37,6 @@ const breadcrumbJsonLd = {
   locale={locale}
 >
   <section class="relative py-24 sm:py-32 overflow-hidden">
-    <div class="absolute inset-x-0 top-0 z-0 aspect-[12/1] opacity-35">
-      <JourneySignature variant="band" gradientId="contact-band-grad" />
-    </div>
     <div class="relative mx-auto max-w-2xl px-6">
       <div class="text-center mb-12" data-aos="fade-up">
         <span class="text-2xs font-semibold uppercase tracking-widest text-primary">{t(locale, "contact.label")}</span>

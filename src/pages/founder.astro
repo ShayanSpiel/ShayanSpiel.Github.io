@@ -1,6 +1,5 @@
 ---
 import Page from "../layouts/Page.astro";
-import JourneySignature from "../components/JourneySignature.astro";
 import SocialIcons from "../components/SocialIcons.astro";
 import { SITE, AUTHOR, FOUNDER, AGENT_BRIEFING_PATH } from "../config";
 import { localizePath } from "../i18n";
@@ -88,9 +87,6 @@ const breadcrumbJsonLd = {
     <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
     <div class="absolute left-1/2 top-[40%] h-[32rem] w-[48rem] -translate-x-1/2 -translate-y-1/2 glow-blob opacity-15"></div>
     <div class="absolute left-[58%] top-[36%] h-64 w-64 rounded-full opacity-10" style="background: radial-gradient(closest-side, var(--accent), transparent 72%);"></div>
-    <div class="absolute inset-y-0 end-0 z-0 hidden w-80 opacity-60 lg:block xl:w-96">
-      <JourneySignature variant="hero-right" gradientId="founder-hero-grad" />
-    </div>
 
     <div class="relative z-10 mx-auto max-w-3xl px-6 text-center" data-aos="fade-up">
       <div class="relative mx-auto mb-6 h-24 w-24">
@@ -118,9 +114,6 @@ const breadcrumbJsonLd = {
   <!-- Systems Before Agents -->
   <section class="relative overflow-hidden py-24 sm:py-32">
     <div class="absolute inset-0 bg-panel-deep/50"></div>
-    <div class="absolute inset-x-0 bottom-0 z-0 aspect-[12/1] opacity-30">
-      <JourneySignature variant="band" gradientId="founder-systems-band" />
-    </div>
     <div class="relative mx-auto max-w-6xl px-6">
       <SectionHeader
         label={t(locale, "founder.systems.label")}
@@ -176,9 +169,6 @@ const breadcrumbJsonLd = {
   <!-- Moving Into Agent Systems -->
   <section class="relative overflow-hidden py-24 sm:py-32">
     <div class="absolute inset-0 bg-panel-deep/50"></div>
-    <div class="absolute bottom-0 start-0 z-0 hidden w-56 h-80 opacity-45 lg:block">
-      <JourneySignature variant="corner" gradientId="founder-agents-grad" />
-    </div>
     <div class="relative mx-auto max-w-6xl px-6">
       <SectionHeader
         label={t(locale, "founder.agents.label")}
@@ -231,9 +221,6 @@ const breadcrumbJsonLd = {
       <div class="relative overflow-hidden rounded-xl border border-border bg-panel p-5 shadow-panel sm:p-8" data-aos="fade-up">
         <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
         <div class="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 glow-blob opacity-10"></div>
-        <div class="absolute end-0 top-0 z-0 hidden w-44 h-56 opacity-20 lg:block">
-          <JourneySignature variant="corner" gradientId="founder-why-corner" glow={false} />
-        </div>
         <div class="relative grid gap-6 sm:grid-cols-2">
           <div class="relative overflow-hidden rounded-lg border border-border bg-panel-raised p-5">
             <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-primary via-accent to-transparent opacity-60" aria-hidden="true"></div>
@@ -266,9 +253,6 @@ const breadcrumbJsonLd = {
   <!-- Selected Work -->
   <section class="relative overflow-hidden py-24 sm:py-32">
     <div class="absolute inset-0 bg-panel-deep/50"></div>
-    <div class="absolute inset-x-0 top-0 z-0 aspect-[12/1] opacity-30">
-      <JourneySignature variant="band" gradientId="founder-selected-band" />
-    </div>
     <div class="relative mx-auto max-w-6xl px-6">
       <SectionHeader
         title={t(locale, "founder.selected.title")}

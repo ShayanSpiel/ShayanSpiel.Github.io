@@ -1,0 +1,171 @@
+---
+import "../styles/homepage-hero-journey.css";
+
+export interface Props {
+  points: Array<[number, number]>;
+  viewBox?: string;
+  preserveAspectRatio?: string;
+  faded?: boolean;
+  id?: string;
+}
+
+const {
+  points,
+  viewBox = "0 0 1200 700",
+  preserveAspectRatio = "xMinYMin meet",
+  faded = false,
+  id,
+} = Astro.props;
+
+if (!points || points.length < 2) {
+  throw new Error("HomepageHeroJourney: points must have at least start and goal");
+}
+
+function toPath(pts: Array<[number, number]>): string {
+  let d = `M ${pts[0][0]} ${pts[0][1]}`;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[i - 1] || pts[0];
+    const p1 = pts[i];
+    const p2 = pts[i + 1];
+    const p3 = pts[i + 2] || p2;
+    const cp1x = p1[0] + (p2[0] - p0[0]) / 6;
+    const cp1y = p1[1] + (p2[1] - p0[1]) / 6;
+    const cp2x = p2[0] - (p3[0] - p1[0]) / 6;
+    const cp2y = p2[1] - (p3[1] - p1[1]) / 6;
+    d += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p2[0]} ${p2[1]}`;
+  }
+  return d;
+}
+
+const path = toPath(points);
+const nodes = points.slice(0, -1);
+const goal = points[points.length - 1];
+const uid = id ?? `home-hero-journey-${Math.random().toString(36).slice(2, 7)}`;
+---
+
+<div
+  id={uid}
+  class:list={["homepage-hero-journey", faded && "homepage-hero-journey--faded"]}
+  aria-hidden="true"
+>
+  <svg class="homepage-hero-journey__svg" viewBox={viewBox} preserveAspectRatio={preserveAspectRatio} focusable="false">
+    <path class="homepage-hero-journey__route" d={path} />
+    <path class="homepage-hero-journey__fill" d="" />
+    {nodes.map(([x, y]) => (
+      <g class="homepage-hero-journey__node" transform={`translate(${x} ${y})`}>
+        <g class="homepage-hero-journey__node-shape">
+          <circle class="homepage-hero-journey__node-ring" r="10" />
+          <circle class="homepage-hero-journey__node-dot" r="4" />
+        </g>
+      </g>
+    ))}
+    <g class="homepage-hero-journey__goal" transform={`translate(${goal[0]} ${goal[1]})`}>
+      <g class="homepage-hero-journey__goal-shape">
+        <circle class="homepage-hero-journey__goal-ring" r="24" />
+        <circle class="homepage-hero-journey__goal-inner" r="14" />
+        <circle class="homepage-hero-journey__goal-core" r="6" />
+      </g>
+    </g>
+  </svg>
+</div>
+
+<script is:inline define:vars={{ uid, points }}>
+  (function (uid, points) {
+    var root = document.getElementById(uid);
+    var svg = root ? root.querySelector(".homepage-hero-journey__svg") : null;
+    var route = root ? root.querySelector(".homepage-hero-journey__route") : null;
+    var fill = root ? root.querySelector(".homepage-hero-journey__fill") : null;
+    var nodes = root ? Array.from(root.querySelectorAll(".homepage-hero-journey__node")) : [];
+    var nodeShapes = root ? Array.from(root.querySelectorAll(".homepage-hero-journey__node-shape")) : [];
+    var goal = root ? root.querySelector(".homepage-hero-journey__goal") : null;
+    var goalShape = root ? root.querySelector(".homepage-hero-journey__goal-shape") : null;
+    if (!root || !svg || !route || !fill || !goal || !goalShape) return;
+
+    var length = 0;
+    try { length = route.getTotalLength(); } catch (error) { length = 0; }
+    if (!length) return;
+
+    root.classList.add("is-ready");
+
+    function drawFill(progress) {
+      var targetLength = length * progress;
+      if (!targetLength) {
+        fill.setAttribute("d", "");
+        return;
+      }
+
+      var samples = Math.max(8, Math.ceil(targetLength / 8));
+      var d = "";
+      for (var i = 0; i <= samples; i++) {
+        var point = route.getPointAtLength(targetLength * i / samples);
+        d += (i === 0 ? "M " : " L ") + point.x + " " + point.y;
+      }
+      fill.setAttribute("d", d);
+    }
+
+    function keepMarkersCircular() {
+      var box = svg.getBoundingClientRect();
+      var viewBox = svg.viewBox.baseVal;
+      if (!viewBox.width || !viewBox.height) return;
+      var scaleX = box.width / viewBox.width;
+      var scaleY = box.height / viewBox.height;
+      if (!scaleX || !scaleY) return;
+      var inverseX = scaleY / scaleX;
+      var markerTransform = "scale(" + inverseX + " 1)";
+      nodeShapes.forEach(function (shape) { shape.setAttribute("transform", markerTransform); });
+      goalShape.setAttribute("transform", markerTransform);
+    }
+
+    keepMarkersCircular();
+    window.addEventListener("resize", keepMarkersCircular);
+
+    function progressAtPoint(point) {
+      var bestLength = 0;
+      var bestDistance = Infinity;
+      var samples = 240;
+      for (var i = 0; i <= samples; i++) {
+        var sampleLength = length * i / samples;
+        var sample = route.getPointAtLength(sampleLength);
+        var dx = sample.x - point[0];
+        var dy = sample.y - point[1];
+        var distance = dx * dx + dy * dy;
+        if (distance < bestDistance) {
+          bestDistance = distance;
+          bestLength = sampleLength;
+        }
+      }
+      return bestLength / length;
+    }
+
+    var pointProgress = points.map(progressAtPoint);
+    var nodeProgress = pointProgress.slice(0, -1);
+    var goalProgress = pointProgress[pointProgress.length - 1];
+    var reducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    function markReached(progress) {
+      nodes.forEach(function (node, index) {
+        node.classList.toggle("is-reached", progress >= nodeProgress[index]);
+      });
+      goal.classList.toggle("is-reached", progress >= goalProgress);
+    }
+
+    if (reducedMotion) {
+      drawFill(1);
+      markReached(1);
+      return;
+    }
+
+    markReached(0);
+
+    var delay = 0;
+    var duration = 5000;
+    var start = performance.now() + delay;
+    function tick(now) {
+      var progress = Math.max(0, Math.min(1, (now - start) / duration));
+      drawFill(progress);
+      markReached(progress);
+      if (progress < 1) window.requestAnimationFrame(tick);
+    }
+    window.requestAnimationFrame(tick);
+  })(uid, points);
+</script>

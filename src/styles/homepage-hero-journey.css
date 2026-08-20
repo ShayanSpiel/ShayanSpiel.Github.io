@@ -1,0 +1,133 @@
+/* Homepage hero journey: its own anchor-timed draw, separate from static
+   background signatures and the fixed Services rail. */
+.homepage-hero-journey {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.homepage-hero-journey--faded {
+  opacity: 0.88;
+}
+
+.homepage-hero-journey__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  shape-rendering: geometricPrecision;
+}
+
+.homepage-hero-journey__route {
+  fill: none;
+  stroke: var(--foreground-muted);
+  stroke-width: 1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 9 8;
+  opacity: 0.65;
+  vector-effect: non-scaling-stroke;
+}
+
+.homepage-hero-journey__fill {
+  fill: none;
+  stroke: var(--primary);
+  stroke-width: 1.5;
+  stroke-linecap: butt;
+  stroke-linejoin: round;
+  opacity: 0;
+  vector-effect: non-scaling-stroke;
+}
+
+.homepage-hero-journey.is-ready .homepage-hero-journey__fill {
+  opacity: 1;
+}
+
+.homepage-hero-journey__node,
+.homepage-hero-journey__goal {
+  opacity: 0;
+  transition: opacity var(--duration) var(--ease);
+}
+
+.homepage-hero-journey__node.is-reached,
+.homepage-hero-journey__goal.is-reached {
+  opacity: 0.95;
+}
+
+.homepage-hero-journey__node-ring {
+  fill: none;
+  stroke: var(--foreground-muted);
+  stroke-width: 1;
+  opacity: 0.5;
+  vector-effect: non-scaling-stroke;
+  transition: stroke var(--duration) var(--ease), opacity var(--duration) var(--ease);
+}
+
+.homepage-hero-journey__node-dot {
+  fill: var(--foreground-muted);
+  opacity: 0.9;
+  transition: fill var(--duration) var(--ease);
+}
+
+.homepage-hero-journey__node.is-reached .homepage-hero-journey__node-ring {
+  stroke: var(--primary);
+  opacity: 0.3;
+}
+
+.homepage-hero-journey__node.is-reached .homepage-hero-journey__node-dot {
+  fill: var(--primary);
+}
+
+.homepage-hero-journey__goal-ring,
+.homepage-hero-journey__goal-inner {
+  fill: var(--background);
+  stroke: var(--foreground-muted);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  transition: stroke var(--duration) var(--ease);
+}
+
+.homepage-hero-journey__goal-inner {
+  fill: none;
+  opacity: 0.85;
+}
+
+.homepage-hero-journey__goal-core {
+  fill: var(--foreground-muted);
+  transition: fill var(--duration) var(--ease);
+}
+
+.homepage-hero-journey__goal.is-reached .homepage-hero-journey__goal-ring,
+.homepage-hero-journey__goal.is-reached .homepage-hero-journey__goal-inner {
+  stroke: var(--primary);
+}
+
+.homepage-hero-journey__goal.is-reached .homepage-hero-journey__goal-core {
+  fill: var(--primary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .homepage-hero-journey__route {
+    opacity: 0.65;
+  }
+
+  .homepage-hero-journey__node-ring,
+  .homepage-hero-journey__node-dot,
+  .homepage-hero-journey__goal-ring,
+  .homepage-hero-journey__goal-inner,
+  .homepage-hero-journey__goal-core {
+    transition: none;
+  }
+
+  .homepage-hero-journey__node,
+  .homepage-hero-journey__goal {
+    transition: none;
+  }
+}
+
+[dir="rtl"] .homepage-hero-journey__svg {
+  transform: scaleX(-1);
+  transform-origin: center;
+}

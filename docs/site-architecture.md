@@ -112,16 +112,12 @@ tap-toggle for coarse pointers, mobile category accordion, RTL-aware). There
 are no second-level sub-menus or flyouts. Every menu item carries its own
 distinct boxicon. The Live dot and the Discovery Call booking CTA are preserved.
 
-Journey signature: `src/components/JourneySignature.astro` + the
-`src/styles/journey-signature.css` token mirror reproduce the Design
-department journey signature (one wandering goal line, dashed muted route
-ahead, solid primary→success traveled fill, nodes on the path, flat
-bullseye). Every placement is full-extent: the route starts at one edge of
-its surface and ends at the opposite edge or boundary. Placements —
-homepage left rail, fixed to the viewport height, with scroll-driven draw
-(`JourneyLine.astro`); full-height hero sidebars (`hero-right`, RTL-aware
-`end-0`); full-width 8:1 aspect bands (`band`); corner surfaces inside cards
-and section corners (`corner`).
+The active website journey surfaces are isolated. The homepage hero uses
+`src/components/HomepageHeroJourney.astro` with its own anchor-timed draw;
+`src/components/HomepageJourneyRail.astro` owns the fixed viewport rail on
+`/services/`. Background journey bars were retired from the rest of the site.
+The Design video gallery remains independent and uses its own rendered journey
+assets under `.agents/company/departments/design/templates/`.
 
 ## Shared sources of truth
 

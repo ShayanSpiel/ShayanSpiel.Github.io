@@ -1,6 +1,5 @@
 ---
 import Page from "../../layouts/Page.astro";
-import JourneySignature from "../../components/JourneySignature.astro";
 import DepartmentMap from "../../components/architecture/DepartmentMap.astro";
 import OperatingLoop from "../../components/architecture/OperatingLoop.astro";
 import SectionHeader from "../../components/sections/SectionHeader.astro";
@@ -52,9 +51,6 @@ const breadcrumbJsonLd = {
     <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
     <div class="absolute left-1/2 top-[42%] h-[32rem] w-[48rem] -translate-x-1/2 -translate-y-1/2 glow-blob opacity-20"></div>
     <div class="absolute left-[58%] top-[38%] h-64 w-64 rounded-full opacity-10" style="background: radial-gradient(closest-side, var(--accent), transparent 72%);"></div>
-    <div class="absolute inset-y-0 end-0 z-0 hidden w-80 opacity-60 lg:block xl:w-96">
-      <JourneySignature variant="hero-right" gradientId="features-hero-grad" />
-    </div>
     <div class="relative mx-auto max-w-4xl px-6 text-center" data-aos="fade-up">
       <p class="text-2xs font-semibold uppercase tracking-widest text-primary">{t(locale, "features.hero.label")}</p>
       <h1 class="mt-4 text-4xl font-extrabold leading-tightest tracking-tight text-foreground-strong sm:text-6xl">{t(locale, "features.hero.titleLead")}<br /><span class="text-primary">{t(locale, "features.hero.titleAccent")}</span></h1>
@@ -87,9 +83,6 @@ const breadcrumbJsonLd = {
       <div class="tree-canvas relative overflow-hidden rounded-xl border border-border bg-panel p-5 shadow-panel sm:p-8" data-aos="fade-up">
         <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
         <div class="absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 glow-blob opacity-10"></div>
-        <div class="absolute end-0 top-0 z-0 hidden w-44 h-64 opacity-30 lg:block">
-          <JourneySignature variant="corner" gradientId="features-tree-grad" glow={false} />
-        </div>
         <div class="tree-rail relative grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {tree.map((node) => (
             <a href={localizePath(node.href, locale)} class:list={["group relative rounded-md border bg-panel-raised p-5 transition-all hover:-translate-y-1 hover:border-border-strong hover:shadow-panel", `border-${node.color}/30`]}>
@@ -171,8 +164,10 @@ const breadcrumbJsonLd = {
 <style is:global>
   /* Tinted border utilities (Tailwind cannot opacity-modify a bare CSS var,
      so these are provided explicitly against the semantic tokens). */
-
-  /* tinted border + bg utilities now live in global.css — zero hardcoding, single source */
+  .border-primary\/30{border-color:color-mix(in oklab, var(--primary) 30%, transparent)}
+  .border-info\/30{border-color:color-mix(in oklab, var(--info) 30%, transparent)}
+  .text-info{color:var(--info)}
+  .bg-info-soft{background-color:var(--info-soft)}
 
 
   .tree-rail::before {
