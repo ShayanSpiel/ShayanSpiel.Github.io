@@ -263,7 +263,7 @@
       "display_title_fa": "گفت‌وگوهای فروش باکیفیت رو بیشتر کنیم",
       "goal_status": "active",
       "id": "goal-email-campaign-20260810",
-      "latest_activity_at": "2026-08-20T05:02:24.601216+00:00",
+      "latest_activity_at": "2026-08-20T05:02:50.157753+00:00",
       "metric": "reply_rate",
       "name": "Resume daily English outbound to 30% reply rate",
       "operator": "ge",
@@ -2289,16 +2289,16 @@
       "created_at": "2026-08-17T19:53:45.793409+00:00",
       "goal_status": "active",
       "id": "goal-08b1335fde",
-      "latest_activity_at": "2026-08-19T14:26:21.137789+00:00",
+      "latest_activity_at": "2026-08-20T05:02:50.157753+00:00",
       "metric": "reply_rate",
       "name": "English outbound send batch 15: next 50 from remaining queue",
       "operator": "ge",
       "owner_id": "outbound",
       "parent_id": "goal-email-campaign-20260810",
-      "run_status": "waiting",
-      "stage": "EVALUATE",
+      "run_status": "completed",
+      "stage": "OBSERVE",
       "target": 0.3,
-      "updated_at": "2026-08-19T14:26:21.136192+00:00"
+      "updated_at": "2026-08-20T05:02:50.156593+00:00"
     },
     {
       "created_at": "2026-08-17T19:54:01.781741+00:00",
@@ -3011,8 +3011,8 @@
       "target": 0.3,
       "updated_at": "2026-08-20T05:01:44.429112+00:00"
     },
-    "last_activity_at": "2026-08-20T05:02:24.601216+00:00",
-    "last_sync_at": "2026-08-20T05:02:24.648873+00:00",
+    "last_activity_at": "2026-08-20T05:02:50.157753+00:00",
+    "last_sync_at": "2026-08-20T05:02:50.194378+00:00",
     "state": "running"
   },
   "totals": {
