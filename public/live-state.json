@@ -1,31 +1,31 @@
 {
   "current_run": {
-    "created_at": "2026-08-19T17:16:37.304959+00:00",
-    "goal_id": "goal-3fd23da75c",
-    "goal_name": "English outbound send batch 20: next 50 from remaining queue (send-all push)",
-    "owner_id": "outbound",
-    "run_id": "run-41662f1874",
-    "run_status": "waiting",
-    "stage": "EVALUATE",
-    "updated_at": "2026-08-20T09:28:36.215504+00:00"
+    "created_at": "2026-08-20T01:44:23.213397+00:00",
+    "goal_id": "goal-content-redo-batch1-v3-20260820",
+    "goal_name": "Redo fresh Batch 1 (Threads + Shorts): genuinely NEW story/copy per item + fixed CTA/countdown renders — PRODUCE and show owner only; NO Buffer dispatch (dry run)",
+    "owner_id": "content",
+    "run_id": "run-44f0efe1cd",
+    "run_status": "running",
+    "stage": "DECIDE",
+    "updated_at": "2026-08-20T09:32:34.269607+00:00"
   },
   "heartbeat": {
     "business_value": null,
     "business_value_fa": null,
     "display_title": null,
     "display_title_fa": null,
-    "goal_id": "goal-3fd23da75c",
-    "goal_name": "English outbound send batch 20: next 50 from remaining queue (send-all push)",
-    "metric": "reply_rate",
+    "goal_id": "goal-content-redo-batch1-v3-20260820",
+    "goal_name": "Redo fresh Batch 1 (Threads + Shorts): genuinely NEW story/copy per item + fixed CTA/countdown renders — PRODUCE and show owner only; NO Buffer dispatch (dry run)",
+    "metric": "published_items",
     "operator": "ge",
-    "owner_id": "outbound",
-    "run_status": "waiting",
-    "stage": "EVALUATE",
-    "target": 0.3,
-    "updated_at": "2026-08-20T09:28:36.215504+00:00"
+    "owner_id": "content",
+    "run_status": "running",
+    "stage": "DECIDE",
+    "target": 1,
+    "updated_at": "2026-08-20T09:32:34.269607+00:00"
   },
-  "last_activity_at": "2026-08-20T09:28:36.215504+00:00",
-  "last_sync_at": "2026-08-20T09:28:36.243197+00:00",
+  "last_activity_at": "2026-08-20T09:32:34.269607+00:00",
+  "last_sync_at": "2026-08-20T09:32:34.316007+00:00",
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
     "goal_name": "3 booked calls per day",
@@ -39,7 +39,7 @@
   "totals": {
     "approvals": 237,
     "decisions": 460,
-    "evidence": 8141,
+    "evidence": 8142,
     "goals_abandoned": 23,
     "goals_achieved": 141,
     "goals_active": 31,
