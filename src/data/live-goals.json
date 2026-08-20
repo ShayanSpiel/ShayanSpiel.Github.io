@@ -2874,7 +2874,7 @@
       "created_at": "2026-08-19T17:42:41.270340+00:00",
       "goal_status": "active",
       "id": "goal-a4acfeb32f",
-      "latest_activity_at": "2026-08-20T13:51:41.535020+00:00",
+      "latest_activity_at": "2026-08-20T14:06:08.296493+00:00",
       "metric": "qualified_social_leads",
       "name": "Research pipeline: grow fully verified English lead pool to 1000 (continuous - don't stop)",
       "operator": "ge",
@@ -2883,7 +2883,7 @@
       "run_status": "blocked",
       "stage": "ACT",
       "target": 1000,
-      "updated_at": "2026-08-20T13:51:41.533068+00:00"
+      "updated_at": "2026-08-20T14:06:08.293403+00:00"
     },
     {
       "created_at": "2026-08-19T20:40:22.805614+00:00",
@@ -2934,7 +2934,7 @@
       "created_at": "2026-08-20T01:42:17.711649+00:00",
       "goal_status": "active",
       "id": "goal-05ec9ac59f",
-      "latest_activity_at": "2026-08-20T13:51:41.073943+00:00",
+      "latest_activity_at": "2026-08-20T14:06:07.780271+00:00",
       "metric": "qualified_social_leads",
       "name": "Research pipeline: scale to 1500 qualified leads (push - don't stop)",
       "operator": "ge",
@@ -2943,7 +2943,7 @@
       "run_status": "blocked",
       "stage": "ACT",
       "target": 1500,
-      "updated_at": "2026-08-20T13:51:41.070443+00:00"
+      "updated_at": "2026-08-20T14:06:07.776858+00:00"
     },
     {
       "created_at": "2026-08-20T01:44:23.213397+00:00",
@@ -2964,7 +2964,7 @@
       "created_at": "2026-08-20T09:00:40.468533+00:00",
       "goal_status": "active",
       "id": "goal-0b8ed21f01",
-      "latest_activity_at": "2026-08-20T14:01:35.014010+00:00",
+      "latest_activity_at": "2026-08-20T14:14:13.428505+00:00",
       "metric": "booked_calls",
       "name": "Homepage conversion refresh: new hero copy, journey line, SEO and design polish",
       "operator": "ge",
@@ -2973,7 +2973,7 @@
       "run_status": "blocked",
       "stage": "EVALUATE",
       "target": 1,
-      "updated_at": "2026-08-20T13:20:28.080273+00:00"
+      "updated_at": "2026-08-20T14:01:48.014523+00:00"
     },
     {
       "created_at": "2026-08-20T09:00:50.043711+00:00",
@@ -3079,6 +3079,21 @@
       "stage": "OBSERVE",
       "target": "True",
       "updated_at": "2026-08-20T14:01:35.012356+00:00"
+    },
+    {
+      "created_at": "2026-08-20T14:03:22.843898+00:00",
+      "goal_status": "achieved",
+      "id": "goal-b104bd7f48",
+      "latest_activity_at": "2026-08-20T14:14:13.428505+00:00",
+      "metric": "acceptance_tests_passed",
+      "name": "Fix video template journey start fresh from 0 with zero solid tails isolated from homepage",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "parent_id": "goal-0b8ed21f01",
+      "run_status": "completed",
+      "stage": "OBSERVE",
+      "target": "True",
+      "updated_at": "2026-08-20T14:14:13.426808+00:00"
     }
   ],
   "heartbeat": {
@@ -3094,7 +3109,7 @@
     "run_status": "blocked",
     "stage": "ACT",
     "target": 1000,
-    "updated_at": "2026-08-20T13:51:41.535020+00:00"
+    "updated_at": "2026-08-20T14:06:08.296493+00:00"
   },
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
@@ -3114,7 +3129,7 @@
       "run_id": "run-2ccb5916df",
       "run_status": "blocked",
       "stage": "ACT",
-      "updated_at": "2026-08-20T13:51:41.535020+00:00"
+      "updated_at": "2026-08-20T14:06:08.296493+00:00"
     },
     "heartbeat": {
       "business_value": null,
@@ -3129,22 +3144,22 @@
       "run_status": "blocked",
       "stage": "ACT",
       "target": 1000,
-      "updated_at": "2026-08-20T13:51:41.535020+00:00"
+      "updated_at": "2026-08-20T14:06:08.296493+00:00"
     },
-    "last_activity_at": "2026-08-20T14:01:35.014010+00:00",
-    "last_sync_at": "2026-08-20T14:01:35.040904+00:00",
+    "last_activity_at": "2026-08-20T14:14:13.428505+00:00",
+    "last_sync_at": "2026-08-20T14:14:13.466651+00:00",
     "state": "running"
   },
   "totals": {
     "approvals": 240,
-    "decisions": 482,
-    "evidence": 8343,
+    "decisions": 486,
+    "evidence": 8392,
     "goals_abandoned": 24,
-    "goals_achieved": 145,
+    "goals_achieved": 146,
     "goals_active": 32,
-    "goals_total": 204,
+    "goals_total": 205,
     "hypotheses": 55,
     "memory_claims": 5,
-    "runs": 224
+    "runs": 225
   }
 }
