@@ -42,14 +42,19 @@ const workCards = [
     <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
     <div class="absolute left-1/2 top-[42%] h-[34rem] w-[52rem] -translate-x-1/2 -translate-y-1/2 glow-blob opacity-20"></div>
     <div class="absolute left-[58%] top-[38%] h-64 w-64 rounded-full opacity-10" style="background: radial-gradient(closest-side, var(--accent), transparent 72%);"></div>
-    <!-- universal journey - edge-anchored vertical wander (5 points, 5s draw, grey->color)
-         Hero spatial anchors in viewBox 0 0 1200 700:
-         [80,28] edge top (like rail start 100,24), [220,210] left side of title "Build a business" near edge,
-         [440,285] top of eyebrow a little left through center, [600,430] below title at center,
-         [600,560] bullseye top side of CTA button (560+24+8=592<700 margin). Catmull-Rom→cubic pure C chain. -->
+    <!-- universal journey - isolated hero 5-anchors, no gallery/video template mix (5 points, 5s draw, grey->color)
+         Hero spatial anchors in viewBox 0 0 1200 700 xMidYMid meet (content max-w-4xl spans 152-1048 in 1200):
+          [80,36] start edge top exactly like left rail (rail 100,24 - margin for ring r=10: 36 ≈ 24+12),
+          [210,220] node2 left side of title "Build a business" far near edge (x 210 west of content 152, y 220 mid-title),
+          [460,160] node3 top of eyebrow a little left through center (eyebrow label above title at y ~160, x 460 ≈ 600-140, slightly left),
+          [600,390] node4 below title at center (x 600 center, y 390 below title block ~260-340),
+          [600,545] goal bullseye top side of CTA button (x 600 center, y 545 with 545+24+8=577<700 margin above CTA row).
+         Note y ordering 36 -> 220 -> 160 -> 390 -> 545 is intentional: node3 y 160 < node2 y 220 because eyebrow
+         is ABOVE title, so Catmull-Rom segment node2->node3 is an upward S-wander (like left rail / gallery S-wave).
+         Path via Catmull-Rom→cubic pure C chain, continuous tangents, smooth; isolated to src/components+src/pages. -->
     <div class="absolute inset-0 z-0 pointer-events-none">
       <JourneyUniversal
-        points={[[80, 28], [220, 210], [440, 285], [600, 430], [600, 560]]}
+        points={[[80, 36], [210, 220], [460, 160], [600, 390], [600, 545]]}
         viewBox="0 0 1200 700"
         preserveAspectRatio="xMidYMid meet"
         animation="auto"

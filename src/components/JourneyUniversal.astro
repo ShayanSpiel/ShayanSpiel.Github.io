@@ -1,6 +1,6 @@
 ---
 /**
- * JourneyUniversal — isolated reusable journey line (legacy adapter, now fixed).
+ * JourneyUniversal - isolated reusable journey line (legacy adapter, now fixed).
  *
  * Consolidation: JourneySignature is the canonical template. JourneyUniversal
  * is kept as a thin legacy adapter for the homepage hero import and now
@@ -15,22 +15,25 @@
  *   continuous tangents). Path generated via toPath().
  *
  * Animation + trigger contract (declared here + in journey-universal.css):
- *   animation="scroll" — trigger: window scroll (scrollY / (docHeight-winHeight)),
- *     how: 0% pre-filled (START_REVEAL=0) — at scroll top solid fully hidden,
+ *   animation="scroll" - trigger: window scroll (scrollY / (docHeight-winHeight)),
+ *     how: 0% pre-filled (START_REVEAL=0) - at scroll top solid fully hidden,
  *     offset = len * (1 - p) where p=scrollY/(docH-winH), at p=1 exactly at
  *     bullseye no tail; JS per-instance uid, guard getTotalLength fallback;
  *     reduced-motion → static 70/30.
- *   animation="auto" — trigger: page load (timed CSS), how: dashed muted
+ *   animation="auto" - trigger: page load (timed CSS), how: dashed muted
  *     route fades in 0.35s, solid primary draws 5s (stroke-dasharray 100
  *     offset 100→0 with pathLength 100), nodes visible at start grey (muted)
  *     then become colored (primary) sequentially when solid hits them;
  *     delays 0.9s + idx*1.25s (goal last at 5.9s), bullseye last;
- *     tokens var(--duration)/var(--ease). Edge-anchored vertical wander
- *     for hero: points [[80,28],[220,210],[440,285],[600,430],[600,560]]
- *     in viewBox 0 0 1200 700 — start edge top like rail, second left of
- *     title near edge, third top of eyebrow a little left through center,
- *     fourth below title at center, goal top side of CTA.
- *   animation="static" — no trigger, 70% traveled solid + 30% dashed ahead.
+ *     tokens var(--duration)/var(--ease). Edge-anchored vertical wander (isolated hero 5-anchors, no gallery mix)
+ *     for hero: points [[80,36],[210,220],[460,160],[600,390],[600,545]]
+ *     in viewBox 0 0 1200 700 xMidYMid meet - [80,36] start edge top like rail
+ *     (100,24 + margin), [210,220] left side of title near edge, [460,160]
+ *     top of eyebrow a little left through center (y 160 < 220 intentional:
+ *     eyebrow ABOVE title so node3 above node2 creates S-wander via
+ *     Catmull-Rom), [600,390] below title at center, [600,545] goal top side
+ *     of CTA (545+24+8=577<700 margin). Isolated to src/components+src/pages.
+ *   animation="static" - no trigger, 70% traveled solid + 30% dashed ahead.
  *
  * Reusable as background: fills parent (absolute inset 0, pointer-events none),
  * RTL-safe via single [dir="rtl"] scaleX rule (avoid double scale on
@@ -39,7 +42,7 @@
 import "../styles/journey-universal.css";
 
 export interface Props {
-  /** Ordered points: [start, ...mids, goal] — line goes through each 1 by 1 */
+  /** Ordered points: [start, ...mids, goal] - line goes through each 1 by 1 */
   points: Array<[number, number]>;
   viewBox?: string;
   preserveAspectRatio?: string;
@@ -47,7 +50,7 @@ export interface Props {
   animation?: "scroll" | "auto" | "static";
   /** Background faded for hero (less transparent = fainter) */
   faded?: boolean;
-  /** Changeable icons (boxicons) — if set, replaces dot/core */
+  /** Changeable icons (boxicons) - if set, replaces dot/core */
   nodeIcon?: string;
   goalIcon?: string;
   /** Optional radii override (defaults match band/corner scale) */
