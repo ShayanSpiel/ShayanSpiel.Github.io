@@ -7,41 +7,13 @@
  * bullseye. The only homepage-specific part is the scroll-driven draw of
  * the travelled fill; the geometry, nodes, and bullseye are the shared
  * signature. Hidden on mobile (< lg).
+ *
+ * Consolidation: thin wrapper around JourneySignature variant="rail"
+ * with animation="scroll" (per-instance uid, guard getTotalLength).
  */
 import JourneySignature from "./JourneySignature.astro";
 ---
 
 <div class="jl-wrap" aria-hidden="true">
-  <JourneySignature variant="rail" gradientId="home-rail-grad" />
+  <JourneySignature variant="rail" animation="scroll" />
 </div>
-
-<script is:inline>
-(function () {
-  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  var wrap = document.querySelector(".jl-wrap");
-  var fill = wrap ? wrap.querySelector(".journey-path-fill") : null;
-  if (!wrap || !fill) return;
-
-  var len = fill.getTotalLength();
-  fill.style.strokeDasharray = len;
-  /* Start with the first 25% already traveled (like the confirmed renders'
-     traveled + route-ahead composition) and reveal the rest on scroll. */
-  var START_REVEAL = 0.25;
-  fill.style.strokeDashoffset = len * (1 - START_REVEAL);
-
-  function tick() {
-    var top = window.pageYOffset || document.documentElement.scrollTop;
-    var docH = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
-    var winH = window.innerHeight;
-    var max = docH - winH;
-    if (max <= 0) return;
-
-    var p = Math.min(top / max, 1);
-    fill.style.strokeDashoffset = len * (1 - START_REVEAL) * (1 - p);
-  }
-
-  window.addEventListener("scroll", tick, { passive: true });
-  window.addEventListener("resize", tick, { passive: true });
-  tick();
-})();
-</script>

@@ -37,7 +37,7 @@ const jsonLd = {
               quality: { icon: "bx-check-shield", tile: "bg-success-soft text-success", gradient: "from-success via-primary to-transparent" },
               research: { icon: "bx-search", tile: "bg-info-soft text-info", gradient: "from-info via-accent to-transparent" },
             };
-            const m = wfMeta[workflow] ?? { icon: "bx-task", tile: "bg-primary-soft text-primary", gradient: "from-primary via-accent to-transparent" };
+            const m = (wfMeta as any)[workflow] ?? { icon: "bx-task", tile: "bg-primary-soft text-primary", gradient: "from-primary via-accent to-transparent" };
             return (
               <article class="group relative overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
                 <div class:list={["absolute inset-x-0 top-0 h-px bg-gradient-to-r opacity-80", m.gradient]} aria-hidden="true"></div>

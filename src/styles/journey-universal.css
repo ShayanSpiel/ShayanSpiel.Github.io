@@ -1,0 +1,149 @@
+/*
+ * journey-universal.css — isolated reusable journey line (fixed).
+ * Mirrors journey-signature.css contracts: tokens only, scoped to
+ * .journey-universal, templative. See JourneyUniversal.astro header for
+ * animation + trigger contract.
+ * No hardcoding: tokens only, non-scaling-stroke.
+ */
+.journey-universal {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+.journey-universal--faded {
+  opacity: 0.88;
+}
+.journey-universal-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  shape-rendering: geometricPrecision;
+}
+.journey-universal-path {
+  fill: none;
+  stroke: var(--foreground-muted);
+  stroke-width: 1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 9 8;
+  opacity: 0.62;
+  vector-effect: non-scaling-stroke;
+}
+.journey-universal-path-fill {
+  fill: none;
+  stroke: var(--primary);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 1;
+  vector-effect: non-scaling-stroke;
+}
+.journey-universal--static .journey-universal-path-fill {
+  stroke-dasharray: 70 100;
+  stroke-dashoffset: 0;
+}
+.journey-universal--auto .journey-universal-path-fill {
+  stroke-dasharray: 70 100;
+  stroke-dashoffset: 0;
+}
+.journey-universal-node {
+  opacity: 0.95;
+}
+.journey-universal-node .node-ring {
+  fill: none;
+  stroke: var(--primary);
+  stroke-width: 1;
+  opacity: 0.3;
+  vector-effect: non-scaling-stroke;
+}
+.journey-universal-node .node-dot {
+  fill: var(--primary);
+}
+.journey-universal-goal {
+  opacity: 0.95;
+}
+.journey-universal-goal .goal-ring {
+  fill: var(--background);
+  stroke: var(--primary);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.journey-universal-goal .goal-ring-inner {
+  fill: none;
+  stroke: var(--primary);
+  stroke-width: 1;
+  opacity: 0.85;
+  vector-effect: non-scaling-stroke;
+}
+.journey-universal-goal .goal-core {
+  fill: var(--primary);
+}
+/* auto: hero texts first (AOS 550ms) then dashes -> solid -> nodes -> bullseye
+   What triggers: page load (CSS animation, no JS).
+   How: dashes fade in 0.35s, solid draws 1.15s (100→0 with pathLength 100),
+        nodes pop stagger 0.15s each, bullseye pops last.
+   Timing defaults use var(--duration)/var(--ease). */
+.journey-universal--auto .journey-universal-path {
+  opacity: 0;
+  animation: ju-dash-in 0.35s var(--ease) forwards 0.75s;
+}
+.journey-universal--auto .journey-universal-path-fill {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: ju-draw 1.15s cubic-bezier(0.22, 1, 0.36, 1) forwards 0.9s;
+}
+.journey-universal--auto .ju-node-pop,
+.journey-universal--auto .ju-goal-pop {
+  opacity: 0;
+  transform: scale(0.88);
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ju-pop 0.32s var(--ease) forwards;
+}
+.journey-universal--auto .ju-goal-pop {
+  animation-duration: 0.4s;
+}
+@keyframes ju-dash-in {
+  from { opacity: 0; }
+  to { opacity: 0.62; }
+}
+@keyframes ju-draw {
+  from { stroke-dashoffset: 100; }
+  to { stroke-dashoffset: 0; }
+}
+@keyframes ju-pop {
+  from { opacity: 0; transform: scale(0.88); }
+  to { opacity: 0.95; transform: scale(1); }
+}
+/* scroll variant initial state until JS sets real length */
+.journey-universal--scroll .journey-universal-path-fill {
+  stroke-dasharray: 100000;
+  stroke-dashoffset: 100000;
+}
+@media (prefers-reduced-motion: reduce) {
+  .journey-universal--scroll .journey-universal-path-fill {
+    stroke-dasharray: 70 100 !important;
+    stroke-dashoffset: 0 !important;
+  }
+  .journey-universal--auto .journey-universal-path,
+  .journey-universal--auto .journey-universal-path-fill,
+  .journey-universal--auto .ju-node-pop,
+  .journey-universal--auto .ju-goal-pop {
+    animation: none !important;
+    opacity: 0.95 !important;
+    transform: none !important;
+  }
+  .journey-universal--auto .journey-universal-path { opacity: 0.62 !important; }
+  .journey-universal--auto .journey-universal-path-fill {
+    stroke-dasharray: 70 100 !important;
+    stroke-dashoffset: 0 !important;
+  }
+}
+/* RTL: single mirror rule only — avoid double scaleX on full-inset */
+[dir="rtl"] .journey-universal {
+  transform: scaleX(-1);
+  transform-origin: center;
+}
