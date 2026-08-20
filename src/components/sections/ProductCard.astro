@@ -10,20 +10,31 @@ export interface Props {
 }
 
 const { name, status, description, url, locale = "en" } = Astro.props;
+
+const statusStyles = status === "Active"
+  ? "bg-success-soft text-success border-success/20"
+  : "bg-panel-raised text-muted-foreground border-border";
+
+const iconMap: Record<string, { icon: string; tile: string; gradient: string }> = {
+  "SpielOS": { icon: "bx-layer", tile: "bg-primary-soft text-primary", gradient: "from-primary via-accent to-transparent" },
+  "CacheCatch": { icon: "bx-search-alt", tile: "bg-accent-soft text-accent", gradient: "from-accent via-purple to-transparent" },
+  "Spiel-OS": { icon: "bx-archive", tile: "bg-purple-soft text-purple", gradient: "from-purple via-warning to-transparent" },
+  "Vibebaba": { icon: "bx-palette", tile: "bg-warning-soft text-warning", gradient: "from-warning via-primary to-transparent" },
+  "ShayanWiki": { icon: "bx-book-open", tile: "bg-success-soft text-success", gradient: "from-success via-accent to-transparent" },
+};
+
+const meta = iconMap[name] ?? { icon: "bx-cube", tile: "bg-primary-soft text-primary", gradient: "from-primary via-accent to-transparent" };
 ---
 
-<a href={url} target="_blank" rel="noopener noreferrer" class="group block p-5 rounded-md border border-border bg-panel transition-all duration-150 hover:border-border-strong hover:bg-panel-raised h-full">
-  <div class="flex items-center gap-2 mb-2">
-    <span class:list={[
-      "inline-flex items-center rounded-md px-2 py-0.5 text-2xs font-semibold",
-      status === "Active"
-        ? "bg-success-soft text-success"
-        : "bg-panel-raised text-muted-foreground",
-    ]}>{t(locale, `status.${status.toLowerCase()}`)}</span>
+<a href={url} target="_blank" rel="noopener noreferrer" class="group relative flex h-full flex-col overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong hover:shadow-panel">
+  <div class:list={["absolute inset-x-0 top-0 h-px bg-gradient-to-r opacity-80", meta.gradient]} aria-hidden="true"></div>
+  <div class="mb-4 flex items-center justify-between gap-2">
+    <div class:list={["flex h-10 w-10 items-center justify-center rounded-md", meta.tile]}><i class:list={["bx", meta.icon, "icon-xl"]} aria-hidden="true"></i></div>
+    <span class:list={["inline-flex items-center rounded-md border px-2 py-0.5 text-2xs font-semibold", statusStyles]}>{t(locale, `status.${status.toLowerCase()}`)}</span>
   </div>
-  <h3 class="text-sm font-semibold text-foreground-strong mb-1.5 group-hover:text-primary transition-colors">{name}</h3>
-  <p class="text-xs text-muted-foreground leading-relaxed">{description}</p>
-  <span class="mt-3 inline-flex items-center gap-1 text-xs text-primary font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-    {t(locale, "product.viewOnGithub")}
+  <h3 class="text-sm font-semibold leading-snug text-foreground-strong transition-colors group-hover:text-primary">{name}</h3>
+  <p class="mt-1.5 flex-1 text-xs leading-relaxed text-muted-foreground">{description}</p>
+  <span class="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-primary opacity-0 transition-all group-hover:opacity-100 group-hover:gap-1.5">
+    {t(locale, "product.viewOnGithub")} <i class="bx bx-chevron-right rtl-flip icon-sm" aria-hidden="true"></i>
   </span>
 </a>

@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import Page from "../../layouts/Page.astro";
 import JourneySignature from "../../components/JourneySignature.astro";
+import SectionHeader from "../../components/sections/SectionHeader.astro";
 import { SITE, AUTHOR } from "../../config";
 import { type Locale, t } from "../../i18n/translations";
 import { localizePath } from "../../i18n";
@@ -61,6 +62,9 @@ const categoryMeta = {
 };
 const categoryMetaJson = JSON.stringify(categoryMeta);
 const noResultsLabel = t(locale, "notes.noResults");
+
+const categoryIcons: Record<string, string> = { journey: "bx-compass", "ai-agents": "bx-bot" };
+const cardGradients = ["from-primary via-accent to-transparent", "from-accent via-purple to-transparent", "from-purple via-warning to-transparent", "from-warning via-success to-transparent", "from-success via-primary to-transparent"];
 ---
 
 <Page
@@ -69,85 +73,113 @@ const noResultsLabel = t(locale, "notes.noResults");
   image="/assets/og/blog.png"
   locale={locale}
 >
-  <section class="relative py-24 sm:py-32 overflow-hidden">
-    <div class="absolute inset-x-0 bottom-0 z-0 aspect-[12/1] opacity-35">
-      <JourneySignature variant="band" gradientId="notes-band-grad" />
+  <!-- Hero -->
+  <section class="relative overflow-hidden py-24 sm:py-32">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
+    <div class="absolute left-1/2 top-[38%] h-[30rem] w-[46rem] -translate-x-1/2 -translate-y-1/2 glow-blob opacity-15"></div>
+    <div class="absolute left-[60%] top-[30%] h-64 w-64 rounded-full opacity-10" style="background: radial-gradient(closest-side, var(--accent), transparent 72%);"></div>
+    <div class="absolute inset-y-0 end-0 z-0 hidden w-80 opacity-50 lg:block xl:w-96">
+      <JourneySignature variant="hero-right" gradientId="notes-hero-grad" />
     </div>
-    <div class="relative mx-auto max-w-4xl px-6">
-      <div class="text-center mb-12" data-aos="fade-up">
-        <span class="text-2xs font-semibold uppercase tracking-widest text-primary">{t(locale, "notes.label")}</span>
-        <h1 class="mt-3 text-3xl sm:text-4xl font-bold text-foreground-strong tracking-tight">{t(locale, "notes.title")}</h1>
-        <p class="mt-4 text-sm text-muted-foreground max-w-xl mx-auto">
-          {t(locale, "notes.desc")}
-          <br />
-          {t(locale, "notes.desc2")}
-        </p>
+    <div class="relative mx-auto max-w-4xl px-6 text-center" data-aos="fade-up">
+      <p class="text-2xs font-semibold uppercase tracking-widest text-primary">{t(locale, "notes.label")}</p>
+      <h1 class="mt-3 text-4xl font-extrabold tracking-tight text-foreground-strong sm:text-5xl leading-tightest">{t(locale, "notes.title")}</h1>
+      <p class="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground">
+        {t(locale, "notes.desc")}
+      </p>
+      <p class="mx-auto mt-1 max-w-xl text-sm leading-relaxed text-muted-foreground">{t(locale, "notes.desc2")}</p>
+    </div>
+  </section>
+
+  <!-- Filters + Grid -->
+  <section class="relative py-16 sm:py-20">
+    <div class="mx-auto max-w-6xl px-6">
+      <!-- Stats -->
+      <div class="flex items-center justify-center gap-3 mb-8" data-aos="fade-up">
+        <span class="inline-flex items-center gap-2 rounded-md border border-border bg-panel px-3 py-1.5 text-xs text-muted-foreground shadow-panel">
+          <i class="bx bx-file text-primary icon-sm" aria-hidden="true"></i>
+          <strong id="notes-count" class="font-semibold text-foreground-strong">{sorted.length}</strong> {t(locale, "notes.stats.notes")}
+        </span>
+        <span class="inline-flex items-center gap-2 rounded-md border border-border bg-panel px-3 py-1.5 text-xs text-muted-foreground shadow-panel">
+          <i class="bx bx-purchase-tag text-accent icon-sm" aria-hidden="true"></i>
+          <strong class="font-semibold text-foreground-strong">{allTags.length}</strong> {t(locale, "notes.stats.topics")}
+        </span>
+        <span class="hidden sm:inline-flex items-center rounded-md border border-border bg-panel px-3 py-1.5 text-xs text-muted-foreground shadow-panel">
+          {t(locale, "notes.stats.newestFirst")}
+        </span>
       </div>
 
-<div class="flex items-center justify-center gap-4 mb-10 text-xs text-muted-foreground">
-        <span><strong id="notes-count" class="text-foreground-strong font-semibold">{sorted.length}</strong> {t(locale, "notes.stats.notes")}</span>
-        <span class="text-border-strong" aria-hidden="true">·</span>
-        <span><strong class="text-foreground-strong font-semibold">{allTags.length}</strong> {t(locale, "notes.stats.topics")}</span>
-        <span class="text-border-strong" aria-hidden="true">·</span>
-        <span>{t(locale, "notes.stats.newestFirst")}</span>
-      </div>
-
+      <!-- Category filters -->
       <div id="category-filters" class="flex flex-wrap items-center justify-center gap-2 mb-3" role="group" aria-label={t(locale, "notes.categories.label")}>
-        <button type="button" data-category="" class:list={[
-          "inline-flex items-center rounded-md px-4 py-1.5 text-xs font-medium transition-colors cursor-pointer",
-          "bg-primary text-primary-foreground",
-        ]}>{t(locale, "notes.categories.all")}</button>
+        <button type="button" data-category="" class="inline-flex items-center gap-1.5 rounded-md px-4 py-2 text-xs font-semibold transition-all bg-primary text-primary-foreground shadow-panel hover:brightness-110">
+          <i class="bx bx-grid-alt icon-sm" aria-hidden="true"></i>{t(locale, "notes.categories.all")}
+        </button>
         {categories.map((cat) => (
-          <button type="button" data-category={cat} class:list={[
-            "inline-flex items-center rounded-md px-4 py-1.5 text-xs font-medium transition-colors cursor-pointer",
-            "bg-panel-raised text-muted-foreground hover:text-foreground border border-border",
-          ]}>{t(locale, `notes.categories.${cat}`)}</button>
+          <button type="button" data-category={cat} class="inline-flex items-center gap-1.5 rounded-md border border-border bg-panel px-4 py-2 text-xs font-medium text-muted-foreground shadow-panel transition-all hover:border-border-strong hover:bg-panel-raised hover:text-foreground">
+            <i class:list={["bx", categoryIcons[cat], "icon-sm"]} aria-hidden="true"></i>{t(locale, `notes.categories.${cat}`)}
+          </button>
         ))}
       </div>
 
-      <p id="category-desc" class="text-center text-xs text-muted-foreground mb-10"></p>
+      <p id="category-desc" class="mx-auto max-w-xl text-center text-xs leading-relaxed text-muted-foreground mb-8 min-h-[1rem]"></p>
 
-      <div id="notes-grid" class="post-grid">
-        {sorted.map((post) => (
+      <div id="notes-grid" class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {sorted.map((post, idx) => (
           <a
             href={localizePath(`/notes${post.data.permalink}`, locale)}
-            class="post-card"
+            class="post-card group relative flex flex-col overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong hover:shadow-panel"
             data-category={post.data.category}
             data-tags={post.data.tags.join("|")}
+            data-aos="fade-up"
           >
-            <div class="post-card-date">
-              {post.data.date.toLocaleDateString(locale === "fa" ? "fa-IR" : "en-US", { month: "short", day: "numeric", year: "numeric" })}
+            <div class:list={["absolute inset-x-0 top-0 h-px bg-gradient-to-r opacity-70", cardGradients[idx % cardGradients.length]]} aria-hidden="true"></div>
+            <div class="mb-3 flex items-center justify-between gap-2">
+              <span class="inline-flex items-center gap-1 rounded-md bg-panel-raised px-2 py-1 text-2xs font-medium text-muted-foreground border border-border">
+                <i class="bx bx-calendar icon-xs" aria-hidden="true"></i>
+                {post.data.date.toLocaleDateString(locale === "fa" ? "fa-IR" : "en-US", { month: "short", day: "numeric", year: "numeric" })}
+              </span>
+              {post.data.category && <span class="inline-flex h-7 w-7 items-center justify-center rounded-md bg-primary-soft text-primary"><i class:list={["bx", categoryIcons[post.data.category] ?? "bx-file", "icon-sm"]} aria-hidden="true"></i></span>}
             </div>
-            <h3 class="post-card-title">{post.data.title}</h3>
-            <p class="post-card-desc">{post.data.description}</p>
-            {post.data.tags.length > 0 && (
-              <div class="post-card-cat">{post.data.tags[0]}</div>
-            )}
+            <h3 class="text-sm font-semibold leading-snug text-foreground-strong line-clamp-2 group-hover:text-primary transition-colors">{post.data.title}</h3>
+            <p class="mt-2 flex-1 text-xs leading-relaxed text-muted-foreground line-clamp-3">{post.data.description}</p>
+            <div class="mt-4 flex items-center justify-between gap-2">
+              {post.data.tags.length > 0 ? (
+                <span class="inline-flex items-center rounded-md bg-accent-soft px-2 py-1 text-2xs font-semibold uppercase tracking-widest text-accent">#{post.data.tags[0]}</span>
+              ) : <span></span>}
+              <span class="inline-flex items-center gap-1 text-2xs font-semibold text-primary opacity-0 transition-opacity group-hover:opacity-100">{t(locale, "common.readMore")}<i class="bx bx-chevron-right rtl-flip icon-xs" aria-hidden="true"></i></span>
+            </div>
           </a>
         ))}
       </div>
 
-      <div id="notes-empty" class="hidden text-center py-10 text-sm text-muted-foreground"></div>
+      <div id="notes-empty" class="hidden rounded-xl border border-dashed border-border bg-panel/50 p-10 text-center shadow-panel">
+        <div class="mx-auto flex h-10 w-10 items-center justify-center rounded-md bg-panel-raised text-muted-foreground mb-3"><i class="bx bx-search icon-xl" aria-hidden="true"></i></div>
+        <p class="text-sm font-medium text-foreground-strong"></p>
+        <p class="mt-1 text-xs text-muted-foreground">{t(locale, "notes.noResults")}</p>
+      </div>
 
       {allTags.length > 0 && (
-        <details id="tag-filters-details" class="mt-12" data-aos="fade-up">
-          <summary class="cursor-pointer text-xs text-muted-foreground hover:text-foreground transition-colors select-none">
-            {t(locale, "notes.browseByTopic")} ({allTags.length})
+        <details id="tag-filters-details" class="mx-auto mt-10 max-w-3xl overflow-hidden rounded-xl border border-border bg-panel shadow-panel" data-aos="fade-up">
+          <summary class="flex cursor-pointer items-center justify-between px-5 py-4 text-xs font-semibold text-foreground-strong hover:bg-panel-raised transition-colors select-none">
+            <span class="inline-flex items-center gap-2"><i class="bx bx-purchase-tag text-accent icon-sm" aria-hidden="true"></i>{t(locale, "notes.browseByTopic")} ({allTags.length})</span>
+            <i class="bx bx-chevron-down icon-sm text-muted-foreground" aria-hidden="true"></i>
           </summary>
-          <div id="tag-filters" class="flex flex-wrap gap-2 mt-4">
-            <button type="button" data-tag="" class:list={[
-              "inline-flex items-center rounded-md px-3 py-1 text-2xs font-medium transition-colors cursor-pointer",
-              "bg-primary text-primary-foreground",
-            ]}>All</button>
-            {allTags.map((tag) => (
-              <button type="button" data-tag={tag} class:list={[
-                "inline-flex items-center rounded-md px-3 py-1 text-2xs font-medium transition-colors cursor-pointer",
-                "bg-panel-raised text-muted-foreground hover:text-foreground border border-border",
-              ]}>#{tag}</button>
-            ))}
+          <div class="border-t border-border bg-panel-deep/30 px-5 py-4">
+            <div id="tag-filters" class="flex flex-wrap gap-2">
+              <button type="button" data-tag="" class="inline-flex items-center rounded-md px-3 py-1.5 text-2xs font-semibold transition-colors bg-primary text-primary-foreground">All</button>
+              {allTags.map((tag) => (
+                <button type="button" data-tag={tag} class="inline-flex items-center rounded-md border border-border bg-panel px-3 py-1.5 text-2xs font-medium text-muted-foreground transition-colors hover:border-border-strong hover:bg-panel-raised hover:text-foreground">#{tag}</button>
+              ))}
+            </div>
           </div>
         </details>
       )}
+    </div>
+
+    <!-- Bottom band signature -->
+    <div class="pointer-events-none absolute inset-x-0 bottom-0 aspect-[16/1] opacity-20">
+      <JourneySignature variant="band" gradientId="notes-band-grad" />
     </div>
   </section>
 
@@ -163,8 +195,10 @@ const noResultsLabel = t(locale, "notes.noResults");
       const countEl = document.getElementById("notes-count");
       const descEl = document.getElementById("category-desc");
 
-      const activeClass = ["bg-primary", "text-primary-foreground"];
-      const inactiveClass = ["bg-panel-raised", "text-muted-foreground", "hover:text-foreground", "border", "border-border"];
+      const activeCategory = ["bg-primary", "text-primary-foreground", "shadow-panel", "border-transparent"];
+      const inactiveCategory = ["bg-panel", "text-muted-foreground", "border", "border-border", "shadow-panel", "hover:border-border-strong", "hover:bg-panel-raised", "hover:text-foreground"];
+      const activeTag = ["bg-primary", "text-primary-foreground", "border-transparent"];
+      const inactiveTag = ["bg-panel", "text-muted-foreground", "border", "border-border", "hover:border-border-strong", "hover:bg-panel-raised", "hover:text-foreground"];
 
       let category = "";
       let tag = "";
@@ -180,15 +214,15 @@ const noResultsLabel = t(locale, "notes.noResults");
         document.querySelectorAll("#category-filters [data-category]").forEach((btn) => {
           const value = btn.getAttribute("data-category") || "";
           const isActive = value === category;
-          btn.classList.remove(...activeClass, ...inactiveClass);
-          btn.classList.add(...(isActive ? activeClass : inactiveClass));
+          btn.classList.remove(...activeCategory, ...inactiveCategory);
+          btn.classList.add(...(isActive ? activeCategory : inactiveCategory));
           btn.setAttribute("aria-pressed", String(isActive));
         });
         document.querySelectorAll("#tag-filters [data-tag]").forEach((btn) => {
           const value = btn.getAttribute("data-tag") || "";
           const isActive = value === tag;
-          btn.classList.remove(...activeClass, ...inactiveClass);
-          btn.classList.add(...(isActive ? activeClass : inactiveClass));
+          btn.classList.remove(...activeTag, ...inactiveTag);
+          btn.classList.add(...(isActive ? activeTag : inactiveTag));
           btn.setAttribute("aria-pressed", String(isActive));
         });
       }
@@ -202,7 +236,7 @@ const noResultsLabel = t(locale, "notes.noResults");
           card.classList.toggle("hidden", !show);
           if (show) visible++;
         });
-        countEl.textContent = String(visible);
+        if (countEl) countEl.textContent = String(visible);
         if (descEl) {
           if (category && categoryMeta[category]) {
             descEl.textContent = categoryMeta[category].desc;
@@ -215,7 +249,8 @@ const noResultsLabel = t(locale, "notes.noResults");
         if (emptyEl) {
           const showEmpty = visible === 0;
           emptyEl.classList.toggle("hidden", !showEmpty);
-          emptyEl.textContent = showEmpty ? noResults : "";
+          const p = emptyEl.querySelector("p");
+          if (p) p.textContent = showEmpty ? noResults : "";
         }
         syncButtons();
       }
@@ -225,7 +260,7 @@ const noResultsLabel = t(locale, "notes.noResults");
         render();
       }
 
-      document.getElementById("category-filters").addEventListener("click", (e) => {
+      document.getElementById("category-filters")?.addEventListener("click", (e) => {
         const btn = e.target.closest("[data-category]");
         if (!btn) return;
         const url = new URL(location.href);

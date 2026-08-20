@@ -13,13 +13,20 @@ const proofLabels: Record<string, string> = {
   "App installs across two seasons": "proof.appInstalls",
   "Year-over-year revenue growth": "proof.revenueGrowth",
 };
+
+const gradients = [
+  "from-primary via-accent to-transparent",
+  "from-accent via-purple to-transparent",
+  "from-purple via-success to-transparent",
+];
 ---
 
-<div class="grid grid-cols-3 gap-4" data-aos="fade-up">
-  {proof.map((item) => (
-    <div class="text-center p-5 rounded-md border border-border bg-panel hover:border-border-strong transition-colors">
-      <div class="text-2xl sm:text-3xl font-bold text-foreground-strong">{item.value}</div>
-      <div class="text-2xs text-muted-foreground mt-1.5 leading-snug">{t(locale, proofLabels[item.label] || item.label)}</div>
+<div class="grid gap-3 sm:grid-cols-3" data-aos="fade-up">
+  {proof.map((item, index) => (
+    <div class="group relative overflow-hidden rounded-lg border border-border bg-panel p-5 text-center shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong hover:shadow-panel">
+      <div class:list={["absolute inset-x-0 top-0 h-px bg-gradient-to-r opacity-80", gradients[index % gradients.length]]} aria-hidden="true"></div>
+      <div class="text-2xl font-bold tracking-tight text-foreground-strong sm:text-3xl">{item.value}</div>
+      <div class="mt-2 text-2xs font-medium leading-snug text-muted-foreground">{t(locale, proofLabels[item.label] || item.label)}</div>
     </div>
   ))}
 </div>

@@ -172,21 +172,7 @@ const breadcrumbJsonLd = {
   /* Tinted border utilities (Tailwind cannot opacity-modify a bare CSS var,
      so these are provided explicitly against the semantic tokens). */
 
-  .border-primary\/30 { border-color: color-mix(in oklab, var(--primary) 30%, transparent); }
-  .border-accent\/30 { border-color: color-mix(in oklab, var(--accent) 30%, transparent); }
-  .border-purple\/30 { border-color: color-mix(in oklab, var(--purple) 30%, transparent); }
-  .border-success\/30 { border-color: color-mix(in oklab, var(--success) 30%, transparent); }
-  .border-warning\/30 { border-color: color-mix(in oklab, var(--warning) 30%, transparent); }
-  .border-info\/30 { border-color: color-mix(in oklab, var(--info) 30%, transparent); }
-  .border-accent { border-color: var(--accent); }
-  .border-purple { border-color: var(--purple); }
-  .border-success { border-color: var(--success); }
-  .border-info { border-color: var(--info); }
-  .bg-accent { background-color: var(--accent); }
-  .bg-purple { background-color: var(--purple); }
-  .bg-info { background-color: var(--info); }
-  .text-info { color: var(--info); }
-  .bg-info-soft { background-color: var(--info-soft); }
+  /* tinted border + bg utilities now live in global.css — zero hardcoding, single source */
 
 
   .tree-rail::before {

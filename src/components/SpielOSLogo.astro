@@ -10,12 +10,13 @@ export interface Props {
 
 const {
   size = "sm",
-  textClass = "text-sm font-semibold text-foreground-strong tracking-tight",
+  textClass = "text-sm font-bold tracking-tight text-foreground-strong",
   markOnly = false,
   boxClass,
 } = Astro.props;
-const boxSize = size === "sm" ? "h-6 w-6" : size === "md" ? "h-7 w-7" : size === "lg" ? "h-9 w-9" : "h-10 w-10";
-const tileClass = boxClass ?? `flex ${boxSize} items-center justify-center rounded-sm bg-panel-raised text-foreground-strong`;
+// Golden ratio: tile ≈ φ * cap-height (14px * 1.618 ≈ 22.6px) — optically balanced with bold wordmark
+const boxSize = size === "sm" ? "h-[22px] w-[22px]" : size === "md" ? "h-6 w-6" : size === "lg" ? "h-8 w-8" : "h-9 w-9";
+const tileClass = boxClass ?? `flex ${boxSize} items-center justify-center rounded-sm bg-panel-raised text-foreground-strong shrink-0`;
 ---
 
 <div class={tileClass}>

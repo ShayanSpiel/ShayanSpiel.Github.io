@@ -154,6 +154,8 @@ i[class*=" bxs-"] {
     @apply grid gap-4 mt-6 sm:grid-cols-2;
   }
 
+  /* Legacy selector kept for JS filtering (e.g. notes) — visual is now token-polished in page markup.
+     New pages should use: relative overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel hover:-translate-y-1 hover:border-border-strong */
   .post-card {
     @apply block p-5 rounded-md border border-border bg-panel transition-all duration-150;
     &:hover { @apply border-border-strong bg-panel-raised; }
@@ -366,6 +368,40 @@ i[class*=" bxs-"] {
   .pill-info { background: var(--info-soft); color: var(--info); }
   .pill-accent { background: var(--accent-soft); color: var(--accent); }
   .pill-purple { background: var(--purple-soft); color: var(--purple); }
+
+  /* ── Tinted border utilities — token-driven, no hardcoding (shared across all pages) ── */
+  .border-primary\/30 { border-color: color-mix(in oklab, var(--primary) 30%, transparent); }
+  .border-accent\/30 { border-color: color-mix(in oklab, var(--accent) 30%, transparent); }
+  .border-purple\/30 { border-color: color-mix(in oklab, var(--purple) 30%, transparent); }
+  .border-success\/30 { border-color: color-mix(in oklab, var(--success) 30%, transparent); }
+  .border-warning\/30 { border-color: color-mix(in oklab, var(--warning) 30%, transparent); }
+  .border-info\/30 { border-color: color-mix(in oklab, var(--info) 30%, transparent); }
+  .bg-accent { background-color: var(--accent); }
+  .bg-purple { background-color: var(--purple); }
+  .bg-info { background-color: var(--info); }
+  .text-info { color: var(--info); }
+  .bg-info-soft { background-color: var(--info-soft); }
+  .border-accent { border-color: var(--accent); }
+  .border-purple { border-color: var(--purple); }
+  .border-success { border-color: var(--success); }
+  .border-info { border-color: var(--info); }
+
+  /* ── Polished card + canvas primitives — zero hardcoding, token-only ──
+     Prefer using these token classes directly in Astro markup (see live/features
+     for the gold standard). These utilities exist only to keep future pages
+     from drifting into ad-hoc hardcoding. */
+  .polished-card {
+    @apply relative overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all;
+  }
+  .polished-card:hover { @apply -translate-y-1 border-border-strong; }
+  .polished-card-topline { @apply absolute inset-x-0 top-0 h-px bg-gradient-to-r opacity-80; }
+  .polished-canvas {
+    @apply relative overflow-hidden rounded-xl border border-border bg-panel p-5 shadow-panel sm:p-8;
+  }
+  .canvas-grid { @apply absolute inset-0 opacity-[0.04] hero-grid; }
+  .canvas-glow { @apply absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 glow-blob opacity-10; }
+
+
 
   /* ── Data tables ── */
   .data-table {
@@ -753,7 +789,7 @@ i[class*=" bxs-"] {
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background: rgba(0, 0, 0, 0.6);
+  background: var(--overlay-bg);
   backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
