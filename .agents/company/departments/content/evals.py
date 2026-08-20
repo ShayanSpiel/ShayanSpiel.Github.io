@@ -6,6 +6,11 @@ the item's brief AND both platform renditions (threads + youtube copy).  The
 content-campaign quality_gate requires a passing eval_report for this suite
 before a campaign can advance to campaign_ready.
 
+`content-story-whole` is the whole-narration gate introduced with the
+storytelling-architecture change (goal-content-storytelling-architecture-v1-20260820):
+campaign Shorts narration is judged as ONE complete story BEFORE design, so a
+fragment-by-fragment script can never reach a template.
+
 Adding a suite to ANY department follows the same Lego contract:
 1. create `departments/<name>/evals.py` exporting EVAL_SUITES
 2. register criteria with source-file grounding (strategy/skill paths)
@@ -55,10 +60,9 @@ CONTENT_COPY_TOP10 = EvalSuite(
             description=(
                 "The piece opens in (or immediately grounds in) a situation the "
                 "reader recognizes from their own work — the brief's "
-                "customer_moment — not in SpielOS's internal activity. Item-03: "
-                "a new customer request ends with a question and nothing happens. "
-                "Item-04: month-end reconciliation means clicking hundreds of rows. "
-                "Item-05: a task list cannot prove the work happened."
+                "customer_moment — not in SpielOS's internal activity. The "
+                "moment must be concrete and specific to the brief, never a "
+                "generic AI complaint."
             ),
             source=CONTENT_README,
         ),
@@ -73,15 +77,17 @@ CONTENT_COPY_TOP10 = EvalSuite(
             source=COPYWRITING_EN,
         ),
         EvalCriterion(
-            id="understandable_without_spielos",
-            name="Understandable without knowing SpielOS",
+            id="cold_audience_clarity",
+            name="Cold-audience clarity",
             description=(
-                "No internal production vocabulary: batch, campaign, hook, review "
-                "gate, Department, Artifact, runtime, harness rule, approval "
-                "record, creative signature, content dispatch. No machinery words "
-                "used as product features: instruction, public record, external "
-                "confirmation, returned proof, ungrounded 'live record'. A reader "
-                "who has never heard of SpielOS must follow the whole piece."
+                "Understandable to a cold audience that has never heard of "
+                "SpielOS. No internal production vocabulary: batch, campaign, "
+                "hook, review gate, Department, Artifact, runtime, harness rule, "
+                "approval record, creative signature, content dispatch. No "
+                "machinery words used as product features: instruction, public "
+                "record, external confirmation, returned proof, ungrounded 'live "
+                "record'. A first-time viewer must follow the whole piece and "
+                "the benefit it names."
             ),
             source=COPYWRITING_EN,
         ),
@@ -156,4 +162,97 @@ CONTENT_COPY_TOP10 = EvalSuite(
     ),
 )
 
-EVAL_SUITES = (CONTENT_COPY_TOP10,)
+
+CONTENT_STORY_WHOLE = EvalSuite(
+    id="content-story-whole",
+    name="Short-form narration judged as one complete story (whole-story gate)",
+    scope="content-story",
+    department_id="content",
+    payload_kind="campaign_manifest",
+    description=(
+        "Six whole-story criteria judged PER ITEM against the item's complete "
+        "YouTube narration (`narration.script` + its ordered scenes), NOT "
+        "against isolated clips. The narration must be written as one complete "
+        "story BEFORE scene-splitting, cover the conversion arc Hook -> "
+        "Pain/Context -> Why it matters -> AI/workflow mechanism -> SpielOS "
+        "role -> Outcome -> CTA, and only then be assigned to a template. Every "
+        "criterion must pass (all_pass, min_score 1.0) before design is locked."
+    ),
+    validity="business",
+    thresholds={"all_pass": True, "min_score": 1.0},
+    payload_id_selector=lambda payload: str(payload.get("batch_id") or payload.get("id") or "payload"),
+    item_selector=lambda payload: [
+        (item["item_id"], item) for item in (payload.get("items") or [])
+    ],
+    criteria=(
+        EvalCriterion(
+            id="cold_audience_context",
+            name="Cold-audience context first",
+            description=(
+                "The hook scene opens in (or immediately establishes) a "
+                "context a cold audience recognizes from their own work — the "
+                "brief's customer_moment — BEFORE any SpielOS claim. A viewer "
+                "who has never seen SpielOS must follow the first scene and "
+                "want the next."
+            ),
+            source=CONTENT_README,
+        ),
+        EvalCriterion(
+            id="causal_flow",
+            name="Causal conversion arc",
+            description=(
+                "The whole narration follows the conversion arc in order: "
+                "Hook -> Pain/Context -> Why it matters -> AI/workflow mechanism "
+                "-> SpielOS role -> Outcome -> CTA. Each scene causes the next; "
+                "no scene is a disconnected fragment and the script never "
+                "restarts or backtracks."
+            ),
+            source=CONTENT_README,
+        ),
+        EvalCriterion(
+            id="solution_clarity",
+            name="Concrete solution clarity",
+            description=(
+                "The mechanism is concrete: what the workflow is, who reviews "
+                "it, what visibly changes. No vague SaaS claims and no implied "
+                "complete company-wide autonomy."
+            ),
+            source=VOICE,
+        ),
+        EvalCriterion(
+            id="spielos_relevance",
+            name="SpielOS relevance earned, not repeated",
+            description=(
+                "The story lands on the SpielOS role named by the brief's "
+                "spielos_relevance: supervised workflows that turn repeated "
+                "knowledge-work into owned operations. The bridge is natural to "
+                "the mechanism and never repeats the same headline mechanically."
+            ),
+            source=CONTENT_README,
+        ),
+        EvalCriterion(
+            id="earned_cta",
+            name="CTA earned by the outcome",
+            description=(
+                "The final CTA follows from the story's outcome: the viewer "
+                "knows what they would book and why it follows from the "
+                "mechanism shown. No forced CTA on a story that gave no reason."
+            ),
+            source=VOICE,
+        ),
+        EvalCriterion(
+            id="founder_personality",
+            name="One founder voice throughout",
+            description=(
+                "The narration sounds like ONE founder who owns the room "
+                "(voice.md): short punchy lines, deliberate pauses, zero "
+                "formality. A single consistent narrator across every scene; no "
+                "generic commercial voice and no tone drift or silent switch "
+                "between scenes."
+            ),
+            source=VOICE,
+        ),
+    ),
+)
+
+EVAL_SUITES = (CONTENT_COPY_TOP10, CONTENT_STORY_WHOLE)

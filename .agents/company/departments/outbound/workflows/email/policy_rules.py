@@ -9,9 +9,9 @@ suppress senders, adjust cohort) and releases with `approve --next`.
 
 Bounce is suppression-aware: a window bounce breach is downgraded ONLY when
 every bounced address is already suppressed in the master (the fix actually
-covers the evidence). Spam honours a time-boxed owner override from
-control.json knobs. Delivered rate is only judgeable when statuses are
-verified — noisy data is its own problem.
+covers the evidence). Spam and delivered rate honour a time-boxed owner
+override from control.json knobs. Delivered rate is only judgeable when
+statuses are verified — noisy data is its own problem.
 """
 
 from datetime import datetime, timedelta, timezone
@@ -87,6 +87,18 @@ def evaluate(snapshot: dict, control_knobs: dict | None = None) -> dict:
         if unverified < max(5, totals.get("sent", 0) * 0.1) and effective < 0.99:
             breaches.append({"name": "delivered rate", "metric": "delivered_rate",
                              "current": effective, "max": 0.99})
+
+    # Delivered-rate override (owner, time-boxed): demotes only the delivered
+    # rate breach, only until the timestamp. Never touches bounce/spam/data.
+    delivered = next((b for b in breaches if b["name"] == "delivered rate"), None)
+    if delivered:
+        until = str(knobs.get("gate_delivered_override_until") or "")
+        if until:
+            try:
+                if datetime.now(timezone.utc) < datetime.fromisoformat(until):
+                    breaches.remove(delivered)
+            except ValueError:
+                pass
 
     noisy_data = (totals.get("unknown", 0) + totals.get("denied", 0)
                   + totals.get("unresolved", 0)) >= max(5, totals.get("sent", 0) * 0.1)

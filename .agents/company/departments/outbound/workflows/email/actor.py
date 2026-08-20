@@ -21,7 +21,7 @@ import time
 import uuid
 from datetime import datetime, timezone
 
-from . import compose, config, content as content_bank, outbound, providers
+from . import compose, config, content as content_bank, outbound, providers, validators
 from .templates import SIGNATURE_HTML, SIGNATURE_TEXT
 
 FAILED_RETRY_SECONDS = 300  # grace before a failed background dispatch retries
@@ -295,6 +295,20 @@ def _execute_emails_inner(ctx, store, batch_id: str, batch: dict) -> dict:
         return {"sent": 0, "failed": 0, "deduped": 0, "note": "empty batch"}
 
     log = outbound.load_sent_log()
+
+    # Hard dedup process gate (goal-4357632a68): fail fast BEFORE any
+    # provider send — before contacts are read, claims taken, or a single
+    # email dispatches. Any batch email whose recipient (case-insensitive)
+    # or lead_id is already in the sent log blocks the whole batch; an
+    # already-sent lead can never be dispatched again by any path.
+    resend = [e for e in emails
+              if validators.sent_log_matches(e.get("email"), e.get("lead_id"), log)]
+    if resend:
+        raise RuntimeError(
+            "resend_guard: %d already-sent lead(s) in batch %s: %s"
+            % (len(resend), batch_id,
+               ", ".join(str(e.get("lead_id") or "?") for e in resend)))
+
     contacts = outbound.read_contacts(lang_filter=None, tier_filter=None)
     by_id = {c["lead_id"]: c for c in contacts}
 

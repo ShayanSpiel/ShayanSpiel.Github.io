@@ -620,11 +620,11 @@ def send_email(to_email: str, subject: str, html: str, text: str, reply_to: str 
 
 
 def pick_provider(sent_log: dict, exclude=()) -> str:
-    """Deterministic provider pick for one send: the configured provider with
-    the most daily headroom (used < cap); ties go to configured order.
-    Providers with >=2 transport failures today are skipped (a dead
-    VPN/filtered host must not stall the machine); they auto-return the next
-    UTC day. It is a tuple."""
+    """Deterministic provider pick for one send: the configured provider that
+    is least used today (minimum used/cap, i.e. the most daily headroom,
+    used < cap); ties go to configured order. Providers with >=2 transport
+    failures today are skipped (a dead VPN/filtered host must not stall the
+    machine); they auto-return the next UTC day. It is a tuple."""
     from datetime import datetime, timezone
     import collections
     day = datetime.now(timezone.utc).strftime("%Y-%m-%d")
@@ -641,7 +641,7 @@ def pick_provider(sent_log: dict, exclude=()) -> str:
         if not str(f.get("error", "")).startswith("send exceeded"):
             failing[f.get("provider") or "?"] += 1
     banned = {p for p in failing if failing[p] >= 2} | set(exclude)
-    best, best_ratio = None, -1.0
+    best, best_ratio = None, float("inf")
     for p in available_providers():
         cap = _cfg_module.PROVIDER_DAILY_CAPS.get(p, 100)
         used = usage.get(p, 0)
@@ -650,7 +650,7 @@ def pick_provider(sent_log: dict, exclude=()) -> str:
         if p in banned:
             continue
         ratio = used / cap
-        if ratio > best_ratio:
+        if ratio < best_ratio:
             best, best_ratio = p, ratio
     if best is None:
         best = [p for p in available_providers() if p not in banned]

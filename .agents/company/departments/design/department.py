@@ -23,6 +23,52 @@ def _registered_archetypes() -> list[dict[str, Any]]:
     return list(registry.get("archetypes") or [])
 
 
+def _template_fit_errors(manifest: dict[str, Any], platform: str) -> list[str]:
+    """Reject known-bad or semantically mismatched gallery choices before render.
+
+    Rotation is a coverage rule, not a creative decision.  A template may be
+    registered and still be wrong for the story, or quarantined after a real
+    media failure.  This gate keeps the renderer from silently accepting that
+    mismatch and makes the choice auditable in the campaign Artifact.
+    """
+    errors: list[str] = []
+    if platform != "youtube":
+        return errors
+    archetypes = {str(item.get("id")): item for item in _registered_archetypes()}
+    fit_terms = {
+        "loop-rail": ("process", "loop", "goal", "observe", "decide", "act", "evaluate"),
+        "heartbeat": ("live", "running", "status", "current", "heartbeat", "today"),
+        "department-map": ("department", "harness", "system", "roles"),
+        "agent-brief": ("brief", "request", "intake", "assessment"),
+        "scenario-b": ("workflow", "coordination", "tools", "handoff", "status", "intake"),
+        "scenario-c": ("department", "role", "workflow", "context", "standard", "status"),
+    }
+    for item in manifest.get("items") or []:
+        item_id = str(item.get("item_id") or "?")
+        rendition = ((item.get("renditions") or {}).get(platform) or {})
+        design = rendition.get("design") or {}
+        template_id = str(design.get("template_id") or "")
+        archetype = archetypes.get(template_id) or {}
+        if manifest.get("media_quality_gate") == "strict" and archetype.get("status") == "quarantined":
+            errors.append(
+                f"items.{item_id}.renditions.{platform}.design.template_id {template_id!r} is quarantined: "
+                f"{archetype.get('quarantine_reason', 'media QA required')}")
+            continue
+        terms = fit_terms.get(template_id)
+        if not terms:
+            continue
+        text_parts: list[str] = [str(design.get("eyebrow") or ""), str(design.get("supporting_text") or "")]
+        narration = rendition.get("narration") or {}
+        text_parts.append(str(narration.get("script") or ""))
+        text_parts.extend(str(scene.get("text") or "") for scene in narration.get("scenes") or [])
+        story = " ".join(text_parts).lower()
+        if not any(term in story for term in terms):
+            errors.append(
+                f"items.{item_id}.renditions.{platform}.design.template_id {template_id!r} does not fit the story; "
+                f"expected one of: {', '.join(terms)}")
+    return errors
+
+
 def _rotation_errors(manifest: dict[str, Any]) -> list[str]:
     """Mechanically enforce the per-item archetype selection rule.
 
@@ -109,6 +155,7 @@ def _rotation_errors(manifest: dict[str, Any]) -> list[str]:
                         f"unbalanced experiment cells: {platform} cell {cell_id!r} collapses to "
                         f"a single archetype {next(iter(distinct))!r} and is starved of a "
                         "template family")
+        errors.extend(_template_fit_errors(manifest, platform))
     return errors
 
 
@@ -214,6 +261,7 @@ class DesignDepartment(EvidenceDepartment, Department):
     goal_schema = {"metrics": ["approved_designs", "rendition_count", "video_renders", "video_orders"],
                    "config": {"workflow": {"enum": [w.id for w in workflows]},
                               "required_count": {"type": "integer"}}}
+    eval_suites = ("video-cta-link", "video-text-sync", "video-media-qa")
     evidence_metrics = {"approved_designs": ("approved_design",),
                         "rendition_count": ("render_report",),
                         "video_renders": ("video_render",),

@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-08-18",
+  "updated_at": "2026-08-20",
   "owner": "design",
   "authority": ".agents/company/departments/design/README.md",
   "research_brief": ".spielos/artifacts/content-growth-20260812/research/shortform-template-research-20260817.md",
@@ -21,7 +21,20 @@
       "file": "video/scenario-b.html",
       "legacy": true,
       "description": "Before/After — disconnected AI tools need one operating system before they work as a team.",
-      "research_map": "Before/after split; contrast tension; transformation storytelling (Hooksnap 2026-05-07)."
+      "content_relevance": "workflow/coordination content",
+      "research_map": "Before/after split; contrast tension; transformation storytelling (Hooksnap 2026-05-07).",
+      "scene_control": {
+        "contract": "scene_timing.<key> in narration.json; scene ids map 1:1 to the template scene nodes (s1..sN) and to campaign narration scenes.",
+        "timing_key": "b",
+        "scenes": [
+          "hook",
+          "pain",
+          "promise",
+          "pillars",
+          "director",
+          "cta"
+        ]
+      }
     },
     {
       "id": "scenario-c",
@@ -29,7 +42,19 @@
       "file": "video/scenario-c.html",
       "legacy": true,
       "description": "Build It — a real AI department is built from roles, context, standards, workflows.",
-      "research_map": "Numbered build steps act as a time contract / payoff moments (Blitzcut 2026-06-06)."
+      "content_relevance": "department/role/workflow content",
+      "research_map": "Numbered build steps act as a time contract / payoff moments (Blitzcut 2026-06-06).",
+      "scene_control": {
+        "contract": "scene_timing.<key> in narration.json; scene ids map 1:1 to the template scene nodes (s1..sN) and to campaign narration scenes.",
+        "timing_key": "c",
+        "scenes": [
+          "hook",
+          "build",
+          "live",
+          "director",
+          "cta"
+        ]
+      }
     },
     {
       "id": "contrast-text",
@@ -37,15 +62,38 @@
       "file": "video/contrast-text.html",
       "legacy": false,
       "description": "Contrast statement hook — 'X works. Y doesn't.' keyword in accent color; pattern interrupt (Hooksnap format B).",
-      "research_map": "Pattern interrupt / bold contrast hooks; first-2s window; centered key element >=1s (Tukey 2026-05-26; JAMS 2026-03-26)."
+      "research_map": "Pattern interrupt / bold contrast hooks; first-2s window; centered key element >=1s (Tukey 2026-05-26; JAMS 2026-03-26).",
+      "scene_control": {
+        "contract": "scene_timing.<key> in narration.json; scene ids map 1:1 to the template scene nodes (s1..sN) and to campaign narration scenes.",
+        "timing_key": "d",
+        "scenes": [
+          "hook",
+          "claim",
+          "proof",
+          "resolve",
+          "cta"
+        ]
+      }
     },
     {
       "id": "storyboard",
       "kind": "shorts",
       "file": "video/storyboard.html",
       "legacy": false,
+      "status": "quarantined",
+      "quarantine_reason": "Storyboard produced blank scene frames in the last two campaign renders; restore only after direct media QA passes.",
       "description": "Three-panel storyboard progression (Problem -> Turn -> Result) with numbered frames.",
-      "research_map": "Scene cuts boost attention, ~5% synchrony loss per extra scene second; keep scenes short and simple (JAMS 2026-03-26)."
+      "research_map": "Scene cuts boost attention, ~5% synchrony loss per extra scene second; keep scenes short and simple (JAMS 2026-03-26).",
+      "scene_control": {
+        "contract": "scene_timing.<key> in narration.json; scene ids map 1:1 to the template scene nodes (s1..sN) and to campaign narration scenes.",
+        "timing_key": "e",
+        "scenes": [
+          "problem",
+          "turn",
+          "result",
+          "cta"
+        ]
+      }
     },
     {
       "id": "data-card",
@@ -53,7 +101,17 @@
       "file": "video/data-card.html",
       "legacy": false,
       "description": "One hero fact/statistic with a counting number and a supporting line; bold claim + proof point.",
-      "research_map": "Currency/number anchors + proof point raise hook quality (viralfaceless 2026-05-10); bold claim hook (Tukey 2026-05-26)."
+      "research_map": "Currency/number anchors + proof point raise hook quality (viralfaceless 2026-05-10); bold claim hook (Tukey 2026-05-26).",
+      "scene_control": {
+        "contract": "scene_timing.<key> in narration.json; scene ids map 1:1 to the template scene nodes (s1..sN) and to campaign narration scenes.",
+        "timing_key": "f",
+        "scenes": [
+          "stat",
+          "claim",
+          "proof",
+          "cta"
+        ]
+      }
     },
     {
       "id": "question-hook",
@@ -61,7 +119,17 @@
       "file": "video/question-hook.html",
       "legacy": false,
       "description": "Open-loop question hook — the question lands on screen before speech; curiosity gap.",
-      "research_map": "Curiosity gap hooks (Tukey 2026-05-26); open-loop markers add the biggest curiosity boost (viralfaceless 2026-05-10)."
+      "research_map": "Curiosity gap hooks (Tukey 2026-05-26); open-loop markers add the biggest curiosity boost (viralfaceless 2026-05-10).",
+      "scene_control": {
+        "contract": "scene_timing.<key> in narration.json; scene ids map 1:1 to the template scene nodes (s1..sN) and to campaign narration scenes.",
+        "timing_key": "g",
+        "scenes": [
+          "question",
+          "stakes",
+          "resolve",
+          "cta"
+        ]
+      }
     },
     {
       "id": "harness-architecture",
@@ -102,7 +170,18 @@
       "legacy": false,
       "description": "Centered five-column OperatingLoop rail — GOAL->OBSERVE->DECIDE->ACT->EVALUATE nodes riding a gradient progress line.",
       "research_map": "Process/loop visualization; step-by-step mapping keeps viewers oriented (JAMS 2026-03-26; Sendible 2025-08-26).",
-      "content_relevance": "process/loop content"
+      "content_relevance": "process/loop content",
+      "scene_control": {
+        "contract": "scene_timing.<key> in narration.json; scene ids map 1:1 to the template scene nodes (s1..sN) and to campaign narration scenes.",
+        "timing_key": "h",
+        "scenes": [
+          "band",
+          "goal",
+          "watch",
+          "run",
+          "cta"
+        ]
+      }
     },
     {
       "id": "heartbeat",
@@ -111,7 +190,17 @@
       "legacy": false,
       "description": "Live heartbeat card — centered north star, run row, and a 2x2 stat grid over a minimal magical pulse.",
       "research_map": "Live-ops/status storytelling; credible live numbers and current work outshine static claims (goal-live-heartbeat-clean-20260818).",
-      "content_relevance": "live-ops content"
+      "content_relevance": "live-ops content",
+      "scene_control": {
+        "contract": "scene_timing.<key> in narration.json; scene ids map 1:1 to the template scene nodes (s1..sN) and to campaign narration scenes.",
+        "timing_key": "i",
+        "scenes": [
+          "band",
+          "goal",
+          "watch",
+          "cta"
+        ]
+      }
     },
     {
       "id": "department-map",

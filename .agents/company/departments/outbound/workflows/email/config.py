@@ -78,11 +78,14 @@ SIGNATURE_SERVICES = os.environ.get(
     "SIGNATURE_SERVICES",
     "https://spielos.xyz/services/?utm_source=outbound-email&utm_medium=email&utm_campaign=outbound-sig",
 ).strip()
-# Discovery Call booking CTA carried by every outbound signature
-# (owner directive 2026-08-19, goal-booking-signature-outbound-20260819).
+# Discovery Call booking CTA carried by every outbound signature.
+# Owner directive 2026-08-19 (goal-booking-signature-outbound-20260819): the
+# booking CTA must stay on the sending domain spielos.xyz — the on-site /book/
+# page (Cal.com native embed, conversion flow preserved) — per the 2026-08-19
+# deliverability insight (URLs not matching the sending domain trigger spam filters).
 SIGNATURE_BOOKING = os.environ.get(
     "SIGNATURE_BOOKING",
-    "https://cal.com/shayanspiel/15min?utm_source=outbound-email&utm_medium=email&utm_campaign=outbound-sig",
+    "https://spielos.xyz/book/?utm_source=outbound-email&utm_medium=email&utm_campaign=outbound-sig",
 ).strip()
 
 # ── Data ───────────────────────────────────────────────────────────────────────

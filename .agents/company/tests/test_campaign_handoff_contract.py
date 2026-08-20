@@ -18,7 +18,7 @@ from company.departments.campaign_contract import (
     record_optimization_decision,
     validate_campaign,
 )
-from company.departments.design.department import accept_design_order, render_report
+from company.departments.design.department import accept_design_order, render_report, validate_design_order
 
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -58,15 +58,106 @@ def promoted_filename_cases():
     return json.loads(result.stdout)
 
 
+HOOK_TEXT = "AI answers are useful. But repeated work still needs a usable workflow."
+URL_TEXT = "go to spielos dot xyz slash services."
+
+# Per-archetype scene order (mirrors registry.json scene_control.scenes and
+# tts-gemini.js SCENE_ORDER). New Shorts archetypes reuse this table so the
+# manifest stays archetype-exact under the 1.1 narration contract.
+SHORTS_SCENE_ORDER = {
+    "scenario-b": ["hook", "pain", "promise", "pillars", "director", "cta"],
+    "scenario-c": ["hook", "build", "live", "director", "cta"],
+    "contrast-text": ["hook", "claim", "proof", "resolve", "cta"],
+    "storyboard": ["problem", "turn", "result", "cta"],
+    "data-card": ["stat", "claim", "proof", "cta"],
+}
+
+SECONDARY_LINES = {
+    "pain": "Context disappears when work moves by hand.",
+    "promise": "One supervised workflow keeps the context.",
+    "pillars": "Roles, standards, evals, and workflows stay attached.",
+    "director": "Set the goal once. You judge the result.",
+    "build": "Define the roles, context, standards, and workflows.",
+    "live": "Now it runs with the review visible.",
+    "claim": "Answers are cheap; an owned operation is the work.",
+    "proof": "Supervised workflows beat chatbots that forget.",
+    "resolve": "Roles, context, and review stay with the work.",
+    "problem": "Work moves between tools by hand.",
+    "turn": "One workflow carries the context.",
+    "result": "It runs and you judge the outcome.",
+    "stat": "Most repeated work never gets reviewed.",
+    "question": "Who owns the AI result?",
+    "stakes": "Unreviewed output looks right until it isn't.",
+    "band": "Your process can run itself with supervision.",
+    "goal": "Set the direction once and check against it.",
+    "watch": "It watches, decides, and catches mistakes early.",
+    "run": "It runs and shows the honest result.",
+    "beat": "Your work lives on one live card.",
+}
+
+
+def _scene_intent(index, total):
+    if index == total - 1:
+        return "command/falling"  # CTA
+    if index == 0:
+        return "question/rising"  # hook
+    return "statement/falling"
+
+
+def _scene_visual(scene_id, text):
+    """Controlled visual fields: headline == spoken text, cta uses the
+    url-pronunciation alignment, every controlled scene carries 1-4 labels."""
+    if scene_id == "cta":
+        return {
+            "eyebrow": "SpielOS · supervised AI workflows",
+            "headline": "spielos.xyz/services",
+            "supporting_text": "Book a free discovery call.",
+            "component": "cta",
+            "icon": "bx-check-square",
+            "labels": ["AI agent implementation"],
+            "spoken_display_alignment": "url-pronunciation",
+        }
+    return {
+        "eyebrow": "SpielOS · supervised AI workflows",
+        "headline": text,
+        "supporting_text": "The decision and the review stay visible.",
+        "component": "statement",
+        "icon": "bx-check-square",
+        "labels": ["Roles", "Context", "Evals"],
+    }
+
+
+def _youtube_narration(template_id, sequence):
+    """One whole story (script) split after the fact into the archetype's
+    scenes, each with a delivery intent — scene_control_version 1.1."""
+    scene_ids = SHORTS_SCENE_ORDER[template_id]
+    texts = []
+    scenes = []
+    for index, scene_id in enumerate(scene_ids):
+        if index == 0:
+            text = HOOK_TEXT
+        elif scene_id == "cta":
+            text = URL_TEXT
+        else:
+            text = SECONDARY_LINES.get(scene_id, f"{scene_id} line {sequence}.")
+        scenes.append({
+            "id": scene_id,
+            "text": text,
+            "intent": _scene_intent(index, len(scene_ids)),
+            "visual": _scene_visual(scene_id, text),
+        })
+        texts.append(text)
+    return {"scene_control_version": "1.1", "script": " ".join(texts), "scenes": scenes}
+
+
 def campaign_manifest():
     campaign_id = "content-leads-20260812"
-    # Valid archetype rotation enforced by the design gate (change
-    # change-e69f419da9): threads uses all four social archetypes with one
-    # bounded round-robin repeat on item 05; youtube picks five unique shorts
-    # archetypes. Both platform sequences pass no-batch-repeats, round-robin
-    # balance, and bounded cell balance.
+    # Valid archetype rotation enforced by the design gate: youtube picks five
+    # unique shorts archetypes of the eight registered; threads picks five
+    # distinct social archetypes of the six registered. Both pass
+    # no-batch-repeats, round-robin balance, and bounded cell balance.
     threads_rotation = ("harness-architecture", "single-fact", "list-checklist",
-                        "testimonial-pull-quote", "harness-architecture")
+                        "testimonial-pull-quote", "department-map")
     youtube_rotation = ("scenario-b", "scenario-c", "contrast-text",
                         "storyboard", "data-card")
     items = []
@@ -82,12 +173,15 @@ def campaign_manifest():
                 f"https://spielos.xyz/services/?utm_source={platform}&utm_medium=social"
                 f"&utm_campaign={campaign_id}&utm_content={content_id}"
             )
+            template_id = (threads_rotation if platform == "threads" else youtube_rotation)[sequence - 1]
             design = {
-                "template_id": (threads_rotation if platform == "threads" else youtube_rotation)[sequence - 1],
+                "template_id": template_id,
                 "theme": ["gruvbox-dark", "gruvbox-light", "blue-dark", "monochrome-dark", "black-gold-dark"][sequence - 1],
                 "size_preset": preset,
                 "eyebrow": "SpielOS · supervised AI workflows",
-                "title_lines": [f"Operational context {sequence}.", "One clear workflow."],
+                # The designed title must equal the locked hook narration
+                # (contract: hook == complete designed title).
+                "title_lines": ["AI answers are useful.", "But repeated work still needs a usable workflow."],
                 "accent_line": 1,
                 "supporting_text": "The title, hierarchy, and message share one campaign source.",
                 "station_labels": ["Strategy", "Design", "Publish", "Measure", "Decide"],
@@ -95,26 +189,17 @@ def campaign_manifest():
             rendition = {
                 "platform": platform, "content_id": content_id,
                 "copy": (
-                    f"AI answers are useful. But repeated work still needs a usable workflow.\n\n"
+                    f"{HOOK_TEXT}\n\n"
                     f"Map the missing workflow:\n{destination}"
                     if platform == "threads" else
-                    f"AI answers are useful. But repeated work still needs a usable workflow.\n\n{LINK_IN_BIO}"
+                    f"{HOOK_TEXT}\n\n{LINK_IN_BIO}"
                 ) + (f"\n\n{SPIELOS_REMINDER}" if sequence == 5 else ""),
                 "destination": destination,
                 "link_placement": "caption" if platform == "threads" else "bio",
                 "design": design,
             }
             if platform == "youtube":
-                rendition["narration"] = {"scenes": [
-                    {"id": scene, "text": text} for scene, text in (
-                        ("hook", "AI answers are useful. But repeated work still needs a usable workflow."),
-                        ("pain", "Context disappears across tools."),
-                        ("promise", "SpielOS connects one supervised workflow."),
-                        ("proof", "The decision and review stay visible."),
-                        ("next", "Measure the result before scaling."),
-                        ("cta", "spielos dot xyz slash services."),
-                    )
-                ]}
+                rendition["narration"] = _youtube_narration(template_id, sequence)
             renditions[platform] = rendition
         item = {
             "sequence": sequence, "item_id": item_id,
@@ -124,9 +209,11 @@ def campaign_manifest():
                 "customer_moment": "Staff move repeated customer work between disconnected tools by hand.",
                 "one_idea": f"One operating proof {sequence}",
                 "desired_result": "Move the work faster without losing customer context.",
+                "intent": "value",
+                "spielos_relevance": "Supervised workflows turn repeated customer work into owned operations.",
                 "proof": "The work can be mapped from intake to result.",
             },
-            "hook": {"id": f"context-hook-{sequence}", "text": "AI answers are useful. But repeated work still needs a usable workflow."},
+            "hook": {"id": f"context-hook-{sequence}", "text": HOOK_TEXT},
             "cta": {"id": f"services-cta-{sequence}", "text": "Map the missing workflow."},
             "narrative_type": "spielos-reminder" if sequence == 5 else "customer-insight",
             "renditions": renditions,
@@ -519,6 +606,66 @@ class CampaignHandoffContractTests(unittest.TestCase):
         threads["design"]["thumbnail_title"] = "not validated here"
         youtube["design"]["thumbnail_title"] = "AI works alone"
         self.assertEqual(validate_campaign(manifest, "strategy"), [])
+
+    def test_schema_1_2_brief_and_narration_contract_passes(self):
+        """Schema 1.2 manifest: brief intent + spielos_relevance, and a
+        whole-story narration (scene_control_version 1.1) validate clean."""
+        manifest = campaign_manifest()
+        self.assertEqual("1.2", SCHEMA_VERSION)
+        self.assertEqual(manifest["schema_version"], "1.2")
+        self.assertEqual(validate_campaign(manifest, "strategy"), [])
+        for item in manifest["items"]:
+            self.assertIn(item["brief"]["intent"], {"value", "proof", "conversion"})
+            self.assertTrue(item["brief"]["spielos_relevance"].strip())
+        narration = manifest["items"][0]["renditions"]["youtube"]["narration"]
+        self.assertEqual("1.1", narration["scene_control_version"])
+        self.assertTrue(narration["script"].strip())
+        for scene in narration["scenes"]:
+            self.assertIn(scene["intent"], {"question/rising", "statement/falling", "command/falling"})
+            if scene["id"] == "cta":
+                # url-pronunciation alignment: the CTA is spoken as the URL
+                # phrase while the displayed headline stays the short URL.
+                self.assertEqual("url-pronunciation", scene["visual"]["spoken_display_alignment"])
+                self.assertEqual("spielos.xyz/services", scene["visual"]["headline"])
+                self.assertEqual("go to spielos dot xyz slash services.", scene["text"])
+            else:
+                self.assertEqual(scene["text"], scene["visual"]["headline"])
+
+    def test_schema_1_2_missing_brief_fields_fail(self):
+        """Missing intent or spielos_relevance on a schema-1.2 brief fails."""
+        manifest = campaign_manifest()
+        brief = manifest["items"][0]["brief"]
+        brief.pop("intent", None)
+        brief["spielos_relevance"] = "   "
+        errors = validate_campaign(manifest, "strategy")
+        self.assertTrue(any("brief.intent must be one of" in error for error in errors))
+        self.assertTrue(any("brief.spielos_relevance is required" in error for error in errors))
+
+    def test_schema_1_2_missing_narration_contract_fails(self):
+        """scene_control_version 1.1 requires the whole narration script and a
+        registered delivery intent on every scene."""
+        manifest = campaign_manifest()
+        narration = manifest["items"][0]["renditions"]["youtube"]["narration"]
+        narration.pop("script", None)
+        narration["scenes"][1]["intent"] = "whimsical"
+        errors = validate_campaign(manifest, "strategy")
+        self.assertTrue(any("narration.script is required" in error for error in errors))
+        self.assertTrue(any("scene 2.intent must be one of" in error for error in errors))
+
+    def test_design_order_rejects_batch_repeats_across_eight_shorts_archetypes(self):
+        """The registry registers eight Shorts archetypes, so a five-item batch
+        must use five distinct ones; repeating one is rejected upstream."""
+        registry = json.loads(
+            (ROOT / ".agents/company/departments/design/templates/registry.json").read_text())
+        shorts = [entry["id"] for entry in registry["archetypes"] if entry["kind"] == "shorts"]
+        self.assertEqual(8, len(shorts))
+        manifest = campaign_manifest()
+        self.assertEqual([], validate_design_order(manifest))
+        manifest["items"][1]["renditions"]["youtube"]["design"]["template_id"] = "scenario-b"
+        manifest["items"][3]["renditions"]["youtube"]["design"]["template_id"] = "scenario-b"
+        errors = validate_design_order(manifest)
+        self.assertTrue(any("no batch repeats" in error and "scenario-b" in error
+                            for error in errors))
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 /**
  * tts-gemini.js — Generates scene narration clips through the TTS provider
- * chain. The CLI name is preserved (SKILL.md, render-all.sh and the owner
- * gates call `tts-gemini.js <b|c>`); the generator is now chain-backed.
+ * chain. The CLI name is preserved (SKILL.md and the render gates call
+ * `tts-gemini.js <key>` for keys b..i — the registered Shorts archetypes).
+ * b/c keep private demo lines for template regression; d..i are campaign-only
+ * (they require CAMPAIGN_MANIFEST + CAMPAIGN_ITEM_ID).
  *
  * Owner contract (2026-08-11 review + 2026-08-12 owner direction):
  *  - ONE narration persona: MASTER_VOICE is pinned here AND in narration.json
@@ -30,7 +32,8 @@
  *    to mix clips whose manifest voice differs from the pinned persona voice.
  *
  * Usage:
- *   node scripts/tts-gemini.js <b|c>
+ *   node scripts/tts-gemini.js <b|c|d|e|f|g|h|i>
+ *   node scripts/tts-gemini.js --check
  *
  * Writes clips to public/videos/audio/<scenario>-<scene>.wav (44.1kHz mono)
  * and saves the measured scene schedule into narration.json under
@@ -60,14 +63,40 @@ const CAMPAIGN_ITEM_ID = process.env.CAMPAIGN_ITEM_ID || "";
    mix. */
 const MASTER_VOICE = config.voice_selection || "Charon";
 
+/* Structural scene order per archetype key. The ids match BOTH the registered
+   template scene nodes (registry.json scene_control.scenes) AND the campaign
+   narration scenes the strategist writes for that archetype. b/c also have
+   private demo lines in narration.json (config.scenarios) for template
+   regression; d..i are campaign-only. */
+const SCENE_ORDER = {
+  b: ["hook", "pain", "promise", "pillars", "director", "cta"],
+  c: ["hook", "build", "live", "director", "cta"],
+  d: ["hook", "claim", "proof", "resolve", "cta"],
+  e: ["problem", "turn", "result", "cta"],
+  f: ["stat", "claim", "proof", "cta"],
+  g: ["question", "stakes", "resolve", "cta"],
+  h: ["band", "goal", "watch", "run", "cta"],
+  i: ["band", "goal", "watch", "cta"],
+};
+
+/* Per-scene delivery intent (scene_control_version 1.1): the storyteller locks
+   how each line lands, and the primary LLM narrator follows it. Pure TTS
+   engines receive only the plain line (they would speak the direction). */
+const SCENE_INTENTS = new Set(["question/rising", "statement/falling", "command/falling"]);
+const SCENE_DELIVERY = {
+  "question/rising": "Land this line as a rising question — pitch climbing at the end, curiosity, never flat reading.",
+  "statement/falling": "Land this line as a certain flat statement — conviction at the end, decisive fall, no lift.",
+  "command/falling": "Land this line as a direct command — clean close, no salesy upswing.",
+};
+
 const checkOnly = process.argv[2] === "--check";
 const scenario = checkOnly ? "b" : process.argv[2];
 if (process.argv[3]) {
   console.error("Voice override is not allowed: EVERY clip must use the pinned master voice.");
   process.exit(1);
 }
-if (!config.scenarios[scenario]) {
-  console.error(`Unknown scenario: ${scenario}. Use b or c.`);
+if (!SCENE_ORDER[scenario]) {
+  console.error(`Unknown scenario: ${scenario}. Registered Shorts archetype keys: ${Object.keys(SCENE_ORDER).join(", ")}.`);
   process.exit(1);
 }
 
@@ -140,13 +169,14 @@ function toWav(raw, meta, wav) {
 /* One take through one provider, with transient retries. Non-transient or
    exhausted providers throw ProviderError so the orchestrator can fall
    through the chain. */
-async function synth(provider, line, idx) {
+async function synth(provider, line, idx, sceneIntent) {
   const speech = pipe(line);
   /* Gemini is an LLM TTS: it understands the performance direction and speaks
      only the quoted line. Pure TTS engines (Mistral/Cartesia/ElevenLabs) read
      EVERYTHING aloud — sending them the direction block produced ~55s takes
      of instructions, so they only ever receive the plain line. */
-  const text = provider === "gemini" ? `${PERFORMANCE}\nNarrate: "${speech}"` : speech;
+  const delivery = SCENE_DELIVERY[sceneIntent] ? `\nDelivery (this line): ${SCENE_DELIVERY[sceneIntent]}` : "";
+  const text = provider === "gemini" ? `${PERFORMANCE}${delivery}\nNarrate: "${speech}"` : speech;
   const raw = join(AUDIO, `.tmp-${scenario}-${idx}.raw`);
   const maxAttempts = 3;
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
@@ -176,11 +206,7 @@ function trimEdges(file) {
   return out;
 }
 
-/* Structural scene order per scenario (matches the templates' scene ids). */
-const SCENE_ORDER = {
-  b: ["hook", "pain", "promise", "pillars", "director", "cta"],
-  c: ["hook", "build", "live", "director", "cta"],
-};
+/* SCENE_ORDER is declared above (all 8 registered Shorts keys). */
 
 let campaign = null;
 let campaignItem = null;
@@ -197,9 +223,22 @@ if (CAMPAIGN_PATH || CAMPAIGN_ITEM_ID) {
     console.error(`Campaign YouTube narration is missing for ${CAMPAIGN_ITEM_ID}.`);
     process.exit(1);
   }
-  if (campaignRendition.narration.scene_control_version !== "1.0") {
-    console.error(`Campaign scene-control contract is missing for ${CAMPAIGN_ITEM_ID}.`);
+  const sceneControlVersion = campaignRendition.narration.scene_control_version;
+  if (sceneControlVersion !== "1.0" && sceneControlVersion !== "1.1") {
+    console.error(`Campaign scene-control contract must be 1.0 or 1.1 for ${CAMPAIGN_ITEM_ID}.`);
     process.exit(1);
+  }
+  if (sceneControlVersion === "1.1") {
+    if (!String(campaignRendition.narration.script || "").trim()) {
+      console.error(`scene_control_version 1.1 requires one complete narration.script before scene-splitting for ${CAMPAIGN_ITEM_ID}.`);
+      process.exit(1);
+    }
+    for (const scene of campaignRendition.narration.scenes) {
+      if (!SCENE_INTENTS.has(String(scene.intent || ""))) {
+        console.error(`Narration scene ${scene.id || "?"} needs a delivery intent ${[...SCENE_INTENTS].join("|")} for ${CAMPAIGN_ITEM_ID}.`);
+        process.exit(1);
+      }
+    }
   }
   const designedHook = (campaignRendition.design?.title_lines || []).join(" ").replace(/\s+/g, " ").trim();
   for (const scene of campaignRendition.narration.scenes) {
@@ -221,8 +260,10 @@ if (CAMPAIGN_PATH || CAMPAIGN_ITEM_ID) {
 const activeLines = campaignRendition
   ? campaignRendition.narration.scenes.map((scene) => String(scene.text || "").trim())
   : config.scenarios[scenario];
-if (activeLines.some((line) => !line)) {
-  console.error("Every campaign narration scene needs complete spoken text.");
+if (!Array.isArray(activeLines) || activeLines.some((line) => !line)) {
+  console.error(campaignRendition
+    ? "Every campaign narration scene needs complete spoken text."
+    : `Scenario ${scenario} has no demo lines; Shorts archetypes d..i require CAMPAIGN_MANIFEST + CAMPAIGN_ITEM_ID.`);
   process.exit(1);
 }
 
@@ -268,7 +309,8 @@ async function tryProvider(provider) {
   for (let i = 0; i < lines.length; i++) {
     const scene = scenes[i];
     try {
-      const { wav } = await synth(provider, lines[i], i);
+      const sceneIntent = campaignRendition?.narration?.scenes?.[i]?.intent;
+      const { wav } = await synth(provider, lines[i], i, sceneIntent);
       const trimmed = trimEdges(wav);
       rmSync(wav, { force: true });
       const final = join(AUDIO, `${scenario}-${scene}.wav`);
@@ -359,6 +401,7 @@ async function main() {
   config.scene_timing = config.scene_timing || {};
   config.scene_timing[scenario] = {
     timing_contract: "narration-led-v2",
+    scene_control_version: campaignRendition?.narration?.scene_control_version || "1.0",
     voice: MASTER_VOICE,
     provider,
     provider_voice: providerVoice,

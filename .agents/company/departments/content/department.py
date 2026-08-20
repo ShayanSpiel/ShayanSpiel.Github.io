@@ -15,6 +15,7 @@ from ..campaign_contract import (
     publication_package,
     validate_campaign,
 )
+from ..design.department import _rotation_errors as _design_rotation_errors
 from ...runtime.models import Department, WorkflowSpec, WorkflowStep
 
 
@@ -243,16 +244,19 @@ def _eval_gate_errors(evidence: list[dict[str, Any]], package: dict[str, Any],
 
 class ContentDepartment(EvidenceDepartment, Department):
     id = department_id = "content"
-    version = "3.5.0"
+    version = "3.6.0"
     description = ("Carries one short customer-first idea through platform-native copy, a judge-enforced "
-                   "LLM-as-judge quality gate, Design, approval, Buffer delivery, and measurement without "
-                   "exposing production metadata to the writer. Dispatch commits a batch to publish "
+                   "LLM-as-judge quality gate (copy suite + whole-story narration suite), Design registry "
+                   "rotation, Design, approval, Buffer delivery, and measurement without exposing "
+                   "production metadata to the writer. Dispatch commits a batch to publish "
                    "(scheduled == published) and a valid publication receipt is final.")
     agent_ids = ("content-strategist", "content-writer", "publisher")
     # Eval suites whose passing eval_report evidence the quality_gate requires.
     # Suites are defined in departments/content/evals.py (Lego contract: any
-    # department may declare its own suites the same way).
-    eval_suites = ("content-copy-top10",)
+    # department may declare its own suites the same way). The whole-story
+    # suite gates the complete narration before a template can be locked; the
+    # copy suite gates the item brief + both renditions.
+    eval_suites = ("content-copy-top10", "content-story-whole")
     production_ready = True
     workflows = (
         WorkflowSpec(
@@ -349,8 +353,13 @@ class ContentDepartment(EvidenceDepartment, Department):
                 return {"run_status": "blocked", "message": "Design handoff identity mismatch",
                         "attention": {"errors": ["render_report must match campaign_id and batch_id"]}}
         errors = validate_campaign_package(package, packages[:-1])
-        if errors:
-            return {"run_status": "blocked", "message": "Campaign quality gate needs changes", "attention": {"errors": errors}}
+        rotation_errors = (
+            _design_rotation_errors(package)
+            if package.get("schema_version") in COMPATIBLE_SCHEMA_VERSIONS
+            else [])
+        all_errors = errors + rotation_errors
+        if all_errors:
+            return {"run_status": "blocked", "message": "Campaign quality gate needs changes", "attention": {"errors": all_errors}}
         eval_errors = _eval_gate_errors(evidence, package, tuple(getattr(self, "eval_suites", ()) or ()))
         if eval_errors:
             return {"run_status": "blocked", "message": "Campaign quality gate needs changes", "attention": {"errors": eval_errors}}

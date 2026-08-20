@@ -4,6 +4,13 @@ Departments exchange this Artifact instead of copying campaign facts into
 their own templates or configuration.  Each handoff adds evidence to the same
 campaign, batch, item, and rendition identifiers; it never creates a rival
 record or changes upstream strategy fields.
+
+Schema 1.2 (2026-08-20, goal-content-storytelling-architecture-v1-20260820):
+the creative brief gains `intent` (value/proof/conversion) and
+`spielos_relevance`, and a YouTube narration becomes ONE complete story —
+`scene_control_version` "1.1" requires `narration.script` (the whole narration
+written before scene-splitting) and a delivery `intent` on every scene. Schemas
+1.0/1.1 stay valid so archived batches keep validating.
 """
 
 from __future__ import annotations
@@ -16,8 +23,13 @@ from typing import Any
 from urllib.parse import parse_qs, urlparse
 
 
-SCHEMA_VERSION = "1.1"
-COMPATIBLE_SCHEMA_VERSIONS = frozenset({"1.0", "1.1"})
+SCHEMA_VERSION = "1.2"
+COMPATIBLE_SCHEMA_VERSIONS = frozenset({"1.0", "1.1", "1.2"})
+# Storytelling contract for schema 1.2: every brief locks a buyer intent and
+# why the idea matters to SpielOS; every YouTube narration is ONE complete
+# script (scene_control_version "1.1") whose scenes carry delivery intents.
+BRIEF_INTENTS = {"value", "proof", "conversion"}
+NARRATION_INTENTS = {"question/rising", "statement/falling", "command/falling"}
 PLATFORMS = ("threads", "youtube")
 PLATFORM_CONTRACT = {
     "threads": {"asset_type": "image", "size_preset": "threads-portrait", "link_placement": "caption"},
@@ -371,11 +383,26 @@ def _validate_rendition(manifest: dict[str, Any], item: dict[str, Any],
         scenes = narration.get("scenes") or []
         if not isinstance(scenes, list) or len(scenes) < 4:
             errors.append(f"{prefix}.narration.scenes needs at least four complete scenes")
-        controlled_scenes = narration.get("scene_control_version") == "1.0"
+        scene_control_version = narration.get("scene_control_version")
+        schema = str(manifest.get("schema_version") or "")
+        if schema == SCHEMA_VERSION and scene_control_version != "1.1":
+            errors.append(
+                f"{prefix}.narration.scene_control_version must be \"1.1\" in "
+                f"schema {SCHEMA_VERSION} (one complete narration + scene intents)")
+        controlled_scenes = scene_control_version in ("1.0", "1.1")
+        if scene_control_version == "1.1":
+            if not _text(narration.get("script")):
+                errors.append(
+                    f"{prefix}.narration.script is required before scene-splitting "
+                    "in scene_control_version 1.1")
         for index, scene in enumerate(scenes):
             if not _text((scene or {}).get("id")) or not _text((scene or {}).get("text")):
                 errors.append(f"{prefix}.narration scenes need id and text")
                 break
+            if scene_control_version == "1.1" and (scene or {}).get("intent") not in NARRATION_INTENTS:
+                errors.append(
+                    f"{prefix}.narration scene {index + 1}.intent must be one of: "
+                    f"{', '.join(sorted(NARRATION_INTENTS))}")
             if not controlled_scenes:
                 continue
             visual = (scene or {}).get("visual") or {}
@@ -465,6 +492,15 @@ def validate_campaign(manifest: dict[str, Any], phase: str | None = None) -> lis
         for field in ("reader", "customer_moment", "one_idea", "desired_result"):
             if not _text(brief.get(field)):
                 errors.append(f"items.{item_id}.brief.{field} is required")
+        if str(manifest.get("schema_version") or "") == SCHEMA_VERSION:
+            if brief.get("intent") not in BRIEF_INTENTS:
+                errors.append(
+                    f"items.{item_id}.brief.intent must be one of: "
+                    f"{', '.join(sorted(BRIEF_INTENTS))}")
+            if not _text(brief.get("spielos_relevance")):
+                errors.append(
+                    f"items.{item_id}.brief.spielos_relevance is required in "
+                    f"schema {SCHEMA_VERSION}")
         if _text(item.get("one_idea")) != _text(brief.get("one_idea")):
             errors.append(f"items.{item_id}.one_idea must match brief.one_idea")
         if len(_text(brief.get("one_idea"))) > 180:
