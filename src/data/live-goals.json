@@ -2874,7 +2874,7 @@
       "created_at": "2026-08-19T17:42:41.270340+00:00",
       "goal_status": "active",
       "id": "goal-a4acfeb32f",
-      "latest_activity_at": "2026-08-20T14:06:08.296493+00:00",
+      "latest_activity_at": "2026-08-20T17:12:32.378651+00:00",
       "metric": "qualified_social_leads",
       "name": "Research pipeline: grow fully verified English lead pool to 1000 (continuous - don't stop)",
       "operator": "ge",
@@ -2883,7 +2883,7 @@
       "run_status": "blocked",
       "stage": "ACT",
       "target": 1000,
-      "updated_at": "2026-08-20T14:06:08.293403+00:00"
+      "updated_at": "2026-08-20T17:12:32.377334+00:00"
     },
     {
       "created_at": "2026-08-19T20:40:22.805614+00:00",
@@ -2934,16 +2934,16 @@
       "created_at": "2026-08-20T01:42:17.711649+00:00",
       "goal_status": "active",
       "id": "goal-05ec9ac59f",
-      "latest_activity_at": "2026-08-20T14:06:07.780271+00:00",
+      "latest_activity_at": "2026-08-20T17:27:33.321091+00:00",
       "metric": "qualified_social_leads",
       "name": "Research pipeline: scale to 1500 qualified leads (push - don't stop)",
       "operator": "ge",
       "owner_id": "outbound",
       "parent_id": null,
-      "run_status": "blocked",
-      "stage": "ACT",
+      "run_status": "running",
+      "stage": "DECIDE",
       "target": 1500,
-      "updated_at": "2026-08-20T14:06:07.776858+00:00"
+      "updated_at": "2026-08-20T17:27:33.314653+00:00"
     },
     {
       "created_at": "2026-08-20T01:44:23.213397+00:00",
@@ -2964,7 +2964,7 @@
       "created_at": "2026-08-20T09:00:40.468533+00:00",
       "goal_status": "active",
       "id": "goal-0b8ed21f01",
-      "latest_activity_at": "2026-08-20T14:14:13.428505+00:00",
+      "latest_activity_at": "2026-08-20T17:27:02.638418+00:00",
       "metric": "booked_calls",
       "name": "Homepage conversion refresh: new hero copy, journey line, SEO and design polish",
       "operator": "ge",
@@ -2973,7 +2973,7 @@
       "run_status": "blocked",
       "stage": "EVALUATE",
       "target": 1,
-      "updated_at": "2026-08-20T14:01:48.014523+00:00"
+      "updated_at": "2026-08-20T14:14:21.699863+00:00"
     },
     {
       "created_at": "2026-08-20T09:00:50.043711+00:00",
@@ -3052,18 +3052,18 @@
     },
     {
       "created_at": "2026-08-20T13:18:17.577786+00:00",
-      "goal_status": "active",
+      "goal_status": "abandoned",
       "id": "goal-b68e334bdb",
-      "latest_activity_at": "2026-08-20T13:18:17.577786+00:00",
+      "latest_activity_at": "2026-08-20T17:25:56.126270+00:00",
       "metric": "video_renders",
       "name": "Fix campaign Shorts rendering — per-video theme, thumbnail titles, text=narration, CTA and journey fidelity (gallery-faithful)",
       "operator": "ge",
       "owner_id": "design",
       "parent_id": null,
-      "run_status": "idle",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": 5,
-      "updated_at": "2026-08-20T13:18:17.577786+00:00"
+      "updated_at": "2026-08-20T17:25:56.126270+00:00"
     },
     {
       "created_at": "2026-08-20T13:53:44.333439+00:00",
@@ -3094,6 +3094,36 @@
       "stage": "OBSERVE",
       "target": "True",
       "updated_at": "2026-08-20T14:14:13.426808+00:00"
+    },
+    {
+      "created_at": "2026-08-20T17:25:56.257638+00:00",
+      "goal_status": "active",
+      "id": "goal-a2e28276e6",
+      "latest_activity_at": "2026-08-20T17:25:56.257638+00:00",
+      "metric": "video_renders",
+      "name": "Fix Shorts rendering — CTA real URL, text sync no cuts, retire cooldown hook, gallery templates only",
+      "operator": "ge",
+      "owner_id": "design",
+      "parent_id": null,
+      "run_status": "idle",
+      "stage": "OBSERVE",
+      "target": 5,
+      "updated_at": "2026-08-20T17:25:56.257638+00:00"
+    },
+    {
+      "created_at": "2026-08-20T17:27:02.638418+00:00",
+      "goal_status": "active",
+      "id": "goal-65ad850f0e",
+      "latest_activity_at": "2026-08-20T17:27:02.638418+00:00",
+      "metric": "acceptance_tests_passed",
+      "name": "Fix screenshot defects: hero edge-merged with left rail and both lines fresh zero solid tails standing state",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "parent_id": "goal-0b8ed21f01",
+      "run_status": "idle",
+      "stage": "OBSERVE",
+      "target": "True",
+      "updated_at": "2026-08-20T17:27:02.638418+00:00"
     }
   ],
   "heartbeat": {
@@ -3101,15 +3131,15 @@
     "business_value_fa": null,
     "display_title": null,
     "display_title_fa": null,
-    "goal_id": "goal-a4acfeb32f",
-    "goal_name": "Research pipeline: grow fully verified English lead pool to 1000 (continuous - don't stop)",
+    "goal_id": "goal-05ec9ac59f",
+    "goal_name": "Research pipeline: scale to 1500 qualified leads (push - don't stop)",
     "metric": "qualified_social_leads",
     "operator": "ge",
     "owner_id": "outbound",
-    "run_status": "blocked",
-    "stage": "ACT",
-    "target": 1000,
-    "updated_at": "2026-08-20T14:06:08.296493+00:00"
+    "run_status": "running",
+    "stage": "DECIDE",
+    "target": 1500,
+    "updated_at": "2026-08-20T17:27:33.321091+00:00"
   },
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
@@ -3122,44 +3152,44 @@
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-19T17:42:41.270340+00:00",
-      "goal_id": "goal-a4acfeb32f",
-      "goal_name": "Research pipeline: grow fully verified English lead pool to 1000 (continuous - don't stop)",
+      "created_at": "2026-08-20T01:42:17.711649+00:00",
+      "goal_id": "goal-05ec9ac59f",
+      "goal_name": "Research pipeline: scale to 1500 qualified leads (push - don't stop)",
       "owner_id": "outbound",
-      "run_id": "run-2ccb5916df",
-      "run_status": "blocked",
-      "stage": "ACT",
-      "updated_at": "2026-08-20T14:06:08.296493+00:00"
+      "run_id": "run-11bdaef5e9",
+      "run_status": "running",
+      "stage": "DECIDE",
+      "updated_at": "2026-08-20T17:27:33.321091+00:00"
     },
     "heartbeat": {
       "business_value": null,
       "business_value_fa": null,
       "display_title": null,
       "display_title_fa": null,
-      "goal_id": "goal-a4acfeb32f",
-      "goal_name": "Research pipeline: grow fully verified English lead pool to 1000 (continuous - don't stop)",
+      "goal_id": "goal-05ec9ac59f",
+      "goal_name": "Research pipeline: scale to 1500 qualified leads (push - don't stop)",
       "metric": "qualified_social_leads",
       "operator": "ge",
       "owner_id": "outbound",
-      "run_status": "blocked",
-      "stage": "ACT",
-      "target": 1000,
-      "updated_at": "2026-08-20T14:06:08.296493+00:00"
+      "run_status": "running",
+      "stage": "DECIDE",
+      "target": 1500,
+      "updated_at": "2026-08-20T17:27:33.321091+00:00"
     },
-    "last_activity_at": "2026-08-20T14:14:13.428505+00:00",
-    "last_sync_at": "2026-08-20T14:14:13.466651+00:00",
+    "last_activity_at": "2026-08-20T17:27:33.321091+00:00",
+    "last_sync_at": "2026-08-20T17:27:33.369745+00:00",
     "state": "running"
   },
   "totals": {
     "approvals": 240,
-    "decisions": 486,
-    "evidence": 8392,
-    "goals_abandoned": 24,
+    "decisions": 502,
+    "evidence": 8781,
+    "goals_abandoned": 25,
     "goals_achieved": 146,
-    "goals_active": 32,
-    "goals_total": 205,
-    "hypotheses": 55,
+    "goals_active": 33,
+    "goals_total": 207,
+    "hypotheses": 56,
     "memory_claims": 5,
-    "runs": 225
+    "runs": 227
   }
 }
