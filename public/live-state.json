@@ -1,31 +1,31 @@
 {
   "current_run": {
-    "created_at": "2026-08-20T13:18:17.577786+00:00",
-    "goal_id": "goal-b68e334bdb",
-    "goal_name": "Fix campaign Shorts rendering — per-video theme, thumbnail titles, text=narration, CTA and journey fidelity (gallery-faithful)",
-    "owner_id": "design",
-    "run_id": "run-d21419d45e",
-    "run_status": "idle",
-    "stage": "OBSERVE",
-    "updated_at": "2026-08-20T13:18:17.577786+00:00"
+    "created_at": "2026-08-19T17:42:41.270340+00:00",
+    "goal_id": "goal-a4acfeb32f",
+    "goal_name": "Research pipeline: grow fully verified English lead pool to 1000 (continuous - don't stop)",
+    "owner_id": "outbound",
+    "run_id": "run-2ccb5916df",
+    "run_status": "blocked",
+    "stage": "ACT",
+    "updated_at": "2026-08-20T13:51:41.535020+00:00"
   },
   "heartbeat": {
     "business_value": null,
     "business_value_fa": null,
     "display_title": null,
     "display_title_fa": null,
-    "goal_id": "goal-b68e334bdb",
-    "goal_name": "Fix campaign Shorts rendering — per-video theme, thumbnail titles, text=narration, CTA and journey fidelity (gallery-faithful)",
-    "metric": "video_renders",
+    "goal_id": "goal-a4acfeb32f",
+    "goal_name": "Research pipeline: grow fully verified English lead pool to 1000 (continuous - don't stop)",
+    "metric": "qualified_social_leads",
     "operator": "ge",
-    "owner_id": "design",
-    "run_status": "idle",
-    "stage": "OBSERVE",
-    "target": 5,
-    "updated_at": "2026-08-20T13:18:17.577786+00:00"
+    "owner_id": "outbound",
+    "run_status": "blocked",
+    "stage": "ACT",
+    "target": 1000,
+    "updated_at": "2026-08-20T13:51:41.535020+00:00"
   },
-  "last_activity_at": "2026-08-20T13:20:12.052743+00:00",
-  "last_sync_at": "2026-08-20T13:20:12.082581+00:00",
+  "last_activity_at": "2026-08-20T14:01:35.014010+00:00",
+  "last_sync_at": "2026-08-20T14:01:35.040904+00:00",
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
     "goal_name": "3 booked calls per day",
@@ -38,14 +38,14 @@
   "state": "running",
   "totals": {
     "approvals": 240,
-    "decisions": 474,
-    "evidence": 8295,
+    "decisions": 482,
+    "evidence": 8343,
     "goals_abandoned": 24,
-    "goals_achieved": 144,
+    "goals_achieved": 145,
     "goals_active": 32,
-    "goals_total": 203,
+    "goals_total": 204,
     "hypotheses": 55,
     "memory_claims": 5,
-    "runs": 223
+    "runs": 224
   }
 }
