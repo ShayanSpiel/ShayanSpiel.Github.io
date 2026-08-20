@@ -5,9 +5,9 @@
     "goal_name": "Homepage conversion refresh: new hero copy, journey line, SEO and design polish",
     "owner_id": "director",
     "run_id": "run-e9ee52e53a",
-    "run_status": "waiting",
-    "stage": "OBSERVE",
-    "updated_at": "2026-08-20T17:33:57.693301+00:00"
+    "run_status": "blocked",
+    "stage": "EVALUATE",
+    "updated_at": "2026-08-20T17:35:21.308012+00:00"
   },
   "heartbeat": {
     "business_value": null,
@@ -19,13 +19,13 @@
     "metric": "booked_calls",
     "operator": "ge",
     "owner_id": "director",
-    "run_status": "waiting",
-    "stage": "OBSERVE",
+    "run_status": "blocked",
+    "stage": "EVALUATE",
     "target": 1,
-    "updated_at": "2026-08-20T17:33:57.693301+00:00"
+    "updated_at": "2026-08-20T17:35:21.308012+00:00"
   },
-  "last_activity_at": "2026-08-20T17:35:11.466063+00:00",
-  "last_sync_at": "2026-08-20T17:35:11.505708+00:00",
+  "last_activity_at": "2026-08-20T17:42:15.653888+00:00",
+  "last_sync_at": "2026-08-20T17:42:15.754631+00:00",
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
     "goal_name": "3 booked calls per day",
@@ -38,11 +38,11 @@
   "state": "running",
   "totals": {
     "approvals": 240,
-    "decisions": 506,
-    "evidence": 9296,
+    "decisions": 508,
+    "evidence": 9597,
     "goals_abandoned": 25,
-    "goals_achieved": 147,
-    "goals_active": 32,
+    "goals_achieved": 148,
+    "goals_active": 31,
     "goals_total": 207,
     "hypotheses": 56,
     "memory_claims": 5,
