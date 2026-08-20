@@ -1,31 +1,31 @@
 {
   "current_run": {
-    "created_at": "2026-08-19T17:16:37.304959+00:00",
-    "goal_id": "goal-3fd23da75c",
-    "goal_name": "English outbound send batch 20: next 50 from remaining queue (send-all push)",
+    "created_at": "2026-08-18T19:31:45.542525+00:00",
+    "goal_id": "goal-f170ce6fbd",
+    "goal_name": "English outbound send batch 17: proven-pattern 36 (Milsted/WS content-prepped)",
     "owner_id": "outbound",
-    "run_id": "run-41662f1874",
+    "run_id": "run-7bef25b0a7",
     "run_status": "waiting",
     "stage": "EVALUATE",
-    "updated_at": "2026-08-20T20:10:01.773325+00:00"
+    "updated_at": "2026-08-20T20:13:00.475275+00:00"
   },
   "heartbeat": {
     "business_value": null,
     "business_value_fa": null,
     "display_title": null,
     "display_title_fa": null,
-    "goal_id": "goal-3fd23da75c",
-    "goal_name": "English outbound send batch 20: next 50 from remaining queue (send-all push)",
+    "goal_id": "goal-f170ce6fbd",
+    "goal_name": "English outbound send batch 17: proven-pattern 36 (Milsted/WS content-prepped)",
     "metric": "reply_rate",
     "operator": "ge",
     "owner_id": "outbound",
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-20T20:10:01.773325+00:00"
+    "updated_at": "2026-08-20T20:13:00.475275+00:00"
   },
-  "last_activity_at": "2026-08-20T20:10:01.773325+00:00",
-  "last_sync_at": "2026-08-20T20:10:01.995473+00:00",
+  "last_activity_at": "2026-08-20T20:13:00.475275+00:00",
+  "last_sync_at": "2026-08-20T20:13:00.535573+00:00",
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
     "goal_name": "3 booked calls per day",
@@ -39,10 +39,10 @@
   "totals": {
     "approvals": 242,
     "decisions": 525,
-    "evidence": 9754,
-    "goals_abandoned": 25,
+    "evidence": 9769,
+    "goals_abandoned": 27,
     "goals_achieved": 151,
-    "goals_active": 31,
+    "goals_active": 29,
     "goals_total": 210,
     "hypotheses": 59,
     "memory_claims": 5,
