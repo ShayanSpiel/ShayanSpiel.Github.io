@@ -217,12 +217,14 @@ function tog(id,v){var e=document.getElementById(id);if(e)e.classList.toggle('sh
 var pathFill=document.getElementById('journey-fill');
 var pathBg=document.getElementById('journey-bg');
 var pathLen=pathFill.getTotalLength();
+if(!pathLen||pathLen<1)pathLen=1200;
 pathFill.style.setProperty('--path-len',pathLen);
 pathFill.style.strokeDasharray=pathLen;
 pathFill.style.strokeDashoffset=pathLen;
 var portraitFill=document.getElementById('portrait-journey-fill');
 var portraitBg=document.getElementById('portrait-journey-bg');
 var portraitLen=portraitFill.getTotalLength();
+if(!portraitLen||portraitLen<1)portraitLen=1200;
 portraitFill.style.setProperty('--path-len',portraitLen);
 portraitFill.style.strokeDasharray=portraitLen;
 portraitFill.style.strokeDashoffset=portraitLen;

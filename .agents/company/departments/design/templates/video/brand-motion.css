@@ -15,7 +15,7 @@
 .journey-portrait { display: none; }
 .journey-path { fill: none; stroke: var(--foreground-muted); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 10 8; opacity: 0; transition: opacity .8s ease; }
 .journey-path.show { opacity: .45; }
-.journey-path-fill { fill: none; stroke: var(--primary); stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: var(--path-len); stroke-dashoffset: var(--path-len); transition: stroke-dashoffset .1s linear; }
+.journey-path-fill { fill: none; stroke: var(--primary); stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: var(--path-len, 10000); stroke-dashoffset: var(--path-len, 10000); transition: stroke-dashoffset .1s linear; }
 .journey-goal { opacity: .45; transition: opacity .45s ease; }
 .journey-goal.show { opacity: 1; }
 .goal-ring { fill: var(--background); stroke: var(--primary); stroke-width: 3; }
