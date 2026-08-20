@@ -263,7 +263,7 @@
       "display_title_fa": "گفت‌وگوهای فروش باکیفیت رو بیشتر کنیم",
       "goal_status": "active",
       "id": "goal-email-campaign-20260810",
-      "latest_activity_at": "2026-08-20T20:12:10.210537+00:00",
+      "latest_activity_at": "2026-08-20T20:29:57.924784+00:00",
       "metric": "reply_rate",
       "name": "Resume daily English outbound to 30% reply rate",
       "operator": "ge",
@@ -1554,7 +1554,7 @@
       "created_at": "2026-08-14T22:09:14.548799+00:00",
       "goal_status": "active",
       "id": "goal-email-send-20260815-b5",
-      "latest_activity_at": "2026-08-20T20:12:10.210537+00:00",
+      "latest_activity_at": "2026-08-20T20:29:57.924784+00:00",
       "metric": "reply_rate",
       "name": "English outbound send batch 5: next 50 from remaining queue",
       "operator": "ge",
@@ -1563,7 +1563,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-20T20:12:10.207347+00:00"
+      "updated_at": "2026-08-20T20:29:57.920620+00:00"
     },
     {
       "created_at": "2026-08-15T00:32:48.129043+00:00",
@@ -2514,16 +2514,16 @@
       "created_at": "2026-08-18T19:31:45.542525+00:00",
       "goal_status": "active",
       "id": "goal-f170ce6fbd",
-      "latest_activity_at": "2026-08-20T20:13:00.475275+00:00",
+      "latest_activity_at": "2026-08-20T20:30:48.237199+00:00",
       "metric": "reply_rate",
       "name": "English outbound send batch 17: proven-pattern 36 (Milsted/WS content-prepped)",
       "operator": "ge",
       "owner_id": "outbound",
       "parent_id": null,
-      "run_status": "waiting",
-      "stage": "EVALUATE",
+      "run_status": "completed",
+      "stage": "OBSERVE",
       "target": 0.3,
-      "updated_at": "2026-08-20T20:13:00.472328+00:00"
+      "updated_at": "2026-08-20T20:30:48.235077+00:00"
     },
     {
       "created_at": "2026-08-18T19:43:00.392716+00:00",
@@ -2559,7 +2559,7 @@
       "created_at": "2026-08-18T20:38:59.925330+00:00",
       "goal_status": "active",
       "id": "goal-email-send-20260819-b18",
-      "latest_activity_at": "2026-08-20T20:07:48.255549+00:00",
+      "latest_activity_at": "2026-08-20T20:26:37.616991+00:00",
       "metric": "reply_rate",
       "name": "English outbound send batch 18: proven-pattern unique-domain fill",
       "operator": "ge",
@@ -2568,7 +2568,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-20T20:07:48.252653+00:00"
+      "updated_at": "2026-08-20T20:26:37.614949+00:00"
     },
     {
       "created_at": "2026-08-18T21:05:18.767738+00:00",
@@ -2814,7 +2814,7 @@
       "created_at": "2026-08-19T14:29:33.637386+00:00",
       "goal_status": "active",
       "id": "goal-de9ae154ee",
-      "latest_activity_at": "2026-08-20T20:09:10.912248+00:00",
+      "latest_activity_at": "2026-08-20T20:27:27.031462+00:00",
       "metric": "reply_rate",
       "name": "English outbound send batch 19: next 50 from remaining queue (send-all push)",
       "operator": "ge",
@@ -2823,13 +2823,13 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-20T20:09:10.909594+00:00"
+      "updated_at": "2026-08-20T20:27:27.027834+00:00"
     },
     {
       "created_at": "2026-08-19T17:16:37.304959+00:00",
       "goal_status": "active",
       "id": "goal-3fd23da75c",
-      "latest_activity_at": "2026-08-20T20:10:01.773325+00:00",
+      "latest_activity_at": "2026-08-20T20:28:17.096032+00:00",
       "metric": "reply_rate",
       "name": "English outbound send batch 20: next 50 from remaining queue (send-all push)",
       "operator": "ge",
@@ -2838,13 +2838,13 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-20T20:10:01.763342+00:00"
+      "updated_at": "2026-08-20T20:28:17.093343+00:00"
     },
     {
       "created_at": "2026-08-19T17:16:37.493171+00:00",
       "goal_status": "active",
       "id": "goal-2676f113ff",
-      "latest_activity_at": "2026-08-20T20:11:19.695842+00:00",
+      "latest_activity_at": "2026-08-20T20:29:07.452810+00:00",
       "metric": "reply_rate",
       "name": "English outbound send batch 21: final 22 from remaining queue (send-all push)",
       "operator": "ge",
@@ -2853,7 +2853,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-20T20:11:19.692666+00:00"
+      "updated_at": "2026-08-20T20:29:07.449903+00:00"
     },
     {
       "created_at": "2026-08-19T17:40:20.472091+00:00",
@@ -2874,7 +2874,7 @@
       "created_at": "2026-08-19T17:42:41.270340+00:00",
       "goal_status": "active",
       "id": "goal-a4acfeb32f",
-      "latest_activity_at": "2026-08-20T19:58:17.675803+00:00",
+      "latest_activity_at": "2026-08-20T20:28:25.012447+00:00",
       "metric": "qualified_social_leads",
       "name": "Research pipeline: grow fully verified English lead pool to 1000 (continuous - don't stop)",
       "operator": "ge",
@@ -2883,7 +2883,7 @@
       "run_status": "blocked",
       "stage": "ACT",
       "target": 1000,
-      "updated_at": "2026-08-20T19:58:17.671300+00:00"
+      "updated_at": "2026-08-20T20:28:25.006879+00:00"
     },
     {
       "created_at": "2026-08-19T20:40:22.805614+00:00",
@@ -3169,6 +3169,36 @@
       "stage": "OBSERVE",
       "target": 1,
       "updated_at": "2026-08-20T20:09:41.691556+00:00"
+    },
+    {
+      "created_at": "2026-08-20T20:28:19.488898+00:00",
+      "goal_status": "active",
+      "id": "goal-c9c243e2d5",
+      "latest_activity_at": "2026-08-20T20:30:10.011487+00:00",
+      "metric": "achieved_children",
+      "name": "Repair video scene flow and evaluation gates before copywriting",
+      "operator": "ge",
+      "owner_id": "director",
+      "parent_id": null,
+      "run_status": "waiting",
+      "stage": "OBSERVE",
+      "target": 1,
+      "updated_at": "2026-08-20T20:30:10.009521+00:00"
+    },
+    {
+      "created_at": "2026-08-20T20:29:02.742082+00:00",
+      "goal_status": "active",
+      "id": "goal-d258886b2f",
+      "latest_activity_at": "2026-08-20T20:30:08.838679+00:00",
+      "metric": "acceptance_tests_passed",
+      "name": "Implement hard scene-flow and CTA evaluation contracts",
+      "operator": "ge",
+      "owner_id": "system-improvement",
+      "parent_id": "goal-c9c243e2d5",
+      "run_status": "blocked",
+      "stage": "ACT",
+      "target": 1,
+      "updated_at": "2026-08-20T20:30:08.836559+00:00"
     }
   ],
   "heartbeat": {
@@ -3176,15 +3206,15 @@
     "business_value_fa": null,
     "display_title": null,
     "display_title_fa": null,
-    "goal_id": "goal-f170ce6fbd",
-    "goal_name": "English outbound send batch 17: proven-pattern 36 (Milsted/WS content-prepped)",
-    "metric": "reply_rate",
+    "goal_id": "goal-c9c243e2d5",
+    "goal_name": "Repair video scene flow and evaluation gates before copywriting",
+    "metric": "achieved_children",
     "operator": "ge",
-    "owner_id": "outbound",
+    "owner_id": "director",
     "run_status": "waiting",
-    "stage": "EVALUATE",
-    "target": 0.3,
-    "updated_at": "2026-08-20T20:13:00.475275+00:00"
+    "stage": "OBSERVE",
+    "target": 1,
+    "updated_at": "2026-08-20T20:30:10.011487+00:00"
   },
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
@@ -3197,44 +3227,44 @@
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-18T19:31:45.542525+00:00",
-      "goal_id": "goal-f170ce6fbd",
-      "goal_name": "English outbound send batch 17: proven-pattern 36 (Milsted/WS content-prepped)",
-      "owner_id": "outbound",
-      "run_id": "run-7bef25b0a7",
+      "created_at": "2026-08-20T20:28:19.488898+00:00",
+      "goal_id": "goal-c9c243e2d5",
+      "goal_name": "Repair video scene flow and evaluation gates before copywriting",
+      "owner_id": "director",
+      "run_id": "run-ba44727ede",
       "run_status": "waiting",
-      "stage": "EVALUATE",
-      "updated_at": "2026-08-20T20:13:00.475275+00:00"
+      "stage": "OBSERVE",
+      "updated_at": "2026-08-20T20:30:10.011487+00:00"
     },
     "heartbeat": {
       "business_value": null,
       "business_value_fa": null,
       "display_title": null,
       "display_title_fa": null,
-      "goal_id": "goal-f170ce6fbd",
-      "goal_name": "English outbound send batch 17: proven-pattern 36 (Milsted/WS content-prepped)",
-      "metric": "reply_rate",
+      "goal_id": "goal-c9c243e2d5",
+      "goal_name": "Repair video scene flow and evaluation gates before copywriting",
+      "metric": "achieved_children",
       "operator": "ge",
-      "owner_id": "outbound",
+      "owner_id": "director",
       "run_status": "waiting",
-      "stage": "EVALUATE",
-      "target": 0.3,
-      "updated_at": "2026-08-20T20:13:00.475275+00:00"
+      "stage": "OBSERVE",
+      "target": 1,
+      "updated_at": "2026-08-20T20:30:10.011487+00:00"
     },
-    "last_activity_at": "2026-08-20T20:13:00.475275+00:00",
-    "last_sync_at": "2026-08-20T20:13:00.535573+00:00",
+    "last_activity_at": "2026-08-20T20:30:48.237199+00:00",
+    "last_sync_at": "2026-08-20T20:30:48.307693+00:00",
     "state": "running"
   },
   "totals": {
-    "approvals": 242,
-    "decisions": 525,
-    "evidence": 9769,
+    "approvals": 244,
+    "decisions": 533,
+    "evidence": 9851,
     "goals_abandoned": 27,
     "goals_achieved": 151,
-    "goals_active": 29,
-    "goals_total": 210,
-    "hypotheses": 59,
+    "goals_active": 31,
+    "goals_total": 212,
+    "hypotheses": 61,
     "memory_claims": 5,
-    "runs": 230
+    "runs": 232
   }
 }
