@@ -3,9 +3,10 @@ import { type Locale, t } from "../../i18n/translations";
 
 export interface Props {
   locale?: Locale;
+  labels?: Array<{ title: string; desc: string }>;
 }
 
-const { locale = "en" } = Astro.props;
+const { locale = "en", labels } = Astro.props;
 const steps = [
   { icon: "bx-bullseye", key: "goal" },
   { icon: "bx-search", key: "observe" },
@@ -25,8 +26,8 @@ const steps = [
           <i class:list={["bx", step.icon, "icon-xl"]} aria-hidden="true"></i>
         </div>
         <div>
-          <p class:list={["text-xs font-semibold", index < 3 ? "text-foreground-strong" : "text-foreground-muted"]}>{t(locale, `architecture.loop.${step.key}.title`)}</p>
-          <p class="mt-1 text-3xs leading-relaxed text-muted-foreground">{t(locale, `architecture.loop.${step.key}.desc`)}</p>
+          <p class:list={["text-xs font-semibold", index < 3 ? "text-foreground-strong" : "text-foreground-muted"]}>{labels?.[index]?.title ?? t(locale, `architecture.loop.${step.key}.title`)}</p>
+          <p class="mt-1 text-3xs leading-relaxed text-muted-foreground">{labels?.[index]?.desc ?? t(locale, `architecture.loop.${step.key}.desc`)}</p>
         </div>
       </div>
     ))}

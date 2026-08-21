@@ -1,0 +1,74 @@
+---
+import { type Locale, t } from "../../i18n/translations";
+import { SOFTWARE_SOLUTIONS } from "../../data/software-solutions";
+import { localizePath } from "../../i18n";
+import zapier from "../../assets/brand-logos/zapier.svg?raw";
+import slack from "../../assets/brand-logos/slack.svg?raw";
+import gmail from "../../assets/brand-logos/gmail.svg?raw";
+import drive from "../../assets/brand-logos/drive.svg?raw";
+import hubspot from "../../assets/brand-logos/hubspot.svg?raw";
+import attio from "../../assets/brand-logos/attio.svg?raw";
+import jira from "../../assets/brand-logos/jira.svg?raw";
+import notion from "../../assets/brand-logos/notion.svg?raw";
+import telegram from "../../assets/brand-logos/telegram.svg?raw";
+import whatsapp from "../../assets/brand-logos/whatsapp.svg?raw";
+import calendar from "../../assets/brand-logos/calendar.svg?raw";
+import opencode from "../../assets/brand-logos/opencode.svg?raw";
+import codex from "../../assets/brand-logos/codex.svg?raw";
+import claudecode from "../../assets/brand-logos/claudecode.svg?raw";
+
+export interface Props { locale?: Locale; }
+const { locale = "en" } = Astro.props;
+
+interface Tool { key: string; svg?: string; img?: string; rot: string }
+
+// Real, current brand marks (Simple Icons + official assets), colored through design tokens.
+const tools: Tool[] = [
+  { key: "zapier", svg: zapier, rot: "-rotate-3" },
+  { key: "slack", svg: slack, rot: "rotate-2" },
+  { key: "gmail", svg: gmail, rot: "-rotate-2" },
+  { key: "drive", svg: drive, rot: "rotate-3" },
+  { key: "hubspot", svg: hubspot, rot: "-rotate-1" },
+  { key: "attio", svg: attio, rot: "rotate-1" },
+  { key: "jira", svg: jira, rot: "-rotate-3" },
+  { key: "notion", svg: notion, rot: "rotate-2" },
+  { key: "telegram", svg: telegram, rot: "-rotate-2" },
+  { key: "whatsapp", svg: whatsapp, rot: "rotate-3" },
+  { key: "calendar", svg: calendar, rot: "-rotate-1" },
+  { key: "opencode", svg: opencode, rot: "rotate-2" },
+  { key: "codex", svg: codex, rot: "-rotate-3" },
+  { key: "claudecode", svg: claudecode, rot: "rotate-1" },
+];
+
+const hrefByKey = Object.fromEntries(SOFTWARE_SOLUTIONS.map((s) => [s.key, `/${s.slug}/`]));
+
+// Two spread rows of seven: first row rides up, second row drops down.
+const rowUp = tools.slice(0, 7);
+const rowDown = tools.slice(7);
+---
+
+<div class="loop-canvas relative overflow-hidden rounded-xl border border-border bg-panel px-4 py-12 shadow-panel sm:px-8" data-aos="fade-up">
+  <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
+  <div class="absolute left-1/4 top-1/3 h-56 w-56 glow-blob opacity-10"></div>
+  <div class="absolute right-1/4 bottom-1/4 h-48 w-48 rounded-full opacity-10" style="background: radial-gradient(closest-side, var(--accent), transparent 72%);"></div>
+  <p class="relative z-[1] mb-10 text-center text-xs font-semibold uppercase tracking-widest text-muted-foreground">{t(locale, "conversion.home.mechanism.gridTitle")}</p>
+  <div class="relative z-[1] mx-auto flex max-w-5xl flex-col gap-y-8 py-4">
+    {[{ row: rowUp, lift: "-translate-y-2 sm:-translate-y-4" }, { row: rowDown, lift: "translate-y-2 sm:translate-y-4" }].map(({ row, lift }) => (
+      <ul class="flex flex-wrap items-start justify-center gap-x-4 gap-y-8 sm:gap-x-7 lg:gap-x-9">
+        {row.map((tool) => (
+          <li class:list={["group relative flex flex-col items-center", tool.rot, lift]}>
+            <a href={localizePath(hrefByKey[tool.key] ?? "/software/", locale)} aria-label={t(locale, `conversion.home.mechanism.tool.${tool.key}.name`)} class="group flex flex-col items-center focus-visible:outline-none">
+            <div class="flex h-14 w-14 items-center justify-center rounded-lg border border-border bg-panel-raised shadow-panel transition-all duration-fast group-hover:-translate-y-1 group-hover:border-border-strong group-focus-visible:border-border-strong sm:h-16 sm:w-16">
+              <span class="block [&>svg]:h-8 [&>svg]:w-8" set:html={tool.svg} />
+            </div>
+            <p class="mt-2 text-3xs font-semibold text-muted-foreground">{t(locale, `conversion.home.mechanism.tool.${tool.key}.name`)}</p>
+            <span class="pointer-events-none absolute bottom-full left-1/2 z-20 mb-1 w-44 -translate-x-1/2 rounded-md border border-border bg-panel-raised p-2 text-center text-2xs leading-relaxed text-foreground opacity-0 shadow-popover transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+              {t(locale, `conversion.home.mechanism.tool.${tool.key}.tip`)}
+            </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    ))}
+  </div>
+</div>

@@ -1,0 +1,8 @@
+---
+import { SOFTWARE_SOLUTIONS } from "../../data/software-solutions";
+import SoftwareSolutionPage from "../../components/software/SoftwareSolutionPage.astro";
+
+const solution = SOFTWARE_SOLUTIONS.find((s) => s.slug === "whatsapp-ai-automation")!;
+---
+
+<SoftwareSolutionPage solution={solution} locale="fa" />

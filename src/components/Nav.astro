@@ -1,8 +1,14 @@
 ---
 import SpielOSLogo from "./SpielOSLogo.astro";
 import { NAV_LINKS, BOOKING_LINK, BOOKING_CONFIG, type NavChildLink, type NavLink } from "../config";
+import { SOFTWARE_SOLUTIONS } from "../data/software-solutions";
 import { type Locale, t } from "../i18n/translations";
 import { localizePath } from "../i18n";
+
+const BRAND_LOGOS = import.meta.glob("../assets/brand-logos/*.svg", { query: "?raw", import: "default", eager: true }) as Record<string, string>;
+const brandLogoByHref: Record<string, string> = Object.fromEntries(
+  SOFTWARE_SOLUTIONS.map((s) => [`/${s.slug}`, BRAND_LOGOS[`../assets/brand-logos/${s.key}.svg`] ?? ""]),
+);
 
 export interface Props {
   links?: NavLink[];
@@ -28,6 +34,11 @@ const NAV_ITEM_ICONS: Record<string, string> = {
   "/features/connections": "bx-link",
   "/features/artifacts": "bx-archive",
   "/use-cases/design": "bx-palette",
+  "/use-cases/content": "bx-edit-alt",
+  "/use-cases/marketing": "bx-speaker",
+  "/use-cases/seo": "bx-search-alt",
+  "/use-cases/analytics": "bx-bar-chart-alt-2",
+  ...Object.fromEntries(SOFTWARE_SOLUTIONS.map((s) => [`/${s.slug}`, s.iconClass])),
 };
 /** Route-key lookup that is locale- and trailing-slash-agnostic so the same
  *  distinct icon follows each item on both EN and FA pages. */
@@ -105,13 +116,23 @@ const ariaCurrent = (href: string) => (isCurrent(href) ? "page" : undefined);
               <i class="bx bx-chevron-down rtl-flip icon-sm nav-group-chevron" aria-hidden="true"></i>
             </a>
             <div
-              class="nav-popover absolute start-0 top-full mt-2 w-[30rem] max-w-[calc(100vw-2rem)] rounded-md border border-border bg-panel shadow-popover p-2"
+              class:list={[
+                "nav-popover absolute start-0 top-full mt-2 max-w-[calc(100vw-2rem)] rounded-md border border-border bg-panel shadow-popover p-2",
+                link.children.reduce((n, c) => n + (c.children?.length ?? 0), 0) > 18
+                  ? "w-[48rem]"
+                  : link.children.reduce((n, c) => n + (c.children?.length ?? 0), 0) > 10
+                    ? "w-[38rem]"
+                    : "w-[30rem]",
+              ]}
               role="menu"
               aria-label={link.label}
             >
               <div class="flex gap-3">
-                {link.children.map((child) => (
-                  <div class:list={["nav-cat flex-1 min-w-0", child.columns === 2 ? "pe-2" : "nav-cat-divider w-40 shrink-0 ps-2"]}>
+                {link.children.map((child, catIndex) => (
+                  <div
+                    class:list={["nav-cat min-w-0", catIndex > 0 && "nav-cat-divider ps-2", catIndex === 0 && "pe-2"]}
+                    style={`flex-grow:${Math.max(1, (child.children || []).length)};`}
+                  >
                     <a href={child.href} role="menuitem" aria-current={isCurrent(child.href) ? "true" : undefined} class:list={["nav-cat-label rounded-sm transition-colors hover:text-foreground", isCurrent(child.href) && "text-foreground"]}>{child.label}</a>
                     <div class:list={["grid gap-0.5", child.columns === 2 ? "grid-cols-2" : "grid-cols-1"]}>
                       {(child.children || []).map((grand) => (
@@ -125,7 +146,11 @@ const ariaCurrent = (href: string) => (isCurrent(href) ? "page" : undefined);
                           ]}
                         >
                           {grand.live && <span class="nav-live-dot" aria-hidden="true"></span>}
-                          <i class={`bx ${navItemIcon(grand.href)} text-primary/80 icon-sm shrink-0`} aria-hidden="true"></i>
+                          {brandLogoByHref[normalize(grand.href)] ? (
+                            <span class="flex h-4 w-4 shrink-0 items-center justify-center [&>svg]:h-4 [&>svg]:w-4" set:html={brandLogoByHref[normalize(grand.href)]} />
+                          ) : (
+                            <i class={`bx ${navItemIcon(grand.href)} text-primary/80 icon-sm shrink-0`} aria-hidden="true"></i>
+                          )}
                           {grand.label}
                         </a>
                       ))}
@@ -208,7 +233,11 @@ const ariaCurrent = (href: string) => (isCurrent(href) ? "page" : undefined);
                         ]}
                       >
                         {grand.live && <span class="nav-live-dot" aria-hidden="true"></span>}
-                        <i class={`bx ${navItemIcon(grand.href)} text-primary/80 icon-sm shrink-0`} aria-hidden="true"></i>
+                        {brandLogoByHref[normalize(grand.href)] ? (
+                            <span class="flex h-4 w-4 shrink-0 items-center justify-center [&>svg]:h-4 [&>svg]:w-4" set:html={brandLogoByHref[normalize(grand.href)]} />
+                          ) : (
+                            <i class={`bx ${navItemIcon(grand.href)} text-primary/80 icon-sm shrink-0`} aria-hidden="true"></i>
+                          )}
                         {grand.label}
                       </a>
                     ))}
@@ -487,6 +516,10 @@ const ariaCurrent = (href: string) => (isCurrent(href) ? "page" : undefined);
      panel is still transitioning closed it stays hoverable, and a pointer
      that re-enters it re-engages :hover instead of racing the close. */
   .nav-group > .nav-popover {
+    /* Center the panel on the trigger (not flush to its start edge). The
+       bidi sign keeps physical centering correct in RTL. */
+    inset-inline-start: 50%;
+    translate: calc(var(--bidi-sign, 1) * -50%) 0;
     visibility: hidden;
     opacity: 0;
     transform: translateY(4px);

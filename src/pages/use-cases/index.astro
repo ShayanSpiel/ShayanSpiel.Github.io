@@ -11,6 +11,38 @@ export interface Props {
 
 const { locale = "en" } = Astro.props;
 
+const departments = [
+  {
+    key: "design",
+    href: "/use-cases/design/",
+    icon: "bx-palette",
+    extra: { label: t(locale, "useCases.card.design.gallery"), href: "/use-cases/design/gallery/" },
+  },
+  {
+    key: "content",
+    href: "/use-cases/content/",
+    icon: "bx-pen",
+    extra: null,
+  },
+  {
+    key: "marketing",
+    href: "/use-cases/marketing/",
+    icon: "bx-envelope",
+    extra: null,
+  },
+  {
+    key: "seo",
+    href: "/use-cases/seo/",
+    icon: "bx-search-alt",
+    extra: null,
+  },
+  {
+    key: "analytics",
+    href: "/use-cases/analytics/",
+    icon: "bx-bar-chart-alt-2",
+    extra: null,
+  },
+] as const;
 ---
 
   <Page
@@ -29,31 +61,33 @@ const { locale = "en" } = Astro.props;
 
   <section class="relative overflow-hidden py-20 sm:py-24">
     <div class="relative mx-auto max-w-6xl px-6">
-      <div class="relative overflow-hidden rounded-xl border border-border bg-panel p-6 shadow-panel sm:p-10" data-aos="fade-up">
-        <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-accent via-purple to-transparent opacity-80" aria-hidden="true"></div>
-        <div class="relative flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
-          <div class="max-w-2xl">
-            <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-md bg-accent-soft text-accent">
-              <i class="bx bx-palette icon-2xl" aria-hidden="true"></i>
+      <div class="grid gap-3 md:grid-cols-2" data-aos="fade-up">
+        {departments.map((dept) => (
+          <article class="relative flex flex-col overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
+            <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-accent via-purple to-transparent opacity-80" aria-hidden="true"></div>
+            <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-md bg-accent-soft text-accent">
+              <i class={`bx ${dept.icon} icon-xl`} aria-hidden="true"></i>
             </div>
-            <h2 class="text-lg font-semibold text-foreground-strong mb-2">{t(locale, "useCases.card.design.title")}</h2>
-            <p class="text-sm text-muted-foreground leading-relaxed">{t(locale, "useCases.card.design.desc")}</p>
-          </div>
-          <div class="relative flex shrink-0 flex-wrap gap-3">
-            <a
-              href={localizePath("/use-cases/design/", locale)}
-              class="inline-flex items-center justify-center rounded-md border border-border bg-panel px-5 h-10 text-sm font-medium hover:bg-panel-raised hover:border-border-strong transition-all"
-            >
-              {t(locale, "useCases.card.design.case")}
-            </a>
-            <a
-              href={localizePath("/use-cases/design/gallery/", locale)}
-              class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-5 h-10 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all"
-            >
-              {t(locale, "useCases.card.design.gallery")}
-            </a>
-          </div>
-        </div>
+            <h2 class="text-sm font-semibold text-foreground-strong">{t(locale, `useCases.card.${dept.key}.title`)}</h2>
+            <p class="mt-2 grow text-xs leading-relaxed text-muted-foreground">{t(locale, `useCases.card.${dept.key}.desc`)}</p>
+            <div class="mt-4 flex flex-wrap gap-2">
+              <a
+                href={localizePath(dept.href, locale)}
+                class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-4 h-9 text-xs font-semibold hover:brightness-110 active:brightness-95 transition-all"
+              >
+                {t(locale, `useCases.card.${dept.key}.case`)}
+              </a>
+              {dept.extra && (
+                <a
+                  href={localizePath(dept.extra.href, locale)}
+                  class="inline-flex items-center justify-center rounded-md border border-border bg-panel px-4 h-9 text-xs font-medium hover:bg-panel-raised hover:border-border-strong transition-all"
+                >
+                  {dept.extra.label}
+                </a>
+              )}
+            </div>
+          </article>
+        ))}
       </div>
     </div>
   </section>

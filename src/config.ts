@@ -1,3 +1,5 @@
+import { SOFTWARE_SOLUTIONS } from "./data/software-solutions";
+
 export const SITE = {
   name: "SpielOS",
   tagline: "AI workflow systems for established businesses",
@@ -149,9 +151,27 @@ export const NAV_LINKS: { default: NavLink[]; showcase: NavLink[] } = {
   default: [
     { label: "Services", href: "/services/" },
     {
-      label: "How it works",
+      label: "Solutions",
       href: "/features/",
       children: [
+        {
+          label: "By Departments",
+          href: "/use-cases/",
+          columns: 1,
+          children: [
+            { label: "Design", href: "/use-cases/design/" },
+            { label: "Content", href: "/use-cases/content/" },
+            { label: "Marketing", href: "/use-cases/marketing/" },
+            { label: "SEO", href: "/use-cases/seo/" },
+            { label: "Analytics", href: "/use-cases/analytics/" },
+          ],
+        },
+        {
+          label: "By Software",
+          href: "/software/",
+          columns: 2,
+          children: SOFTWARE_SOLUTIONS.map((s) => ({ label: s.name, href: `/${s.slug}/` })),
+        },
         {
           label: "Features",
           href: "/features/",
@@ -166,12 +186,6 @@ export const NAV_LINKS: { default: NavLink[]; showcase: NavLink[] } = {
             { label: "Connections", href: "/features/connections/" },
             { label: "Artifacts", href: "/features/artifacts/" },
           ],
-        },
-        {
-          label: "Use Cases",
-          href: "/use-cases/",
-          columns: 1,
-          children: [{ label: "Design", href: "/use-cases/design/" }],
         },
       ],
     },

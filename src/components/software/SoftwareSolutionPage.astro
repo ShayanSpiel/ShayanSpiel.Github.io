@@ -1,0 +1,202 @@
+---
+import FeatureHero from "../features/FeatureHero.astro";
+import FeatureCTA from "../features/FeatureCTA.astro";
+import SectionHeader from "../sections/SectionHeader.astro";
+import Page from "../../layouts/Page.astro";
+import { SITE } from "../../config";
+import { localizePath } from "../../i18n";
+import { type Locale, t } from "../../i18n/translations";
+import { SOFTWARE_SOLUTIONS, type SoftwareSolution } from "../../data/software-solutions";
+
+export interface Props {
+  solution: SoftwareSolution;
+  locale?: Locale;
+}
+
+const { solution, locale = "en" } = Astro.props;
+
+// Raw brand SVGs selected by key (mirrors the ToolGrid tile pattern).
+const brandLogos = import.meta.glob("../../assets/brand-logos/*.svg", {
+  query: "?raw",
+  import: "default",
+  eager: true,
+});
+const logoSvg = brandLogos[`../../assets/brand-logos/${solution.key}.svg`] as string | undefined;
+
+const isFa = locale === "fa";
+const name = solution.name;
+const tagline = isFa ? solution.taglineFa : solution.taglineEn;
+const pain = isFa ? solution.painFa : solution.painEn;
+const workflowTitle = isFa ? solution.workflowTitleFa : solution.workflowTitleEn;
+const workflowLocalized = isFa ? solution.workflowFa : solution.workflowEn;
+
+// SEO: explicit title/description passed through to <Page>.
+const pageTitle = `${solution.keyword} | ${SITE.name}`;
+const rawPain = pain;
+const metaDescription =
+  rawPain.length <= 155 ? rawPain : rawPain.slice(0, 155).replace(/\s+\S*$/, "").trimEnd() + "…";
+
+const howSteps = t(locale, "softwarePage.how.steps", { name }).split(" · ");
+const otherSolutions = SOFTWARE_SOLUTIONS.filter((s) => s.slug !== solution.slug);
+const pageHref = localizePath(`/${solution.slug}/`, locale);
+
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: t(locale, "nav.home"), item: `${SITE.url}${localizePath("/", locale)}` },
+    { "@type": "ListItem", position: 2, name: t(locale, "nav.solutions"), item: `${SITE.url}${localizePath("/features/", locale)}` },
+    { "@type": "ListItem", position: 3, name: solution.name, item: `${SITE.url}${pageHref}` },
+  ],
+};
+---
+
+<Page title={pageTitle} description={metaDescription} image="/assets/og/home.png" locale={locale}>
+  <FeatureHero
+    locale={locale}
+    breadcrumbs={[
+      { label: t(locale, "nav.solutions"), href: localizePath("/features/", locale) },
+      { label: solution.name },
+    ]}
+    label={t(locale, "softwarePage.hero.label")}
+    title={solution.keyword}
+    description={tagline}
+    cta={{ label: t(locale, "softwarePage.workflow.label"), href: "#workflow" }}
+  />
+
+  <!-- Pain -->
+  <section class="relative py-20 sm:py-24">
+    <div class="mx-auto max-w-4xl px-6">
+      <SectionHeader title={t(locale, "softwarePage.pain.title")} />
+      <div class="solution-canvas relative overflow-hidden rounded-xl border border-border bg-panel p-6 shadow-panel sm:p-10" data-aos="fade-up">
+        <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
+        <div class="absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 glow-blob opacity-10"></div>
+        <figure class="relative mx-auto flex max-w-3xl gap-4">
+          <span class="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-warning-soft text-warning">
+            <i class={`bx ${solution.iconClass} icon-xl`} aria-hidden="true"></i>
+          </span>
+          <blockquote class="text-base leading-relaxed text-muted-foreground sm:text-lg">{pain}</blockquote>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- The workflow -->
+  <section id="workflow" class="relative overflow-hidden scroll-mt-24 py-20 sm:py-24">
+    <div class="absolute inset-0 bg-panel-deep/35"></div>
+    <div class="relative mx-auto max-w-6xl px-6">
+      <SectionHeader
+        label={t(locale, "softwarePage.workflow.label")}
+        title={t(locale, "softwarePage.workflow.title")}
+      />
+      <div class="solution-canvas relative overflow-hidden rounded-xl border border-border bg-panel p-6 shadow-panel sm:p-10" data-aos="fade-up">
+        <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
+        <div class="relative mx-auto max-w-3xl">
+          <div class="flex items-center gap-4">
+            {logoSvg && (
+              <div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg border border-border bg-panel-raised shadow-panel">
+                <span class="block [&>svg]:h-10 [&>svg]:w-10" set:html={logoSvg} />
+              </div>
+            )}
+            <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent sm:hidden">
+              <i class={`bx ${solution.iconClass} icon-2xl`} aria-hidden="true"></i>
+            </div>
+            <h3 class="text-lg font-semibold text-foreground-strong sm:text-xl">{workflowTitle}</h3>
+          </div>
+          <p class="mt-5 text-sm leading-relaxed text-muted-foreground sm:text-base">{workflowLocalized}</p>
+        </div>
+        <ol class="solution-rail relative mx-auto mt-10 max-w-2xl">
+          {howSteps.map((step, index) => (
+            <li class="relative flex gap-4 py-3">
+              <div class:list={["relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-md border bg-panel-raised", index === 0 ? "border-accent text-accent shadow-[0_0_20px_var(--accent-soft)]" : "border-border text-muted-foreground"]}>
+                <span class="text-xs font-bold">{index + 1}</span>
+              </div>
+              <div class="pt-1">
+                <p class="text-xs leading-relaxed text-muted-foreground">{step}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- How SpielOS runs it -->
+  <section class="relative py-20 sm:py-24">
+    <div class="mx-auto max-w-4xl px-6">
+      <SectionHeader title={t(locale, "softwarePage.how.title", { name })} />
+      <ol class="grid gap-3" data-aos="fade-up">
+        {howSteps.map((step, index) => (
+          <li class="flex items-start gap-4 rounded-lg border border-accent/30 bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
+            <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-accent bg-accent-soft text-accent">
+              <span class="text-xs font-bold">{index + 1}</span>
+            </span>
+            <p class="pt-1 text-sm leading-relaxed text-muted-foreground">{step}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- More software -->
+  <section class="relative overflow-hidden py-20 sm:py-24">
+    <div class="absolute inset-0 bg-panel-deep/35"></div>
+    <div class="relative mx-auto max-w-6xl px-6">
+      <SectionHeader
+        title={t(locale, "softwarePage.more.title")}
+        description={t(locale, "softwarePage.more.desc")}
+      />
+      <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" data-aos="fade-up">
+        {otherSolutions.map((other) => {
+          const otherTagline = isFa ? other.taglineFa : other.taglineEn;
+          const otherLogo = brandLogos[`../../assets/brand-logos/${other.key}.svg`] as string | undefined;
+          return (
+            <a
+              href={localizePath(`/${other.slug}/`, locale)}
+              class="group relative overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong"
+            >
+              <div class="mb-4 flex items-center gap-3">
+                {otherLogo ? (
+                  <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-border bg-panel-raised transition-all group-hover:border-border-strong">
+                    <span class="block [&>svg]:h-6 [&>svg]:w-6" set:html={otherLogo} />
+                  </div>
+                ) : (
+                  <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-accent-soft text-accent">
+                    <i class={`bx ${other.iconClass} icon-xl`} aria-hidden="true"></i>
+                  </div>
+                )}
+                <h3 class="text-sm font-semibold text-foreground-strong">{other.name}</h3>
+              </div>
+              <p class="text-xs leading-relaxed text-muted-foreground">{otherTagline}</p>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <FeatureCTA
+    locale={locale}
+    title={t(locale, "softwarePage.cta.title", { name })}
+    description={t(locale, "softwarePage.cta.desc", { name })}
+  />
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
+</Page>
+
+<style is:global>
+  .border-accent\/30 { border-color: color-mix(in oklab, var(--accent) 30%, transparent); }
+
+  .solution-canvas { position: relative; }
+
+  .solution-rail::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: 1.1rem;
+    top: 1.25rem;
+    bottom: 1.25rem;
+    width: 2px;
+    border-radius: var(--radius-pill);
+    background: linear-gradient(to bottom, var(--accent), var(--primary));
+    opacity: 0.6;
+  }
+</style>
