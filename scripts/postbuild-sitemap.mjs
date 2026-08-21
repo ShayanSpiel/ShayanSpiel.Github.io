@@ -91,10 +91,8 @@ if (!/<loc>https:\/\/spielos\.xyz/.test(raw)) {
 console.log("postbuild-sitemap: dist/sitemap.xml OK");
 
 const redirectShells = [
-  { source: "features/index.html", destination: "architecture/index.html", target: "/features/" },
-  { source: "features/index.html", destination: "waitlist/index.html", target: "/architecture/" },
-  { source: "fa/features/index.html", destination: "fa/architecture/index.html", target: "/fa/features/" },
-  { source: "fa/features/index.html", destination: "fa/waitlist/index.html", target: "/fa/architecture/" },
+  { source: "features/index.html", destination: "waitlist/index.html", target: "/features/" },
+  { source: "fa/features/index.html", destination: "fa/waitlist/index.html", target: "/fa/features/" },
   // Fictional feature pages now 301 to the real block pages they describe.
   { source: "features/director/index.html", destination: "features/chat/index.html", target: "/features/director/" },
   { source: "features/director/index.html", destination: "features/chat/director-mode/index.html", target: "/features/director/" },

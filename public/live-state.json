@@ -7,7 +7,7 @@
     "run_id": "run-c47e478ee3",
     "run_status": "waiting",
     "stage": "EVALUATE",
-    "updated_at": "2026-08-21T15:03:16.172969+00:00"
+    "updated_at": "2026-08-21T15:20:48.974995+00:00"
   },
   "heartbeat": {
     "business_value": null,
@@ -22,10 +22,10 @@
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-21T15:03:16.172969+00:00"
+    "updated_at": "2026-08-21T15:20:48.974995+00:00"
   },
-  "last_activity_at": "2026-08-21T15:04:01.312951+00:00",
-  "last_sync_at": "2026-08-21T15:04:01.336159+00:00",
+  "last_activity_at": "2026-08-21T15:20:48.974995+00:00",
+  "last_sync_at": "2026-08-21T15:20:49.006016+00:00",
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
     "goal_name": "3 booked calls per day",
@@ -38,8 +38,8 @@
   "state": "running",
   "totals": {
     "approvals": 247,
-    "decisions": 622,
-    "evidence": 10743,
+    "decisions": 623,
+    "evidence": 10752,
     "goals_abandoned": 27,
     "goals_achieved": 157,
     "goals_active": 30,

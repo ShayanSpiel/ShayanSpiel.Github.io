@@ -88,9 +88,8 @@ belong under `.spielos/artifacts/`, not strategy, assets, or skills.
 | `/contact/` | `src/pages/contact.astro` | Business contact form (EN) |
 | `/services/` | `src/pages/services.astro` | Buyer-facing AI implementation offer (EN) |
 | `/services/agent-brief/` | `src/pages/services/agent-brief.astro` | Agent Brief experience (EN) |
-| `/architecture/` | `src/pages/architecture.astro` | 301 redirect to `/features/` |
 | `/live/` | `src/pages/live.astro` | Plain-language live company record (EN) |
-| `/waitlist/` | `src/pages/waitlist.astro` | 301 redirect to `/architecture/` |
+| `/waitlist/` | `src/pages/waitlist.astro` | 301 redirect to `/features/` |
 | `/about/` | `src/pages/about.astro` | 301 redirect to `/founder/` |
 | `/fa/` | `src/pages/fa/index.astro` | Homepage (FA) |
 | `/fa/about/` | `src/pages/fa/about.astro` | 301 redirect to `/fa/founder/` |
@@ -98,9 +97,8 @@ belong under `.spielos/artifacts/`, not strategy, assets, or skills.
 | `/fa/notes/` | `src/pages/fa/notes/index.astro` | Notes index (FA) |
 | `/fa/notes/[slug]/` | `src/pages/fa/notes/[...slug].astro` | Individual note pages (FA) |
 | `/fa/contact/` | `src/pages/fa/contact.astro` | Contact form (FA) |
-| `/fa/architecture/` | `src/pages/fa/architecture.astro` | 301 redirect to `/fa/features/` |
 | `/fa/live/` | `src/pages/fa/live.astro` | Plain-language live company record (FA) |
-| `/fa/waitlist/` | `src/pages/fa/waitlist.astro` | 301 redirect to `/fa/architecture/` |
+| `/fa/waitlist/` | `src/pages/fa/waitlist.astro` | 301 redirect to `/fa/features/` |
 | `/fa/features/` | `src/pages/fa/features/index.astro` | Buyer-facing features — company lego blocks (FA) |
 | `/features/` | `src/pages/features/index.astro` | Buyer-facing features — the one loop and eight real blocks (EN) |
 | `/features/director/` | `src/pages/features/director.astro` | Director — the role that owns goals, approvals, evidence, and reports (EN) |
