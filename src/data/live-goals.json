@@ -263,7 +263,7 @@
       "display_title_fa": "گفت‌وگوهای فروش باکیفیت رو بیشتر کنیم",
       "goal_status": "active",
       "id": "goal-email-campaign-20260810",
-      "latest_activity_at": "2026-08-21T01:46:52.699858+00:00",
+      "latest_activity_at": "2026-08-21T22:14:16.105100+00:00",
       "metric": "reply_rate",
       "name": "Resume daily English outbound to 30% reply rate",
       "operator": "ge",
@@ -1552,18 +1552,18 @@
     },
     {
       "created_at": "2026-08-14T22:09:14.548799+00:00",
-      "goal_status": "active",
+      "goal_status": "abandoned",
       "id": "goal-email-send-20260815-b5",
-      "latest_activity_at": "2026-08-21T01:46:52.699858+00:00",
+      "latest_activity_at": "2026-08-21T22:14:16.105100+00:00",
       "metric": "reply_rate",
       "name": "English outbound send batch 5: next 50 from remaining queue",
       "operator": "ge",
       "owner_id": "outbound",
       "parent_id": "goal-email-campaign-20260810",
       "run_status": "completed",
-      "stage": "OBSERVE",
+      "stage": "ACT",
       "target": 0.3,
-      "updated_at": "2026-08-21T01:46:52.698907+00:00"
+      "updated_at": "2026-08-21T22:14:16.105100+00:00"
     },
     {
       "created_at": "2026-08-15T00:32:48.129043+00:00",
@@ -2874,16 +2874,16 @@
       "created_at": "2026-08-19T17:42:41.270340+00:00",
       "goal_status": "active",
       "id": "goal-a4acfeb32f",
-      "latest_activity_at": "2026-08-21T18:56:25.899226+00:00",
+      "latest_activity_at": "2026-08-21T22:24:00.033001+00:00",
       "metric": "qualified_social_leads",
       "name": "Research pipeline: grow fully verified English lead pool to 1000 (continuous - don't stop)",
       "operator": "ge",
       "owner_id": "outbound",
       "parent_id": null,
-      "run_status": "blocked",
-      "stage": "ACT",
+      "run_status": "running",
+      "stage": "DECIDE",
       "target": 1000,
-      "updated_at": "2026-08-21T18:56:25.896023+00:00"
+      "updated_at": "2026-08-21T22:24:00.026555+00:00"
     },
     {
       "created_at": "2026-08-19T20:40:22.805614+00:00",
@@ -3286,10 +3286,10 @@
     "metric": "qualified_social_leads",
     "operator": "ge",
     "owner_id": "outbound",
-    "run_status": "blocked",
-    "stage": "ACT",
+    "run_status": "running",
+    "stage": "DECIDE",
     "target": 1000,
-    "updated_at": "2026-08-21T18:56:25.899226+00:00"
+    "updated_at": "2026-08-21T22:24:00.033001+00:00"
   },
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
@@ -3307,9 +3307,9 @@
       "goal_name": "Research pipeline: grow fully verified English lead pool to 1000 (continuous - don't stop)",
       "owner_id": "outbound",
       "run_id": "run-2ccb5916df",
-      "run_status": "blocked",
-      "stage": "ACT",
-      "updated_at": "2026-08-21T18:56:25.899226+00:00"
+      "run_status": "running",
+      "stage": "DECIDE",
+      "updated_at": "2026-08-21T22:24:00.033001+00:00"
     },
     "heartbeat": {
       "business_value": null,
@@ -3321,25 +3321,25 @@
       "metric": "qualified_social_leads",
       "operator": "ge",
       "owner_id": "outbound",
-      "run_status": "blocked",
-      "stage": "ACT",
+      "run_status": "running",
+      "stage": "DECIDE",
       "target": 1000,
-      "updated_at": "2026-08-21T18:56:25.899226+00:00"
+      "updated_at": "2026-08-21T22:24:00.033001+00:00"
     },
-    "last_activity_at": "2026-08-21T19:08:52.710437+00:00",
-    "last_sync_at": "2026-08-21T19:08:52.846725+00:00",
+    "last_activity_at": "2026-08-21T22:24:00.033001+00:00",
+    "last_sync_at": "2026-08-21T22:24:00.089901+00:00",
     "state": "running"
   },
   "totals": {
     "approvals": 247,
-    "decisions": 641,
-    "evidence": 10881,
-    "goals_abandoned": 27,
+    "decisions": 661,
+    "evidence": 10977,
+    "goals_abandoned": 28,
     "goals_achieved": 157,
-    "goals_active": 30,
+    "goals_active": 29,
     "goals_total": 217,
-    "hypotheses": 66,
+    "hypotheses": 67,
     "memory_claims": 5,
-    "runs": 238
+    "runs": 239
   }
 }
