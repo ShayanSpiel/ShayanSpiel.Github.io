@@ -1,7 +1,6 @@
 ---
 import Page from "../layouts/Page.astro";
 import { FORMS, AUTHOR, SITE, SOCIAL, BOOKING_LINK, BOOKING_CONFIG } from "../config";
-import { ICONS } from "../lib/icons";
 import { type Locale, t } from "../i18n/translations";
 import { localizePath } from "../i18n";
 
@@ -75,7 +74,7 @@ const breadcrumbJsonLd = {
 
           <button id="submit-btn" type="submit" class="w-full rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2">
             <span id="submit-text">{formCopy.submit}</span>
-            <i id="submit-spinner" class="bx bx-loader icon-base bx-spin" style="display:none;"></i>
+            <i id="submit-spinner" class="bx bx-loader icon-base bx-spin" hidden></i>
           </button>
 
           <div id="form-error" class="hidden rounded-md bg-destructive-soft border border-destructive/20 p-3 text-xs text-destructive"></div>
@@ -130,7 +129,7 @@ const breadcrumbJsonLd = {
           btn.disabled = true;
           btn.classList.add('opacity-70', 'cursor-not-allowed');
           text.textContent = originalText.replace('...', '') + '...';
-          spinner.style.display = '';
+          spinner.hidden = false;
 
           var formData = new FormData(form);
           var data = {};
@@ -157,7 +156,7 @@ const breadcrumbJsonLd = {
             btn.disabled = false;
             btn.classList.remove('opacity-70', 'cursor-not-allowed');
             text.textContent = originalText;
-            spinner.style.display = 'none';
+            spinner.hidden = true;
           }
         });
 
@@ -179,8 +178,8 @@ const breadcrumbJsonLd = {
           <h2 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, "contact.dmTitle")}</h2>
           <p class="text-xs text-muted-foreground mb-4">{t(locale, "contact.dmDesc")}</p>
           <div class="flex items-center justify-center gap-4">
-            <a href={SOCIAL.x} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 rounded-md border border-border bg-panel-raised px-5 h-10 text-sm font-medium hover:bg-panel-strong hover:border-border-strong transition-all" set:html={ICONS.x + " " + t(locale, "contact.dmX")} />
-            <a href={SOCIAL.linkedin} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 rounded-md border border-border bg-panel-raised px-5 h-10 text-sm font-medium hover:bg-panel-strong hover:border-border-strong transition-all" set:html={ICONS.linkedin + " " + t(locale, "contact.dmLinkedin")} />
+            <a href={SOCIAL.x} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 rounded-md border border-border bg-panel-raised px-5 h-10 text-sm font-medium hover:bg-panel-strong hover:border-border-strong transition-all"><i class="bx bxl-twitter icon-base" aria-hidden="true"></i>{t(locale, "contact.dmX")}</a>
+            <a href={SOCIAL.linkedin} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 rounded-md border border-border bg-panel-raised px-5 h-10 text-sm font-medium hover:bg-panel-strong hover:border-border-strong transition-all"><i class="bx bxl-linkedin-square icon-base" aria-hidden="true"></i>{t(locale, "contact.dmLinkedin")}</a>
           </div>
         </div>
       </div>

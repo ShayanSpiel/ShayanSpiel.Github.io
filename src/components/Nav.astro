@@ -497,16 +497,13 @@ const ariaCurrent = (href: string) => (isCurrent(href) ? "page" : undefined);
 </script>
 
 <style>
+  /* Theme-aware token surfaces (replaces raw rgba black/white). */
   #site-nav[data-scrolled="true"] {
-    background: rgba(0, 0, 0, 0.5);
+    background: var(--overlay-bg);
     backdrop-filter: blur(24px) saturate(1.5);
     -webkit-backdrop-filter: blur(24px) saturate(1.5);
     border-bottom-color: var(--border);
-    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.04);
-  }
-
-  :root[data-theme*="light"] #site-nav[data-scrolled="true"] {
-    background: rgba(255, 255, 255, 0.7);
+    box-shadow: var(--shadow-panel);
   }
 
   /* Desktop dropdown: hidden by default, revealed on hover or keyboard focus

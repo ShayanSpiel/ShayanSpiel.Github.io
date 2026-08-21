@@ -124,11 +124,23 @@ belong under `.spielos/artifacts/`, not strategy, assets, or skills.
 | `/features/infrastructure/` | `src/pages/features/infrastructure/index.astro` | 301 redirect to `/features/` |
 | `/features/infrastructure/providers/` | `src/pages/features/infrastructure/providers.astro` | 301 redirect to `/features/` |
 | `/features/infrastructure/connections/` | `src/pages/features/infrastructure/connections.astro` | 301 redirect to `/features/connections/` |
+| `/architecture/` | `src/pages/architecture.astro` | 301 redirect to `/features/` |
+| `/software/` | `src/pages/software/index.astro` | Software automation solutions hub (EN) |
+| `/{slug}-ai-automation/` | `src/pages/{slug}-ai-automation.astro` | 14 software solution pages from `SOFTWARE_SOLUTIONS` (zapier, slack, gmail, google-drive, hubspot, attio, jira, notion, whatsapp, telegram, claude-code, codex, opencode, google-calendar) (EN) |
 | `/use-cases/` | `src/pages/use-cases/index.astro` | Use cases hub (EN) |
 | `/use-cases/design/` | `src/pages/use-cases/design/index.astro` | Live Design department use case (EN) |
+| `/use-cases/analytics/` | `src/pages/use-cases/analytics/index.astro` | Analytics department use case (EN) |
+| `/use-cases/seo/` | `src/pages/use-cases/seo/index.astro` | SEO department use case (EN) |
+| `/use-cases/marketing/` | `src/pages/use-cases/marketing/index.astro` | Marketing department use case (EN) |
+| `/use-cases/content/` | `src/pages/use-cases/content/index.astro` | Content department use case (EN) |
+| `/contact/thank-you/` | `src/pages/contact/thank-you.astro` | Contact form success page (`noindex`) (EN) |
 | `/use-cases/design/gallery/` | `src/pages/use-cases/design/gallery.astro` | Build-driven Design template gallery (EN) |
 | `/fa/use-cases/design/` | `src/pages/fa/use-cases/design/index.astro` | Live Design department use case (FA) |
 | `/fa/use-cases/design/gallery/` | `src/pages/fa/use-cases/design/gallery.astro` | Build-driven Design template gallery (FA) |
+| `/fa/architecture/` | `src/pages/fa/architecture.astro` | 301 redirect to `/fa/features/` |
+| `/fa/posts/` | `src/pages/fa/posts/index.astro` | 301 redirect to `/fa/notes/` |
+| `/fa/software/` and `/fa/{slug}-ai-automation/` | FA thin wrappers | Software solutions hub + 14 pages (FA) |
+| `/fa/use-cases/{analytics,seo,marketing,content}/` | FA thin wrappers | Department use cases (FA) |
 | `/spielos-v1/` | `src/pages/spielos-v1.astro` | Archived legacy product page (`noindex`) |
 | `/shayan/` | `src/pages/shayan.astro` | 301 redirect to `/founder/` |
 | `/posts/` | `src/pages/posts/index.astro` | 301 redirect to `/notes/` |
@@ -190,17 +202,19 @@ Persian headings use heavier font-weight (h1=800, h2=700, h3+=600) via `[dir="rt
 
 Single source of truth: `src/config.ts` → `NAV_LINKS`.
 
-Default nav: Services → `/services/`, How it works → `/features/` (flat
-two-category dropdown: Features → `/features/` with Director,
-Departments, Workflows, Agents, Skills, Evals, Connections, Artifacts, and
-Use Cases → `/use-cases/` with Design → `/use-cases/design/`), Live →
-`/live/`, Notes → `/notes/`, Founder → `/founder/`.
-The How it works dropdown is rendered by `src/components/Nav.astro` from the
-`NavLink.children` category model in `src/config.ts`: one flat mega menu with
-no second-level sub-menus or flyouts (desktop hover-intent with a leave-delay
-and a transparent trigger-to-panel bridge, focus/Enter open, Esc close,
-tap-toggle for coarse pointers, mobile category accordion, RTL-aware). Every
-menu item carries its own distinct boxicon from `NAV_ITEM_ICONS`.
+Default nav: Services → `/services/`, Solutions → `/features/`
+(three-category dropdown: By Departments → `/use-cases/` with Design,
+Content, Marketing, SEO, Analytics; By Software → `/software/` with the 14
+`SOFTWARE_SOLUTIONS` pages; Features → `/features/` with Director,
+Departments, Workflows, Agents, Skills, Evals, Connections, Artifacts),
+Live → `/live/`, Notes → `/notes/`, Founder → `/founder/`.
+The Solutions dropdown is rendered by `src/components/Nav.astro` from the
+`NavLink.children` category model in `src/config.ts`: one mega menu with three
+labeled categories and no second-level sub-menus or flyouts (desktop
+hover-intent with a leave-delay and a transparent trigger-to-panel bridge,
+focus/Enter open, Esc close, tap-toggle for coarse pointers, mobile category
+accordion, RTL-aware). Every menu item carries its own distinct boxicon from
+`NAV_ITEM_ICONS`, defined locally in `src/components/Nav.astro`.
 Primary navbar CTA: Book a Discovery Call (FREE) → native Cal embed trigger button
 (`data-cal-link="shayanspiel/15min"`). Clicking it opens Cal's booking embed
 (popup) right on the page — flow.digital pattern — with no navigation away from
@@ -226,7 +240,9 @@ assets under the Design department and does not share website DOM or CSS.
 
 Single source of truth: `src/config.ts` → `FOOTER_LINKS`.
 
-Default footer: SpielOS, Agent Brief, Services, Features, Live, Notes, Founder, Contact.
+Default footer (`FOOTER_LINKS.default`): Agent Brief, Services, Features, Live,
+Notes, Founder, Contact. The "SpielOS" wordmark is rendered from `SITE.name`
+as a text label, not a link.
 Social icons: X, GitHub.
 Copyright: dynamic year, "SpielOS is independently built by Shayan Spiel."
 

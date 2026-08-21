@@ -26,7 +26,7 @@ export const SOFTWARE_SOLUTIONS: SoftwareSolution[] = [
     name: "Zapier",
     slug: "zapier-ai-automation",
     keyword: "Zapier AI Automation",
-    iconClass: "bx-bolt-circle",
+    iconClass: "bxs-bolt",
     taglineEn: "Zapier connects your tools. We make it think.",
     taglineFa: "زپیر ابزارهات رو به هم وصل می‌کنه؛ ما بهش هوش می‌دیم.",
     painEn: "Every new lead or order still lands as a row somebody has to copy, check, and chase by hand — Zapier moves the data, but nobody is deciding inside it.",

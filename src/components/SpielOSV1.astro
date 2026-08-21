@@ -1,6 +1,7 @@
 ---
 import SectionHeader from "./sections/SectionHeader.astro";
 import { type Locale, t } from "../i18n/translations";
+import { SOCIAL, SITE } from "../config";
 
 export interface Props {
   locale?: Locale;
@@ -236,7 +237,7 @@ const faqItems = [
             </li>
           ))}
         </ul>
-        <a href="https://github.com/shayanspiel" target="_blank" rel="noopener noreferrer" class="mt-8 inline-flex items-center justify-center rounded-md border border-border bg-panel px-6 h-11 text-sm font-medium hover:bg-panel-raised hover:border-border-strong transition-all">
+        <a href={SOCIAL.github} target="_blank" rel="noopener noreferrer" class="mt-8 inline-flex items-center justify-center rounded-md border border-border bg-panel px-6 h-11 text-sm font-medium hover:bg-panel-raised hover:border-border-strong transition-all">
           <i class="bx bxl-github icon-base mr-2"></i>
           {t(L, "spielosV1.pricing.card1.cta")}
         </a>
@@ -266,7 +267,7 @@ const faqItems = [
             </li>
           ))}
         </ul>
-        <a href="https://x.com/ShayanSpiel" target="_blank" rel="noopener noreferrer" class="mt-8 inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20">
+        <a href={SOCIAL.x} target="_blank" rel="noopener noreferrer" class="mt-8 inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20">
           {t(L, "spielosV1.pricing.card2.cta")}
           <i class="bx bx-link-external icon-base ml-2"></i>
         </a>
@@ -345,16 +346,16 @@ const faqItems = [
       <span class="text-primary">{t(L, "spielosV1.cta.title2")}</span>
     </h2>
     <p class="mt-5 text-sm text-muted-foreground max-w-xl mx-auto leading-relaxed" data-aos="fade-up">{t(L, "spielosV1.cta.desc")}</p>
-    <a href="https://x.com/ShayanSpiel" target="_blank" rel="noopener noreferrer" class="mt-8 inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20" data-aos="fade-up">
+    <a href={SOCIAL.x} target="_blank" rel="noopener noreferrer" class="mt-8 inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20" data-aos="fade-up">
       {t(L, "spielosV1.cta.cta")}
       <i class="bx bx-link-external icon-base ml-2"></i>
     </a>
   </div>
 </section>
 
-<script is:inline define:vars={{ cliCommand }}>
+<script is:inline define:vars={{ cliCommand, siteUrl: SITE.url }}>
 (function() {
-  var COPY_COMMAND = cliCommand || 'curl -fsSL https://spielos.xyz/install | bash';
+  var COPY_COMMAND = cliCommand || `curl -fsSL ${siteUrl}/install | bash`;
 
   /* ---- Copy to clipboard (both CLI boxes) ---- */
   function setupCopy(boxId, btnId, iconId) {

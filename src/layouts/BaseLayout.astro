@@ -99,8 +99,9 @@ const lang = locale === "fa" ? "fa" : "en";
       (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(cal, ar); }; const namespace = ar[1]; api.q = api.q || []; typeof namespace === "string" ? (cal.ns[namespace] = api) : (p(cal, api)); return; } p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
     </script>
 
-    <!-- hreflang alternates for i18n SEO -->
-    {(() => {
+    <!-- hreflang alternates for i18n SEO (indexable pages only —
+         noindex pages should not publish alternate clusters) -->
+    {!robots.includes("noindex") && (() => {
       const path = Astro.url.pathname;
       const enPath = locale === "fa" ? path.replace(/^\/fa/, "") || "/" : path;
       const faPath = locale === "fa" ? path : `/fa${path}`;
@@ -301,10 +302,10 @@ const lang = locale === "fa" ? "fa" : "en";
           if(link){
             var href = link.getAttribute('href') || '';
 
-            /* Discovery Call booking CTAs: internal link to the on-site
-               /book/ page with the native Cal embed. Record the click as the
-               dedicated PostHog/GA event and let the browser navigate — no
-               overlay, no preventDefault, nothing to wait on. */
+            /* Discovery Call booking CTAs: native Cal embed triggers
+               (data-cal-link). Cal opens its own popup overlay on the page —
+               no navigation away, no custom modal. Record the click as the
+               dedicated PostHog/GA event without blocking the popup. */
             if(isBookingTarget(link)){
               track('booking_cta_clicked', {
                 page: getPage(),

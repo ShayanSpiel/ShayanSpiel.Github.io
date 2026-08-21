@@ -11,8 +11,8 @@
  * noindex documents so the shared SEO audit can still verify them.
  * Exit 0 = ok, exit 1 = broken sitemap found.
  */
-import { readFileSync, readdirSync, writeFileSync, statSync } from "fs";
-import { join, extname } from "path";
+import { readFileSync, readdirSync, writeFileSync, statSync, mkdirSync } from "fs";
+import { join, extname, dirname } from "path";
 
 const dist = join(process.cwd(), "dist");
 const base = "https://spielos.xyz";
@@ -75,6 +75,12 @@ if (chunkFiles.length === 1) {
   writeFileSync(sitemapXml, content);
   console.log(`postbuild-sitemap: wrote single-urlset sitemap.xml from ${chunkFiles[0]}`);
 } else {
+  // Filter noindex/redirect URLs out of every chunk BEFORE indexing so the
+  // multi-chunk path gets the same canonical filtering as the single-chunk path.
+  for (const f of chunkFiles) {
+    const chunkPath = join(dist, f);
+    writeFileSync(chunkPath, filterNonCanonical(readFileSync(chunkPath, "utf8")));
+  }
   const entries = chunkFiles
     .map((f) => `    <sitemap><loc>${new URL(f, SITE).href}</loc></sitemap>`)
     .join("\n");
@@ -131,6 +137,7 @@ for (const { source, destination, target } of redirectShells) {
     console.error(`postbuild-sitemap: redirect source missing: ${sourcePath}`);
     process.exit(1);
   }
+  mkdirSync(dirname(destinationPath), { recursive: true });
   writeFileSync(destinationPath, minimalRedirectDoc(target));
 }
 

@@ -1,7 +1,7 @@
 ---
 import SocialIcons from "./SocialIcons.astro";
 import LanguageSwitcher from "./LanguageSwitcher.astro";
-import { FOOTER_LINKS } from "../config";
+import { FOOTER_LINKS, SITE } from "../config";
 import { type Locale, t } from "../i18n/translations";
 import { localizePath } from "../i18n";
 
@@ -35,7 +35,7 @@ const copyrightText = copyright || t(locale, "footer.copyright", { year });
   <div class="mx-auto max-w-6xl px-6">
     <div class="flex flex-col items-center justify-between gap-3 sm:flex-row">
       <div class="flex items-center gap-1.5 text-2xs text-muted-foreground">
-        <span class="font-semibold text-foreground-strong">SpielOS</span>
+        <span class="font-semibold text-foreground-strong">{SITE.name}</span>
         <span aria-hidden="true">·</span>
         <span>{copyrightText}</span>
       </div>

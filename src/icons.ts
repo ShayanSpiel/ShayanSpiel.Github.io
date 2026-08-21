@@ -24,11 +24,11 @@ export const VALID_BOXICONS = [
   'bx-time-five',        // warning / time / waiting
 
   // Actions
-  'bx-bolt-circle',      // energy / lightning / speed (note: bx-bolt does NOT exist)
+  'bxs-bolt',            // energy / lightning / speed (solid; plain bx-bolt does NOT exist)
   'bx-rocket',           // launch / fast / ship
   'bx-search',           // find / search
   'bx-send',             // submit / send
-  'bx-play-circle',      // play / execute / run
+  'bx-play',             // play / execute / run
 
   // Communication
   'bx-message',          // message / comment
@@ -42,7 +42,7 @@ export const VALID_BOXICONS = [
   'bx-server',           // server / infrastructure
   'bx-layer',            // layers / stack / context
   'bx-chip',             // chip / hardware
-  'bx-code-alt',         // code / development (also used for GitHub since bxl-github doesn't exist)
+  'bx-code-alt',         // code / development (GitHub in notes uses bxl-github elsewhere)
   'bx-file',             // file / document
   'bx-data',             // data / database
   'bx-book',             // book
@@ -113,11 +113,11 @@ export const iconMap: Record<string, string> = {
   'alert-triangle':'bx-error',
 
   // Actions / Energy
-  'zap':           'bx-bolt-circle',      // bx-bolt does NOT exist
+  'zap':           'bxs-bolt',            // solid bolt; plain bx-bolt does NOT exist
   'rocket':        'bx-rocket',
   'search':        'bx-search',
   'send':          'bx-send',
-  'play':          'bx-play-circle',
+  'play':          'bx-play',
 
   // Objects / Tech
   'globe':         'bx-globe',
