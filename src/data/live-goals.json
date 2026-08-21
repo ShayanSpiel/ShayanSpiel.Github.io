@@ -263,7 +263,7 @@
       "display_title_fa": "گفت‌وگوهای فروش باکیفیت رو بیشتر کنیم",
       "goal_status": "active",
       "id": "goal-email-campaign-20260810",
-      "latest_activity_at": "2026-08-20T21:46:30.994141+00:00",
+      "latest_activity_at": "2026-08-21T01:46:52.699858+00:00",
       "metric": "reply_rate",
       "name": "Resume daily English outbound to 30% reply rate",
       "operator": "ge",
@@ -1554,16 +1554,16 @@
       "created_at": "2026-08-14T22:09:14.548799+00:00",
       "goal_status": "active",
       "id": "goal-email-send-20260815-b5",
-      "latest_activity_at": "2026-08-20T21:46:30.994141+00:00",
+      "latest_activity_at": "2026-08-21T01:46:52.699858+00:00",
       "metric": "reply_rate",
       "name": "English outbound send batch 5: next 50 from remaining queue",
       "operator": "ge",
       "owner_id": "outbound",
       "parent_id": "goal-email-campaign-20260810",
-      "run_status": "waiting",
-      "stage": "EVALUATE",
+      "run_status": "completed",
+      "stage": "OBSERVE",
       "target": 0.3,
-      "updated_at": "2026-08-20T21:46:30.921987+00:00"
+      "updated_at": "2026-08-21T01:46:52.698907+00:00"
     },
     {
       "created_at": "2026-08-15T00:32:48.129043+00:00",
@@ -2559,7 +2559,7 @@
       "created_at": "2026-08-18T20:38:59.925330+00:00",
       "goal_status": "active",
       "id": "goal-email-send-20260819-b18",
-      "latest_activity_at": "2026-08-20T21:51:13.666246+00:00",
+      "latest_activity_at": "2026-08-21T01:45:19.138836+00:00",
       "metric": "reply_rate",
       "name": "English outbound send batch 18: proven-pattern unique-domain fill",
       "operator": "ge",
@@ -2568,7 +2568,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-20T21:51:13.663717+00:00"
+      "updated_at": "2026-08-21T01:45:19.137558+00:00"
     },
     {
       "created_at": "2026-08-18T21:05:18.767738+00:00",
@@ -2814,7 +2814,7 @@
       "created_at": "2026-08-19T14:29:33.637386+00:00",
       "goal_status": "active",
       "id": "goal-de9ae154ee",
-      "latest_activity_at": "2026-08-20T21:52:04.869909+00:00",
+      "latest_activity_at": "2026-08-21T01:46:06.502619+00:00",
       "metric": "reply_rate",
       "name": "English outbound send batch 19: next 50 from remaining queue (send-all push)",
       "operator": "ge",
@@ -2823,13 +2823,13 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-20T21:52:04.866664+00:00"
+      "updated_at": "2026-08-21T01:46:06.501383+00:00"
     },
     {
       "created_at": "2026-08-19T17:16:37.304959+00:00",
       "goal_status": "active",
       "id": "goal-3fd23da75c",
-      "latest_activity_at": "2026-08-20T21:45:34.302748+00:00",
+      "latest_activity_at": "2026-08-21T01:40:49.319853+00:00",
       "metric": "reply_rate",
       "name": "English outbound send batch 20: next 50 from remaining queue (send-all push)",
       "operator": "ge",
@@ -2838,13 +2838,13 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-20T21:45:34.297345+00:00"
+      "updated_at": "2026-08-21T01:40:49.318520+00:00"
     },
     {
       "created_at": "2026-08-19T17:16:37.493171+00:00",
       "goal_status": "active",
       "id": "goal-2676f113ff",
-      "latest_activity_at": "2026-08-20T21:47:44.733670+00:00",
+      "latest_activity_at": "2026-08-21T01:44:33.820844+00:00",
       "metric": "reply_rate",
       "name": "English outbound send batch 21: final 22 from remaining queue (send-all push)",
       "operator": "ge",
@@ -2853,7 +2853,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-20T21:47:44.722641+00:00"
+      "updated_at": "2026-08-21T01:44:33.819424+00:00"
     },
     {
       "created_at": "2026-08-19T17:40:20.472091+00:00",
@@ -2874,7 +2874,7 @@
       "created_at": "2026-08-19T17:42:41.270340+00:00",
       "goal_status": "active",
       "id": "goal-a4acfeb32f",
-      "latest_activity_at": "2026-08-20T21:46:33.238041+00:00",
+      "latest_activity_at": "2026-08-21T01:44:13.671287+00:00",
       "metric": "qualified_social_leads",
       "name": "Research pipeline: grow fully verified English lead pool to 1000 (continuous - don't stop)",
       "operator": "ge",
@@ -2883,7 +2883,7 @@
       "run_status": "blocked",
       "stage": "ACT",
       "target": 1000,
-      "updated_at": "2026-08-20T21:46:33.219791+00:00"
+      "updated_at": "2026-08-21T01:44:13.668925+00:00"
     },
     {
       "created_at": "2026-08-19T20:40:22.805614+00:00",
@@ -3274,7 +3274,7 @@
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 0.3,
-    "updated_at": "2026-08-20T21:52:04.869909+00:00"
+    "updated_at": "2026-08-21T01:46:06.502619+00:00"
   },
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
@@ -3294,7 +3294,7 @@
       "run_id": "run-c47e478ee3",
       "run_status": "waiting",
       "stage": "EVALUATE",
-      "updated_at": "2026-08-20T21:52:04.869909+00:00"
+      "updated_at": "2026-08-21T01:46:06.502619+00:00"
     },
     "heartbeat": {
       "business_value": null,
@@ -3309,16 +3309,16 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-20T21:52:04.869909+00:00"
+      "updated_at": "2026-08-21T01:46:06.502619+00:00"
     },
-    "last_activity_at": "2026-08-20T21:52:04.869909+00:00",
-    "last_sync_at": "2026-08-20T21:52:05.017093+00:00",
+    "last_activity_at": "2026-08-21T01:46:52.699858+00:00",
+    "last_sync_at": "2026-08-21T01:46:52.789306+00:00",
     "state": "running"
   },
   "totals": {
     "approvals": 247,
-    "decisions": 559,
-    "evidence": 9966,
+    "decisions": 585,
+    "evidence": 10280,
     "goals_abandoned": 27,
     "goals_achieved": 157,
     "goals_active": 29,
