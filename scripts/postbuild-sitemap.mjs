@@ -91,39 +91,15 @@ if (!/<loc>https:\/\/spielos\.xyz/.test(raw)) {
 console.log("postbuild-sitemap: dist/sitemap.xml OK");
 
 const redirectShells = [
+  // Legacy URL guards for real historical routes (old blog, old brand paths,
+  // retired waitlist). Fictional feature-page redirects were removed with
+  // their stub pages.
+  { source: "founder/index.html", destination: "about/index.html", target: "/founder/" },
+  { source: "founder/index.html", destination: "shayan/index.html", target: "/founder/" },
+  { source: "notes/index.html", destination: "posts/index.html", target: "/notes/" },
   { source: "features/index.html", destination: "waitlist/index.html", target: "/features/" },
-  { source: "fa/features/index.html", destination: "fa/waitlist/index.html", target: "/fa/features/" },
-  // Fictional feature pages now 301 to the real block pages they describe.
-  { source: "features/director/index.html", destination: "features/chat/index.html", target: "/features/director/" },
-  { source: "features/director/index.html", destination: "features/chat/director-mode/index.html", target: "/features/director/" },
-  { source: "features/workflows/index.html", destination: "features/chat/direct-mode/index.html", target: "/features/workflows/" },
-  { source: "features/index.html", destination: "features/context/index.html", target: "/features/" },
-  { source: "features/index.html", destination: "features/context/files/index.html", target: "/features/" },
-  { source: "features/index.html", destination: "features/context/strategy/index.html", target: "/features/" },
-  { source: "features/index.html", destination: "features/context/memory/index.html", target: "/features/" },
-  { source: "features/index.html", destination: "features/harness/index.html", target: "/features/" },
-  { source: "features/agents/index.html", destination: "features/harness/agents/index.html", target: "/features/agents/" },
-  { source: "features/skills/index.html", destination: "features/harness/skills/index.html", target: "/features/skills/" },
-  { source: "features/workflows/index.html", destination: "features/harness/workflows/index.html", target: "/features/workflows/" },
-  { source: "features/evals/index.html", destination: "features/harness/evals/index.html", target: "/features/evals/" },
-  { source: "features/index.html", destination: "features/infrastructure/index.html", target: "/features/" },
-  { source: "features/index.html", destination: "features/infrastructure/providers/index.html", target: "/features/" },
-  { source: "features/connections/index.html", destination: "features/infrastructure/connections/index.html", target: "/features/connections/" },
-  { source: "fa/features/director/index.html", destination: "fa/features/chat/index.html", target: "/fa/features/director/" },
-  { source: "fa/features/director/index.html", destination: "fa/features/chat/director-mode/index.html", target: "/fa/features/director/" },
-  { source: "fa/features/workflows/index.html", destination: "fa/features/chat/direct-mode/index.html", target: "/fa/features/workflows/" },
-  { source: "fa/features/index.html", destination: "fa/features/context/index.html", target: "/fa/features/" },
-  { source: "fa/features/index.html", destination: "fa/features/context/files/index.html", target: "/fa/features/" },
-  { source: "fa/features/index.html", destination: "fa/features/context/strategy/index.html", target: "/fa/features/" },
-  { source: "fa/features/index.html", destination: "fa/features/context/memory/index.html", target: "/fa/features/" },
-  { source: "fa/features/index.html", destination: "fa/features/harness/index.html", target: "/fa/features/" },
-  { source: "fa/features/agents/index.html", destination: "fa/features/harness/agents/index.html", target: "/fa/features/agents/" },
-  { source: "fa/features/skills/index.html", destination: "fa/features/harness/skills/index.html", target: "/fa/features/skills/" },
-  { source: "fa/features/workflows/index.html", destination: "fa/features/harness/workflows/index.html", target: "/fa/features/workflows/" },
-  { source: "fa/features/evals/index.html", destination: "fa/features/harness/evals/index.html", target: "/fa/features/evals/" },
-  { source: "fa/features/index.html", destination: "fa/features/infrastructure/index.html", target: "/fa/features/" },
-  { source: "fa/features/index.html", destination: "fa/features/infrastructure/providers/index.html", target: "/fa/features/" },
-  { source: "fa/features/connections/index.html", destination: "fa/features/infrastructure/connections/index.html", target: "/fa/features/connections/" },
+  { source: "fa/founder/index.html", destination: "fa/about/index.html", target: "/fa/founder/" },
+  { source: "fa/notes/index.html", destination: "fa/posts/index.html", target: "/fa/notes/" },
 ];
 
 function minimalRedirectDoc(target) {

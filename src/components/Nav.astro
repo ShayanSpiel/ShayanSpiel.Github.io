@@ -101,8 +101,8 @@ const ariaCurrent = (href: string) => (isCurrent(href) ? "page" : undefined);
       {navLinks.map((link) =>
         link.children && link.children.length > 0 ? (
           <div class="nav-group relative flex items-center" data-nav-group>
-            <a
-              href={link.href}
+            <button
+              type="button"
               aria-haspopup="true"
               aria-expanded="false"
               data-nav-trigger
@@ -114,7 +114,7 @@ const ariaCurrent = (href: string) => (isCurrent(href) ? "page" : undefined);
               {link.live && <span class="nav-live-dot" aria-hidden="true"></span>}
               {link.label}
               <i class="bx bx-chevron-down rtl-flip icon-sm nav-group-chevron" aria-hidden="true"></i>
-            </a>
+            </button>
             <div
               class:list={[
                 "nav-popover absolute start-0 top-full mt-2 max-w-[calc(100vw-2rem)] rounded-md border border-border bg-panel shadow-popover p-2",

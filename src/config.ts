@@ -140,6 +140,8 @@ export interface NavChildLink {
 export interface NavLink {
   label: string;
   href: string;
+  /** Dropdown trigger only — renders as a button, never navigates. */
+  triggerOnly?: boolean;
   /** Renders a small liveness ping dot beside the label. */
   live?: boolean;
   /** Category blocks rendered as one flat two-column mega menu on desktop
@@ -153,6 +155,7 @@ export const NAV_LINKS: { default: NavLink[]; showcase: NavLink[] } = {
     {
       label: "Solutions",
       href: "/features/",
+      triggerOnly: true,
       children: [
         {
           label: "By Departments",

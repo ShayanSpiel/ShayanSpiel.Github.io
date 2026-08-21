@@ -1,13 +1,16 @@
 ---
 import { type Locale, t } from "../i18n/translations";
-import { getSwitchLocaleUrl } from "../i18n";
+import { getSwitchLocaleUrl, localizePath } from "../i18n";
 
 export interface Props {
   locale?: Locale;
 }
 
 const { locale = "en" } = Astro.props;
-const switchPath = getSwitchLocaleUrl(Astro.url.pathname, locale);
+// The 404 page is a single global document — switching locale there can
+// only land on another missing path, so send the switcher home instead.
+const is404 = /^\/(fa\/)?404\/?$/.test(Astro.url.pathname);
+const switchPath = is404 ? localizePath("/", locale) : getSwitchLocaleUrl(Astro.url.pathname, locale);
 const switchLabel = locale === "en" ? t(locale, "common.switchToFa") : t(locale, "common.switchToEn");
 ---
 
