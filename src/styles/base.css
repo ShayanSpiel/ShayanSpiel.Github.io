@@ -323,6 +323,19 @@ input[type="number"]::-webkit-inner-spin-button:hover {
   animation: spiel-drawer-out var(--duration-slow) var(--ease) both;
 }
 
+/*
+ * Bounce-subtle — gentle downward pulse for CTA arrow hints.
+ * Respects reduced-motion below.
+ */
+@keyframes bounce-subtle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(4px); }
+}
+
+.animate-bounce-subtle {
+  animation: bounce-subtle 1.8s ease-in-out infinite;
+}
+
 @keyframes skeleton-pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.5; }
@@ -402,7 +415,8 @@ input[type="number"]::-webkit-inner-spin-button:hover {
   }
 
   .animate-pulse,
-  .animate-bounce {
+  .animate-bounce,
+  .animate-bounce-subtle {
     animation: none !important;
   }
 }

@@ -1,31 +1,31 @@
 {
   "current_run": {
-    "created_at": "2026-08-22T14:44:25.256702+00:00",
-    "goal_id": "goal-apply-funnel-opt-20260822",
-    "goal_name": "Apply funnel optimization: retire booking-call copy drift, wizard anchor alignment, hero arrow animation, wizard copy, FAQ book-a-call link",
-    "owner_id": "director",
-    "run_id": "run-9ed3ea473e",
+    "created_at": "2026-08-22T17:17:25.340801+00:00",
+    "goal_id": "goal-87a4572a0f",
+    "goal_name": "Research pipeline: grow fully verified English lead pool to 2000 (continuous - don't stop)",
+    "owner_id": "outbound",
+    "run_id": "run-9ff4b879f6",
     "run_status": "blocked",
     "stage": "DECIDE",
-    "updated_at": "2026-08-22T14:44:27.378033+00:00"
+    "updated_at": "2026-08-22T19:13:51.570915+00:00"
   },
   "heartbeat": {
     "business_value": null,
     "business_value_fa": null,
     "display_title": null,
     "display_title_fa": null,
-    "goal_id": "goal-apply-funnel-opt-20260822",
-    "goal_name": "Apply funnel optimization: retire booking-call copy drift, wizard anchor alignment, hero arrow animation, wizard copy, FAQ book-a-call link",
-    "metric": "booked_calls",
+    "goal_id": "goal-87a4572a0f",
+    "goal_name": "Research pipeline: grow fully verified English lead pool to 2000 (continuous - don't stop)",
+    "metric": "qualified_social_leads",
     "operator": "ge",
-    "owner_id": "director",
+    "owner_id": "outbound",
     "run_status": "blocked",
     "stage": "DECIDE",
-    "target": 1,
-    "updated_at": "2026-08-22T14:44:27.378033+00:00"
+    "target": 2000,
+    "updated_at": "2026-08-22T19:13:51.570915+00:00"
   },
-  "last_activity_at": "2026-08-22T16:54:17.195534+00:00",
-  "last_sync_at": "2026-08-22T16:54:17.233189+00:00",
+  "last_activity_at": "2026-08-22T19:13:51.570915+00:00",
+  "last_sync_at": "2026-08-22T19:13:51.640443+00:00",
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
     "goal_name": "3 booked calls per day",
@@ -38,14 +38,14 @@
   "state": "running",
   "totals": {
     "approvals": 249,
-    "decisions": 733,
-    "evidence": 11183,
+    "decisions": 745,
+    "evidence": 12244,
     "goals_abandoned": 28,
     "goals_achieved": 159,
-    "goals_active": 29,
-    "goals_total": 219,
-    "hypotheses": 70,
+    "goals_active": 30,
+    "goals_total": 220,
+    "hypotheses": 71,
     "memory_claims": 5,
-    "runs": 242
+    "runs": 243
   }
 }

@@ -47,7 +47,7 @@ const breadcrumbJsonLd = {
         <p class="mx-auto mt-6 max-w-2xl text-lg font-semibold text-foreground-strong">{t(locale, "conversion.apply.hero.sub")}</p>
         <p class="mt-2 text-sm text-muted-foreground">{t(locale, "conversion.apply.hero.line1")}</p>
         <p class="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground">{t(locale, "conversion.apply.hero.intro1")} {t(locale, "conversion.apply.hero.intro2")} {t(locale, "conversion.apply.hero.intro3")}</p>
-        <a href="#free-review" class="mt-8 inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:-translate-y-px hover:brightness-110">{t(locale, "conversion.apply.cta.start")}<i class="bx bx-chevron-down icon-md ms-1"></i></a>
+        <a href="#free-review" class="mt-8 inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:-translate-y-px hover:brightness-110">{t(locale, "conversion.apply.cta.start")}<i class="bx bx-chevron-down icon-md ms-1 animate-bounce-subtle"></i></a>
       </div>
     </div>
   </section>
@@ -81,7 +81,7 @@ const breadcrumbJsonLd = {
   </section>
 
   <!-- WIZARD -->
-  <section id="free-review" class="relative overflow-hidden py-24 sm:py-32 scroll-mt-20">
+  <section id="free-review" class="relative overflow-hidden py-24 sm:py-32 scroll-mt-32">
     <div class="absolute inset-0 bg-panel-deep/50"></div>
     <div class="relative mx-auto max-w-5xl px-6" data-aos="fade-up">
       <div class="mb-8 max-w-2xl">
@@ -184,6 +184,16 @@ const breadcrumbJsonLd = {
     <div class="relative mx-auto max-w-3xl px-6">
       <SectionHeader label={t(locale, "conversion.apply.faq.label")} title={t(locale, "conversion.apply.faq.title")} />
       <FAQList locale={locale} items={faqs} keyPrefix="conversion.apply.faq" />
+    </div>
+  </section>
+
+  <!-- PREFER A CALL -->
+  <section class="relative py-12 sm:py-16">
+    <div class="mx-auto max-w-3xl px-6 text-center">
+      <a href="mailto:66shayan@gmail.com" class="inline-flex items-center gap-2 rounded-md border border-border bg-panel px-6 py-3 text-sm font-medium text-foreground-strong transition-all hover:border-border-strong hover:bg-panel-raised">
+        <i class="bx bx-phone icon-base" aria-hidden="true"></i>
+        Prefer a call? Book here
+      </a>
     </div>
   </section>
 
