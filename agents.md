@@ -48,18 +48,18 @@ rename, move, or modify any file under `src/components/showcase/*`.
 redirect wrappers to their localized Architecture routes. Do not add any other
 behavior to them.
 
-Every conversion CTA on the site books a free Discovery Call: the navbar CTA and all
-primary page CTAs are native Cal embed triggers — `<button data-cal-link="shayanspiel/15min"
-data-cal-config='{"layout":"month_view","theme":"dark"}'>` — the flow.digital
-pattern. Clicking a CTA opens Cal's own booking embed (popup) right on the page:
-no navigation away from the site, no direct cal.com tab, no custom modal wrapper.
-`app.cal.com` embed.js loads site-wide with preconnect so the popup opens as fast
-as possible. The Agent Brief page at `/services/agent-brief/` stays a purely
-informational page (framework rail, agent statement, define-together table,
-deliverable section); its hero CTA is also a native Cal embed trigger. Do not
-reintroduce an Agent Brief request form or modal, and do not reintroduce `/book/`
-navigation or direct cal.com links on any conversion CTA. The legacy waitlist is
-not a default CTA.
+The commercial funnel is Apply-first (owner directive 2026-08-22): every primary
+conversion CTA links to `/apply/` — **Apply — Free Review** — with the microcopy
+"Free review · No required call · See the scope before you pay". Contextual CTAs:
+"Show Us What Keeps Breaking" (DeSlopping contexts: codex/claude-code/opencode
+pages) and "Show Us the Work" (AI Workers contexts: software/use-case pages).
+Applying comes before payment; pricing supports the decision and never leads.
+Cal booking CTAs are retired — do not reintroduce `data-cal-link`, `cal.com`
+embed scripts, or a required-call step anywhere in the funnel. The two services
+are AI DeSlopping (fix broken AI-built software) and AI Workers (hand repetitive
+work to AI), sold at $2,990/month with one active build at a time. The Live page
+is proof ("WE RUN ON AI OURSELVES"), framed as credibility, not a conversion
+destination. The legacy waitlist is not a default CTA.
 
 ## Strategy — single source of truth
 
@@ -88,6 +88,8 @@ belong under `.spielos/artifacts/`, not strategy, assets, or skills.
 | `/contact/` | `src/pages/contact.astro` | Business contact form (EN) |
 | `/services/` | `src/pages/services.astro` | Buyer-facing AI implementation offer (EN) |
 | `/services/agent-brief/` | `src/pages/services/agent-brief.astro` | Agent Brief experience (EN) |
+| `/pricing/` | `src/pages/pricing.astro` | One monthly rate — value-first pricing page (EN) |
+| `/apply/` | `src/pages/apply.astro` | Apply — Free Review 3-step wizard (EN) |
 | `/live/` | `src/pages/live.astro` | Plain-language live company record (EN) |
 | `/waitlist/` | `src/pages/waitlist.astro` | 301 redirect to `/features/` |
 | `/about/` | `src/pages/about.astro` | 301 redirect to `/founder/` |
@@ -97,6 +99,8 @@ belong under `.spielos/artifacts/`, not strategy, assets, or skills.
 | `/fa/notes/` | `src/pages/fa/notes/index.astro` | Notes index (FA) |
 | `/fa/notes/[slug]/` | `src/pages/fa/notes/[...slug].astro` | Individual note pages (FA) |
 | `/fa/contact/` | `src/pages/fa/contact.astro` | Contact form (FA) |
+| `/fa/pricing/` | `src/pages/fa/pricing.astro` | Pricing page (FA thin wrapper) |
+| `/fa/apply/` | `src/pages/fa/apply.astro` | Apply wizard (FA thin wrapper) |
 | `/fa/live/` | `src/pages/fa/live.astro` | Plain-language live company record (FA) |
 | `/fa/waitlist/` | `src/pages/fa/waitlist.astro` | 301 redirect to `/fa/features/` |
 | `/fa/features/` | `src/pages/fa/features/index.astro` | Buyer-facing features — company lego blocks (FA) |
@@ -147,8 +151,8 @@ belong under `.spielos/artifacts/`, not strategy, assets, or skills.
 
 FA wrappers exist for all routes under `/fa/` following the thin-wrapper pattern.
 
-Do not add: pricing, enterprise, marketplace, solutions, consulting, templates,
-teams, or unrelated lead magnets. Services and implementation pages are part of
+Do not add: enterprise, marketplace, solutions, consulting, templates, teams,
+or unrelated lead magnets. Services and implementation pages are part of
 the current buyer-conversion architecture.
 
 ## i18n architecture
@@ -215,13 +219,10 @@ hover-intent with a leave-delay and a transparent trigger-to-panel bridge,
 focus/Enter open, Esc close, tap-toggle for coarse pointers, mobile category
 accordion, RTL-aware). Every menu item carries its own distinct boxicon from
 `NAV_ITEM_ICONS`, defined locally in `src/components/Nav.astro`.
-Primary navbar CTA: Book a Discovery Call (FREE) → native Cal embed trigger button
-(`data-cal-link="shayanspiel/15min"`). Clicking it opens Cal's booking embed
-(popup) right on the page — flow.digital pattern — with no navigation away from
-the site and no external cal.com tab. embed.js loads site-wide with preconnect to
-`app.cal.com` so the popup opens as fast as possible. Click tracking fires
-`booking_cta_clicked` (with `cta_type: book_call`) without blocking the popup;
-`booked_call` fires when Cal reports a successful booking. The Agent Brief page
+Nav order: Services → Solutions → Pricing → Live → Notes → Founder.
+Primary navbar CTA: **Apply — Free Review** → `/apply/` (desktop + mobile).
+Clicks fire `apply_cta_clicked` with their `data-cta-location`; the funnel event
+for a completed wizard submission is `apply_submitted`. The Agent Brief page
 remains informational at `/services/agent-brief/` and linked from the services
 page.
 

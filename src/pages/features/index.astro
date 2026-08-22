@@ -3,7 +3,7 @@ import Page from "../../layouts/Page.astro";
 import DepartmentMap from "../../components/architecture/DepartmentMap.astro";
 import OperatingLoop from "../../components/architecture/OperatingLoop.astro";
 import SectionHeader from "../../components/sections/SectionHeader.astro";
-import { SITE, BOOKING_LINK, BOOKING_CONFIG } from "../../config";
+import { SITE, APPLY_PATH } from "../../config";
 import { localizePath } from "../../i18n";
 import { type Locale, t } from "../../i18n/translations";
 
@@ -56,7 +56,7 @@ const breadcrumbJsonLd = {
       <h1 class="mt-4 text-4xl font-extrabold leading-tightest tracking-tight text-foreground-strong sm:text-6xl">{t(locale, "features.hero.titleLead")}<br /><span class="text-primary">{t(locale, "features.hero.titleAccent")}</span></h1>
       <p class="mx-auto mt-6 max-w-3xl text-base leading-relaxed text-muted-foreground">{t(locale, "features.hero.desc")}</p>
       <div class="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
-        <button type="button" data-cal-link={BOOKING_LINK} data-cal-config={JSON.stringify(BOOKING_CONFIG)} data-cal-cta data-features-brief class="inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground transition-all hover:brightness-110">{t(locale, "cta.bookDiscoveryCall")}</button>
+        <a href={localizePath(APPLY_PATH, locale)} class="inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground transition-all hover:brightness-110">{t(locale, "cta.apply")}</a>
         <a href={localizePath("/live/", locale)} data-features-live class="inline-flex h-11 items-center justify-center rounded-md border border-border bg-panel px-6 text-sm font-medium text-foreground transition-all hover:border-border-strong hover:bg-panel-raised">{t(locale, "features.hero.primary")}</a>
       </div>
     </div>
@@ -151,7 +151,7 @@ const breadcrumbJsonLd = {
     <div class="relative mx-auto max-w-3xl px-6 text-center" data-aos="fade-up">
       <h2 class="text-3xl font-bold tracking-tight text-foreground-strong sm:text-4xl">{t(locale, "architecture.cta.title")}</h2>
       <p class="mt-4 text-base leading-relaxed text-muted-foreground">{t(locale, "architecture.cta.desc")}</p>
-      <button type="button" data-cal-link={BOOKING_LINK} data-cal-config={JSON.stringify(BOOKING_CONFIG)} data-cal-cta class="mt-8 inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground transition-all hover:brightness-110">{t(locale, "cta.bookDiscoveryCall")}</button>
+      <a href={localizePath(APPLY_PATH, locale)} class="mt-8 inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground transition-all hover:brightness-110">{t(locale, "cta.apply")}</a>
     </div>
   </section>
 

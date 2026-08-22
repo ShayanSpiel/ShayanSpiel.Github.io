@@ -1201,7 +1201,23 @@ class Runtime:
                                           if item["goal_id"] == goal_id]}
 
     def list_goals(self) -> list[dict]:
-        return [{"goal": goal, "cycle": self.store.cycle(goal["id"])} for goal in self.store.goals()]
+        """All goals with their current cycle; malformed goals are skipped.
+
+        change-a8869554dd (runner-resilience-1): a goal row without a cycle
+        row used to raise KeyError here and kill every caller that enumerates
+        goals — including the runner watch loop. One malformed row must never
+        stop the whole company; skip it with a warning instead.
+        """
+        rows = []
+        for goal in self.store.goals():
+            try:
+                cycle = self.store.cycle(goal["id"])
+            except KeyError:
+                logger.warning("skipping goal %s: no cycle row (malformed goal)",
+                               goal["id"])
+                continue
+            rows.append({"goal": goal, "cycle": cycle})
+        return rows
 
     def goal_summary(self, goal_id: str) -> dict:
         rows = self.store.goal_summaries(goal_id=goal_id, limit=1)

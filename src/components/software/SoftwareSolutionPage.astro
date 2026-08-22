@@ -179,6 +179,7 @@ const breadcrumbJsonLd = {
     locale={locale}
     title={t(locale, "softwarePage.cta.title", { name })}
     description={t(locale, "softwarePage.cta.desc", { name })}
+    ctaLabel={["claude-code-ai-automation", "codex-ai-automation", "opencode-ai-automation"].includes(solution.slug) ? t(locale, "cta.showBreaking") : t(locale, "cta.showWork")}
   />
   <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
 </Page>

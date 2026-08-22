@@ -1,6 +1,6 @@
 ---
 import { type Locale } from "../../i18n/translations";
-import { BOOKING_LINK, BOOKING_CONFIG } from "../../config";
+import { APPLY_PATH } from "../../config";
 import Breadcrumbs from "./Breadcrumbs.astro";
 
 export interface Props {
@@ -41,16 +41,13 @@ const { locale = "en", breadcrumbs, label, title, description, cta } = Astro.pro
             {cta.label}
           </a>
         ) : (
-          <button
-            type="button"
-            data-cal-link={BOOKING_LINK}
-            data-cal-config={JSON.stringify(BOOKING_CONFIG)}
-            data-cal-cta
+          <a
+            href={APPLY_PATH}
             data-cta-location="feature_hero"
             class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20"
           >
             {cta.label}
-          </button>
+          </a>
         )}
       </div>
     )}

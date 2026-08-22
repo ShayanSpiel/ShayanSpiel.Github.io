@@ -39,7 +39,8 @@ def format_utc(value) -> str:
 
 
 def _why_next_for_run(run_status: str, goal_status: str, resume_at,
-                      data: dict | None) -> str | None:
+                      data: dict | None, *, experiment=None,
+                      resource_conflict: str | None = None) -> str | None:
     """Plain-language why/next line for a run in the compact projection.
 
     Machine tokens remain available unchanged; this adds one human-readable
@@ -78,14 +79,25 @@ def _why_next_for_run(run_status: str, goal_status: str, resume_at,
             return {"achieved": "completed — goal achieved",
                     "abandoned": "completed — goal abandoned",
                     "expired": "completed — goal expired"}[goal_status]
+        # change-a8869554dd (runner-resilience-1): read the proposed
+        # experiment from the persisted evaluation record (the caller passes
+        # it), not from the evaluate-step payload stored in cycle data — the
+        # payload never carried next_experiment, so valid continuations were
+        # misreported as "no valid next experiment".
         evaluation = data.get("evaluation") or {}
-        experiment = evaluation.get("next_experiment") or {}
+        experiment = experiment if experiment is not None else (
+            evaluation.get("next_experiment") or {})
         validity = evaluation.get("validity") or "business"
         if validity in {"invalid", "contaminated"}:
             return f"completed — evaluation is {validity}; continuation stopped"
-        if experiment.get("system_improvement"):
+        if isinstance(experiment, dict) and experiment.get("system_improvement"):
             return "completed — continuation blocked; a system improvement is required"
-        if experiment:
+        if isinstance(experiment, dict) and any(
+                experiment.get(key) not in (None, "", {}, [])
+                for key in ("action", "change_one_variable", "hypothesis", "variable")):
+            if resource_conflict:
+                return ("completed — next experiment ready; "
+                        f"{resource_conflict}")
             return "completed — next run starts automatically"
         return "completed — run finished; no valid next experiment"
     if run_status == "failed":
@@ -508,20 +520,59 @@ class Store:
                     (SELECT verdict FROM evaluations e WHERE e.goal_id=g.id
                         ORDER BY e.created_at DESC LIMIT 1) AS verdict,
                     (SELECT goal_met FROM evaluations e WHERE e.goal_id=g.id
-                        ORDER BY e.created_at DESC LIMIT 1) AS goal_met
+                        ORDER BY e.created_at DESC LIMIT 1) AS goal_met,
+                    (SELECT e.next_experiment_json FROM evaluations e WHERE e.goal_id=g.id
+                        AND e.run_id=c.id ORDER BY e.created_at DESC LIMIT 1)
+                        AS next_experiment_json
                 FROM goals g
                 JOIN cycles c ON c.goal_id=g.id AND c.sequence=(
                     SELECT MAX(c2.sequence) FROM cycles c2 WHERE c2.goal_id=g.id)
                 JOIN runs r ON r.id=c.id
                 {where}
                 ORDER BY g.updated_at DESC,g.id DESC LIMIT ?""", parameters).fetchall()
+        # change-a8869554dd (runner-resilience-1): one read of busy goals so a
+        # completed run with a valid next experiment can name the real blocker
+        # (a same-channel goal holding the shared resource) instead of the
+        # misleading "no valid next experiment".
+        busy: dict[str, dict[str, str]] = {}
+        with self.connect() as con2:
+            busy_rows = con2.execute("""SELECT g.id,g.owner_id,c.run_status
+                    FROM goals g
+                    JOIN cycles c ON c.goal_id=g.id AND c.sequence=(
+                        SELECT MAX(c2.sequence) FROM cycles c2 WHERE c2.goal_id=g.id)
+                    WHERE g.goal_status='active'
+                      AND c.run_status IN ('idle','running','awaiting_approval','waiting')"""
+            ).fetchall()
+        for row in busy_rows:
+            key = ("channel", "email") if row["owner_id"] in {"email", "outbound"} \
+                else ("owner", row["owner_id"])
+            busy.setdefault(key, {})[row["id"]] = row["run_status"]
+
         values = []
         for row in rows:
             item = dict(row)
             item["target"] = self._normalize(json.loads(item.pop("target_json")))
             data = self._normalize(json.loads(item.pop("data_json")))
+            raw_experiment = item.pop("next_experiment_json", None)
+            try:
+                experiment = json.loads(raw_experiment) if raw_experiment else None
+            except (TypeError, ValueError):
+                experiment = None
+            conflict = None
+            if item["run_status"] == "completed" and item["goal_status"] == "active":
+                owner = item["owner_id"]
+                if owner != "system-improvement":
+                    key = ("channel", "email") if owner in {"email", "outbound"} \
+                        else ("owner", owner)
+                    holders = {gid: status for gid, status in busy.get(key, {}).items()
+                               if gid != item["id"]}
+                    if holders:
+                        gid, status = next(iter(holders.items()))
+                        conflict = f"resource held by {gid} ({status})"
             item["why_next"] = _why_next_for_run(item["run_status"], item["goal_status"],
-                                                 item.get("resume_at"), data)
+                                                 item.get("resume_at"), data,
+                                                 experiment=experiment,
+                                                 resource_conflict=conflict)
             if item.get("goal_met") is not None:
                 item["goal_met"] = bool(item["goal_met"])
             values.append(item)

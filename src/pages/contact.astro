@@ -1,6 +1,6 @@
 ---
 import Page from "../layouts/Page.astro";
-import { FORMS, AUTHOR, SITE, SOCIAL, BOOKING_LINK, BOOKING_CONFIG } from "../config";
+import { FORMS, AUTHOR, SITE, SOCIAL, APPLY_PATH } from "../config";
 import { type Locale, t } from "../i18n/translations";
 import { localizePath } from "../i18n";
 
@@ -49,9 +49,9 @@ const breadcrumbJsonLd = {
       <div data-aos="fade-up" class="rounded-lg border border-border bg-panel p-6 sm:p-8 mb-6 text-center">
         <h2 class="text-lg font-semibold text-foreground-strong">{t(locale, "contact.booking.title")}</h2>
         <p class="mt-2 text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">{t(locale, "contact.booking.desc")}</p>
-        <button type="button" data-cal-link={BOOKING_LINK} data-cal-config={JSON.stringify(BOOKING_CONFIG)} data-cal-cta data-cta-location="contact_primary" class="mt-6 inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20">
-          {t(locale, "cta.bookDiscoveryCall")}
-        </button>
+        <a href={localizePath(APPLY_PATH, locale)} data-cta-location="contact_primary" class="mt-6 inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20">
+          {t(locale, "cta.apply")}
+        </a>
         <p class="mt-3 text-xs text-foreground-muted">{t(locale, "contact.booking.fallback")}</p>
       </div>
 

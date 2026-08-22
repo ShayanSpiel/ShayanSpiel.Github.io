@@ -106,17 +106,9 @@ export const FORMS = {
 export const WAITLIST_URL = "/features/";
 export const SERVICES_PATH = "/services/";
 
-// Discovery Call booking (owner directive 2026-08-19, v4 — flow.digital
-// pattern): every conversion CTA is a native Cal embed trigger
-// (<button data-cal-link=shayanspiel/15min data-cal-config='...'>). Clicking it
-// opens Cal's own booking embed (popup) right on the page — no navigation away
-// from the site, no external cal.com tab, no custom modal wrapper. embed.js +
-// preconnect load site-wide so the popup opens as fast as possible.
-export const BOOKING_URL = "https://cal.com/shayanspiel/15min?overlayCalendar=true";
-export const BOOKING_LINK = "shayanspiel/15min";
-// ui.color-scheme keeps the embed canvas dark so no white frame shows
-// around the booking shell even when the visitor OS prefers light.
-export const BOOKING_CONFIG = { layout: "month_view", theme: "dark", "ui.color-scheme": "dark" } as const;
+// Apply funnel (Phase 1): free-review application page fed by the pricing page.
+export const APPLY_PATH = "/apply/";
+
 
 // The Agent Brief request form was removed; the Agent Brief page is now purely
 // informational, so the canonical destination is the page itself (no #request).
@@ -192,6 +184,7 @@ export const NAV_LINKS: { default: NavLink[]; showcase: NavLink[] } = {
         },
       ],
     },
+    { label: "Pricing", href: "/pricing/" },
     { label: "Live", href: "/live/", live: true },
     { label: "Notes", href: "/notes/" },
     { label: "Founder", href: "/founder/" },
@@ -207,6 +200,8 @@ export const FOOTER_LINKS = {
   default: [
     { label: "Agent Brief", href: AGENT_BRIEF_REQUEST_PATH },
     { label: "Services", href: "/services/" },
+    { label: "Pricing", href: "/pricing/" },
+    { label: "Apply", href: APPLY_PATH },
     { label: "Features", href: "/features/" },
     { label: "Live", href: "/live/" },
     { label: "Notes", href: "/notes/" },

@@ -1,8 +1,9 @@
 ---
 import HomepageJourneyRail from "../components/HomepageJourneyRail.astro";
 import SectionHeader from "../components/sections/SectionHeader.astro";
+import FAQList from "../components/sections/FAQList.astro";
 import Page from "../layouts/Page.astro";
-import { AUTHOR, SITE, BOOKING_LINK, BOOKING_CONFIG } from "../config";
+import { AUTHOR, SITE, APPLY_PATH } from "../config";
 import { localizePath } from "../i18n";
 import { type Locale, t } from "../i18n/translations";
 
@@ -23,9 +24,53 @@ const jsonLd = {
 
 <Page title={t(locale, "conversion.services.pageTitle")} description={t(locale, "conversion.services.pageDesc")} locale={locale}>
   <HomepageJourneyRail />
-  <section class="relative flex min-h-[76vh] items-center overflow-hidden py-24 sm:py-32"><div class="absolute inset-0 bg-panel-deep/50"></div><div class="absolute inset-0 opacity-[0.04] hero-grid"></div><div class="absolute left-1/2 top-[42%] h-[32rem] w-[48rem] -translate-x-1/2 -translate-y-1/2 glow-blob opacity-20"></div><div class="absolute left-[58%] top-[38%] h-64 w-64 rounded-full opacity-10" style="background: radial-gradient(closest-side, var(--accent), transparent 72%);"></div><div class="relative mx-auto max-w-4xl px-6 text-center" data-aos="fade-up"><p class="text-2xs font-semibold uppercase tracking-widest text-primary">{t(locale, "conversion.services.hero.label")}</p><h1 class="mt-4 text-4xl font-extrabold leading-tightest tracking-tight text-foreground-strong sm:text-6xl">{t(locale, "conversion.services.hero.titleLead")}<br /><span class="text-primary">{t(locale, "conversion.services.hero.titleAccent")}</span></h1><p class="mx-auto mt-6 max-w-3xl text-base leading-relaxed text-muted-foreground">{t(locale, "conversion.services.hero.body")}</p><p class="mx-auto mt-4 max-w-2xl text-xs leading-relaxed text-foreground-muted">{t(locale, "conversion.services.hero.evidence")}</p><div class="mt-9 flex flex-col justify-center gap-3 sm:flex-row"><button type="button" data-cal-link={BOOKING_LINK} data-cal-config={JSON.stringify(BOOKING_CONFIG)} data-cal-cta data-cta-location="services_hero" class="inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20">{t(locale, "cta.bookDiscoveryCall")}</button><a href={localizePath("/services/agent-brief/#framework", locale)} class="inline-flex items-center justify-center rounded-md border border-border bg-panel px-6 h-11 text-sm font-medium">{t(locale, "conversion.services.hero.secondary")}</a></div></div></section>
+  <section class="relative flex min-h-[76vh] items-center overflow-hidden py-24 sm:py-32"><div class="absolute inset-0 bg-panel-deep/50"></div><div class="absolute inset-0 opacity-[0.04] hero-grid"></div><div class="absolute left-1/2 top-[42%] h-[32rem] w-[48rem] -translate-x-1/2 -translate-y-1/2 glow-blob opacity-20"></div><div class="absolute left-[58%] top-[38%] h-64 w-64 rounded-full opacity-10" style="background: radial-gradient(closest-side, var(--accent), transparent 72%);"></div><div class="relative mx-auto max-w-4xl px-6 text-center" data-aos="fade-up"><p class="text-2xs font-semibold uppercase tracking-widest text-primary">{t(locale, "conversion.services.hero.label")}</p><h1 class="mt-4 text-4xl font-extrabold leading-tightest tracking-tight text-foreground-strong sm:text-6xl">{t(locale, "conversion.services.hero.titleLead")}<br /><span class="text-primary">{t(locale, "conversion.services.hero.titleAccent")}</span></h1><p class="mx-auto mt-6 max-w-3xl text-base leading-relaxed text-muted-foreground">{t(locale, "conversion.services.hero.body")}</p><p class="mx-auto mt-4 max-w-2xl text-xs leading-relaxed text-foreground-muted">{t(locale, "conversion.services.hero.evidence")}</p><div class="mt-9 flex flex-col justify-center gap-3 sm:flex-row"><a href={localizePath(APPLY_PATH, locale)} data-cta-location="services_hero" class="inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20">{t(locale, "cta.apply")}</a><a href={localizePath("/pricing/", locale)} class="inline-flex items-center justify-center rounded-md border border-border bg-panel px-6 h-11 text-sm font-medium">{t(locale, "conversion.pricing.services.link")}</a></div></div></section>
 
-  <section class="relative py-24 sm:py-32"><div class="mx-auto max-w-6xl px-6"><SectionHeader title={t(locale, "conversion.services.brief.title")} description={t(locale, "conversion.services.brief.body")} /><p class="mx-auto -mt-8 mb-8 max-w-3xl text-center text-sm font-medium text-foreground">{t(locale, "conversion.services.brief.footer")}</p><div class="flex justify-center gap-3" data-aos="fade-up"><button type="button" data-cal-link={BOOKING_LINK} data-cal-config={JSON.stringify(BOOKING_CONFIG)} data-cal-cta class="inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground">{t(locale, "cta.bookDiscoveryCall")}</button><a href={localizePath("/services/agent-brief/#framework", locale)} class="inline-flex h-11 items-center justify-center rounded-md border border-border bg-panel px-6 text-sm font-medium">{t(locale, "conversion.services.brief.secondary")}</a></div></div></section>
+  <section class="relative py-24 sm:py-32">
+    <div class="mx-auto max-w-6xl px-6">
+      <SectionHeader label={t(locale, "conversion.services.svc.label")} title={t(locale, "conversion.services.svc.title")} description={t(locale, "conversion.services.svc.body")} />
+      <div class="grid gap-3 md:grid-cols-2" data-aos="fade-up">
+        <div class="rounded-lg border border-border bg-panel p-6 shadow-panel sm:p-8">
+          <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-md bg-destructive-soft"><i class="bx bx-error text-destructive icon-xl"></i></div>
+          <h3 class="text-lg font-semibold text-foreground-strong">{t(locale, "conversion.pricing.help.deslop.t")}</h3>
+          <p class="mt-2 text-sm font-medium text-foreground">{t(locale, "conversion.pricing.help.deslop.d1")}</p>
+          <ul class="mt-4 space-y-2.5">
+            {[1, 2, 3].map((n) => (
+              <li class="flex items-start gap-2.5"><i class="bx bx-check-square icon-base shrink-0 text-destructive"></i><span class="text-sm leading-relaxed text-muted-foreground">{t(locale, `conversion.services.svc.deslop.b${n}`)}</span></li>
+            ))}
+          </ul>
+        </div>
+        <div class="rounded-lg border border-border bg-panel p-6 shadow-panel sm:p-8">
+          <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-md bg-success-soft"><i class="bx bx-trending-up text-success icon-xl"></i></div>
+          <h3 class="text-lg font-semibold text-foreground-strong">{t(locale, "conversion.pricing.help.workers.t")}</h3>
+          <p class="mt-2 text-sm font-medium text-foreground">{t(locale, "conversion.pricing.help.workers.d1")}</p>
+          <ul class="mt-4 space-y-2.5">
+            {[1, 2, 3].map((n) => (
+              <li class="flex items-start gap-2.5"><i class="bx bx-check-square icon-base shrink-0 text-success"></i><span class="text-sm leading-relaxed text-muted-foreground">{t(locale, `conversion.services.svc.workers.b${n}`)}</span></li>
+            ))}
+          </ul>
+        </div>
+      </div>
+      <p class="mt-6 rounded-md border border-border bg-panel-deep/50 px-5 py-4 text-center text-sm font-semibold text-foreground" data-aos="fade-up">{t(locale, "conversion.services.svc.workers.scale")}</p>
+    </div>
+  </section>
+
+  <!-- How working together works -->
+  <section class="relative py-24 sm:py-32 overflow-hidden">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="relative mx-auto max-w-4xl px-6">
+      <SectionHeader label={t(locale, "conversion.services.how.label")} title={t(locale, "conversion.services.how.title")} />
+      <ol class="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3" data-aos="fade-up">
+        {([1, 2, 3, 4, 5, 6] as const).map((n) => (
+          <li class="rounded-lg border border-border bg-panel p-6 shadow-panel">
+            <span class="flex h-9 w-9 items-center justify-center rounded-md border border-primary font-mono text-sm font-bold text-primary">{n}</span>
+            <p class="mt-4 text-sm leading-relaxed text-muted-foreground">{t(locale, `conversion.services.how.s${n}`)}</p>
+          </li>
+        ))}
+      </ol>
+      <p class="mt-6 text-center text-xs text-muted-foreground">{t(locale, "conversion.apply.microcopy")}</p>
+    </div>
+  </section>
 
   <section class="relative overflow-hidden py-24 sm:py-32"><div class="absolute inset-0 bg-panel-deep/50"></div><div class="absolute inset-0 opacity-[0.03] hero-grid"></div><div class="relative mx-auto max-w-6xl px-6"><SectionHeader title={t(locale, "conversion.services.system.title")} description={t(locale, "conversion.services.system.body")} /><ol class="service-rail relative mx-auto grid max-w-5xl gap-6 sm:grid-cols-5 sm:gap-0" data-aos="fade-up">{steps.map((step, index) => <li class="relative flex items-start gap-4 sm:flex-col sm:items-center sm:px-3 sm:text-center"><span class:list={["relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-md border bg-panel font-mono text-xs font-bold", index < 3 ? "border-primary text-primary shadow-[0_0_20px_var(--primary-soft)]" : "border-border text-muted-foreground"]}>{index + 1}</span><p class="text-xs leading-relaxed text-muted-foreground">{t(locale, `conversion.services.system.${step}`)}</p></li>)}</ol></div></section>
 
@@ -63,7 +108,54 @@ const jsonLd = {
         </article>
       </div></div></section>
 
-  <section class="relative overflow-hidden py-24 sm:py-32"><div class="absolute inset-0 bg-panel-deep/50"></div><div class="relative mx-auto max-w-3xl px-6 text-center" data-aos="fade-up"><h2 class="text-3xl font-bold tracking-tight text-foreground-strong sm:text-4xl">{t(locale, "conversion.services.final.title")}</h2><p class="mt-4 text-base leading-relaxed text-muted-foreground">{t(locale, "conversion.services.final.body")}</p><button type="button" data-cal-link={BOOKING_LINK} data-cal-config={JSON.stringify(BOOKING_CONFIG)} data-cal-cta class="mt-8 inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground">{t(locale, "cta.bookDiscoveryCall")}</button></div></section>
+
+  <!-- Pricing summary -->
+  <section class="relative py-24 sm:py-32 overflow-hidden">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="relative mx-auto max-w-3xl px-6" data-aos="fade-up">
+      <div class="group relative overflow-hidden rounded-lg border border-border-strong bg-panel p-8 shadow-panel sm:p-12">
+        <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-primary/70 via-primary/30 to-transparent opacity-80" aria-hidden="true"></div>
+        <div class="text-center">
+          <p class="text-4xl font-extrabold tracking-tight text-foreground-strong sm:text-5xl">{t(locale, "conversion.pricing.package.price")}</p>
+          <p class="mt-3 text-base font-bold text-foreground-strong">{t(locale, "conversion.pricing.package.title")}</p>
+        </div>
+        <ul class="mx-auto mt-8 grid max-w-xl gap-x-8 gap-y-3 sm:grid-cols-2">
+          {([1, 2, 3, 4, 5, 6] as const).map((n) => (
+            <li class="flex items-start gap-2.5">
+              <i class="bx bx-check-square icon-base shrink-0 text-success"></i>
+              <span class="text-sm leading-relaxed text-muted-foreground">{t(locale, `conversion.pricing.package.p${n}`)}</span>
+            </li>
+          ))}
+        </ul>
+        <p class="mt-8 border-t border-border pt-6 text-center text-sm leading-relaxed text-muted-foreground">{t(locale, "conversion.pricing.large.title")} {t(locale, "conversion.pricing.package.next")}</p>
+        <div class="mt-6 text-center">
+          <a href={localizePath("/pricing/", locale)} class="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:opacity-80 transition-opacity">{t(locale, "conversion.pricing.hero.label")}<i class="bx bx-chevron-right rtl-flip icon-md"></i></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Guarantee -->
+  <section class="relative py-24 sm:py-32">
+    <div class="mx-auto max-w-3xl px-6">
+      <SectionHeader label={t(locale, "conversion.pricing.deal.label")} title={t(locale, "conversion.pricing.deal.title")} />
+      <div class="text-center" data-aos="fade-up">
+        <p class="mx-auto max-w-2xl text-lg font-bold leading-relaxed text-primary">{t(locale, "conversion.pricing.deal.flow")}</p>
+        <p class="mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-muted-foreground">{t(locale, "conversion.pricing.deal.d1")} {t(locale, "conversion.pricing.deal.d2")} {t(locale, "conversion.pricing.deal.d3")}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQs -->
+  <section class="relative py-24 sm:py-32 overflow-hidden">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="relative mx-auto max-w-3xl px-6">
+      <SectionHeader label={t(locale, "conversion.apply.faq.label")} title={t(locale, "conversion.apply.faq.title")} />
+      <FAQList locale={locale} items={[1, 2, 3, 4, 5, 6]} keyPrefix="conversion.apply.faq" />
+    </div>
+  </section>
+
+  <section class="relative overflow-hidden py-24 sm:py-32"><div class="absolute inset-0 bg-panel-deep/50"></div><div class="relative mx-auto max-w-3xl px-6 text-center" data-aos="fade-up"><h2 class="text-3xl font-bold tracking-tight text-foreground-strong sm:text-4xl">{t(locale, "conversion.services.final.title")}</h2><p class="mt-4 text-base leading-relaxed text-muted-foreground">{t(locale, "conversion.services.final.body")}</p><a href={localizePath(APPLY_PATH, locale)} data-cta-location="services_final" class="mt-8 inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground">{t(locale, "cta.apply")}</a></div></section>
 
   <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 </Page>

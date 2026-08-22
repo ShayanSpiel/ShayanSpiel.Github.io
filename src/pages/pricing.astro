@@ -1,0 +1,124 @@
+---
+import Page from "../layouts/Page.astro";
+import SectionHeader from "../components/sections/SectionHeader.astro";
+import FAQList from "../components/sections/FAQList.astro";
+import { SITE } from "../config";
+import { type Locale, t } from "../i18n/translations";
+import { localizePath } from "../i18n";
+
+export interface Props {
+  locale?: Locale;
+}
+
+const { locale = "en" } = Astro.props;
+
+const covers = [1, 2, 3, 4, 5, 6] as const;
+const howSteps = [1, 2, 3, 4] as const;
+const faqs = [1, 2, 3, 4, 5, 7] as const;
+
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: `${SITE.url}${localizePath("/", locale)}` },
+    { "@type": "ListItem", position: 2, name: t(locale, "conversion.pricing.hero.label"), item: `${SITE.url}${localizePath("/pricing/", locale)}` },
+  ],
+};
+---
+
+<Page
+  title={t(locale, "conversion.pricing.pageTitle")}
+  description={t(locale, "conversion.pricing.pageDesc")}
+  locale={locale}
+>
+  <section class="relative flex min-h-[64vh] items-center overflow-hidden py-24 sm:py-32">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
+    <div class="absolute left-1/2 top-[42%] h-[34rem] w-[52rem] -translate-x-1/2 -translate-y-1/2 glow-blob opacity-20"></div>
+    <div class="absolute left-[58%] top-[38%] h-64 w-64 rounded-full opacity-10" style="background: radial-gradient(closest-side, var(--accent), transparent 72%);"></div>
+    <div class="relative mx-auto max-w-4xl px-6 text-center" data-aos="fade-up">
+      <div>
+        <p class="text-2xs font-semibold uppercase tracking-widest text-primary">{t(locale, "conversion.pricing.hero.label")}</p>
+        <h1 class="mt-4 text-4xl font-extrabold leading-tightest tracking-tight text-foreground-strong sm:text-6xl">
+          {t(locale, "conversion.pricing.hero.titleLead")}<br /><span class="text-primary">{t(locale, "conversion.pricing.hero.titleAccent")}</span>
+        </h1>
+        <p class="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground">{t(locale, "conversion.pricing.hero.l2")}</p>
+        <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row sm:items-center">
+          <a href={localizePath("/apply/", locale)} class="inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:brightness-110">{t(locale, "cta.apply")}</a>
+          <span class="text-sm text-foreground-muted sm:ms-2">{t(locale, "conversion.pricing.hero.price")}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative overflow-hidden py-20 sm:py-24">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="relative mx-auto max-w-5xl px-6">
+      <SectionHeader label={t(locale, "conversion.pricing.package.covers")} title={t(locale, "conversion.pricing.package.title")} description={t(locale, "conversion.pricing.hero.l1")} />
+      <div class="relative overflow-hidden rounded-xl border border-border bg-panel shadow-panel" data-aos="fade-up">
+        <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-primary via-accent to-transparent opacity-80" aria-hidden="true"></div>
+        <div class="grid lg:grid-cols-[0.8fr_1.2fr]">
+        <div class="bg-panel-raised p-8 sm:p-10">
+          <p class="text-4xl font-extrabold tracking-tight text-foreground-strong sm:text-5xl">{t(locale, "conversion.pricing.package.price")}</p>
+          <p class="mt-4 text-sm leading-relaxed text-foreground">{t(locale, "conversion.pricing.package.next")}</p>
+          <a href={localizePath("/apply/", locale)} class="mt-8 inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:brightness-110">{t(locale, "cta.apply")}</a>
+        </div>
+        <div class="p-8 sm:p-10">
+          <p class="text-2xs font-semibold uppercase tracking-widest text-primary">{t(locale, "conversion.pricing.package.covers")}</p>
+          <ul class="mt-5 grid gap-x-8 gap-y-4 sm:grid-cols-2">
+            {covers.map((n) => <li class="flex items-start gap-2.5"><i class="bx bx-check-square icon-base shrink-0 text-success"></i><span class="text-sm leading-relaxed text-foreground">{t(locale, `conversion.pricing.package.p${n}`)}</span></li>)}
+          </ul>
+          <p class="mt-7 border-t border-border pt-6 text-sm font-semibold leading-relaxed text-foreground-strong">{t(locale, "conversion.pricing.package.reassure")}</p>
+        </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative py-24 sm:py-32">
+    <div class="mx-auto max-w-5xl px-6">
+      <SectionHeader label={t(locale, "conversion.pricing.how.label")} title={t(locale, "conversion.pricing.how.title")} />
+      <ol class="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-4" data-aos="fade-up">
+        {howSteps.map((n) => (
+          <li class="group relative overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
+            <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-primary via-accent to-transparent opacity-70" aria-hidden="true"></div>
+            <span class="font-mono text-2xs font-bold text-primary">0{n}</span>
+            <h3 class="mt-4 text-base font-bold text-foreground-strong">{t(locale, `conversion.pricing.how.s${n}.t`)}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-muted-foreground">{t(locale, `conversion.pricing.how.s${n}.d`)}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="relative overflow-hidden py-20 sm:py-24">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="relative mx-auto max-w-4xl px-6">
+      <SectionHeader label={t(locale, "conversion.pricing.deal.label")} title={t(locale, "conversion.pricing.deal.title")} />
+      <div class="grid gap-3 md:grid-cols-3" data-aos="fade-up">
+        {["d1", "d2", "d3"].map((key, index) => <div class="group relative overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong"><div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-accent via-purple to-transparent opacity-70" aria-hidden="true"></div><span class="font-mono text-2xs font-bold text-primary">0{index + 1}</span><p class="mt-4 text-sm font-semibold leading-relaxed text-foreground-strong">{t(locale, `conversion.pricing.deal.${key}`)}</p></div>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="relative py-24 sm:py-32">
+    <div class="mx-auto max-w-3xl px-6">
+      <SectionHeader label={t(locale, "conversion.pricing.faq.label")} title={t(locale, "conversion.pricing.faq.title")} />
+      <FAQList locale={locale} items={faqs} keyPrefix="conversion.pricing.faq" />
+    </div>
+  </section>
+
+  <section class="relative overflow-hidden py-28 sm:py-36">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="absolute inset-0 opacity-[0.03] hero-grid"></div>
+    <div class="absolute left-1/2 top-[52%] h-[28rem] w-[44rem] -translate-x-1/2 -translate-y-1/2 glow-blob opacity-15"></div>
+    <div class="relative mx-auto max-w-3xl px-6 text-center" data-aos="fade-up">
+      <p class="text-xs font-semibold uppercase tracking-widest text-primary">{t(locale, "conversion.pricing.ready.kicker")}</p>
+      <h2 class="mt-5 text-4xl font-extrabold leading-tightest tracking-tight text-foreground-strong sm:text-5xl">{t(locale, "conversion.pricing.ready.titleLead")}<br /><span class="text-primary">{t(locale, "conversion.pricing.ready.titleAccent")}</span></h2>
+      <p class="mx-auto mt-6 max-w-xl text-base leading-relaxed text-muted-foreground">{t(locale, "conversion.pricing.ready.body")}</p>
+      <a href={localizePath("/apply/", locale)} class="mt-10 inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-8 h-12 text-base font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20">{t(locale, "cta.apply")}</a>
+    </div>
+  </section>
+
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
+</Page>

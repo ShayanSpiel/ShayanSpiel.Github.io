@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import os
 import threading
 import time
@@ -13,6 +14,8 @@ from .alignment import approval_key
 from .loop import Runtime
 from .notifications import digest_payload
 from .service import automation_enabled
+
+logger = logging.getLogger("company.runtime.runner")
 
 # Watchdog constants. The runner is its own watchdog: the watch loop stamps a
 # heartbeat file every cycle so external readers (the OpenCode notifications
@@ -394,7 +397,17 @@ class Runner:
             for candidate in candidates:
                 before = self._signature(candidate)
                 self._active_goal_id = candidate
-                state = self.runtime.once(candidate, holder="company-runner")
+                # change-a8869554dd (runner-resilience-1): a failure on ONE
+                # goal — a live lease held by another client ("already
+                # running in another client"), a malformed cycle, or any
+                # other per-goal error — used to propagate out of tick() and
+                # kill the whole watch loop. Contain it: skip this goal,
+                # log, and keep advancing the rest of the company.
+                try:
+                    state = self.runtime.once(candidate, holder="company-runner")
+                except Exception as exc:
+                    logger.warning("tick skipped goal %s: %s", candidate, exc)
+                    continue
                 after = self._signature(candidate)
                 if after != before:
                     progress = True

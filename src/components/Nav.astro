@@ -1,6 +1,6 @@
 ---
 import SpielOSLogo from "./SpielOSLogo.astro";
-import { NAV_LINKS, BOOKING_LINK, BOOKING_CONFIG, type NavChildLink, type NavLink } from "../config";
+import { NAV_LINKS, APPLY_PATH, type NavChildLink, type NavLink } from "../config";
 import { SOFTWARE_SOLUTIONS } from "../data/software-solutions";
 import { type Locale, t } from "../i18n/translations";
 import { localizePath } from "../i18n";
@@ -70,7 +70,8 @@ const navLinks = links
       live: Boolean(link.live),
       children: (link.children || []).map(toChild),
     }));
-const ctaLink = cta || { label: t(locale, "cta.bookDiscoveryCall") };
+const ctaLink = cta ?? { label: t(locale, "cta.apply"), href: APPLY_PATH };
+const ctaHref = localizePath(("href" in ctaLink ? ctaLink.href : APPLY_PATH), locale);
 
 const normalize = (p: string) => p.replace(/\/+$/, "") || "/";
 const isCurrent = (href: string) => normalize(href) === normalize(currentPath);
@@ -178,16 +179,13 @@ const ariaCurrent = (href: string) => (isCurrent(href) ? "page" : undefined);
     </div>
 
     <div class="flex items-center gap-3 relative z-10 shrink-0">
-      <button
-        type="button"
-        data-cal-link={BOOKING_LINK}
-        data-cal-config={JSON.stringify(BOOKING_CONFIG)}
-        data-cal-cta
+      <a
+        href={ctaHref}
         data-cta-location="nav"
         class="hidden sm:inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-4 h-8 text-xs font-medium hover:brightness-110 active:brightness-95 transition-all"
       >
         {ctaLink.label}
-      </button>
+      </a>
 
       <button
         type="button"
@@ -273,16 +271,13 @@ const ariaCurrent = (href: string) => (isCurrent(href) ? "page" : undefined);
           </a>
         )
       )}
-      <button
-        type="button"
-        data-cal-link={BOOKING_LINK}
-        data-cal-config={JSON.stringify(BOOKING_CONFIG)}
-        data-cal-cta
+      <a
+        href={ctaHref}
         data-cta-location="nav_mobile"
         class="block mt-2 w-full rounded-md bg-primary text-primary-foreground px-3 py-2 text-sm text-center font-medium"
       >
         {ctaLink.label}
-      </button>
+      </a>
     </div>
   </div>
 </nav>

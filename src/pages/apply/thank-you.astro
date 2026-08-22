@@ -1,0 +1,49 @@
+---
+import Page from "../../layouts/Page.astro";
+import { type Locale, t } from "../../i18n/translations";
+import { localizePath } from "../../i18n";
+
+export interface Props { locale?: Locale; }
+const { locale = "en" } = Astro.props;
+---
+
+<Page
+  title={t(locale, "conversion.apply.thanks.title")}
+  description={t(locale, "conversion.apply.thanks.desc")}
+  locale={locale}
+  robots="noindex, follow"
+>
+  <section class="relative overflow-hidden py-24 sm:py-32">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
+    <div class="relative mx-auto max-w-3xl px-6" data-aos="fade-up">
+      <div class="relative overflow-hidden rounded-xl border border-border bg-panel p-8 shadow-panel sm:p-12">
+        <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-primary via-accent to-transparent opacity-80" aria-hidden="true"></div>
+        <div class="flex h-10 w-10 items-center justify-center rounded-md bg-success-soft text-success">
+          <i class="bx bx-check-square icon-xl"></i>
+        </div>
+        <p class="mt-6 text-2xs font-semibold uppercase tracking-widest text-primary">{t(locale, "conversion.apply.thanks.kicker")}</p>
+        <h1 class="mt-3 text-3xl font-extrabold tracking-tight text-foreground-strong sm:text-4xl">{t(locale, "conversion.apply.thanks.title")}</h1>
+        <p class="mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground">{t(locale, "conversion.apply.thanks.desc")}</p>
+
+        <div class="mt-10 border-t border-border pt-8">
+          <h2 class="text-2xl font-bold tracking-tight text-foreground-strong">{t(locale, "conversion.apply.thanks.nextLabel")}</h2>
+          <h3 class="mt-2 text-lg font-semibold text-primary">{t(locale, "conversion.apply.thanks.nextTitle")}</h3>
+          <ol class="mt-6 space-y-4">
+            {([1, 2, 3] as const).map((n) => (
+              <li class="flex items-start gap-3">
+                <span class="font-mono text-2xs font-bold text-primary">0{n}</span>
+                <span class="text-sm leading-relaxed text-muted-foreground">{t(locale, `conversion.apply.thanks.i${n}`)}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        <a href={localizePath("/apply/", locale)} class="mt-10 inline-flex h-11 items-center justify-center rounded-md border border-border bg-panel px-6 text-sm font-medium text-foreground-strong transition-all hover:border-border-strong hover:bg-panel-raised">
+          <i class="bx bx-chevron-left rtl-flip icon-md me-1"></i>
+          {t(locale, "conversion.apply.thanks.back")}
+        </a>
+      </div>
+    </div>
+  </section>
+</Page>

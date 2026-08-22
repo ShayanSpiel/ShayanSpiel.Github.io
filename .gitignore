@@ -38,3 +38,5 @@ Thumbs.db
 # Company runtime SQLite DBs — local only
 .spielos/*.db
 .spielos/*.db-*
+
+.spielos/.env.*

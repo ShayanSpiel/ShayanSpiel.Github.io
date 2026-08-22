@@ -5,7 +5,7 @@ import LiveStats, { type LiveTotals } from "../components/live/LiveStats.astro";
 import SectionHeader from "../components/sections/SectionHeader.astro";
 import OperatingLoop from "../components/architecture/OperatingLoop.astro";
 import Page from "../layouts/Page.astro";
-import { SITE, BOOKING_LINK, BOOKING_CONFIG } from "../config";
+import { SITE, APPLY_PATH } from "../config";
 import { localizePath } from "../i18n";
 import { type Locale, t } from "../i18n/translations";
 import snapshot from "../data/live-goals.json";
@@ -74,7 +74,7 @@ const howTo = [
         <LiveStatus locale={locale} state={state} heartbeat={heartbeat} northstar={northstar} heartbeatText={heartbeatText} northstarText={northstarText} />
       </div>
       <div class="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
-        <button type="button" data-cal-link={BOOKING_LINK} data-cal-config={JSON.stringify(BOOKING_CONFIG)} data-cal-cta data-cta-location="live_hero" class="inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground">{t(locale, "cta.bookDiscoveryCall")}</button>
+        <a href={localizePath(APPLY_PATH, locale)} data-cta-location="live_hero" class="inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground">{t(locale, "cta.apply")}</a>
         <a href={localizePath("/features/", locale)} class="inline-flex h-11 items-center justify-center rounded-md border border-border bg-panel px-6 text-sm font-medium">{t(locale, "conversion.live.hero.secondary")}</a>
       </div>
     </div>
@@ -134,7 +134,7 @@ const howTo = [
     <div class="relative mx-auto max-w-3xl px-6 text-center" data-aos="fade-up">
       <h2 class="text-3xl font-bold tracking-tight text-foreground-strong sm:text-4xl">{t(locale, "conversion.live.final.title")}</h2>
       <p class="mt-4 text-base leading-relaxed text-muted-foreground">{t(locale, "conversion.live.final.body")}</p>
-      <button type="button" data-cal-link={BOOKING_LINK} data-cal-config={JSON.stringify(BOOKING_CONFIG)} data-cal-cta data-cta-location="live_final" class="mt-8 inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground">{t(locale, "cta.bookDiscoveryCall")}</button>
+      <a href={localizePath(APPLY_PATH, locale)} data-cta-location="live_final" class="mt-8 inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground">{t(locale, "cta.apply")}</a>
     </div>
   </section>
 

@@ -1,27 +1,95 @@
 ---
 export interface Props {
   size?: "sm" | "md" | "lg" | "xl";
+  /** Extra wrapper classes; color utilities apply via currentColor. */
   textClass?: string;
-  /** Render only the diamond tile mark (no "SpielOS" wordmark). */
+  /** Render only the brand mark (no "SpielOS" wordmark). */
   markOnly?: boolean;
-  /** Full override for the tile's class list (e.g. responsive hero sizes). */
+  /** Full override for the lockup's sizing class list. */
   boxClass?: string;
 }
 
 const {
   size = "sm",
-  textClass = "text-sm font-bold tracking-tight text-foreground-strong",
+  textClass = "",
   markOnly = false,
   boxClass,
 } = Astro.props;
-// Golden ratio: tile ≈ φ * cap-height (14px * 1.618 ≈ 22.6px) — optically balanced with bold wordmark
-const boxSize = size === "sm" ? "h-[22px] w-[22px]" : size === "md" ? "h-6 w-6" : size === "lg" ? "h-8 w-8" : "h-9 w-9";
-const tileClass = boxClass ?? `flex ${boxSize} items-center justify-center rounded-sm bg-panel-raised text-foreground-strong shrink-0`;
+
+// Official lockup: 20px visual mark + 6px optical gap + Outfit wordmark inside
+// a 96x24 viewBox (4:1). No background tile — the symbol reads as a brand mark.
+// Everything paints with currentColor so it follows every theme automatically.
+const sizeClass =
+  size === "sm"
+    ? "h-6 w-24"
+    : size === "md"
+      ? "h-7 w-28"
+      : size === "lg"
+        ? "h-8 w-32"
+        : "h-10 w-40";
+const markSizeClass =
+  size === "sm"
+    ? "h-6 w-6"
+    : size === "md"
+      ? "h-7 w-7"
+      : size === "lg"
+        ? "h-8 w-8"
+        : "h-10 w-10";
 ---
 
-<div class={tileClass}>
-  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="h-full w-full" aria-hidden="true">
-    <path d="M20 2a2 2 0 1 0 0 4 2 2 0 1 0 0-4m-3 10 .5-5.5L12 7l1.75 1.75c-.47.4-1.01.5-1.69.63-1.05.19-2.35.44-3.4 1.93s-.83 2.8-.65 3.85c.15.9.26 1.55-.32 2.38-.58.82-1.23.94-2.12 1.11-1.05.19-2.35.43-3.4 1.93l1.64 1.15c.58-.82 1.22-.94 2.12-1.11 1.05-.19 2.35-.43 3.4-1.93 1.05-1.49.83-2.8.65-3.85-.15-.9-.26-1.55.32-2.38.58-.82 1.23-.94 2.12-1.11.84-.15 1.84-.35 2.74-1.18L16.99 12ZM3.71 8.71l1.79-1.8 1.79 1.8 1.42-1.42-1.8-1.79 1.8-1.79-1.42-1.42-1.79 1.8-1.79-1.8-1.42 1.42 1.8 1.79-1.8 1.79zm16.58 5.58L18 16.59l-2.29-2.3-1.42 1.42 2.3 2.29-2.3 2.29 1.42 1.42 2.29-2.3 2.29 2.3 1.42-1.42-2.3-2.29 2.3-2.29z" fill="currentColor"/>
-  </svg>
-</div>
-{!markOnly && <span class={textClass}>SpielOS</span>}
+{
+  markOnly ? (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      class:list={["shrink-0 text-foreground-strong", textClass, boxClass ?? markSizeClass]}
+      aria-hidden="true"
+      fill="none"
+    >
+      <path
+        d="M20 2a2 2 0 1 0 0 4 2 2 0 1 0 0-4m-3 10 .5-5.5L12 7l1.75 1.75c-.47.4-1.01.5-1.69.63-1.05.19-2.35.44-3.4 1.93s-.83 2.8-.65 3.85c.15.9.26 1.55-.32 2.38-.58.82-1.23.94-2.12 1.11-1.05.19-2.35.43-3.4 1.93l1.64 1.15c.58-.82 1.22-.94 2.12-1.11 1.05-.19 2.35-.43 3.4-1.93 1.05-1.49.83-2.8.65-3.85-.15-.9-.26-1.55.32-2.38.58-.82 1.23-.94 2.12-1.11.84-.15 1.84-.35 2.74-1.18L16.99 12ZM3.71 8.71l1.79-1.8 1.79 1.8 1.42-1.42-1.8-1.79 1.8-1.79-1.42-1.42-1.79 1.8-1.79-1.8-1.42 1.42 1.8 1.79-1.8 1.79zm16.58 5.58L18 16.59l-2.29-2.3-1.42 1.42 2.3 2.29-2.3 2.29 1.42 1.42 2.29-2.3 2.29 2.3 1.42-1.42-2.3-2.29 2.3-2.29z"
+        fill="currentColor"
+        stroke="currentColor"
+        stroke-width="0.55"
+        stroke-linejoin="round"
+        paint-order="stroke fill"
+      />
+    </svg>
+  ) : (
+    <div class:list={["shrink-0 text-foreground-strong", textClass, boxClass ?? sizeClass]}>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 96 24"
+        class="block h-full w-full"
+        role="img"
+        aria-label="SpielOS"
+        fill="none"
+      >
+        <g color="currentColor">
+          <svg x="0" y="2" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M20 2a2 2 0 1 0 0 4 2 2 0 1 0 0-4m-3 10 .5-5.5L12 7l1.75 1.75c-.47.4-1.01.5-1.69.63-1.05.19-2.35.44-3.4 1.93s-.83 2.8-.65 3.85c.15.9.26 1.55-.32 2.38-.58.82-1.23.94-2.12 1.11-1.05.19-2.35.43-3.4 1.93l1.64 1.15c.58-.82 1.22-.94 2.12-1.11 1.05-.19 2.35-.43 3.4-1.93 1.05-1.49.83-2.8.65-3.85-.15-.9-.26-1.55.32-2.38.58-.82 1.23-.94 2.12-1.11.84-.15 1.84-.35 2.74-1.18L16.99 12ZM3.71 8.71l1.79-1.8 1.79 1.8 1.42-1.42-1.8-1.79 1.8-1.79-1.42-1.42-1.79 1.8-1.79-1.8-1.42 1.42 1.8 1.79-1.8 1.79zm16.58 5.58L18 16.59l-2.29-2.3-1.42 1.42 2.3 2.29-2.3 2.29 1.42 1.42 2.29-2.3 2.29 2.3 1.42-1.42-2.3-2.29 2.3-2.29z"
+              fill="currentColor"
+              stroke="currentColor"
+              stroke-width="0.55"
+              stroke-linejoin="round"
+              paint-order="stroke fill"
+            />
+          </svg>
+        </g>
+        <text
+          x="26"
+          y="18.15"
+          fill="currentColor"
+          font-family="Outfit, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Arial, sans-serif"
+          font-size="18"
+          font-weight="700"
+          letter-spacing="-0.45"
+          style="font-feature-settings:'ss01' 1,'cv11' 1"
+        >
+          SpielOS
+        </text>
+      </svg>
+    </div>
+  )
+}

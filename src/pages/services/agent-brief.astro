@@ -1,6 +1,6 @@
 ---
 import Page from "../../layouts/Page.astro";
-import { SITE, BOOKING_LINK, BOOKING_CONFIG } from "../../config";
+import { SITE, APPLY_PATH } from "../../config";
 import { type Locale, t } from "../../i18n/translations";
 import { localizePath } from "../../i18n";
 
@@ -64,13 +64,7 @@ const breadcrumbJsonLd = {
             <p class="mt-5 text-sm leading-relaxed text-muted-foreground">{t(locale, "agentBrief.hero.body")}</p>
             <p class="mt-3 text-xs font-medium text-foreground">{t(locale, "agentBrief.hero.trust")}</p>
           </div>
-          <button type="button" data-cal-link={BOOKING_LINK} data-cal-config={JSON.stringify(BOOKING_CONFIG)}
-            data-cal-cta
-            data-cta-location="agent_brief_hero"
-            class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-5 h-10 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20 cursor-pointer shrink-0"
-          >
-            {t(locale, "cta.bookDiscoveryCall")}
-          </button>
+          <a href={localizePath(APPLY_PATH, locale)} data-cta-location="agent_brief_hero" class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-5 h-10 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20 cursor-pointer shrink-0">{t(locale, "cta.apply")}</a>
         </div>
       </div>
 

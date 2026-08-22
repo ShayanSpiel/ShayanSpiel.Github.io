@@ -1,0 +1,126 @@
+---
+import { type Locale, t } from "../../i18n/translations";
+
+export interface Props {
+  locale?: Locale;
+  items: readonly number[];
+  keyPrefix: string;
+}
+
+const { locale = "en", items, keyPrefix } = Astro.props;
+const idPrefix = `faq-${keyPrefix.replace(/[^a-z0-9]+/gi, "-")}-${locale}`;
+---
+
+<div class="faq-list mt-8 space-y-2" data-faq-list data-aos="fade-up">
+  {items.map((n) => {
+    const panelId = `${idPrefix}-${n}`;
+    return (
+      <article class="group relative overflow-hidden rounded-lg border border-border bg-panel shadow-panel transition-colors hover:border-border-strong" data-faq-item>
+        <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-primary via-accent to-transparent opacity-70" aria-hidden="true"></div>
+        <button
+          type="button"
+          class="flex w-full items-center justify-between gap-4 px-5 py-4 text-start text-sm font-semibold text-foreground-strong transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:text-base"
+          aria-expanded="false"
+          aria-controls={panelId}
+          data-faq-trigger
+        >
+          <span>{t(locale, `${keyPrefix}.q${n}`)}</span>
+          <i class="faq-icon bx bx-chevron-down icon-lg shrink-0 text-muted-foreground" aria-hidden="true"></i>
+        </button>
+        <div id={panelId} class="faq-panel" data-faq-panel data-open="false" hidden>
+          <div class="border-t border-border px-5 pb-5 pt-4 text-sm leading-7 text-muted-foreground sm:text-base">
+            {t(locale, `${keyPrefix}.a${n}`)}
+          </div>
+        </div>
+      </article>
+    );
+  })}
+</div>
+
+<script is:inline>
+  (() => {
+    document.querySelectorAll('[data-faq-list]').forEach((list) => {
+      if (list.dataset.faqReady === 'true') return;
+      list.dataset.faqReady = 'true';
+      const items = Array.from(list.querySelectorAll('[data-faq-item]'));
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      function finish(panel) {
+        panel.addEventListener('transitionend', (event) => {
+          if (event.propertyName !== 'max-height') return;
+          if (panel.dataset.open === 'true') panel.style.maxHeight = 'none';
+          else panel.hidden = true;
+        });
+      }
+
+      function close(item) {
+        const trigger = item.querySelector('[data-faq-trigger]');
+        const panel = item.querySelector('[data-faq-panel]');
+        if (!trigger || !panel || trigger.getAttribute('aria-expanded') !== 'true') return;
+        trigger.setAttribute('aria-expanded', 'false');
+        panel.dataset.open = 'false';
+        if (panel.style.maxHeight === 'none') panel.style.maxHeight = `${panel.scrollHeight}px`;
+        requestAnimationFrame(() => { panel.style.maxHeight = '0px'; });
+        if (reducedMotion) panel.hidden = true;
+      }
+
+      function open(item) {
+        const trigger = item.querySelector('[data-faq-trigger]');
+        const panel = item.querySelector('[data-faq-panel]');
+        if (!trigger || !panel) return;
+        items.filter((candidate) => candidate !== item).forEach(close);
+        trigger.setAttribute('aria-expanded', 'true');
+        panel.hidden = false;
+        panel.dataset.open = 'true';
+        panel.style.maxHeight = '0px';
+        requestAnimationFrame(() => { panel.style.maxHeight = `${panel.scrollHeight}px`; });
+        if (reducedMotion) panel.style.maxHeight = 'none';
+      }
+
+      items.forEach((item) => {
+        const panel = item.querySelector('[data-faq-panel]');
+        const trigger = item.querySelector('[data-faq-trigger]');
+        if (!panel || !trigger) return;
+        finish(panel);
+        trigger.addEventListener('click', () => {
+          if (trigger.getAttribute('aria-expanded') === 'true') close(item);
+          else open(item);
+        });
+      });
+    });
+  })();
+</script>
+
+<style>
+  .faq-panel {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transform: translateY(calc(var(--motion-distance-sm) * -1));
+    transition:
+      max-height var(--duration-slow) var(--ease),
+      opacity var(--duration-slow) var(--ease),
+      transform var(--duration-slow) var(--ease);
+  }
+
+  .faq-panel[data-open="true"] {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .faq-icon {
+    transition: transform var(--duration) var(--ease), color var(--duration) var(--ease);
+  }
+
+  [data-faq-trigger][aria-expanded="true"] .faq-icon {
+    color: var(--primary);
+    transform: rotate(180deg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .faq-panel,
+    .faq-icon {
+      transition: none;
+    }
+  }
+</style>
