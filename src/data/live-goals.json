@@ -2872,18 +2872,18 @@
     },
     {
       "created_at": "2026-08-19T17:42:41.270340+00:00",
-      "goal_status": "active",
+      "goal_status": "achieved",
       "id": "goal-a4acfeb32f",
-      "latest_activity_at": "2026-08-22T03:30:31.402616+00:00",
+      "latest_activity_at": "2026-08-22T16:54:17.195534+00:00",
       "metric": "qualified_social_leads",
       "name": "Research pipeline: grow fully verified English lead pool to 1000 (continuous - don't stop)",
       "operator": "ge",
       "owner_id": "outbound",
       "parent_id": null,
-      "run_status": "blocked",
-      "stage": "ACT",
+      "run_status": "completed",
+      "stage": "OBSERVE",
       "target": 1000,
-      "updated_at": "2026-08-22T03:30:31.396057+00:00"
+      "updated_at": "2026-08-22T16:54:17.184970+00:00"
     },
     {
       "created_at": "2026-08-19T20:40:22.805614+00:00",
@@ -3289,6 +3289,21 @@
       "stage": "OBSERVE",
       "target": 3,
       "updated_at": "2026-08-21T22:50:15.275990+00:00"
+    },
+    {
+      "created_at": "2026-08-22T14:44:25.256702+00:00",
+      "goal_status": "active",
+      "id": "goal-apply-funnel-opt-20260822",
+      "latest_activity_at": "2026-08-22T14:44:27.378033+00:00",
+      "metric": "booked_calls",
+      "name": "Apply funnel optimization: retire booking-call copy drift, wizard anchor alignment, hero arrow animation, wizard copy, FAQ book-a-call link",
+      "operator": "ge",
+      "owner_id": "director",
+      "parent_id": null,
+      "run_status": "blocked",
+      "stage": "DECIDE",
+      "target": 1,
+      "updated_at": "2026-08-22T14:44:27.376325+00:00"
     }
   ],
   "heartbeat": {
@@ -3296,15 +3311,15 @@
     "business_value_fa": null,
     "display_title": null,
     "display_title_fa": null,
-    "goal_id": "goal-a4acfeb32f",
-    "goal_name": "Research pipeline: grow fully verified English lead pool to 1000 (continuous - don't stop)",
-    "metric": "qualified_social_leads",
+    "goal_id": "goal-apply-funnel-opt-20260822",
+    "goal_name": "Apply funnel optimization: retire booking-call copy drift, wizard anchor alignment, hero arrow animation, wizard copy, FAQ book-a-call link",
+    "metric": "booked_calls",
     "operator": "ge",
-    "owner_id": "outbound",
+    "owner_id": "director",
     "run_status": "blocked",
-    "stage": "ACT",
-    "target": 1000,
-    "updated_at": "2026-08-22T03:30:31.402616+00:00"
+    "stage": "DECIDE",
+    "target": 1,
+    "updated_at": "2026-08-22T14:44:27.378033+00:00"
   },
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
@@ -3317,44 +3332,44 @@
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-19T17:42:41.270340+00:00",
-      "goal_id": "goal-a4acfeb32f",
-      "goal_name": "Research pipeline: grow fully verified English lead pool to 1000 (continuous - don't stop)",
-      "owner_id": "outbound",
-      "run_id": "run-2ccb5916df",
+      "created_at": "2026-08-22T14:44:25.256702+00:00",
+      "goal_id": "goal-apply-funnel-opt-20260822",
+      "goal_name": "Apply funnel optimization: retire booking-call copy drift, wizard anchor alignment, hero arrow animation, wizard copy, FAQ book-a-call link",
+      "owner_id": "director",
+      "run_id": "run-9ed3ea473e",
       "run_status": "blocked",
-      "stage": "ACT",
-      "updated_at": "2026-08-22T03:30:31.402616+00:00"
+      "stage": "DECIDE",
+      "updated_at": "2026-08-22T14:44:27.378033+00:00"
     },
     "heartbeat": {
       "business_value": null,
       "business_value_fa": null,
       "display_title": null,
       "display_title_fa": null,
-      "goal_id": "goal-a4acfeb32f",
-      "goal_name": "Research pipeline: grow fully verified English lead pool to 1000 (continuous - don't stop)",
-      "metric": "qualified_social_leads",
+      "goal_id": "goal-apply-funnel-opt-20260822",
+      "goal_name": "Apply funnel optimization: retire booking-call copy drift, wizard anchor alignment, hero arrow animation, wizard copy, FAQ book-a-call link",
+      "metric": "booked_calls",
       "operator": "ge",
-      "owner_id": "outbound",
+      "owner_id": "director",
       "run_status": "blocked",
-      "stage": "ACT",
-      "target": 1000,
-      "updated_at": "2026-08-22T03:30:31.402616+00:00"
+      "stage": "DECIDE",
+      "target": 1,
+      "updated_at": "2026-08-22T14:44:27.378033+00:00"
     },
-    "last_activity_at": "2026-08-22T03:30:31.402616+00:00",
-    "last_sync_at": "2026-08-22T03:30:31.444047+00:00",
+    "last_activity_at": "2026-08-22T16:54:17.195534+00:00",
+    "last_sync_at": "2026-08-22T16:54:17.233189+00:00",
     "state": "running"
   },
   "totals": {
     "approvals": 249,
-    "decisions": 693,
-    "evidence": 11051,
+    "decisions": 733,
+    "evidence": 11183,
     "goals_abandoned": 28,
-    "goals_achieved": 158,
+    "goals_achieved": 159,
     "goals_active": 29,
-    "goals_total": 218,
-    "hypotheses": 69,
+    "goals_total": 219,
+    "hypotheses": 70,
     "memory_claims": 5,
-    "runs": 241
+    "runs": 242
   }
 }
