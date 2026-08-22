@@ -44,10 +44,6 @@ is not part of the site's conversion path.
 
 The retired showcase implementation remains protected. Do not edit, refactor,
 rename, move, or modify any file under `src/components/showcase/*`.
-`src/pages/waitlist.astro` and `src/pages/fa/waitlist.astro` are approved direct
-redirect wrappers to their localized Architecture routes. Do not add any other
-behavior to them.
-
 The commercial funnel is Apply-first (owner directive 2026-08-22): every primary
 conversion CTA links to `/apply/` — **Apply — Free Review** — with the microcopy
 "Free review · No required call · See the scope before you pay". Contextual CTAs:
@@ -59,7 +55,7 @@ embed scripts, or a required-call step anywhere in the funnel. The two services
 are AI DeSlopping (fix broken AI-built software) and AI Workers (hand repetitive
 work to AI), sold at $2,990/month with one active build at a time. The Live page
 is proof ("WE RUN ON AI OURSELVES"), framed as credibility, not a conversion
-destination. The legacy waitlist is not a default CTA.
+destination. The legacy waitlist route no longer exists.
 
 ## Strategy — single source of truth
 
@@ -91,10 +87,7 @@ belong under `.spielos/artifacts/`, not strategy, assets, or skills.
 | `/pricing/` | `src/pages/pricing.astro` | One monthly rate — value-first pricing page (EN) |
 | `/apply/` | `src/pages/apply.astro` | Apply — Free Review 3-step wizard (EN) |
 | `/live/` | `src/pages/live.astro` | Plain-language live company record (EN) |
-| `/waitlist/` | `src/pages/waitlist.astro` | 301 redirect to `/features/` |
-| `/about/` | `src/pages/about.astro` | 301 redirect to `/founder/` |
 | `/fa/` | `src/pages/fa/index.astro` | Homepage (FA) |
-| `/fa/about/` | `src/pages/fa/about.astro` | 301 redirect to `/fa/founder/` |
 | `/fa/founder/` | `src/pages/fa/founder.astro` | Founder story (FA) |
 | `/fa/notes/` | `src/pages/fa/notes/index.astro` | Notes index (FA) |
 | `/fa/notes/[slug]/` | `src/pages/fa/notes/[...slug].astro` | Individual note pages (FA) |
@@ -113,22 +106,6 @@ belong under `.spielos/artifacts/`, not strategy, assets, or skills.
 | `/features/evals/` | `src/pages/features/evals.astro` | Evals — LLM-as-judge quality gates (EN) |
 | `/features/connections/` | `src/pages/features/connections.astro` | Connections — approved access to external systems (EN) |
 | `/features/artifacts/` | `src/pages/features/artifacts.astro` | Artifacts — output and evidence from every run (EN) |
-| `/features/chat/` | `src/pages/features/chat/index.astro` | 301 redirect to `/features/director/` |
-| `/features/chat/director-mode/` | `src/pages/features/chat/director-mode.astro` | 301 redirect to `/features/director/` |
-| `/features/chat/direct-mode/` | `src/pages/features/chat/direct-mode.astro` | 301 redirect to `/features/workflows/` |
-| `/features/context/` | `src/pages/features/context/index.astro` | 301 redirect to `/features/` |
-| `/features/context/files/` | `src/pages/features/context/files.astro` | 301 redirect to `/features/` |
-| `/features/context/strategy/` | `src/pages/features/context/strategy.astro` | 301 redirect to `/features/` |
-| `/features/context/memory/` | `src/pages/features/context/memory.astro` | 301 redirect to `/features/` |
-| `/features/harness/` | `src/pages/features/harness/index.astro` | 301 redirect to `/features/` |
-| `/features/harness/agents/` | `src/pages/features/harness/agents.astro` | 301 redirect to `/features/agents/` |
-| `/features/harness/skills/` | `src/pages/features/harness/skills.astro` | 301 redirect to `/features/skills/` |
-| `/features/harness/workflows/` | `src/pages/features/harness/workflows.astro` | 301 redirect to `/features/workflows/` |
-| `/features/harness/evals/` | `src/pages/features/harness/evals.astro` | 301 redirect to `/features/evals/` |
-| `/features/infrastructure/` | `src/pages/features/infrastructure/index.astro` | 301 redirect to `/features/` |
-| `/features/infrastructure/providers/` | `src/pages/features/infrastructure/providers.astro` | 301 redirect to `/features/` |
-| `/features/infrastructure/connections/` | `src/pages/features/infrastructure/connections.astro` | 301 redirect to `/features/connections/` |
-| `/architecture/` | `src/pages/architecture.astro` | 301 redirect to `/features/` |
 | `/software/` | `src/pages/software/index.astro` | Software automation solutions hub (EN) |
 | `/{slug}-ai-automation/` | `src/pages/{slug}-ai-automation.astro` | 14 software solution pages from `SOFTWARE_SOLUTIONS` (zapier, slack, gmail, google-drive, hubspot, attio, jira, notion, whatsapp, telegram, claude-code, codex, opencode, google-calendar) (EN) |
 | `/use-cases/` | `src/pages/use-cases/index.astro` | Use cases hub (EN) |
@@ -141,13 +118,9 @@ belong under `.spielos/artifacts/`, not strategy, assets, or skills.
 | `/use-cases/design/gallery/` | `src/pages/use-cases/design/gallery.astro` | Build-driven Design template gallery (EN) |
 | `/fa/use-cases/design/` | `src/pages/fa/use-cases/design/index.astro` | Live Design department use case (FA) |
 | `/fa/use-cases/design/gallery/` | `src/pages/fa/use-cases/design/gallery.astro` | Build-driven Design template gallery (FA) |
-| `/fa/architecture/` | `src/pages/fa/architecture.astro` | 301 redirect to `/fa/features/` |
-| `/fa/posts/` | `src/pages/fa/posts/index.astro` | 301 redirect to `/fa/notes/` |
 | `/fa/software/` and `/fa/{slug}-ai-automation/` | FA thin wrappers | Software solutions hub + 14 pages (FA) |
 | `/fa/use-cases/{analytics,seo,marketing,content}/` | FA thin wrappers | Department use cases (FA) |
 | `/spielos-v1/` | `src/pages/spielos-v1.astro` | Archived legacy product page (`noindex`) |
-| `/shayan/` | `src/pages/shayan.astro` | 301 redirect to `/founder/` |
-| `/posts/` | `src/pages/posts/index.astro` | 301 redirect to `/notes/` |
 
 FA wrappers exist for all routes under `/fa/` following the thin-wrapper pattern.
 

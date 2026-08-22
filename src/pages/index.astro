@@ -16,8 +16,8 @@ const liveGoal = liveGoals.find((goal) => ["director", "email", "outbound"].incl
 
 const jsonLd = [
   { "@context": "https://schema.org", "@type": "Person", "@id": `${SITE.url}/#person`, name: AUTHOR.name, url: SITE.url, image: `${SITE.url}/assets/avatars/avatar.jpg`, jobTitle: AUTHOR.jobTitle, sameAs: AUTHOR.sameAs, worksFor: { "@id": `${SITE.url}/#organization` } },
-  { "@context": "https://schema.org", "@type": "WebSite", "@id": `${SITE.url}/#website`, name: SITE.name, url: SITE.url, description: t(locale, "conversion.home.pageDesc"), inLanguage: locale, publisher: { "@id": `${SITE.url}/#organization` } },
-  { "@context": "https://schema.org", "@type": "SoftwareApplication", "@id": `${SITE.url}/#software`, name: SITE.name, url: SITE.url, description: t(locale, "conversion.home.pageDesc"), applicationCategory: "BusinessApplication", operatingSystem: "Web", author: { "@id": `${SITE.url}/#person` }, publisher: { "@id": `${SITE.url}/#organization` } },
+  { "@context": "https://schema.org", "@type": "WebSite", "@id": `${SITE.url}/#website`, name: SITE.name, url: SITE.url, description: t(locale, "schema.website.desc"), inLanguage: locale, publisher: { "@id": `${SITE.url}/#organization` } },
+  { "@context": "https://schema.org", "@type": "SoftwareApplication", "@id": `${SITE.url}/#software`, name: SITE.name, url: SITE.url, description: t(locale, "schema.software.desc"), applicationCategory: "BusinessApplication", operatingSystem: "Web", author: { "@id": `${SITE.url}/#person` }, publisher: { "@id": `${SITE.url}/#organization` } },
   { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: t(locale, "nav.home"), item: `${SITE.url}${localizePath("/", locale)}` }] },
 ];
 

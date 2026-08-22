@@ -41,11 +41,6 @@ function meta(html, pattern) {
 
 const isRealPage = (path) => {
   const rel = path.replace(dist, "");
-  // 301 redirect stubs (posts → notes, shayan → founder, about → founder)
-  if (rel.startsWith("/posts/") || rel === "/posts/index.html") return false;
-  if (rel.startsWith("/shayan/")) return false;
-  if (rel.startsWith("/about/")) return false;
-  if (rel.startsWith("/fa/about/")) return false;
   // static assets / legacy noindex pages
   if (rel.startsWith("/assets/")) return false;
   if (rel.startsWith("/SpielOS/")) return false;

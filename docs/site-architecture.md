@@ -21,9 +21,9 @@ as possible. The Agent Brief page remains available as an informational experien
 at `/services/agent-brief/` and on the services page; it has no request form. Do
 not replace it with a generic CTA page and do not reintroduce `/book/` navigation
 or direct cal.com links on conversion CTAs.
-The general fallback is `/contact/`. The retired `/waitlist/` route redirects
-directly to `/architecture/`; its Persian equivalent redirects to
-`/fa/architecture/`. The former showcase implementation remains recoverable in
+The general fallback is `/contact/`. The retired `/waitlist/`, `/architecture/`,
+and all other migration-redirect routes have been removed entirely — there are
+no redirect stubs in `src/pages/`. The former showcase implementation remains recoverable in
 Git history and is not part of the active funnel.
 
 ## One Idea Hierarchy
@@ -66,7 +66,6 @@ Qualified buyer conversation
 | Product education | `/architecture/`, `/live/` | Architecture and Live page components |
 | Founder-led content | `/notes/**` | Notes collection + post components |
 | Legacy feature detail | `/features/**` subpages | Retained with `noindex, follow` pending evidence-based retirement |
-| Migration redirects | `/waitlist/`, `/fa/waitlist/`, `/features/`, `/fa/features/`, `/posts/**`, `/shayan/`, `/about/`, `/fa/about/` | Redirect page files |
 
 `/use-cases/`, `/contact/thank-you/`, `/fa/contact/thank-you/`, and archived
 product pages are not indexable. They may remain crawlable so search engines
@@ -159,9 +158,10 @@ Every indexable page must have unique title and description, a self-canonical,
 valid reciprocal hreflang links, valid structured data where appropriate, and a
 direct crawlable internal path from the site navigation or related content.
 
-`/about/` and `/fa/about/` are retired single-hop redirects to `/founder/` and
-`/fa/founder/`, matching the `/shayan/` and `/posts/**` convention. They are
-excluded from the sitemap and are not indexable.
+All former migration-redirect routes (`/architecture/`, `/waitlist/`, `/about/`,
+`/fa/about/`, `/shayan/`, `/posts/**`, `/features/chat/**`, `/features/context/**`,
+`/features/harness/**`, `/features/infrastructure/**`) were removed as page files.
+They no longer exist at any URL.
 
 ## Validation commands
 

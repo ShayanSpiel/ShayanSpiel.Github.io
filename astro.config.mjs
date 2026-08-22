@@ -22,12 +22,6 @@ export default defineConfig({
         const path = new URL(page).pathname;
         // Exclude thin placeholder pages
         if (path === '/use-cases/' || path === '/fa/use-cases/') return false;
-        // Exclude /posts/ redirect stubs (301 to /notes/)
-        if (path === '/posts/' || path.startsWith('/posts/')) return false;
-        // Exclude /shayan/ redirect stub (301 to /founder/)
-        if (path === '/shayan/') return false;
-        // Exclude /about/ redirect stubs (301 to /founder/)
-        if (path === '/about/' || path === '/fa/about/') return false;
         return true;
       },
     }),

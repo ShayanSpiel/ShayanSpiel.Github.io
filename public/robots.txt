@@ -1,43 +1,59 @@
-# robots.txt, Shayan Spiel, https://spielos.xyz/
-# AI crawlers: ALLOW indexing (so AI search can cite us), block training only.
-# Updated 2026-06-19.
+# robots.txt — spielos.xyz
+# Policy: everything allowed. All search engines and all AI crawlers
+# (indexing AND training) are welcome. No content-signal restrictions.
+# Updated 2026-08-22.
 
 User-agent: *
 Allow: /
-Disallow: /assets/banners/$
+Disallow: /contact/thank-you/
+Disallow: /apply/thank-you/
 
-# Sitemaps
-Sitemap: https://spielos.xyz/sitemap.xml
+# ── Search engines ──
+User-agent: Googlebot
+Allow: /
 
-# ── AI crawlers, allow indexing, block training ──
-# GPTBot (OpenAI training), block training, allow ChatGPT-User indexing
-User-agent: GPTBot
-Disallow: /
+User-agent: Bingbot
+Allow: /
 
-# ChatGPT-User (ChatGPT browsing/indexing), ALLOW so ChatGPT can cite us
+User-agent: DuckDuckBot
+Allow: /
+
+# ── AI indexing / citation crawlers ──
+User-agent: OAI-SearchBot
+Allow: /
+
 User-agent: ChatGPT-User
 Allow: /
 
-# ClaudeBot (Anthropic indexing), ALLOW so Claude can cite us
-User-agent: ClaudeBot
-Allow: /
-
-# PerplexityBot, ALLOW so Perplexity can cite us
 User-agent: PerplexityBot
 Allow: /
 
-# Google-Extended (Gemini training), block training
-User-agent: Google-Extended
-Disallow: /
+User-agent: ClaudeBot
+Allow: /
 
-# anthropic-ai (Anthropic training), block training
-User-agent: anthropic-ai
-Disallow: /
+User-agent: Applebot
+Allow: /
 
-# CCBot (Common Crawl), block training
+# ── AI training crawlers — allowed by owner decision 2026-08-22 ──
+User-agent: GPTBot
+Allow: /
+
 User-agent: CCBot
-Disallow: /
+Allow: /
 
-# Bytespider (ByteDance/TikTok), block training
+User-agent: Google-Extended
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
 User-agent: Bytespider
-Disallow: /
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+Sitemap: https://spielos.xyz/sitemap.xml
