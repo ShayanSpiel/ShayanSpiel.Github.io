@@ -465,7 +465,7 @@ export const translations: Record<Locale, Translations> = {
     "common.breadcrumbAria": "Breadcrumb",
 
     // ── Feature pages ──
-    "features.pageTitle": "Features | SpielOS Operating Architecture",
+    "features.pageTitle": "The SpielOS Agent Harness | How It Works",
     "features.pageDesc": "Inside the SpielOS agent harness: Director, Departments, Workflows, Agents, Skills, Evals, Connections, and Artifacts — how an AI-run company actually works.",
     "features.hero.label": "SPIELOS FEATURES",
     "features.hero.titleLead": "The whole company as",
@@ -494,7 +494,7 @@ export const translations: Record<Locale, Translations> = {
 
     "features.blocks.director.short": "Director",
     "features.blocks.director.label": "Director",
-    "features.blocks.director.pageTitle": "Director - the Role That Runs Every Goal | SpielOS",
+    "features.blocks.director.pageTitle": "AI Director - The Role That Owns Every Goal | SpielOS",
     "features.blocks.director.pageDesc": "The SpielOS Director owns goals, routes Departments, supervises durable runs, judges evidence, requests approvals, and reports outcomes. No live permission is inferred.",
     "features.blocks.director.hero.title": "The role that owns<br /> every goal.",
     "features.blocks.director.hero.desc": "The Director is an operating role, not a chat wrapper. It translates business intent into measurable Goals, coordinates production-ready Departments, supervises long-running runs, judges evidence validity, requests approvals, and reports outcomes.",
@@ -526,7 +526,7 @@ export const translations: Record<Locale, Translations> = {
 
     "features.blocks.workflows.short": "Workflows",
     "features.blocks.workflows.label": "Workflows",
-    "features.blocks.workflows.pageTitle": "Workflows - Repeatable Playbooks | SpielOS",
+    "features.blocks.workflows.pageTitle": "AI Workflows - Declared Once, Run Forever | SpielOS",
     "features.blocks.workflows.pageDesc": "AI Workflows in SpielOS are repeatable playbooks inside a Department: a WorkflowSpec graph of typed steps executed by the shared interpreter.",
     "features.blocks.workflows.hero.title": "Repeatable work,<br /> declared once.",
     "features.blocks.workflows.hero.desc": "A Workflow is a stored spec: the graph of steps, their kinds, the owning Department, and how to resume. Running the same workflow today and next quarter produces the same discipline.",
@@ -542,7 +542,7 @@ export const translations: Record<Locale, Translations> = {
 
     "features.blocks.agents.short": "Agents",
     "features.blocks.agents.label": "Agents",
-    "features.blocks.agents.pageTitle": "Agents - Bounded Executors | SpielOS",
+    "features.blocks.agents.pageTitle": "Autonomous AI Agents With Boundaries | SpielOS",
     "features.blocks.agents.pageDesc": "Autonomous AI agents with boundaries: SpielOS Agents are bounded executors for Workflow steps. They claim work orders, activate skills, execute, and complete.",
     "features.blocks.agents.hero.title": "Bounded roles that<br /> execute steps.",
     "features.blocks.agents.hero.desc": "An Agent is a contract between a role and the runtime: it claims an available work order, activates the skills it needs, executes the step, and completes the order. It never owns the loop.",
@@ -558,7 +558,7 @@ export const translations: Record<Locale, Translations> = {
 
     "features.blocks.skills.short": "Skills",
     "features.blocks.skills.label": "Skills",
-    "features.blocks.skills.pageTitle": "Skills - Reusable Methods | SpielOS",
+    "features.blocks.skills.pageTitle": "AI Skills for Agents - Reusable Methods | SpielOS",
     "features.blocks.skills.pageDesc": "AI Skills are reusable methods - the how behind work. Agents activate the skills they need; the Director loads the Director skill before operating.",
     "features.blocks.skills.hero.title": "Methods that agents<br /> actually follow.",
     "features.blocks.skills.hero.desc": "A Skill is a method with an activation contract. It contains the workflow and checks for one kind of work, never company truth. Facts live in strategy and assets; skills stay reusable.",
@@ -574,7 +574,7 @@ export const translations: Record<Locale, Translations> = {
 
     "features.blocks.evals.short": "Evals",
     "features.blocks.evals.label": "Evals",
-    "features.blocks.evals.pageTitle": "Evals - Quality Gates | SpielOS",
+    "features.blocks.evals.pageTitle": "LLM-as-Judge Evals - Quality Gates | SpielOS",
     "features.blocks.evals.pageDesc": "LLM-as-judge evals are the quality gates of SpielOS. Each EvalSuite declares criteria and thresholds; a passed eval report is required evidence before work ships.",
     "features.blocks.evals.hero.title": "Quality you can<br /> point to.",
     "features.blocks.evals.hero.desc": "An Eval is a stored quality gate: criteria, thresholds, and an LLM-as-judge that scores the artifact and returns a verdict with a full report. Low-quality work stops before it ships.",
@@ -761,7 +761,7 @@ export const translations: Record<Locale, Translations> = {
     "agentBrief.hero.trust": "You keep the brief whether or not we work together.",
 
     // Conversion homepage
-    "conversion.home.pageTitle": "Build a business that runs without you | SpielOS",
+    "conversion.home.pageTitle": "AI Workflow Automation That Runs Without You | SpielOS",
     "conversion.home.pageDesc": "AI workflow automation that runs your business without you. We fix broken AI-built software and turn repetitive work into systems that keep working.",
     "schema.website.desc": "SpielOS runs real company work through supervised AI departments — goals in, evidence out. See the live company record.",
     "schema.software.desc": "SpielOS is an agent harness that owns real business work: define a goal, run it durably with approvals, ship with evidence.",
@@ -1074,7 +1074,7 @@ export const translations: Record<Locale, Translations> = {
     "conversion.apply.final.title": "Five minutes now can remove something your team has been dealing with for months.",
 
     // Conversion Pricing page
-    "conversion.pricing.pageTitle": "Pricing — One Monthly Rate | SpielOS",
+    "conversion.pricing.pageTitle": "AI Automation Pricing — One Monthly Rate | SpielOS",
     "conversion.pricing.pageDesc": "One monthly rate for AI automation: $2,990/month, one active build at a time. No hourly billing, no lock-in — see the scope before you pay.",
     "conversion.pricing.hero.label": "Pricing",
     "conversion.pricing.hero.title": "One monthly rate. Built around results, not hours.",
@@ -1289,7 +1289,7 @@ export const translations: Record<Locale, Translations> = {
     "architecture.cta.desc": "We identify one repetitive process, define its result and constraints in an Agent Brief, and build the working system on SpielOS.",
 
     // Use Cases
-    "useCases.pageTitle": "AI Agent Use Cases",
+    "useCases.pageTitle": "AI Departments — Real Examples From a Real Company",
     "useCases.pageDesc": "See real AI departments doing real company work — design, content, marketing, SEO, analytics — on the same loop that runs SpielOS live.",
     "useCases.hero.title": "Real work,<br /> real results.",
     "useCases.hero.desc": "See how SpielOS AI employees handle actual business tasks — from research to content production to customer operations.",
@@ -1297,7 +1297,7 @@ export const translations: Record<Locale, Translations> = {
     "useCases.card.design.desc": "Your AI Design department turns one campaign Artifact into platform-ready videos and Threads graphics. Every render is previewed and vision-QA'd first, and the whole gallery is rebuilt from the live archetype registry on every deploy.",
     "useCases.card.design.case": "Read the Design case",
     "useCases.card.design.gallery": "Browse the template gallery",
-    "useCases.design.pageTitle": "Design Department - Visual Production | SpielOS",
+    "useCases.design.pageTitle": "AI Design Department | SpielOS",
     "useCases.design.pageDesc": "Your AI Design Department produces platform-ready videos and social graphics on the same loop that runs this company: one campaign Artifact, a registered archetype per item and platform, previews first, and vision QA on every render.",
     "useCases.design.hero.label": "USE CASE · AI DESIGN DEPARTMENT",
     "useCases.design.hero.title": "Visual production<br class='hidden sm:block' /> on the live loop.",
@@ -1376,7 +1376,7 @@ export const translations: Record<Locale, Translations> = {
     "useCases.card.content.title": "AI Content Department",
     "useCases.card.content.desc": "Your AI Content department goes from one campaign brief to published articles, social posts, and video scripts - drafted, quality-gated, approved by a human, and shipped through Buffer with receipts.",
     "useCases.card.content.case": "Read the Content case",
-    "useCases.content.pageTitle": "Content AI Automation That Runs the Work | SpielOS",
+    "useCases.content.pageTitle": "AI Content Department | SpielOS",
     "useCases.content.pageDesc": "Your AI Content Department on the same loop that runs SpielOS: one brief, drafts written for your ideal customer, a quality gate and human approval before shipping, published through Buffer, Threads, and YouTube with evidence.",
     "useCases.content.hero.label": "USE CASE · AI CONTENT DEPARTMENT",
     "useCases.content.hero.title": "Content AI automation<br class='hidden sm:block' /> on the live loop.",
@@ -1429,7 +1429,7 @@ export const translations: Record<Locale, Translations> = {
     "useCases.card.marketing.title": "AI Marketing Department",
     "useCases.card.marketing.desc": "Your AI Marketing department: researched leads, personal emails and DMs, approved sends, and replies recorded back to your CRM - outbound as a repeatable operation, not ad-hoc effort.",
     "useCases.card.marketing.case": "Read the Marketing case",
-    "useCases.marketing.pageTitle": "Marketing AI Automation That Runs the Work | SpielOS",
+    "useCases.marketing.pageTitle": "AI Marketing Department | SpielOS",
     "useCases.marketing.pageDesc": "Your AI Marketing Department for outreach that earns replies: researched leads, personal emails and social DMs, approved sending, and every outcome recorded back to your CRM - on one supervised loop.",
     "useCases.marketing.hero.label": "USE CASE · AI MARKETING DEPARTMENT",
     "useCases.marketing.hero.title": "Marketing AI automation<br class='hidden sm:block' /> that fills the pipeline.",
@@ -1482,7 +1482,7 @@ export const translations: Record<Locale, Translations> = {
     "useCases.card.seo.title": "AI SEO Department",
     "useCases.card.seo.desc": "Your AI SEO department: continuous keyword research, technical audits, on-page fixes, and internal linking - verified against Search Console data instead of guesswork.",
     "useCases.card.seo.case": "Read the SEO case",
-    "useCases.seo.pageTitle": "SEO AI Automation That Runs the Work | SpielOS",
+    "useCases.seo.pageTitle": "AI SEO Department | SpielOS",
     "useCases.seo.pageDesc": "Your AI SEO Department on the loop that runs SpielOS: continuous keyword research, technical audits, metadata, internal linking, and Search Console verification - maintained as an operation, not once a year.",
     "useCases.seo.hero.label": "USE CASE · AI SEO DEPARTMENT",
     "useCases.seo.hero.title": "SEO AI automation<br class='hidden sm:block' /> that keeps working.",
@@ -1535,7 +1535,7 @@ export const translations: Record<Locale, Translations> = {
     "useCases.card.analytics.title": "AI Analytics Department",
     "useCases.card.analytics.desc": "Your AI Analytics department: a clean event taxonomy, verified GA4 and PostHog tracking, and weekly plain-language reports that end with the one number worth moving next.",
     "useCases.card.analytics.case": "Read the Analytics case",
-    "useCases.analytics.pageTitle": "Analytics AI Automation That Runs the Work | SpielOS",
+    "useCases.analytics.pageTitle": "AI Analytics Department | SpielOS",
     "useCases.analytics.pageDesc": "Your AI Analytics Department turns raw tracking into decisions: event taxonomy, conversion tracking, attribution, and weekly plain-language reports from GA4, PostHog, and Search Console.",
     "useCases.analytics.hero.label": "USE CASE · AI ANALYTICS DEPARTMENT",
     "useCases.analytics.hero.title": "Analytics AI automation<br class='hidden sm:block' /> without the dashboard chore.",
@@ -2107,7 +2107,7 @@ export const translations: Record<Locale, Translations> = {
     "common.breadcrumbAria": "مسیر صفحه",
 
     // ── صفحات امکانات ──
-    "features.pageTitle": "امکانات | معماری عملیاتی SpielOS",
+    "features.pageTitle": "هارنس ایجنت SpielOS | چطور کار می‌کند",
     "features.pageDesc": "داخل هارنس ایجنت SpielOS: مدیر، دپارتمان‌ها، ورک‌فلوها، ایجنت‌ها، مهارت‌ها، ارزیابی‌ها، اتصال‌ها و خروجی‌ها — اینکه یک شرکتِ اجراشده با AI واقعاً چطور کار می‌کند.",
     "features.hero.label": "امکانات SPIELOS",
     "features.hero.titleLead": "کل شرکت به‌صورت",
@@ -2136,7 +2136,7 @@ export const translations: Record<Locale, Translations> = {
 
     "features.blocks.director.short": "مدیر",
     "features.blocks.director.label": "مدیر",
-    "features.blocks.director.pageTitle": "مدیر - نقشی که هر هدف را اداره می‌کند | SpielOS",
+    "features.blocks.director.pageTitle": "مدیر AI - نقشی که هر هدف را در اختیار دارد | SpielOS",
     "features.blocks.director.pageDesc": "مدیر SpielOS صاحب اهداف است، دپارتمان‌ها را هدایت می‌کند، ران‌های بادوام را نظارت می‌کند، شواهد را داوری می‌کند، تأیید می‌گیرد و نتایج را گزارش می‌دهد. هیچ اجازه زنده‌ای استنباط نمی‌شود.",
     "features.blocks.director.hero.title": "نقشی که مالکِ<br /> هر هدف است.",
     "features.blocks.director.hero.desc": "مدیر یک نقش عملیاتی است، نه یک چت‌رپر. قصد کسب‌وکار را به اهداف قابل‌اندازه‌گیری تبدیل می‌کند، دپارتمان‌های آماده تولید را هماهنگ می‌کند، ران‌های طولانی را نظارت می‌کند، اعتبار شواهد را داوری می‌کند، تأیید می‌گیرد و نتایج را گزارش می‌دهد.",
@@ -2168,7 +2168,7 @@ export const translations: Record<Locale, Translations> = {
 
     "features.blocks.workflows.short": "ورک‌فلوها",
     "features.blocks.workflows.label": "ورک‌فلوها",
-    "features.blocks.workflows.pageTitle": "ورک‌فلوها - پلی‌بوک‌های تکرارشونده | SpielOS",
+    "features.blocks.workflows.pageTitle": "ورک‌فلوهای AI - یک‌بار تعریف، برای همیشه اجرا | SpielOS",
     "features.blocks.workflows.pageDesc": "ورک‌فلوهای AI در SpielOS پلی‌بوک‌های تکرارشونده داخل یک دپارتمان‌اند: گراف WorkflowSpec از مراحل تایپ‌شده که اینترپرتر مشترک اجرا می‌کند.",
     "features.blocks.workflows.hero.title": "کار تکرارشونده،<br /> یک‌بار تعریف‌شده.",
     "features.blocks.workflows.hero.desc": "ورک‌فلو یک اسپک ذخیره‌شده است: گراف مراحل، نوع آن‌ها، دپارتمان مالک و نحوه ادامه. اجرای همین ورک‌فلو امروز و فصل بعد همان نظم را می‌سازد.",
@@ -2184,7 +2184,7 @@ export const translations: Record<Locale, Translations> = {
 
     "features.blocks.agents.short": "ایجنت‌ها",
     "features.blocks.agents.label": "ایجنت‌ها",
-    "features.blocks.agents.pageTitle": "ایجنت‌ها - اجراکننده‌های محدود | SpielOS",
+    "features.blocks.agents.pageTitle": "ایجنت‌های خودکار AI با مرز مشخص | SpielOS",
     "features.blocks.agents.pageDesc": "ایجنت‌های خودکار AI با مرز مشخص: ایجنت‌های SpielOS اجراکننده‌های محدود مراحل ورک‌فلو هستند. سفارش کار می‌گیرند، مهارت فعال می‌کنند، اجرا می‌کنند و کامل می‌کنند.",
     "features.blocks.agents.hero.title": "نقش‌های محدودی که<br /> مراحل را اجرا می‌کنند.",
     "features.blocks.agents.hero.desc": "ایجنت قراردادی بین یک نقش و رانتایم است: سفارش کار موجود را می‌گیرد، مهارت‌هایی را که نیاز دارد فعال می‌کند، مرحله را اجرا می‌کند و سفارش را کامل می‌کند. هرگز صاحب چرخه نیست.",
@@ -2200,7 +2200,7 @@ export const translations: Record<Locale, Translations> = {
 
     "features.blocks.skills.short": "مهارت‌ها",
     "features.blocks.skills.label": "مهارت‌ها",
-    "features.blocks.skills.pageTitle": "مهارت‌ها - روش‌های قابل‌استفاده دوباره | SpielOS",
+    "features.blocks.skills.pageTitle": "مهارت‌های AI برای ایجنت‌ها | SpielOS",
     "features.blocks.skills.pageDesc": "مهارت‌های AI روش‌های قابل‌استفاده دوباره هستند - چگونگی انجام کار. ایجنت‌ها مهارت لازم را فعال می‌کنند؛ مدیر قبل از کار عملیاتی اسکیل مدیر را بار می‌کند.",
     "features.blocks.skills.hero.title": "روش‌هایی که ایجنت‌ها<br /> واقعاً دنبال می‌کنند.",
     "features.blocks.skills.hero.desc": "مهارت یک روش با قرارداد فعال‌سازی است. ورک‌فلو و چک‌های یک جور کار را دارد، نه حقیقت شرکت را. واقعیت‌ها در استراتژی و دارایی‌ها هستند؛ مهارت‌ها قابل‌استفاده دوباره می‌مانند.",
@@ -2216,7 +2216,7 @@ export const translations: Record<Locale, Translations> = {
 
     "features.blocks.evals.short": "ارزیابی‌ها",
     "features.blocks.evals.label": "ارزیابی‌ها",
-    "features.blocks.evals.pageTitle": "ارزیابی‌ها - گیت‌های کیفیت | SpielOS",
+    "features.blocks.evals.pageTitle": "ارزیابی LLM-as-judge - گیت‌های کیفیت | SpielOS",
     "features.blocks.evals.pageDesc": "ارزیابی‌های LLM-as-judge گیت‌های کیفیت SpielOS هستند. هر EvalSuite معیارها و آستانه‌ها را اعلام می‌کند؛ گزارش ارزیابی پاس‌شده پیش از انتشار، شواهد الزامی است.",
     "features.blocks.evals.hero.title": "کیفیتی که<br /> می‌توانی نشان بدهی.",
     "features.blocks.evals.hero.desc": "ارزیابی یک گیت کیفیت ذخیره‌شده است: معیارها، آستانه‌ها و یک داور LLM که خروجی را نمره می‌دهد و با گزارش کامل رأی می‌دهد. کار بی‌کیفیت قبل از انتشار متوقف می‌شود.",
@@ -2262,7 +2262,7 @@ export const translations: Record<Locale, Translations> = {
     "features.blocks.artifacts.cta.title": "این نظم را در شرکت‌ات می‌خواهی؟",
     "features.blocks.artifacts.cta.desc": "Agent Brief یکی از ورک‌فلوهای تو را به همین چرخه، تأییدها و شواهد وصل می‌کند.",
 
-    "conversion.home.pageTitle": "SpielOS | سیستم‌های کاری هوش مصنوعی برای کسب‌وکارهای تثبیت‌شده",
+    "conversion.home.pageTitle": "اتوماسیون ورک‌فلوی AI | کسب‌وکاری که بدون تو کار می‌کند | SpielOS",
     "conversion.home.pageDesc": "اتوماسیون ورک‌فلو با هوش مصنوعی که کسب‌وکارت را بدون تو می‌چرخاند. نرم‌افزار خرابِ ساخته‌شده با AI را درست می‌کنیم و کار تکراری را به سیستم‌هایی تبدیل می‌کنیم که بدون تو کار می‌کنند.",
     "schema.website.desc": "SpielOS کار واقعی شرکت را از طریق دپارتمان‌های AI نظارت‌شده اجرا می‌کند — هدف می‌گیرد، مدرک تحویل می‌دهد. وضعیت زنده شرکت را ببین.",
     "schema.software.desc": "SpielOS یک هارنس ایجنت است که کار واقعی کسب‌وکار را بر عهده می‌گیرد: هدف را تعریف کن، ران‌های بادوام را با تأییدیه اداره کن، با مدرک تحویل بده.",
@@ -2575,7 +2575,7 @@ export const translations: Record<Locale, Translations> = {
     "conversion.apply.final.title": "پنج دقیقه الان می‌تونه چیزی رو حذف کنه که ماه‌هاست تیم شما درگیرشه.",
 
     // Conversion Pricing page (fa)
-    "conversion.pricing.pageTitle": "تعرفه — یک نرخ ماهانه | SpielOS",
+    "conversion.pricing.pageTitle": "تعرفه اتوماسیون AI — یک نرخ ماهانه | SpielOS",
     "conversion.pricing.pageDesc": "یک نرخ ماهانه برای اتوماسیون AI: ماهانه ۲,۹۹۰ دلار، فقط یک پروژه فعال در هر زمان. بدون ساعت‌حسابی و قید بلندمدت — قبل از پرداخت، محدوده کار را ببینید.",
     "conversion.pricing.hero.label": "تعرفه",
     "conversion.pricing.hero.title": "یک نرخ ماهانه. بنا شده روی نتیجه، نه ساعت کاری.",
@@ -2798,7 +2798,7 @@ export const translations: Record<Locale, Translations> = {
     "useCases.card.design.desc": "دپارتمان AI Design تو یک خروجی کمپین را به ویدیوهای آماده پلتفرم و گرافیک تردز تبدیل می‌کند. هر رندر اول پیش‌نمایش و بعد با QA بصری بررسی می‌شود و کل گالری در هر دیپلوی از روی رجیستری زنده آرکی‌تایپ‌ها ساخته می‌شود.",
     "useCases.card.design.case": "مطالعه پرونده Design",
     "useCases.card.design.gallery": "گالری تمپلیت‌ها را ببین",
-    "useCases.design.pageTitle": "دپارتمان Design — تولید بصری | SpielOS",
+    "useCases.design.pageTitle": "دپارتمان AI Design | SpielOS",
     "useCases.design.pageDesc": "دپارتمان AI Design تو ویدیو و گرافیک آماده پلتفرم را روی همان چرخه‌ای تولید می‌کند که همین شرکت را اداره می‌کند: یک خروجی کمپین، یک آرکی‌تایپ ثبت‌شده برای هر آیتم و پلتفرم، اول پیش‌نمایش و QA بصری روی هر رندر.",
     "useCases.design.hero.label": "کاربرد · دپارتمان DESIGN",
     "useCases.design.hero.title": "تولید بصری<br class='hidden sm:block' /> روی چرخهٔ زنده.",
@@ -2877,7 +2877,7 @@ export const translations: Record<Locale, Translations> = {
     "useCases.card.content.title": "دپارتمان AI Content",
     "useCases.card.content.desc": "دپارتمان AI Content تو از یک بریف کمپین تا مقاله منتشرشده، پست سوشال و اسکریپت ویدیو — نوشته‌شده، ارزیابی‌شده، تأییدشده توسط انسان، و ارسال‌شده از طریق Buffer همراه با رسید.",
     "useCases.card.content.case": "مطالعه پرونده Content",
-    "useCases.content.pageTitle": "اتوماسیون محتوای AI که کار را انجام می‌دهد | SpielOS",
+    "useCases.content.pageTitle": "دپارتمان AI Content | SpielOS",
     "useCases.content.pageDesc": "دپارتمان AI Content تو روی همان چرخه‌ای که SpielOS را اداره می‌کند: یک بریف، پیش‌نویس‌هایی که برای مشتری ایده‌آل تو نوشته می‌شوند، دروازه کیفیت و تأیید انسان قبل از انتشار، و انتشار از طریق Buffer و Threads و YouTube همراه با مدرک.",
     "useCases.content.hero.label": "کاربرد · دپارتمان CONTENT",
     "useCases.content.hero.title": "اتوماسیون محتوای AI<br class='hidden sm:block' /> روی چرخهٔ زنده.",
@@ -2930,7 +2930,7 @@ export const translations: Record<Locale, Translations> = {
     "useCases.card.marketing.title": "دپارتمان AI Marketing",
     "useCases.card.marketing.desc": "دپارتمان AI Marketing تو: لیدهای تحقیق‌شده، ایمیل و DM شخصی، ارسال‌های تأییدشده و پاسخ‌هایی که به CRM برمی‌گردند — outreach به‌عنوان یک عملیات تکرارشدنی، نه تلاش پراکنده.",
     "useCases.card.marketing.case": "مطالعه پرونده Marketing",
-    "useCases.marketing.pageTitle": "اتوماسیون بازاریابی AI که کار را انجام می‌دهد | SpielOS",
+    "useCases.marketing.pageTitle": "دپارتمان AI Marketing | SpielOS",
     "useCases.marketing.pageDesc": "دپارتمان AI Marketing تو برای outreach‌ای که جواب می‌گیرد: لیدهای تحقیق‌شده، ایمیل و DM شخصی، ارسال تأییدشده و ثبت همه نتایج در CRM — روی یک چرخه نظارت‌شده.",
     "useCases.marketing.hero.label": "کاربرد · دپارتمان MARKETING",
     "useCases.marketing.hero.title": "اتوماسیون بازاریابی AI<br class='hidden sm:block' /> که پایپ‌لاین را پر می‌کند.",
@@ -2983,7 +2983,7 @@ export const translations: Record<Locale, Translations> = {
     "useCases.card.seo.title": "دپارتمان AI SEO",
     "useCases.card.seo.desc": "دپارتمان AI SEO تو: تحقیق کلمه‌کلیدی مداوم، ممیزی فنی، اصلاحات on-page و لینک‌سازی داخلی — هر تغییر به‌جای حدس، با داده Search Console راستی‌آزمایی می‌شود.",
     "useCases.card.seo.case": "مطالعه پرونده SEO",
-    "useCases.seo.pageTitle": "اتوماسیون سئوی AI که کار را انجام می‌دهد | SpielOS",
+    "useCases.seo.pageTitle": "دپارتمان AI SEO | SpielOS",
     "useCases.seo.pageDesc": "دپارتمان AI SEO تو روی چرخه‌ای که SpielOS را اداره می‌کند: تحقیق کلمه‌کلیدی مداوم، ممیزی فنی، متادیتا، لینک‌سازی داخلی و راستی‌آزمایی با Search Console — به‌عنوان یک عملیات، نه سالی یک بار.",
     "useCases.seo.hero.label": "کاربرد · دپارتمان SEO",
     "useCases.seo.hero.title": "اتوماسیون سئوی AI<br class='hidden sm:block' /> که همیشه در کار است.",
@@ -3036,7 +3036,7 @@ export const translations: Record<Locale, Translations> = {
     "useCases.card.analytics.title": "دپارتمان AI Analytics",
     "useCases.card.analytics.desc": "دپارتمان AI Analytics تو: تکسونومی رویداد تمیز، ترکینگ راستی‌آزمایی‌شده GA4 و PostHog، و گزارش‌های هفتگی به زبان ساده که با یک عدد مهم تمام می‌شوند.",
     "useCases.card.analytics.case": "مطالعه پرونده Analytics",
-    "useCases.analytics.pageTitle": "اتوماسیون آنالیتیکس AI که کار را انجام می‌دهد | SpielOS",
+    "useCases.analytics.pageTitle": "دپارتمان AI Analytics | SpielOS",
     "useCases.analytics.pageDesc": "دپارتمان AI Analytics تو داده خام را به تصمیم تبدیل می‌کند: تکسونومی رویداد، ترکینگ تبدیل، اتریبیوشن و گزارش‌های هفتگی به زبان ساده از GA4 و PostHog و Search Console.",
     "useCases.analytics.hero.label": "کاربرد · دپارتمان ANALYTICS",
     "useCases.analytics.hero.title": "اتوماسیون آنالیتیکس AI<br class='hidden sm:block' /> بدون دردسر داشبورد.",
