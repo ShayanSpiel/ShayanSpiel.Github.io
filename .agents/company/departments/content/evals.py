@@ -23,7 +23,7 @@ from ...evals.models import EvalCriterion, EvalSuite
 ICPC = ".agents/company/strategy/icp.md"
 VOICE = ".agents/company/strategy/voice.md"
 CONTENT_README = ".agents/company/departments/content/README.md"
-COPYWRITING_EN = ".agents/skills/copywriting-en/SKILL.md"
+COPYWRITING_EN = ".agents/skills/website/copywriting-en/SKILL.md"
 
 CONTENT_COPY_TOP10 = EvalSuite(
     id="content-copy-top10",

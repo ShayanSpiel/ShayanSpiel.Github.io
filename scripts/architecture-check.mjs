@@ -32,10 +32,11 @@ expect(baseLayout.includes("booking_cta_clicked"), "BaseLayout must fire the Pos
 
 expect(baseLayout.includes("booked_call"), "BaseLayout must capture successful bookings from the Cal embed");
 expect(!existsSync(join(root, "src/pages/book.astro")) && !existsSync(join(root, "src/pages/fa/book.astro")) && !existsSync(join(root, "src/components/BookingEmbed.astro")), "the /book/ pages and embed component are deleted");
-expect(read("src/components/Nav.astro").includes('data-cal-link={BOOKING_LINK}'), "Nav CTAs must be native Cal embed popup triggers");
+const nav = read("src/components/Nav.astro");
+expect(nav.includes("APPLY_PATH") && nav.includes('data-cta-location="nav"') && nav.includes('data-cta-location="nav_mobile"'), "Nav primary CTA must be the Apply funnel link on desktop and mobile");
 expect(!read("src/components/LanguageSwitcher.astro").includes("<svg"), "LanguageSwitcher must use Boxicons, not an inline SVG icon");
 expect(!read("src/components/SocialIcons.astro").includes("set:html"), "SocialIcons must use Boxicons, not injected SVG markup");
-expect(read("src/pages/use-cases/index.astro").includes('robots="noindex, follow"'), "placeholder use-cases page must be noindex");
+expect(!read("src/pages/use-cases/index.astro").includes("noindex"), "use-cases hub is a real department page and must stay indexable");
 expect(read("src/pages/contact/thank-you.astro").includes('robots="noindex, follow"'), "contact thank-you page must be noindex");
 expect(read("src/pages/spielos-v1.astro").includes('robots="noindex, follow"'), "archived v1 page must be noindex");
 expect(baseLayout.includes("cta_clicked") && baseLayout.includes("book_call"), "BaseLayout must track booking CTA clicks as book_call");

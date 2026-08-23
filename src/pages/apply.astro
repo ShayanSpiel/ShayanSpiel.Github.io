@@ -2,7 +2,7 @@
 import Page from "../layouts/Page.astro";
 import SectionHeader from "../components/sections/SectionHeader.astro";
 import FAQList from "../components/sections/FAQList.astro";
-import { FORMS, SITE } from "../config";
+import { FORMS, SITE, BOOKING_LINK, BOOKING_CONFIG } from "../config";
 import { type Locale, t } from "../i18n/translations";
 import { localizePath } from "../i18n";
 
@@ -63,7 +63,7 @@ const breadcrumbJsonLd = {
           <ul class="mt-6 grid gap-x-8 gap-y-4 sm:grid-cols-2">
             {([1, 2, 3, 4, 5] as const).map((n) => (
               <li class="flex items-start gap-2.5">
-                <i class="bx bx-check-square icon-base shrink-0 text-success"></i>
+                <i class="bx bx-check-square icon-base mt-1 shrink-0 text-success"></i>
                 <span class="text-sm leading-relaxed text-muted-foreground">{t(locale, `conversion.apply.fit.i${n}`)}</span>
               </li>
             ))}
@@ -74,14 +74,21 @@ const breadcrumbJsonLd = {
           <div class="flex h-10 w-10 items-center justify-center rounded-md bg-primary-soft text-primary"><i class="bx bx-info-square icon-xl"></i></div>
           <h3 class="mt-5 text-base font-semibold text-foreground-strong">{t(locale, "conversion.apply.fit.notSureTitle")}</h3>
           <p class="mt-2 text-sm leading-relaxed text-muted-foreground">{t(locale, "conversion.apply.fit.notSureDesc")}</p>
-          <a href="#free-review" class="mt-6 inline-flex h-10 items-center justify-center rounded-md border border-border bg-panel px-5 text-sm font-semibold text-foreground-strong transition-colors hover:border-border-strong hover:bg-panel-raised">{t(locale, "conversion.apply.cta.start")}</a>
+          <div class="mt-6 flex items-center gap-2">
+            <a href="#free-review" class="inline-flex h-10 flex-1 items-center justify-center rounded-md border border-border bg-panel px-5 text-sm font-semibold text-foreground-strong transition-colors hover:border-border-strong hover:bg-panel-raised">{t(locale, "conversion.apply.cta.start")}</a>
+            <!-- Optional secondary action (owner directive 2026-08-23): icon-only
+                 Cal booking trigger. Opens Cal's native embed popup in place. -->
+            <button type="button" data-cal-link={BOOKING_LINK} data-cal-config={JSON.stringify(BOOKING_CONFIG)} data-cal-cta data-cta-location="apply_not_sure_call_icon" aria-label={t(locale, "cta.preferCallShort")} title={t(locale, "cta.preferCallShort")} class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-border bg-panel-raised text-muted-foreground transition-all hover:border-border-strong hover:bg-panel-strong hover:text-primary">
+              <i class="bx bx-phone icon-base" aria-hidden="true"></i>
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- WIZARD -->
-  <section id="free-review" class="relative overflow-hidden py-24 sm:py-32 scroll-mt-32">
+  <section class="relative overflow-hidden py-24 sm:py-32">
     <div class="absolute inset-0 bg-panel-deep/50"></div>
     <div class="relative mx-auto max-w-5xl px-6" data-aos="fade-up">
       <div class="mb-8 max-w-2xl">
@@ -89,7 +96,7 @@ const breadcrumbJsonLd = {
         <h2 class="mt-3 text-3xl font-bold tracking-tight text-foreground-strong sm:text-4xl">{t(locale, "conversion.apply.form.title")}</h2>
         <p class="mt-3 text-sm leading-relaxed text-muted-foreground">{t(locale, "conversion.apply.form.note")}</p>
       </div>
-      <div class="relative overflow-hidden rounded-xl border border-border bg-panel shadow-panel">
+      <div id="free-review" class="relative scroll-mt-28 overflow-hidden rounded-xl border border-border bg-panel shadow-panel">
         <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-primary via-accent to-transparent opacity-80" aria-hidden="true"></div>
         <form id="apply-form" novalidate>
           <input type="hidden" name="_captcha" value="false" />

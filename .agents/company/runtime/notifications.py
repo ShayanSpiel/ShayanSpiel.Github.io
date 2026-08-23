@@ -155,13 +155,3 @@ def deliver_pending(store, limit: int = 100) -> int:
     for row in pending:
         store.acknowledge_notification(row["id"])
     return len(pending)
-
-
-def dispatch(store, limit: int = 100) -> int:
-    """Alias of :func:`deliver_pending` for callers that prefer a dispatch verb."""
-    return deliver_pending(store, limit=limit)
-
-
-def deliver(store, notification_id: str) -> dict:
-    """Deliver one notification by id; returns the updated notification row."""
-    return store.acknowledge_notification(notification_id)

@@ -10,7 +10,9 @@ permissions:
     effect: allow
 ---
 
-Read the company ICP and voice plus the outbound-email skill. Work only from a
+Read `.agents/skills/company/outbound-email/SKILL.md`,
+`.agents/company/strategy/icp.md`, and `.agents/company/strategy/voice.md`.
+Work only from a
 persisted `action_required` request and researched lead evidence. Return the
 requested `email_draft` or `dm_draft` evidence. Never send, approve, invent
 research, or change the offer or ICP.

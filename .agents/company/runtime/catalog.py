@@ -6,6 +6,7 @@ from ..agents import agents as installed_agents
 from ..connections import connections as installed_connections
 from ..evals import suite_spec as eval_suite_spec, suites as installed_eval_suites
 from .package import package_spec, validate_package
+from . import config as runtime_config
 from .registry import departments as installed_departments
 from .strategy import strategy_kernel_summary
 
@@ -15,7 +16,7 @@ SKILLS_ROOT = COMPANY_ROOT.parent / "skills"
 
 def _skills():
     values = []
-    for path in sorted(SKILLS_ROOT.glob("*/SKILL.md")):
+    for path in sorted(SKILLS_ROOT.glob("*/*/SKILL.md")):
         name, description = path.parent.name, ""
         for line in path.read_text().splitlines()[1:20]:
             if line.startswith("name:"):
@@ -36,7 +37,7 @@ def catalog():
         departments.append(package)
     return {
         "runtime": {
-            "version": "6.0.0",
+            "version": runtime_config.VERSION,
             "loop": ["GOAL", "OBSERVE", "DECIDE", "ACT", "EVALUATE"],
             "controls": ["director", "system-improvement"],
             "department_runtime": "interpreter",

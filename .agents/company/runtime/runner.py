@@ -14,6 +14,7 @@ from .alignment import approval_key
 from .loop import Runtime
 from .notifications import digest_payload
 from .service import automation_enabled
+from .util import parse_dt
 
 logger = logging.getLogger("company.runtime.runner")
 
@@ -481,7 +482,10 @@ class Runner:
             return self.runtime.store.live_lease(row["goal"]["id"]) is None
         if status != "waiting" or not cycle.get("resume_at"):
             return False
-        return datetime.fromisoformat(cycle["resume_at"]) <= datetime.now(timezone.utc)
+        # Shared parse: legacy naive resume_at values normalize to UTC instead
+        # of raising TypeError and killing the whole tick.
+        resume_at = parse_dt(cycle["resume_at"])
+        return resume_at is not None and resume_at <= datetime.now(timezone.utc)
 
     def _signature(self, goal_id: str):
         state = self.runtime.status(goal_id)
@@ -775,15 +779,8 @@ class Runner:
 
     @staticmethod
     def _parse_dt(value):
-        if not value:
-            return None
-        try:
-            parsed = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
-        except (TypeError, ValueError):
-            return None
-        if parsed.tzinfo is None:
-            parsed = parsed.replace(tzinfo=timezone.utc)
-        return parsed
+        # Shared normalization (naive timestamps -> UTC); see runtime/util.py.
+        return parse_dt(value)
 
     # ------------------------------------------------------------------ #
     # Scheduled progress digest (goal-chat-visible-supervision-20260815)  #
@@ -842,7 +839,8 @@ class Runner:
             return []
         anchor = active[0]  # deterministic: store.goals() orders by created_at
         self.runtime.store.notify(anchor["goal"]["id"], anchor["cycle"]["id"],
-                                  "watchdog_digest", self._digest_payload(active, now))
+                                  "watchdog_digest", self._digest_payload(active, now),
+                                  reopen=True)
         self._stamp_digest(now)
         return [anchor["goal"]["id"]]
 
@@ -899,7 +897,7 @@ class Runner:
                 f"Inspect and resume goal {goal['id']}: `company status {goal['id']}` "
                 f"then `company once {goal['id']}`"),
             "next_trigger": f"company once {goal['id']}",
-        })
+        }, reopen=True)
 
     def _emit_runner_down(self, exc: Exception) -> None:
         """Best-effort action_required notification when the watch loop dies.
@@ -933,6 +931,6 @@ class Runner:
                 "result": {"message": f"runner watch loop died: {type(exc).__name__}: {exc}"},
                 "required_user_action": "Restart the runner daemon: `company runner start`",
                 "next_trigger": "company runner start",
-            })
+            }, reopen=True)
         except Exception:  # pragma: no cover - best-effort; never mask the death
             pass

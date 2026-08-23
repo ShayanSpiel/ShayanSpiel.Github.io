@@ -14,8 +14,14 @@ from pathlib import Path
 class RunnerService:
     def __init__(self, project_root: Path, db_path: Path):
         self.project_root = project_root
-        self.db_path = db_path
-        self.state_dir = project_root / ".spielos" / "state"
+        self.db_path = Path(db_path)
+        # The stop switch, pid file, and log all live beside the DATABASE,
+        # matching how the runner derives its state directory
+        # (automation_enabled(store.path.parent)). Deriving from the db path
+        # keeps `company runner stop` effective for a custom --db too: the
+        # flag is written and read at the same location. For the default db
+        # (.spielos/state/company.sqlite) this is the historical layout.
+        self.state_dir = self.db_path.parent
         self.pid_path = self.state_dir / "runner.pid"
         self.log_path = self.state_dir / "runner.log"
         self.control_path = self.state_dir / "automation.json"

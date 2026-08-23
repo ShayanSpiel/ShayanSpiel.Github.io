@@ -48,6 +48,7 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from company.runtime.service import RunnerService  # noqa: E402
+from company.runtime import config as runtime_config  # noqa: E402
 
 # Thresholds mirror the plugin constants (ALIVE_STALE_MS 45_000 / LOOP_STALE_MS
 # 75_000) in seconds.
@@ -286,20 +287,26 @@ class Supervisor:
             else:
                 try:
                     status = self._restart()
-                    self._record_restart(action="restarted")
+                    # Truthful bookkeeping: record what actually happened
+                    # AFTER checking the restart result, so supervisor.json
+                    # never claims a restart that failed. The timestamp still
+                    # advances on a failed attempt to keep the crash-loop
+                    # cooldown effective.
                     if status.get("running"):
                         action = "restarted"
                         actions.append("restarted")
                     else:
                         action = "restart_failed"
                         actions.append("restart_failed")
+                    self._record_restart(action=action)
                 except Exception as exc:  # pragma: no cover - defensive
                     action = "restart_failed"
                     actions.append(f"restart_failed: {exc}")
+                    self._record_restart(action="restart_failed")
 
         if alert and action in {"restarted", "restart_failed"}:
             notified = self._notify_macos(
-                "SpielOS supervisor",
+                runtime_config.supervisor_alert_title(),
                 f"Runner {signal_name} detected; {action}.")
             actions.append("alerted" if notified else "alert_failed")
 

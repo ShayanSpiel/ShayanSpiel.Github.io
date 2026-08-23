@@ -11,9 +11,9 @@ from ...evals.models import EvalCriterion, EvalSuite
 
 REGISTRY = ".agents/company/departments/design/templates/registry.json"
 BRAND_MOTION = ".agents/company/departments/design/templates/video/brand-motion.css"
-VIDEO_CREATION = ".agents/skills/video-creation/SKILL.md"
+VIDEO_CREATION = ".agents/skills/website/video-creation/SKILL.md"
 NARRATION = ".agents/company/departments/design/templates/video/narration.json"
-COPYWRITING_EN = ".agents/skills/copywriting-en/SKILL.md"
+COPYWRITING_EN = ".agents/skills/website/copywriting-en/SKILL.md"
 
 VIDEO_CTA_LINK = EvalSuite(
     id="video-cta-link",

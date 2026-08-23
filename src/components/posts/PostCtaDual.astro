@@ -1,0 +1,42 @@
+---
+interface Props {
+  title?: string;
+  echo?: string;
+  primaryLabel: string;
+  primaryHref: string;
+  secondaryLabel: string;
+  secondaryHref: string;
+  microcopy?: string;
+  externalSecondary?: boolean;
+}
+
+const {
+  title,
+  echo,
+  primaryLabel,
+  primaryHref,
+  secondaryLabel,
+  secondaryHref,
+  microcopy,
+  externalSecondary = false,
+} = Astro.props;
+
+const secondaryAttrs = externalSecondary ? { target: "_blank", rel: "noopener noreferrer" } : {};
+---
+
+<div class="post-cta-dual">
+  <div class="post-cta-dual-icon">
+    <i class="bx bx-rocket icon-2xl"></i>
+  </div>
+  {title && <h3>{title}</h3>}
+  {echo && <p>{echo}</p>}
+  <div class="post-cta-actions">
+    <a href={primaryHref} class="btn-primary">
+      {primaryLabel}<i class="bx bx-right-arrow-alt rtl-flip icon-base"></i>
+    </a>
+    <a href={secondaryHref} class="btn-secondary" {...secondaryAttrs}>
+      <i class="bx bx-download icon-base"></i>{secondaryLabel}
+    </a>
+  </div>
+  {microcopy && <p class="post-cta-micro">{microcopy}</p>}
+</div>

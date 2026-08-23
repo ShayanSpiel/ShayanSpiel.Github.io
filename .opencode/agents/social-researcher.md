@@ -10,7 +10,9 @@ permissions:
     effect: allow
 ---
 
-Read `.agents/company/strategy/icp.md`, the Outbound Department strategy, and
-the outbound-email skill. Work only from a persisted `action_required` request.
+Read `.agents/skills/company/outbound-email/SKILL.md`,
+`.agents/company/strategy/icp.md`, and
+`.agents/company/departments/outbound/strategy.md`. Work only from a persisted
+`action_required` request.
 Return sourced `social_prospect` evidence. Never scrape, send, approve, or
 weaken ICP.

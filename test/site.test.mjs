@@ -7,9 +7,15 @@ const root = process.cwd();
 const dist = join(root, "dist");
 const read = (route) => readFileSync(join(dist, route, "index.html"), "utf8");
 
+// Owner directive 2026-08-23: icon-only Cal booking triggers are sanctioned
+// ONLY as a secondary action on the Contact flow and in the Apply "Not sure?"
+// section — everywhere else the funnel stays Apply-first.
+const CAL_ALLOWED_ROUTES = new Set(["contact", "fa/contact", "apply", "fa/apply"]);
+const calTriggerCount = (html) => (html.match(/<button[^>]*data-cal-link=/g) || []).length;
+
 test("core conversion routes build in English and Persian", () => {
-  const enRoutes = ["", "services", "services/agent-brief", "features", "architecture", "live", ...["director", "departments", "workflows", "agents", "skills", "evals", "connections", "artifacts"].map((b) => `features/${b}`)];
-  const faRoutes = ["fa", "fa/services", "fa/services/agent-brief", "fa/features", "fa/architecture", "fa/live", ...["director", "departments", "workflows", "agents", "skills", "evals", "connections", "artifacts"].map((b) => `fa/features/${b}`)];
+  const enRoutes = ["", "services", "services/agent-brief", "features", "live", "pricing", "apply", "contact", ...["director", "departments", "workflows", "agents", "skills", "evals", "connections", "artifacts"].map((b) => `features/${b}`)];
+  const faRoutes = ["fa", "fa/services", "fa/services/agent-brief", "fa/features", "fa/live", "fa/pricing", "fa/apply", "fa/contact", ...["director", "departments", "workflows", "agents", "skills", "evals", "connections", "artifacts"].map((b) => `fa/features/${b}`)];
   for (const route of [...enRoutes, ...faRoutes]) {
     assert.ok(existsSync(join(dist, route, "index.html")), `${route || "/"} must build`);
   }
@@ -18,15 +24,16 @@ test("core conversion routes build in English and Persian", () => {
   }
 });
 
-test("navigation exposes the fixed information architecture and the booking CTA", () => {
+test("navigation exposes the fixed information architecture and the Apply CTA", () => {
   const en = read("");
   const fa = read("fa");
-  for (const href of ["/services/", "/features/", "/live/", "/notes/", "/founder/"]) assert.match(en, new RegExp(`href="${href}"`));
-  for (const href of ["/fa/services/", "/fa/features/", "/fa/live/", "/fa/notes/", "/fa/founder/"]) assert.match(fa, new RegExp(`href="${href}"`));
+  for (const href of ["/services/", "/pricing/", "/features/", "/live/", "/notes/", "/founder/", "/apply/"]) assert.match(en, new RegExp(`href="${href}"`));
+  for (const href of ["/fa/services/", "/fa/pricing/", "/fa/features/", "/fa/live/", "/fa/notes/", "/fa/founder/", "/fa/apply/"]) assert.match(fa, new RegExp(`href="${href}"`));
   for (const html of [en, fa]) {
-    assert.match(html, /data-cal-link="shayanspiel\/15min"/, "booking CTAs must be native Cal embed triggers");
-    assert.match(html, /data-cal-cta/, "booking CTA trigger marker must be present");
-    assert.match(html, /app\.cal\.com\/embed\/embed\.js/, "Cal embed script must load site-wide for the on-page popup");
+    // Owner directive 2026-08-22: Apply-first funnel; the navbar CTA is the
+    // tracked Apply link, never a booking trigger or a /book/ navigation.
+    assert.match(html, /data-cta-location="nav"/, "the primary navbar CTA must be the tracked Apply funnel link");
+    assert.doesNotMatch(html, /<button[^>]*data-cal-link=/, "no booking trigger may appear outside the Contact and Apply flows");
     assert.doesNotMatch(html, /href="\/book\/"/, "no CTA may navigate to /book/");
   }
 });
@@ -56,72 +63,34 @@ test("Features presents the canonical loop and the company tree with Evals", () 
   }
   assert.match(en, /assets\/og\/features\.png/);
   assert.match(en, /href="\/live\/"/);
-  assert.match(en, /data-cal-link="shayanspiel\/15min"/);
+  assert.match(en, /href="[^"]*\/apply\//, "Features must route conversion intent to the Apply funnel");
   assert.match(fa, /هدف/);
   assert.match(fa, /دپارتمان/);
   assert.match(fa, /ورک‌فلو/);
   assert.match(fa, /ارزیابی‌ها/);
 });
 
-test("retired hubs redirect directly to localized Architecture", () => {
-  for (const [route, target] of [
-    ["waitlist", "/architecture/"],
-    ["architecture", "/features/"],
-    ["fa/waitlist", "/fa/architecture/"],
-    ["fa/architecture", "/fa/features/"],
-  ]) {
-    const html = read(route);
-    assert.match(html, new RegExp(`http-equiv="refresh" content="0;url=${target}"`));
-    assert.match(html, /<meta name="robots" content="noindex">/);
-    assert.match(html, new RegExp(`<link rel="canonical" href="https://spielos.xyz${target}"`));
-  }
-});
-
-test("fictional feature pages redirect 301 to the real blocks and stay noindex", () => {
-  const redirects = [
-    ["features/chat", "/features/director/"],
-    ["features/chat/director-mode", "/features/director/"],
-    ["features/chat/direct-mode", "/features/workflows/"],
-    ["features/context", "/features/"],
-    ["features/harness/agents", "/features/agents/"],
-    ["features/harness/skills", "/features/skills/"],
-    ["features/harness/workflows", "/features/workflows/"],
-    ["features/harness/evals", "/features/evals/"],
-    ["features/infrastructure/connections", "/features/connections/"],
-    ["features/infrastructure/providers", "/features/"],
-    ["fa/features/chat", "/fa/features/director/"],
-    ["fa/features/context", "/fa/features/"],
-    ["fa/features/harness/evals", "/fa/features/evals/"],
-    ["fa/features/infrastructure/providers", "/fa/features/"],
-  ];
-  for (const [route, target] of redirects) {
-    const html = read(route);
-    assert.match(html, new RegExp(`http-equiv="refresh" content="0;url=${target}"`));
-    assert.match(html, /<meta name="robots" content="noindex">/);
-    assert.match(html, new RegExp(`<link rel="canonical" href="https://spielos.xyz${target}"`));
-  }
-});
-
 test("sitemap includes localized core pages and excludes redirects and noindex details", () => {
   const sitemap = readFileSync(join(dist, "sitemap.xml"), "utf8");
   const blocks = ["director", "departments", "workflows", "agents", "skills", "evals", "connections", "artifacts"];
-  const included = ["/features/", "/fa/features/", "/live/", "/fa/live/", "/services/", "/fa/services/", ...blocks.map((b) => `/features/${b}/`), ...blocks.map((b) => `/fa/features/${b}/`)];
+  const included = ["/apply/", "/fa/apply/", "/pricing/", "/fa/pricing/", "/contact/", "/fa/contact/", "/features/", "/fa/features/", "/live/", "/fa/live/", "/services/", "/fa/services/", ...blocks.map((b) => `/features/${b}/`), ...blocks.map((b) => `/fa/features/${b}/`)];
   for (const route of included) {
     assert.match(sitemap, new RegExp(`https:\\/\\/spielos\\.xyz${route.replaceAll("/", "\\/")}`), `${route} must be in the sitemap`);
   }
-  const excluded = ["/waitlist/", "/fa/waitlist/", "/architecture/", "/fa/architecture/", "/features/chat/", "/features/context/", "/features/harness/evals/", "/features/infrastructure/providers/", "/fa/features/chat/", "/fa/features/harness/"];
-  for (const route of excluded) {
+  // Only genuinely archived/noindex surfaces stay out of the sitemap.
+  for (const route of ["/spielos-v1/"]) {
     assert.doesNotMatch(sitemap, new RegExp(`https:\\/\\/spielos\\.xyz${route.replaceAll("/", "\\/")}`), `${route} must not be in the sitemap`);
   }
 });
 
-test("Agent Brief stays an informational page with a booking CTA and no request form", () => {
+test("Agent Brief stays an informational page routed into the Apply funnel", () => {
   for (const route of ["services/agent-brief", "fa/services/agent-brief"]) {
     const page = read(route);
     assert.match(page, /brief-rail/, `${route} must keep the brief framework rail`);
-    assert.match(page, /data-cal-link="shayanspiel\/15min"/, `${route} hero must be a native Cal embed booking CTA`);
+    assert.match(page, /href="[^"]*\/apply\//, `${route} must route conversion intent to the Apply funnel`);
     assert.doesNotMatch(page, /<form[^>]*method="post"/, `${route} must not contain a request form`);
     assert.doesNotMatch(page, /id="request"/, `${route} must not contain the retired #request section`);
+    assert.equal(calTriggerCount(page), 0, `${route} must not carry booking triggers`);
   }
   assert.ok(!existsSync(join(root, "src/components/AgentBriefForm.astro")), "AgentBriefForm must be removed");
   assert.ok(!existsSync(join(root, "src/components/ContactModal.astro")), "ContactModal must be removed");
@@ -165,7 +134,6 @@ test("Live leads with active business work, north star, hierarchy, and visible s
   assert.match(en, /data-live-load-more="business"/);
   assert.match(en, /data-live-load-more="improvement"/);
   assert.match(en, /Still being measured/);
-  assert.match(en, /data-cal-link="shayanspiel\/15min"/);
   assert.match(fa, /هنوز در حال اندازه‌گیریه/);
   assert.match(fa, /مشاهده فعالیت/);
 
@@ -236,16 +204,34 @@ test("Live leads with active business work, north star, hierarchy, and visible s
   }
 });
 
-test("booking CTAs open the Cal embed on the page (flow.digital pattern), no /book/ route and no external cal.com link", () => {
-  for (const route of ["", "fa", "services", "fa/services", "features", "live", "services/agent-brief", "contact", "use-cases", "features/director"]) {
+test("conversion pages funnel through Apply; Cal is scoped to Contact + Apply secondaries", () => {
+  for (const route of ["", "fa", "services", "fa/services", "features", "pricing", "fa/pricing", "services/agent-brief", "contact", "fa/contact", "apply", "fa/apply", "features/director"]) {
     const page = read(route);
-    assert.match(page, /data-cal-link="shayanspiel\/15min"/, `${route} must carry native Cal embed booking triggers`);
-    assert.match(page, /data-cal-cta/, `${route} must carry the booking CTA marker`);
-    assert.match(page, /app\.cal\.com\/embed\/embed\.js/, `${route} must load the Cal embed script site-wide`);
-    assert.doesNotMatch(page, /href="\/book\/"/, `${route} must not navigate to /book/`);
-    assert.doesNotMatch(page, /href="https:\/\/cal\.com\/shayanspiel\/15min/, `${route} CTAs must not be external cal.com links`);
+    // Owner directive 2026-08-22: every page carries at least one tracked
+    // Apply funnel CTA; clicks fire apply_cta_clicked via BaseLayout.
+    assert.match(page, /href="[^"]*\/apply\//, `${route} must carry at least one Apply funnel CTA`);
+    assert.match(page, /data-cta-location=/, `${route} Apply CTAs must record their location`);
+    if (!CAL_ALLOWED_ROUTES.has(route)) {
+      assert.equal(calTriggerCount(page), 0, `${route} must not reintroduce Cal booking triggers outside Contact/Apply`);
+    } else {
+      // Owner directive 2026-08-23: exactly one icon-only secondary call CTA.
+      assert.equal(calTriggerCount(page), 1, `${route} may carry exactly one icon-only booking trigger`);
+      assert.doesNotMatch(page, /href="\/book\/"/, `${route} must not navigate to /book/`);
+    }
     assert.doesNotMatch(page, /data-open-contact-modal/, `${route} must not wire the retired contact modal`);
   }
+  // The Apply wizard itself stays the primary action on the Apply page: the
+  // free-review form anchor exists beside any optional call trigger.
+  for (const route of ["apply", "fa/apply"]) {
+    assert.match(read(route), /id="free-review"/, `${route} must keep the free-review wizard`);
+  }
+});
+
+test("BaseLayout wires apply_cta_clicked from data-cta-location attributes", () => {
+  const baseLayout = readFileSync(join(root, "src/layouts/BaseLayout.astro"), "utf8");
+  assert.match(baseLayout, /apply_cta_clicked/, "the funnel click event must be implemented");
+  assert.match(baseLayout, /data-cta-location/, "CTA locations must be read from the attribute");
+  assert.match(baseLayout, /location:\s*link\.getAttribute\('data-cta-location'\)/, "the event payload must carry the CTA location");
 });
 
 test("conversion pages preserve the distinctive grid, light, and connected-progress language", () => {
@@ -254,8 +240,8 @@ test("conversion pages preserve the distinctive grid, light, and connected-progr
     assert.match(html, /hero-grid/);
     assert.match(html, /text-primary/);
   }
-  assert.match(read(""), /jl-wrap/);
-  assert.match(read("services"), /service-rail/);
+  assert.match(read(""), /homepage-hero-journey/);
+  assert.match(read("services"), /deal-canvas/);
   assert.match(read("services/agent-brief"), /brief-rail/);
   assert.match(read("features"), /department-canvas/);
 });

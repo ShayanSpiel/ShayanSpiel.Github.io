@@ -2,6 +2,7 @@
 
 from datetime import datetime, timezone
 
+from . import config
 from .alignment import (
     UNKNOWN, as_goal_record, is_market_outcome, judge_alignment, present,
 )
@@ -11,6 +12,7 @@ from .truth import (
     DIRECTOR_ROLLUPS, accepted_validities, child_supports_parent,
     derive_evaluation_validity,
 )
+from .util import compare as _shared_compare, parse_dt
 
 
 class Director(GoalHandler):
@@ -18,18 +20,26 @@ class Director(GoalHandler):
     description = "Coordinates child goals while preserving their state and approvals."
     version = "2.8.0"
     goal_schema = {
-        "metrics": ["all_children_achieved", "achieved_children", "reply_rate", "sales", "booked_calls"],
+        "metrics": list(config.director_metrics()),
         "config": {"accepted_evidence_validity": {"type": "array"}},
     }
 
     def observe(self, ctx):
         children = list(ctx.cycle.get("children") or ())
         evaluations = [child.get("evaluation") for child in children if child.get("evaluation")]
-        return StageResult("collect", {"children": children, "evaluations": evaluations},
-                           evidence=[{"kind": "director_observation", "source": "director",
-                                      "payload": {"child_count": len(children),
-                                                  "evaluation_count": len(evaluations)}}],
-                           message=f"Observed {len(children)} child goals and {len(evaluations)} evaluations")
+        # One observation record per run/cycle: re-observing the same run must
+        # update the picture in the payload that DECIDE reads, not append a
+        # duplicate director_observation row every cycle.
+        already_observed = any(item.get("kind") == "director_observation"
+                               for item in (ctx.cycle.get("evidence") or ()))
+        evidence = [] if already_observed else [{
+            "kind": "director_observation", "source": "director",
+            "payload": {"child_count": len(children),
+                        "evaluation_count": len(evaluations)}}]
+        return StageResult(
+            "collect", {"children": children, "evaluations": evaluations},
+            evidence=evidence,
+            message=f"Observed {len(children)} child goals and {len(evaluations)} evaluations")
 
     def decide(self, ctx, observation):
         children = observation.get("children") or []
@@ -343,8 +353,7 @@ class Director(GoalHandler):
 
 
 def _compare(value, operator, target):
-    return {"ge": value >= target, "gt": value > target, "eq": value == target,
-            "le": value <= target, "lt": value < target}.get(operator, False)
+    return _shared_compare(value, operator, target)
 
 
 def _system_intervention_lineage(goal, child, proposal):
@@ -391,7 +400,10 @@ def _runnable(child):
         return True
     if cycle["run_status"] != "waiting" or not cycle.get("resume_at"):
         return False
-    return datetime.fromisoformat(cycle["resume_at"]) <= datetime.now(timezone.utc)
+    # parse_dt normalizes legacy naive resume_at values to UTC; a raw
+    # fromisoformat comparison here used to raise TypeError and kill the tick.
+    due = parse_dt(cycle["resume_at"])
+    return due is not None and due <= datetime.now(timezone.utc)
 
 
 def _derive_next_hypothesis(supporting, goal, measured):

@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from . import config
 from .truth import INVALID_VALIDITIES, _field
 
 DEFAULT_MAX_RUNS = 32
@@ -25,14 +26,14 @@ def next_experiment_valid(evaluation) -> bool:
 
 
 def resource_key(goal) -> tuple:
-    owner = _field(goal, "owner_id")
-    config = _field(goal, "config") or {}
-    if owner == "system-improvement":
-        files = tuple(sorted(config.get("allowed_files") or ()))
-        return ("files", files) if files else ("owner", owner)
-    if owner in {"email", "outbound"}:
-        return ("channel", "email")
-    return ("owner", owner)
+    """The exclusive resource a goal occupies.
+
+    Single derivation shared with the store's busy-goal projection via
+    ``config.resource_key``; the two consumers can never disagree about
+    channel groupings.
+    """
+    return config.resource_key(
+        _field(goal, "owner_id"), _field(goal, "config") or {})
 
 
 def declared_run_limit(goal) -> int:
@@ -65,9 +66,6 @@ def continuation_decision(*, goal, cycle, evaluation, run_count: int,
         return _result(False, "goal_already_met")
     validity = _field(evaluation, "validity") or "business"
     if validity in INVALID_VALIDITIES:
-        return _result(False, f"evaluation_{validity}")
-    if (_field(evaluation, "contamination_reason")
-            and validity in INVALID_VALIDITIES):
         return _result(False, f"evaluation_{validity}")
     experiment = _field(evaluation, "next_experiment") or {}
     if isinstance(experiment, dict) and experiment.get("system_improvement"):

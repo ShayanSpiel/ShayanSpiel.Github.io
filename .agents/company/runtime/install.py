@@ -241,24 +241,39 @@ def validate_department_spec(spec: dict[str, Any]) -> list[str]:
     if not normalized["agent_ids"]:
         defects.append("no agent_ids")
     from ..agents import AGENTS, agents as installed_agents
+    from ..agents import known_company_skill_ids, known_skill_ids
     from ..connections import connections as installed_connections
     known_agents = set(installed_agents()) | {
         item["id"] for item in normalized.get("agents") or []
     }
-    known_skills = {
-        path.parent.name for path in (COMPANY_ROOT.parent / "skills").glob("*/SKILL.md")
-    }
+    # Two skill namespaces exist under .agents/skills/ (company/ and website/).
+    # Resolution is recursive, but Departments may only bind company skills —
+    # website skills (seo, analytics, spielos-ui, ...) belong to the website.
+    known_skills = known_skill_ids()
+    company_skills = known_company_skill_ids()
     known_connections = set(installed_connections())
     explicit_agent_ids = {
         str(item.get("id") or "") for item in (spec.get("agents") or [])
     }
     for agent_id in sorted(explicit_agent_ids & set(AGENTS)):
         defects.append(f"agent {agent_id} is built-in and cannot be redefined")
+
+    def skill_defect(owner: str, skill_id: str) -> str | None:
+        # Departments may only bind company-namespace skills; website skills
+        # are out of bounds for installable packages.
+        if skill_id not in known_skills:
+            return f"{owner} references unknown skill {skill_id}"
+        if skill_id not in company_skills:
+            return (
+                f"{owner} references website-bound skill {skill_id}; "
+                "departments may only bind skills under .agents/skills/company/")
+        return None
+
     for agent in normalized.get("agents") or []:
         for skill_id in agent.get("skill_ids") or []:
-            if skill_id not in known_skills:
-                defects.append(
-                    f"agent {agent['id']} references unknown skill {skill_id}")
+            defect = skill_defect(f"agent {agent['id']}", skill_id)
+            if defect:
+                defects.append(defect)
     stems: dict[str, str] = {}
     for agent_id in normalized["agent_ids"]:
         stem = agent_file_stem(agent_id)
@@ -276,8 +291,9 @@ def validate_department_spec(spec: dict[str, Any]) -> list[str]:
             if agent_id not in known_agents:
                 defects.append(f"workflow {workflow_id} references unknown agent {agent_id}")
         for skill_id in workflow.get("skills") or []:
-            if skill_id not in known_skills:
-                defects.append(f"workflow {workflow_id} references unknown skill {skill_id}")
+            defect = skill_defect(f"workflow {workflow_id}", skill_id)
+            if defect:
+                defects.append(defect)
         for connection_id in workflow.get("connections") or []:
             if connection_id not in known_connections:
                 defects.append(
@@ -300,9 +316,10 @@ def validate_department_spec(spec: dict[str, Any]) -> list[str]:
                     f"workflow {workflow_id} step {step_id} references unknown agent "
                     f"{node['employee_id']}")
             for skill_id in node.get("skill_ids") or []:
-                if skill_id not in known_skills:
-                    defects.append(
-                        f"workflow {workflow_id} step {step_id} references unknown skill {skill_id}")
+                defect = skill_defect(
+                    f"workflow {workflow_id} step {step_id}", skill_id)
+                if defect:
+                    defects.append(defect)
             if kind == "connection" and not (
                 node.get("connection_ids") or workflow.get("connections")
             ):

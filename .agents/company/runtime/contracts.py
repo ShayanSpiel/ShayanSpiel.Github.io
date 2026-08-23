@@ -9,7 +9,7 @@ from __future__ import annotations
 from typing import Any
 
 from ..agents import agents as installed_agents
-from .models import Department, GoalHandler, WorkflowSpec
+from .models import GoalHandler, WorkflowSpec
 
 
 def approval_interaction(goal: Any, result: Any) -> dict[str, Any]:
@@ -223,7 +223,3 @@ def enrich_work_order_source(handler: GoalHandler | None, goal: dict,
         if workflow.connection_ids and not out.get("connection_ids"):
             out["connection_ids"] = list(workflow.connection_ids)
     return out
-
-
-def is_department(handler: GoalHandler) -> bool:
-    return isinstance(handler, Department)

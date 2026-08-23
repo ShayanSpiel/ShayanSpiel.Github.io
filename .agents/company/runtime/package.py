@@ -74,7 +74,7 @@ def validate_package(department: Department) -> list[str]:
         defects.append("no workflows declared")
     agents = set(getattr(department, "agent_ids", ()) or ())
     known_agents = set(installed_agents()) | agents
-    known_skills = {path.parent.name for path in SKILLS_ROOT.glob("*/SKILL.md")}
+    known_skills = {path.parent.name for path in SKILLS_ROOT.glob("*/*/SKILL.md")}
     known_connections = set(installed_connections())
     workflow_ids: set[str] = set()
     for workflow in workflows:

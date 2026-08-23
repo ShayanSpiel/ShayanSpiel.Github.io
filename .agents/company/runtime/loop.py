@@ -2,18 +2,14 @@
 
 from __future__ import annotations
 
-import importlib.util
 import json
 import logging
-import os
 import sqlite3
-import subprocess
-import threading
-import time
 import uuid
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
+from . import config
 from .alignment import (
     active_market_outcomes, alignment_override_interaction, approval_key,
     judge_alignment, needs_alignment, resolve_originating_goal,
@@ -21,6 +17,7 @@ from .alignment import (
 )
 from .continuation import ancestors_allow, conflicting_goal, continuation_decision
 from .errors import is_transient
+from .hooks import run_transition_hook
 from .repair_iteration import iteration_decision, same_scope
 from .contracts import approval_interaction, enrich_work_order_source, validate_goal_request
 from .models import (
@@ -31,233 +28,22 @@ from .notifications import followup_payload, terminal_state_payload
 from .memory import eligible_memory
 from .strategy import select_strategy_context
 from .registry import handlers as installed_handlers
+from .service import automation_enabled
 from .store import Store
 from .truth import achievement_allowed, countable_evidence, hypothesis_resolution
+from .util import compare as _shared_compare, parse_dt
 
 TERMINAL = {"achieved", "abandoned", "expired"}
 SUSPENDED = {RunStatus.WAITING, RunStatus.AWAITING_APPROVAL, RunStatus.BLOCKED,
              RunStatus.FAILED, RunStatus.COMPLETED}
 
 # Map capability tokens from department attention payloads to catalog defaults.
-CAPABILITY_EMPLOYEES = {
-    "lead_research": "lead-researcher",
-}
-CAPABILITY_WORKFLOWS = {
-    "lead_research": "lead-research",
-}
+# Identity-owned mapping lives in the user configuration layer
+# (runtime/config.py + config.user.json).
+CAPABILITY_EMPLOYEES = config.capability_employees()
+CAPABILITY_WORKFLOWS = config.capability_workflows()
 
 logger = logging.getLogger("company.runtime.loop")
-
-# Best-effort /live snapshot sync after every persisted transition. The
-# runner's cwd is the repo root, so these are repo-root-relative paths.
-LIVE_SYNC_SCRIPT = "scripts/sync-live-timeline.py"
-LIVE_SYNC_DB = ".spielos/state/company.sqlite"
-LIVE_SYNC_OUT = "src/data/live-goals.json"
-
-# Live push (goal-ed500b0c63): commit + push the /live snapshot when the
-# company is actually active. Gated by SPIELOS_LIVE_PUSH (env var, falling
-# back to a value parsed from .spielos/.env), debounced 120s, non-fatal.
-# The snapshot commit is pushed to the current branch and then, as a
-# best-effort extra step, fast-forwarded to origin main (HEAD:main) so the
-# GitHub Pages deploy triggers. Default OFF; never force-pushes and never
-# stages unrelated files.
-LIVE_PUSH_ENV = "SPIELOS_LIVE_PUSH"
-LIVE_PUSH_ENV_FILE = ".spielos/.env"
-LIVE_PUSH_MARKER = ".spielos/state/.live_push_state.json"
-LIVE_PUSH_STATE_OUT = "public/live-state.json"
-LIVE_PUSH_DEBOUNCE_S = 120
-
-# Bounded best-effort: a hanging git push or snapshot sync must never
-# block a goal transition. Values chosen to keep the /live loop usable
-# while still failing fast when the network or filesystem wedges.
-LIVE_PUSH_GIT_TIMEOUT_S = 20
-LIVE_SYNC_TIMEOUT_S = 15
-
-
-def _load_live_sync():
-    """Import scripts/sync-live-timeline.py; None (with a warning) when unavailable."""
-    script = Path(LIVE_SYNC_SCRIPT)
-    if not script.is_file():
-        logger.warning("live timeline sync skipped: %s not found", LIVE_SYNC_SCRIPT)
-        return None
-    try:
-        spec = importlib.util.spec_from_file_location("company_runtime_live_sync", script)
-        if spec is None or spec.loader is None:
-            logger.warning("live timeline sync skipped: could not resolve %s", LIVE_SYNC_SCRIPT)
-            return None
-        module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
-        return module
-    except Exception as exc:  # pragma: no cover - defensive; never breaks the loop
-        logger.warning("live timeline sync skipped: could not load %s: %s", LIVE_SYNC_SCRIPT, exc)
-        return None
-
-
-def _env_file_value(path: str, key: str) -> str | None:
-    """Value of the first KEY=VALUE line in a dotenv-style file, or None."""
-    try:
-        lines = Path(path).read_text(encoding="utf-8").splitlines()
-    except OSError:
-        return None
-    for line in lines:
-        stripped = line.strip()
-        if not stripped or stripped.startswith("#") or "=" not in stripped:
-            continue
-        name, _, value = stripped.partition("=")
-        if name.strip() == key:
-            return value.strip()
-    return None
-
-
-def _live_push_gate() -> bool:
-    """SPIELOS_LIVE_PUSH gate: env var first, then .spielos/.env fallback."""
-    raw = os.environ.get(LIVE_PUSH_ENV)
-    if raw is None:
-        raw = _env_file_value(LIVE_PUSH_ENV_FILE, LIVE_PUSH_ENV)
-    return raw is not None and raw.strip().lower() in {"1", "true", "yes", "on"}
-
-
-def _completed_failed_runs(db_path: str) -> int:
-    """Read-only count of completed/failed runs for the push fingerprint."""
-    try:
-        conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True, timeout=5)
-        try:
-            row = conn.execute(
-                "SELECT count(*) FROM runs WHERE status IN ('completed', 'failed')"
-            ).fetchone()
-            return int(row[0]) if row else 0
-        finally:
-            conn.close()
-    except Exception:  # pragma: no cover - defensive; fingerprint is best-effort
-        return 0
-
-
-def _live_fingerprint(snapshot: dict, db_path: str) -> str | None:
-    """Fingerprint = state + terminal goals + completed/failed runs.
-
-    None when the snapshot carries no runtime_state, so nothing is compared.
-    """
-    runtime_state = snapshot.get("runtime_state") or {}
-    totals = snapshot.get("totals") or {}
-    state = runtime_state.get("state")
-    if not state:
-        return None
-    terminal_goals = int(totals.get("goals_achieved", 0) or 0) + int(
-        totals.get("goals_abandoned", 0) or 0)
-    return f"{state}|{terminal_goals}|{_completed_failed_runs(db_path)}"
-
-
-def _read_live_push_marker(path: str) -> dict:
-    """The last push marker; {} when missing or unparsable."""
-    try:
-        data = json.loads(Path(path).read_text(encoding="utf-8"))
-        return data if isinstance(data, dict) else {}
-    except (OSError, ValueError):
-        return {}
-
-
-def _push_allowed(marker: dict) -> bool:
-    """True when there is no marker, no pushed_at, or the debounce elapsed."""
-    pushed_at = marker.get("pushed_at")
-    if not pushed_at:
-        return True
-    try:
-        parsed = datetime.fromisoformat(str(pushed_at).replace("Z", "+00:00"))
-        if parsed.tzinfo is None:
-            parsed = parsed.replace(tzinfo=timezone.utc)
-        return time.time() - parsed.timestamp() >= LIVE_PUSH_DEBOUNCE_S
-    except ValueError:
-        return True
-
-
-def _run_git(args: list[str], check: bool = True):
-    """Run a git subprocess with a hard timeout; raises on non-zero exit when
-    check is True and on TimeoutExpired when git hangs past the bound. Every
-    caller treats failures as non-fatal and logs a warning."""
-    return subprocess.run(args, capture_output=True, text=True, check=check,
-                          timeout=LIVE_PUSH_GIT_TIMEOUT_S)
-
-
-def _bounded_sync(module, timeout=None):
-    """Run module.sync_live on a daemon thread with a hard timeout.
-
-    Returns the snapshot dict, or None when the sync times out or fails.
-    A timed-out worker is a daemon thread and is abandoned, so the CLI
-    process can still exit; the snapshot is simply missing this round.
-    """
-    timeout = timeout if timeout is not None else LIVE_SYNC_TIMEOUT_S
-    result: dict = {}
-
-    def _run():
-        try:
-            result["snapshot"] = module.sync_live(LIVE_SYNC_DB, LIVE_SYNC_OUT, quiet=True)
-        except Exception as exc:  # pragma: no cover - defensive; never breaks the loop
-            result["error"] = exc
-
-    worker = threading.Thread(target=_run, daemon=True)
-    worker.start()
-    worker.join(timeout=timeout)
-    if worker.is_alive():
-        logger.warning("live timeline sync skipped (timed out after %ss)", timeout)
-        return None
-    if "error" in result:
-        logger.warning("live timeline sync skipped (non-fatal): %s", result["error"])
-        return None
-    return result.get("snapshot")
-
-
-def _git_push_sequence() -> bool:
-    """git add (only existing snapshot files) -> commit -> push origin HEAD,
-    then a best-effort fast-forward push of HEAD to origin main.
-
-    The HEAD:main step exists because GitHub Pages only deploys on push to
-    main, so the snapshot commit must reach main for the /live page to
-    update. Returns True when a push actually happened. Returns False
-    (skip and stop) when there is nothing to commit. Raises on any git
-    failure of the HEAD push; the caller logs the warning and the goal
-    transition continues. The HEAD:main push is strictly best-effort and
-    never raises.
-    """
-    candidates = [path for path in (LIVE_SYNC_OUT, LIVE_PUSH_STATE_OUT)
-                  if Path(path).is_file()]
-    if not candidates:
-        logger.info("live push skipped: no snapshot files to stage")
-        return False
-    _run_git(["git", "add", *candidates])
-    staged = _run_git(["git", "diff", "--cached", "--quiet"], check=False)
-    if staged.returncode == 0:
-        logger.info("live push skipped: nothing to commit")
-        return False
-    if staged.returncode != 1:
-        raise RuntimeError(f"git diff --cached --quiet exited {staged.returncode}")
-    _run_git(["git", "commit", "-m", "live: sync runtime state"])
-    _run_git(["git", "push", "origin", "HEAD"])
-    _push_live_main_ref()
-    return True
-
-
-def _push_live_main_ref() -> None:
-    """Best-effort: fast-forward the /live snapshot commit to origin main.
-
-    Pushing HEAD:main keeps origin main in sync with the branch carrying
-    the snapshot commit, which triggers the GitHub Pages deploy. Any git
-    failure — a remote non-fast-forward rejection, a hang past the hard
-    timeout, a missing remote — logs a warning and never raises: the
-    snapshot is already committed and pushed to the current branch, so the
-    goal transition must not be blocked by this extra best-effort step.
-    """
-    try:
-        _run_git(["git", "push", "origin", "HEAD:main"])
-    except Exception as exc:  # best-effort; never blocks the transition
-        logger.warning("live push to origin main skipped (non-fatal): %s", exc)
-
-
-def _write_live_push_marker(path: str, fingerprint: str) -> None:
-    payload = {"fingerprint": fingerprint,
-               "pushed_at": datetime.now(timezone.utc).isoformat()}
-    marker = Path(path)
-    marker.parent.mkdir(parents=True, exist_ok=True)
-    marker.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
 
 
 class Runtime:
@@ -332,9 +118,24 @@ class Runtime:
                 "Override the recommended deferral to start this work, or leave it proposed"),
             "approval_interaction": alignment_override_interaction(goal, judgment),
             "alignment": judgment,
-        })
+        }, reopen=True)
+
+    def _automation_gate(self, action: str) -> None:
+        """Foreground commands honor the stop switch like the daemon tick.
+
+        `company runner stop` writes automation.json beside the database; a
+        disabled flag refuses manual once/next/retry/approve too, so a stop
+        really stops every path that could advance a goal. Internal callers
+        never reach here while stopped because their entry point already
+        raised.
+        """
+        if not automation_enabled(self.store.path.parent):
+            raise RuntimeError(
+                f"automation is disabled (company runner stop); "
+                f"`company {action}` is refused until `company runner enable`")
 
     def once(self, goal_id: str, holder: str | None = None) -> dict:
+        self._automation_gate("once")
         holder = holder or f"runtime-{uuid.uuid4().hex[:8]}"
         goal = self.store.goal(goal_id)
         if goal["goal_status"] in TERMINAL:
@@ -347,10 +148,12 @@ class Runtime:
                 goal=goal, cycle=cycle, goal_status=GoalStatus.EXPIRED.value,
                 message=(f"goal {goal_id} expired: deadline {goal['deadline']} "
                          "passed before the target was reached"))
-            self.store.notify(goal_id, cycle["id"], "goal_expired", terminal)
+            self.store.notify(goal_id, cycle["id"], "goal_expired", terminal,
+                              reopen=True)
             self.store.notify(goal_id, cycle["id"], "goal_completed_followup",
                               followup_payload(terminal, goal=goal,
-                                               goal_status=GoalStatus.EXPIRED.value))
+                                               goal_status=GoalStatus.EXPIRED.value),
+                              reopen=True)
             return self.status(goal_id)
         if goal["goal_status"] == "proposed":
             raise RuntimeError(
@@ -423,8 +226,8 @@ class Runtime:
             row = self.store.goal(goal_id)
             cycle = self.store.cycle(goal_id)
             if cycle["run_status"] == "waiting":
-                due = cycle.get("resume_at")
-                if not due or datetime.now(timezone.utc) < datetime.fromisoformat(due):
+                due = parse_dt(cycle.get("resume_at"))
+                if not due or datetime.now(timezone.utc) < due:
                     return self.status(goal_id)
             if cycle["run_status"] in {"blocked", "failed"}:
                 return self.status(goal_id)
@@ -485,7 +288,16 @@ class Runtime:
             if Stage(cycle["stage"]) is Stage.EVALUATE and result.run_status is RunStatus.IDLE:
                 result.run_status = RunStatus.COMPLETED
             self._persist(goal, cycle, result)
-            self._sync_live_snapshot()
+            # Generic post-transition hook (website decoupling): replaces the
+            # hardcoded /live snapshot + git push pipeline. No-op unless
+            # SPIELOS_TRANSITION_HOOK is set; best-effort, hard-bounded.
+            run_transition_hook("goal_transition", {
+                "goal_id": goal_id,
+                "run_id": cycle["id"],
+                "step": result.step,
+                "run_status": result.run_status.value,
+                "goal_status": self.store.goal(goal_id)["goal_status"],
+            })
             current = self.store.cycle(goal_id)
             if result.run_status in SUSPENDED or self.store.goal(goal_id)["goal_status"] in TERMINAL:
                 return self.status(goal_id)
@@ -571,6 +383,40 @@ class Runtime:
                     result.evaluation["goal_met"] = False
                     result.evaluation["verdict"] = result.evaluation.get("verdict") or "continue"
         goal_status = result.goal_status.value if result.goal_status else goal.goal_status
+        # Audit-trail ordering (bug 8): the justifying PROOF — learnings,
+        # evidence, decisions, evaluations — is persisted BEFORE the terminal
+        # goal status, so the record never shows an achievement preceding its
+        # evidence.
+        run = self.store.run(cycle["id"])
+        current_evidence = list(self.store.evidence(cycle["id"]))
+        for learning in (result.learnings or ()):
+            memory = eligible_memory(learning, current_evidence, goal, run)
+            if memory:
+                self.store.learn(goal.owner_id, goal.id, memory["claim"],
+                                 memory["evidence"], memory["confidence"])
+        for evidence in (result.evidence or ()):
+            self.store.add_evidence(goal.id, cycle["id"], evidence["kind"],
+                                    evidence.get("source", goal.owner_id), evidence.get("payload", {}),
+                                    evidence.get("validity", run["evidence_validity"]))
+        if result.decision:
+            decision = dict(result.decision)
+            requested = list(decision.get("evidence_ids") or ())
+            allowed = self._decision_evidence_scope(goal.id, cycle["id"])
+            decision["evidence_ids"] = [item for item in requested if item in allowed]
+            self.store.add_decision(goal.id, cycle["id"], decision)
+        if result.evaluation:
+            evaluation = self.store.add_evaluation(goal.id, cycle["id"], result.evaluation)
+            hypothesis_status = hypothesis_resolution(goal, run, result.evaluation)
+            if (hypothesis_status
+                    and self.store.hypothesis(run["hypothesis_id"])["status"] == "active"):
+                hypothesis = self.store.resolve_hypothesis(
+                    run["hypothesis_id"], hypothesis_status)
+                self.store.event(goal.id, cycle["id"], "hypothesis.resolved", {
+                    "hypothesis_id": hypothesis["id"],
+                    "status": hypothesis["status"],
+                    "evaluation_id": evaluation["id"],
+                })
+        # Proof persisted; now the state transitions.
         self.store.set_goal_status(goal.id, goal_status)
         self.store.update_cycle(cycle["id"], stage=next_stage.value, step=result.step,
                                 run_status=result.run_status.value, resume_at=result.resume_at, data=data)
@@ -582,58 +428,34 @@ class Runtime:
         self.store.event(goal.id, cycle["id"], f"{stage.value.lower()}.{result.step}", {
             "status": result.run_status.value, "next_stage": next_stage.value,
             "message": result.message, "payload": result.payload})
-        run = self.store.run(cycle["id"])
-        current_evidence = list(self.store.evidence(cycle["id"]))
-        for learning in (result.learnings or ()):
-            memory = eligible_memory(learning, current_evidence, goal, run)
-            if memory:
-                self.store.learn(goal.owner_id, goal.id, memory["claim"],
-                                 memory["evidence"], memory["confidence"])
-        for evidence in (result.evidence or ()):
-            self.store.add_evidence(goal.id, cycle["id"], evidence["kind"],
-                                    evidence.get("source", goal.owner_id), evidence.get("payload", {}),
-                                    evidence.get("validity", self.store.run(cycle["id"])["evidence_validity"]))
-        if result.decision:
-            decision = dict(result.decision)
-            requested = list(decision.get("evidence_ids") or ())
-            allowed = self._decision_evidence_scope(goal.id, cycle["id"])
-            decision["evidence_ids"] = [item for item in requested if item in allowed]
-            self.store.add_decision(goal.id, cycle["id"], decision)
-        if result.evaluation:
-            evaluation = self.store.add_evaluation(goal.id, cycle["id"], result.evaluation)
-            run = self.store.run(cycle["id"])
-            hypothesis_status = hypothesis_resolution(goal, run, result.evaluation)
-            if (hypothesis_status
-                    and self.store.hypothesis(run["hypothesis_id"])["status"] == "active"):
-                hypothesis = self.store.resolve_hypothesis(
-                    run["hypothesis_id"], hypothesis_status)
-                self.store.event(goal.id, cycle["id"], "hypothesis.resolved", {
-                    "hypothesis_id": hypothesis["id"],
-                    "status": hypothesis["status"],
-                    "evaluation_id": evaluation["id"],
-                })
         work_order = self._maybe_open_work_order(goal, cycle, result)
         payload = self._notification_payload(goal, cycle, result, next_stage, work_order)
         if result.run_status is RunStatus.AWAITING_APPROVAL:
-            self.store.notify(goal.id, cycle["id"], "approval_required", payload)
+            self.store.notify(goal.id, cycle["id"], "approval_required", payload,
+                              reopen=True)
         elif result.attention:
-            self.store.notify(goal.id, cycle["id"], "action_required", payload)
+            self.store.notify(goal.id, cycle["id"], "action_required", payload,
+                              reopen=True)
         elif result.run_status in (RunStatus.BLOCKED, RunStatus.FAILED):
-            self.store.notify(goal.id, cycle["id"], result.run_status.value, payload)
+            self.store.notify(goal.id, cycle["id"], result.run_status.value, payload,
+                              reopen=True)
         if goal_status in TERMINAL:
             terminal = self._notification_payload(
                 goal, cycle, result, next_stage, work_order)
-            self.store.notify(goal.id, cycle["id"], f"goal_{goal_status}", terminal)
+            self.store.notify(goal.id, cycle["id"], f"goal_{goal_status}", terminal,
+                              reopen=True)
             # Terminal follow-up (goal-chat-visible-supervision-20260815): the
             # goal_<status> row alone goes silent once delivered; a follow-up
             # carrying a recommended next action surfaces a concrete step into
             # the chat instead.
             self.store.notify(goal.id, cycle["id"], "goal_completed_followup",
                               followup_payload(terminal, goal=goal,
-                                               goal_status=goal_status))
+                                               goal_status=goal_status),
+                              reopen=True)
         elif stage is Stage.EVALUATE and result.run_status is RunStatus.COMPLETED:
             self.store.notify(goal.id, cycle["id"], "run_completed",
-                              self._notification_payload(goal, cycle, result, next_stage, work_order))
+                              self._notification_payload(goal, cycle, result, next_stage, work_order),
+                              reopen=True)
 
     def _decision_evidence_scope(self, goal_id: str, run_id: str) -> set[str]:
         """Evidence reachable from the current Run, evaluated children, or ancestors."""
@@ -656,57 +478,6 @@ class Runtime:
             allowed.update(item["id"] for item in self.store.evidence(parent_run_id))
             parent_id = self.store.goal(parent_id).get("parent_id")
         return allowed
-
-    def _sync_live_snapshot(self):
-        """Regenerate the committed /live snapshot after a persisted transition.
-
-        Best-effort: a missing script or database, or a locked database, only
-        logs a warning. Never raises and never touches the sqlite write path —
-        the sync script opens the database read-only (mode=ro, busy_timeout).
-        Both the in-process sync and every git push are bounded, so a hung
-        network, remote lock, or filesystem can never block a transition.
-
-        After a successful sync, when SPIELOS_LIVE_PUSH is enabled (default
-        off) and the fingerprint changed past the debounce window, the
-        snapshot files are committed and pushed to origin. Every git failure
-        is logged as a warning and never breaks the goal transition.
-        """
-        module = _load_live_sync()
-        if module is None:
-            return
-        snapshot = _bounded_sync(module)
-        if snapshot is None:
-            return
-        try:
-            self._maybe_push_live_snapshot(snapshot)
-        except Exception as exc:  # pragma: no cover - defensive; never breaks the loop
-            logger.warning("live push skipped (non-fatal): %s", exc)
-
-    def _maybe_push_live_snapshot(self, snapshot: dict) -> None:
-        """Commit + push the /live snapshot when enabled and changed.
-
-        Fires when SPIELOS_LIVE_PUSH is enabled (default off), the
-        fingerprint (runtime state + terminal goals + completed/failed runs)
-        differs from the marker, and at least 120s passed since the last
-        push. The marker is written only after a successful push. Never
-        raises and never changes any other runtime behavior.
-        """
-        if not _live_push_gate():
-            return
-        fingerprint = _live_fingerprint(snapshot, LIVE_SYNC_DB)
-        if fingerprint is None:
-            return
-        marker = _read_live_push_marker(LIVE_PUSH_MARKER)
-        if marker.get("fingerprint") == fingerprint:
-            logger.debug("live push skipped: fingerprint unchanged")
-            return
-        if not _push_allowed(marker):
-            logger.info("live push skipped: debounce window (%ss) not elapsed",
-                        LIVE_PUSH_DEBOUNCE_S)
-            return
-        if not _git_push_sequence():
-            return
-        _write_live_push_marker(LIVE_PUSH_MARKER, fingerprint)
 
     def _maybe_open_work_order(self, goal, cycle, result):
         """Persist a durable employee assignment when a run parks on agent work.
@@ -834,6 +605,7 @@ class Runtime:
         ``config["approval_policy"]`` on the Goal in addition to granting the
         current action; ``per_action`` (or no scope) never changes the policy.
         """
+        self._automation_gate("approve")
         cycle = self.store.cycle(goal_id)
         if cycle["run_status"] != "awaiting_approval":
             raise RuntimeError(f"goal is not awaiting approval (status: {cycle['run_status']})")
@@ -901,10 +673,12 @@ class Runtime:
             terminal = terminal_state_payload(
                 goal=row, cycle=cycle, goal_status=status.value,
                 message=f"goal {goal_id} reached {status.value}")
-            self.store.notify(goal_id, cycle["id"], f"goal_{status.value}", terminal)
+            self.store.notify(goal_id, cycle["id"], f"goal_{status.value}", terminal,
+                              reopen=True)
             self.store.notify(goal_id, cycle["id"], "goal_completed_followup",
                               followup_payload(terminal, goal=row,
-                                               goal_status=status.value))
+                                               goal_status=status.value),
+                              reopen=True)
         if status in {GoalStatus.PAUSED, GoalStatus.ABANDONED, GoalStatus.EXPIRED, GoalStatus.ACHIEVED}:
             self._halt_descendants(goal_id)
             if status is GoalStatus.PAUSED:
@@ -950,7 +724,7 @@ class Runtime:
                 "child_id": child_id,
                 "child_status": child["goal_status"],
                 "child_run_status": child_cycle["run_status"],
-            })
+            }, reopen=True)
 
     def _resume_originating(self, child: dict, child_cycle: dict) -> None:
         child_run = self.store.run(child_cycle["id"])
@@ -985,6 +759,7 @@ class Runtime:
         )
 
     def retry(self, goal_id: str, *, automatic: bool = False) -> dict:
+        self._automation_gate("retry")
         cycle = self.store.cycle(goal_id)
         if cycle["run_status"] not in {"blocked", "failed"}:
             raise RuntimeError(f"retry requires blocked or failed status (current: {cycle['run_status']})")
@@ -1034,6 +809,7 @@ class Runtime:
         )
 
     def next(self, goal_id: str, *, automatic: bool = False) -> dict:
+        self._automation_gate("next")
         goal = self.store.goal(goal_id)
         if goal["goal_status"] != "active":
             raise RuntimeError(f"next run requires an active goal (current: {goal['goal_status']})")
@@ -1259,8 +1035,12 @@ class Runtime:
 
 
 def _timestamp(value: str) -> datetime:
-    parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
-    return parsed if parsed.tzinfo else parsed.replace(tzinfo=timezone.utc)
+    # Shared normalization: legacy naive timestamps are read as UTC instead
+    # of raising on comparison (bug 1).
+    parsed = parse_dt(value)
+    if parsed is None:
+        raise ValueError(f"invalid timestamp: {value!r}")
+    return parsed
 
 
 def now_iso() -> str:
@@ -1268,5 +1048,4 @@ def now_iso() -> str:
 
 
 def _compare(value, operator, target):
-    return {"ge": value >= target, "gt": value > target, "eq": value == target,
-            "le": value <= target, "lt": value < target}.get(operator, False)
+    return _shared_compare(value, operator, target)

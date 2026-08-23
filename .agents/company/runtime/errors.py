@@ -24,7 +24,7 @@ class RateLimitError(TransientError):
     """Provider rate limit / quota exhaustion (HTTP 429).
 
     ``retry_after`` optionally carries the provider's Retry-After value in
-    seconds; see ``retry_after()`` for a guarded read.
+    seconds on the exception instance.
     """
 
     def __init__(self, message: str = "", retry_after: float | None = None):
@@ -47,19 +47,3 @@ class DNSError(TransientError):
 def is_transient(exc) -> bool:
     """True only for the transient taxonomy; ordinary exceptions are not."""
     return isinstance(exc, TransientError)
-
-
-def retry_after(exc) -> float | None:
-    """Seconds to wait before retrying a rate-limited call, or None.
-
-    Only ``RateLimitError`` instances with an explicit ``retry_after``
-    attribute return a value; every other failure returns None.
-    """
-    if isinstance(exc, RateLimitError):
-        value = getattr(exc, "retry_after", None)
-        if value is not None:
-            try:
-                return max(0.0, float(value))
-            except (TypeError, ValueError):
-                return None
-    return None

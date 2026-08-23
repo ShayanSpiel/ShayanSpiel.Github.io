@@ -46,7 +46,7 @@ def sample_suite() -> EvalSuite:
                 ".agents/company/strategy/voice.md"),
             EvalCriterion(
                 "native", "Native shape", "The shape fits the channel.",
-                ".agents/skills/copywriting-en/SKILL.md", severity="warn"),
+                ".agents/skills/website/copywriting-en/SKILL.md", severity="warn"),
         ),
     )
 

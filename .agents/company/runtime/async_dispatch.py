@@ -13,7 +13,14 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable
 
-DISPATCH_DIR = Path(".spielos/state/outbound/async")
+# Single derivation of the dispatch directory, anchored to the repo root via
+# this file's location (.agents/company/runtime/) instead of the process cwd.
+# The runner's watchdog derives the same directory from the store path
+# (<db parent>/outbound/async); both resolve identically for the canonical
+# database. Backward compatible: when the cwd was the repo root, the old
+# cwd-relative value resolved to exactly this path.
+REPO_ROOT = Path(__file__).resolve().parents[3]
+DISPATCH_DIR = REPO_ROOT / ".spielos" / "state" / "outbound" / "async"
 STALE_THRESHOLD_SECONDS = 3600  # 1 hour
 
 

@@ -103,25 +103,6 @@ def pursuit_kind(goal) -> str:
     return "primary_goal"
 
 
-def batch_exposure(run) -> dict[str, Any] | None:
-    """Read one bounded Batch from existing Run config metadata."""
-
-    snapshot = dict(_field(run, "config_snapshot") or {})
-    value = snapshot.get("batch")
-    if value is None:
-        return None
-    if not isinstance(value, dict):
-        raise ValueError("Run batch exposure must be an object")
-    batch_id = present(value.get("id") or value.get("batch_id"))
-    try:
-        size = int(value.get("size") or value.get("batch_size") or 0)
-    except (TypeError, ValueError):
-        size = 0
-    if not batch_id or size <= 0:
-        raise ValueError("Run batch exposure requires id and positive size")
-    return {**value, "id": batch_id, "size": size}
-
-
 def is_market_outcome(goal) -> bool:
     """True only for real company outcomes, not rollups or repairs."""
 

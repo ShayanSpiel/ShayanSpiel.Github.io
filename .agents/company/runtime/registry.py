@@ -45,11 +45,3 @@ def handlers() -> dict[str, GoalHandler]:
 def departments() -> dict[str, Department]:
     return {key: value for key, value in handlers().items()
             if isinstance(value, Department)}
-
-
-def get(owner_id: str) -> GoalHandler:
-    try:
-        return handlers()[owner_id]
-    except KeyError as exc:
-        raise KeyError(
-            f"unknown goal owner '{owner_id}'; installed: {', '.join(sorted(handlers()))}") from exc

@@ -121,17 +121,18 @@ const icpCards = [
     <div class="relative mx-auto max-w-6xl px-6">
       <SectionHeader label={t(locale, "conversion.home.services.label")} title={t(locale, "conversion.home.services.title")} description={t(locale, "conversion.home.services.body")} />
       <div class="grid gap-3 md:grid-cols-2" data-aos="fade-up">
-        <div class="rounded-lg border border-border bg-panel p-6 shadow-panel">
-          <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-md bg-destructive-soft"><i class="bx bx-error text-destructive icon-xl"></i></div>
-          <h3 class="text-base font-semibold text-foreground-strong">{t(locale, "conversion.pricing.help.deslop.t")}</h3>
-          <p class="mt-2 text-sm font-medium text-foreground">{t(locale, "conversion.pricing.help.deslop.d1")}</p>
-          <p class="mt-1.5 text-sm leading-relaxed text-muted-foreground">{t(locale, "conversion.pricing.help.deslop.d2")}</p>
-        </div>
+        <!-- Owner directive: AI Workers leads, DeSlopping second (matches Services page). -->
         <div class="rounded-lg border border-border bg-panel p-6 shadow-panel">
           <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-md bg-success-soft"><i class="bx bx-trending-up text-success icon-xl"></i></div>
           <h3 class="text-base font-semibold text-foreground-strong">{t(locale, "conversion.pricing.help.workers.t")}</h3>
           <p class="mt-2 text-sm font-medium text-foreground">{t(locale, "conversion.pricing.help.workers.d1")}</p>
           <p class="mt-1.5 text-sm leading-relaxed text-muted-foreground">{t(locale, "conversion.pricing.help.workers.d2")}</p>
+        </div>
+        <div class="rounded-lg border border-border bg-panel p-6 shadow-panel">
+          <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-md bg-destructive-soft"><i class="bx bx-error text-destructive icon-xl"></i></div>
+          <h3 class="text-base font-semibold text-foreground-strong">{t(locale, "conversion.pricing.help.deslop.t")}</h3>
+          <p class="mt-2 text-sm font-medium text-foreground">{t(locale, "conversion.pricing.help.deslop.d1")}</p>
+          <p class="mt-1.5 text-sm leading-relaxed text-muted-foreground">{t(locale, "conversion.pricing.help.deslop.d2")}</p>
         </div>
       </div>
       <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row" data-aos="fade-up">

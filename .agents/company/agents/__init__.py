@@ -108,6 +108,35 @@ AGENTS = {
 
 _INSTALLED_DIR = Path(__file__).resolve().parent / "installed"
 
+# Skills live in two namespaces under .agents/skills/: company/ (harness
+# operation: director, departments, outbound) and website/ (site-bound methods).
+# Resolution is recursive so callers never depend on the namespace layout.
+SKILLS_ROOT = Path(__file__).resolve().parents[2] / "skills"
+COMPANY_SKILLS_SUBROOT = SKILLS_ROOT / "company"
+
+
+def skill_files() -> list[Path]:
+    """Every installed SKILL.md across all skill namespaces."""
+
+    if not SKILLS_ROOT.is_dir():
+        return []
+    return sorted(SKILLS_ROOT.glob("*/*/SKILL.md"))
+
+
+def known_skill_ids() -> set[str]:
+    """Skill ids (directory names owning a SKILL.md) in any namespace."""
+
+    return {path.parent.name for path in skill_files()}
+
+
+def known_company_skill_ids() -> set[str]:
+    """Skill ids under skills/company/ — the only ones Departments may bind."""
+
+    root = COMPANY_SKILLS_SUBROOT
+    if not root.is_dir():
+        return set()
+    return {path.parent.name for path in sorted(root.glob("*/SKILL.md"))}
+
 
 def installed_agents_dir() -> Path:
     """Directory of installed Lego employees; tests may redirect it."""

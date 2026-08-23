@@ -11,6 +11,7 @@ Never a second lifecycle. Parent runtime still owns goals, approvals, and work o
 
 from __future__ import annotations
 
+import math
 from typing import Any
 
 from ..connections import connection as resolve_connection
@@ -18,11 +19,21 @@ from .contracts import agent_shortfall, employee_for, workflow_by_id
 from .models import GoalStatus, RunStatus, Stage, StageResult, WorkflowSpec, WorkflowStep
 from .memory import apply_memory, relevant_memory
 from .truth import countable_evidence, derive_evaluation_validity, is_business_outcome
+from .util import compare as _shared_compare
 
 
 def compare(value, operator, target):
-    return {"ge": value >= target, "gt": value > target, "eq": value == target,
-            "le": value <= target, "lt": value < target}[operator]
+    """The one shared goal-metric comparator; unknown operators fail (False)."""
+    return _shared_compare(value, operator, target)
+
+
+def _shortfall(target, current_value) -> int:
+    """Whole artifacts still needed to reach the target.
+
+    Float-safe: a fractional target (e.g. 2.5) rounds UP, and the old
+    ``int(target) - int(current)`` truncation can never undercount.
+    """
+    return max(1, math.ceil(float(target) - float(current_value or 0)))
 
 
 def _kinds_present(evidence: list[dict], kinds: tuple[str, ...] | list[str]) -> int:
@@ -107,7 +118,15 @@ def next_incomplete_step(graph: tuple[WorkflowStep, ...], evidence: list[dict],
                 continue
             return node
         if node.kind == "machine":
-            if node.produces and _kinds_present(evidence, node.produces) >= 1:
+            if not node.produces:
+                # Package-validation error, not a silent skip: a machine node
+                # that declares no produced evidence kinds can never be
+                # satisfied and would wedge the graph invisibly.
+                raise ValueError(
+                    f"invalid workflow package: machine step '{node.id}' "
+                    "declares no `produces` evidence kinds; every machine "
+                    "node must name the evidence it creates")
+            if _kinds_present(evidence, node.produces) >= 1:
                 continue
             return node
         if node.produces:
@@ -176,7 +195,8 @@ class InterpretedDepartment:
 
         if step is None:
             # Fall back to metric shortfall work order (classic evidence department).
-            needed = max(1, int(ctx.goal.target) - int(current_value or 0))
+            # Float-safe: fractional targets round UP to whole artifacts.
+            needed = _shortfall(ctx.goal.target, current_value)
             payload = agent_shortfall(
                 self, goal_id=ctx.goal.id, metric=metric, needed=needed,
                 workflow_id=workflow_id, config=ctx.goal.config)
@@ -259,7 +279,7 @@ class InterpretedDepartment:
                                          "payload": payload}, memory))
 
         # employee step
-        needed = max(1, int(ctx.goal.target) - int(current_value or 0))
+        needed = _shortfall(ctx.goal.target, current_value)
         if step.produces:
             have = _kinds_present(evidence, step.produces)
             needed = max(1, 1 - have)

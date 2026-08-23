@@ -96,7 +96,7 @@ class SpecNormalizationTests(unittest.TestCase):
         labels, graph = build_graph_from_brief(
             template="publish", employee="pub-ops", agents=["pub-ops"],
             produces=["content_package", "publication_receipt"],
-            skill_ids=["copywriting-en"], connection_ids=["buffer"],
+            skill_ids=["outbound-email"], connection_ids=["buffer"],
             approval_points=["approve"],
         )
         kinds = [node["kind"] for node in graph]
@@ -157,7 +157,7 @@ class InstallPathTests(unittest.TestCase):
             "metrics": ["playbooks"],
             "agent_ids": ["demo-ops-operator"],
             "evidence_metrics": {"playbooks": ["playbook_record"]},
-            "skill_ids": ["copywriting-en"],
+            "skill_ids": ["outbound-email"],
             "steps": ["research", "draft", "record"],
             "template": "pipeline",
         }, force=True)
@@ -302,7 +302,7 @@ class CliInstallTests(unittest.TestCase):
             "agents": [{
                 "id": "cli-install-writer",
                 "description": "Writes notes",
-                "skill_ids": ["copywriting-en"],
+                "skill_ids": ["outbound-email"],
                 "permissions": ["read_strategy", "write_evidence"],
                 "produces": ["note_record"],
             }],

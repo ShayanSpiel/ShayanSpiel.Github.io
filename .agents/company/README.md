@@ -1,5 +1,78 @@
 # SpielOS Company Harness
 
+## Owner operating doctrine
+
+These directives come from the owner. They bind every Department, Agent,
+Skill, and piece of site copy. The website-facing restatement lives in the
+repository root `agents.md`; this section is the authority.
+
+### Company operating runtime
+
+When the selected role is Director, it is the SpielOS operating Director, not a
+generic coding or website agent. It owns business-goal intake, Department
+routing, durable run supervision, evidence judgment, approvals, and outcome reporting.
+It must identify itself accordingly and route unrelated implementation to
+Build/default mode unless the user attaches that work to a company goal.
+
+For business goals and company orchestration, use `.agents/company/` as the
+durable authority and `.agents/skills/company/director/SKILL.md` as the operating
+procedure. The public loop is only GOAL → OBSERVE → DECIDE → ACT → EVALUATE.
+Stage, internal step, run status, and goal status are independent. The runtime
+owns every goal. Departments supply domain behavior through colocated
+`department.py` handlers and may run directly or as child goals of the Director. Workflows and
+agents never own another loop. Never bypass runtime approvals or infer
+live-execution permission from a chat request.
+
+Runs are first-class and typed: business experiment, execution, diagnostic,
+system improvement, evaluation, or controlled system test. Preserve hypothesis,
+owner version, config snapshot, controlled/changed variables, evidence
+validity, decisions, evaluation, and resume links. Never learn business lessons
+from technical-only, contaminated, or invalid evidence. Department or runtime code changes
+must be separate bounded system-improvement goals with allowed files and actual
+acceptance-test evidence.
+
+The universal company vocabulary is exactly Goal, Department, Workflow, Agent,
+Skill, Connection, and Artifact. Do not introduce Engine, Tool, Port, or
+ContentPackage as an additional public layer. `ContentPackage` is only an
+Artifact manifest. This document is the complete authority, layout, and
+OpenCode command surface; other READMEs link to it instead of restating the
+architecture.
+
+### Apply-first conversion funnel
+
+The commercial funnel is Apply-first (owner directive 2026-08-22): every primary
+conversion CTA links to `/apply/` — **Apply — Free Review** — with the microcopy
+"Free review · No required call · See the scope before you pay". Contextual CTAs:
+"Show Us What Keeps Breaking" (DeSlopping contexts: codex/claude-code/opencode
+pages) and "Show Us the Work" (AI Workers contexts: software/use-case pages).
+Applying comes before payment; pricing supports the decision and never leads.
+Booking stays optional and secondary (owner directive 2026-08-23, supersedes
+the 2026-08-22 Cal retirement): a small icon-only call CTA (`data-cal-link`
+opening Cal's native embed popup) is allowed on the Contact page and in the
+Apply "Not sure?" section beside "Start a Review" — never as a primary CTA,
+never a required-call step. Do not expand booking CTAs to other pages without
+a new owner directive. The two services are AI DeSlopping (fix broken AI-built
+software) and AI Workers (hand repetitive work to AI), sold at $2,990/month
+with one active build at a time. The Live page is proof ("WE RUN ON AI
+OURSELVES"), framed as credibility, not a conversion destination. The legacy
+waitlist route no longer exists.
+
+### Strategy — single source of truth
+
+`.agents/company/strategy/icp.md` is the canonical Ideal Customer Profile (buyer, exclusions,
+positioning idea). Every skill, outbound rule, lead score, and piece of site copy
+follows it. Never restate or redefine the ICP in another file — reference it.
+The Outbound Department implements it via
+`.agents/company/departments/outbound/strategy.md` (execution details only); the campaign data
+(master xlsx, `.env`) stays local under `.spielos/data/outbound/` and
+`.spielos/.env`; both are gitignored.
+
+Company-wide positioning, voice, and measurement rules live beside the ICP in
+`.agents/company/strategy/`. Approved reusable facts and proof live in
+`.agents/company/assets/`; channel-specific templates live with their Department.
+Skills contain methods, never company truth. Generated drafts and run evidence
+belong under `.spielos/artifacts/`, not strategy, assets, or skills.
+
 SpielOS runs the company through one durable loop:
 
 ```text
@@ -46,6 +119,10 @@ new architectural layer. It lives at
   agents/                  bounded executor identities
 
 .agents/skills/            reusable methods
+  company/                 harness operation (director, department-runner,
+                           system-improvement, outbound, outbound-email)
+  website/                 site-bound methods (spielos-ui, seo, analytics,
+                           translation-fa, copywriting-en/fa, video-creation)
 .spielos/.env              private credentials (ignored)
 .spielos/data/             private operational inputs (ignored)
 .spielos/state/            durable runtime state (ignored)
@@ -67,9 +144,11 @@ no separate public adapter or Tool layer.
 | `/approve <goal>` | Approve exactly one displayed parked action |
 | `/help` | Explain this vocabulary and command surface |
 
-Escape cancels the current OpenCode response. `/stop` is different: its plugin
-hook immediately disables durable company automation, preventing idle hooks or
-background supervision from starting more work. `/start` enables it again.
+Escape cancels the current OpenCode response. `/stop` and `/start` are
+different from the rest: the V2 plugin has no command interception hook, so the
+Director disables durable company automation itself by running `company runner
+stop` (`/start` runs `company runner start`). While automation is disabled, idle
+hooks, the HUD ticker, and background supervision will not start more work.
 
 ## Connections
 

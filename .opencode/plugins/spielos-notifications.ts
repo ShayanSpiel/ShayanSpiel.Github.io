@@ -106,6 +106,10 @@ const HEARTBEAT_RELATIVE = ".spielos/state/runner.heartbeat"
 const LIVE_STATUS_RELATIVE = ".spielos/state/live_status.json"
 const CHECK_INTERVAL_MS = 5000       // supervisor check cadence
 const REPROMPT_THROTTLE_MS = 300_000 // per-id re-prompt window (5 minutes)
+// Failure backoff for the catch-all around the whole check: a broken CLI or
+// unreadable state must not retry hot every CHECK_INTERVAL_MS forever.
+const ERROR_BACKOFF_BASE_MS = 30_000   // first failure waits one interval slot
+const ERROR_BACKOFF_MAX_MS = 600_000   // capped at 10 minutes
 // Watchdog v2 live HUD ticker (goal-577aaacc7d / change-7cc84900b7): a
 // compact one-line live status is injected into the active session on this
 // cadence while goals are active (see buildHudTicker).
@@ -143,7 +147,7 @@ type NotificationItem = {
 // .spielos/state and the `company` CLI) is resolved by this precedence:
 //   1. process.cwd() when it contains .spielos/state/runner.heartbeat — the
 //      app is normally launched from the repo, so this is the fast path.
-//   2. import.meta.url of this file, three directory levels up
+//   2. import.meta.url of this file, two directory levels up
 //      (.opencode/plugins/ -> .opencode/ -> repo root) — stable regardless
 //      of the launch directory.
 //   3. process.cwd() as a last resort (the CLI calls then fail closed inside
@@ -156,7 +160,7 @@ const resolveRepoRoot = (): string => {
     return cwd
   }
   // 2. Module-location fallback: this file lives at
-  //    <repo>/.opencode/plugins/spielos-notifications.ts, so three directory
+  //    <repo>/.opencode/plugins/spielos-notifications.ts, so two directory
   //    levels up is the repo root regardless of the launch directory.
   try {
     const here = dirname(fileURLToPath(import.meta.url))
@@ -259,6 +263,10 @@ export default {
     const run = (args: string[]) => runCompany(repoRoot, args)
     let checking = false
     const prompted = new Map<string, number>()
+    // Catch-all failure backoff state: consecutive failed checks suppress the
+    // supervisor loop for an exponentially growing (capped) window.
+    let checkFailures = 0
+    let suppressChecksUntil = 0
     let activeSessionID: string | undefined
     let disposed = false
     // HUD ticker state: per-session cadence so a newly attached session gets
@@ -287,7 +295,7 @@ export default {
     }
 
     const check = async () => {
-      if (checking) return
+      if (checking || Date.now() < suppressChecksUntil) return
       checking = true
       try {
         const status = JSON.parse(
@@ -428,8 +436,22 @@ export default {
             ].filter(Boolean).join(" "))
           }
         }
-      } catch {
-        // The durable outbox remains pending; the next idle check retries safely.
+        checkFailures = 0
+      } catch (error) {
+        // The durable outbox remains pending, but a persistent failure (CLI
+        // error, unreadable state) must not retry hot every interval. Log it
+        // and back off exponentially before the next attempt.
+        checkFailures += 1
+        const delay = Math.min(
+          ERROR_BACKOFF_BASE_MS * 2 ** (checkFailures - 1),
+          ERROR_BACKOFF_MAX_MS,
+        )
+        suppressChecksUntil = Date.now() + delay
+        console.error(
+          `[spielos-notifications] company check failed ` +
+            `(attempt ${checkFailures}, backing off ${Math.round(delay / 1000)}s):`,
+          error instanceof Error ? error.message : error,
+        )
       } finally {
         checking = false
       }

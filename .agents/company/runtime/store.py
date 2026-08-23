@@ -12,6 +12,10 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Iterator
 
+from . import config as _config
+
+channel_for_owner = _config.channel_for_owner
+
 REPO_ROOT = Path(__file__).resolve().parents[3]
 CANONICAL_LIVE_DB = REPO_ROOT / ".spielos" / "state" / "company.sqlite"
 
@@ -19,6 +23,10 @@ TERMINAL_GOAL_STATUSES = ("achieved", "abandoned", "expired")
 ACTIONABLE_NOTIFICATION_KINDS = (
     "approval_required", "action_required", "blocked", "failed",
 )
+
+# Repair-once-per-process guard (bug 15): database files already scanned by
+# _repair_terminal_states/_repair_attention_states in this process.
+_REPAIR_SCANNED_DBS: set[str] = set()
 
 
 def now() -> str:
@@ -355,12 +363,47 @@ class Store:
                 con.execute("ALTER TABLE work_orders ADD COLUMN claimed_by TEXT")
             if "claimed_at" not in work_order_columns:
                 con.execute("ALTER TABLE work_orders ADD COLUMN claimed_at TEXT")
-            con.execute("""INSERT OR IGNORE INTO runs
-                SELECT c.id,c.goal_id,'execution',NULL,NULL,g.owner_id,'unversioned',NULL,
-                       g.config_json,'{}','{}','business',NULL,NULL,c.run_status,c.created_at,c.updated_at
-                FROM cycles c JOIN goals g ON g.id=c.goal_id""")
-            self._repair_terminal_states(con)
-            self._repair_attention_states(con)
+            self._backfill_missing_runs(con)
+            if str(self.path.resolve()) not in _REPAIR_SCANNED_DBS:
+                # Repair scans run once per process per database file: they
+                # are pure maintenance reads/writes whose result cannot change
+                # between two Store constructions of the same file, and they
+                # cost a full-table scan on every open otherwise.
+                _REPAIR_SCANNED_DBS.add(str(self.path.resolve()))
+                self._repair_terminal_states(con)
+                self._repair_attention_states(con)
+
+    @staticmethod
+    def _backfill_missing_runs(con: sqlite3.Connection) -> None:
+        """Fabricate run rows for legacy cycles that predate the runs table.
+
+        The historical run config was never recorded, so the fabricated
+        snapshot copies the CURRENT goal config but carries an explicit
+        provenance marker — it must never read as genuine run history.
+        """
+        missing = con.execute("""SELECT c.id,c.goal_id,c.run_status,c.created_at,c.updated_at,
+                g.owner_id,g.config_json
+            FROM cycles c JOIN goals g ON g.id=c.goal_id
+            WHERE NOT EXISTS (SELECT 1 FROM runs r WHERE r.id=c.id)""").fetchall()
+        for row in missing:
+            try:
+                goal_config = json.loads(row["config_json"] or "{}")
+            except ValueError:
+                goal_config = {}
+            snapshot = {
+                "config": goal_config,
+                "provenance": "migration_backfill",
+                "provenance_note": (
+                    "Fabricated run row synthesized during migration from the "
+                    "CURRENT goal config; the historical run configuration "
+                    "was never recorded."),
+                "backfilled_at": now(),
+            }
+            con.execute("""INSERT OR IGNORE INTO runs VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                        (row["id"], row["goal_id"], "execution", None, None,
+                         row["owner_id"], "unversioned", None, json.dumps(snapshot),
+                         "{}", "{}", "business", None, None,
+                         row["run_status"], row["created_at"], row["updated_at"]))
 
     @staticmethod
     def _migrate_v5(con: sqlite3.Connection) -> None:
@@ -544,8 +587,8 @@ class Store:
                       AND c.run_status IN ('idle','running','awaiting_approval','waiting')"""
             ).fetchall()
         for row in busy_rows:
-            key = ("channel", "email") if row["owner_id"] in {"email", "outbound"} \
-                else ("owner", row["owner_id"])
+            channel = channel_for_owner(row["owner_id"])
+            key = ("channel", channel) if channel else ("owner", row["owner_id"])
             busy.setdefault(key, {})[row["id"]] = row["run_status"]
 
         values = []
@@ -562,8 +605,8 @@ class Store:
             if item["run_status"] == "completed" and item["goal_status"] == "active":
                 owner = item["owner_id"]
                 if owner != "system-improvement":
-                    key = ("channel", "email") if owner in {"email", "outbound"} \
-                        else ("owner", owner)
+                    channel = channel_for_owner(owner)
+                    key = ("channel", channel) if channel else ("owner", owner)
                     holders = {gid: status for gid, status in busy.get(key, {}).items()
                                if gid != item["id"]}
                     if holders:
@@ -653,9 +696,17 @@ class Store:
         stamp = now()
         cycle_id = f"run-{uuid.uuid4().hex[:10]}"
         with self.connect() as con:
-            con.execute("INSERT INTO cycles VALUES (?,?,?,?,?,?,?,?,?,?)", (
-                cycle_id, goal_id, previous["sequence"] + 1, "OBSERVE", "collect", "idle", None,
-                json.dumps({}), stamp, stamp))
+            try:
+                con.execute("INSERT INTO cycles VALUES (?,?,?,?,?,?,?,?,?,?)", (
+                    cycle_id, goal_id, previous["sequence"] + 1, "OBSERVE", "collect", "idle", None,
+                    json.dumps({}), stamp, stamp))
+            except sqlite3.IntegrityError:
+                # Atomic continuation (plan §7.2): UNIQUE(goal_id, sequence) is
+                # the write fence. A concurrent client that decided first
+                # already created the next run; this loser returns the winner's
+                # cycle as a clean idempotent no-op instead of leaking a raw
+                # IntegrityError.
+                return self.cycle(goal_id)
             hypothesis_id = None
             hypothesis = metadata.get("hypothesis")
             if hypothesis:
@@ -883,16 +934,30 @@ class Store:
             con.execute("INSERT INTO events(goal_id,cycle_id,kind,payload_json,created_at) VALUES (?,?,?,?,?)",
                         (goal_id, cycle_id, kind, json.dumps(payload), now()))
 
-    def notify(self, goal_id: str, run_id: str, kind: str, payload: dict) -> dict:
+    def notify(self, goal_id: str, run_id: str, kind: str, payload: dict,
+               *, reopen: bool = False) -> dict:
+        """Upsert one notification row per (goal, run, kind).
+
+        The upsert refreshes ``payload_json`` and ``created_at`` so callers
+        can rate-limit re-emission by re-stamping the row (the runner's
+        send-stall limiter relies on this). Delivery state is PRESERVED by
+        default: an accidental upsert must not resurrect an already-delivered
+        notification as pending. Pass ``reopen=True`` for a deliberate
+        re-alert that should become visible again.
+        """
         notification_id = f"note-{uuid.uuid4().hex[:12]}"
         stamp = now()
         with self.connect() as con:
-            con.execute("""INSERT INTO notifications
+            if reopen:
+                conflict_update = """payload_json=excluded.payload_json,status='pending',
+                    created_at=excluded.created_at,delivered_at=NULL"""
+            else:
+                conflict_update = """payload_json=excluded.payload_json,
+                    created_at=excluded.created_at"""
+            con.execute(f"""INSERT INTO notifications
                 (id,goal_id,run_id,kind,payload_json,status,created_at,delivered_at)
                 VALUES (?,?,?,?,?,'pending',?,NULL)
-                ON CONFLICT(goal_id,run_id,kind) DO UPDATE SET
-                    payload_json=excluded.payload_json,status='pending',
-                    created_at=excluded.created_at,delivered_at=NULL""",
+                ON CONFLICT(goal_id,run_id,kind) DO UPDATE SET {conflict_update}""",
                 (notification_id, goal_id, run_id, kind, json.dumps(payload), stamp))
             row = con.execute("""SELECT * FROM notifications
                 WHERE goal_id=? AND run_id=? AND kind=?""", (goal_id, run_id, kind)).fetchone()
@@ -1264,29 +1329,22 @@ class Store:
                     "evidence_ids": list(evidence_ids or [])})
         return value
 
-    def cancel_open_work_orders(self, goal_id: str, run_id: str | None = None,
-                                reason: str = "cancelled") -> int:
-        stamp = now()
-        with self.connect() as con:
-            if run_id:
-                cur = con.execute("""UPDATE work_orders SET status='cancelled',updated_at=?
-                    WHERE goal_id=? AND run_id=? AND status IN ('open','claimed')""",
-                                 (stamp, goal_id, run_id))
-            else:
-                cur = con.execute("""UPDATE work_orders SET status='cancelled',updated_at=?
-                    WHERE goal_id=? AND status IN ('open','claimed')""", (stamp, goal_id))
-            count = cur.rowcount
-        if count:
-            self.event(goal_id, run_id, "work_order.cancelled",
-                       {"count": count, "reason": reason})
-        return count
-
     def refresh_work_orders_for_run(self, goal_id: str, run_id: str) -> list[dict]:
-        """Mark open work orders done when accepted evidence meets the needed count."""
+        """Mark open work orders done when accepted evidence meets the needed count.
+
+        Linked evidence (payload.work_order_id) always wins. The unlinked
+        fallback is deliberately conservative: it applies ONLY when exactly
+        one typed assignment (one that declares accepted evidence kinds) is
+        active on this run — capability orders without evidence kinds are
+        excluded from that count, so a mixed run still completes its single
+        typed order while multi-order runs never guess which evidence belongs
+        to whom.
+        """
 
         evidence = self.evidence(run_id)
         completed = []
         active = self.work_orders(status="active", goal_id=goal_id, run_id=run_id, limit=100)
+        typed = [order for order in active if order.get("accepts_evidence")]
         for order in active:
             accepts = set(order.get("accepts_evidence") or [])
             if not accepts:
@@ -1295,8 +1353,9 @@ class Store:
                       if (item.get("payload") or {}).get("work_order_id") == order["id"]]
             if linked:
                 matched = [item for item in linked if item.get("kind") in accepts]
-            elif len(active) == 1:
-                # Backward compatibility for existing single-assignment runs.
+            elif len(typed) == 1:
+                # Conservative unlinked-evidence fallback: exactly one typed
+                # assignment on the run, so accepted kinds are unambiguous.
                 matched = [item for item in evidence if item.get("kind") in accepts]
             else:
                 matched = []

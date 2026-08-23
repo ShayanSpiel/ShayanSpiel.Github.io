@@ -4,23 +4,17 @@ from __future__ import annotations
 
 from typing import Any
 
+from . import config
+
 INVALID_VALIDITIES = frozenset({"invalid", "contaminated"})
 HYPOTHESIS_OUTCOMES = frozenset({"supported", "rejected", "inconclusive"})
-TECHNICAL_OWNERS = frozenset({"system-improvement"})
+# Identity-owned vocabularies are user-layer configuration, not generic code
+# (see runtime/config.py and config.user.json).
+TECHNICAL_OWNERS = config.technical_owners()
 TECHNICAL_RUN_TYPES = frozenset({"system_improvement", "system_test", "diagnostic"})
 TECHNICAL_METRICS = frozenset({"acceptance_tests_passed"})
-BUSINESS_OUTCOME_METRICS = frozenset({
-    "reply_rate", "sales", "booked_calls", "leads", "qualified_leads",
-    "daily_leads", "daily_visits", "visits", "services_leads",
-})
+BUSINESS_OUTCOME_METRICS = config.business_outcome_metrics()
 DIRECTOR_ROLLUPS = frozenset({"all_children_achieved", "achieved_children"})
-
-# Historical false achievements accepted before this invariant. Documented, not
-# rewritten. Do not treat them as current business truth.
-PRE_INVARIANT_FALSE_ACHIEVEMENTS = {
-    "goal-content-leads-20260812":
-        "achieved from technical system-improvement children without lead evidence",
-}
 
 
 def _field(obj: Any, name: str, default=None):
@@ -143,7 +137,3 @@ def hypothesis_resolution(goal, run, evaluation: dict | None) -> str | None:
     if validity not in accepted_validities(goal, run):
         return None
     return outcome
-
-
-def is_current_business_truth(goal_id: str) -> bool:
-    return goal_id not in PRE_INVARIANT_FALSE_ACHIEVEMENTS

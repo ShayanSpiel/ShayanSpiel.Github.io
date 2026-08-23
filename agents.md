@@ -1,36 +1,19 @@
 # AGENTS.md — SpielOS Website
 
-## Company operating runtime
+## Company runtime — authority lives in `.agents/company/README.md`
+
+The company operating runtime, Apply-first funnel directive (with Cal booking
+rules), and strategy single-source-of-truth doctrine are owned by the company
+harness and documented once in `.agents/company/README.md` ("Owner operating
+doctrine"). Do not restate them here. Skills are split into
+`.agents/skills/company/` (harness) and `.agents/skills/website/` (site);
+Departments may only bind `skills/company/` skills.
 
 When the selected role is Director, it is the SpielOS operating Director, not a
 generic coding or website agent. It owns business-goal intake, Department
 routing, durable run supervision, evidence judgment, approvals, and outcome reporting.
 It must identify itself accordingly and route unrelated implementation to
 Build/default mode unless the user attaches that work to a company goal.
-
-For business goals and company orchestration, use `.agents/company/` as the
-durable authority and `.agents/skills/director/SKILL.md` as the operating
-procedure. The public loop is only GOAL → OBSERVE → DECIDE → ACT → EVALUATE.
-Stage, internal step, run status, and goal status are independent. The runtime
-owns every goal. Departments supply domain behavior through colocated
-`department.py` handlers and may run directly or as child goals of the Director. Workflows and
-agents never own another loop. Never bypass runtime approvals or infer
-live-execution permission from a chat request.
-
-Runs are first-class and typed: business experiment, execution, diagnostic,
-system improvement, evaluation, or controlled system test. Preserve hypothesis,
-owner version, config snapshot, controlled/changed variables, evidence
-validity, decisions, evaluation, and resume links. Never learn business lessons
-from technical-only, contaminated, or invalid evidence. Department or runtime code changes
-must be separate bounded system-improvement goals with allowed files and actual
-acceptance-test evidence.
-
-The universal company vocabulary is exactly Goal, Department, Workflow, Agent,
-Skill, Connection, and Artifact. Do not introduce Engine, Tool, Port, or
-ContentPackage as an additional public layer. `ContentPackage` is only an
-Artifact manifest. The complete authority, layout, and OpenCode command surface
-are documented once in `.agents/company/README.md`; other READMEs link to it
-instead of restating the architecture.
 
 ## What this site is
 
@@ -44,34 +27,6 @@ is not part of the site's conversion path.
 
 The retired showcase implementation remains protected. Do not edit, refactor,
 rename, move, or modify any file under `src/components/showcase/*`.
-The commercial funnel is Apply-first (owner directive 2026-08-22): every primary
-conversion CTA links to `/apply/` — **Apply — Free Review** — with the microcopy
-"Free review · No required call · See the scope before you pay". Contextual CTAs:
-"Show Us What Keeps Breaking" (DeSlopping contexts: codex/claude-code/opencode
-pages) and "Show Us the Work" (AI Workers contexts: software/use-case pages).
-Applying comes before payment; pricing supports the decision and never leads.
-Cal booking CTAs are retired — do not reintroduce `data-cal-link`, `cal.com`
-embed scripts, or a required-call step anywhere in the funnel. The two services
-are AI DeSlopping (fix broken AI-built software) and AI Workers (hand repetitive
-work to AI), sold at $2,990/month with one active build at a time. The Live page
-is proof ("WE RUN ON AI OURSELVES"), framed as credibility, not a conversion
-destination. The legacy waitlist route no longer exists.
-
-## Strategy — single source of truth
-
-`.agents/company/strategy/icp.md` is the canonical Ideal Customer Profile (buyer, exclusions,
-positioning idea). Every skill, outbound rule, lead score, and piece of site copy
-follows it. Never restate or redefine the ICP in another file — reference it.
-The Outbound Department implements it via
-`.agents/company/departments/outbound/strategy.md` (execution details only); the campaign data
-(master xlsx, `.env`) stays local under `.spielos/data/outbound/` and
-`.spielos/.env`; both are gitignored.
-
-Company-wide positioning, voice, and measurement rules live beside the ICP in
-`.agents/company/strategy/`. Approved reusable facts and proof live in
-`.agents/company/assets/`; channel-specific templates live with their Department.
-Skills contain methods, never company truth. Generated drafts and run evidence
-belong under `.spielos/artifacts/`, not strategy, assets, or skills.
 
 ## Routes
 
@@ -154,7 +109,7 @@ Single source of truth: `src/i18n/translations.ts`
 
 - `t(locale, key, params?)` — returns translated string
 - All UI strings live here. Never hardcode text in components.
-- Follow `.agents/skills/translation-fa/SKILL.md` for Persian translation quality.
+- Follow `.agents/skills/website/translation-fa/SKILL.md` for Persian translation quality.
 
 ### Font
 
@@ -286,11 +241,13 @@ Usage pattern — use icon size utility classes, NOT inline `style="font-size:..
 
 ### Source of truth
 
-Tokens mirror `packages/design-system/src/tokens/` in the SpielOS repo
-(`~/Desktop/projects/spielos`). When they change upstream, copy the palette
-and `semantic-*.css` files into `src/styles/tokens/`, then re-add the
-website-only `--panel-deep` extension (the app has no alternating-section
-surface). The RTL font override in `index.css` keeps IRANSansX (not Vazirmatn).
+Tokens mirror `packages/design-system/src/tokens/` in the companion SpielOS
+product repo (path is environment-specific; resolve it from your local
+checkout, e.g. via a `SPIELOS_PRODUCT_REPO` environment variable). When they
+change upstream, copy the palette and `semantic-*.css` files into
+`src/styles/tokens/`, then re-add the website-only `--panel-deep` extension
+(the app has no alternating-section surface). The RTL font override in
+`index.css` keeps IRANSansX (not Vazirmatn).
 
 ### Brand mark
 
@@ -473,7 +430,11 @@ Schema:
 
 Single source of truth: `src/config.ts`.
 
-Exports: `SITE`, `AUTHOR`, `FOUNDER`, `SEO`, `SOCIAL`, `ANALYTICS`, `FORMS`, `WAITLIST_URL`, `NAV_LINKS`, `FOOTER_LINKS`, `THEMES`, `RSS`.
+Exports: `SITE`, `AUTHOR`, `FOUNDER`, `SEO`, `SOCIAL`, `ANALYTICS`, `FORMS`,
+`APPLY_PATH`, `BOOKING_LINK`, `BOOKING_CONFIG`, `SERVICES_PATH`,
+`WAITLIST_URL` (deprecated compatibility alias pointing at `/features/`; the
+public waitlist route itself is retired — do not import it in new code),
+`NAV_LINKS`, `FOOTER_LINKS`, `THEMES`, `RSS`.
 
 Never hardcode site name, URLs, author info, social links, or metrics in page components.
 
@@ -505,16 +466,18 @@ Theme toggle in footer cycles through all themes.
 ## Agent skills
 
 The only active skill system is `.agents/skills/`. Do not create a second skill
-tree or copy skills into the repository root. Current skills are:
+tree or copy skills into the repository root. Skills live in two namespaces:
 
-- `analytics` — consent, attribution, GA4, PostHog, and conversion events
-- `copywriting-en` / `copywriting-fa` — buyer-focused content creation
-- `outbound-email` / `outbound` — lead discovery, qualification, and outreach
-- `director` / `department-runner` / `system-improvement` — company operation
-- `seo` — crawlability, metadata, schemas, sitemap, and internal linking
-- `spielos-ui` — tokens, components, accessibility, and visual contracts
-- `translation-fa` — Persian localization and terminology
-- `video-creation` — HTML-to-video production
+- `.agents/skills/company/` (harness operation): `director`, `department-runner`,
+  `system-improvement`, `outbound`, `outbound-email`
+- `.agents/skills/website/` (site-bound): `analytics` (consent, attribution,
+  GA4, PostHog, conversion events), `copywriting-en` / `copywriting-fa`
+  (buyer-focused content creation), `seo` (crawlability, metadata, schemas,
+  sitemap, internal linking), `spielos-ui` (tokens, components, accessibility,
+  visual contracts), `translation-fa` (Persian localization), `video-creation`
+  (HTML-to-video production)
 
-The canonical ICP is `.agents/company/strategy/icp.md`. The website conversion model is
+Departments may only bind `skills/company/` skills; website skills belong to
+this repository's surfaces. The canonical ICP is
+`.agents/company/strategy/icp.md`. The website conversion model is
 documented in `docs/site-architecture.md`.

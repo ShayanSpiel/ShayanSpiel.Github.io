@@ -39,4 +39,16 @@ Thumbs.db
 .spielos/*.db
 .spielos/*.db-*
 
+# Stray harness DBs at .agents root — local only
+.agents/*.db
+.agents/*.sqlite
+.agents/*.sqlite-*
+.agents/*.db-*
+
+# Python test cache
+.pytest_cache/
+
+# Harness user-layer overrides (identity, brand, private config)
+.agents/company/config.user.json
+
 .spielos/.env.*

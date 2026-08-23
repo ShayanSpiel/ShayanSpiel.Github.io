@@ -73,8 +73,10 @@ i[class*=" bxs-"] {
     a { @apply text-primary underline underline-offset-2 hover:opacity-80 transition-opacity; }
     a.card { @apply no-underline; }
     a.post-cta-btn { @apply no-underline text-primary-foreground; }
-    ul, ol { @apply my-4 ps-6; }
-    li { @apply mb-1; }
+    ul { @apply my-6 ps-6 list-disc; }
+    ol { @apply my-6 ps-6 list-decimal; }
+    li { @apply mb-2 ps-1; }
+    li::marker { color: var(--primary); }
     code {
       @apply font-mono text-[0.875em] px-1.5 py-0.5 rounded-sm;
       background: var(--code-block);
@@ -230,7 +232,7 @@ i[class*=" bxs-"] {
 
   /* ── Post CTA ── */
   .post-cta {
-    @apply mt-10 p-8 bg-panel border border-border rounded-md text-center;
+    @apply my-10 p-8 bg-panel border border-border rounded-md text-center;
     h3 { @apply text-base font-semibold text-foreground-strong mb-2; }
     p { @apply text-sm text-muted-foreground mb-5 max-w-lg mx-auto leading-relaxed; }
   }
@@ -292,13 +294,13 @@ i[class*=" bxs-"] {
   .takeaway {
     @apply my-6 p-5 bg-primary-soft rounded-md;
     border: 1px solid color-mix(in oklab, var(--primary) 20%, transparent);
-    p { @apply text-sm text-foreground-strong font-medium; }
+    p { @apply m-0 text-sm text-foreground-strong font-medium leading-relaxed; }
   }
 
   /* ── Prose center ── */
   .prose-center {
-    @apply max-w-2xl mx-auto;
-    p { @apply text-sm text-muted-foreground leading-relaxed; }
+    @apply my-6;
+    p { @apply m-0 text-sm text-muted-foreground leading-relaxed; }
     a { @apply text-primary underline underline-offset-2 hover:opacity-80 transition-opacity; }
   }
 
@@ -311,7 +313,7 @@ i[class*=" bxs-"] {
     @apply text-2xs font-semibold uppercase tracking-widest text-primary mb-3 block;
   }
   .section-sub {
-    @apply mt-3 text-sm text-muted-foreground max-w-2xl mx-auto leading-relaxed;
+    @apply mt-3 text-sm text-muted-foreground leading-relaxed;
   }
 
   /* ── Card stat num ── */
@@ -594,6 +596,46 @@ i[class*=" bxs-"] {
   .step-body {
     @apply text-sm text-foreground leading-relaxed flex-1 min-w-0;
     strong { @apply text-foreground-strong font-semibold; }
+  }
+
+  /* ── Arrow list (flow steps in MDX) ── */
+  .arrow-list {
+    @apply my-6 space-y-2.5;
+    list-style: none;
+    padding-inline-start: 0;
+    li {
+      @apply relative m-0 ps-7 text-sm text-muted-foreground leading-relaxed;
+      &::before {
+        content: '→';
+        position: absolute;
+        inset-inline-start: 0;
+        top: 0;
+        @apply text-primary font-semibold;
+      }
+    }
+  }
+  [dir="rtl"] .arrow-list li::before { content: '←'; }
+
+  /* ── Dual CTA (notes ending: primary conversion + secondary DIY path) ── */
+  .post-cta-dual {
+    @apply my-10 p-8 rounded-lg border border-primary/30 bg-panel-strong ring-1 ring-primary/20 text-center;
+    h3 { @apply text-base font-semibold text-foreground-strong mb-2; }
+    > p { @apply text-sm text-muted-foreground mb-6 max-w-lg mx-auto leading-relaxed; }
+  }
+  .post-cta-dual-icon {
+    @apply flex items-center justify-center w-12 h-12 rounded-full bg-primary-soft text-primary mx-auto mb-4;
+  }
+  .post-cta-actions {
+    @apply flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3;
+    .btn-primary {
+      @apply inline-flex items-center justify-center gap-2 rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all no-underline;
+    }
+    .btn-secondary {
+      @apply inline-flex items-center justify-center gap-2 rounded-md border border-border bg-panel px-6 h-11 text-sm font-medium text-foreground hover:border-border-strong hover:bg-panel-raised transition-all no-underline;
+    }
+  }
+  .post-cta-micro {
+    @apply mt-4 !mb-0 text-2xs text-muted-foreground;
   }
 
   /* ── War reveal (animated entrance) ── */

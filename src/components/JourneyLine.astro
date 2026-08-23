@@ -1,0 +1,138 @@
+---
+/**
+ * JourneyLine — isolated, reusable one-line journey component.
+ *
+ * A straight journey line that starts at a node with a label ("Repetitive
+ * problem"), runs through intermediate milestone nodes with labels beside
+ * them, and ends at a goal node that pops a green success checkmark exactly
+ * when the line reaches it. The whole draw animation starts when the section
+ * scrolls into view.
+ *
+ * Derived from the HomepageJourneyRail family but intentionally separate:
+ * this is a tiny inline content component for use-case storytelling
+ * (problem -> workflow -> workflows -> AI company), not the page-edge rail.
+ * Zero hardcoding — every color, radius, duration, and easing comes from the
+ * shared design tokens via src/styles/journey-line.css.
+ *
+ * Props:
+ *   steps: string[] — ordered labels; first = start, last = goal (check).
+ */
+import "../styles/journey-line.css";
+
+export interface Props {
+  steps: string[];
+}
+
+const { steps } = Astro.props;
+if (steps.length < 2) throw new Error("JourneyLine needs at least two steps");
+
+// One shared timeline. Node slots are NOT hardcoded: JS measures each
+// node's real position along the track (labels have different widths, so
+// nodes are not evenly spaced) and sets --jl-at as a fraction of the draw.
+// The goal check therefore lands EXACTLY when the line reaches it.
+const DURATION_MS = 5200; // 2x slower than a standard 2600ms draw.
+const uid = `journey-line-${Math.random().toString(36).slice(2, 8)}`;
+---
+
+<div id={uid} class="journey-line" role="img" aria-label={steps.join(" → ")}>
+  <div class="journey-line__track">
+    <span class="journey-line__base" aria-hidden="true"></span>
+    <span class="journey-line__fill" style={`--jl-duration:${DURATION_MS}ms`} aria-hidden="true"></span>
+    {steps.map((label, i) => (
+      <span class:list={["journey-line__step", i === steps.length - 1 && "journey-line__step--goal"]}>
+        <span class="journey-line__node" aria-hidden="true">
+          {i === steps.length - 1 && (
+            <span class="journey-line__check"><i class="bx bx-check icon-sm"></i></span>
+          )}
+        </span>
+        <span class="journey-line__label">{label}</span>
+      </span>
+    ))}
+  </div>
+</div>
+
+<script is:inline define:vars={{ uid, durationMs: DURATION_MS }}>
+  (function (uid, durationMs) {
+    var root = document.getElementById(uid);
+    if (!root || root.dataset.jlBound) return;
+    root.dataset.jlBound = "1";
+
+    // Measure each node's true position along the fill and convert it to a
+    // timeline slot, so every node lights up exactly when the line passes
+    // through it — and the goal check lands exactly on arrival.
+    // IMPORTANT: this is only valid once stylesheets AND fonts have been
+    // applied — measuring during HTML parse yields garbage (all zeros),
+    // which kills the whole timeline. So we measure on load + font ready,
+    // re-measure on resize, and only arm the draw once measured.
+    var track = root.querySelector(".journey-line__track");
+    var rtl = document.documentElement.dir === "rtl";
+    var measured = false;
+
+    function measure() {
+      if (!track) return;
+      // Measure against the TRACK with viewport rects. (offsetLeft is
+      // unusable here: each node's offsetParent is its own positioned
+      // .journey-line__step, which always reports ~0.)
+      var tr = track.getBoundingClientRect();
+      var total = tr.width;
+      if (!total) return;
+      function slotFraction(node) {
+        var nr = node.getBoundingClientRect();
+        var center = nr.left - tr.left + nr.width / 2;
+        var f = Math.min(1, Math.max(0, center / total));
+        return rtl ? 1 - f : f;
+      }
+      Array.prototype.forEach.call(root.querySelectorAll(".journey-line__step"), function (step) {
+        var node = step.querySelector(".journey-line__node");
+        if (!node) return;
+        step.style.setProperty("--jl-at", Math.round(slotFraction(node) * durationMs) + "ms");
+      });
+      // The draw stops at the goal node's center instead of running to the
+      // track edge.
+      var stepsAll = root.querySelectorAll(".journey-line__step");
+      var goalNode = stepsAll[stepsAll.length - 1].querySelector(".journey-line__node");
+      if (goalNode) {
+        root.style.setProperty("--jl-end", (slotFraction(goalNode) * 100).toFixed(2) + "%");
+      }
+      measured = true;
+    }
+
+    function whenMeasured(cb) {
+      if (measured) { cb(); return; }
+      var t = setInterval(function () {
+        if (measured) { clearInterval(t); cb(); }
+      }, 60);
+    }
+
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      root.classList.add("is-active");
+      return;
+    }
+
+    if (document.readyState === "complete") {
+      measure();
+    } else {
+      window.addEventListener("load", measure);
+    }
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () { measure(); });
+    }
+    window.addEventListener("resize", function () {
+      measured = false;
+      measure();
+    });
+
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        // Start exactly when the section scrolls into view — but never
+        // before slots are measured; run once.
+        whenMeasured(function () {
+          requestAnimationFrame(function () { root.classList.add("is-active"); });
+        });
+        observer.disconnect();
+      });
+    }, { threshold: 0.6 });
+    observer.observe(root);
+  })(uid, durationMs);
+</script>

@@ -90,6 +90,19 @@ const lang = locale === "fa" ? "fa" : "en";
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/jetbrains-latin.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/boxicons.woff2" crossorigin />
 
+    <!-- Cal.com native embed (owner directive 2026-08-23, flow.digital
+         pattern): the small icon-only call CTAs on Contact and Apply are
+         data-cal-link triggers that open Cal's booking embed right on the
+         page. Cal's OFFICIAL loader defines window.Cal as a queue immediately
+         and only then loads embed.js, so analytics can register
+         bookingSuccessful before Cal finishes loading and the popup opens as
+         fast as possible. There is NO custom modal wrapper. Apply remains the
+         primary conversion action; booking is an optional alternative. -->
+    <link rel="preconnect" href="https://app.cal.com" crossorigin />
+    <link rel="dns-prefetch" href="https://app.cal.com" />
+    <script is:inline type="text/javascript">
+      (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(cal, ar); }; const namespace = ar[1]; api.q = api.q || []; typeof namespace === "string" ? (cal.ns[namespace] = api) : (p(cal, api)); return; } p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+    </script>
 
     <!-- hreflang alternates for i18n SEO (indexable pages only —
          noindex pages should not publish alternate clusters) -->
@@ -224,6 +237,16 @@ const lang = locale === "fa" ? "fa" : "en";
           }
         }
         window.spielosTrack = track;
+
+        /* ---- Successful booking (owner directive 2026-08-23): Cal reports
+             bookingSuccessful on the embed. The Cal.com -> Attio sync still
+             captures the booked call separately; this is the page-side funnel
+             event for PostHog/GA. ---- */
+        if(typeof window.Cal === 'function'){
+          window.Cal('on', { action: 'bookingSuccessful', callback: function () {
+            track('booked_call', { page: getPage(), device: getDevice(), locale: getLocale() });
+          } });
+        }
 
         /* ---- Apply funnel (owner directive 2026-08-22): every conversion CTA
              links to /apply/. Clicks are recorded as apply_cta_clicked with

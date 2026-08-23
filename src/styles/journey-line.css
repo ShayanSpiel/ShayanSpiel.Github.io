@@ -1,0 +1,191 @@
+/* JourneyLine — isolated styles for src/components/JourneyLine.astro.
+   One-line journey: dashed base track, solid primary fill drawn over it,
+   milestone nodes that sit quietly until the fill reaches their slot, and
+   a goal node whose green check lands exactly on arrival. Node slots come
+   from real geometry (--jl-at is set by JS), so timing matches the draw.
+   Zero hardcoding: colors/radii/durations/easing come from design tokens. */
+
+.journey-line {
+  --jl-duration: 5200ms;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.journey-line::-webkit-scrollbar { display: none; }
+
+.journey-line__track {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: 0.75rem;
+  min-width: max-content;
+  padding-block: 0.375rem;
+}
+
+/* Base + fill share the same horizontal geometry. Logical properties keep
+   the draw direction following the document direction (LTR left->right,
+   RTL right->left). */
+.journey-line__base,
+.journey-line__fill {
+  position: absolute;
+  inset-inline: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+/* Dashed base route — same rhythm and tone as the homepage journey rail
+   (9px dash / 8px gap, muted, 0.65 opacity). */
+.journey-line__base {
+  height: 1px;
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--foreground-muted) 0 9px,
+    transparent 9px 17px
+  );
+  opacity: 0.65;
+}
+/* Solid primary fill drawn over the dashed base. */
+.journey-line__fill {
+  height: 1.5px;
+  inset-inline-start: 0;
+  inset-inline-end: auto;
+  /* Stops exactly at the goal node's center (--jl-end is measured by JS).
+     Falls back to the full track only if JS did not run. */
+  width: var(--jl-end, 100%);
+  background: var(--primary);
+  transform: translateY(-50%) scaleX(0);
+  transform-origin: left center;
+}
+.journey-line[dir="rtl"] .journey-line__fill { transform-origin: right center; }
+.journey-line.is-active .journey-line__fill {
+  animation: jl-fill var(--jl-duration) linear forwards;
+}
+@keyframes jl-fill { to { transform: translateY(-50%) scaleX(1); } }
+
+.journey-line__step {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Node: quiet until its slot. Thin 1px border, masked panel background so
+   the dashed base does not cross through it. Lights up with a plain color
+   settle when the fill arrives — no movement, no bounce. */
+.journey-line__node {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 0.875rem;
+  height: 0.875rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
+  background: var(--panel);
+  box-shadow: 0 0 0 3px var(--background);
+}
+.journey-line__node::after {
+  content: "";
+  width: 0.25rem;
+  height: 0.25rem;
+  border-radius: var(--radius-pill);
+  background: var(--foreground-muted);
+}
+.journey-line.is-active .journey-line__node {
+  animation: jl-node-on 320ms var(--ease) forwards;
+  animation-delay: var(--jl-at);
+}
+@keyframes jl-node-on {
+  to {
+    border-color: var(--primary);
+    box-shadow: 0 0 10px var(--primary-soft);
+  }
+}
+.journey-line.is-active .journey-line__node::after {
+  animation: jl-dot-on 320ms var(--ease) forwards;
+  animation-delay: var(--jl-at);
+}
+@keyframes jl-dot-on { to { background: var(--primary); } }
+
+.journey-line__label {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--foreground-strong);
+  white-space: nowrap;
+  /* Seamless backing (page background) so the dashed base never mixes
+     with the text. */
+  background: var(--background);
+  padding: 0.3em 0.75em;
+  border-radius: var(--radius-pill);
+  opacity: 0;
+}
+.journey-line.is-active .journey-line__label {
+  animation: jl-label-in 400ms var(--ease) forwards;
+  animation-delay: var(--jl-at);
+}
+@keyframes jl-label-in { to { opacity: 1; } }
+
+/* Goal node: the same simple node as every milestone. When the fill
+   arrives (its measured --jl-at == end of the draw) the ring settles on
+   success green, the core dot fades away, and the green checkmark fades
+   in its place. Plain fades only — no pop, no bounce. */
+.journey-line__step--goal .journey-line__check {
+  position: absolute;
+  inset: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--success);
+  opacity: 0;
+}
+.journey-line__step--goal .journey-line__check .bx { font-size: var(--font-size-sm); }
+
+.journey-line.is-active .journey-line__step--goal .journey-line__node {
+  animation-name: jl-goal-on;
+}
+@keyframes jl-goal-on {
+  to {
+    border-color: var(--success);
+    box-shadow: 0 0 12px var(--success-soft);
+  }
+}
+.journey-line.is-active .journey-line__step--goal .journey-line__node::after {
+  animation-name: jl-dot-off;
+}
+@keyframes jl-dot-off {
+  to { opacity: 0; }
+}
+.journey-line.is-active .journey-line__step--goal .journey-line__check {
+  animation: jl-check-in 480ms var(--ease) forwards;
+  animation-delay: calc(var(--jl-at) + 100ms);
+}
+/* Fades in neutral, then settles on success green once the line has
+   arrived. */
+@keyframes jl-check-in {
+  0% { opacity: 0; color: var(--foreground-muted); }
+  45% { opacity: 1; color: var(--foreground-muted); }
+  100% { opacity: 1; color: var(--success); }
+}
+
+/* Reduced motion: everything in its final state immediately, no animation. */
+@media (prefers-reduced-motion: reduce) {
+  .journey-line .journey-line__fill,
+  .journey-line.is-active .journey-line__fill { animation: none; transform: translateY(-50%) scaleX(1); }
+  .journey-line .journey-line__node,
+  .journey-line.is-active .journey-line__node {
+    animation: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 10px var(--primary-soft);
+  }
+  .journey-line .journey-line__node::after,
+  .journey-line.is-active .journey-line__node::after { animation: none; background: var(--primary); }
+  .journey-line .journey-line__step--goal .journey-line__node {
+    border-color: var(--success);
+    box-shadow: 0 0 12px var(--success-soft);
+  }
+  .journey-line .journey-line__step--goal .journey-line__node::after { opacity: 0; }
+  .journey-line .journey-line__label { animation: none; opacity: 1; }
+  .journey-line .journey-line__step--goal .journey-line__check { opacity: 1; animation: none; }
+}

@@ -4,7 +4,7 @@ export const SITE = {
   name: "SpielOS",
   tagline: "AI workflow systems for established businesses",
   url: "https://spielos.xyz",
-  description: "SpielOS runs real company work through supervised AI departments. Start with one repetitive workflow and a clear Agent Brief.",
+  description: "SpielOS runs real company work through supervised AI departments. Apply for a free review — we make the result clear before the build starts.",
   descriptionFa: "SpielOS کارهای واقعی شرکت رو با دپارتمان‌های AI و زیر نظر آدم‌ها اجرا می‌کنه. از یک ورک‌فلوی تکراری و یک Agent Brief روشن شروع کن.",
   locale: "en",
   colorScheme: "dark",
@@ -108,6 +108,17 @@ export const SERVICES_PATH = "/services/";
 
 // Apply funnel (Phase 1): free-review application page fed by the pricing page.
 export const APPLY_PATH = "/apply/";
+
+// Discovery call (owner directive 2026-08-23): a small secondary icon-only
+// CTA on Contact and Apply ("Not sure?" section). Clicking it opens Cal's
+// native booking embed (popup) right on the page via data-cal-link — no
+// navigation away from the site. Apply stays the primary action; this is an
+// optional alternative, never a required-call step.
+export const BOOKING_URL = "https://cal.com/shayanspiel/15min?overlayCalendar=true";
+export const BOOKING_LINK = "shayanspiel/15min";
+// ui.color-scheme keeps the embed canvas dark so no white frame shows
+// around the booking shell even when the visitor OS prefers light.
+export const BOOKING_CONFIG = { layout: "month_view", theme: "dark", "ui.color-scheme": "dark" } as const;
 
 
 // The Agent Brief request form was removed; the Agent Brief page is now purely
