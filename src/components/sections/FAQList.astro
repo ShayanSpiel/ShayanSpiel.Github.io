@@ -1,19 +1,23 @@
 ---
 import { type Locale, t } from "../../i18n/translations";
 
+export interface FaqEntry { q: string; a: string }
+
 export interface Props {
   locale?: Locale;
-  items: readonly number[];
+  items?: readonly number[];
   keyPrefix: string;
+  /** Inline Q/A entries (data-driven pages). Overrides items/keyPrefix lookups. */
+  entries?: FaqEntry[];
 }
 
-const { locale = "en", items, keyPrefix } = Astro.props;
+const { locale = "en", items, keyPrefix, entries } = Astro.props;
 const idPrefix = `faq-${keyPrefix.replace(/[^a-z0-9]+/gi, "-")}-${locale}`;
 ---
 
 <div class="faq-list mt-8 space-y-2" data-faq-list data-aos="fade-up">
-  {items.map((n) => {
-    const panelId = `${idPrefix}-${n}`;
+  {(entries ?? (items ?? []).map((n) => ({ q: t(locale, `${keyPrefix}.q${n}`), a: t(locale, `${keyPrefix}.a${n}`) }))).map((f, idx) => {
+    const panelId = `${idPrefix}-${idx}`;
     return (
       <article class="group relative overflow-hidden rounded-lg border border-border bg-panel shadow-panel transition-colors hover:border-border-strong" data-faq-item>
         <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-primary via-accent to-transparent opacity-70" aria-hidden="true"></div>
@@ -24,12 +28,12 @@ const idPrefix = `faq-${keyPrefix.replace(/[^a-z0-9]+/gi, "-")}-${locale}`;
           aria-controls={panelId}
           data-faq-trigger
         >
-          <span>{t(locale, `${keyPrefix}.q${n}`)}</span>
+          <span>{f.q}</span>
           <i class="faq-icon bx bx-chevron-down icon-lg shrink-0 text-muted-foreground" aria-hidden="true"></i>
         </button>
         <div id={panelId} class="faq-panel" data-faq-panel data-open="false" hidden>
           <div class="border-t border-border px-5 pb-5 pt-4 text-sm leading-7 text-muted-foreground sm:text-base">
-            {t(locale, `${keyPrefix}.a${n}`)}
+            {f.a}
           </div>
         </div>
       </article>

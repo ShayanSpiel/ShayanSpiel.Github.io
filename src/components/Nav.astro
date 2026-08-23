@@ -69,6 +69,7 @@ const toChild = (child: NavChildLink) => ({
   label: trLabel(child.label),
   live: Boolean(child.live),
   columns: child.columns ?? 1,
+  seeAll: child.seeAll ? { label: trLabel(child.seeAll.label), href: localizePath(child.seeAll.href, locale) } : undefined,
   children: (child.children || []).map((grand) => ({
     href: localizePath(grand.href, locale),
     label: trLabel(grand.label),
@@ -136,45 +137,45 @@ const ariaCurrent = (href: string) => (isCurrent(href) ? "page" : undefined);
               <i class="bx bx-chevron-down rtl-flip icon-sm nav-group-chevron" aria-hidden="true"></i>
             </button>
             <div
-              class:list={[
-                "nav-popover absolute start-0 top-full mt-2 max-w-[calc(100vw-2rem)] rounded-md border border-border bg-panel shadow-popover p-2",
-                link.children.reduce((n, c) => n + (c.children?.length ?? 0), 0) > 18
-                  ? "w-[56rem]"
-                  : link.children.reduce((n, c) => n + (c.children?.length ?? 0), 0) > 10
-                    ? "w-[38rem]"
-                    : "w-[30rem]",
-              ]}
+              class="nav-popover absolute start-0 top-full mt-2 w-[52rem] max-w-[calc(100vw-2rem)] rounded-md border border-border bg-panel shadow-popover p-4"
               role="menu"
               aria-label={link.label}
             >
-              <div class="flex gap-3">
-                {link.children.map((child, catIndex) => (
-                  <div
-                    class:list={["nav-cat min-w-0", catIndex > 0 && "nav-cat-divider ps-2", catIndex === 0 && "pe-2"]}
-                    style={`flex-grow:${Math.max(1, (child.children || []).length)};`}
-                  >
-                    <a href={child.href} role="menuitem" aria-current={isCurrent(child.href) ? "true" : undefined} class:list={["nav-cat-label rounded-sm transition-colors hover:text-foreground", isCurrent(child.href) && "text-foreground"]}>{child.label}</a>
-                    <div class:list={["grid gap-0.5", child.columns === 2 ? "grid-cols-2" : "grid-cols-1"]}>
+              <div class="grid grid-cols-4 gap-5">
+                {link.children.map((child) => (
+                  <div class="nav-cat min-w-0">
+                    <a href={child.href} aria-current={isCurrent(child.href) ? "true" : undefined} class:list={["mb-1 block rounded-sm px-2 py-1 text-2xs font-semibold uppercase tracking-wider transition-colors", isCurrent(child.href) ? "text-primary" : "text-muted-foreground hover:text-foreground"]}>{trLabel(child.label)}</a>
+                    <div class="grid grid-cols-1 gap-0.5">
                       {(child.children || []).map((grand) => (
                         <a
                           href={grand.href}
                           role="menuitem"
                           aria-current={ariaCurrent(grand.href)}
                           class:list={[
-                            "flex items-center gap-1.5 rounded-md px-2.5 py-2 text-xs text-muted-foreground hover:text-foreground hover:bg-panel-raised transition-colors",
+                            "flex h-8 items-center gap-2.5 rounded-md px-2 text-xs text-muted-foreground hover:text-foreground hover:bg-panel-raised transition-colors",
                             isCurrent(grand.href) && "text-foreground font-medium",
                           ]}
                         >
-                          {grand.live && <span class="nav-live-dot" aria-hidden="true"></span>}
-                          {brandLogoByHref[normalize(grand.href)] ? (
-                            <span class="flex h-4 w-4 shrink-0 items-center justify-center [&>svg]:h-4 [&>svg]:w-4" set:html={brandLogoByHref[normalize(grand.href)]} />
-                          ) : (
-                            <i class={`bx ${navItemIcon(grand.href)} text-primary/80 icon-sm shrink-0`} aria-hidden="true"></i>
-                          )}
-                          {grand.label}
+                          <span class="flex h-5 w-5 shrink-0 items-center justify-center">
+                            {brandLogoByHref[normalize(grand.href)] ? (
+                              <span class="flex h-full w-full items-center justify-center [&>svg]:h-3.5 [&>svg]:w-3.5" set:html={brandLogoByHref[normalize(grand.href)]} />
+                            ) : (
+                              <i class={`bx ${navItemIcon(grand.href)} text-primary/80 text-base leading-none`} aria-hidden="true"></i>
+                            )}
+                          </span>
+                          <span class="truncate">{grand.label}</span>
                         </a>
                       ))}
                     </div>
+                    {child.seeAll && (
+                      <a
+                        href={child.seeAll.href}
+                        class="mt-1 flex h-8 items-center gap-1.5 rounded-md px-2 text-xs font-medium text-primary hover:bg-panel-raised transition-colors"
+                      >
+                        {trLabel(child.seeAll.label)}
+                        <i class="bx bx-chevron-right rtl-flip icon-sm" aria-hidden="true"></i>
+                      </a>
+                    )}
                   </div>
                 ))}
               </div>

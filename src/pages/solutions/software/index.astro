@@ -15,7 +15,7 @@ const { locale = "en" } = Astro.props;
 const isFa = locale === "fa";
 
 const logos = import.meta.glob("../../../assets/brand-logos/*.svg", { query: "?raw", import: "default", eager: true }) as Record<string, string>;
-const logo = (key: string) => logos[`../../assets/brand-logos/${key}.svg`] ?? "";
+const logo = (key: string) => logos[`../../../assets/brand-logos/${key}.svg`] ?? "";
 
 const breadcrumbJsonLd = {
   "@context": "https://schema.org",

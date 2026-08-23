@@ -124,9 +124,10 @@ export interface NavChildLink {
    *  one flat category (header + plain item links). There are NO second-level
    *  sub-menus or flyouts anywhere in the site navigation. */
   children?: NavChildLink[];
-  /** Desktop presentation: how many columns the category items render in.
-   *  2 = wide two-column grid (Features), 1 = single column (Use Cases). */
+  /** Desktop presentation: how many columns the category items render in. */
   columns?: 1 | 2;
+  /** Trailing hub link rendered after the item list ("See All"). */
+  seeAll?: { label: string; href: string };
 }
 
 export interface NavLink {
@@ -160,6 +161,7 @@ export const NAV_LINKS: { default: NavLink[]; showcase: NavLink[] } = {
             { label: "AI SEO Department", href: "/solutions/ai-departments/seo/" },
             { label: "AI Analytics Department", href: "/solutions/ai-departments/analytics/" },
           ],
+          seeAll: { label: "All AI Departments", href: "/solutions/ai-departments/" },
         },
         {
           label: "By Workflow",
@@ -171,20 +173,26 @@ export const NAV_LINKS: { default: NavLink[]; showcase: NavLink[] } = {
             { label: "Client Onboarding Automation", href: "/solutions/workflows/client-onboarding-automation/" },
             { label: "Client Intake Automation", href: "/solutions/workflows/client-intake-automation/" },
             { label: "Document Collection Automation", href: "/solutions/workflows/document-collection-automation/" },
-            { label: "Lead Qualification Automation", href: "/solutions/workflows/lead-qualification-automation/" },
-            { label: "View all workflows", href: "/solutions/workflows/" },
           ],
+          seeAll: { label: "All Workflows", href: "/solutions/workflows/" },
         },
         {
           label: "Software Automation",
           href: "/solutions/software/",
-          columns: 2,
-          children: SOFTWARE_SOLUTIONS.map((s) => ({ label: `${s.name} automation`, href: `/solutions/software/${s.slug}/` })),
+          columns: 1,
+          children: [
+            { label: "Zapier Automation", href: "/solutions/software/zapier-automation/" },
+            { label: "Slack Automation", href: "/solutions/software/slack-automation/" },
+            { label: "Gmail Automation", href: "/solutions/software/gmail-automation/" },
+            { label: "HubSpot Automation", href: "/solutions/software/hubspot-automation/" },
+            { label: "Notion Automation", href: "/solutions/software/notion-automation/" },
+          ],
+          seeAll: { label: "All Software", href: "/solutions/software/" },
         },
         {
-          label: "SpielOS → AI Company",
+          label: "SpielOS \u2192 AI Company",
           href: "/features/",
-          columns: 2,
+          columns: 1,
           children: [
             { label: "Director", href: "/features/director/" },
             { label: "Departments", href: "/features/departments/" },
@@ -192,9 +200,8 @@ export const NAV_LINKS: { default: NavLink[]; showcase: NavLink[] } = {
             { label: "Agents", href: "/features/agents/" },
             { label: "Skills", href: "/features/skills/" },
             { label: "Evals", href: "/features/evals/" },
-            { label: "Connections", href: "/features/connections/" },
-            { label: "Artifacts", href: "/features/artifacts/" },
           ],
+          seeAll: { label: "See the whole company", href: "/features/" },
         },
       ],
     },

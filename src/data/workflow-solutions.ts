@@ -22,6 +22,8 @@ export interface WorkflowSolution {
   withText: string;
   /** Actual states/actions rendered as an arrow flow. */
   flowStates: string[];
+  /** Matching boxicon per flow state. */
+  flowIcons: string[];
   automateIntro: string;
   automate: WorkflowAutomate[];
   /** SOFTWARE_SOLUTIONS keys this workflow typically runs on. */
@@ -63,6 +65,7 @@ export const WORKFLOW_SOLUTIONS: WorkflowSolution[] = [
     withText:
       "The workflow watches the onboarding state itself. It sends what should be sent, collects what should be collected, updates your systems, and brings you in only when a judgment call or exception needs a person.",
     flowStates: ["Contract signed", "Welcome sent", "Intake requested", "Documents tracked", "Records created", "Team notified", "Kickoff scheduled"],
+    flowIcons: ["bx-check-square","bx-envelope","bx-task","bx-folder-open","bx-data","bx-bell","bx-calendar"],
     automateIntro: "What client onboarding automation handles end-to-end:",
     automate: [
       { title: "Send welcome and intake requests", desc: "Personalized to the client and engagement type the moment the deal is marked won." },
@@ -128,6 +131,7 @@ export const WORKFLOW_SOLUTIONS: WorkflowSolution[] = [
     withText:
       "Incoming information is read, structured, validated, and written to the right system automatically. Uncertain entries are flagged for review instead of silently guessed, and every value keeps a link back to its source.",
     flowStates: ["Item arrives", "Fields extracted", "Data validated", "Duplicates checked", "Systems updated", "Uncertain flagged", "Source archived"],
+    flowIcons: ["bx-download","bx-search-alt","bx-check-square","bx-copy","bx-data","bx-error","bx-archive"],
     automateIntro: "What data entry automation takes off your team:",
     automate: [
       { title: "Read emails, forms, and documents", desc: "Invoices, intake forms, applications, order confirmations — structured or messy." },
@@ -192,6 +196,7 @@ export const WORKFLOW_SOLUTIONS: WorkflowSolution[] = [
     withText:
       "Outstanding items are tracked as workflow state. The system knows what was asked, when, and whether a response arrived — and follows up accordingly, updating records and escalating what goes cold.",
     flowStates: ["Request sent", "Waiting tracked", "Response watched", "Reminder timed", "Thread resumed", "Status updated", "Overdue escalated"],
+    flowIcons: ["bx-send","bx-time-five","bx-show","bx-bell","bx-comment-detail","bx-refresh","bx-error"],
     automateIntro: "What follow-up automation covers:",
     automate: [
       { title: "Detect what is outstanding", desc: "Leads, client replies, documents, quote approvals, internal sign-offs — tracked as state, not memory." },
@@ -255,6 +260,7 @@ export const WORKFLOW_SOLUTIONS: WorkflowSolution[] = [
     withText:
       "Every inquiry is captured the same way: structured, completed, categorized, filed, and routed with an internal summary — so the first human conversation happens with context already prepared.",
     flowStates: ["Inquiry arrives", "Requirements extracted", "Gaps asked", "Docs collected", "Categorized", "Routed to owner", "Summary ready"],
+    flowIcons: ["bx-envelope-open","bx-search-alt","bx-help-circle","bx-folder-open","bx-collection","bx-network-chart","bx-file"],
     automateIntro: "What client intake automation handles:",
     automate: [
       { title: "Capture inquiries from any channel", desc: "Forms, forwarded emails, referrals — one consistent intake pipeline." },
@@ -319,6 +325,7 @@ export const WORKFLOW_SOLUTIONS: WorkflowSolution[] = [
     withText:
       "Requirements are generated per engagement, incoming files are classified and filed as they arrive, gaps are chased automatically, and status is always current — visible at a glance, not reconstructed on demand.",
     flowStates: ["List generated", "Requests sent", "Files arriving", "Classified & filed", "Validity checked", "Reminders sent", "Complete confirmed"],
+    flowIcons: ["bx-list-check","bx-send","bx-download","bx-category","bx-check-square","bx-bell","bx-badge"],
     automateIntro: "What document collection automation does:",
     automate: [
       { title: "Generate required document lists", desc: "Per client type, matter, or engagement — not one generic checklist." },
@@ -383,6 +390,7 @@ export const WORKFLOW_SOLUTIONS: WorkflowSolution[] = [
     withText:
       "Every lead gets the same treatment within minutes: enriched, scored against explicit criteria, classified with a stated reason, recorded, and routed — with humans making the decisions that deserve humans.",
     flowStates: ["Lead captured", "Enriched", "Criteria matched", "Scored & explained", "CRM updated", "Qualified routed", "Nurture set"],
+    flowIcons: ["bx-user-plus","bx-search","bx-target-lock","bx-bar-chart-alt-2","bx-data","bx-send","bx-time-five"],
     automateIntro: "What lead qualification automation delivers:",
     automate: [
       { title: "Capture leads from every channel", desc: "Forms, inbound email, outbound replies — one pipeline." },
@@ -447,6 +455,7 @@ export const WORKFLOW_SOLUTIONS: WorkflowSolution[] = [
     withText:
       "Invoices flow from inbox to accounting-ready draft automatically: fields extracted and validated, duplicates caught, matches proposed, approvals routed — and every entry traceable to its source document.",
     flowStates: ["Invoice received", "Fields extracted", "Checks passed", "Duplicates rejected", "Entry prepared", "Approval routed", "History archived"],
+    flowIcons: ["bx-download","bx-search-alt","bx-check-square","bx-copy","bx-receipt","bx-user-check","bx-archive"],
     automateIntro: "What invoice processing automation covers:",
     automate: [
       { title: "Receive invoices from email", desc: "Attachments and forwarded bills captured into one processing pipeline." },
@@ -511,6 +520,7 @@ export const WORKFLOW_SOLUTIONS: WorkflowSolution[] = [
     withText:
       "Every application gets the same careful read: structured extraction, explicit-criteria comparison, a factual summary, and a ranking that explains itself. Recruiters spend their time judging shortlisted humans, not formatting chaos.",
     flowStates: ["Application in", "Facts extracted", "Criteria compared", "Summary prepared", "Ranked for review", "ATS updated", "Next steps triggered"],
+    flowIcons: ["bx-envelope-open","bx-search-alt","bx-target-lock","bx-file","bx-bar-chart-alt-2","bx-data","bx-calendar"],
     automateIntro: "What candidate screening automation does:",
     automate: [
       { title: "Read applications and CVs", desc: "All formats — including the creative ones recruiters dread." },
