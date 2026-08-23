@@ -5,9 +5,9 @@
     "goal_name": "Research pipeline: grow fully verified English lead pool to 2000 (continuous - don't stop)",
     "owner_id": "outbound",
     "run_id": "run-9ff4b879f6",
-    "run_status": "blocked",
-    "stage": "DECIDE",
-    "updated_at": "2026-08-23T18:55:50.970374+00:00"
+    "run_status": "idle",
+    "stage": "OBSERVE",
+    "updated_at": "2026-08-23T19:46:50.075880+00:00"
   },
   "heartbeat": {
     "business_value": null,
@@ -19,13 +19,13 @@
     "metric": "qualified_social_leads",
     "operator": "ge",
     "owner_id": "outbound",
-    "run_status": "blocked",
-    "stage": "DECIDE",
+    "run_status": "idle",
+    "stage": "OBSERVE",
     "target": 2000,
-    "updated_at": "2026-08-23T18:55:50.970374+00:00"
+    "updated_at": "2026-08-23T19:46:50.075880+00:00"
   },
-  "last_activity_at": "2026-08-23T18:55:50.970374+00:00",
-  "last_sync_at": "2026-08-23T19:17:35.468526+00:00",
+  "last_activity_at": "2026-08-23T19:46:50.075880+00:00",
+  "last_sync_at": "2026-08-23T19:47:15.364109+00:00",
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
     "goal_name": "3 booked calls per day",

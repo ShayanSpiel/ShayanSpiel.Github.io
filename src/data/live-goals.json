@@ -3309,14 +3309,14 @@
       "created_at": "2026-08-22T17:17:25.340801+00:00",
       "goal_status": "active",
       "id": "goal-87a4572a0f",
-      "latest_activity_at": "2026-08-23T18:55:50.970374+00:00",
+      "latest_activity_at": "2026-08-23T19:46:50.075880+00:00",
       "metric": "qualified_social_leads",
       "name": "Research pipeline: grow fully verified English lead pool to 2000 (continuous - don't stop)",
       "operator": "ge",
       "owner_id": "outbound",
       "parent_id": null,
-      "run_status": "blocked",
-      "stage": "DECIDE",
+      "run_status": "idle",
+      "stage": "OBSERVE",
       "target": 2000,
       "updated_at": "2026-08-23T18:55:50.968491+00:00"
     },
@@ -3346,10 +3346,10 @@
     "metric": "qualified_social_leads",
     "operator": "ge",
     "owner_id": "outbound",
-    "run_status": "blocked",
-    "stage": "DECIDE",
+    "run_status": "idle",
+    "stage": "OBSERVE",
     "target": 2000,
-    "updated_at": "2026-08-23T18:55:50.970374+00:00"
+    "updated_at": "2026-08-23T19:46:50.075880+00:00"
   },
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
@@ -3367,9 +3367,9 @@
       "goal_name": "Research pipeline: grow fully verified English lead pool to 2000 (continuous - don't stop)",
       "owner_id": "outbound",
       "run_id": "run-9ff4b879f6",
-      "run_status": "blocked",
-      "stage": "DECIDE",
-      "updated_at": "2026-08-23T18:55:50.970374+00:00"
+      "run_status": "idle",
+      "stage": "OBSERVE",
+      "updated_at": "2026-08-23T19:46:50.075880+00:00"
     },
     "heartbeat": {
       "business_value": null,
@@ -3381,13 +3381,13 @@
       "metric": "qualified_social_leads",
       "operator": "ge",
       "owner_id": "outbound",
-      "run_status": "blocked",
-      "stage": "DECIDE",
+      "run_status": "idle",
+      "stage": "OBSERVE",
       "target": 2000,
-      "updated_at": "2026-08-23T18:55:50.970374+00:00"
+      "updated_at": "2026-08-23T19:46:50.075880+00:00"
     },
-    "last_activity_at": "2026-08-23T18:55:50.970374+00:00",
-    "last_sync_at": "2026-08-23T18:55:51.080858+00:00",
+    "last_activity_at": "2026-08-23T19:46:50.075880+00:00",
+    "last_sync_at": "2026-08-23T19:46:50.332723+00:00",
     "state": "running"
   },
   "totals": {

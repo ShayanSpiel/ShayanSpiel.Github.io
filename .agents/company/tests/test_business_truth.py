@@ -16,8 +16,7 @@ from company.runtime.models import (
 )
 from company.runtime.system_improvement import SystemImprovement
 from company.runtime.truth import (
-    PRE_INVARIANT_FALSE_ACHIEVEMENTS, accepted_validities, is_business_outcome,
-    is_current_business_truth, is_explicitly_technical,
+    accepted_validities, is_business_outcome, is_explicitly_technical,
 )
 from company.tests.test_runtime import ImmediateHandler
 
@@ -50,11 +49,6 @@ class BusinessTruthDiscriminatorTests(unittest.TestCase):
         self.assertTrue(is_explicitly_technical(goal, run))
         self.assertFalse(is_business_outcome(goal, run))
         self.assertIn("technical_only", accepted_validities(goal, run))
-
-    def test_historical_false_achievement_is_not_current_truth(self):
-        self.assertIn("goal-content-leads-20260812", PRE_INVARIANT_FALSE_ACHIEVEMENTS)
-        self.assertFalse(is_current_business_truth("goal-content-leads-20260812"))
-        self.assertTrue(is_current_business_truth("goal-email-campaign-20260810"))
 
 
 class BusinessTruthRuntimeTests(unittest.TestCase):

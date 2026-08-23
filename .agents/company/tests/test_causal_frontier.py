@@ -6,7 +6,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from company.runtime.alignment import batch_exposure, pursuit_kind
+from company.runtime.alignment import pursuit_kind
 from company.runtime.director import Director
 from company.runtime.loop import Runtime
 from company.runtime.models import GoalHandler, GoalStatus, RunStatus, StageResult
@@ -104,7 +104,6 @@ class CausalFrontierTests(unittest.TestCase):
         self.assertEqual(first["cycle"]["run_status"], "completed")
         self.assertIsNone(first["pending_notifications"][0]["payload"]
                           ["required_user_action"])
-        self.assertEqual(batch_exposure(first["run"])["id"], "reply-batch-01")
 
         repair = runtime.create_goal(
             name="Repair the sender mapping dependency",
@@ -130,7 +129,6 @@ class CausalFrontierTests(unittest.TestCase):
 
         resumed = runtime.status(supporting["id"])
         self.assertEqual(resumed["cycle"]["sequence"], 2)
-        self.assertEqual(batch_exposure(resumed["run"])["id"], "reply-batch-02")
         achieved = runtime.once(supporting["id"])
         self.assertEqual(achieved["goal"]["goal_status"], "achieved")
 

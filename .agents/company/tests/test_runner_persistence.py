@@ -20,8 +20,6 @@ Intended API contract (implementer must make every test pass by editing ONLY
    one of:
      - `deliver_pending(store, limit=100) -> int`   (marks pending notifications
        delivered via store.acknowledge_notification; returns how many)
-     - `deliver(store, notification_id) -> dict`    (delivers one)
-     - `dispatch(store) -> int`                     (alias of deliver_pending)
    The runner watch cycle must call the delivery path so pending notifications
    do not accumulate unseen while the runner is on.
 
@@ -235,14 +233,10 @@ class RunnerNotificationTests(unittest.TestCase):
         except ImportError as exc:
             raise unittest.SkipTest(
                 "company.runtime.notifications does not exist yet: %s" % exc)
-        deliver = (getattr(notifications, "deliver_pending", None)
-                   or getattr(notifications, "dispatch", None))
-        if deliver is None:
-            deliver = getattr(notifications, "deliver", None)
+        deliver = getattr(notifications, "deliver_pending", None)
         if deliver is None:
             self.fail("company.runtime.notifications must expose deliver_pending("
-                      "store, limit=100) -> int, dispatch(store) -> int, or "
-                      "deliver(store, notification_id) -> dict")
+                      "store, limit=100) -> int")
         goal = self.parked_goal()
         count = deliver(self.runtime.store)
         self.assertGreaterEqual(int(count), 1)
