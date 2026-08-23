@@ -104,7 +104,7 @@ def live_fingerprint(snapshot: dict) -> str | None:
 
 def read_marker() -> dict:
     try:
-        data = json.loads(MARKER_PLACEHOLDER.read_text(encoding="utf-8"))
+        data = json.loads(LIVE_PUSH_MARKER.read_text(encoding="utf-8"))
         return data if isinstance(data, dict) else {}
     except (OSError, ValueError):
         return {}
@@ -153,8 +153,8 @@ def git_push_sequence() -> bool:
 
 
 def write_marker(fingerprint: str) -> None:
-    MARKER_PLACEHOLDER.parent.mkdir(parents=True, exist_ok=True)
-    MARKER_PLACEHOLDER.write_text(json.dumps(
+    LIVE_PUSH_MARKER.parent.mkdir(parents=True, exist_ok=True)
+    LIVE_PUSH_MARKER.write_text(json.dumps(
         {"fingerprint": fingerprint,
          "pushed_at": datetime.now(timezone.utc).isoformat()}, indent=2) + "\n",
         encoding="utf-8")

@@ -20,9 +20,10 @@ from company.runtime.models import GoalHandler, GoalContext, Goal, GoalStatus, R
 from company.runtime.runner import Runner
 from company.runtime.service import RunnerService
 from company.runtime.store import Store
+from company.runtime.hooks import run_transition_hook
+from company.runtime import hooks as runtime_hooks
 from company.runtime import loop as runtime_loop
-from company.runtime.loop import (Runtime, _completed_failed_runs, _env_file_value,
-                                  _live_fingerprint, _live_push_gate)
+from company.runtime.loop import Runtime
 from company.__main__ import main, render_report
 
 
@@ -735,47 +736,94 @@ class RuntimeControlTests(unittest.TestCase):
             self.assertNotIn("engine_id", goal)
 
 
-class LiveTimelineSyncTests(unittest.TestCase):
-    """The /live snapshot hook: fires on every persisted transition, and its
-    sync output is deterministic and idempotent (no mtime churn)."""
+class TransitionHookTests(unittest.TestCase):
+    """The generic post-transition hook (website decoupling): disabled by
+    default, fires once per persisted transition when configured via
+    SPIELOS_TRANSITION_HOOK, and never breaks a goal transition."""
 
-    def test_snapshot_hook_fires_on_recorded_transition(self):
-        with tempfile.TemporaryDirectory() as directory:
-            runtime = Runtime(Path(directory) / "state.sqlite",
-                              {"immediate_test": ImmediateHandler()})
-            goal = runtime.create_goal(name="Snapshot hook", owner_id="immediate_test",
-                                       metric="done", operator="eq", target=True, config={})
-            calls = []
-            fake = SimpleNamespace(
-                sync_live=lambda db, out, quiet: calls.append((db, out, quiet)) or {})
-            with patch("company.runtime.loop._load_live_sync", return_value=fake):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+
+    def runtime(self):
+        return Runtime(Path(self.temp.name) / "state.sqlite",
+                       {"immediate_test": ImmediateHandler()})
+
+    def test_hook_disabled_by_default(self):
+        runtime = self.runtime()
+        goal = runtime.create_goal(name="No hook", owner_id="immediate_test",
+                                   metric="done", operator="eq", target=True, config={})
+        with patch.dict(os.environ, {}, clear=True):
+            result = runtime.once(goal["id"])
+        self.assertEqual(result["goal"]["goal_status"], "achieved")
+
+    def test_hook_fires_on_every_persisted_transition_with_payload(self):
+        runtime = self.runtime()
+        goal = runtime.create_goal(name="Hooked", owner_id="immediate_test",
+                                   metric="done", operator="eq", target=True, config={})
+        calls = []
+
+        def record(event, payload, **kwargs):
+            calls.append((event, payload))
+            return {"returncode": 0}
+
+        with patch.dict(os.environ,
+                        {"SPIELOS_TRANSITION_HOOK": "true"}, clear=False), \
+             patch("company.runtime.loop.run_transition_hook", side_effect=record):
+            result = runtime.once(goal["id"])
+        # ImmediateHandler advances OBSERVE -> DECIDE -> ACT -> EVALUATE:
+        # exactly four persisted transitions, one hook invocation each.
+        self.assertEqual(result["goal"]["goal_status"], "achieved")
+        self.assertEqual(len(calls), 4)
+        for event, payload in calls:
+            self.assertEqual(event, "goal_transition")
+            self.assertEqual(payload["goal_id"], goal["id"])
+            self.assertIn("run_id", payload)
+            self.assertIn("run_status", payload)
+            self.assertIn("goal_status", payload)
+        self.assertEqual(calls[-1][1]["goal_status"], "achieved")
+
+    def test_hook_failure_never_breaks_the_goal_transition(self):
+        runtime = self.runtime()
+        goal = runtime.create_goal(name="Hook fails", owner_id="immediate_test",
+                                   metric="done", operator="eq", target=True, config={})
+        with patch.dict(os.environ,
+                        {"SPIELOS_TRANSITION_HOOK": "false"}, clear=False):
+            with patch("company.runtime.hooks.subprocess.run",
+                       side_effect=subprocess.TimeoutExpired(cmd=["x"], timeout=1)):
+                started = time.monotonic()
                 result = runtime.once(goal["id"])
-            self.assertEqual(result["goal"]["goal_status"], "achieved")
-            # ImmediateHandler advances OBSERVE -> DECIDE -> ACT -> EVALUATE,
-            # so exactly four recorded transitions must each trigger the sync.
-            self.assertEqual(len(calls), 4)
-            for db, out, quiet in calls:
-                self.assertEqual(db, ".spielos/state/company.sqlite")
-                self.assertEqual(out, "src/data/live-goals.json")
-                self.assertTrue(quiet)
+                self.assertLess(time.monotonic() - started, 5)
+        self.assertEqual(result["goal"]["goal_status"], "achieved")
 
-    def test_hook_tolerates_missing_script_and_locked_db(self):
-        with tempfile.TemporaryDirectory() as directory:
-            runtime = Runtime(Path(directory) / "state.sqlite",
-                              {"immediate_test": ImmediateHandler()})
-            with patch("company.runtime.loop._load_live_sync", return_value=None):
-                goal = runtime.create_goal(name="Tolerant hook", owner_id="immediate_test",
-                                           metric="done", operator="eq", target=True, config={})
-                result = runtime.once(goal["id"])  # missing script: skip, no raise
-            self.assertEqual(result["goal"]["goal_status"], "achieved")
+    def test_run_transition_hook_substitutes_and_quotes(self):
+        calls = []
+        with patch.dict(os.environ, {"SPIELOS_TRANSITION_HOOK":
+                                     "python3 hook.py {event} {payload_json}"}, clear=False), \
+             patch("company.runtime.hooks.subprocess.run",
+                   side_effect=lambda cmd, **kw: calls.append(cmd)
+                   or SimpleNamespace(returncode=0)):
+            result = run_transition_hook("goal_transition", {"goal_id": "g x"})
+        self.assertEqual({"returncode": 0}, result)
+        command = calls[0]
+        self.assertEqual(command, "python3 hook.py 'goal_transition' '{\"goal_id\": \"g x\"}'")
 
-            broken = SimpleNamespace(sync_live=lambda db, out, quiet: (_ for _ in ()).throw(
-                RuntimeError("database is locked")))
-            with patch("company.runtime.loop._load_live_sync", return_value=broken):
-                goal = runtime.create_goal(name="Locked hook", owner_id="immediate_test",
-                                           metric="done", operator="eq", target=True, config={})
-                result = runtime.once(goal["id"])  # locked DB: warn, no raise
-            self.assertEqual(result["goal"]["goal_status"], "achieved")
+    def test_run_transition_hook_env_file_fallback_and_env_var_priority(self):
+        env_file = Path(self.temp.name) / ".env"
+        env_file.write_text("# comment\nSPIELOS_TRANSITION_HOOK=file-cmd\n", encoding="utf-8")
+        # File fallback when the variable is unset.
+        with patch.dict(os.environ, {}, clear=True), \
+             patch.object(runtime_hooks, "HOOK_ENV_FILE", env_file):
+            self.assertEqual(runtime_hooks._hook_template(), "file-cmd")
+        # Env var wins over the file.
+        with patch.dict(os.environ, {"SPIELOS_TRANSITION_HOOK": "env-cmd"}, clear=False), \
+             patch.object(runtime_hooks, "HOOK_ENV_FILE", env_file):
+            self.assertEqual(runtime_hooks._hook_template(), "env-cmd")
+        # Empty everywhere -> disabled.
+        with patch.dict(os.environ, {}, clear=True), \
+             patch.object(runtime_hooks, "HOOK_ENV_FILE",
+                          Path(self.temp.name) / "missing.env"):
+            self.assertIsNone(run_transition_hook("goal_transition", {}))
 
     def test_sync_output_is_idempotent_without_mtime_churn(self):
         root = Path(__file__).resolve().parents[3]
@@ -921,388 +969,45 @@ class PlainLanguageProjectionTests(unittest.TestCase):
             self.assertTrue(status["started_at"].startswith("2026-08-11T12:17:00"))
 
 
-class LivePushTests(unittest.TestCase):
-    """SPIELOS_LIVE_PUSH gate: fingerprint + 120s debounce + light git push
-    for the /live snapshot, plus a best-effort HEAD:main fast-forward so
-    GitHub Pages deploys. Default OFF; every git failure is non-fatal."""
-
-    def setUp(self):
-        self.temp = tempfile.TemporaryDirectory()
-        self.addCleanup(self.temp.cleanup)
-        self.root = Path(self.temp.name)
-        self.marker = self.root / ".live_push_state.json"
-        self.out = self.root / "live-goals.json"
-        self.state_out = self.root / "live-state.json"
-        self.out.write_text("{}", encoding="utf-8")
-        self.state_out.write_text("{}", encoding="utf-8")
-
-    def runtime(self):
-        return Runtime(self.root / "state.sqlite", {"immediate_test": ImmediateHandler()})
-
-    def enabled(self):
-        return patch.dict(os.environ, {"SPIELOS_LIVE_PUSH": "1"})
-
-    def live_push_patches(self, db):
-        return (
-            patch("company.runtime.loop.LIVE_PUSH_MARKER", str(self.marker)),
-            patch("company.runtime.loop.LIVE_SYNC_OUT", str(self.out)),
-            patch("company.runtime.loop.LIVE_PUSH_STATE_OUT", str(self.state_out)),
-            patch("company.runtime.loop.LIVE_SYNC_DB", str(db)),
-        )
-
-    @contextmanager
-    def clock(self):
-        frozen = [datetime(2026, 8, 11, 12, 0, 0, tzinfo=timezone.utc)]
-
-        class FrozenDateTime(datetime):
-            @classmethod
-            def now(cls, tz=None):
-                return frozen[0]
-
-        with patch("company.runtime.loop.datetime", FrozenDateTime), \
-             patch("company.runtime.loop.time.time",
-                   side_effect=lambda: frozen[0].timestamp()):
-            yield frozen
-
-    def git_fake(self, calls, diff_returncode=1):
-        def run(args, check=True):
-            calls.append(list(args))
-            if list(args[:2]) == ["git", "diff"]:
-                return SimpleNamespace(returncode=diff_returncode)
-            return SimpleNamespace(returncode=0)
-        return run
-
-    def test_fires_on_state_flip_and_writes_marker(self):
-        runtime = self.runtime()
-        running = {"runtime_state": {"state": "running"},
-                   "totals": {"goals_achieved": 1, "goals_abandoned": 0}}
-        resting = {"runtime_state": {"state": "resting"},
-                   "totals": {"goals_achieved": 1, "goals_abandoned": 0}}
-        calls = []
-        with ExitStack() as stack:
-            frozen = stack.enter_context(self.clock())
-            stack.enter_context(self.enabled())
-            stack.enter_context(patch("company.runtime.loop._run_git",
-                                      side_effect=self.git_fake(calls)))
-            for item in self.live_push_patches(runtime.store.path):
-                stack.enter_context(item)
-            runtime._maybe_push_live_snapshot(running)
-            frozen[0] = frozen[0] + timedelta(seconds=121)
-            runtime._maybe_push_live_snapshot(resting)
-        expected = [["git", "add", str(self.out), str(self.state_out)],
-                    ["git", "diff", "--cached", "--quiet"],
-                    ["git", "commit", "-m", "live: sync runtime state"],
-                    ["git", "push", "origin", "HEAD"],
-                    ["git", "push", "origin", "HEAD:main"]] * 2
-        self.assertEqual(expected, calls)
-        marker = json.loads(self.marker.read_text(encoding="utf-8"))
-        self.assertEqual("resting|1|0", marker["fingerprint"])
-        self.assertIn("pushed_at", marker)
-
-    def test_fires_on_terminal_goal_fingerprint_change(self):
-        runtime = self.runtime()
-        calls = []
-        resting = {"runtime_state": {"state": "resting"},
-                   "totals": {"goals_achieved": 1, "goals_abandoned": 0}}
-        with ExitStack() as stack:
-            frozen = stack.enter_context(self.clock())
-            stack.enter_context(self.enabled())
-            stack.enter_context(patch("company.runtime.loop._run_git",
-                                      side_effect=self.git_fake(calls)))
-            for item in self.live_push_patches(runtime.store.path):
-                stack.enter_context(item)
-            runtime._maybe_push_live_snapshot(resting)
-            frozen[0] = frozen[0] + timedelta(seconds=121)
-            runtime._maybe_push_live_snapshot(
-                {"runtime_state": {"state": "resting"},
-                 "totals": {"goals_achieved": 1, "goals_abandoned": 1}})
-        pushes = [call for call in calls if call[:2] != ["git", "diff"]]
-        self.assertEqual(8, len(pushes))  # add + commit + HEAD push + main push per push
-        marker = json.loads(self.marker.read_text(encoding="utf-8"))
-        self.assertEqual("resting|2|0", marker["fingerprint"])
-
-    def test_fires_on_run_completion_fingerprint_change(self):
-        runtime = self.runtime()
-        goal = runtime.create_goal(name="Runs", owner_id="immediate_test",
-                                   metric="done", operator="eq", target=True, config={})
-        snapshot = {"runtime_state": {"state": "resting"},
-                    "totals": {"goals_achieved": 0, "goals_abandoned": 0}}
-        calls = []
-        with ExitStack() as stack:
-            frozen = stack.enter_context(self.clock())
-            stack.enter_context(self.enabled())
-            stack.enter_context(patch("company.runtime.loop._run_git",
-                                      side_effect=self.git_fake(calls)))
-            for item in self.live_push_patches(runtime.store.path):
-                stack.enter_context(item)
-            runtime._maybe_push_live_snapshot(snapshot)  # 0 completed runs
-            fake_sync = SimpleNamespace(sync_live=lambda db, out, quiet: snapshot)
-            with patch("company.runtime.loop._load_live_sync", return_value=fake_sync):
-                runtime.once(goal["id"])  # run completes in the DB
-            frozen[0] = frozen[0] + timedelta(seconds=121)
-            runtime._maybe_push_live_snapshot(snapshot)  # 1 completed run now
-        pushes = [call for call in calls if call[:2] != ["git", "diff"]]
-        self.assertEqual(8, len(pushes))
-        marker = json.loads(self.marker.read_text(encoding="utf-8"))
-        self.assertEqual("resting|0|1", marker["fingerprint"])
-
-    def test_no_push_when_fingerprint_unchanged(self):
-        runtime = self.runtime()
-        self.marker.write_text(json.dumps(
-            {"fingerprint": "resting|1|0", "pushed_at": "2026-08-10T12:00:00+00:00"}),
-            encoding="utf-8")
-        calls = []
-        with ExitStack() as stack:
-            stack.enter_context(self.clock())
-            stack.enter_context(self.enabled())
-            stack.enter_context(patch("company.runtime.loop._run_git",
-                                      side_effect=self.git_fake(calls)))
-            for item in self.live_push_patches(runtime.store.path):
-                stack.enter_context(item)
-            runtime._maybe_push_live_snapshot(
-                {"runtime_state": {"state": "resting"},
-                 "totals": {"goals_achieved": 1, "goals_abandoned": 0}})
-        self.assertEqual([], calls)
-
-    def test_noop_when_gate_disabled(self):
-        runtime = self.runtime()
-        calls = []
-        with ExitStack() as stack:
-            stack.enter_context(patch.dict(os.environ, {}, clear=True))
-            stack.enter_context(patch("company.runtime.loop._env_file_value",
-                                      return_value=None))
-            stack.enter_context(patch("company.runtime.loop._run_git",
-                                      side_effect=self.git_fake(calls)))
-            for item in self.live_push_patches(runtime.store.path):
-                stack.enter_context(item)
-            runtime._maybe_push_live_snapshot(
-                {"runtime_state": {"state": "running"},
-                 "totals": {"goals_achieved": 1, "goals_abandoned": 0}})
-        self.assertEqual([], calls)
-        self.assertFalse(self.marker.exists())
-
-    def test_git_failure_is_non_fatal_and_goal_still_achieves(self):
-        runtime = self.runtime()
-        goal = runtime.create_goal(name="Push fail", owner_id="immediate_test",
-                                   metric="done", operator="eq", target=True, config={})
-        snapshot = {"runtime_state": {"state": "running"},
-                    "totals": {"goals_achieved": 0, "goals_abandoned": 0}}
-        fake_sync = SimpleNamespace(sync_live=lambda db, out, quiet: snapshot)
-
-        def failing_push(args, check=True):
-            if list(args[:2]) == ["git", "diff"]:
-                return SimpleNamespace(returncode=1)
-            if list(args[:2]) == ["git", "push"]:
-                raise subprocess.CalledProcessError(128, args, b"", b"fatal: no upstream")
-            return SimpleNamespace(returncode=0)
-
-        with ExitStack() as stack:
-            stack.enter_context(self.clock())
-            stack.enter_context(self.enabled())
-            stack.enter_context(patch("company.runtime.loop._load_live_sync",
-                                      return_value=fake_sync))
-            stack.enter_context(patch("company.runtime.loop._run_git",
-                                      side_effect=failing_push))
-            for item in self.live_push_patches(runtime.store.path):
-                stack.enter_context(item)
-            with self.assertLogs("company.runtime.loop", level="WARNING") as logs:
-                result = runtime.once(goal["id"])
-        self.assertEqual("achieved", result["goal"]["goal_status"])
-        self.assertFalse(self.marker.exists())  # marker written only after success
-        self.assertTrue(any("live push" in line for line in logs.output))
-
-    def test_main_ref_rejection_is_non_fatal_and_marker_still_written(self):
-        """A rejected HEAD:main push logs a warning but never raises; the
-        snapshot is already on the current branch, so the push completes."""
-        runtime = self.runtime()
-        running = {"runtime_state": {"state": "running"},
-                   "totals": {"goals_achieved": 1, "goals_abandoned": 0}}
-        calls = []
-
-        def reject_non_ff_push(args, check=True):
-            calls.append(list(args))
-            if list(args[:2]) == ["git", "diff"]:
-                return SimpleNamespace(returncode=1)
-            if list(args) == ["git", "push", "origin", "HEAD:main"]:
-                raise subprocess.CalledProcessError(
-                    128, args, b"",
-                    b"! [rejected] HEAD -> main (non-fast-forward)")
-            return SimpleNamespace(returncode=0)
-
-        with ExitStack() as stack:
-            frozen = stack.enter_context(self.clock())
-            stack.enter_context(self.enabled())
-            stack.enter_context(patch("company.runtime.loop._run_git",
-                                      side_effect=reject_non_ff_push))
-            for item in self.live_push_patches(runtime.store.path):
-                stack.enter_context(item)
-            with self.assertLogs("company.runtime.loop", level="WARNING") as logs:
-                runtime._maybe_push_live_snapshot(running)  # must not raise
-        self.assertIn(["git", "push", "origin", "HEAD:main"], calls)
-        self.assertIn(["git", "push", "origin", "HEAD"], calls)
-        self.assertTrue(any("origin main" in line for line in logs.output))
-        marker = json.loads(self.marker.read_text(encoding="utf-8"))
-        self.assertEqual("running|1|0", marker["fingerprint"])
-
-    def test_debounce_blocks_pushes_within_120_seconds(self):
-        runtime = self.runtime()
-        running = {"runtime_state": {"state": "running"},
-                   "totals": {"goals_achieved": 0, "goals_abandoned": 0}}
-        resting = {"runtime_state": {"state": "resting"},
-                   "totals": {"goals_achieved": 0, "goals_abandoned": 0}}
-
-        def push_count(calls):
-            return sum(1 for call in calls if list(call[:2]) == ["git", "push"])
-
-        calls = []
-        with ExitStack() as stack:
-            frozen = stack.enter_context(self.clock())
-            stack.enter_context(self.enabled())
-            stack.enter_context(patch("company.runtime.loop._run_git",
-                                      side_effect=self.git_fake(calls)))
-            for item in self.live_push_patches(runtime.store.path):
-                stack.enter_context(item)
-            runtime._maybe_push_live_snapshot(running)  # push 1 at T0
-            runtime._maybe_push_live_snapshot(resting)  # changed but 0s < 120s -> skip
-            self.assertEqual(2, push_count(calls))  # HEAD + main push for push 1
-            frozen[0] = frozen[0] + timedelta(seconds=120)  # exactly 120s -> allowed
-            runtime._maybe_push_live_snapshot(resting)  # push 2
-            self.assertEqual(4, push_count(calls))
-            frozen[0] = frozen[0] + timedelta(seconds=119)  # 119s since push 2 -> skip
-            runtime._maybe_push_live_snapshot(running)  # changed again, debounced
-            self.assertEqual(4, push_count(calls))
-
-    def test_skips_when_nothing_to_commit(self):
-        runtime = self.runtime()
-        calls = []
-        with ExitStack() as stack:
-            stack.enter_context(self.clock())
-            stack.enter_context(self.enabled())
-            stack.enter_context(patch("company.runtime.loop._run_git",
-                                      side_effect=self.git_fake(calls, diff_returncode=0)))
-            for item in self.live_push_patches(runtime.store.path):
-                stack.enter_context(item)
-            runtime._maybe_push_live_snapshot(
-                {"runtime_state": {"state": "running"},
-                 "totals": {"goals_achieved": 0, "goals_abandoned": 0}})
-        self.assertEqual([["git", "add", str(self.out), str(self.state_out)],
-                          ["git", "diff", "--cached", "--quiet"]], calls)
-        self.assertFalse(self.marker.exists())
-
-    def test_git_add_only_stages_existing_snapshot_files(self):
-        runtime = self.runtime()
-        self.state_out.unlink()  # only live-goals.json exists
-        calls = []
-        with ExitStack() as stack:
-            frozen = stack.enter_context(self.clock())
-            stack.enter_context(self.enabled())
-            stack.enter_context(patch("company.runtime.loop._run_git",
-                                      side_effect=self.git_fake(calls)))
-            for item in self.live_push_patches(runtime.store.path):
-                stack.enter_context(item)
-            runtime._maybe_push_live_snapshot(
-                {"runtime_state": {"state": "running"},
-                 "totals": {"goals_achieved": 0, "goals_abandoned": 0}})
-            self.assertEqual([["git", "add", str(self.out)],
-                              ["git", "diff", "--cached", "--quiet"],
-                              ["git", "commit", "-m", "live: sync runtime state"],
-                              ["git", "push", "origin", "HEAD"],
-                              ["git", "push", "origin", "HEAD:main"]], calls)
-            self.out.unlink()  # now neither snapshot file exists
-            frozen[0] = frozen[0] + timedelta(seconds=121)
-            runtime._maybe_push_live_snapshot(
-                {"runtime_state": {"state": "resting"},
-                 "totals": {"goals_achieved": 0, "goals_abandoned": 0}})
-        self.assertEqual(5, len(calls))  # no new git calls without files to stage
-
-    def test_fingerprint_combines_state_terminal_goals_and_runs(self):
-        runtime = self.runtime()
-        snapshot = {"runtime_state": {"state": "running"},
-                    "totals": {"goals_achieved": 3, "goals_abandoned": 2}}
-        self.assertEqual("running|5|0", _live_fingerprint(snapshot, str(runtime.store.path)))
-        snapshot["runtime_state"]["state"] = "resting"
-        self.assertEqual("resting|5|0", _live_fingerprint(snapshot, str(runtime.store.path)))
-        self.assertIsNone(_live_fingerprint({}, str(runtime.store.path)))
-        self.assertIsNone(_live_fingerprint(
-            {"totals": {"goals_achieved": 1}}, str(runtime.store.path)))
-
-    def test_fingerprint_counts_completed_and_failed_runs(self):
-        runtime = self.runtime()
-        goal = runtime.create_goal(name="Runs", owner_id="immediate_test",
-                                   metric="done", operator="eq", target=True, config={})
-        self.assertEqual(0, _completed_failed_runs(str(runtime.store.path)))
-        with sqlite3.connect(str(runtime.store.path)) as con:
-            for run_id, status in (("r-c", "completed"), ("r-f", "failed"), ("r-i", "idle")):
-                con.execute(
-                    "INSERT INTO runs (id, goal_id, run_type, owner_id, owner_version, "
-                    "config_snapshot_json, controlled_variables_json, changed_variables_json, "
-                    "evidence_validity, status, created_at, updated_at) "
-                    "VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
-                    (run_id, goal["id"], "execution", "immediate_test", "1.0.0", "{}", "{}",
-                     "{}", "business", status, "now", "now"))
-        self.assertEqual(2, _completed_failed_runs(str(runtime.store.path)))
-
-    def test_gate_env_var_and_env_file_fallback(self):
-        env_file = self.root / ".env"
-        env_file.write_text("# comment\nGEMINI_API_KEY=x\nSPIELOS_LIVE_PUSH = 1\n\n",
-                            encoding="utf-8")
-        self.assertEqual("1", _env_file_value(str(env_file), "SPIELOS_LIVE_PUSH"))
-        self.assertIsNone(_env_file_value(str(self.root / "missing.env"), "SPIELOS_LIVE_PUSH"))
-        # env var wins over the file
-        with patch.dict(os.environ, {"SPIELOS_LIVE_PUSH": "0"}, clear=True), \
-             patch("company.runtime.loop._env_file_value", return_value="1"):
-            self.assertFalse(_live_push_gate())
-        # file fallback when env var is unset
-        with patch.dict(os.environ, {}, clear=True), \
-             patch("company.runtime.loop._env_file_value", return_value="1"):
-            self.assertTrue(_live_push_gate())
-        # unset everywhere -> default OFF
-        with patch.dict(os.environ, {}, clear=True), \
-             patch("company.runtime.loop._env_file_value", return_value=None):
-            self.assertFalse(_live_push_gate())
-
-
-if __name__ == "__main__":
-    unittest.main()
-
-
-class LivePushBoundTests(unittest.TestCase):
-    """company-runtime 5.4.0: live sync/push never block a goal transition."""
+class TransitionHookBoundTests(unittest.TestCase):
+    """company-runtime 6.1: the transition hook never blocks a goal
+    transition and is strictly bounded; the retired live sync/push machinery
+    no longer exists in loop.py."""
 
     def runtime(self, registry):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         return Runtime(Path(self.temp.name) / "state.sqlite", registry)
 
-    def test_git_subprocess_is_bounded(self):
-        with patch("company.runtime.loop.subprocess.run") as run:
+    def test_website_deploy_symbols_are_gone_from_loop(self):
+        for symbol in ("LIVE_SYNC_SCRIPT", "LIVE_SYNC_DB", "LIVE_SYNC_OUT",
+                       "LIVE_PUSH_STATE_OUT", "_git_push_sequence",
+                       "_push_live_main_ref", "_sync_live_snapshot",
+                       "_maybe_push_live_snapshot", "_load_live_sync"):
+            self.assertFalse(hasattr(runtime_loop, symbol),
+                             f"website coupling must stay out of the runtime: {symbol}")
+
+    def test_hook_subprocess_is_bounded(self):
+        with patch("company.runtime.hooks.subprocess.run") as run:
             run.return_value = SimpleNamespace(returncode=0, stdout="", stderr="")
-            runtime_loop._run_git(["status"])
+            with patch.dict(os.environ,
+                            {"SPIELOS_TRANSITION_HOOK": "true"}, clear=False):
+                run_transition_hook("goal_transition", {})
         self.assertIn("timeout", run.call_args.kwargs)
         self.assertLessEqual(run.call_args.kwargs["timeout"], 30)
 
-    def test_hanging_push_never_blocks_transition(self):
+    def test_hanging_hook_never_blocks_transition(self):
         runtime = self.runtime({"immediate_test": ImmediateHandler()})
-        stub = SimpleNamespace(
-            sync_live=lambda db, out, quiet: {"runtime_state": {"state": "x"}})
+        goal = runtime.create_goal(name="Hung hook", owner_id="immediate_test",
+                                   metric="done", operator="eq", target=True, config={})
         started = time.monotonic()
-        with patch("company.runtime.loop._load_live_sync", return_value=stub), \
-             patch("company.runtime.loop._live_push_gate", return_value=True), \
-             patch("company.runtime.loop._git_push_sequence",
+        with patch.dict(os.environ,
+                        {"SPIELOS_TRANSITION_HOOK": "true"}, clear=False), \
+             patch("company.runtime.hooks.subprocess.run",
                    side_effect=subprocess.TimeoutExpired(cmd=["git", "push"], timeout=1)):
-            runtime._sync_live_snapshot()  # must not raise and must return fast
+            result = runtime.once(goal["id"])  # must not raise and must return fast
         self.assertLess(time.monotonic() - started, 5)
-
-    def test_hanging_sync_never_blocks_transition(self):
-        runtime = self.runtime({"immediate_test": ImmediateHandler()})
-        stub = SimpleNamespace(sync_live=lambda db, out, quiet: time.sleep(60))
-        started = time.monotonic()
-        with patch("company.runtime.loop._load_live_sync", return_value=stub), \
-             patch.object(Runtime, "_maybe_push_live_snapshot") as pushed, \
-             patch("company.runtime.loop.LIVE_SYNC_TIMEOUT_S", 1):
-            runtime._sync_live_snapshot()  # bounded: returns after ~1s
-        self.assertLess(time.monotonic() - started, 5)
-        pushed.assert_not_called()
+        self.assertEqual(result["goal"]["goal_status"], "achieved")
 
     def test_stale_running_cycle_resumes_but_live_lease_blocks(self):
         runtime = self.runtime({"immediate_test": ImmediateHandler()})

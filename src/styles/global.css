@@ -618,7 +618,9 @@ i[class*=" bxs-"] {
 
   /* ── Dual CTA (notes ending: primary conversion + secondary DIY path) ── */
   .post-cta-dual {
-    @apply my-10 p-8 rounded-lg border border-primary/30 bg-panel-strong ring-1 ring-primary/20 text-center;
+    @apply my-10 p-8 rounded-lg bg-panel-strong text-center;
+    border: 1px solid color-mix(in oklab, var(--primary) 30%, transparent);
+    box-shadow: 0 0 0 1px color-mix(in oklab, var(--primary) 15%, transparent);
     h3 { @apply text-base font-semibold text-foreground-strong mb-2; }
     > p { @apply text-sm text-muted-foreground mb-6 max-w-lg mx-auto leading-relaxed; }
   }

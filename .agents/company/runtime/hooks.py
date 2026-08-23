@@ -4,7 +4,8 @@ The runtime used to hardcode this repository's website deploy pipeline
 (regenerate ``src/data/live-goals.json``, git add/commit/push) directly into
 its goal-transition hot path. That coupling is gone: after every persisted
 transition the loop calls :func:`run_transition_hook`, which is a no-op unless
-the ``SPIELOS_TRANSITION_HOOK`` environment variable names a shell command
+the ``SPIELOS_TRANSITION_HOOK`` environment variable (with a fallback read of
+``.spielos/.env``, mirroring the retired live-push gate) names a shell command
 template.
 
 Template substitution (plain string replace):
@@ -30,11 +31,34 @@ import logging
 import os
 import shlex
 import subprocess
+from pathlib import Path
 
 logger = logging.getLogger("company.runtime.hooks")
 
 HOOK_ENV = "SPIELOS_TRANSITION_HOOK"
+# Fallback dotenv file beside the runtime state, matching the old live-push
+# gate semantics: environment variable wins; the file is only consulted when
+# the variable is unset. Empty/unset everywhere => hook disabled by default.
+HOOK_ENV_FILE = Path(".spielos/.env")
 DEFAULT_TIMEOUT_S = 20.0
+
+
+def _hook_template() -> str:
+    raw = os.environ.get(HOOK_ENV)
+    if raw is None:
+        try:
+            lines = HOOK_ENV_FILE.read_text(encoding="utf-8").splitlines()
+        except OSError:
+            return ""
+        for line in lines:
+            stripped = line.strip()
+            if not stripped or stripped.startswith("#") or "=" not in stripped:
+                continue
+            name, _, value = stripped.partition("=")
+            if name.strip() == HOOK_ENV:
+                return value.strip()
+        return ""
+    return raw.strip()
 
 
 def run_transition_hook(event: str, payload: dict, *,
@@ -44,7 +68,7 @@ def run_transition_hook(event: str, payload: dict, *,
     Returns None when the hook is disabled or failed; otherwise a small dict
     with ``returncode``. Never raises.
     """
-    template = (os.environ.get(HOOK_ENV) or "").strip()
+    template = _hook_template()
     if not template:
         return None
     limit = DEFAULT_TIMEOUT_S if timeout is None else timeout
