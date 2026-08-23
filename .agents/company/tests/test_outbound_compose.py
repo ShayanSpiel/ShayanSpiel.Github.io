@@ -18,7 +18,9 @@ no network, no real sends.
 """
 
 import json
+import shutil
 import sys
+import tempfile
 import unittest
 import unittest.mock
 from pathlib import Path
@@ -40,6 +42,26 @@ REPO_CONTENT_PATH = (
 )
 
 RETIRED_PHRASE = "supervised AI employees"
+
+_CONFIG_ATTRS = ("SENT_LOG_PATH", "METRICS_PATH", "CONTENT_PATH", "DATABASE_PATH")
+_CONFIG_SNAPSHOT = {}
+
+
+def setUpModule():
+    """Hermetic guard: the shared `config` object is process-global; other
+    modules (and this one) redirect its paths to temp dirs. Snapshot and
+    restore around this module so pollution can never cross files."""
+    from company.departments.outbound.workflows.email import config as _config
+    for attr in _CONFIG_ATTRS:
+        if hasattr(_config, attr):
+            _CONFIG_SNAPSHOT[attr] = getattr(_config, attr)
+
+
+def tearDownModule():
+    from company.departments.outbound.workflows.email import config as _config
+    for attr, value in _CONFIG_SNAPSHOT.items():
+        setattr(_config, attr, value)
+
 
 RESEARCHED = {
     "lead_id": "EN-100",
@@ -158,23 +180,31 @@ class SubjectBankTests(unittest.TestCase):
         self.assertIn("Supervised agents at {company}", bank)
 
 
-class SignatureBookingTests(unittest.TestCase):
-    """Change change-e7d88c6f5c (goal-booking-signature-outbound-20260819):
-    every outbound email signature carries the Discovery Call booking CTA
-    line and link, in both HTML and plain-text layers."""
+class SignatureApplyTests(unittest.TestCase):
+    """Owner directive 2026-08-22/23 (supersedes change-e7d88c6f5c /
+    goal-booking-signature-outbound-20260819): every outbound email signature
+    carries the Apply-first CTA ("Apply — Free Review", no required call) in
+    both HTML and plain-text layers, with UTM parameters, and carries NO
+    booking/cal.com CTA anywhere."""
 
-    BOOKING_LINE = "Book a FREE Discovery Call"
-    BOOKING_LINK = "https://cal.com/shayanspiel/15min"
+    APPLY_LINE = "Apply for a Free Review"
+    APPLY_LINK = "https://spielos.xyz/apply/"
 
-    def test_signature_html_has_booking_line_and_link(self):
-        self.assertIn(self.BOOKING_LINE, SIGNATURE_HTML)
-        self.assertIn(self.BOOKING_LINK, SIGNATURE_HTML)
+    def test_signature_html_has_apply_line_and_link(self):
+        self.assertIn(self.APPLY_LINE, SIGNATURE_HTML)
+        self.assertIn(self.APPLY_LINK, SIGNATURE_HTML)
 
-    def test_signature_text_has_booking_line_and_link(self):
-        self.assertIn(self.BOOKING_LINE, SIGNATURE_TEXT)
-        self.assertIn(self.BOOKING_LINK, SIGNATURE_TEXT)
+    def test_signature_text_has_apply_line_and_link(self):
+        self.assertIn(self.APPLY_LINE, SIGNATURE_TEXT)
+        self.assertIn(self.APPLY_LINK, SIGNATURE_TEXT)
 
-    def test_booking_link_carries_signature_utm_params(self):
+    def test_signature_carries_no_booking_cta(self):
+        for sig in (SIGNATURE_HTML, SIGNATURE_TEXT):
+            self.assertNotIn("cal.com", sig, sig[:120])
+            self.assertNotIn("Book a FREE Discovery Call", sig, sig[:120])
+            self.assertNotIn("/book/", sig, sig[:120])
+
+    def test_apply_link_carries_signature_utm_params(self):
         for sig in (SIGNATURE_HTML, SIGNATURE_TEXT):
             self.assertIn("utm_source=outbound-email", sig, sig[:120])
             self.assertIn("utm_medium=email", sig, sig[:120])
@@ -250,6 +280,17 @@ class MechanicalConstraintTests(unittest.TestCase):
 
 
 class RetiredOfferValidatorTests(unittest.TestCase):
+    def setUp(self):
+        # Hermetic sent log: the fixture lead (EN-100) collides with a real
+        # production entry, and validate() consults the live sent log.
+        from company.departments.outbound.workflows.email import outbound as _ob
+        tmp = Path(tempfile.mkdtemp(prefix="validator-"))
+        self.addCleanup(shutil.rmtree, str(tmp), ignore_errors=True)
+        original = config.SENT_LOG_PATH
+        self.addCleanup(setattr, config, "SENT_LOG_PATH", original)
+        config.SENT_LOG_PATH = tmp / "sent.json"
+        _ob.save_sent_log({"sent": [], "failed": []})
+
     def test_validator_flags_the_retired_offer_phrase(self):
         batch = {"emails": [{
             "lead_id": "L1",

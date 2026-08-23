@@ -1,220 +1,300 @@
 #!/usr/bin/env node
 /**
- * generate-og.mjs — Renders OG images from the SpielOS design system via Puppeteer.
+ * generate-og.mjs — Renders every site OG image (exact 1200x630) via Puppeteer.
+ *
+ * Templates (website derivatives of the Design Department's registered social
+ * archetypes, gallery research map shortform-template-research-20260817):
+ *   - src/og-templates/og-single-fact.html  (default: one bold fact + support)
+ *   - src/og-templates/og-pull-quote.html   (quote + attribution)
+ *
+ * The manifest mirrors each indexable route's real SEO metadata:
+ *   - Notes: parsed live from src/content/notes/*.mdx frontmatter
+ *   - Software pages: parsed from src/data/software-solutions.ts
+ *   - Workflow pages: parsed from src/data/workflow-solutions.ts
  *
  * Usage: node scripts/generate-og.mjs
  */
 
 import puppeteer from "puppeteer";
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from "fs";
+import { readFileSync, readdirSync, writeFileSync, existsSync, mkdirSync, unlinkSync } from "fs";
 import { join, resolve } from "path";
 import { fileURLToPath } from "url";
 import { createServer } from "http";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const ROOT = resolve(__dirname, "..");
-const TEMPLATE = join(ROOT, "src/og-templates/og-base.html");
+const TEMPLATES = {
+  fact: join(ROOT, "src/og-templates/og-single-fact.html"),
+  quote: join(ROOT, "src/og-templates/og-pull-quote.html"),
+};
 const OUT_DIR = join(ROOT, "public/assets/og");
+const WIDTH = 1200;
+const HEIGHT = 630;
 
-/* ── Design system tokens (Gruvbox Dark) ── */
-const T = {
-  bg: "#1d2021",
-  panel: "#282828",
-  panelRaised: "#32302f",
-  fg: "#ebdbb2",
-  fgStrong: "#fbf1c7",
-  fgMuted: "#bdae93",
-  muted: "#a89984",
-  primary: "#458588",
-  accent: "#689d6a",
-  purple: "#b16286",
-  success: "#98971a",
-  warning: "#d79921",
-  destructive: "#cc241d",
-  border: "#504945",
+/* ── Helpers ─────────────────────────────────────────────── */
+const unquote = (s) => s.replace(/\\/g, "").replace(/"/g, "").trim();
+const trunc = (s, n = 150) =>
+  s.length <= n ? s : s.slice(0, n).replace(/\s+\S*$/, "").trimEnd() + "…";
+
+/** Parse YAML frontmatter (title/description/permalink) from an .mdx note. */
+function parseNote(filePath) {
+  const src = readFileSync(filePath, "utf-8");
+  const fm = src.match(/^---\n([\s\S]*?)\n---/);
+  if (!fm) return null;
+  const grab = (key) => {
+    const m = fm[1].match(new RegExp(`^${key}:\\s*(.*)$`, "m"));
+    return m ? m[1].trim().replace(/^["']|["']$/g, "") : "";
+  };
+  // description may be a wrapped multi-line scalar — take until next top-level key
+  const dm = fm[1].match(/^description:\s*([\s\S]*?)(?=^\w|\n\w+:)/m);
+  const description = dm ? dm[1].split("\n").map((l) => l.trim()).join(" ").trim() : "";
+  return { title: grab("title"), description, permalink: grab("permalink") };
+}
+
+/** Extract slug-keyed string fields from a typed TS data module. */
+function parseTsEntries(filePath, fields) {
+  const src = readFileSync(filePath, "utf-8");
+  // Entries open with "  {" at two-space indent inside the exported array.
+  // Anchoring there keeps each segment self-contained, so fields that precede
+  // the slug line (key, name) are read from the right entry.
+  const entryRe = /\n  \{\s*\n([\s\S]*?)\n  \}(?:,|\s*$)/g;
+  const entries = [];
+  let m;
+  while ((m = entryRe.exec(src))) entries.push(m[1]);
+  return entries.map((seg) => {
+    const sm = seg.match(/(?:^|\n)\s{4}slug:\s*"([^"]+)"/);
+    const out = { slug: sm ? sm[1] : "" };
+    for (const f of fields) {
+      const fm2 = seg.match(new RegExp(`(?:^|\\n)\\s{4}${f}:\\s*"((?:[^"\\\\]|\\\\.)*)"`));
+      out[f] = fm2 ? unquote(fm2[1]) : "";
+    }
+    return out;
+  });
+}
+
+/* ── Manifest ─────────────────────────────────────────────── */
+function buildManifest() {
+  const pages = [];
+
+  /* Core pages */
+  pages.push(
+    {
+      file: "home.png", archetype: "fact", eyebrow: "AI Workflow Automation",
+      title_lines: ["AI workflow automation", "that runs without you"], accent_line: 1,
+      supporting_text: "We fix broken AI-built software and turn repetitive work into systems that keep working.",
+      url: "/",
+    },
+    {
+      file: "founder.png", archetype: "quote", eyebrow: "Founder",
+      title_lines: ["Ten years of startup systems.", "One AI company."], accent_line: 1,
+      supporting_text: "— Shayan Spiel · Founder & Agent Harness Architect",
+      url: "/founder/",
+    },
+    {
+      file: "contact.png", archetype: "fact", eyebrow: "Contact",
+      title_lines: ["Show us what keeps breaking"], accent_line: -1,
+      supporting_text: "Get in touch about fixing AI-built software or handing repetitive work to AI.",
+      url: "/contact/",
+    },
+    {
+      file: "notes-index.png", archetype: "fact", eyebrow: "Notes",
+      title_lines: ["Notes from building", "an AI company"], accent_line: 1,
+      supporting_text: "Agent systems, context, workflows, evaluations — building in public.",
+      url: "/notes/",
+    },
+    {
+      file: "services.png", archetype: "fact", eyebrow: "Services",
+      title_lines: ["AI agent implementation,", "measured against your cost"], accent_line: 1,
+      supporting_text: "Fix broken AI-built software or hand repetitive work to AI workers. Free review, scope before you pay.",
+      url: "/services/",
+    },
+    {
+      file: "agent-brief.png", archetype: "fact", eyebrow: "Agent Brief",
+      title_lines: ["Scope before you pay"], accent_line: -1,
+      supporting_text: "Map one repetitive workflow into a clear Agent Brief: result, inputs, outputs, controls, success measure.",
+      url: "/services/agent-brief/",
+    },
+    {
+      file: "pricing.png", archetype: "fact", eyebrow: "Pricing",
+      title_lines: ["$2,990/month.", "One active build at a time."], accent_line: 0,
+      supporting_text: "No hourly billing, no lock-in — see the scope before you pay.",
+      url: "/pricing/",
+    },
+    {
+      file: "apply.png", archetype: "fact", eyebrow: "Free Review",
+      title_lines: ["Apply — Free Review"], accent_line: -1,
+      supporting_text: "Hear back within 48 hours — no sales call, no demo. Scope and acceptance criteria before any payment.",
+      url: "/apply/",
+    },
+    {
+      file: "live.png", archetype: "fact", eyebrow: "Live",
+      title_lines: ["An AI company,", "running in the open"], accent_line: 1,
+      supporting_text: "Real goals, departments, approvals, work, and evidence behind the company running on SpielOS.",
+      url: "/live/",
+    },
+    /* Features hub + eight blocks */
+    {
+      file: "features.png", archetype: "fact", eyebrow: "Features",
+      title_lines: ["Inside the SpielOS", "agent harness"], accent_line: 1,
+      supporting_text: "Director, Departments, Workflows, Agents, Skills, Evals, Connections, Artifacts — how an AI-run company works.",
+      url: "/features/",
+    },
+    ...["director", "departments", "workflows", "agents", "skills", "evals", "connections", "artifacts"].map(
+      (block) => ({
+        file: `features-${block}.png`, archetype: "fact", eyebrow: `Features · ${block}`,
+        title_lines: [block.charAt(0).toUpperCase() + block.slice(1)],
+        accent_line: -1,
+        supporting_text: FEATURES_BLOCK_SUPPORT[block],
+        url: `/features/${block}/`,
+      })
+    ),
+    /* Solutions hubs + department use cases */
+    {
+      file: "solutions.png", archetype: "fact", eyebrow: "Solutions",
+      title_lines: ["AI automation solutions"], accent_line: -1,
+      supporting_text: "Workflows, departments, and software — one concrete automatable loop at a time.",
+      url: "/solutions/",
+    },
+    {
+      file: "ai-departments.png", archetype: "fact", eyebrow: "Solutions · Departments",
+      title_lines: ["AI departments doing", "real company work"], accent_line: 1,
+      supporting_text: "Design, content, marketing, SEO, analytics — on the same loop that runs SpielOS live.",
+      url: "/solutions/ai-departments/",
+    },
+    {
+      file: "use-case-design.png", archetype: "fact", eyebrow: "AI Departments",
+      title_lines: ["Your AI Design Department"], accent_line: -1,
+      supporting_text: "Platform-ready videos and social graphics on the same loop that runs this company.",
+      url: "/solutions/ai-departments/design/",
+    },
+    {
+      file: "use-case-content.png", archetype: "fact", eyebrow: "AI Departments",
+      title_lines: ["Your AI Content Department"], accent_line: -1,
+      supporting_text: "One brief, drafts written for your ideal customer, quality gate and approval before shipping.",
+      url: "/solutions/ai-departments/content/",
+    },
+    {
+      file: "use-case-marketing.png", archetype: "fact", eyebrow: "AI Departments",
+      title_lines: ["Your AI Marketing Department"], accent_line: -1,
+      supporting_text: "Researched leads, personal emails and social DMs, approved sending — recorded back to your CRM.",
+      url: "/solutions/ai-departments/marketing/",
+    },
+    {
+      file: "use-case-seo.png", archetype: "fact", eyebrow: "AI Departments",
+      title_lines: ["Your AI SEO Department"], accent_line: -1,
+      supporting_text: "Continuous keyword research, technical audits, metadata, and Search Console verification — as an operation.",
+      url: "/solutions/ai-departments/seo/",
+    },
+    {
+      file: "use-case-analytics.png", archetype: "fact", eyebrow: "AI Departments",
+      title_lines: ["Your AI Analytics Department"], accent_line: -1,
+      supporting_text: "Event taxonomy, conversion tracking, attribution, and plain-language weekly reports.",
+      url: "/solutions/ai-departments/analytics/",
+    },
+    {
+      file: "design-gallery.png", archetype: "fact", eyebrow: "Design Department",
+      title_lines: ["Every registered", "design archetype"], accent_line: 1,
+      supporting_text: "Flat-motion Shorts and Threads canvases built from research — rebuilt from the live registry every deploy.",
+      url: "/solutions/ai-departments/design/gallery/",
+    },
+    {
+      file: "software-hub.png", archetype: "fact", eyebrow: "Solutions · Software",
+      title_lines: ["AI automation by software"], accent_line: -1,
+      supporting_text: "One concrete workflow we automate on the software you already use: Zapier, Slack, Gmail, HubSpot, Notion…",
+      url: "/solutions/software/",
+    },
+    {
+      file: "workflows-hub.png", archetype: "fact", eyebrow: "Solutions · Workflows",
+      title_lines: ["Workflow automation", "solutions"], accent_line: 0,
+      supporting_text: "Repeatable playbooks for onboarding, intake, follow-up, invoicing, screening — run end to end.",
+      url: "/solutions/workflows/",
+    },
+    {
+      file: "lead-researcher.png", archetype: "fact", eyebrow: "Open Source",
+      title_lines: ["A free AI lead", "research worker"], accent_line: 1,
+      supporting_text: "Finds and verifies leads against your ICP, nonstop. Runs in Claude Code, Codex CLI, or OpenCode.",
+      url: "/landing/lead-researcher/",
+    },
+    /* Utility pages */
+    {
+      file: "SpielOS.png", archetype: "fact", eyebrow: "Archive",
+      title_lines: ["SpielOS v1"], accent_line: -1,
+      supporting_text: "Capture. Simulate. Publish. — the original founder distribution infrastructure.",
+      url: "/spielos-v1/",
+    },
+    {
+      file: "404.png", archetype: "fact", eyebrow: "404",
+      title_lines: ["Page not found"], accent_line: -1,
+      supporting_text: "This page does not exist — head back to spielos.xyz.",
+      url: "/404.html",
+    },
+  );
+
+  /* Notes — derived live from the content collection frontmatter */
+  const notesDir = join(ROOT, "src/content/notes");
+  for (const f of readdirSync(notesDir).filter((f) => f.endsWith(".mdx"))) {
+    const note = parseNote(join(notesDir, f));
+    if (!note?.permalink || !note?.title) continue;
+    const slug = note.permalink.replace(/^\/|\/$/g, "");
+    pages.push({
+      file: `${slug}.png`,
+      archetype: "fact",
+      eyebrow: "Notes",
+      title_lines: [note.title],
+      accent_line: -1,
+      supporting_text: trunc(note.description || "", 140),
+      url: `/notes${note.permalink}`,
+    });
+  }
+
+  /* Software solution pages */
+  for (const s of parseTsEntries(join(ROOT, "src/data/software-solutions.ts"),
+    ["key", "name", "keyword", "taglineEn", "workflowTitleEn"])) {
+    pages.push({
+      file: `software-${s.key || s.slug}.png`,
+      archetype: "fact",
+      eyebrow: `Software · ${s.name}`,
+      title_lines: [s.taglineEn],
+      accent_line: -1,
+      supporting_text: s.workflowTitleEn,
+      url: `/solutions/software/${s.slug}/`,
+    });
+  }
+
+  /* Workflow solution pages */
+  for (const w of parseTsEntries(join(ROOT, "src/data/workflow-solutions.ts"),
+    ["name", "h1", "seoDesc"])) {
+    pages.push({
+      file: `workflow-${w.slug}.png`,
+      archetype: "fact",
+      eyebrow: "Workflows",
+      title_lines: [w.h1],
+      accent_line: -1,
+      supporting_text: trunc(w.seoDesc || "", 140),
+      url: `/solutions/workflows/${w.slug}/`,
+    });
+  }
+
+  return pages;
+}
+
+const FEATURES_BLOCK_SUPPORT = {
+  director: "Owns goals, routes Departments, supervises durable runs, judges evidence, and reports outcomes.",
+  departments: "Durable business capabilities with their own strategy, workflows, agents, skills, connections, and evals.",
+  workflows: "Repeatable playbooks inside a Department: a typed step graph executed by the shared interpreter.",
+  agents: "Bounded executors for workflow steps — they claim work orders, activate skills, execute, complete.",
+  skills: "Reusable methods agents activate — the how behind the work.",
+  evals: "LLM-as-judge quality gates; a passed eval report is required evidence before work ships.",
+  connections: "Approved access to external systems — credentials stay local, actions stay reviewable.",
+  artifacts: "Output and evidence from every run — inspectable, evaluable, reusable.",
 };
 
-/* ── Page manifest: filename → { title, desc, accent, tag? } ── */
-const PAGES = {
-  /* ── Core pages ── */
-  "home.png": {
-    title: "SpielOS",
-    desc: "AI employee and department platform. Build roles, skills, workflows, and evaluations — then direct your AI team from one place.",
-    accent: T.primary,
-  },
-  "about.png": {
-    title: "About SpielOS",
-    desc: "The platform for building and directing AI employees and departments.",
-    accent: T.primary,
-  },
-  "contact.png": {
-    title: "Contact",
-    desc: "Get in touch about SpielOS, partnerships, or working together.",
-    accent: T.accent,
-  },
-  "blog.png": {
-    title: "Notes",
-    desc: "Writing about agent systems, context, workflows, evaluations, and building in public.",
-    accent: T.purple,
-  },
-  "guides.png": {
-    title: "Guides",
-    desc: "Step-by-step guides for building AI departments with SpielOS.",
-    accent: T.accent,
-  },
-  "use-cases.png": {
-    title: "Use Cases",
-    desc: "How companies use SpielOS to build AI departments for real work.",
-    accent: T.warning,
-  },
-  "waitlist.png": {
-    title: "Join the Waitlist",
-    desc: "Get early access to SpielOS and start building your first AI department.",
-    accent: T.primary,
-  },
-  "SpielOS.png": {
-    title: "SpielOS v1",
-    desc: "The open-source AI orchestration platform for roles, skills, context, and workflows.",
-    accent: T.primary,
-  },
-  "404.png": {
-    title: "Page Not Found",
-    desc: "The page you are looking for does not exist.",
-    accent: T.destructive,
-  },
-
-  /* ── Features hub ── */
-  "features.png": {
-    title: "Features",
-    desc: "The four-layer architecture behind SpielOS: chat, context, harness, and infrastructure.",
-    accent: T.primary,
-  },
-  "features-chat.png": {
-    title: "Chat",
-    desc: "Director Mode and Direct Mode for interacting with your AI department.",
-    accent: T.primary,
-    tag: "Chat",
-  },
-  "features-chat-director-mode.png": {
-    title: "Director Mode",
-    desc: "Long-running agent sessions with human approval, branching, and multi-step execution.",
-    accent: T.purple,
-    tag: "Director Mode",
-  },
-  "features-chat-direct-mode.png": {
-    title: "Direct Mode",
-    desc: "Instant workflow execution and scheduling from chat.",
-    accent: T.accent,
-    tag: "Direct Mode",
-  },
-  "features-context.png": {
-    title: "Context",
-    desc: "Files, strategy, and memory — the knowledge layer for your AI employees.",
-    accent: T.accent,
-    tag: "Context",
-  },
-  "features-context-files.png": {
-    title: "Files",
-    desc: "Agent knowledge base — structured file access for roles and skills.",
-    accent: T.accent,
-    tag: "Files",
-  },
-  "features-context-strategy.png": {
-    title: "Strategy",
-    desc: "Prompt and instruction management for consistent AI behavior.",
-    accent: T.warning,
-    tag: "Strategy",
-  },
-  "features-context-memory.png": {
-    title: "Memory & Dreaming",
-    desc: "Persistent agent memory with background reflection and learning.",
-    accent: T.purple,
-    tag: "Memory",
-  },
-  "features-harness.png": {
-    title: "Harness",
-    desc: "Agents, skills, workflows, and evaluations — the execution layer.",
-    accent: T.warning,
-    tag: "Harness",
-  },
-  "features-harness-agents.png": {
-    title: "Agents",
-    desc: "Define AI employees with roles, guardrails, and responsibilities.",
-    accent: T.primary,
-    tag: "Agents",
-  },
-  "features-harness-skills.png": {
-    title: "Skills",
-    desc: "Reusable agent capabilities — composable building blocks for your AI team.",
-    accent: T.accent,
-    tag: "Skills",
-  },
-  "features-harness-workflows.png": {
-    title: "Workflows",
-    desc: "Multi-agent pipelines with visual builder and approval gates.",
-    accent: T.purple,
-    tag: "Workflows",
-  },
-  "features-harness-evals.png": {
-    title: "Evals",
-    desc: "Agent quality testing — evaluate output against defined criteria.",
-    accent: T.warning,
-    tag: "Evals",
-  },
-  "features-infrastructure.png": {
-    title: "Infrastructure",
-    desc: "Providers and connections — the integration layer for your AI department.",
-    accent: T.destructive,
-    tag: "Infrastructure",
-  },
-  "features-infrastructure-providers.png": {
-    title: "Providers",
-    desc: "Choose and configure LLM providers for your AI employees.",
-    accent: T.primary,
-    tag: "Providers",
-  },
-  "features-infrastructure-connections.png": {
-    title: "Connections",
-    desc: "MCP, OAuth, and API integrations for your AI workflows.",
-    accent: T.accent,
-    tag: "Connections",
-  },
-
-  /* ── Notes (reuse blog.png style with different titles) ── */
-  "72-hour-sprint.png": { title: "72-Hour Content Sprint", desc: "How I built and shipped a full content system in three days.", accent: T.purple },
-  "agentic-loops.png": { title: "From Declarative Rules to Agentic Loops", desc: "Why static prompts break and how to build adaptive agent systems.", accent: T.primary },
-  "ai-war-price-intelligence.png": { title: "AI War: Price Intelligence", desc: "Building competitive price intelligence with AI agents.", accent: T.warning },
-  "blog-rebuild-4h.png": { title: "Rebuilt My Blog in 4 Hours", desc: "How I migrated and shipped two posts the same night.", accent: T.accent },
-  "content-pipeline.png": { title: "Content Pipeline", desc: "Building a systematic content creation pipeline with AI.", accent: T.primary },
-  "decisions-are-content.png": { title: "Decisions Are Content", desc: "Why every business decision should be treated as durable content.", accent: T.purple },
-  "deepseek-v4-official-launch.png": { title: "DeepSeek V4 Launch", desc: "Analysis of the DeepSeek V4 official launch and what it means.", accent: T.accent },
-  "deepseek-v4-price-war.png": { title: "DeepSeek V4 Price War", desc: "How DeepSeek V4 changed the AI pricing landscape.", accent: T.warning },
-  "gates-not-models.png": { title: "Gates, Not Models", desc: "Why the bottleneck in AI is quality gates, not model capability.", accent: T.destructive },
-  "GLM5.2-Cost-Breakdown.png": { title: "GLM 5.2 Cost Breakdown", desc: "Detailed cost analysis of GLM 5.2 for production workloads.", accent: T.warning },
-  "migration-audits.png": { title: "Migration Audits", desc: "How to audit and migrate AI systems without breaking production.", accent: T.accent },
-  "pipeline-not-strategy.png": { title: "Pipeline, Not Strategy", desc: "Why AI success depends on execution pipelines, not strategy documents.", accent: T.primary },
-  "positioning-state.png": { title: "Positioning State", desc: "The current state of AI positioning and market dynamics.", accent: T.purple },
-  "rtl-design-system.png": { title: "RTL Design System", desc: "Building a bidirectional design system for Persian and English.", accent: T.accent },
-  "second-brain.png": { title: "Second Brain", desc: "How I automated my content with a second brain system.", accent: T.primary },
-  "seo-from-architecture.png": { title: "SEO from Architecture", desc: "Why technical SEO starts with information architecture.", accent: T.warning },
-  "session-as-content.png": { title: "Session as Content", desc: "How building sessions become the content itself.", accent: T.purple },
-  "sessions-to-posts.png": { title: "Sessions to Posts", desc: "Turning work sessions into published content automatically.", accent: T.accent },
-  "spielos-open-source.png": { title: "SpielOS Open Source", desc: "Why I made SpielOS open source and what it means for the platform.", accent: T.primary },
-  "spielos-update.png": { title: "SpielOS Update", desc: "Latest updates, features, and improvements to SpielOS.", accent: T.accent },
-  "tokens-per-sheep.png": { title: "Tokens Per Sheep", desc: "Token economics and cost optimization for AI workloads.", accent: T.warning },
-  "translation-glossary.png": { title: "Translation Glossary", desc: "Building and maintaining a translation glossary for AI systems.", accent: T.purple },
-  "skills-repo.png": { title: "Turn Your Website Into a Content Engine With These 10 Agent Skills", desc: "Video creation from HTML, content writing, Persian translation, SEO, analytics, design systems. Full repo, full scripts, full templates.", accent: T.accent },
-  "waitlist-supabase.png": { title: "Waitlist + Supabase", desc: "How I built the SpielOS waitlist with Supabase.", accent: T.accent },
-};
-
-/* ── MIME types ── */
+/* ── Static server (serves repo root so template asset paths resolve) ── */
 const MIME = {
   ".html": "text/html", ".css": "text/css", ".js": "application/javascript",
-  ".json": "application/json", ".png": "image/png", ".jpg": "image/jpeg",
-  ".svg": "image/svg+xml", ".woff2": "font/woff2", ".woff": "font/woff",
+  ".json": "application/json", ".png": "image/png", ".svg": "image/svg+xml",
+  ".woff2": "font/woff2", ".woff": "font/woff",
 };
-
-/* ── Static server ── */
 function startServer() {
   return new Promise((res) => {
     const server = createServer((req, res) => {
@@ -229,14 +309,17 @@ function startServer() {
     });
     server.listen(0, "127.0.0.1", () => {
       const port = server.address().port;
-      res({ server, port, url: `http://127.0.0.1:${port}` });
+      res({ server, url: `http://127.0.0.1:${port}` });
     });
   });
 }
 
 /* ── Main ── */
 async function generate() {
-  const templateHtml = readFileSync(TEMPLATE, "utf-8");
+  const pages = buildManifest();
+  const templateHtml = Object.fromEntries(
+    Object.entries(TEMPLATES).map(([k, p]) => [k, readFileSync(p, "utf-8")])
+  );
   const { server, url: baseUrl } = await startServer();
   console.log(`  Server: ${baseUrl}`);
 
@@ -244,67 +327,69 @@ async function generate() {
   const browser = await puppeteer.launch({
     headless: "shell",
     executablePath: CHROME_PATH,
-    args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage", "--disable-gpu", "--font-render-hinting=none", "--allow-file-access-from-files"],
+    args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage", "--disable-gpu", "--font-render-hinting=none"],
   });
-
   const page = await browser.newPage();
-  await page.setViewport({ width: 1200, height: 630, deviceScaleFactor: 1 });
+  await page.setViewport({ width: WIDTH, height: HEIGHT, deviceScaleFactor: 1 });
 
   if (!existsSync(OUT_DIR)) mkdirSync(OUT_DIR, { recursive: true });
 
-  const entries = Object.entries(PAGES);
+  const rendered = new Set();
   let done = 0;
+  let failures = 0;
 
-  for (const [filename, meta] of entries) {
+  for (const meta of pages) {
     done++;
-    const tagColor = meta.accent;
-    const tagBg = meta.accent + "22";
+    const html = templateHtml[meta.archetype] ?? templateHtml.fact;
+    const tmpName = `og-tmp-${meta.file.replace(/\.png$/, ".html")}`;
+    writeFileSync(join(ROOT, tmpName), html);
+    const tmpUrl = `${baseUrl}/${tmpName}`;
 
-    const html = templateHtml
-      .replace('id="title"', `id="title"`)
-      .replace('id="desc"', `id="desc"`)
-      .replace(`id="glow"`, `id="glow" style="background:${meta.accent};"`)
-      .replace(`id="accentBar"`, `id="accentBar" style="background:${meta.accent};"`)
-      .replace(`id="tag"`, `id="tag"`)
-      .replace("</body>", `
-        <script>
-          document.getElementById("title").textContent = ${JSON.stringify(meta.title)};
-          document.getElementById("desc").textContent = ${JSON.stringify(meta.desc)};
-          ${meta.tag ? `const tag = document.getElementById("tag"); tag.textContent = ${JSON.stringify(meta.tag)}; tag.style.background = ${JSON.stringify(tagBg)}; tag.style.color = ${JSON.stringify(tagColor)}; tag.style.display = "inline-flex";` : `document.getElementById("tag").style.display = "none";`}
-        </script>
-      </body>`);
-
-    const tmpFile = join(ROOT, `og-tmp-${filename}.html`);
-    writeFileSync(tmpFile, html);
-
-    const pageUrl = `${baseUrl}/og-tmp-${filename}.html`;
-    await page.goto(pageUrl, { waitUntil: "networkidle0", timeout: 15000 });
-    await page.evaluate(() => document.fonts.ready);
-    await new Promise((r) => setTimeout(r, 300));
-
-    await page.screenshot({
-      path: join(OUT_DIR, filename),
-      type: "png",
-      clip: { x: 0, y: 0, width: 1200, height: 630 },
-    });
-
-    process.stdout.write(`\r  [${done}/${entries.length}] ${filename}`);
-  }
-
-  console.log("\n");
-  await browser.close();
-  server.close();
-
-  /* cleanup tmp files */
-  for (const filename of Object.keys(PAGES)) {
-    const tmp = join(ROOT, `og-tmp-${filename}.html`);
-    if (existsSync(tmp)) {
-      const { unlinkSync } = await import("fs");
-      unlinkSync(tmp);
+    try {
+      await page.goto(tmpUrl, { waitUntil: "networkidle0", timeout: 20000 });
+      await page.evaluate((data) => window.__applyOg(data), {
+        eyebrow: meta.eyebrow,
+        title_lines: meta.title_lines,
+        accent_line: meta.accent_line ?? -1,
+        supporting_text: meta.supporting_text || "",
+        url: meta.url || "/",
+      });
+      await page.waitForFunction(
+        () => document.documentElement.dataset.templateReady === "true",
+        { timeout: 5000 }
+      );
+      await page.evaluate(() => document.fonts.ready);
+      await new Promise((r) => setTimeout(r, 250));
+      await page.screenshot({
+        path: join(OUT_DIR, meta.file),
+        type: "png",
+        clip: { x: 0, y: 0, width: WIDTH, height: HEIGHT },
+      });
+      rendered.add(meta.file);
+      process.stdout.write(`\r  [${done}/${pages.length}] ${meta.file}          `);
+    } catch (err) {
+      failures++;
+      process.stdout.write(`\n  FAIL ${meta.file}: ${err.message}\n`);
+    } finally {
+      try { unlinkSync(join(ROOT, tmpName)); } catch {}
     }
   }
 
-  console.log(`  Done! ${Object.keys(PAGES).length} OG images → public/assets/og/\n`);
+  await browser.close();
+  server.close();
+
+  /* Prune rendered OG files no longer in the manifest */
+  let pruned = 0;
+  for (const f of readdirSync(OUT_DIR)) {
+    if (f.endsWith(".png") && !rendered.has(f)) {
+      unlinkSync(join(OUT_DIR, f));
+      pruned++;
+    }
+  }
+
+  console.log(`\n  Done: ${rendered.size} OG images (${WIDTH}x${HEIGHT}) -> public/assets/og/`);
+  console.log(`  Pruned ${pruned} stale file(s). Failures: ${failures}\n`);
+  if (failures > 0 || rendered.size < pages.length) process.exit(1);
 }
 
 generate().catch((err) => {

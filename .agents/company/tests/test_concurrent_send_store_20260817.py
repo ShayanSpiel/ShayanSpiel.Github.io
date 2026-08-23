@@ -120,6 +120,8 @@ class SaveSentLogConcurrencyTests(unittest.TestCase):
         self.addCleanup(__import__("shutil").rmtree, str(self.tmpdir),
                         ignore_errors=True)
         self.sent_path = self.tmpdir / "sent.json"
+        original = config.SENT_LOG_PATH
+        self.addCleanup(setattr, config, "SENT_LOG_PATH", original)
         config.SENT_LOG_PATH = self.sent_path
 
     def _entry(self, i):

@@ -19,6 +19,8 @@ export interface LiveGoal {
   latest_activity_at?: string | null;
   stage?: string | null;
   run_status?: string | null;
+  /** Latest derived progress toward the target, when evidence provides one. */
+  current_value?: number | null;
 }
 
 export interface Props { locale?: Locale; goals: LiveGoal[]; }
@@ -41,6 +43,7 @@ const latestAt = (goal: LiveGoal) => goal.latest_activity_at || goal.updated_at;
 const USER_FACING_METRICS = new Set(["reply_rate", "booked_calls", "published_items"]);
 
 const formatter = new Intl.DateTimeFormat(locale === "fa" ? "fa-IR-u-ca-gregory" : "en-US", { dateStyle: "medium", timeStyle: "short", timeZone: "UTC" });
+const countFormat = new Intl.NumberFormat(locale === "fa" ? "fa-IR" : "en-US");
 const faDigits = "۰۱۲۳۴۵۶۷۸۹";
 const localNumber = (value: string) => locale === "fa" ? value.replace(/\d/g, (digit) => faDigits[Number(digit)]) : value;
 const departmentKey = (owner: string) => ["director", "outbound", "email", "analytics", "content", "design", "seo"].includes(owner) ? `live.department.${owner}` : "live.department.operations";
@@ -58,6 +61,27 @@ const metricLabel = (metric: string) =>
 const targetText = (goal: LiveGoal) => goal.metric === "reply_rate" && typeof goal.target === "number" ? `${Math.round(goal.target * 100)}%` : typeof goal.target === "boolean" ? t(locale, goal.target ? "live.target.yes" : "live.target.no") : String(goal.target);
 const metricText = (goal: LiveGoal) => t(locale, "live.entry.metric", { metric: metricLabel(goal.metric), operator: operatorText(goal.operator), target: targetText(goal) });
 const statusText = (status: string) => t(locale, `live.status.${status}`) || status;
+
+/** "Latest meaningful result": real progress when evidence records one
+ *  (e.g. 1,531 of 2,500 verified leads), otherwise still being measured. */
+const progressPct = (goal: LiveGoal) =>
+  typeof goal.current_value === "number" && typeof goal.target === "number" && goal.target > 0 && goal.operator === "ge"
+    ? Math.min(100, Math.max(2, Math.round((goal.current_value / goal.target) * 100)))
+    : null;
+const resultFor = (goal: LiveGoal) => {
+  const value = goal.current_value;
+  if (typeof value !== "number") return t(locale, "live.company.measuring");
+  if (goal.metric === "reply_rate") {
+    return t(locale, "live.company.progress", {
+      current: `${Math.round(value * 100)}%`,
+      target: targetText(goal),
+    });
+  }
+  return t(locale, "live.company.progress", {
+    current: countFormat.format(value),
+    target: typeof goal.target === "number" ? countFormat.format(goal.target) : targetText(goal),
+  });
+};
 
 /** Top-level goals for one section: no parent, or a parent outside the
  *  section's active set (orphans stay visible so nothing disappears). */
@@ -124,7 +148,17 @@ const improvementChildren = childrenByParent(improvements);
             <p class="mt-3 text-xs leading-relaxed text-muted-foreground">{valueFor(goal)}</p>
             <dl class="mt-4 grid gap-3 text-2xs text-muted-foreground sm:grid-cols-2">
               <div><dt class="font-semibold uppercase tracking-wider text-foreground-muted">{t(locale, "live.company.department")}</dt><dd class="mt-1 text-foreground">{t(locale, departmentKey(goal.owner_id))}</dd></div>
-              <div><dt class="font-semibold uppercase tracking-wider text-foreground-muted">{t(locale, "live.company.result")}</dt><dd class="mt-1 text-foreground">{t(locale, "live.company.measuring")}</dd></div>
+              <div>
+                  <dt class="font-semibold uppercase tracking-wider text-foreground-muted">{t(locale, "live.company.result")}</dt>
+                  <dd class="mt-1 text-foreground">
+                    {resultFor(goal)}
+                    {progressPct(goal) !== null && (
+                      <span class="mt-1.5 block h-1 max-w-[10rem] overflow-hidden rounded-pill bg-panel-raised" aria-hidden="true">
+                        <span class="block h-full rounded-pill bg-primary" style={`width: ${progressPct(goal)}%`}></span>
+                      </span>
+                    )}
+                  </dd>
+                </div>
               <div><dt class="font-semibold uppercase tracking-wider text-foreground-muted">{t(locale, "live.company.next")}</dt><dd class="mt-1 text-foreground">{t(locale, `live.company.next.${nextKey(goal.run_status)}`)}</dd></div>
               <div><dt class="font-semibold uppercase tracking-wider text-foreground-muted">{t(locale, "live.company.updated")}</dt><dd class="mt-1 text-foreground"><time datetime={latestAt(goal)}>{localNumber(formatter.format(new Date(latestAt(goal))))}</time></dd></div>
             </dl>

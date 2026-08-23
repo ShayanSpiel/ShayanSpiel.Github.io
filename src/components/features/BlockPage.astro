@@ -40,7 +40,7 @@ const ctaTitle = t(locale, k("cta.title"));
 const ctaDesc = t(locale, k("cta.desc"));
 ---
 
-<FeaturesLayout title={title} description={desc} image="/assets/og/features.png" locale={locale}>
+<FeaturesLayout title={title} description={desc} image={`/assets/og/features-${block}.png`} locale={locale}>
   <FeatureHero
     locale={locale}
     breadcrumbs={[

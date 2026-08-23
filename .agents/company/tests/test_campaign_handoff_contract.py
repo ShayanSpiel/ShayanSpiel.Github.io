@@ -443,12 +443,31 @@ class CampaignHandoffContractTests(unittest.TestCase):
                                  "identity-less basenames get a single clean prefix")
             self.assertLessEqual(name.count(content_id), 1)
 
-        # (b) Approved batch-02/03 manifests: every announced public_url
+    def _approved_manifest(self, batch: str) -> dict:
+        """Load an approved batch manifest from local run artifacts.
+
+        Artifacts live under gitignored `.spielos/artifacts/`; the batch-02/03
+        manifests were archived to `_archive/fresh-start-20260819/`. Callers
+        must skip when the local artifact is absent (fresh clones).
+        """
+        for rel in (f".spielos/artifacts/content-growth-20260812/{batch}/campaign-approved.json",
+                    f".spielos/artifacts/content-growth-20260812/_archive/fresh-start-20260819/{batch}/campaign-approved.json"):
+            path = ROOT / rel
+            if path.is_file():
+                return json.loads(path.read_text())
+        self.skipTest(f"local artifact not present: {batch}/campaign-approved.json")
+
+    @unittest.skipUnless(
+        any((Path(__file__).resolve().parents[2] / rel).is_file() for rel in (
+            ".spielos/artifacts/content-growth-20260812/batch-02/campaign-approved.json",
+            ".spielos/artifacts/content-growth-20260812/_archive/fresh-start-20260819/batch-02/campaign-approved.json")),
+        "owner-local artifact batch-02/campaign-approved.json not present")
+    def test_approved_batch_manifests_announce_deployed_public_urls(self):
+        # Approved batch-02/03 manifests: every announced public_url
         # contains exactly one content_id segment and the announced URL points
         # at the deployed public file, byte-for-byte.
         for batch in ("batch-02", "batch-03"):
-            manifest = json.loads(
-                (ROOT / f".spielos/artifacts/content-growth-20260812/{batch}/campaign-approved.json").read_text())
+            manifest = self._approved_manifest(batch)
             self.assertEqual(manifest["phase"], "approved")
             for item in manifest["items"]:
                 for platform, rendition in item["renditions"].items():

@@ -21,6 +21,24 @@ from company.departments.outbound.workflows.email.templates import (  # noqa: E4
 )
 
 
+_CONFIG_ATTRS = ("SENT_LOG_PATH", "METRICS_PATH", "CONTENT_PATH", "DATABASE_PATH")
+_CONFIG_SNAPSHOT = {}
+
+
+def setUpModule():
+    """Hermetic guard: tests in this module redirect config paths to temp
+    dirs. Snapshot the real values so pollution can never leak into (or out
+    of) this module — the shared `config` object is process-global."""
+    for attr in _CONFIG_ATTRS:
+        if hasattr(config, attr):
+            _CONFIG_SNAPSHOT[attr] = getattr(config, attr)
+
+
+def tearDownModule():
+    for attr, value in _CONFIG_SNAPSHOT.items():
+        setattr(config, attr, value)
+
+
 def make_ctx():
     tmp = Path(tempfile.mkdtemp())
     config.SENT_LOG_PATH = tmp / "sent.json"
@@ -103,35 +121,42 @@ class ComposeTests(unittest.TestCase):
         self.assertIn("EN-101", skipped_ids)  # placeholder pain
 
 
-class SignatureBookingTests(unittest.TestCase):
-    """Change change-e7d88c6f5c (goal-booking-signature-outbound-20260819):
-    every composed email carries the Discovery Call booking CTA line and
-    link in both HTML and plain-text signatures, plus the UTM parameters."""
+class SignatureApplyTests(unittest.TestCase):
+    """Owner directive 2026-08-22/23 (supersedes goal-booking-signature-
+    outbound-20260819): every composed email carries the Apply-first CTA
+    ("Apply — Free Review", no required call) in both signature layers, plus
+    UTM parameters, and carries NO booking/cal.com CTA anywhere."""
 
-    BOOKING_LINE = "Book a FREE Discovery Call"
-    BOOKING_LINK = "https://cal.com/shayanspiel/15min"
+    APPLY_LINE = "Apply for a Free Review"
+    APPLY_LINK = "https://spielos.xyz/apply/"
 
-    def test_signature_html_has_booking_line_and_link(self):
-        self.assertIn(self.BOOKING_LINE, SIGNATURE_HTML)
-        self.assertIn(self.BOOKING_LINK, SIGNATURE_HTML)
+    def test_signature_html_has_apply_line_and_link(self):
+        self.assertIn(self.APPLY_LINE, SIGNATURE_HTML)
+        self.assertIn(self.APPLY_LINK, SIGNATURE_HTML)
 
-    def test_signature_text_has_booking_line_and_link(self):
-        self.assertIn(self.BOOKING_LINE, SIGNATURE_TEXT)
-        self.assertIn(self.BOOKING_LINK, SIGNATURE_TEXT)
+    def test_signature_text_has_apply_line_and_link(self):
+        self.assertIn(self.APPLY_LINE, SIGNATURE_TEXT)
+        self.assertIn(self.APPLY_LINK, SIGNATURE_TEXT)
 
-    def test_booking_link_carries_signature_utm_params(self):
+    def test_signature_carries_no_booking_cta(self):
+        for sig in (SIGNATURE_HTML, SIGNATURE_TEXT):
+            self.assertNotIn("cal.com", sig, sig[:120])
+            self.assertNotIn("/book/", sig, sig[:120])
+
+    def test_apply_link_carries_signature_utm_params(self):
         for sig in (SIGNATURE_HTML, SIGNATURE_TEXT):
             self.assertIn("utm_source=outbound-email", sig, sig[:120])
             self.assertIn("utm_medium=email", sig, sig[:120])
             self.assertIn("utm_campaign=outbound-sig", sig, sig[:120])
 
-    def test_rendered_email_carries_booking_cta(self):
+    def test_rendered_email_carries_apply_cta(self):
         subject, html, text, reason = compose.render_checked(RESEARCHED, seq=0)
         self.assertIsNone(reason)
-        self.assertIn(self.BOOKING_LINE, html)
-        self.assertIn(self.BOOKING_LINK, html)
-        self.assertIn(self.BOOKING_LINE, text)
-        self.assertIn(self.BOOKING_LINK, text)
+        self.assertIn(self.APPLY_LINE, html)
+        self.assertIn(self.APPLY_LINK, html)
+        self.assertIn(self.APPLY_LINE, text)
+        self.assertIn(self.APPLY_LINK, text)
+        self.assertNotIn("cal.com", html)
 
 
 class ValidatorTests(unittest.TestCase):
@@ -549,8 +574,10 @@ class PendingStatusGateTests(unittest.TestCase):
 
 
 class IdempotentExecuteTests(unittest.TestCase):
-    """Bounded repair 2026-08-10: concurrent executors must not strand a
-    batch. already_sent leads are skipped (deduped), not fatal. Hermetic."""
+    """Updated for resend_guard (goal-4357632a68, 2026-08-21): a batch that
+    contains an already-sent lead fails fast BEFORE any provider send — no
+    partial remainder, no silent dedupe. Supersedes the 2026-08-10
+    skip-already-sent contract. Hermetic."""
 
     def _execute(self, sent_log, batch_leads, contacts):
         from company.departments.outbound.workflows.email import actor, outbound as ob, config
@@ -569,7 +596,7 @@ class IdempotentExecuteTests(unittest.TestCase):
             result = actor.execute(ctx, batch, dry=False)
         return result, sent_calls
 
-    def test_mixed_batch_sends_remainder(self):
+    def test_mixed_batch_fails_fast_before_any_send(self):
         log = {"sent": [{"lead_id": "L1", "email": "a@x.com"}], "failed": []}
         contacts = [
             {"lead_id": "L1", "email": "a@x.com", "company": "A", "contact_name": "Ann"},
@@ -579,11 +606,11 @@ class IdempotentExecuteTests(unittest.TestCase):
             {"lead_id": "L1", "subject": "s1", "body_html": "h", "body_text": "t", "features": {}},
             {"lead_id": "L2", "subject": "s2", "body_html": "h", "body_text": "t", "features": {}},
         ]
-        result, sent_calls = self._execute(log, leads, contacts)
-        self.assertEqual(result["sent"], 1)
-        self.assertEqual(result["deduped"], 1)
-        self.assertEqual(result["failed"], 0)
-        self.assertEqual(sent_calls, ["b@x.com"])
+        with self.assertRaises(RuntimeError) as guard:
+            self._execute(log, leads, contacts)
+        self.assertIn("resend_guard", str(guard.exception))
+        # fail-fast: the fresh lead L2 is never dispatched either (the
+        # guard raises before any _send_with_cap invocation).
 
     def test_all_already_sent_is_not_a_failure(self):
         log = {"sent": [{"lead_id": "L1", "email": "a@x.com"},
@@ -596,11 +623,11 @@ class IdempotentExecuteTests(unittest.TestCase):
             {"lead_id": "L1", "subject": "s1", "body_html": "h", "body_text": "t", "features": {}},
             {"lead_id": "L2", "subject": "s2", "body_html": "h", "body_text": "t", "features": {}},
         ]
-        result, sent_calls = self._execute(log, leads, contacts)
-        self.assertEqual(result["sent"], 0)
-        self.assertEqual(result["deduped"], 2)
-        self.assertIn("nothing to send", result["note"])
-        self.assertEqual(sent_calls, [])
+        with self.assertRaises(RuntimeError) as guard:
+            self._execute(log, leads, contacts)
+        self.assertIn("resend_guard", str(guard.exception))
+        self.assertIn("L1", str(guard.exception))
+        self.assertIn("L2", str(guard.exception))
 
 
 class SuppressedDeliveredRateTests(unittest.TestCase):

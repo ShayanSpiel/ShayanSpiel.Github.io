@@ -42,7 +42,8 @@ Treat `packages/design-system` as authoritative. If code and docs disagree, fix 
 
 ## Brand mark
 
-The logo is the official diamond mark (`BRAND_MARK_PATH` geometry) on a rounded tile. In-app and on the website, the tile follows the active theme (`bg-panel-raised`) and the glyph inherits `currentColor` (`text-foreground-strong`). Standalone assets (favicon, OG images) use the static palette from `brand.ts`: tile `#282828`, glyph `#ebdbb2`. Do not restate the shape or colors elsewhere; `SpielOSLogo.astro` and `src/og-templates/og-base.html` are the website owners.
+The logo is the official diamond mark (`BRAND_MARK_PATH` geometry) on a rounded tile. In-app and on the website, the tile follows the active theme (`bg-panel-raised`) and the glyph inherits `currentColor` (`text-foreground-strong`). Standalone assets (favicon, OG images) use the static palette from `brand.ts`: tile `#282828`, glyph `#ebdbb2`. Do not restate the shape or colors elsewhere; `SpielOSLogo.astro` and the OG templates `src/og-templates/og-single-fact.html` /
+  `src/og-templates/og-pull-quote.html` (inline SVG brand lockup) are the website owners.
 
 ## Workflow
 

@@ -72,7 +72,7 @@ Every indexable page (`dist/*.html`, excluding 301 redirect stubs, `noindex` pag
 - `meta description` — non-empty, unique across the site
 - `canonical` link pointing to a valid, indexable URL
 - `robots` meta (`noindex` only where intentional)
-- `og:title`, `og:description`, `og:image`, `og:type`, `og:locale`, `twitter:card`
+- `og:title`, `og:description`, `og:image`, `og:image:alt`, `og:type`, `og:locale`, `twitter:card`, `twitter:image`, `twitter:image:alt`
 - Correct `lang` and `dir` attributes on `<html>`
 - `google-site-verification` meta (Search Console)
 
@@ -314,6 +314,9 @@ Verify:
 - Structured-data image URLs are crawlable and indexable
 - Localized social copy matches the page language
 - Default OG images are not used where a page-specific visual is required
+- Every indexable route has a dedicated OG image from the registered archetypes
+  (regenerate with `node scripts/generate-og.mjs`; templates in `src/og-templates/`,
+  manifest mirrors each route's real `<title>`/description/URL; exact 1200x630)
 
 ## Analytics presence (not implementation)
 

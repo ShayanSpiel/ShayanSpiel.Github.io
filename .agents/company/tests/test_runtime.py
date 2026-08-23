@@ -806,7 +806,7 @@ class TransitionHookTests(unittest.TestCase):
             result = run_transition_hook("goal_transition", {"goal_id": "g x"})
         self.assertEqual({"returncode": 0}, result)
         command = calls[0]
-        self.assertEqual(command, "python3 hook.py 'goal_transition' '{\"goal_id\": \"g x\"}'")
+        self.assertEqual(command, "python3 hook.py goal_transition '{\"goal_id\": \"g x\"}'")
 
     def test_run_transition_hook_env_file_fallback_and_env_var_priority(self):
         env_file = Path(self.temp.name) / ".env"

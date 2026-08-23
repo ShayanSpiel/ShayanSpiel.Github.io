@@ -8,6 +8,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from company.__main__ import main
+from company.runtime import store as store_module
 from company.runtime.loop import Runtime
 from company.runtime.models import GoalStatus
 from company.runtime.store import Store
@@ -287,6 +288,10 @@ class TerminalStateTests(unittest.TestCase):
                                        run_status="blocked", data={})
             runtime.store.notify(goal["id"], cycle["id"], "approval_required", {})
             runtime.store.notify(goal["id"], cycle["id"], "blocked", {})
+            # Repair scans run once per process per database file (audit
+            # 2026-08-23 bug 15); this test simulates OUT-OF-BAND mutation
+            # between opens, so it resets the scan marker like a new process.
+            store_module._REPAIR_SCANNED_DBS.discard(str(db.resolve()))
             repaired = Store(db)
             self.assertEqual(["blocked"], [item["kind"] for item in repaired.attention()])
 
@@ -322,6 +327,9 @@ class TerminalStateTests(unittest.TestCase):
                 con.execute("UPDATE goals SET goal_status='abandoned' WHERE id=?", (goal["id"],))
                 con.execute("UPDATE cycles SET run_status='blocked' WHERE id=?", (cycle["id"],))
                 con.execute("UPDATE runs SET status='blocked' WHERE id=?", (cycle["id"],))
+            # Once-per-process repair guard: reset so the reopened Store
+            # re-scans this externally mutated file like a fresh process.
+            store_module._REPAIR_SCANNED_DBS.discard(str(db.resolve()))
             repaired = Store(db)
             self.assertEqual("completed", repaired.cycle(goal["id"])["run_status"])
             self.assertEqual("completed", repaired.run(cycle["id"])["status"])

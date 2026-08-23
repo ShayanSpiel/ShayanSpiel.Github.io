@@ -10,10 +10,11 @@ decoupled from the harness (audit 2026-08-23 §2a / task 17):
 2. When SPIELOS_LIVE_PUSH is enabled (env var first, then .spielos/.env),
    the fingerprint (runtime state + terminal goals + completed/failed runs)
    changed since the marker, and at least LIVE_PUSH_DEBOUNCE_S seconds passed,
-   commit and push the snapshot files: git add -> commit -> push origin HEAD,
-   then a best-effort fast-forward push of HEAD to origin main so GitHub
-   Pages deploys. The marker (.spielos/state/.live_push_state.json) is
-   written only after a successful push.
+   publish ONLY the snapshot files as a single commit parented on the
+   fetched origin/main, lease-guarded so a concurrent writer is never
+   clobbered (see git_push_sequence). The marker
+   (.spielos/state/.live_push_state.json) is written only after a
+   successful push.
 
 Debounce/fingerprint/marker semantics live HERE, never in the runtime. The
 runtime only invokes this script via SPIELOS_TRANSITION_HOOK:
@@ -29,6 +30,7 @@ from __future__ import annotations
 
 import json
 import sqlite3
+import os
 import subprocess
 import sys
 import time
@@ -128,27 +130,71 @@ def run_git(args: list[str], check: bool = True):
                           timeout=GIT_TIMEOUT_S)
 
 
+def _git(*args: str, check: bool = True):
+    return run_git(["git", "-C", str(REPO_ROOT), *args], check=check)
+
+
 def git_push_sequence() -> bool:
-    candidates = [str(path) for path in (SYNC_OUT, SYNC_STATE_OUT) if path.is_file()]
+    """Publish ONLY the two snapshot files as one commit on origin/main.
+
+    Surgical by design (incident 2026-08-23: a shared-HEAD push erased a
+    concurrently-pushed commit from origin/main):
+
+    1. fetch origin/main -> BASE.
+    2. Build, with a TEMPORARY index (the shared working session's index and
+       HEAD are never touched), a single commit whose tree is BASE's tree
+       with only the snapshot blobs replaced, parented on BASE.
+    3. Push it with --force-with-lease against BASE. The lease guarantees a
+       concurrent writer who advanced origin/main is never clobbered — the
+       push rejects, stays non-fatal, and the next transition retries on the
+       new BASE.
+
+    Local branch/HEAD are left alone: snapshots are idempotent, so a skipped
+    push simply retries on a later transition after the human session syncs.
+    """
+    candidates = [str(path.relative_to(REPO_ROOT))
+                  for path in (SYNC_OUT, SYNC_STATE_OUT) if path.is_file()]
     if not candidates:
         log("live push skipped: no snapshot files to stage")
         return False
-    run_git(["git", "-C", str(REPO_ROOT), "add", *candidates])
-    staged = run_git(["git", "-C", str(REPO_ROOT), "diff", "--cached", "--quiet"],
-                     check=False)
-    if staged.returncode == 0:
-        log("live push skipped: nothing to commit")
+
+    _git("fetch", "origin", "main")
+    fetched = _git("rev-parse", "FETCH_HEAD", check=False)
+    base = fetched.stdout.strip() if fetched.returncode == 0 else ""
+    if not base:
+        log("live push skipped: origin/main unavailable")
         return False
-    if staged.returncode != 1:
-        raise RuntimeError(f"git diff --cached --quiet exited {staged.returncode}")
-    run_git(["git", "-C", str(REPO_ROOT), "commit", "-m", "live: sync runtime state"])
-    run_git(["git", "-C", str(REPO_ROOT), "push", "origin", "HEAD"])
-    # Best-effort GitHub Pages trigger: a rejected/hung HEAD:main push must
-    # never fail the hook — the snapshot is already committed and pushed.
+
+    tmp_index = REPO_ROOT / ".spielos" / "state" / ".live_push_index"
+    tmp_index.parent.mkdir(parents=True, exist_ok=True)
+    env = {**os.environ, "GIT_INDEX_FILE": str(tmp_index)}
     try:
-        run_git(["git", "-C", str(REPO_ROOT), "push", "origin", "HEAD:main"])
-    except Exception as exc:
-        log(f"live push to origin main skipped (non-fatal): {exc}")
+        subprocess.run(["git", "read-tree", base], cwd=REPO_ROOT, env=env,
+                       check=True, capture_output=True, timeout=GIT_TIMEOUT_S)
+        subprocess.run(["git", "update-index", "--add", "--replace", *candidates],
+                       cwd=REPO_ROOT, env=env, check=True, capture_output=True,
+                       timeout=GIT_TIMEOUT_S)
+        tree = subprocess.run(["git", "write-tree"], cwd=REPO_ROOT, env=env,
+                              check=True, capture_output=True, text=True,
+                              timeout=GIT_TIMEOUT_S).stdout.strip()
+        if tree == _git("rev-parse", f"{base}^{{tree}}").stdout.strip():
+            log("live push skipped: snapshots already match origin/main")
+            return False
+        commit = subprocess.run(
+            ["git", "commit-tree", tree, "-p", base, "-m", "live: sync runtime state"],
+            cwd=REPO_ROOT, env=env, check=True, capture_output=True, text=True,
+            timeout=GIT_TIMEOUT_S).stdout.strip()
+    finally:
+        tmp_index.unlink(missing_ok=True)
+
+    push = _git("push",
+                f"--force-with-lease=refs/heads/main:{base}",
+                f"{commit}:refs/heads/main", check=False)
+    if push.returncode != 0:
+        log("live push rejected: origin/main moved concurrently (lease held, "
+            "nothing clobbered); retrying on next transition")
+        return False
+    log(f"live push ok: snapshot-only commit {commit[:12]} on origin/main")
     return True
 
 

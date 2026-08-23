@@ -64,6 +64,22 @@ LEAD_BY_ID = {c["lead_id"]: c for c in LEADS}
 EMAIL_TO_LEAD = {c["email"]: c["lead_id"] for c in LEADS}
 
 
+_CONFIG_ATTRS = ("SENT_LOG_PATH", "METRICS_PATH", "CONTENT_PATH", "DATABASE_PATH")
+_CONFIG_SNAPSHOT = {}
+
+
+def setUpModule():
+    """Hermetic guard for the process-global `config` path attributes."""
+    for attr in _CONFIG_ATTRS:
+        if hasattr(config, attr):
+            _CONFIG_SNAPSHOT[attr] = getattr(config, attr)
+
+
+def tearDownModule():
+    for attr, value in _CONFIG_SNAPSHOT.items():
+        setattr(config, attr, value)
+
+
 def make_env(block_size: int = 50):
     """Hermetic environment: temp paths, fresh store, control with knobs."""
     tmp = Path(tempfile.mkdtemp())
@@ -349,9 +365,13 @@ class NormalSendSemanticsTests(unittest.TestCase):
     daily-cap note — plus the new registry resolutions."""
 
     def test_first_send_semantics_unchanged(self):
+        """Updated for resend_guard (goal-4357632a68, 2026-08-21): a batch
+        containing an already-sent lead fails fast before any provider send,
+        so this first-send scenario uses only unsent leads. Registry order,
+        dedupe pre-check, and resolution semantics are unchanged."""
         store, _control, _tmp = make_env()
         ctx = execute_ctx(store)
-        t1, t2, t3 = LEAD_BY_ID["EN-T1"], LEAD_BY_ID["EN-T2"], LEAD_BY_ID["EN-T3"]
+        t1, t3 = LEAD_BY_ID["EN-T1"], LEAD_BY_ID["EN-T3"]
         log = {
             "sent": [{"lead_id": "EN-T2", "email": "person2@dom2.test",
                       "timestamp": "2026-08-14T10:00:00+00:00"}],
@@ -361,8 +381,8 @@ class NormalSendSemanticsTests(unittest.TestCase):
                         "timestamp": "2026-08-14T10:00:00+00:00"}],
         }
         saved = {}
-        batch = {"id": "B4", "emails": [email_for(t1), email_for(t2), email_for(t3)]}
-        contacts = [t1, t2, t3]
+        batch = {"id": "B4", "emails": [email_for(t1), email_for(t3)]}
+        contacts = [t1, t3]
         send_calls = []
         status_at_call = []
 
@@ -382,10 +402,10 @@ class NormalSendSemanticsTests(unittest.TestCase):
             with unittest.mock.patch.object(actor, "_send_with_cap", side_effect=do_send):
                 result = actor._execute_emails(ctx, batch)
 
-        # counts: 1 sent, 0 failed, 2 deduped (log dedupe + provider pre-check)
+        # counts: 1 sent, 0 failed, 1 deduped (provider pre-check)
         self.assertEqual(result["sent"], 1)
         self.assertEqual(result["failed"], 0)
-        self.assertEqual(result["deduped"], 2)
+        self.assertEqual(result["deduped"], 1)
         self.assertIn("cap", result["note"])
         # provider called once, and the registry was in_flight BEFORE the call
         self.assertEqual(send_calls, ["person1@dom1.test"])
@@ -402,13 +422,29 @@ class NormalSendSemanticsTests(unittest.TestCase):
         f1 = next(f for f in saved["log"]["failed"] if f["lead_id"] == "EN-T1")
         self.assertTrue(f1.get("resolved_at"))
 
-        # registry resolutions: accepted with provider ids; log-deduped lead
-        # untouched; pre-check dedupe visible as accepted provider truth
+        # registry resolutions: accepted with provider ids; the already-sent
+        # lead (EN-T2) is untouched by this batch entirely
         self.assertEqual(store.get_submission("EN-T1")["status"], "accepted")
         self.assertEqual(store.get_submission("EN-T1")["provider_id"], "m1")
         self.assertEqual(store.get_submission("EN-T3")["status"], "accepted")
         self.assertEqual(store.get_submission("EN-T3")["provider_id"], "prov-9")
         self.assertIsNone(store.get_submission("EN-T2"))
+
+        # resend guard: a batch that includes the already-sent EN-T2 must
+        # fail fast before any provider dispatch — no partial remainder.
+        batch_with_sent = {"id": "B5",
+                           "emails": [email_for(t1), email_for(LEAD_BY_ID["EN-T2"])]}
+        send_calls.clear()
+        with _PatchStack(read_contacts=lambda *a, **k: [t1, LEAD_BY_ID["EN-T2"]],
+                         load_sent_log=lambda: saved["log"],
+                         save_sent_log=lambda l: None,
+                         provider_sent_id=lambda email: None):
+            with unittest.mock.patch.object(actor, "_send_with_cap", side_effect=do_send):
+                with self.assertRaises(RuntimeError) as guard:
+                    actor._execute_emails(ctx, batch_with_sent)
+        self.assertIn("resend_guard", str(guard.exception))
+        self.assertIn("EN-T2", str(guard.exception))
+        self.assertEqual(send_calls, [])
 
         # action ledger unchanged: exactly one recorded send
         self.assertEqual(store.action_count("email", "send_email", "sent"), 1)

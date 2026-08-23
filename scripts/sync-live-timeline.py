@@ -272,6 +272,42 @@ def _northstar(conn: sqlite3.Connection) -> Optional[Dict[str, Any]]:
     }
 
 
+def _current_values(conn: sqlite3.Connection) -> Dict[str, Any]:
+    """Derive the latest buyer-meaningful progress value per goal.
+
+    Owner request 2026-08-24: "Latest meaningful result" must show real
+    progress (e.g. 1,531 of 2,500 verified leads), not a static
+    "still being measured" line. Derivations stay conservative and only
+    use evidence already recorded by runs:
+      - qualified_social_leads: distinct researched lead_ids recorded as
+        social_prospect evidence for that goal;
+      - reply_rate: reply_rate from that goal's newest email_metrics_snapshot.
+    booked_calls stays undetermined on purpose: its target is a daily rate,
+    and a cumulative count would misstate it.
+    """
+    values: Dict[str, Any] = {}
+    for row in conn.execute(
+        "SELECT goal_id, COUNT(DISTINCT json_extract(payload_json, "
+        "'$.lead_id')) AS n FROM evidence WHERE kind = 'social_prospect' "
+        "GROUP BY goal_id"
+    ):
+        if row["n"]:
+            values[row["goal_id"]] = row["n"]
+    row = conn.execute(
+        "SELECT goal_id, payload_json FROM evidence "
+        "WHERE kind = 'email_metrics_snapshot' "
+        "ORDER BY observed_at DESC LIMIT 1"
+    ).fetchone()
+    if row is not None:
+        try:
+            rate = json.loads(row["payload_json"]).get("metrics", {}).get("reply_rate")
+            if isinstance(rate, (int, float)):
+                values[row["goal_id"]] = rate
+        except (TypeError, ValueError):
+            pass
+    return values
+
+
 def _heartbeat(conn: sqlite3.Connection) -> Optional[Dict[str, Any]]:
     """The company's most recent live run -- any goal type.
 
@@ -433,6 +469,7 @@ def sync_live(
             "memory_claims": _count(conn, "memory"),
         }
 
+        current_values = _current_values(conn)
         runtime_state = _runtime_state(conn)
         northstar = _northstar(conn)
 
@@ -443,6 +480,11 @@ def sync_live(
                     "id": row["id"],
                     "name": row["name"],
                     **_PUBLIC_GOAL_COPY.get(row["id"], {}),
+                    **(
+                        {"current_value": current_values[row["id"]]}
+                        if row["id"] in current_values
+                        else {}
+                    ),
                     "owner_id": row["owner_id"],
                     "goal_status": row["goal_status"],
                     "metric": row["metric"],

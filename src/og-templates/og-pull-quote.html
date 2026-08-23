@@ -1,0 +1,114 @@
+<!doctype html>
+<!--
+  OG image template — ARCHETYPE: testimonial-pull-quote (1200x630 exact).
+  Website derivative of the Design Department's registered social archetype
+  `.agents/company/departments/design/templates/social/testimonial-pull-quote.html`
+  (gallery research map shortform-template-research-20260817: conversation
+  starters and personal proof outperform announcements). Large quoted line,
+  attribution line, page URL, and the journey signature. Flat only.
+
+  Injection contract (used by scripts/generate-og.mjs):
+    window.__applyOg({
+      eyebrow: "FOUNDER",
+      title_lines: ["Quoted line one", "line two"],
+      accent_line: 0,
+      supporting_text: "— Attribution",   // who said it / where it is from
+      url: "/founder/",
+    })
+-->
+<html lang="en" data-theme="gruvbox-dark">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SpielOS OG — pull-quote</title>
+  <link rel="stylesheet" href="/.agents/company/departments/design/system/production.css">
+  <link rel="stylesheet" href="/.agents/company/departments/design/system/journey-signature.css">
+  <style>
+    html, body { width: 1200px; height: 630px; }
+    body { container-type: size; display: grid; place-items: center; overflow: hidden; }
+    .canvas { position: relative; width: 100%; height: 100%; display: grid; grid-template-rows: auto 1fr auto; place-items: center; overflow: hidden; background: radial-gradient(circle at 50% 44%, var(--primary-soft), transparent 46%), var(--background); }
+    .grid { position: absolute; inset: 0; opacity: .03; background-image: linear-gradient(var(--foreground) 1px, transparent 1px), linear-gradient(90deg, var(--foreground) 1px, transparent 1px); background-size: 5cqw 5cqw; }
+    header, main, footer { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; }
+    header { margin-top: 4.5cqh; }
+    .eyebrow { color: var(--primary); font: 600 clamp(13px, 2.1cqw, 30px)/1 var(--font-mono); letter-spacing: .14em; text-transform: uppercase; }
+    main { gap: 3cqh; padding: 0 6cqw; }
+    .quote { display: flex; flex-direction: column; align-items: center; text-align: center; }
+    /* Large quotation glyph — typographic, not an icon. */
+    .quote-glyph { color: var(--primary); font: 800 clamp(64px, 9cqh, 150px)/.6 var(--font-sans); letter-spacing: -.08em; margin-bottom: 2.4cqh; }
+    h1 { max-width: 21ch; margin: 0; text-align: center; color: var(--foreground-strong); font-size: clamp(36px, 9.5cqh, 96px); font-weight: 800; line-height: 1.06; letter-spacing: -.04em; }
+    h1 .accent { color: var(--primary); }
+    .attribution { display: flex; align-items: center; gap: 1.2cqw; margin-top: 3cqh; color: var(--muted-foreground); font: 600 clamp(14px, 1.8cqw, 28px)/1 var(--font-mono); letter-spacing: .06em; }
+    footer { width: 100%; box-sizing: border-box; padding: 0 80px; margin-bottom: 5cqh; display: flex; flex-direction: row; justify-content: space-between; align-items: center; color: var(--muted-foreground); font: 500 clamp(15px, 1.7cqw, 26px)/1 var(--font-mono); letter-spacing: .02em; }
+    footer .page-url { direction: ltr; unicode-bidi: embed; color: var(--foreground-muted); opacity: .85; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 72%; font-size: .85em; }
+    @container (aspect-ratio > 8/5) {
+      header { margin-top: 3.6cqh; }
+      h1 { max-width: 22ch; font-size: clamp(36px, 11.5cqh, 80px); }
+      main { gap: 2.2cqh; }
+      footer { margin-bottom: 4.2cqh; }
+    }
+  </style>
+</head>
+<body>
+<div class="canvas">
+  <div class="grid"></div>
+
+  <!-- Journey signature — landscape lower-band wave below the attribution.
+       The quote stays centered and clear; the signature rides the empty band. -->
+  <svg class="journey-svg journey-portrait" viewBox="0 0 1080 1350" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+    <path class="journey-path" d="M20,1140 C180,920 340,1180 500,1010 C660,840 820,1140 980,970 C1010,940 1035,930 1045,930"/>
+    <path class="journey-path-fill" d="M20,1140 C180,920 340,1180 500,1010"/>
+    <g class="journey-node" transform="translate(500,1010)"><circle class="node-ring" r="16"/><circle class="node-dot" r="7"/></g>
+    <g class="journey-node" transform="translate(980,970)"><circle class="node-ring" r="16"/><circle class="node-dot" r="7"/></g>
+    <g class="journey-goal" transform="translate(1045,930)">
+      <circle class="goal-ring" r="30"/><circle class="goal-ring-inner" r="17"/><circle class="goal-core" r="6"/>
+    </g>
+  </svg>
+  <svg class="journey-svg journey-landscape" viewBox="0 0 1200 630" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+    <path class="journey-path" d="M20,560 C160,480 320,585 480,520 C640,455 800,575 960,500 C1040,462 1130,495 1180,488"/>
+    <path class="journey-path-fill" d="M20,560 C160,480 320,585 480,520"/>
+    <g class="journey-node" transform="translate(480,520)"><circle class="node-ring" r="11"/><circle class="node-dot" r="5"/></g>
+    <g class="journey-node" transform="translate(960,500)"><circle class="node-ring" r="11"/><circle class="node-dot" r="5"/></g>
+    <g class="journey-goal" transform="translate(1180,488)">
+      <circle class="goal-ring" r="21"/><circle class="goal-ring-inner" r="12"/><circle class="goal-core" r="4.5"/>
+    </g>
+  </svg>
+
+  <header>
+    <div class="eyebrow" id="template-eyebrow">SpielOS</div>
+  </header>
+
+  <main>
+    <div class="quote">
+      <div class="quote-glyph">&ldquo;</div>
+      <h1 class="canvas-title" id="template-title">Page quote</h1>
+      <div class="attribution" id="attribution-text"></div>
+    </div>
+  </main>
+
+  <footer>
+    <span class="brand-lockup">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="width:1.65em;height:1.65em;"><rect width="24" height="24" rx="5" fill="var(--panel-raised)"/><path d="M20 2a2 2 0 1 0 0 4 2 2 0 1 0 0-4m-3 10 .5-5.5L12 7l1.75 1.75c-.47.4-1.01.5-1.69.63-1.05.19-2.35.44-3.4 1.93s-.83 2.8-.65 3.85c.15.9.26 1.55-.32 2.38-.58.82-1.23.94-2.12 1.11-1.05.19-2.35.43-3.4 1.93l1.64 1.15c.58-.82 1.22-.94 2.12-1.11 1.05-.19 2.35-.43 3.4-1.93 1.05-1.49.83-2.8.65-3.85-.15-.9-.26-1.55.32-2.38.58-.82 1.23-.94 2.12-1.11.84-.15 1.84-.35 2.74-1.18L16.99 12ZM3.71 8.71l1.79-1.8 1.79 1.8 1.42-1.42-1.8-1.79 1.8-1.79-1.42-1.42-1.79 1.8-1.79-1.8-1.42 1.42 1.8 1.79-1.8 1.79zm16.58 5.58L18 16.59l-2.29-2.3-1.42 1.42 2.3 2.29-2.3 2.29 1.42 1.42 2.29-2.3 2.29 2.3 1.42-1.42-2.3-2.29 2.3-2.29z" fill="var(--foreground-strong)"/></svg>spielos.xyz</span>
+    <span class="page-url" id="page-url"></span>
+  </footer>
+</div>
+<script>
+  (function () {
+    function applyOg(data) {
+      if (!data || !Array.isArray(data.title_lines) || data.title_lines.length === 0) {
+        document.documentElement.dataset.templateReady = 'error';
+        throw new Error('OG data with title_lines is required');
+      }
+      document.getElementById('template-eyebrow').textContent = data.eyebrow || 'SpielOS';
+      document.getElementById('template-title').innerHTML = data.title_lines.map(function (line, index) {
+        var text = String(line).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        return index === data.accent_line ? '<span class="accent">' + text + '</span>' : text;
+      }).join('<br>');
+      document.getElementById('attribution-text').textContent = data.supporting_text || '';
+      document.getElementById('page-url').textContent = 'spielos.xyz' + (data.url || '/');
+      document.documentElement.dataset.templateReady = 'true';
+    }
+    window.__applyOg = applyOg;
+    document.documentElement.dataset.templateReady = 'waiting';
+  }());
+</script>
+</body>
+</html>

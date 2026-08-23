@@ -222,7 +222,7 @@ class RegistryTests(unittest.TestCase):
         self.assertEqual("campaign_manifest", suite.payload_kind)
         self.assertEqual(10, len(suite.criteria))
         self.assertEqual(["one_reader", "one_moment", "one_idea",
-                          "understandable_without_spielos", "buyer_language",
+                          "cold_audience_clarity", "buyer_language",
                           "sharp_opening", "honest_claims", "platform_native",
                           "flow_brevity", "fifth_item_reminder"],
                          [c.id for c in suite.criteria])

@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "spielos-harness"
+description = "SpielOS company harness: one durable Goal loop, Departments, approvals, evidence, and evals for operating AI work as a company system."
+readme = "company/README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+dynamic = ["version"]
+authors = [{ name = "Shayan Spiel" }]
+keywords = ["ai-agents", "agent-harness", "company-runtime", "spielos"]
+
+[project.scripts]
+spielos = "company.cli:main"
+
+[project.urls]
+Homepage = "https://spielos.xyz"
+
+[tool.setuptools.packages.find]
+include = ["company*"]
+exclude = ["company.tests*", "company.init_templates*"]
+
+[tool.setuptools.package-data]
+"*" = [
+    "*.json",
+    "*.md",
+    "*.txt",
+    ".env.example",
+]
+company = [
+    "init_templates/**/*",
+    ".env.example",
+]
+
+[tool.setuptools.dynamic]
+version = { attr = "company.runtime.config.VERSION" }

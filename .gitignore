@@ -51,4 +51,9 @@ Thumbs.db
 # Harness user-layer overrides (identity, brand, private config)
 .agents/company/config.user.json
 
+# Packaging build artifacts
+.agents/build/
+.agents/*.egg-info/
+dist-build/
+
 .spielos/.env.*

@@ -138,15 +138,16 @@ class PackageHandoffTests(unittest.TestCase):
 
 
 class CampaignSchemaCompatibilityTests(unittest.TestCase):
-    def test_current_schema_is_1_1_and_1_0_remains_compatible(self):
-        self.assertEqual(SCHEMA_VERSION, "1.1")
-        self.assertEqual(COMPATIBLE_SCHEMA_VERSIONS, frozenset({"1.0", "1.1"}))
+    def test_current_schema_is_1_2_and_earlier_remains_compatible(self):
+        self.assertEqual(SCHEMA_VERSION, "1.2")
+        self.assertEqual(COMPATIBLE_SCHEMA_VERSIONS, frozenset({"1.0", "1.1", "1.2"}))
         manifest = campaign_manifest()
-        self.assertEqual(manifest["schema_version"], "1.1")
         legacy = dict(manifest)
-        legacy["schema_version"] = "1.0"
-        from company.departments.campaign_contract import validate_campaign
-        self.assertEqual(validate_campaign(legacy, "strategy"), [])
+        for version in ("1.0", "1.1"):
+            legacy["schema_version"] = version
+            from company.departments.campaign_contract import validate_campaign
+            self.assertEqual(validate_campaign(legacy, "strategy"), [],
+                             f"schema {version} must remain readable")
 
 
 if __name__ == "__main__":

@@ -130,7 +130,11 @@ class BufferConnectionTests(unittest.TestCase):
         self.assertTrue(all(item["approval_id"].startswith("batch-review-") for item in package["posts"]))
         for item in package["posts"]:
             if item["platform"] == "youtube":
-                self.assertTrue(item["metadata"]["youtube"]["title"].endswith("One clear workflow."))
+                # YouTube title is the joined design.title_lines of the item
+                self.assertTrue(item["metadata"]["youtube"]["title"].endswith(
+                    " ".join(next(i["renditions"]["youtube"]["design"]["title_lines"]
+                                  for i in approved["items"] if i["item_id"] == item["item_id"]))),
+                    f"unexpected YouTube title for {item['item_id']}")
                 self.assertEqual("28", item["metadata"]["youtube"]["categoryId"])
             else:
                 self.assertIsNone(item.get("metadata"))
