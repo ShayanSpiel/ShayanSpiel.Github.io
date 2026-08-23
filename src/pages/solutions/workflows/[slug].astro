@@ -21,6 +21,29 @@ interface Props {
 }
 
 const { workflow: w, locale = "en" } = Astro.props;
+
+/** Pick the FA variant when rendering the Persian twin, else the EN source. */
+function L<T>(en: T, fa?: T): T {
+  return locale === "fa" && fa !== undefined ? fa : en;
+}
+
+const name = L(w.name, w.nameFa);
+const h1 = L(w.h1, w.h1Fa);
+const heroCopy = L(w.heroCopy, w.heroCopyFa);
+const manualSteps = L(w.manualSteps, w.manualStepsFa);
+const painPoint = L(w.painPoint, w.painPointFa);
+const beforeText = L(w.beforeText, w.beforeTextFa);
+const withText = L(w.withText, w.withTextFa);
+const flowStates = L(w.flowStates, w.flowStatesFa);
+const automateIntro = L(w.automateIntro, w.automateIntroFa);
+const automate = L(w.automate, w.automateFa);
+const audiences = L(w.audiences, w.audiencesFa);
+const boundaryIntro = L(w.boundaryIntro, w.boundaryIntroFa);
+const runsAlone = L(w.runsAlone, w.runsAloneFa);
+const stopsForHuman = L(w.stopsForHuman, w.stopsForHumanFa);
+const faqs = L(w.faqs, w.faqsFa);
+const seoTitle = L(w.seoTitle, w.seoTitleFa);
+const seoDesc = L(w.seoDesc, w.seoDescFa);
 const tools = w.toolKeys
   .map((k) => SOFTWARE_SOLUTIONS.find((s) => s.key === k))
   .filter((s): s is NonNullable<typeof s> => Boolean(s));
@@ -37,7 +60,7 @@ const breadcrumbJsonLd = {
     { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
     { "@type": "ListItem", position: 2, name: "Solutions", item: `${SITE_URL}/solutions/` },
     { "@type": "ListItem", position: 3, name: "Workflows", item: `${SITE_URL}/solutions/workflows/` },
-    { "@type": "ListItem", position: 4, name: w.name, item: `${SITE_URL}/solutions/workflows/${w.slug}/` },
+    { "@type": "ListItem", position: 4, name: name, item: `${SITE_URL}/solutions/workflows/${w.slug}/` },
   ],
 };
 
@@ -52,7 +75,7 @@ const faqJsonLd = {
 };
 ---
 
-<Page title={w.seoTitle} description={w.seoDesc} image="/assets/og/home.png" locale={locale} noAlternate>
+<Page title={seoTitle} description={seoDesc} image="/assets/og/home.png" locale={locale}>
   <!-- 1 - HERO -->
   <section class="relative pt-24 pb-12 sm:pt-28 sm:pb-16 overflow-hidden">
     <div class="absolute inset-0 opacity-[0.03] hero-grid"></div>
@@ -63,15 +86,15 @@ const faqJsonLd = {
           <li><a href="/" class="hover:text-foreground transition-colors">Home</a></li>
           <li class="flex items-center gap-1.5"><span aria-hidden="true" class="text-border-strong">/</span><a href="/solutions/" class="hover:text-foreground transition-colors">Solutions</a></li>
           <li class="flex items-center gap-1.5"><span aria-hidden="true" class="text-border-strong">/</span><a href="/solutions/workflows/" class="hover:text-foreground transition-colors">Workflows</a></li>
-          <li class="flex items-center gap-1.5"><span aria-hidden="true" class="text-border-strong">/</span><span class="text-foreground font-medium" aria-current="page">{w.name}</span></li>
+          <li class="flex items-center gap-1.5"><span aria-hidden="true" class="text-border-strong">/</span><span class="text-foreground font-medium" aria-current="page">{name}</span></li>
         </ol>
       </nav>
       <div class="inline-flex items-center gap-2 rounded-full border border-border bg-panel-raised px-3 py-1 mb-6" data-aos="fade-up">
         <i class="bx bx-repeat text-primary/80 icon-sm shrink-0" aria-hidden="true"></i>
-        <span class="text-2xs text-muted-foreground font-medium">{w.eyebrow}</span>
+        <span class="text-2xs text-muted-foreground font-medium">{L(w.eyebrow, w.nameFa?.toUpperCase())}</span>
       </div>
-      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground-strong tracking-tight leading-tightest" data-aos="fade-up">{w.h1}</h1>
-      <p class="mt-6 text-base text-muted-foreground max-w-2xl leading-relaxed" data-aos="fade-up">{w.heroCopy}</p>
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground-strong tracking-tight leading-tightest" data-aos="fade-up">{h1}</h1>
+      <p class="mt-6 text-base text-muted-foreground max-w-2xl leading-relaxed" data-aos="fade-up">{heroCopy}</p>
       <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3" data-aos="fade-up">
         <a href="/apply/" data-cta-location={`workflow_${w.slug}`} class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20">Apply — Free Review</a>
         <a href="#what-changes" class="inline-flex items-center justify-center rounded-md border border-border bg-panel px-6 h-11 text-sm font-medium hover:border-border-strong hover:bg-panel-raised transition-all">See how it works</a>
@@ -92,7 +115,7 @@ const faqJsonLd = {
           <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
           <div class="absolute left-1/2 top-1/2 h-56 w-56 -translate-x-1/2 -translate-y-1/2 glow-blob opacity-10"></div>
         <ol class="wf-rail relative z-[1] mx-auto max-w-sm w-full" data-aos="fade-up">
-          {w.manualSteps.map((step, i) => (
+          {manualSteps.map((step, i) => (
             <li class="relative flex items-center gap-4 min-h-[3.5rem]">
               <div class={`relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-md border shadow-panel ${i === 0 ? "border-destructive bg-destructive-soft text-destructive shadow-[0_0_20px_var(--destructive-soft)]" : "border-border bg-panel-raised text-muted-foreground"}`}>
                 <span class="text-xs font-bold">{i + 1}</span>
@@ -106,7 +129,7 @@ const faqJsonLd = {
           <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r opacity-70 from-destructive via-destructive-soft to-transparent"></div>
           <div class="absolute right-0 bottom-0 h-40 w-40 glow-blob opacity-10"></div>
           <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-md bg-destructive-soft"><i class="bx bx-error text-destructive icon-xl"></i></div>
-          <p class="text-base font-semibold leading-relaxed text-foreground-strong">{w.painPoint}</p>
+          <p class="text-base font-semibold leading-relaxed text-foreground-strong">{painPoint}</p>
         </div>
       </div>
     </div>
@@ -127,7 +150,7 @@ const faqJsonLd = {
             <span class="flex h-7 w-7 items-center justify-center rounded-md bg-muted-foreground/10"><i class="bx bx-user text-muted-foreground icon-base" aria-hidden="true"></i></span>
             <h3 class="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Before</h3>
           </div>
-          <p class="text-sm leading-relaxed text-muted-foreground">{w.beforeText}</p>
+          <p class="text-sm leading-relaxed text-muted-foreground">{beforeText}</p>
         </div>
         <div class="relative overflow-hidden rounded-lg border border-primary/30 bg-panel p-6 shadow-panel transition-all hover:border-primary">
           <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r opacity-80 from-primary via-accent to-transparent"></div>
@@ -135,7 +158,7 @@ const faqJsonLd = {
             <span class="flex h-7 w-7 items-center justify-center rounded-md bg-primary-soft"><i class="bx bx-network-chart text-primary icon-base" aria-hidden="true"></i></span>
             <h3 class="text-sm font-semibold uppercase tracking-wide text-primary">With SpielOS</h3>
           </div>
-          <p class="text-sm leading-relaxed text-foreground">{w.withText}</p>
+          <p class="text-sm leading-relaxed text-foreground">{withText}</p>
         </div>
       </div>
     </div>
@@ -149,7 +172,7 @@ const faqJsonLd = {
         <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
         <div class="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 glow-blob opacity-15"></div>
         <ol class="flow-rail relative z-10 grid gap-6 sm:grid-cols-7 sm:gap-0">
-          {w.flowStates.map((state, i) => {
+          {flowStates.map((state, i) => {
             const last = i === w.flowStates.length - 1;
             return (
               <li class="flow-station relative flex items-center gap-4 sm:flex-col sm:gap-3 sm:text-center">
@@ -169,9 +192,9 @@ const faqJsonLd = {
   <section class="relative overflow-hidden py-20 sm:py-24">
     <div class="absolute inset-0 bg-panel-deep/35"></div>
     <div class="relative mx-auto max-w-6xl px-6">
-      <SectionHeader label="WHAT IT AUTOMATES" title={w.automateIntro.replace(":", ".")} />
+      <SectionHeader label="WHAT IT AUTOMATES" title={automateIntro.replace(":", ".")} />
       <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" data-aos="fade-up">
-        {w.automate.map((item) => (
+        {automate.map((item) => (
           <article class="group relative overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
             <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r opacity-80 from-primary via-accent to-transparent"></div>
             <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-md bg-primary-soft text-primary"><i class="bx bx-check-square icon-xl" aria-hidden="true"></i></div>
@@ -210,7 +233,7 @@ const faqJsonLd = {
     <div class="relative mx-auto max-w-5xl px-6">
       <SectionHeader label="WHO THIS IS FOR" title="Built for teams where this work repeats weekly." />
       <div class="grid gap-3 md:grid-cols-3" data-aos="fade-up">
-        {w.audiences.map((a) => (
+        {audiences.map((a) => (
           <article class="group relative overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
             <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r opacity-60 from-info via-primary to-transparent"></div>
             <h3 class="text-sm font-semibold text-foreground-strong mb-1 transition-colors group-hover:text-primary">{a.name}</h3>
@@ -241,7 +264,7 @@ const faqJsonLd = {
             <h3 class="text-sm font-semibold text-foreground-strong">Runs on its own</h3>
           </div>
           <ul class="space-y-2">
-            {w.runsAlone.map((item) => (
+            {runsAlone.map((item) => (
               <li class="flex gap-2 text-xs leading-relaxed text-muted-foreground"><i class="bx bx-check icon-sm text-success shrink-0 mt-0.5" aria-hidden="true"></i>{item}</li>
             ))}
           </ul>
@@ -253,13 +276,13 @@ const faqJsonLd = {
             <h3 class="text-sm font-semibold text-foreground-strong">Stops for a human</h3>
           </div>
           <ul class="space-y-2">
-            {w.stopsForHuman.map((item) => (
+            {stopsForHuman.map((item) => (
               <li class="flex gap-2 text-xs leading-relaxed text-muted-foreground"><i class="bx bx-user icon-sm text-warning shrink-0 mt-0.5" aria-hidden="true"></i>{item}</li>
             ))}
           </ul>
         </div>
       </div>
-      <p class="mt-6 text-center text-xs leading-relaxed text-muted-foreground max-w-2xl mx-auto">{w.boundaryIntro}</p>
+      <p class="mt-6 text-center text-xs leading-relaxed text-muted-foreground max-w-2xl mx-auto">{boundaryIntro}</p>
     </div>
   </section>
 
@@ -268,8 +291,8 @@ const faqJsonLd = {
     <div class="absolute inset-0 bg-panel-deep/35"></div>
     <div class="absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 glow-blob opacity-10"></div>
     <div class="relative mx-auto max-w-3xl px-6">
-      <SectionHeader label="QUESTIONS" title={`${w.name}, answered.`} />
-      <FAQList locale={locale} entries={w.faqs} keyPrefix={`wf-${w.slug}`} />
+      <SectionHeader label="QUESTIONS" title={`${name}, answered.`} />
+      <FAQList locale={locale} entries={faqs} keyPrefix={`wf-${w.slug}`} />
     </div>
   </section>
 

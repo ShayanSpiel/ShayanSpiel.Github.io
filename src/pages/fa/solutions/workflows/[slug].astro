@@ -1,0 +1,15 @@
+---
+import { WORKFLOW_SOLUTIONS } from "../../../../data/workflow-solutions";
+import WorkflowPage from "../../../solutions/workflows/[slug].astro";
+
+export function getStaticPaths() {
+  return WORKFLOW_SOLUTIONS.map((workflow) => ({
+    params: { slug: workflow.slug },
+    props: { workflow },
+  }));
+}
+
+const { workflow } = Astro.props;
+---
+
+<WorkflowPage workflow={workflow} locale="fa" />

@@ -1,6 +1,10 @@
 ---
 import Page from "../../../layouts/Page.astro";
+import { type Locale, t } from "../../../i18n/translations";
 import { WORKFLOW_SOLUTIONS, WORKFLOW_HUB_GROUPS } from "../../../data/workflow-solutions";
+
+export interface Props { locale?: Locale }
+const { locale = "en" } = Astro.props;
 
 const byslug = Object.fromEntries(WORKFLOW_SOLUTIONS.map((w) => [w.slug, w]));
 
@@ -18,10 +22,12 @@ const WF_ICONS: Record<string, string> = {
 ---
 
 <Page
-  title="Workflow Automation Solutions | SpielOS"
-  description="Automation for the work that repeats: follow-ups, data entry, client intake, onboarding, document collection, invoicing, qualification, screening."
+  title={locale === "fa" ? "راهکارهای اتوماسیون ورک‌فلو | SpielOS" : "Workflow Automation Solutions | SpielOS"}
+  description={locale === "fa"
+    ? "اتوماسیون برای کار تکراری: پیگیری، ورود داده، پذیرش مشتری، آنبوردینگ، جمع‌آوری اسناد، فاکتور، صلاحیت‌سنجی و غربالگری."
+    : "Automation for the work that repeats: follow-ups, data entry, client intake, onboarding, document collection, invoicing, qualification, screening."}
   image="/assets/og/home.png"
-  noAlternate
+  locale={locale}
 >
   <section class="relative pt-24 pb-12 sm:pt-28 sm:pb-16 overflow-hidden">
     <div class="absolute inset-0 opacity-[0.03] hero-grid"></div>
@@ -38,8 +44,8 @@ const WF_ICONS: Record<string, string> = {
         <i class="bx bx-repeat text-primary/80 icon-sm shrink-0" aria-hidden="true"></i>
         <span class="text-2xs text-muted-foreground font-medium">WORKFLOW AUTOMATION</span>
       </div>
-      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground-strong tracking-tight leading-tightest" data-aos="fade-up">What work do you want off your plate?</h1>
-      <p class="mt-6 text-base text-muted-foreground max-w-2xl leading-relaxed" data-aos="fade-up">Start with the recurring work your team keeps doing manually: copying, chasing, checking, reporting, admin. Pick the workflow that sounds like your week.</p>
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground-strong tracking-tight leading-tightest" data-aos="fade-up">{t(locale, "solutions.workflows.hub.title")}</h1>
+      <p class="mt-6 text-base text-muted-foreground max-w-2xl leading-relaxed" data-aos="fade-up">{t(locale, "solutions.workflows.hub.sub")}</p>
       <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3" data-aos="fade-up">
         <a href="/solutions/" class="inline-flex items-center justify-center rounded-md border border-border bg-panel px-6 h-11 text-sm font-medium hover:border-border-strong hover:bg-panel-raised transition-all"><i class="bx bx-arrow-back rtl-flip icon-sm me-2" aria-hidden="true"></i>All solutions</a>
       </div>
@@ -50,8 +56,8 @@ const WF_ICONS: Record<string, string> = {
     <section class="relative py-12 sm:py-16">
       <div class="mx-auto max-w-5xl px-6">
         <div class="mb-8 max-w-xl" data-aos="fade-up">
-          <h2 class="text-lg font-bold text-foreground-strong">{group.label}</h2>
-          <p class="mt-1 text-xs leading-relaxed text-muted-foreground">{group.blurb}</p>
+          <h2 class="text-lg font-bold text-foreground-strong">{t(locale, `solutions.group.${group.id}`)}</h2>
+          <p class="mt-1 text-xs leading-relaxed text-muted-foreground">{t(locale, `solutions.group.${group.id}.blurb`)}</p>
         </div>
         <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3" data-aos="fade-up">
           {group.slugs.map((slug) => {
@@ -60,8 +66,8 @@ const WF_ICONS: Record<string, string> = {
               <a href={`/solutions/workflows/${w.slug}/`} class="group relative flex flex-col overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
                 <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r opacity-80 from-primary via-accent to-transparent"></div>
                 <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-md bg-primary-soft text-primary shadow-[0_0_18px_var(--primary-soft)]"><i class={`bx ${WF_ICONS[w.slug] ?? "bx-repeat"} icon-xl`} aria-hidden="true"></i></div>
-                <h3 class="text-sm font-semibold text-foreground-strong transition-colors group-hover:text-primary">{w.name}</h3>
-                <p class="mt-1.5 grow text-xs leading-relaxed text-muted-foreground">{w.h1.replace(/^Automate /, "").replace(/\.$/, "")}</p>
+                <h3 class="text-sm font-semibold text-foreground-strong transition-colors group-hover:text-primary">{t(locale, `wf.${w.slug}.name`)}</h3>
+                <p class="mt-1.5 grow text-xs leading-relaxed text-muted-foreground">{t(locale, `wf.${w.slug}.desc`)}</p>
                 <span class="mt-4 inline-flex items-center gap-1 text-xs font-medium text-primary">See the workflow<i class="bx bx-chevron-right rtl-flip icon-sm transition-transform group-hover:translate-x-0.5" aria-hidden="true"></i></span>
               </a>
             );
