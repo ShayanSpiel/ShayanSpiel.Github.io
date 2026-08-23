@@ -56,14 +56,17 @@ const hosts = [
   },
 ];
 
-/* Owner-verified totals from SpielOS's own outbound runtime
-   (runtime evidence + provider snapshot, 2026-08-24). Update together
-   with the runtime when the pool grows. */
+/* Owner-verified outbound performance:
+   - leads + emails sent from SpielOS runtime evidence (2026-08-24);
+   - open/click rates as reported on the Brevo and Resend sender
+     dashboards (owner-verified 2026-08-24) — the runtime snapshot
+     undercounts clicks because provider link tracking is not fully
+     wired into measurement yet. */
 const stats: { value: string; labelKey: string; icon: string; color: string; sub?: string; subLabelKey?: string }[] = [
   { value: "3,098", labelKey: "landing.lr.stats.leadsTotal", icon: "bx-group", color: "primary" },
   { value: "2,000", labelKey: "landing.lr.stats.weekend", icon: "bx-trending-up", color: "success" },
   { value: "1,093", labelKey: "landing.lr.stats.sent", icon: "bx-send", color: "accent" },
-  { value: "536", sub: "44", subLabelKey: "landing.lr.stats.clicked", labelKey: "landing.lr.stats.opened", icon: "bx-bar-chart-alt-2", color: "purple" },
+  { value: "534", sub: "298", subLabelKey: "landing.lr.stats.clicked", labelKey: "landing.lr.stats.opened", icon: "bx-bar-chart-alt-2", color: "purple" },
 ];
 
 const usage = [
