@@ -11,8 +11,13 @@ const toolLogo = (key: string) => BRAND_LOGOS[`../../../assets/brand-logos/${key
 export function getStaticPaths() {
   return WORKFLOW_SOLUTIONS.map((workflow) => ({
     params: { slug: workflow.slug },
-    props: { workflow },
+    props: { workflow, locale: "en" as const },
   }));
+}
+
+interface Props {
+  workflow: WorkflowSolution;
+  locale?: "en" | "fa";
 }
 
 const { workflow: w, locale = "en" } = Astro.props;
@@ -88,7 +93,7 @@ const faqJsonLd = {
           <div class="absolute left-1/2 top-1/2 h-56 w-56 -translate-x-1/2 -translate-y-1/2 glow-blob opacity-10"></div>
         <ol class="wf-rail relative z-[1] mx-auto max-w-sm w-full" data-aos="fade-up">
           {w.manualSteps.map((step, i) => (
-            <li class="relative flex gap-4 py-2.5">
+            <li class="relative flex items-center gap-4 min-h-[3.5rem]">
               <div class={`relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-md border shadow-panel ${i === 0 ? "border-destructive bg-destructive-soft text-destructive shadow-[0_0_20px_var(--destructive-soft)]" : "border-border bg-panel-raised text-muted-foreground"}`}>
                 <span class="text-xs font-bold">{i + 1}</span>
               </div>
@@ -301,42 +306,66 @@ const faqJsonLd = {
 </Page>
 
 <style>
-  /* Manual-chain rail — mirrors the Design department timeline. */
-  .wf-rail::before {
+  /*
+   * Connector geometry: every li draws ONE segment from the center of its
+   * own icon to the center of the NEXT icon, so lines can never overshoot
+   * the first or last icon. Icons are opaque and sit above the line (z-10).
+   */
+
+  /* Vertical manual chain (tiles are h-9 = 2.25rem -> center at 1.125rem). */
+  .wf-rail li:not(:last-child)::before {
     content: "";
     position: absolute;
-    inset-inline-start: 1.05rem;
-    top: 1.25rem;
-    bottom: 1.25rem;
+    inset-inline-start: 1.125rem;
+    top: 50%;
+    height: 100%;
     width: 2px;
+    translate: -50% 0;
     border-radius: var(--radius-pill);
-    background: linear-gradient(to bottom, var(--destructive), var(--primary));
-    opacity: 0.45;
+    background: linear-gradient(
+      to bottom,
+      color-mix(in oklab, var(--destructive) 45%, transparent),
+      color-mix(in oklab, var(--primary) 35%, transparent)
+    );
   }
 
-  /* Flow rail — mirrors the OperatingLoop component. */
-  .flow-rail::before,
-  .flow-rail::after {
+  /* Flow rail — mobile: vertical segments between icon centers (h-11 -> 1.375rem). */
+  .flow-station:not(:last-child)::before {
     content: "";
     position: absolute;
     inset-inline-start: 1.375rem;
-    top: 1.375rem;
-    bottom: 1.375rem;
+    top: 50%;
+    height: 100%;
     width: 2px;
+    translate: -50% 0;
     border-radius: var(--radius-pill);
+    background: linear-gradient(
+      to bottom,
+      color-mix(in oklab, var(--primary) 40%, transparent),
+      color-mix(in oklab, var(--accent) 40%, transparent)
+    );
   }
-  .flow-rail::before { background: var(--border-strong); }
-  .flow-rail::after { bottom: 50%; background: linear-gradient(to bottom, var(--primary), var(--accent)); }
+
+  /* Flow rail — sm+: horizontal segments, node center sits at 1.375rem
+     from the station top (h-11 icon, flex-col). */
   @media (min-width: 640px) {
-    .flow-rail::before,
-    .flow-rail::after {
-      inset-inline-start: calc(100% / 14);
-      inset-inline-end: calc(100% / 14);
+    .flow-station:not(:last-child)::before { display: none; }
+    .flow-station:not(:last-child)::after {
+      content: "";
+      position: absolute;
       top: 1.375rem;
-      bottom: auto;
-      width: auto;
       height: 2px;
+      inset-inline-start: 50%;
+      width: 100%;
+      border-radius: var(--radius-pill);
+      background: linear-gradient(
+        to right,
+        color-mix(in oklab, var(--primary) 45%, transparent),
+        color-mix(in oklab, var(--accent) 45%, transparent)
+      );
     }
-    .flow-rail::after { inset-inline-end: calc(100% / 14 + (100% - 200%) / 12); background: linear-gradient(to right, var(--primary), var(--accent)); }
+    [dir="rtl"] .flow-station:not(:last-child)::after {
+      background: linear-gradient(to left, color-mix(in oklab, var(--primary) 45%, transparent), color-mix(in oklab, var(--accent) 45%, transparent));
+    }
   }
 </style>
