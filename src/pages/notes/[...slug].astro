@@ -28,7 +28,7 @@ const isoDate = date.toISOString();
 
 const urlPrefix = locale === "fa" ? "/fa/notes" : "/notes";
 const articleUrl = `${SITE.url}${urlPrefix}${note.data.permalink}`;
-const imageUrl = image && image.startsWith("http") ? image : `${SITE.url}${image || "/assets/og/blog.png"}`;
+const imageUrl = image && image.startsWith("http") ? image : `${SITE.url}${image || `/assets/og/${note.data.permalink.replaceAll("/", "")}.png`}`;
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
