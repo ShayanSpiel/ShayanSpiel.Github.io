@@ -512,12 +512,21 @@ const ariaCurrent = (href: string) => (isCurrent(href) ? "page" : undefined);
 </script>
 
 <style>
-  /* Theme-aware token surfaces (replaces raw rgba black/white). */
-  #site-nav[data-scrolled="true"] {
+  /* Theme-aware token surfaces (replaces raw rgba black/white).
+     The blur lives on an ::after layer, NOT on #site-nav itself:
+     backdrop-filter on the nav would make it the containing block for
+     position:fixed descendants (#nav-mobile-menu), which breaks the
+     mobile panel the moment data-scrolled flips to true (any scroll). */
+  #site-nav { isolation: isolate; }
+  #site-nav[data-scrolled="true"]::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
     background: var(--overlay-bg);
     backdrop-filter: blur(24px) saturate(1.5);
     -webkit-backdrop-filter: blur(24px) saturate(1.5);
-    border-bottom-color: var(--border);
+    border-bottom: 1px solid var(--border);
     box-shadow: var(--shadow-panel);
   }
 
