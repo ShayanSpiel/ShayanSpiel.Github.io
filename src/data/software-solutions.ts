@@ -24,7 +24,7 @@ export const SOFTWARE_SOLUTIONS: SoftwareSolution[] = [
   {
     key: "zapier",
     name: "Zapier",
-    slug: "zapier-ai-automation",
+    slug: "zapier-automation",
     keyword: "Zapier AI Automation",
     iconClass: "bxs-bolt",
     taglineEn: "Zapier connects your tools. We make it think.",
@@ -39,7 +39,7 @@ export const SOFTWARE_SOLUTIONS: SoftwareSolution[] = [
   {
     key: "slack",
     name: "Slack",
-    slug: "slack-ai-automation",
+    slug: "slack-automation",
     keyword: "Slack AI Automation",
     iconClass: "bx-message-rounded",
     taglineEn: "Slack is where your team already lives. Put the answers there.",
@@ -54,7 +54,7 @@ export const SOFTWARE_SOLUTIONS: SoftwareSolution[] = [
   {
     key: "gmail",
     name: "Gmail",
-    slug: "gmail-ai-automation",
+    slug: "gmail-automation",
     keyword: "Gmail AI Automation",
     iconClass: "bx-envelope",
     taglineEn: "Gmail on autopilot — reads, drafts, files, follows up.",
@@ -69,7 +69,7 @@ export const SOFTWARE_SOLUTIONS: SoftwareSolution[] = [
   {
     key: "drive",
     name: "Google Drive",
-    slug: "google-drive-ai-automation",
+    slug: "google-drive-automation",
     keyword: "Google Drive AI Automation",
     iconClass: "bx-folder",
     taglineEn: "Your Drive becomes an organized operations library.",
@@ -84,7 +84,7 @@ export const SOFTWARE_SOLUTIONS: SoftwareSolution[] = [
   {
     key: "hubspot",
     name: "HubSpot",
-    slug: "hubspot-ai-automation",
+    slug: "hubspot-automation",
     keyword: "HubSpot AI Automation",
     iconClass: "bx-trending-up",
     taglineEn: "HubSpot updates itself. You just sell.",
@@ -99,7 +99,7 @@ export const SOFTWARE_SOLUTIONS: SoftwareSolution[] = [
   {
     key: "attio",
     name: "Attio",
-    slug: "attio-ai-automation",
+    slug: "attio-automation",
     keyword: "Attio AI Automation",
     iconClass: "bx-id-card",
     taglineEn: "Attio stays current so you stay in flow.",
@@ -114,7 +114,7 @@ export const SOFTWARE_SOLUTIONS: SoftwareSolution[] = [
   {
     key: "jira",
     name: "Jira",
-    slug: "jira-ai-automation",
+    slug: "jira-automation",
     keyword: "Jira AI Automation",
     iconClass: "bx-collection",
     taglineEn: "Jira tickets move themselves.",
@@ -129,7 +129,7 @@ export const SOFTWARE_SOLUTIONS: SoftwareSolution[] = [
   {
     key: "notion",
     name: "Notion",
-    slug: "notion-ai-automation",
+    slug: "notion-automation",
     keyword: "Notion AI Automation",
     iconClass: "bx-note",
     taglineEn: "Notion stays organized — even after the meeting ends.",
@@ -144,7 +144,7 @@ export const SOFTWARE_SOLUTIONS: SoftwareSolution[] = [
   {
     key: "telegram",
     name: "Telegram",
-    slug: "telegram-ai-automation",
+    slug: "telegram-automation",
     keyword: "Telegram AI Automation",
     iconClass: "bx-paper-plane",
     taglineEn: "Telegram pings that actually mean something.",
@@ -159,7 +159,7 @@ export const SOFTWARE_SOLUTIONS: SoftwareSolution[] = [
   {
     key: "whatsapp",
     name: "WhatsApp",
-    slug: "whatsapp-ai-automation",
+    slug: "whatsapp-automation",
     keyword: "WhatsApp AI Automation",
     iconClass: "bx-chat",
     taglineEn: "WhatsApp follow-ups while you do literally anything else.",
@@ -174,7 +174,7 @@ export const SOFTWARE_SOLUTIONS: SoftwareSolution[] = [
   {
     key: "calendar",
     name: "Google Calendar",
-    slug: "google-calendar-ai-automation",
+    slug: "google-calendar-automation",
     keyword: "Google Calendar AI Automation",
     iconClass: "bx-calendar-event",
     taglineEn: "Your calendar books itself — scheduling without the back-and-forth.",
@@ -189,7 +189,7 @@ export const SOFTWARE_SOLUTIONS: SoftwareSolution[] = [
   {
     key: "opencode",
     name: "OpenCode",
-    slug: "opencode-ai-automation",
+    slug: "opencode-automation",
     keyword: "OpenCode AI Automation",
     iconClass: "bx-code-alt",
     taglineEn: "AI-built software, kept healthy by AI — supervised.",
@@ -204,7 +204,7 @@ export const SOFTWARE_SOLUTIONS: SoftwareSolution[] = [
   {
     key: "codex",
     name: "Codex",
-    slug: "codex-ai-automation",
+    slug: "codex-automation",
     keyword: "Codex AI Automation",
     iconClass: "bx-terminal",
     taglineEn: "Small features and fixes shipped while you sleep.",
@@ -219,7 +219,7 @@ export const SOFTWARE_SOLUTIONS: SoftwareSolution[] = [
   {
     key: "claudecode",
     name: "Claude Code",
-    slug: "claude-code-ai-automation",
+    slug: "claude-code-automation",
     keyword: "Claude Code AI Automation",
     iconClass: "bx-cog",
     taglineEn: "Deep fixes for deep problems — scoped, tested, approved.",

@@ -1,0 +1,65 @@
+---
+import Page from "../../../layouts/Page.astro";
+import { type Locale, t } from "../../../i18n/translations";
+
+export interface Props { locale?: Locale }
+const { locale = "en" } = Astro.props;
+
+const departments = [
+  { slug: "design", icon: "bx-palette" },
+  { slug: "content", icon: "bx-pen" },
+  { slug: "marketing", icon: "bx-speaker" },
+  { slug: "seo", icon: "bx-search-alt" },
+  { slug: "analytics", icon: "bx-bar-chart-alt-2" },
+];
+---
+
+<Page
+  title={locale === "fa" ? "دپارتمان‌های AI | نمونه‌های واقعی از یک شرکت واقعی | SpielOS" : "AI Departments | Real Examples Running a Real Company | SpielOS"}
+  description={t(locale, "useCases.pageDesc")}
+  image="/assets/og/use-cases.png"
+  locale={locale}
+>
+  <section class="relative pt-24 pb-12 sm:pt-28 sm:pb-16 overflow-hidden">
+    <div class="absolute inset-0 opacity-[0.03] hero-grid"></div>
+    <div class="relative z-10 mx-auto max-w-3xl px-6 text-center">
+      <nav aria-label="Breadcrumb" class="mb-8">
+        <ol class="flex items-center justify-center gap-1.5 text-2xs text-muted-foreground flex-wrap">
+          <li><a href="/" class="hover:text-foreground transition-colors">Home</a></li>
+          <li class="flex items-center gap-1.5"><span aria-hidden="true" class="text-border-strong">/</span><a href="/solutions/" class="hover:text-foreground transition-colors">{t(locale, "solutions.hub.title")}</a></li>
+          <li class="flex items-center gap-1.5"><span aria-hidden="true" class="text-border-strong">/</span><span class="text-foreground font-medium" aria-current="page">{t(locale, "solutions.departments.group")}</span></li>
+        </ol>
+      </nav>
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground-strong tracking-tight leading-tightest" data-aos="fade-up">AI Departments doing real work.</h1>
+      <p class="mt-6 text-base text-muted-foreground max-w-2xl leading-relaxed" data-aos="fade-up">{t(locale, "useCases.hero.desc")}</p>
+    </div>
+  </section>
+
+  <section class="relative pb-24 sm:pb-32">
+    <div class="mx-auto max-w-6xl px-6">
+      <div class="grid gap-3 md:grid-cols-2 lg:grid-cols-3" data-aos="fade-up">
+        {departments.map((d) => (
+          <a href={`/solutions/ai-departments/${d.slug}/`} class="group relative flex flex-col overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
+            <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r opacity-80 from-accent via-purple to-transparent"></div>
+            <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-md bg-accent-soft text-accent"><i class={`${d.icon} icon-xl`} aria-hidden="true"></i></div>
+            <h2 class="text-sm font-semibold text-foreground-strong group-hover:text-primary transition-colors">{t(locale, `useCases.card.${d.slug}.title`)}</h2>
+            <p class="mt-1.5 grow text-xs leading-relaxed text-muted-foreground">{t(locale, `useCases.card.${d.slug}.desc`)}</p>
+          </a>
+        ))}
+      </div>
+      <div class="mt-10 text-center">
+        <a href="/apply/" data-cta-location="departments_hub_final" class="inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:brightness-110">Apply — Free Review</a>
+      </div>
+    </div>
+  </section>
+
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://spielos.xyz/" },
+      { "@type": "ListItem", position: 2, name: "Solutions", item: "https://spielos.xyz/solutions/" },
+      { "@type": "ListItem", position: 3, name: "AI Departments", item: "https://spielos.xyz/solutions/ai-departments/" },
+    ],
+  })} />
+</Page>

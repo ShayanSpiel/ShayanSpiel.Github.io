@@ -14,12 +14,14 @@ export interface Props {
   modifiedTime?: string;
   tags?: string[];
   locale?: Locale;
+  /** Suppress hreflang alternates (EN-only pages with no FA twin yet). */
+  noAlternate?: boolean;
 }
 
-const { title, description, image, robots, ogType, publishedTime, modifiedTime, tags, locale = "en" } = Astro.props;
+const { title, description, image, robots, ogType, publishedTime, modifiedTime, tags, locale = "en", noAlternate = false } = Astro.props;
 ---
 
-<BaseLayout title={title} description={description} image={image} robots={robots} ogType={ogType} publishedTime={publishedTime} modifiedTime={modifiedTime} tags={tags} locale={locale}>
+<BaseLayout title={title} description={description} image={image} robots={robots} ogType={ogType} publishedTime={publishedTime} modifiedTime={modifiedTime} tags={tags} locale={locale} noAlternate={noAlternate}>
   <Nav slot="nav" locale={locale} />
   <slot />
   <div class="mt-16" />

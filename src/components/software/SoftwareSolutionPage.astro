@@ -31,14 +31,17 @@ const workflowTitle = isFa ? solution.workflowTitleFa : solution.workflowTitleEn
 const workflowLocalized = isFa ? solution.workflowFa : solution.workflowEn;
 
 // SEO: explicit title/description passed through to <Page>.
-const pageTitle = `${solution.keyword} | ${SITE.name}`;
+const pageTitle =
+  locale === "fa"
+    ? `اتوماسیون ${name} با هوش مصنوعی | SpielOS`
+    : `${solution.keyword} | ${SITE.name}`;
 const rawPain = pain;
 const metaDescription =
   rawPain.length <= 155 ? rawPain : rawPain.slice(0, 155).replace(/\s+\S*$/, "").trimEnd() + "…";
 
 const howSteps = t(locale, "softwarePage.how.steps", { name }).split(" · ");
 const otherSolutions = SOFTWARE_SOLUTIONS.filter((s) => s.slug !== solution.slug);
-const pageHref = localizePath(`/${solution.slug}/`, locale);
+const pageHref = localizePath(`/solutions/software/${solution.slug}/`, locale);
 
 const breadcrumbJsonLd = {
   "@context": "https://schema.org",
@@ -152,7 +155,7 @@ const breadcrumbJsonLd = {
           const otherLogo = brandLogos[`../../assets/brand-logos/${other.key}.svg`] as string | undefined;
           return (
             <a
-              href={localizePath(`/${other.slug}/`, locale)}
+              href={localizePath(`/solutions/software/${other.slug}/`, locale)}
               class="group relative overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong"
             >
               <div class="mb-4 flex items-center gap-3">
@@ -179,7 +182,7 @@ const breadcrumbJsonLd = {
     locale={locale}
     title={t(locale, "softwarePage.cta.title", { name })}
     description={t(locale, "softwarePage.cta.desc", { name })}
-    ctaLabel={["claude-code-ai-automation", "codex-ai-automation", "opencode-ai-automation"].includes(solution.slug) ? t(locale, "cta.showBreaking") : t(locale, "cta.showWork")}
+    ctaLabel={["claude-code-automation", "codex-automation", "opencode-automation"].includes(solution.slug) ? t(locale, "cta.showBreaking") : t(locale, "cta.showWork")}
   />
   <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
 </Page>

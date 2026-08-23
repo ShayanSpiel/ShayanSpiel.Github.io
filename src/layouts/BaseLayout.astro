@@ -16,6 +16,8 @@ export interface Props {
   tags?: string[];
   robots?: string;
   locale?: Locale;
+  /** Skip emitting hreflang alternates (EN-only pages). */
+  noAlternate?: boolean;
 }
 
 const {
@@ -29,6 +31,7 @@ const {
   tags = [],
   robots = SEO.robots,
   locale = SITE.locale as Locale,
+  noAlternate = false,
 } = Astro.props;
 
 const pageTitle = title.includes(SITE.name) ? title : `${title} — ${SITE.name}`;
@@ -90,7 +93,7 @@ const lang = locale === "fa" ? "fa" : "en";
 
     <!-- hreflang alternates for i18n SEO (indexable pages only —
          noindex pages should not publish alternate clusters) -->
-    {!robots.includes("noindex") && (() => {
+    {!robots.includes("noindex") && !noAlternate && (() => {
       const path = Astro.url.pathname;
       const enPath = locale === "fa" ? path.replace(/^\/fa/, "") || "/" : path;
       const faPath = locale === "fa" ? path : `/fa${path}`;

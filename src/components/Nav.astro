@@ -21,6 +21,13 @@ const { links, cta, locale = "en" } = Astro.props;
 const currentPath = Astro.url.pathname;
 
 const navKey = (label: string) => `nav.${label.toLowerCase().replace(/\s+/g, "")}`;
+// Translate a nav label through its nav.<slug> key; fall back to the
+// literal config label when no translation exists.
+const trLabel = (label: string) => {
+  const key = navKey(label);
+  const value = t(locale, key);
+  return value === key ? label : value;
+};
 
 /** One DISTINCT boxicon per menu item, keyed by route. Every item in the
  *  mega menu has its own icon; no two items share or resemble each other's. */
@@ -33,11 +40,11 @@ const NAV_ITEM_ICONS: Record<string, string> = {
   "/features/evals": "bx-task",
   "/features/connections": "bx-link",
   "/features/artifacts": "bx-archive",
-  "/use-cases/design": "bx-palette",
-  "/use-cases/content": "bx-edit-alt",
-  "/use-cases/marketing": "bx-speaker",
-  "/use-cases/seo": "bx-search-alt",
-  "/use-cases/analytics": "bx-bar-chart-alt-2",
+  "/solutions/ai-departments/design": "bx-palette",
+  "/solutions/ai-departments/content": "bx-edit-alt",
+  "/solutions/ai-departments/marketing": "bx-speaker",
+  "/solutions/ai-departments/seo": "bx-search-alt",
+  "/solutions/ai-departments/analytics": "bx-bar-chart-alt-2",
   ...Object.fromEntries(SOFTWARE_SOLUTIONS.map((s) => [`/${s.slug}`, s.iconClass])),
 };
 /** Route-key lookup that is locale- and trailing-slash-agnostic so the same
@@ -47,12 +54,12 @@ const navItemIcon = (href: string) =>
 
 const toChild = (child: NavChildLink) => ({
   href: localizePath(child.href, locale),
-  label: t(locale, navKey(child.label)) || child.label,
+  label: trLabel(child.label),
   live: Boolean(child.live),
   columns: child.columns ?? 1,
   children: (child.children || []).map((grand) => ({
     href: localizePath(grand.href, locale),
-    label: t(locale, navKey(grand.label)) || grand.label,
+    label: trLabel(grand.label),
     live: Boolean(grand.live),
   })),
 });
@@ -60,13 +67,13 @@ const toChild = (child: NavChildLink) => ({
 const navLinks = links
   ? links.map((link) => ({
       href: localizePath(link.href, locale),
-      label: t(locale, navKey(link.label)) || link.label,
+      label: trLabel(link.label),
       live: Boolean(link.live),
       children: (link.children || []).map(toChild),
     }))
   : NAV_LINKS.default.map((link) => ({
       href: localizePath(link.href, locale),
-      label: t(locale, navKey(link.label)) || link.label,
+      label: trLabel(link.label),
       live: Boolean(link.live),
       children: (link.children || []).map(toChild),
     }));
@@ -120,7 +127,7 @@ const ariaCurrent = (href: string) => (isCurrent(href) ? "page" : undefined);
               class:list={[
                 "nav-popover absolute start-0 top-full mt-2 max-w-[calc(100vw-2rem)] rounded-md border border-border bg-panel shadow-popover p-2",
                 link.children.reduce((n, c) => n + (c.children?.length ?? 0), 0) > 18
-                  ? "w-[48rem]"
+                  ? "w-[56rem]"
                   : link.children.reduce((n, c) => n + (c.children?.length ?? 0), 0) > 10
                     ? "w-[38rem]"
                     : "w-[30rem]",

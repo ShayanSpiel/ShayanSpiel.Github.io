@@ -1,0 +1,224 @@
+---
+import FeatureHero from "../../../../components/features/FeatureHero.astro";
+import FeatureCTA from "../../../../components/features/FeatureCTA.astro";
+import SectionHeader from "../../../../components/sections/SectionHeader.astro";
+import Page from "../../../../layouts/Page.astro";
+import { SITE } from "../../../../config";
+import { localizePath } from "../../../../i18n";
+import { type Locale, t } from "../../../../i18n/translations";
+
+export interface Props {
+  locale?: Locale;
+}
+
+const { locale = "en" } = Astro.props;
+
+const steps = t(locale, "useCases.content.how.steps").split(" · ");
+const livePoints = t(locale, "useCases.content.live.points").split(" · ");
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: t(locale, "nav.home"), item: `${SITE.url}${localizePath("/", locale)}` },
+    { "@type": "ListItem", position: 2, name: t(locale, "nav.usecases"), item: `${SITE.url}${localizePath("/solutions/", locale)}` },
+    { "@type": "ListItem", position: 3, name: t(locale, "nav.content"), item: `${SITE.url}${localizePath("/solutions/ai-departments/content/", locale)}` },
+  ],
+};
+---
+
+<Page title={t(locale, "useCases.content.pageTitle")} description={t(locale, "useCases.content.pageDesc")} image="/assets/og/use-cases.png" locale={locale}>
+  <FeatureHero
+    locale={locale}
+    breadcrumbs={[
+      { label: t(locale, "nav.usecases"), href: "/solutions/" },
+      { label: t(locale, "nav.content") },
+    ]}
+    label={t(locale, "useCases.content.hero.label")}
+    title={t(locale, "useCases.content.hero.title")}
+    description={t(locale, "useCases.content.hero.desc")}
+    cta={{ label: t(locale, "cta.apply") }}
+  />
+
+  <section class="relative py-20 sm:py-24">
+    <div class="mx-auto max-w-6xl px-6">
+      <SectionHeader label={t(locale, "useCases.content.how.label")} title={t(locale, "useCases.content.how.title")} description={t(locale, "useCases.content.how.desc")} />
+      <div class="design-canvas relative overflow-hidden rounded-xl border border-border bg-panel p-5 shadow-panel sm:p-8" data-aos="fade-up">
+        <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
+        <div class="absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 glow-blob opacity-10"></div>
+        <ol class="design-rail relative mx-auto max-w-2xl">
+          {steps.map((step, index) => (
+            <li class="relative flex gap-4 py-3">
+              <div class:list={["relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-md border bg-panel-raised", index === 0 ? "border-accent text-accent shadow-[0_0_20px_var(--accent-soft)]" : "border-border text-muted-foreground"]}>
+                <span class="text-xs font-bold">{index + 1}</span>
+              </div>
+              <div class="pt-1">
+                <p class="text-xs leading-relaxed text-muted-foreground">{step}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative overflow-hidden py-20 sm:py-24">
+    <div class="absolute inset-0 bg-panel-deep/35"></div>
+    <div class="relative mx-auto max-w-6xl px-6">
+      <SectionHeader title={t(locale, "useCases.content.workflows.title")} description={t(locale, "useCases.content.workflows.desc")} />
+      <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" data-aos="fade-up">
+        <article class="relative overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
+          <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-accent via-purple to-transparent opacity-80" aria-hidden="true"></div>
+          <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-md bg-accent-soft text-accent"><i class="bx bx-package icon-xl" aria-hidden="true"></i></div>
+          <h3 class="text-sm font-semibold text-foreground-strong">{t(locale, "useCases.content.workflows.package.title")}</h3>
+          <p class="mt-2 text-xs leading-relaxed text-muted-foreground">{t(locale, "useCases.content.workflows.package.desc")}</p>
+        </article>
+        <article class="relative overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
+          <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-purple via-info to-transparent opacity-80" aria-hidden="true"></div>
+          <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-md bg-purple-soft text-purple"><i class="bx bx-user icon-xl" aria-hidden="true"></i></div>
+          <h3 class="text-sm font-semibold text-foreground-strong">{t(locale, "useCases.content.workflows.buyer.title")}</h3>
+          <p class="mt-2 text-xs leading-relaxed text-muted-foreground">{t(locale, "useCases.content.workflows.buyer.desc")}</p>
+        </article>
+        <article class="relative overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
+          <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-info via-primary to-transparent opacity-80" aria-hidden="true"></div>
+          <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-md bg-info-soft text-info"><i class="bx bx-globe icon-xl" aria-hidden="true"></i></div>
+          <h3 class="text-sm font-semibold text-foreground-strong">{t(locale, "useCases.content.workflows.fa.title")}</h3>
+          <p class="mt-2 text-xs leading-relaxed text-muted-foreground">{t(locale, "useCases.content.workflows.fa.desc")}</p>
+        </article>
+        <article class="relative overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
+          <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-primary via-accent to-transparent opacity-80" aria-hidden="true"></div>
+          <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-md bg-success-soft text-success"><i class="bx bx-send icon-xl" aria-hidden="true"></i></div>
+          <h3 class="text-sm font-semibold text-foreground-strong">{t(locale, "useCases.content.workflows.publish.title")}</h3>
+          <p class="mt-2 text-xs leading-relaxed text-muted-foreground">{t(locale, "useCases.content.workflows.publish.desc")}</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative py-20 sm:py-24">
+    <div class="mx-auto max-w-6xl px-6">
+      <SectionHeader title={t(locale, "useCases.content.agents.title")} description={t(locale, "useCases.content.agents.desc")} />
+      <div class="grid gap-3 md:grid-cols-2" data-aos="fade-up">
+        <article class="flex gap-4 rounded-lg border border-accent/30 bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
+          <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-accent-soft text-accent"><i class="bx bx-pen icon-xl" aria-hidden="true"></i></div>
+          <div>
+            <h3 class="text-sm font-semibold text-foreground-strong">{t(locale, "useCases.content.agents.strategist.title")}</h3>
+            <p class="mt-2 text-xs leading-relaxed text-muted-foreground">{t(locale, "useCases.content.agents.strategist.desc")}</p>
+          </div>
+        </article>
+        <article class="flex gap-4 rounded-lg border border-accent/30 bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
+          <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-accent-soft text-accent"><i class="bx bx-paper-plane icon-xl" aria-hidden="true"></i></div>
+          <div>
+            <h3 class="text-sm font-semibold text-foreground-strong">{t(locale, "useCases.content.agents.publisher.title")}</h3>
+            <p class="mt-2 text-xs leading-relaxed text-muted-foreground">{t(locale, "useCases.content.agents.publisher.desc")}</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative overflow-hidden py-20 sm:py-24">
+    <div class="absolute inset-0 bg-panel-deep/35"></div>
+    <div class="relative mx-auto max-w-6xl px-6">
+      <SectionHeader title={t(locale, "useCases.content.skills.title")} description={t(locale, "useCases.content.skills.desc")} />
+      <div class="grid gap-3 md:grid-cols-2" data-aos="fade-up">
+        <article class="flex gap-4 rounded-lg border border-accent/30 bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
+          <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-accent-soft text-accent"><i class="bx bx-edit icon-xl" aria-hidden="true"></i></div>
+          <div>
+            <h3 class="text-sm font-semibold text-foreground-strong">{t(locale, "useCases.content.skills.copyEn.title")}</h3>
+            <p class="mt-2 text-xs leading-relaxed text-muted-foreground">{t(locale, "useCases.content.skills.copyEn.desc")}</p>
+          </div>
+        </article>
+        <article class="flex gap-4 rounded-lg border border-accent/30 bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
+          <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-accent-soft text-accent"><i class="bx bx-transfer icon-xl" aria-hidden="true"></i></div>
+          <div>
+            <h3 class="text-sm font-semibold text-foreground-strong">{t(locale, "useCases.content.skills.translationFa.title")}</h3>
+            <p class="mt-2 text-xs leading-relaxed text-muted-foreground">{t(locale, "useCases.content.skills.translationFa.desc")}</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative py-20 sm:py-24">
+    <div class="mx-auto max-w-4xl px-6">
+      <SectionHeader title={t(locale, "useCases.content.connections.title")} description={t(locale, "useCases.content.connections.desc")} />
+      <div class="design-canvas relative overflow-hidden rounded-xl border border-border bg-panel p-6 shadow-panel sm:p-10" data-aos="fade-up">
+        <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
+        <div class="absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 glow-blob opacity-10"></div>
+        <div class="relative mx-auto flex max-w-4xl gap-4">
+          <span class="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-muted-foreground/10 text-muted-foreground"><i class="bx bx-link icon-xl" aria-hidden="true"></i></span>
+          <p class="text-sm leading-relaxed text-muted-foreground">{t(locale, "useCases.content.connections.body")}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative overflow-hidden py-20 sm:py-24">
+    <div class="absolute inset-0 bg-panel-deep/35"></div>
+    <div class="relative mx-auto max-w-6xl px-6">
+      <SectionHeader title={t(locale, "useCases.content.artifacts.title")} description={t(locale, "useCases.content.artifacts.desc")} />
+      <div class="grid gap-3 sm:grid-cols-3" data-aos="fade-up">
+        <article class="rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
+          <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-md bg-accent-soft text-accent"><i class="bx bx-file icon-xl" aria-hidden="true"></i></div>
+          <h3 class="text-sm font-semibold text-foreground-strong">{t(locale, "useCases.content.artifacts.manifest.title")}</h3>
+          <p class="mt-2 text-xs leading-relaxed text-muted-foreground">{t(locale, "useCases.content.artifacts.manifest.desc")}</p>
+        </article>
+        <article class="rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
+          <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-md bg-success-soft text-success"><i class="bx bx-check-square icon-xl" aria-hidden="true"></i></div>
+          <h3 class="text-sm font-semibold text-foreground-strong">{t(locale, "useCases.content.artifacts.draft.title")}</h3>
+          <p class="mt-2 text-xs leading-relaxed text-muted-foreground">{t(locale, "useCases.content.artifacts.draft.desc")}</p>
+        </article>
+        <article class="rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
+          <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-md bg-purple-soft text-purple"><i class="bx bx-receipt icon-xl" aria-hidden="true"></i></div>
+          <h3 class="text-sm font-semibold text-foreground-strong">{t(locale, "useCases.content.artifacts.receipt.title")}</h3>
+          <p class="mt-2 text-xs leading-relaxed text-muted-foreground">{t(locale, "useCases.content.artifacts.receipt.desc")}</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative overflow-hidden py-20 sm:py-24">
+    <div class="absolute inset-0 bg-panel-deep/35"></div>
+    <div class="absolute inset-0 opacity-[0.03] hero-grid"></div>
+    <div class="relative mx-auto max-w-6xl px-6">
+      <SectionHeader label={t(locale, "useCases.content.live.label")} title={t(locale, "useCases.content.live.title")} description={t(locale, "useCases.content.live.desc")} />
+      <div class="design-canvas relative overflow-hidden rounded-xl border border-border bg-panel p-5 shadow-panel sm:p-8" data-aos="fade-up">
+        <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
+        <div class="absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 glow-blob opacity-10"></div>
+        <ul class="relative mx-auto grid max-w-4xl gap-3 sm:grid-cols-2">
+          {livePoints.map((point) => (
+            <li class="flex items-start gap-3 rounded-md border border-accent/30 bg-panel-raised p-4 transition-all hover:-translate-y-1 hover:border-border-strong hover:shadow-panel">
+              <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-accent-soft text-accent">
+                <i class="bx bx-check-square icon-md" aria-hidden="true"></i>
+              </span>
+              <span class="pt-1 text-xs leading-relaxed text-muted-foreground">{point}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div class="mt-8 text-center">
+        <a href={localizePath("/live/", locale)} class="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:opacity-80">{t(locale, "useCases.content.live.cta")}<i class="bx bx-chevron-right rtl-flip icon-md" aria-hidden="true"></i></a>
+      </div>
+    </div>
+  </section>
+
+  <FeatureCTA locale={locale} title={t(locale, "useCases.content.cta.title")} description={t(locale, "useCases.content.cta.desc")} />
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
+</Page>
+
+<style is:global>
+  .border-accent\/30 { border-color: color-mix(in oklab, var(--accent) 30%, transparent); }
+  .bg-muted-foreground\/10 { background-color: color-mix(in oklab, var(--muted-foreground) 10%, transparent); }
+
+  .design-rail::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: 1.1rem;
+    top: 1.25rem;
+    bottom: 1.25rem;
+    width: 2px;
+    border-radius: var(--radius-pill);
+    background: linear-gradient(to bottom, var(--accent), var(--primary));
+    opacity: 0.6;
+  }
+</style>

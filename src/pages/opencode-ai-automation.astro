@@ -1,8 +1,3 @@
 ---
-import { SOFTWARE_SOLUTIONS } from "../data/software-solutions";
-import SoftwareSolutionPage from "../components/software/SoftwareSolutionPage.astro";
-
-const solution = SOFTWARE_SOLUTIONS.find((s) => s.slug === "opencode-ai-automation")!;
+return Astro.redirect("/solutions/software/opencode-automation/", 301);
 ---
-
-<SoftwareSolutionPage solution={solution} />

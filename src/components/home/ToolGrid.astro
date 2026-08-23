@@ -40,7 +40,7 @@ const tools: Tool[] = [
   { key: "claudecode", svg: claudecode, rot: "rotate-1" },
 ];
 
-const hrefByKey = Object.fromEntries(SOFTWARE_SOLUTIONS.map((s) => [s.key, `/${s.slug}/`]));
+const hrefByKey = Object.fromEntries(SOFTWARE_SOLUTIONS.map((s) => [s.key, `/solutions/software/${s.slug}/`]));
 
 // Two spread rows of seven: first row rides up, second row drops down.
 const rowUp = tools.slice(0, 7);
@@ -57,7 +57,7 @@ const rowDown = tools.slice(7);
       <ul class="flex flex-wrap items-start justify-center gap-x-4 gap-y-8 sm:gap-x-7 lg:gap-x-9">
         {row.map((tool) => (
           <li class:list={["group relative flex flex-col items-center", tool.rot, lift]}>
-            <a href={localizePath(hrefByKey[tool.key] ?? "/software/", locale)} aria-label={t(locale, `conversion.home.mechanism.tool.${tool.key}.name`)} class="group flex flex-col items-center focus-visible:outline-none">
+            <a href={localizePath(hrefByKey[tool.key] ?? "/solutions/software/", locale)} aria-label={t(locale, `conversion.home.mechanism.tool.${tool.key}.name`)} class="group flex flex-col items-center focus-visible:outline-none">
             <div class="flex h-14 w-14 items-center justify-center rounded-lg border border-border bg-panel-raised shadow-panel transition-all duration-fast group-hover:-translate-y-1 group-hover:border-border-strong group-focus-visible:border-border-strong sm:h-16 sm:w-16">
               <span class="block [&>svg]:h-8 [&>svg]:w-8" set:html={tool.svg} />
             </div>

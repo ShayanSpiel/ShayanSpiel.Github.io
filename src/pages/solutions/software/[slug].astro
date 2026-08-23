@@ -1,0 +1,15 @@
+---
+import { SOFTWARE_SOLUTIONS } from "../../../data/software-solutions";
+import SoftwareSolutionPage from "../../../components/software/SoftwareSolutionPage.astro";
+
+export function getStaticPaths() {
+  return SOFTWARE_SOLUTIONS.map((solution) => ({
+    params: { slug: solution.slug },
+    props: { solution },
+  }));
+}
+
+const { solution } = Astro.props;
+---
+
+<SoftwareSolutionPage solution={solution} />
