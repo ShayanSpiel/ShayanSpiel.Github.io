@@ -3,6 +3,18 @@ import Page from "../../../layouts/Page.astro";
 import { WORKFLOW_SOLUTIONS, WORKFLOW_HUB_GROUPS } from "../../../data/workflow-solutions";
 
 const byslug = Object.fromEntries(WORKFLOW_SOLUTIONS.map((w) => [w.slug, w]));
+
+/** Distinct boxicon per workflow — mirrors the nav icon set. */
+const WF_ICONS: Record<string, string> = {
+  "follow-up-automation": "bx-bell",
+  "data-entry-automation": "bx-data",
+  "client-onboarding-automation": "bx-user-check",
+  "client-intake-automation": "bx-envelope-open",
+  "document-collection-automation": "bx-folder-open",
+  "lead-qualification-automation": "bx-target-lock",
+  "invoice-processing-automation": "bx-receipt",
+  "candidate-screening-automation": "bx-id-card",
+};
 ---
 
 <Page
@@ -47,8 +59,8 @@ const byslug = Object.fromEntries(WORKFLOW_SOLUTIONS.map((w) => [w.slug, w]));
             return (
               <a href={`/solutions/workflows/${w.slug}/`} class="group relative flex flex-col overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
                 <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r opacity-80 from-primary via-accent to-transparent"></div>
-                <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-md bg-primary-soft text-primary"><i class="bx bx-repeat icon-xl" aria-hidden="true"></i></div>
-                <h3 class="text-sm font-semibold text-foreground-strong group-hover:text-primary transition-colors">{w.name}</h3>
+                <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-md bg-primary-soft text-primary shadow-[0_0_18px_var(--primary-soft)]"><i class={`bx ${WF_ICONS[w.slug] ?? "bx-repeat"} icon-xl`} aria-hidden="true"></i></div>
+                <h3 class="text-sm font-semibold text-foreground-strong transition-colors group-hover:text-primary">{w.name}</h3>
                 <p class="mt-1.5 grow text-xs leading-relaxed text-muted-foreground">{w.h1.replace(/^Automate /, "").replace(/\.$/, "")}</p>
                 <span class="mt-4 inline-flex items-center gap-1 text-xs font-medium text-primary">See the workflow<i class="bx bx-chevron-right rtl-flip icon-sm transition-transform group-hover:translate-x-0.5" aria-hidden="true"></i></span>
               </a>

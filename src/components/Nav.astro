@@ -7,7 +7,7 @@ import { localizePath } from "../i18n";
 
 const BRAND_LOGOS = import.meta.glob("../assets/brand-logos/*.svg", { query: "?raw", import: "default", eager: true }) as Record<string, string>;
 const brandLogoByHref: Record<string, string> = Object.fromEntries(
-  SOFTWARE_SOLUTIONS.map((s) => [`/${s.slug}`, BRAND_LOGOS[`../assets/brand-logos/${s.key}.svg`] ?? ""]),
+  SOFTWARE_SOLUTIONS.map((s) => [`/solutions/software/${s.slug}`, BRAND_LOGOS[`../assets/brand-logos/${s.key}.svg`] ?? ""]),
 );
 
 export interface Props {
@@ -45,6 +45,18 @@ const NAV_ITEM_ICONS: Record<string, string> = {
   "/solutions/ai-departments/marketing": "bx-speaker",
   "/solutions/ai-departments/seo": "bx-search-alt",
   "/solutions/ai-departments/analytics": "bx-bar-chart-alt-2",
+  "/solutions/workflows/follow-up-automation": "bx-bell",
+  "/solutions/workflows/data-entry-automation": "bx-data",
+  "/solutions/workflows/client-onboarding-automation": "bx-user-check",
+  "/solutions/workflows/client-intake-automation": "bx-envelope-open",
+  "/solutions/workflows/document-collection-automation": "bx-folder-open",
+  "/solutions/workflows/lead-qualification-automation": "bx-target-lock",
+  "/solutions/workflows/invoice-processing-automation": "bx-receipt",
+  "/solutions/workflows/candidate-screening-automation": "bx-id-card",
+  "/solutions/workflows": "bx-repeat",
+  "/solutions/ai-departments": "bx-sitemap",
+  "/solutions/software": "bx-package",
+  "/solutions": "bx-diamond",
   ...Object.fromEntries(SOFTWARE_SOLUTIONS.map((s) => [`/${s.slug}`, s.iconClass])),
 };
 /** Route-key lookup that is locale- and trailing-slash-agnostic so the same
