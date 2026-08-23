@@ -130,11 +130,21 @@ const usage = [
             <div class:list={["mx-auto mb-4 flex h-10 w-10 items-center justify-center rounded-md", `bg-${stat.color}-soft`]}>
               <i class:list={["bx icon-xl", stat.icon, `text-${stat.color}`]}></i>
             </div>
-            <p class="text-4xl font-extrabold tracking-tight text-foreground-strong sm:text-5xl">{stat.value}</p>
             {stat.sub ? (
-              <p class="mt-1 text-xs font-semibold text-muted-foreground">{stat.sub} {t(locale, stat.subLabelKey ?? "")}</p>
-            ) : null}
-            <p class="mt-2 text-xs leading-relaxed text-muted-foreground">{t(locale, stat.labelKey)}</p>
+              <div class="space-y-1.5">
+                <p class="text-2xl font-extrabold tracking-tight text-foreground-strong sm:text-3xl">
+                  {stat.value} <span class="text-xs font-medium tracking-normal text-muted-foreground">{t(locale, stat.labelKey)}</span>
+                </p>
+                <p class="text-2xl font-extrabold tracking-tight text-foreground-strong sm:text-3xl">
+                  {stat.sub} <span class="text-xs font-medium tracking-normal text-muted-foreground">{t(locale, stat.subLabelKey ?? "")}</span>
+                </p>
+              </div>
+            ) : (
+              <>
+                <p class="text-4xl font-extrabold tracking-tight text-foreground-strong sm:text-5xl">{stat.value}</p>
+                <p class="mt-2 text-xs leading-relaxed text-muted-foreground">{t(locale, stat.labelKey)}</p>
+              </>
+            )}
           </div>
         ))}
       </div>
