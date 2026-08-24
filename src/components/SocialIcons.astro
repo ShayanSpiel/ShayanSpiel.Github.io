@@ -8,24 +8,31 @@ export interface Props {
 
 const { size = "sm", show = ["x", "linkedin", "github"] } = Astro.props;
 const iconClass = size === "sm" ? "icon-base" : "icon-lg";
+const linkClass = "text-muted-foreground hover:text-foreground transition-colors";
+// Official X brand glyph — boxicons (2.1.4) predates the rebrand and only
+// ships the legacy twitter bird. Brand logos are exempt from the boxicons
+// rule (same precedent as the provider glyphs on the landing page).
+const xGlyph = "M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z";
 ---
 
 {show.includes("x") && (
-  <a href={SOCIAL.x} target="_blank" rel="noopener noreferrer me" class="text-muted-foreground hover:text-foreground transition-colors" aria-label="X"><i class={`bx bxl-twitter ${iconClass}`} aria-hidden="true"></i></a>
+  <a href={SOCIAL.x} target="_blank" rel="noopener noreferrer me" class={linkClass} aria-label="X (Twitter)" title="X (Twitter)">
+    <svg viewBox="0 0 24 24" fill="currentColor" width={size === "sm" ? 14 : 18} height={size === "sm" ? 14 : 18} aria-hidden="true" style="display:block;margin:auto"><path d={xGlyph}></path></svg>
+  </a>
 )}
 {show.includes("linkedin") && (
-  <a href={SOCIAL.linkedin} target="_blank" rel="noopener noreferrer me" class="text-muted-foreground hover:text-foreground transition-colors" aria-label="LinkedIn"><i class={`bx bxl-linkedin-square ${iconClass}`} aria-hidden="true"></i></a>
+  <a href={SOCIAL.linkedin} target="_blank" rel="noopener noreferrer me" class={linkClass} aria-label="LinkedIn" title="LinkedIn"><i class={`bx bxl-linkedin-square ${iconClass}`} aria-hidden="true"></i></a>
 )}
 {show.includes("github") && (
-  <a href={SOCIAL.github} target="_blank" rel="noopener noreferrer me" class="text-muted-foreground hover:text-foreground transition-colors" aria-label="GitHub"><i class={`bx bxl-github ${iconClass}`} aria-hidden="true"></i></a>
+  <a href={SOCIAL.github} target="_blank" rel="noopener noreferrer me" class={linkClass} aria-label="GitHub" title="GitHub"><i class={`bx bxl-github ${iconClass}`} aria-hidden="true"></i></a>
 )}
 {show.includes("rss") && (
-  <a href="/feed.xml" class="text-muted-foreground hover:text-foreground transition-colors" aria-label="RSS">
+  <a href="/feed.xml" class={linkClass} aria-label="RSS feed" title="RSS feed">
     <i class="bx bx-rss icon-sm"></i>
   </a>
 )}
 {show.includes("email") && (
-  <a href={`mailto:${AUTHOR.email}`} class="text-muted-foreground hover:text-foreground transition-colors" aria-label="Email">
+  <a href={`mailto:${AUTHOR.email}`} class={linkClass} aria-label="Email" title="Email">
     <i class="bx bx-envelope icon-sm"></i>
   </a>
 )}

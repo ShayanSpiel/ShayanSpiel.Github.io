@@ -41,9 +41,12 @@ const copyrightText = copyright || t(locale, "footer.copyright", { year });
       </div>
 
       <div class="flex w-full flex-wrap items-center justify-center gap-x-4 gap-y-3 sm:w-auto sm:flex-nowrap sm:justify-end">
-        <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
-          {footerLinks.map((link) => (
-            <a href={link.href} class="text-2xs text-muted-foreground hover:text-foreground transition-colors">{link.label}</a>
+        <div class="flex flex-wrap items-center justify-center gap-x-1 gap-y-2">
+          {footerLinks.map((link, i) => (
+            <>
+              {i > 0 && <span class="px-1.5 text-3xs text-muted-foreground/50" aria-hidden="true">·</span>}
+              <a href={link.href} title={link.label} class="text-2xs text-muted-foreground hover:text-foreground transition-colors">{link.label}</a>
+            </>
           ))}
         </div>
 
@@ -57,12 +60,30 @@ const copyrightText = copyright || t(locale, "footer.copyright", { year });
               id="footer-theme-toggle"
               class="flex h-6 w-6 items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-panel-raised transition-colors"
               aria-label={t(locale, "common.themeToggle")}
+              title={t(locale, "common.themeToggle")}
             >
               <i class="bx bx-moon icon-lg" id="theme-icon"></i>
             </button>
           )}
           {showSocial && <SocialIcons size="sm" show={["x", "github"]} />}
         </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+{showThemeToggle && (
+          <button
+            type="button"
+            id="footer-theme-toggle"
+            class="flex h-6 w-6 items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-panel-raised transition-colors"
+            aria-label={t(locale, "common.themeToggle")}
+            title={t(locale, "common.themeToggle")}
+          >
+            <i class="bx bx-moon icon-lg" id="theme-icon"></i>
+          </button>
+        )}
+        {showSocial && <SocialIcons size="sm" show={["x", "github"]} />}
       </div>
     </div>
   </div>
