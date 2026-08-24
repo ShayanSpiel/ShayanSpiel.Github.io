@@ -15,6 +15,7 @@ export const translations: Record<Locale, Translations> = {
     "nav.features": "Features",
     "nav.services": "Services",
     "nav.pricing": "Pricing",
+    "nav.partners": "Partners",
     "nav.apply": "Apply",
     "nav.live": "Live",
     "nav.liveaicompany": "Live AI Company",
@@ -247,7 +248,7 @@ export const translations: Record<Locale, Translations> = {
     "about.founder.link": "Full background & projects →",
 
     // Footer
-    "footer.copyright": "© {year} SpielOS · Built by Shayan Spiel",
+    "footer.copyright": "© {year}",
     "footer.builtBy": "SpielOS is independently built by Shayan Spiel.",
     "footer.waitlist": "Join waitlist",
 
@@ -259,6 +260,7 @@ export const translations: Record<Locale, Translations> = {
     "common.navAria": "Main navigation",
     "common.homeAria": "SpielOS, Home",
     "common.themeToggle": "Toggle theme",
+    "common.footerNav": "Footer",
     "nav.home": "Home",
     "founder.byline": "By {name}, founder of SpielOS",
     "notes.tagsAria": "Post tags",
@@ -1920,6 +1922,7 @@ export const translations: Record<Locale, Translations> = {
     "nav.features": "امکانات",
     "nav.services": "خدمات",
     "nav.pricing": "تعرفه",
+    "nav.partners": "همکاران",
     "nav.apply": "ثبت درخواست",
     "nav.live": "Live",
     "nav.liveaicompany": "شرکت هوش مصنوعی زنده",
@@ -2173,7 +2176,7 @@ export const translations: Record<Locale, Translations> = {
     "about.founder.link": "سابقه‌ی کامل و پروژه‌ها ←",
 
     // Footer
-    "footer.copyright": "© {year} SpielOS · ساخت شایان اشپیل",
+    "footer.copyright": "© {year}",
     "footer.builtBy": "SpielOS رو شایان اشپیل به‌تنهایی ساخته.",
     "footer.waitlist": "به لیست انتظار بپیوند",
 
@@ -2183,6 +2186,7 @@ export const translations: Record<Locale, Translations> = {
     "common.navAria": "ناوبری اصلی",
     "common.homeAria": "SpielOS، خانه",
     "common.themeToggle": "تغییر تم",
+    "common.footerNav": "پیوند‌های پاورقی",
     "common.backToHome": "برگشت به خانه",
     "common.skipToContent": "رفتن به محتوا",
     "nav.home": "خانه",
