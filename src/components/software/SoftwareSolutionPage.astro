@@ -71,7 +71,7 @@ const breadcrumbJsonLd = {
   <section class="relative py-20 sm:py-24">
     <div class="mx-auto max-w-4xl px-6">
       <SectionHeader title={t(locale, "softwarePage.pain.title")} />
-      <div class="solution-canvas relative overflow-hidden rounded-xl border border-border bg-panel p-6 shadow-panel sm:p-10" data-aos="fade-up">
+      <div class="solution-canvas relative overflow-hidden rounded-md border border-border bg-panel p-6 shadow-panel sm:p-10" data-aos="fade-up">
         <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
         <div class="absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 glow-blob opacity-10"></div>
         <figure class="relative mx-auto flex max-w-3xl gap-4">
@@ -92,16 +92,16 @@ const breadcrumbJsonLd = {
         label={t(locale, "softwarePage.workflow.label")}
         title={t(locale, "softwarePage.workflow.title")}
       />
-      <div class="solution-canvas relative overflow-hidden rounded-xl border border-border bg-panel p-6 shadow-panel sm:p-10" data-aos="fade-up">
+      <div class="solution-canvas relative overflow-hidden rounded-md border border-border bg-panel p-6 shadow-panel sm:p-10" data-aos="fade-up">
         <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
         <div class="relative mx-auto max-w-3xl">
           <div class="flex items-center gap-4">
             {logoSvg && (
-              <div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg border border-border bg-panel-raised shadow-panel">
+              <div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-md border border-border bg-panel-raised shadow-panel">
                 <span class="block [&>svg]:h-10 [&>svg]:w-10" set:html={logoSvg} />
               </div>
             )}
-            <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent sm:hidden">
+            <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-accent-soft text-accent sm:hidden">
               <i class={`bx ${solution.iconClass} icon-2xl`} aria-hidden="true"></i>
             </div>
             <h3 class="text-lg font-semibold text-foreground-strong sm:text-xl">{workflowTitle}</h3>
@@ -130,7 +130,7 @@ const breadcrumbJsonLd = {
       <SectionHeader title={t(locale, "softwarePage.how.title", { name })} />
       <ol class="grid gap-3" data-aos="fade-up">
         {howSteps.map((step, index) => (
-          <li class="flex items-start gap-4 rounded-lg border border-accent/30 bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
+          <li class="flex items-start gap-4 rounded-md border border-accent/30 bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
             <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-accent bg-accent-soft text-accent">
               <span class="text-xs font-bold">{index + 1}</span>
             </span>
@@ -156,11 +156,11 @@ const breadcrumbJsonLd = {
           return (
             <a
               href={localizePath(`/solutions/software/${other.slug}/`, locale)}
-              class="group relative overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong"
+              class="group relative overflow-hidden rounded-md border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong"
             >
               <div class="mb-4 flex items-center gap-3">
                 {otherLogo ? (
-                  <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-border bg-panel-raised transition-all group-hover:border-border-strong">
+                  <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-border bg-panel-raised transition-all group-hover:border-border-strong">
                     <span class="block [&>svg]:h-6 [&>svg]:w-6" set:html={otherLogo} />
                   </div>
                 ) : (
@@ -199,7 +199,7 @@ const breadcrumbJsonLd = {
     top: 1.25rem;
     bottom: 1.25rem;
     width: 2px;
-    border-radius: var(--radius-pill);
+    border-radius: var(--radius-md);
     background: linear-gradient(to bottom, var(--accent), var(--primary));
     opacity: 0.6;
   }

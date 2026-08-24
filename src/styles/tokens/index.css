@@ -38,9 +38,6 @@
 :root {
   --radius-sm: 4px;
   --radius-md: 6px;
-  --radius-lg: 10px;
-  --radius-xl: 14px;
-  --radius-pill: 999px;
 
   --duration-fast: 120ms;
   --duration: 160ms;

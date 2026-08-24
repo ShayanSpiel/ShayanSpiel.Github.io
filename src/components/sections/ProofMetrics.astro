@@ -23,7 +23,7 @@ const gradients = [
 
 <div class="grid gap-3 sm:grid-cols-3" data-aos="fade-up">
   {proof.map((item, index) => (
-    <div class="group relative overflow-hidden rounded-lg border border-border bg-panel p-5 text-center shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong hover:shadow-panel">
+    <div class="group relative overflow-hidden rounded-md border border-border bg-panel p-5 text-center shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong hover:shadow-panel">
       <div class:list={["absolute inset-x-0 top-0 h-px bg-gradient-to-r opacity-80", gradients[index % gradients.length]]} aria-hidden="true"></div>
       <div class="text-2xl font-bold tracking-tight text-foreground-strong sm:text-3xl">{item.value}</div>
       <div class="mt-2 text-2xs font-medium leading-snug text-muted-foreground">{t(locale, proofLabels[item.label] || item.label)}</div>

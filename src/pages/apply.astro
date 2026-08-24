@@ -40,7 +40,7 @@ const breadcrumbJsonLd = {
     <div class="absolute inset-0 bg-panel-deep/50"></div>
     <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
     <div class="absolute left-1/2 top-[42%] h-[34rem] w-[52rem] -translate-x-1/2 -translate-y-1/2 glow-blob opacity-20"></div>
-    <div class="absolute left-[58%] top-[38%] h-64 w-64 rounded-full glow-blob-accent opacity-10"></div>
+    <div class="absolute left-[58%] top-[38%] h-64 w-64 rounded-md glow-blob-accent opacity-10"></div>
     <div class="relative mx-auto max-w-5xl px-6" data-aos="fade-up">
       <div class="mx-auto max-w-4xl text-center">
         <p class="text-2xs font-semibold uppercase tracking-widest text-primary">{t(locale, "conversion.apply.hero.label")}</p>
@@ -58,7 +58,7 @@ const breadcrumbJsonLd = {
     <div class="mx-auto max-w-5xl px-6">
       <SectionHeader label={t(locale, "conversion.apply.fit.label")} title={t(locale, "conversion.apply.fit.title")} />
       <div class="grid gap-3 lg:grid-cols-[1.25fr_0.75fr]" data-aos="fade-up">
-        <div class="group relative overflow-hidden rounded-lg border border-border bg-panel p-6 shadow-panel transition-all hover:border-border-strong sm:p-8">
+        <div class="group relative overflow-hidden rounded-md border border-border bg-panel p-6 shadow-panel transition-all hover:border-border-strong sm:p-8">
           <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-primary via-accent to-transparent opacity-80" aria-hidden="true"></div>
           <h3 class="text-sm font-semibold uppercase tracking-wide text-primary">{t(locale, "conversion.apply.fit.subtitle")}</h3>
           <ul class="mt-6 grid gap-x-8 gap-y-4 sm:grid-cols-2">
@@ -70,7 +70,7 @@ const breadcrumbJsonLd = {
             ))}
           </ul>
         </div>
-        <div class="group relative overflow-hidden rounded-lg border border-border bg-panel p-6 shadow-panel transition-all hover:border-border-strong sm:p-8">
+        <div class="group relative overflow-hidden rounded-md border border-border bg-panel p-6 shadow-panel transition-all hover:border-border-strong sm:p-8">
           <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-accent via-purple to-transparent opacity-80" aria-hidden="true"></div>
           <div class="flex h-10 w-10 items-center justify-center rounded-md bg-primary-soft text-primary"><i class="bx bx-info-square icon-xl"></i></div>
           <h3 class="mt-5 text-base font-semibold text-foreground-strong">{t(locale, "conversion.apply.fit.notSureTitle")}</h3>
@@ -97,7 +97,7 @@ const breadcrumbJsonLd = {
         <h2 class="mt-3 text-3xl font-bold tracking-tight text-foreground-strong sm:text-4xl">{t(locale, "conversion.apply.form.title")}</h2>
         <p class="mt-3 text-sm leading-relaxed text-muted-foreground">{t(locale, "conversion.apply.form.note")}</p>
       </div>
-      <div id="free-review" class="relative scroll-mt-28 overflow-hidden rounded-xl border border-border bg-panel shadow-panel">
+      <div id="free-review" class="relative scroll-mt-28 overflow-hidden rounded-md border border-border bg-panel shadow-panel">
         <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-primary via-accent to-transparent opacity-80" aria-hidden="true"></div>
         <form id="apply-form" novalidate>
           <input type="hidden" name="_captcha" value="false" />
@@ -121,7 +121,7 @@ const breadcrumbJsonLd = {
               <legend class="text-xl font-bold text-foreground-strong sm:text-2xl">{t(locale, "conversion.apply.form.helpLabel")}</legend>
               <div class="mt-6 grid gap-3 sm:grid-cols-2">
                 {choices.map(({ key, icon, tile }, i) => (
-                    <label class="group relative cursor-pointer overflow-hidden rounded-lg border border-border bg-panel p-6 transition-all hover:-translate-y-0.5 hover:border-border-strong has-[:checked]:border-primary has-[:checked]:bg-primary-soft/30 has-[:checked]:shadow-panel">
+                    <label class="group relative cursor-pointer overflow-hidden rounded-md border border-border bg-panel p-6 transition-all hover:-translate-y-0.5 hover:border-border-strong has-[:checked]:border-primary has-[:checked]:bg-primary-soft/30 has-[:checked]:shadow-panel">
                       <span class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-primary via-accent to-transparent opacity-70" aria-hidden="true"></span>
                     <input type="radio" name="help_type" value={key} class="sr-only" checked={i === 0} />
                     <div class:list={["flex h-11 w-11 items-center justify-center rounded-md transition-colors", tile]}>

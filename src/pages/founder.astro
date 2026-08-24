@@ -86,12 +86,12 @@ const breadcrumbJsonLd = {
     <div class="absolute inset-0 bg-panel-deep/50"></div>
     <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
     <div class="absolute left-1/2 top-[40%] h-[32rem] w-[48rem] -translate-x-1/2 -translate-y-1/2 glow-blob opacity-15"></div>
-    <div class="absolute left-[58%] top-[36%] h-64 w-64 rounded-full glow-blob-accent opacity-10"></div>
+    <div class="absolute left-[58%] top-[36%] h-64 w-64 rounded-md glow-blob-accent opacity-10"></div>
 
     <div class="relative z-10 mx-auto max-w-3xl px-6 text-center" data-aos="fade-up">
       <div class="relative mx-auto mb-6 h-24 w-24">
-        <div class="absolute inset-0 rounded-xl bg-gradient-to-br from-primary via-accent to-transparent opacity-20 blur-xl"></div>
-        <img src="/assets/avatars/avatar.jpg" alt={AUTHOR.name} width="96" height="96" class="relative rounded-xl border border-border bg-panel shadow-panel object-cover w-24 h-24" loading="lazy" />
+        <div class="absolute inset-0 rounded-md bg-gradient-to-br from-primary via-accent to-transparent opacity-20 blur-xl"></div>
+        <img src="/assets/avatars/avatar.jpg" alt={AUTHOR.name} width="96" height="96" class="relative rounded-md border border-border bg-panel shadow-panel object-cover w-24 h-24" loading="lazy" />
       </div>
 
       <p class="text-2xs font-semibold uppercase tracking-widest text-primary">{t(locale, "founder.authorTitle")}</p>
@@ -121,7 +121,7 @@ const breadcrumbJsonLd = {
         description={t(locale, "founder.systems.desc")}
       />
 
-      <div class="relative overflow-hidden rounded-xl border border-border bg-panel p-5 shadow-panel sm:p-8" data-aos="fade-up">
+      <div class="relative overflow-hidden rounded-md border border-border bg-panel p-5 shadow-panel sm:p-8" data-aos="fade-up">
         <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
         <div class="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 glow-blob opacity-10"></div>
         <div class="relative">
@@ -146,7 +146,7 @@ const breadcrumbJsonLd = {
       />
 
       <div class="grid gap-3 sm:grid-cols-2" data-aos="fade-up">
-        <article class="group relative overflow-hidden rounded-lg border border-border bg-panel p-6 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
+        <article class="group relative overflow-hidden rounded-md border border-border bg-panel p-6 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
           <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-destructive via-warning to-transparent opacity-80" aria-hidden="true"></div>
           <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-md bg-destructive-soft text-destructive">
             <i class="bx bx-error icon-xl" aria-hidden="true"></i>
@@ -154,7 +154,7 @@ const breadcrumbJsonLd = {
           <h3 class="text-sm font-semibold text-foreground-strong mb-1.5">{t(locale, "founder.products.card1.title")}</h3>
           <p class="text-xs leading-relaxed text-muted-foreground">{t(locale, "founder.products.card1.desc")}</p>
         </article>
-        <article class="group relative overflow-hidden rounded-lg border border-border bg-panel p-6 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
+        <article class="group relative overflow-hidden rounded-md border border-border bg-panel p-6 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
           <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-success via-accent to-transparent opacity-80" aria-hidden="true"></div>
           <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-md bg-success-soft text-success">
             <i class="bx bx-check-square icon-xl" aria-hidden="true"></i>
@@ -177,7 +177,7 @@ const breadcrumbJsonLd = {
       />
 
       <div class="grid gap-3 sm:grid-cols-3" data-aos="fade-up">
-        <article class="group relative overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
+        <article class="group relative overflow-hidden rounded-md border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
           <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-primary via-accent to-transparent opacity-80" aria-hidden="true"></div>
           <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-md bg-primary-soft text-primary">
             <i class="bx bx-code-alt icon-xl" aria-hidden="true"></i>
@@ -185,7 +185,7 @@ const breadcrumbJsonLd = {
           <h3 class="text-sm font-semibold text-foreground-strong mb-1">LangChain & LangGraph</h3>
           <p class="text-xs leading-relaxed text-muted-foreground">{t(locale, "founder.agents.card1.desc")}</p>
         </article>
-        <article class="group relative overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
+        <article class="group relative overflow-hidden rounded-md border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
           <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-accent via-purple to-transparent opacity-80" aria-hidden="true"></div>
           <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-md bg-accent-soft text-accent">
             <i class="bx bx-layer icon-xl" aria-hidden="true"></i>
@@ -193,7 +193,7 @@ const breadcrumbJsonLd = {
           <h3 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, "founder.agents.card2.title")}</h3>
           <p class="text-xs leading-relaxed text-muted-foreground">{t(locale, "founder.agents.card2.desc")}</p>
         </article>
-        <article class="group relative overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
+        <article class="group relative overflow-hidden rounded-md border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
           <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-warning via-primary to-transparent opacity-80" aria-hidden="true"></div>
           <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-md bg-warning-soft text-warning">
             <i class="bx bx-task icon-xl" aria-hidden="true"></i>
@@ -218,17 +218,17 @@ const breadcrumbJsonLd = {
         description={t(locale, "founder.why.desc")}
       />
 
-      <div class="relative overflow-hidden rounded-xl border border-border bg-panel p-5 shadow-panel sm:p-8" data-aos="fade-up">
+      <div class="relative overflow-hidden rounded-md border border-border bg-panel p-5 shadow-panel sm:p-8" data-aos="fade-up">
         <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
         <div class="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 glow-blob opacity-10"></div>
         <div class="relative grid gap-6 sm:grid-cols-2">
-          <div class="relative overflow-hidden rounded-lg border border-border bg-panel-raised p-5">
+          <div class="relative overflow-hidden rounded-md border border-border bg-panel-raised p-5">
             <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-primary via-accent to-transparent opacity-60" aria-hidden="true"></div>
             <div class="mb-3 flex h-9 w-9 items-center justify-center rounded-md bg-primary-soft text-primary"><i class="bx bx-bullseye icon-lg" aria-hidden="true"></i></div>
             <h3 class="text-sm font-semibold text-foreground-strong mb-2">{t(locale, "founder.why.card1.title")}</h3>
             <p class="text-xs leading-relaxed text-muted-foreground">{t(locale, "founder.why.card1.desc")}</p>
           </div>
-          <div class="relative overflow-hidden rounded-lg border border-border bg-panel-raised p-5">
+          <div class="relative overflow-hidden rounded-md border border-border bg-panel-raised p-5">
             <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-accent via-purple to-transparent opacity-60" aria-hidden="true"></div>
             <div class="mb-3 flex h-9 w-9 items-center justify-center rounded-md bg-accent-soft text-accent"><i class="bx bx-group icon-lg" aria-hidden="true"></i></div>
             <h3 class="text-sm font-semibold text-foreground-strong mb-2">{t(locale, "founder.why.card2.title")}</h3>
@@ -283,7 +283,7 @@ const breadcrumbJsonLd = {
   <!-- Personal -->
   <section class="relative py-24 sm:py-32">
     <div class="mx-auto max-w-3xl px-6">
-      <div class="relative overflow-hidden rounded-xl border border-border bg-panel p-6 shadow-panel sm:p-8" data-aos="fade-up">
+      <div class="relative overflow-hidden rounded-md border border-border bg-panel p-6 shadow-panel sm:p-8" data-aos="fade-up">
         <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-primary via-accent to-transparent opacity-60" aria-hidden="true"></div>
         <div class="absolute inset-0 opacity-[0.03] hero-grid"></div>
         <div class="relative space-y-4">

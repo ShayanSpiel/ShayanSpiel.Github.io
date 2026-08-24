@@ -136,7 +136,7 @@ i[class*=" bxs-"] {
     @apply flex flex-wrap gap-1.5 mt-8 justify-center;
   }
   .tag-chip {
-    @apply font-mono text-2xs py-1 px-2.5 rounded-full bg-panel border border-border text-muted-foreground transition-all duration-150;
+    @apply font-mono text-2xs py-1 px-2.5 rounded-md bg-panel border border-border text-muted-foreground transition-all duration-150;
     &:hover { @apply border-border-strong text-foreground; }
   }
 
@@ -157,7 +157,7 @@ i[class*=" bxs-"] {
   }
 
   /* Legacy selector kept for JS filtering (e.g. notes) — visual is now token-polished in page markup.
-     New pages should use: relative overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel hover:-translate-y-1 hover:border-border-strong */
+     New pages should use: relative overflow-hidden rounded-md border border-border bg-panel p-5 shadow-panel hover:-translate-y-1 hover:border-border-strong */
   .post-card {
     @apply block p-5 rounded-md border border-border bg-panel transition-all duration-150;
     &:hover { @apply border-border-strong bg-panel-raised; }
@@ -193,7 +193,7 @@ i[class*=" bxs-"] {
     @apply flex flex-wrap gap-1.5 justify-center mb-6;
   }
   .filter-btn {
-    @apply text-2xs py-1.5 px-3 rounded-full bg-panel border border-border text-muted-foreground cursor-pointer transition-all duration-150 inline-flex items-center gap-1;
+    @apply text-2xs py-1.5 px-3 rounded-md bg-panel border border-border text-muted-foreground cursor-pointer transition-all duration-150 inline-flex items-center gap-1;
     &:hover { @apply border-border-strong text-foreground; }
     &.active { @apply bg-primary border-primary text-primary-foreground; }
   }
@@ -237,7 +237,7 @@ i[class*=" bxs-"] {
     p { @apply text-sm text-muted-foreground mb-5 max-w-lg mx-auto leading-relaxed; }
   }
   .post-cta-icon {
-    @apply flex items-center justify-center w-12 h-12 rounded-full bg-primary-soft text-primary mx-auto mb-4;
+    @apply flex items-center justify-center w-12 h-12 rounded-md bg-primary-soft text-primary mx-auto mb-4;
   }
   .post-cta-btn {
     @apply inline-flex items-center justify-center gap-2 rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all;
@@ -248,7 +248,7 @@ i[class*=" bxs-"] {
     @apply my-8 relative;
     &::before {
       content: '';
-      @apply absolute start-0 top-0 bottom-0 w-[3px] rounded-full;
+      @apply absolute start-0 top-0 bottom-0 w-[3px] rounded-md;
       background: var(--primary);
     }
     blockquote {
@@ -270,7 +270,7 @@ i[class*=" bxs-"] {
 
   /* ── Tweet embed ── */
   .tweet-embed {
-    @apply my-8 p-5 rounded-xl border border-border bg-panel relative overflow-hidden;
+    @apply my-8 p-5 rounded-md border border-border bg-panel relative overflow-hidden;
     &::before {
       content: '';
       @apply absolute start-0 top-0 bottom-0 w-[3px];
@@ -340,9 +340,9 @@ i[class*=" bxs-"] {
   /* ── Hero glow blob (no filter — radial gradient instead of expensive blur) ── */
   .glow-blob {
     background: radial-gradient(closest-side, var(--primary), transparent 72%);
-    border-radius: 50%;
+    border-radius: var(--radius-md);
   }
-  /* Color variants — pair with positioning/size utilities (rounded-full + opacity-*) */
+  /* Color variants — pair with positioning/size utilities (rounded-md + opacity-*) */
   .glow-blob-accent {
     background: radial-gradient(closest-side, var(--accent), transparent 72%);
   }
@@ -400,12 +400,12 @@ i[class*=" bxs-"] {
      for the gold standard). These utilities exist only to keep future pages
      from drifting into ad-hoc hardcoding. */
   .polished-card {
-    @apply relative overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all;
+    @apply relative overflow-hidden rounded-md border border-border bg-panel p-5 shadow-panel transition-all;
   }
   .polished-card:hover { @apply -translate-y-1 border-border-strong; }
   .polished-card-topline { @apply absolute inset-x-0 top-0 h-px bg-gradient-to-r opacity-80; }
   .polished-canvas {
-    @apply relative overflow-hidden rounded-xl border border-border bg-panel p-5 shadow-panel sm:p-8;
+    @apply relative overflow-hidden rounded-md border border-border bg-panel p-5 shadow-panel sm:p-8;
   }
   .canvas-grid { @apply absolute inset-0 opacity-[0.04] hero-grid; }
   .canvas-glow { @apply absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 glow-blob opacity-10; }
@@ -505,10 +505,10 @@ i[class*=" bxs-"] {
     @apply text-xs font-mono font-semibold text-foreground-strong;
   }
   .compare-bar {
-    @apply flex-1 h-1.5 bg-panel-raised rounded-full mx-3 overflow-hidden;
+    @apply flex-1 h-1.5 bg-panel-raised rounded-md mx-3 overflow-hidden;
   }
   .compare-bar-fill {
-    @apply h-full rounded-full;
+    @apply h-full rounded-md;
     width: var(--bar-pct, 0%);
   }
 
@@ -564,10 +564,10 @@ i[class*=" bxs-"] {
     @apply text-xs text-muted-foreground w-24 shrink-0 text-end;
   }
   .war-route-track {
-    @apply flex-1 h-2 bg-panel-raised rounded-full overflow-hidden;
+    @apply flex-1 h-2 bg-panel-raised rounded-md overflow-hidden;
   }
   .war-route-bar {
-    @apply h-full bg-primary rounded-full;
+    @apply h-full bg-primary rounded-md;
     width: var(--w-bar, 0%);
   }
   .war-route-value {
@@ -625,14 +625,14 @@ i[class*=" bxs-"] {
 
   /* ── Dual CTA (notes ending: primary conversion + secondary DIY path) ── */
   .post-cta-dual {
-    @apply my-10 p-8 rounded-lg bg-panel-strong text-center;
+    @apply my-10 p-8 rounded-md bg-panel-strong text-center;
     border: 1px solid color-mix(in oklab, var(--primary) 30%, transparent);
     box-shadow: 0 0 0 1px color-mix(in oklab, var(--primary) 15%, transparent);
     h3 { @apply text-base font-semibold text-foreground-strong mb-2; }
     > p { @apply text-sm text-muted-foreground mb-6 max-w-lg mx-auto leading-relaxed; }
   }
   .post-cta-dual-icon {
-    @apply flex items-center justify-center w-12 h-12 rounded-full bg-primary-soft text-primary mx-auto mb-4;
+    @apply flex items-center justify-center w-12 h-12 rounded-md bg-primary-soft text-primary mx-auto mb-4;
   }
   .post-cta-actions {
     @apply flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3;
@@ -734,7 +734,7 @@ i[class*=" bxs-"] {
 .brief-modal {
   background: var(--panel);
   border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   width: 100%;
   max-width: 64rem;
   max-height: 85vh;

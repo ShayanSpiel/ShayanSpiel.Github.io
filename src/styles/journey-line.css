@@ -81,7 +81,7 @@
   flex-shrink: 0;
   width: 0.875rem;
   height: 0.875rem;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-md);
   border: 1px solid var(--border);
   background: var(--panel);
   box-shadow: 0 0 0 3px var(--background);
@@ -90,7 +90,7 @@
   content: "";
   width: 0.25rem;
   height: 0.25rem;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-md);
   background: var(--foreground-muted);
 }
 .journey-line.is-active .journey-line__node {
@@ -118,7 +118,7 @@
      with the text. */
   background: var(--background);
   padding: 0.3em 0.75em;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-md);
   opacity: 0;
 }
 .journey-line.is-active .journey-line__label {

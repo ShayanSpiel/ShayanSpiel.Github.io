@@ -72,29 +72,29 @@ const hrefs = {
 
     <!-- Aurora / magic glow -->
     <div class="absolute top-[12%] -left-44 w-[560px] h-[560px] glow-blob opacity-20 animate-drift"></div>
-    <div class="absolute bottom-[8%] -right-44 w-[560px] h-[560px] rounded-full glow-blob-purple opacity-20 animate-drift-slow"></div>
-    <div class="absolute top-[45%] left-[18%] w-[260px] h-[260px] rounded-full glow-blob-accent opacity-10 animate-drift-slow"></div>
+    <div class="absolute bottom-[8%] -right-44 w-[560px] h-[560px] rounded-md glow-blob-purple opacity-20 animate-drift-slow"></div>
+    <div class="absolute top-[45%] left-[18%] w-[260px] h-[260px] rounded-md glow-blob-accent opacity-10 animate-drift-slow"></div>
 
     <!-- Floating particles -->
     <div class="absolute inset-0 pointer-events-none" id="magic-particles" aria-hidden="true"></div>
 
     <div class="relative z-10 mx-auto max-w-3xl px-6 text-center">
       <!-- Badge -->
-      <div class="inline-flex items-center gap-2 rounded-full border border-border bg-panel-raised px-3 py-1 mb-8" data-aos="fade-up">
+      <div class="inline-flex items-center gap-2 rounded-md border border-border bg-panel-raised px-3 py-1 mb-8" data-aos="fade-up">
         <i class="bx bxs-bot text-primary icon-base"></i>
         <span data-i18n="badge" class="text-2xs text-muted-foreground font-medium">{strings.en.badge}</span>
-        <span class="h-1.5 w-1.5 rounded-full bg-success animate-pulse"></span>
+        <span class="h-1.5 w-1.5 rounded-md bg-success animate-pulse"></span>
       </div>
 
       <!-- Orbit scene -->
       <div class="relative inline-flex items-center justify-center w-[20rem] h-[20rem] sm:w-[26rem] sm:h-[26rem]" data-aos="fade-up">
         <!-- Radar sweep + rings -->
-        <div class="absolute inset-0 rounded-full border border-border/60"></div>
-        <div class="absolute inset-6 rounded-full border border-dashed border-border/70"></div>
-        <div class="absolute inset-14 rounded-full border border-dashed border-border/40"></div>
-        <div class="absolute inset-0 rounded-full radar-sweep"></div>
-        <div class="absolute inset-0 rounded-full radar-ping"></div>
-        <div class="absolute inset-0 rounded-full radar-ping delay"></div>
+        <div class="absolute inset-0 rounded-md border border-border/60"></div>
+        <div class="absolute inset-6 rounded-md border border-dashed border-border/70"></div>
+        <div class="absolute inset-14 rounded-md border border-dashed border-border/40"></div>
+        <div class="absolute inset-0 rounded-md radar-sweep"></div>
+        <div class="absolute inset-0 rounded-md radar-ping"></div>
+        <div class="absolute inset-0 rounded-md radar-ping delay"></div>
 
         <!-- Orbiting AI employees -->
         <div class="absolute inset-0 orbit-spin orbit-slow">
@@ -122,14 +122,14 @@ const hrefs = {
 
       <!-- Agent dispatch log -->
       <div class="mt-12 mx-auto max-w-xl text-start" data-aos="fade-up">
-        <div class="rounded-xl border border-border bg-background-deep shadow-panel overflow-hidden">
+        <div class="rounded-md border border-border bg-background-deep shadow-panel overflow-hidden">
           <div class="flex items-center gap-2 border-b border-border px-4 h-10">
-            <span class="h-3 w-3 rounded-full bg-destructive/70"></span>
-            <span class="h-3 w-3 rounded-full bg-warning/70"></span>
-            <span class="h-3 w-3 rounded-full bg-success/70"></span>
+            <span class="h-3 w-3 rounded-md bg-destructive/70"></span>
+            <span class="h-3 w-3 rounded-md bg-warning/70"></span>
+            <span class="h-3 w-3 rounded-md bg-success/70"></span>
             <span data-i18n="terminalTitle" class="ml-2 font-mono text-2xs text-muted-foreground truncate">{strings.en.terminalTitle}</span>
             <span class="ml-auto inline-flex items-center gap-1.5 rounded-md bg-success-soft px-2 py-0.5 text-2xs font-semibold text-success">
-              <span class="h-1 w-1 rounded-full bg-success animate-pulse"></span>
+              <span class="h-1 w-1 rounded-md bg-success animate-pulse"></span>
               <span data-i18n="status">{strings.en.status}</span>
             </span>
           </div>
@@ -372,7 +372,7 @@ const hrefs = {
       align-items: center;
       justify-content: center;
       font-size: var(--font-size-xl);
-      border-radius: 9999px;
+      border-radius: var(--radius-md);
       background: var(--background-deep);
       border: 1px solid var(--border);
       box-shadow: 0 0 14px color-mix(in oklab, currentColor 45%, transparent);
@@ -390,7 +390,7 @@ const hrefs = {
     }
     .particle {
       position: absolute;
-      border-radius: 9999px;
+      border-radius: var(--radius-md);
       animation: spiel-404-float ease-in infinite;
       pointer-events: none;
     }

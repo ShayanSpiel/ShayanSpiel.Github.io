@@ -57,7 +57,7 @@ const offerJsonLd = {
     <div class="absolute inset-0 bg-panel-deep/50"></div>
     <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
     <div class="absolute left-1/2 top-[42%] h-[34rem] w-[52rem] -translate-x-1/2 -translate-y-1/2 glow-blob opacity-20"></div>
-    <div class="absolute left-[58%] top-[38%] h-64 w-64 rounded-full glow-blob-accent opacity-10"></div>
+    <div class="absolute left-[58%] top-[38%] h-64 w-64 rounded-md glow-blob-accent opacity-10"></div>
     <div class="relative mx-auto max-w-4xl px-6 text-center" data-aos="fade-up">
       <div>
         <p class="text-2xs font-semibold uppercase tracking-widest text-primary">{t(locale, "conversion.pricing.hero.label")}</p>
@@ -78,7 +78,7 @@ const offerJsonLd = {
     <div class="absolute inset-0 bg-panel-deep/50"></div>
     <div class="relative mx-auto max-w-5xl px-6">
       <SectionHeader label={t(locale, "conversion.pricing.package.covers")} title={t(locale, "conversion.pricing.package.title")} description={t(locale, "conversion.pricing.hero.l1")} />
-      <div class="relative overflow-hidden rounded-xl border border-border bg-panel shadow-panel" data-aos="fade-up">
+      <div class="relative overflow-hidden rounded-md border border-border bg-panel shadow-panel" data-aos="fade-up">
         <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-primary via-accent to-transparent opacity-80" aria-hidden="true"></div>
         <div class="grid lg:grid-cols-[0.8fr_1.2fr]">
         <div class="bg-panel-raised p-8 sm:p-10">
@@ -103,7 +103,7 @@ const offerJsonLd = {
       <SectionHeader label={t(locale, "conversion.pricing.how.label")} title={t(locale, "conversion.pricing.how.title")} />
       <ol class="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-4" data-aos="fade-up">
         {howSteps.map((n) => (
-          <li class="group relative overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
+          <li class="group relative overflow-hidden rounded-md border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
             <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-primary via-accent to-transparent opacity-70" aria-hidden="true"></div>
             <span class="font-mono text-2xs font-bold text-primary">0{n}</span>
             <h3 class="mt-4 text-base font-bold text-foreground-strong">{t(locale, `conversion.pricing.how.s${n}.t`)}</h3>
@@ -119,7 +119,7 @@ const offerJsonLd = {
     <div class="relative mx-auto max-w-4xl px-6">
       <SectionHeader label={t(locale, "conversion.pricing.deal.label")} title={t(locale, "conversion.pricing.deal.title")} />
       <div class="grid gap-3 md:grid-cols-3" data-aos="fade-up">
-        {["d1", "d2", "d3"].map((key, index) => <div class="group relative overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong"><div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-accent via-purple to-transparent opacity-70" aria-hidden="true"></div><span class="font-mono text-2xs font-bold text-primary">0{index + 1}</span><p class="mt-4 text-sm font-semibold leading-relaxed text-foreground-strong">{t(locale, `conversion.pricing.deal.${key}`)}</p></div>)}
+        {["d1", "d2", "d3"].map((key, index) => <div class="group relative overflow-hidden rounded-md border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong"><div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-accent via-purple to-transparent opacity-70" aria-hidden="true"></div><span class="font-mono text-2xs font-bold text-primary">0{index + 1}</span><p class="mt-4 text-sm font-semibold leading-relaxed text-foreground-strong">{t(locale, `conversion.pricing.deal.${key}`)}</p></div>)}
       </div>
     </div>
   </section>

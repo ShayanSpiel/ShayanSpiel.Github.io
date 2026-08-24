@@ -311,13 +311,17 @@ static palette: tile `#282828`, glyph `#ebdbb2`.
 
 ### Border radius tokens
 
+The design language uses slightly-rounded squares only — **no pills, no
+circles**. Maximum roundness is `--radius-md`.
+
 | Token | Value | Use |
 |---|---|---|
 | `--radius-sm` | 4px | Small elements, tags |
-| `--radius-md` | 6px | Cards, buttons, containers |
-| `--radius-lg` | 10px | Large cards |
-| `--radius-xl` | 14px | Hero containers |
-| `--radius-pill` | 999px | Badges, pills |
+| `--radius-md` | 6px | Everything else — cards, buttons, containers, badges |
+
+The former `--radius-lg`, `--radius-xl`, and `--radius-pill` tokens (and the
+`rounded-lg`/`rounded-xl`/`rounded-pill`/`rounded-full` utilities) are removed.
+Do not reintroduce them; use `rounded-md`.
 
 ### Font size tokens
 
@@ -344,7 +348,7 @@ Use Tailwind utilities that map to tokens:
 - `bg-primary`, `text-primary-foreground`, `bg-primary-soft`
 - `border-border`, `border-border-strong`
 - `bg-success-soft`, `text-success`, `bg-warning-soft`, `text-warning`, etc.
-- `rounded-sm`, `rounded-md`, `rounded-lg`, `rounded-xl`, `rounded-pill`, `rounded-full`
+- `rounded-sm`, `rounded-md` (maximum — the scale has no pill, circle, or large radii)
 - `text-3xs`, `text-2xs`, `text-xs`, `text-sm`, `text-base`, etc.
 - `font-sans` (Outfit), `font-mono` (JetBrains Mono)
 

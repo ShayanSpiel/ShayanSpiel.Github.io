@@ -123,8 +123,8 @@ const improvementChildren = childrenByParent(improvements);
       {businessTop.length === 0 && <p class="rounded-md border border-border bg-panel p-5 text-sm text-muted-foreground">{t(locale, "live.company.noActive")}</p>}
       {businessTop.map((goal, index) => (
         <li class="live-business-entry relative border-s-2 border-border pb-7 ps-7 last:pb-0" data-live-more-item="business" data-aos="fade-up" hidden={index >= VISIBLE_LIMIT}>
-          <span class="live-timeline-node absolute -start-[9px] top-5 flex h-4 w-4 items-center justify-center rounded-full border-2 border-warning bg-background shadow-[0_0_18px_var(--warning-soft)]" aria-hidden="true"><span class="h-1.5 w-1.5 rounded-full bg-warning"></span></span>
-          <article class="group relative overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-0.5 hover:border-border-strong sm:p-6" data-live-parent-id={goal.id}>
+          <span class="live-timeline-node absolute -start-[9px] top-5 flex h-4 w-4 items-center justify-center rounded-md border-2 border-warning bg-background shadow-[0_0_18px_var(--warning-soft)]" aria-hidden="true"><span class="h-1.5 w-1.5 rounded-md bg-warning"></span></span>
+          <article class="group relative overflow-hidden rounded-md border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-0.5 hover:border-border-strong sm:p-6" data-live-parent-id={goal.id}>
             <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-primary via-accent to-transparent opacity-80" aria-hidden="true"></div>
             <div class="flex flex-wrap items-start gap-3">
               <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-primary-soft text-primary" aria-hidden="true"><i class="bx bx-bullseye icon-xl"></i></span>
@@ -153,8 +153,8 @@ const improvementChildren = childrenByParent(improvements);
                   <dd class="mt-1 text-foreground">
                     {resultFor(goal)}
                     {progressPct(goal) !== null && (
-                      <span class="mt-1.5 block h-1 max-w-[10rem] overflow-hidden rounded-pill bg-panel-raised" aria-hidden="true">
-                        <span class="block h-full rounded-pill bg-primary" style={`width: ${progressPct(goal)}%`}></span>
+                      <span class="mt-1.5 block h-1 max-w-[10rem] overflow-hidden rounded-md bg-panel-raised" aria-hidden="true">
+                        <span class="block h-full rounded-md bg-primary" style={`width: ${progressPct(goal)}%`}></span>
                       </span>
                     )}
                   </dd>
@@ -219,7 +219,7 @@ const improvementChildren = childrenByParent(improvements);
     </div>
     <div class="space-y-4" data-live-load-more="improvement" data-live-load-more-count={String(Math.max(0, improvementTop.length - VISIBLE_LIMIT))}>
       {improvementTop.map((goal, index) => (
-        <article class="group relative overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-0.5 hover:border-border-strong sm:p-6" data-live-more-item="improvement" data-live-parent-id={goal.id} hidden={index >= VISIBLE_LIMIT}>
+        <article class="group relative overflow-hidden rounded-md border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-0.5 hover:border-border-strong sm:p-6" data-live-more-item="improvement" data-live-parent-id={goal.id} hidden={index >= VISIBLE_LIMIT}>
           <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-purple via-warning to-transparent opacity-80" aria-hidden="true"></div>
           <div class="flex flex-wrap items-start gap-3">
             <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-purple-soft text-purple" aria-hidden="true"><i class="bx bx-slider icon-xl"></i></span>
@@ -294,7 +294,7 @@ const improvementChildren = childrenByParent(improvements);
     position: absolute;
     inset: -0.4rem;
     border: 1px solid var(--warning);
-    border-radius: var(--radius-pill);
+    border-radius: var(--radius-md);
     animation: live-timeline-pulse 1.8s ease-out infinite;
   }
   @keyframes live-timeline-pulse {

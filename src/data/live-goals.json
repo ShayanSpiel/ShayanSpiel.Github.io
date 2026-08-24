@@ -3310,10 +3310,10 @@
     },
     {
       "created_at": "2026-08-22T17:17:25.340801+00:00",
-      "current_value": 1638,
+      "current_value": 1683,
       "goal_status": "active",
       "id": "goal-87a4572a0f",
-      "latest_activity_at": "2026-08-24T03:34:16.410941+00:00",
+      "latest_activity_at": "2026-08-24T13:43:27.512744+00:00",
       "metric": "qualified_social_leads",
       "name": "Research pipeline: grow fully verified English lead pool to 2000 (continuous - don't stop)",
       "operator": "ge",
@@ -3322,7 +3322,7 @@
       "run_status": "blocked",
       "stage": "DECIDE",
       "target": 2500,
-      "updated_at": "2026-08-24T03:34:16.408938+00:00"
+      "updated_at": "2026-08-24T13:43:27.509436+00:00"
     },
     {
       "created_at": "2026-08-23T14:41:35.284821+00:00",
@@ -3493,16 +3493,16 @@
       "created_at": "2026-08-24T04:06:38.167424+00:00",
       "goal_status": "active",
       "id": "goal-audit-seo-verify-20260824",
-      "latest_activity_at": "2026-08-24T04:06:39.526898+00:00",
+      "latest_activity_at": "2026-08-24T04:06:50.736240+00:00",
       "metric": "seo_reports",
       "name": "SEO verification: 2026-08-24 audit remediation (schema, breadcrumbs, sitemap, robots, hreflang)",
       "operator": "ge",
       "owner_id": "seo",
       "parent_id": null,
-      "run_status": "running",
-      "stage": "DECIDE",
+      "run_status": "blocked",
+      "stage": "ACT",
       "target": 1,
-      "updated_at": "2026-08-24T04:06:39.525807+00:00"
+      "updated_at": "2026-08-24T04:06:50.735184+00:00"
     }
   ],
   "heartbeat": {
@@ -3510,15 +3510,15 @@
     "business_value_fa": null,
     "display_title": null,
     "display_title_fa": null,
-    "goal_id": "goal-audit-seo-verify-20260824",
-    "goal_name": "SEO verification: 2026-08-24 audit remediation (schema, breadcrumbs, sitemap, robots, hreflang)",
-    "metric": "seo_reports",
+    "goal_id": "goal-87a4572a0f",
+    "goal_name": "Research pipeline: grow fully verified English lead pool to 2000 (continuous - don't stop)",
+    "metric": "qualified_social_leads",
     "operator": "ge",
-    "owner_id": "seo",
-    "run_status": "running",
+    "owner_id": "outbound",
+    "run_status": "blocked",
     "stage": "DECIDE",
-    "target": 1,
-    "updated_at": "2026-08-24T04:06:39.526898+00:00"
+    "target": 2500,
+    "updated_at": "2026-08-24T13:43:27.512744+00:00"
   },
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
@@ -3531,38 +3531,38 @@
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-24T04:06:38.167424+00:00",
-      "goal_id": "goal-audit-seo-verify-20260824",
-      "goal_name": "SEO verification: 2026-08-24 audit remediation (schema, breadcrumbs, sitemap, robots, hreflang)",
-      "owner_id": "seo",
-      "run_id": "run-6c9f736ef5",
-      "run_status": "running",
+      "created_at": "2026-08-22T17:17:25.340801+00:00",
+      "goal_id": "goal-87a4572a0f",
+      "goal_name": "Research pipeline: grow fully verified English lead pool to 2000 (continuous - don't stop)",
+      "owner_id": "outbound",
+      "run_id": "run-9ff4b879f6",
+      "run_status": "blocked",
       "stage": "DECIDE",
-      "updated_at": "2026-08-24T04:06:39.526898+00:00"
+      "updated_at": "2026-08-24T13:43:27.512744+00:00"
     },
     "heartbeat": {
       "business_value": null,
       "business_value_fa": null,
       "display_title": null,
       "display_title_fa": null,
-      "goal_id": "goal-audit-seo-verify-20260824",
-      "goal_name": "SEO verification: 2026-08-24 audit remediation (schema, breadcrumbs, sitemap, robots, hreflang)",
-      "metric": "seo_reports",
+      "goal_id": "goal-87a4572a0f",
+      "goal_name": "Research pipeline: grow fully verified English lead pool to 2000 (continuous - don't stop)",
+      "metric": "qualified_social_leads",
       "operator": "ge",
-      "owner_id": "seo",
-      "run_status": "running",
+      "owner_id": "outbound",
+      "run_status": "blocked",
       "stage": "DECIDE",
-      "target": 1,
-      "updated_at": "2026-08-24T04:06:39.526898+00:00"
+      "target": 2500,
+      "updated_at": "2026-08-24T13:43:27.512744+00:00"
     },
-    "last_activity_at": "2026-08-24T04:06:39.526898+00:00",
-    "last_sync_at": "2026-08-24T04:06:39.589838+00:00",
+    "last_activity_at": "2026-08-24T13:43:27.512744+00:00",
+    "last_sync_at": "2026-08-24T13:43:28.468801+00:00",
     "state": "running"
   },
   "totals": {
     "approvals": 250,
-    "decisions": 836,
-    "evidence": 12927,
+    "decisions": 841,
+    "evidence": 12972,
     "goals_abandoned": 33,
     "goals_achieved": 161,
     "goals_active": 29,

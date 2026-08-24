@@ -90,7 +90,7 @@ const faqJsonLd = {
           <li class="flex items-center gap-1.5"><span aria-hidden="true" class="text-border-strong">/</span><span class="text-foreground font-medium" aria-current="page">{name}</span></li>
         </ol>
       </nav>
-      <div class="inline-flex items-center gap-2 rounded-full border border-border bg-panel-raised px-3 py-1 mb-6" data-aos="fade-up">
+      <div class="inline-flex items-center gap-2 rounded-md border border-border bg-panel-raised px-3 py-1 mb-6" data-aos="fade-up">
         <i class="bx bx-repeat text-primary/80 icon-sm shrink-0" aria-hidden="true"></i>
         <span class="text-2xs text-muted-foreground font-medium">{L(w.eyebrow, w.nameFa?.toUpperCase())}</span>
       </div>
@@ -112,7 +112,7 @@ const faqJsonLd = {
         <h2 class="font-bold text-foreground-strong tracking-tight mt-3 text-3xl sm:text-4xl">{t(locale, "wf.shared.manualTitle")}</h2>
       </div>
       <div class="grid gap-6 lg:grid-cols-[minmax(0,6fr)_minmax(0,6fr)] items-stretch">
-        <div class="relative overflow-hidden rounded-xl border border-border bg-panel p-5 shadow-panel sm:p-8" data-aos="fade-up">
+        <div class="relative overflow-hidden rounded-md border border-border bg-panel p-5 shadow-panel sm:p-8" data-aos="fade-up">
           <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
           <div class="absolute left-1/2 top-1/2 h-56 w-56 -translate-x-1/2 -translate-y-1/2 glow-blob opacity-10"></div>
         <ol class="wf-rail relative z-[1] mx-auto max-w-sm w-full" data-aos="fade-up">
@@ -126,7 +126,7 @@ const faqJsonLd = {
           ))}
         </ol>
         </div>
-        <div class="relative overflow-hidden rounded-xl border border-destructive/30 bg-panel p-6 shadow-panel flex flex-col justify-center sm:p-10" data-aos="fade-up">
+        <div class="relative overflow-hidden rounded-md border border-destructive/30 bg-panel p-6 shadow-panel flex flex-col justify-center sm:p-10" data-aos="fade-up">
           <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r opacity-70 from-destructive via-destructive-soft to-transparent"></div>
           <div class="absolute right-0 bottom-0 h-40 w-40 glow-blob opacity-10"></div>
           <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-md bg-destructive-soft"><i class="bx bx-error text-destructive icon-xl"></i></div>
@@ -145,7 +145,7 @@ const faqJsonLd = {
         <h2 class="font-bold text-foreground-strong tracking-tight mt-3 text-3xl sm:text-4xl">{t(locale, "wf.shared.changesTitle")}</h2>
       </div>
       <div class="grid gap-3 md:grid-cols-2 max-w-4xl mx-auto" data-aos="fade-up">
-        <div class="relative overflow-hidden rounded-lg border border-border bg-panel p-6 shadow-panel">
+        <div class="relative overflow-hidden rounded-md border border-border bg-panel p-6 shadow-panel">
           <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r opacity-60 from-muted-foreground via-border to-transparent"></div>
           <div class="mb-4 flex items-center gap-2">
             <span class="flex h-7 w-7 items-center justify-center rounded-md bg-muted-foreground/10"><i class="bx bx-user text-muted-foreground icon-base" aria-hidden="true"></i></span>
@@ -153,7 +153,7 @@ const faqJsonLd = {
           </div>
           <p class="text-sm leading-relaxed text-muted-foreground">{beforeText}</p>
         </div>
-        <div class="relative overflow-hidden rounded-lg border border-primary/30 bg-panel p-6 shadow-panel transition-all hover:border-primary">
+        <div class="relative overflow-hidden rounded-md border border-primary/30 bg-panel p-6 shadow-panel transition-all hover:border-primary">
           <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r opacity-80 from-primary via-accent to-transparent"></div>
           <div class="mb-4 flex items-center gap-2">
             <span class="flex h-7 w-7 items-center justify-center rounded-md bg-primary-soft"><i class="bx bx-network-chart text-primary icon-base" aria-hidden="true"></i></span>
@@ -169,7 +169,7 @@ const faqJsonLd = {
   <section class="relative py-20 sm:py-24">
     <div class="mx-auto max-w-5xl px-6">
       <SectionHeader label="HOW THE WORKFLOW RUNS" title="Actual states. Actual actions." />
-      <div class="flow-canvas relative overflow-hidden rounded-xl border border-border bg-panel px-5 py-10 shadow-panel sm:px-8 sm:py-14" data-aos="fade-up">
+      <div class="flow-canvas relative overflow-hidden rounded-md border border-border bg-panel px-5 py-10 shadow-panel sm:px-8 sm:py-14" data-aos="fade-up">
         <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
         <div class="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 glow-blob opacity-15"></div>
         <ol class="flow-rail relative z-10 grid gap-6 sm:grid-cols-7 sm:gap-0">
@@ -196,7 +196,7 @@ const faqJsonLd = {
       <SectionHeader label="WHAT IT AUTOMATES" title={automateIntro.replace(":", ".")} />
       <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" data-aos="fade-up">
         {automate.map((item) => (
-          <article class="group relative overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
+          <article class="group relative overflow-hidden rounded-md border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
             <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r opacity-80 from-primary via-accent to-transparent"></div>
             <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-md bg-primary-soft text-primary"><i class="bx bx-check-square icon-xl" aria-hidden="true"></i></div>
             <h3 class="text-sm font-semibold leading-snug text-foreground-strong">{item.title}</h3>
@@ -213,9 +213,9 @@ const faqJsonLd = {
       <SectionHeader label="NO MIGRATION" title="Works with the tools you already use." description="The workflow runs on top of your current stack — we connect to it, we don't replace it." />
       <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3" data-aos="fade-up">
         {tools.map((tool) => (
-          <a href={localizePath(`/solutions/software/${tool.slug}/`, locale)} class="group relative flex items-center gap-4 overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
+          <a href={localizePath(`/solutions/software/${tool.slug}/`, locale)} class="group relative flex items-center gap-4 overflow-hidden rounded-md border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
             <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r opacity-60 from-primary via-accent to-transparent"></div>
-            <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border border-border bg-panel-raised shadow-panel transition-all group-hover:-translate-y-0.5 [&>svg]:h-8 [&>svg]:w-8" set:html={toolLogo(tool.key)} />
+            <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-md border border-border bg-panel-raised shadow-panel transition-all group-hover:-translate-y-0.5 [&>svg]:h-8 [&>svg]:w-8" set:html={toolLogo(tool.key)} />
             <span class="min-w-0">
               <span class="block truncate text-sm font-semibold text-foreground-strong transition-colors group-hover:text-primary">{tool.name}</span>
               <span class="mt-0.5 block text-xs text-muted-foreground">Automation on {tool.name} →</span>
@@ -235,7 +235,7 @@ const faqJsonLd = {
       <SectionHeader label="WHO THIS IS FOR" title="Built for teams where this work repeats weekly." />
       <div class="grid gap-3 md:grid-cols-3" data-aos="fade-up">
         {audiences.map((a) => (
-          <article class="group relative overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
+          <article class="group relative overflow-hidden rounded-md border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
             <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r opacity-60 from-info via-primary to-transparent"></div>
             <h3 class="text-sm font-semibold text-foreground-strong mb-1 transition-colors group-hover:text-primary">{a.name}</h3>
             <p class="text-xs leading-relaxed text-muted-foreground">{a.note}</p>
@@ -245,7 +245,7 @@ const faqJsonLd = {
       <div class="mt-6 flex flex-wrap items-center justify-center gap-2" data-aos="fade-up">
         <span class="text-2xs uppercase tracking-widest text-muted-foreground me-2">Run by an AI department:</span>
         {w.relatedDepartments.map((d) => (
-          <a href={localizePath(`/solutions/ai-departments/${d}/`, locale)} class="inline-flex items-center gap-1 rounded-full border border-border bg-panel px-3 py-1 text-xs capitalize text-muted-foreground hover:text-foreground hover:border-border-strong transition-all">
+          <a href={localizePath(`/solutions/ai-departments/${d}/`, locale)} class="inline-flex items-center gap-1 rounded-md border border-border bg-panel px-3 py-1 text-xs capitalize text-muted-foreground hover:text-foreground hover:border-border-strong transition-all">
             AI {d} department<i class="bx bx-chevron-right rtl-flip icon-xs" aria-hidden="true"></i>
           </a>
         ))}
@@ -258,7 +258,7 @@ const faqJsonLd = {
     <div class="mx-auto max-w-5xl px-6">
       <SectionHeader label="HUMAN BOUNDARIES" title="Automate the repetition. Keep the judgment." />
       <div class="grid gap-3 md:grid-cols-2" data-aos="fade-up">
-        <div class="relative overflow-hidden rounded-lg border border-success/30 bg-panel p-6 shadow-panel">
+        <div class="relative overflow-hidden rounded-md border border-success/30 bg-panel p-6 shadow-panel">
           <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r opacity-70 from-success via-success-soft to-transparent"></div>
           <div class="mb-4 flex items-center gap-2">
             <span class="flex h-8 w-8 items-center justify-center rounded-md bg-success-soft"><i class="bx bx-check-square text-success icon-lg" aria-hidden="true"></i></span>
@@ -270,7 +270,7 @@ const faqJsonLd = {
             ))}
           </ul>
         </div>
-        <div class="relative overflow-hidden rounded-lg border border-warning/30 bg-panel p-6 shadow-panel">
+        <div class="relative overflow-hidden rounded-md border border-warning/30 bg-panel p-6 shadow-panel">
           <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r opacity-70 from-warning via-warning-soft to-transparent"></div>
           <div class="mb-4 flex items-center gap-2">
             <span class="flex h-8 w-8 items-center justify-center rounded-md bg-warning-soft"><i class="bx bx-group text-warning icon-lg" aria-hidden="true"></i></span>
@@ -303,7 +303,7 @@ const faqJsonLd = {
       <SectionHeader label="KEEP EXPLORING" title="Related workflows." />
       <div class="grid gap-3 md:grid-cols-3" data-aos="fade-up">
         {relatedWorkflows.map((r) => (
-          <a href={localizePath(`/solutions/workflows/${r.slug}/`, locale)} class="group relative overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
+          <a href={localizePath(`/solutions/workflows/${r.slug}/`, locale)} class="group relative overflow-hidden rounded-md border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
             <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r opacity-80 from-accent via-purple to-transparent"></div>
             <p class="text-2xs font-semibold uppercase tracking-widest text-primary mb-1">Workflow</p>
             <h3 class="text-sm font-semibold text-foreground-strong group-hover:text-primary transition-colors">{r.name}</h3>
@@ -345,7 +345,7 @@ const faqJsonLd = {
     height: 100%;
     width: 2px;
     translate: -50% 0;
-    border-radius: var(--radius-pill);
+    border-radius: var(--radius-md);
     background: linear-gradient(
       to bottom,
       color-mix(in oklab, var(--destructive) 45%, transparent),
@@ -362,7 +362,7 @@ const faqJsonLd = {
     height: 100%;
     width: 2px;
     translate: -50% 0;
-    border-radius: var(--radius-pill);
+    border-radius: var(--radius-md);
     background: linear-gradient(
       to bottom,
       color-mix(in oklab, var(--primary) 40%, transparent),
@@ -381,7 +381,7 @@ const faqJsonLd = {
       height: 2px;
       inset-inline-start: 50%;
       width: 100%;
-      border-radius: var(--radius-pill);
+      border-radius: var(--radius-md);
       background: linear-gradient(
         to right,
         color-mix(in oklab, var(--primary) 45%, transparent),

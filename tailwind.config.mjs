@@ -4,7 +4,7 @@ export default {
     "selector",
     '[data-theme="monochrome-dark"], [data-theme="gruvbox-dark"], [data-theme="blue-dark"], [data-theme="discord-dark"], [data-theme="black-gold-dark"]',
   ],
-  content: ["./src/**/*.{astro,tsx,ts,html,mdx}"],
+  content: ["./src/**/*.{astro,tsx,ts,html,mdx}", "!./src/components/showcase/**"],
   theme: {
     extend: {
       animation: {
@@ -53,9 +53,6 @@ export default {
       borderRadius: {
         sm: "var(--radius-sm)",
         md: "var(--radius-md)",
-        lg: "var(--radius-lg)",
-        xl: "var(--radius-xl)",
-        pill: "var(--radius-pill)",
       },
       boxShadow: {
         panel: "var(--shadow-panel)",

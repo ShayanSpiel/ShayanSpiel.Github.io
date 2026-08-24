@@ -47,10 +47,10 @@ const rowUp = tools.slice(0, 7);
 const rowDown = tools.slice(7);
 ---
 
-<div class="loop-canvas relative overflow-hidden rounded-xl border border-border bg-panel px-4 py-12 shadow-panel sm:px-8" data-aos="fade-up">
+<div class="loop-canvas relative overflow-hidden rounded-md border border-border bg-panel px-4 py-12 shadow-panel sm:px-8" data-aos="fade-up">
   <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
   <div class="absolute left-1/4 top-1/3 h-56 w-56 glow-blob opacity-10"></div>
-  <div class="absolute right-1/4 bottom-1/4 h-48 w-48 rounded-full glow-blob-accent opacity-10"></div>
+  <div class="absolute right-1/4 bottom-1/4 h-48 w-48 rounded-md glow-blob-accent opacity-10"></div>
   <p class="relative z-[1] mb-10 text-center text-xs font-semibold uppercase tracking-widest text-muted-foreground">{t(locale, "conversion.home.mechanism.gridTitle")}</p>
   <div class="relative z-[1] mx-auto flex max-w-5xl flex-col gap-y-8 py-4">
     {[{ row: rowUp, lift: "-translate-y-2 sm:-translate-y-4" }, { row: rowDown, lift: "translate-y-2 sm:translate-y-4" }].map(({ row, lift }) => (
@@ -58,7 +58,7 @@ const rowDown = tools.slice(7);
         {row.map((tool) => (
           <li class:list={["group relative flex flex-col items-center", tool.rot, lift]}>
             <a href={localizePath(hrefByKey[tool.key] ?? "/solutions/software/", locale)} aria-label={t(locale, `conversion.home.mechanism.tool.${tool.key}.name`)} class="group flex flex-col items-center focus-visible:outline-none">
-            <div class="flex h-14 w-14 items-center justify-center rounded-lg border border-border bg-panel-raised shadow-panel transition-all duration-fast group-hover:-translate-y-1 group-hover:border-border-strong group-focus-visible:border-border-strong sm:h-16 sm:w-16">
+            <div class="flex h-14 w-14 items-center justify-center rounded-md border border-border bg-panel-raised shadow-panel transition-all duration-fast group-hover:-translate-y-1 group-hover:border-border-strong group-focus-visible:border-border-strong sm:h-16 sm:w-16">
               <span class="block [&>svg]:h-8 [&>svg]:w-8" set:html={tool.svg} />
             </div>
             <p class="mt-2 text-3xs font-semibold text-muted-foreground">{t(locale, `conversion.home.mechanism.tool.${tool.key}.name`)}</p>

@@ -26,7 +26,7 @@ const iconMap: Record<string, { icon: string; tile: string; gradient: string }> 
 const meta = iconMap[name] ?? { icon: "bx-cube", tile: "bg-primary-soft text-primary", gradient: "from-primary via-accent to-transparent" };
 ---
 
-<a href={url} target="_blank" rel="noopener noreferrer" class="group relative flex h-full flex-col overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong hover:shadow-panel">
+<a href={url} target="_blank" rel="noopener noreferrer" class="group relative flex h-full flex-col overflow-hidden rounded-md border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong hover:shadow-panel">
   <div class:list={["absolute inset-x-0 top-0 h-px bg-gradient-to-r opacity-80", meta.gradient]} aria-hidden="true"></div>
   <div class="mb-4 flex items-center justify-between gap-2">
     <div class:list={["flex h-10 w-10 items-center justify-center rounded-md", meta.tile]}><i class:list={["bx", meta.icon, "icon-xl"]} aria-hidden="true"></i></div>

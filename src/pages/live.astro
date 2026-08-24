@@ -65,7 +65,7 @@ const howTo = [
     <div class="absolute inset-0 bg-panel-deep/50"></div>
     <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
     <div class="absolute left-1/2 top-[36%] h-[30rem] w-[46rem] -translate-x-1/2 -translate-y-1/2 glow-blob opacity-20"></div>
-    <div class="absolute left-[60%] top-[32%] h-64 w-64 rounded-full glow-blob-accent opacity-10"></div>
+    <div class="absolute left-[60%] top-[32%] h-64 w-64 rounded-md glow-blob-accent opacity-10"></div>
     <div class="relative mx-auto max-w-4xl px-6 text-center" data-aos="fade-up">
       <p class="text-2xs font-semibold uppercase tracking-widest text-primary">{t(locale, "conversion.live.hero.label")}</p>
       <h1 class="mt-4 text-4xl font-extrabold leading-tightest tracking-tight text-foreground-strong sm:text-6xl">{t(locale, "conversion.live.hero.titleLead")}<br /><span class="text-primary">{t(locale, "conversion.live.hero.titleAccent")}</span></h1>
@@ -86,7 +86,7 @@ const howTo = [
       <SectionHeader label={t(locale, "live.hero.loop.title")} title={t(locale, "live.howto.title")} description={t(locale, "live.howto.desc")} />
       <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" data-aos="fade-up">
         {vocab.map((item) => (
-          <article class="group relative overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
+          <article class="group relative overflow-hidden rounded-md border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
             <div class:list={["absolute inset-x-0 top-0 h-px bg-gradient-to-r opacity-80", item.gradient]} aria-hidden="true"></div>
             <div class:list={["mb-4 flex h-10 w-10 items-center justify-center rounded-md", item.tile]}><i class:list={["bx", item.icon, "icon-xl"]} aria-hidden="true"></i></div>
             <h3 class="text-sm font-semibold text-foreground-strong">{t(locale, item.titleKey)}</h3>
@@ -109,7 +109,7 @@ const howTo = [
       <SectionHeader label={t(locale, "live.howto.label")} title={t(locale, "live.howto.title")} description={t(locale, "live.howto.desc")} />
       <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" data-aos="fade-up">
         {howTo.map((item, index) => (
-          <article class="relative overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel">
+          <article class="relative overflow-hidden rounded-md border border-border bg-panel p-5 shadow-panel">
             <div class:list={["absolute inset-x-0 top-0 h-px bg-gradient-to-r opacity-80", item.gradient]} aria-hidden="true"></div>
             <span class="absolute end-4 top-4 text-2xs text-foreground-muted">0{index + 1}</span>
             <div class:list={["mb-4 flex h-10 w-10 items-center justify-center rounded-md", item.tile]}><i class:list={["bx", item.icon, "icon-xl"]} aria-hidden="true"></i></div>

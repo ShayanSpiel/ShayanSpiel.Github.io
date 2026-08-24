@@ -19,7 +19,7 @@ const idPrefix = `faq-${keyPrefix.replace(/[^a-z0-9]+/gi, "-")}-${locale}`;
   {(entries ?? (items ?? []).map((n) => ({ q: t(locale, `${keyPrefix}.q${n}`), a: t(locale, `${keyPrefix}.a${n}`) }))).map((f, idx) => {
     const panelId = `${idPrefix}-${idx}`;
     return (
-      <article class="group relative overflow-hidden rounded-lg border border-border bg-panel shadow-panel transition-colors hover:border-border-strong" data-faq-item>
+      <article class="group relative overflow-hidden rounded-md border border-border bg-panel shadow-panel transition-colors hover:border-border-strong" data-faq-item>
         <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-primary via-accent to-transparent opacity-70" aria-hidden="true"></div>
         <button
           type="button"

@@ -50,7 +50,7 @@ const breadcrumbJsonLd = {
     <div class="absolute inset-0 bg-panel-deep/50"></div>
     <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
     <div class="absolute left-1/2 top-[42%] h-[32rem] w-[48rem] -translate-x-1/2 -translate-y-1/2 glow-blob opacity-20"></div>
-    <div class="absolute left-[58%] top-[38%] h-64 w-64 rounded-full glow-blob-accent opacity-10"></div>
+    <div class="absolute left-[58%] top-[38%] h-64 w-64 rounded-md glow-blob-accent opacity-10"></div>
     <div class="relative mx-auto max-w-4xl px-6 text-center" data-aos="fade-up">
       <p class="text-2xs font-semibold uppercase tracking-widest text-primary">{t(locale, "features.hero.label")}</p>
       <h1 class="mt-4 text-4xl font-extrabold leading-tightest tracking-tight text-foreground-strong sm:text-6xl">{t(locale, "features.hero.titleLead")}<br /><span class="text-primary">{t(locale, "features.hero.titleAccent")}</span></h1>
@@ -80,7 +80,7 @@ const breadcrumbJsonLd = {
   <section class="relative py-24 sm:py-32">
     <div class="mx-auto max-w-6xl px-6">
       <SectionHeader title={t(locale, "features.tree.heading")} description={t(locale, "features.tree.body")} />
-      <div class="tree-canvas relative overflow-hidden rounded-xl border border-border bg-panel p-5 shadow-panel sm:p-8" data-aos="fade-up">
+      <div class="tree-canvas relative overflow-hidden rounded-md border border-border bg-panel p-5 shadow-panel sm:p-8" data-aos="fade-up">
         <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
         <div class="absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 glow-blob opacity-10"></div>
         <div class="tree-rail relative grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -105,7 +105,7 @@ const breadcrumbJsonLd = {
     <div class="absolute inset-0 bg-panel-deep/50"></div>
     <div class="relative mx-auto max-w-6xl px-6">
       <SectionHeader title={t(locale, "architecture.control.heading")} description={t(locale, "architecture.control.body")} />
-      <div class="control-canvas relative overflow-hidden rounded-xl border border-border bg-panel p-5 shadow-panel sm:p-8" data-aos="fade-up">
+      <div class="control-canvas relative overflow-hidden rounded-md border border-border bg-panel p-5 shadow-panel sm:p-8" data-aos="fade-up">
         <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
         <div class="absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 glow-blob opacity-10"></div>
         <ul class="control-rail relative mx-auto grid max-w-4xl gap-3 sm:grid-cols-2">
@@ -125,7 +125,7 @@ const breadcrumbJsonLd = {
   <section class="relative py-24 sm:py-32">
     <div class="mx-auto max-w-4xl px-6">
       <SectionHeader title={t(locale, "architecture.example.heading")} description={t(locale, "architecture.example.body")} />
-      <div class="example-canvas relative overflow-hidden rounded-xl border border-border bg-panel p-5 shadow-panel sm:p-8" data-aos="fade-up">
+      <div class="example-canvas relative overflow-hidden rounded-md border border-border bg-panel p-5 shadow-panel sm:p-8" data-aos="fade-up">
         <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
         <div class="absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 glow-blob opacity-10"></div>
         <ol class="example-rail relative mx-auto max-w-2xl">
@@ -197,7 +197,7 @@ const breadcrumbJsonLd = {
     top: 1.25rem;
     bottom: 1.25rem;
     width: 2px;
-    border-radius: var(--radius-pill);
+    border-radius: var(--radius-md);
     background: linear-gradient(to bottom, var(--primary), var(--accent));
     opacity: 0.6;
   }

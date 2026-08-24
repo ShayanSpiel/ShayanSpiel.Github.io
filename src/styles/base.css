@@ -117,7 +117,7 @@ select {
 ::-webkit-scrollbar-thumb {
   background: var(--border);
   border: 2px solid var(--background);
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-md);
 }
 
 ::-webkit-scrollbar-thumb:hover {
