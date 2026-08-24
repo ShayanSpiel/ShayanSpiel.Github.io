@@ -123,7 +123,7 @@ const improvementChildren = childrenByParent(improvements);
       {businessTop.length === 0 && <p class="rounded-md border border-border bg-panel p-5 text-sm text-muted-foreground">{t(locale, "live.company.noActive")}</p>}
       {businessTop.map((goal, index) => (
         <li class="live-business-entry relative border-s-2 border-border pb-7 ps-7 last:pb-0" data-live-more-item="business" data-aos="fade-up" hidden={index >= VISIBLE_LIMIT}>
-          <span class="live-timeline-node absolute -start-[9px] top-5 flex h-4 w-4 items-center justify-center rounded-md border-2 border-warning bg-background shadow-[0_0_18px_var(--warning-soft)]" aria-hidden="true"><span class="h-1.5 w-1.5 rounded-md bg-warning"></span></span>
+          <span class="live-timeline-node absolute -start-[9px] top-5 flex h-4 w-4 items-center justify-center rounded-full border-2 border-warning bg-background shadow-[0_0_18px_var(--warning-soft)]" aria-hidden="true"><span class="h-1.5 w-1.5 rounded-full bg-warning"></span></span>
           <article class="group relative overflow-hidden rounded-md border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-0.5 hover:border-border-strong sm:p-6" data-live-parent-id={goal.id}>
             <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-primary via-accent to-transparent opacity-80" aria-hidden="true"></div>
             <div class="flex flex-wrap items-start gap-3">

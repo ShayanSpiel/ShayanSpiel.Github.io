@@ -83,7 +83,7 @@ const hrefs = {
       <div class="inline-flex items-center gap-2 rounded-md border border-border bg-panel-raised px-3 py-1 mb-8" data-aos="fade-up">
         <i class="bx bxs-bot text-primary icon-base"></i>
         <span data-i18n="badge" class="text-2xs text-muted-foreground font-medium">{strings.en.badge}</span>
-        <span class="h-1.5 w-1.5 rounded-md bg-success animate-pulse"></span>
+        <span class="h-1.5 w-1.5 rounded-full bg-success animate-pulse"></span>
       </div>
 
       <!-- Orbit scene -->
@@ -124,12 +124,12 @@ const hrefs = {
       <div class="mt-12 mx-auto max-w-xl text-start" data-aos="fade-up">
         <div class="rounded-md border border-border bg-background-deep shadow-panel overflow-hidden">
           <div class="flex items-center gap-2 border-b border-border px-4 h-10">
-            <span class="h-3 w-3 rounded-md bg-destructive/70"></span>
-            <span class="h-3 w-3 rounded-md bg-warning/70"></span>
-            <span class="h-3 w-3 rounded-md bg-success/70"></span>
+            <span class="h-3 w-3 rounded-full bg-destructive/70"></span>
+            <span class="h-3 w-3 rounded-full bg-warning/70"></span>
+            <span class="h-3 w-3 rounded-full bg-success/70"></span>
             <span data-i18n="terminalTitle" class="ml-2 font-mono text-2xs text-muted-foreground truncate">{strings.en.terminalTitle}</span>
             <span class="ml-auto inline-flex items-center gap-1.5 rounded-md bg-success-soft px-2 py-0.5 text-2xs font-semibold text-success">
-              <span class="h-1 w-1 rounded-md bg-success animate-pulse"></span>
+              <span class="h-1 w-1 rounded-full bg-success animate-pulse"></span>
               <span data-i18n="status">{strings.en.status}</span>
             </span>
           </div>
@@ -372,7 +372,7 @@ const hrefs = {
       align-items: center;
       justify-content: center;
       font-size: var(--font-size-xl);
-      border-radius: var(--radius-md);
+      border-radius: 9999px;
       background: var(--background-deep);
       border: 1px solid var(--border);
       box-shadow: 0 0 14px color-mix(in oklab, currentColor 45%, transparent);
@@ -390,7 +390,7 @@ const hrefs = {
     }
     .particle {
       position: absolute;
-      border-radius: var(--radius-md);
+      border-radius: 9999px;
       animation: spiel-404-float ease-in infinite;
       pointer-events: none;
     }
