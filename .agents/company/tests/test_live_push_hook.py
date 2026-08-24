@@ -106,23 +106,25 @@ class LivePushHookTest(unittest.TestCase):
         self._write_snapshots("v1")
         self.assertFalse(mod.git_push_sequence(),
                          "lease must reject when origin/main moved")
-        tip = git(self.work, "rev-parse", "origin/main")
-        self.assertIn("concurrent writer", git(self.work, "log", "-1", "--format=%s", tip),
+        remote_tip = git(self.work, "ls-remote", "origin", "refs/heads/main").split()[0]
+        self.assertIn("concurrent writer",
+                      git(self.origin, "log", "-1", "--format=%s", remote_tip),
                       "the concurrent commit must survive untouched")
 
         # next transition (fresh fetch) lands the snapshots ON TOP of it
         mod._git = real_git
         self.assertTrue(mod.git_push_sequence())
         self.assertIn("concurrent writer",
-                      git(self.work, "log", "--format=%s", "-3", "origin/main"))
+                      git(self.origin, "log", "--format=%s", "-3", "refs/heads/main"),
+                      "snapshots must land on top of the concurrent commit")
 
     def test_shared_working_tree_untouched(self):
         mod = load_hook(self.work)
         (self.work / "tracked.txt").write_text("dirty\n")
         git(self.work, "add", "tracked.txt")  # staged, like a live session
+        self._write_snapshots("v1")
         head_before = git(self.work, "rev-parse", "HEAD")
         status_before = git(self.work, "status", "--porcelain")
-        self._write_snapshots("v1")
 
         self.assertTrue(mod.git_push_sequence())
 

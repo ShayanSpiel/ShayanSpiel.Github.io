@@ -187,7 +187,7 @@ def git_push_sequence() -> bool:
     finally:
         tmp_index.unlink(missing_ok=True)
 
-    push = _git("push",
+    push = _git("push", "origin",
                 f"--force-with-lease=refs/heads/main:{base}",
                 f"{commit}:refs/heads/main", check=False)
     if push.returncode != 0:

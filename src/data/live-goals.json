@@ -3310,10 +3310,10 @@
     },
     {
       "created_at": "2026-08-22T17:17:25.340801+00:00",
-      "current_value": 1573,
+      "current_value": 1587,
       "goal_status": "active",
       "id": "goal-87a4572a0f",
-      "latest_activity_at": "2026-08-23T22:32:41.353334+00:00",
+      "latest_activity_at": "2026-08-23T23:53:44.022872+00:00",
       "metric": "qualified_social_leads",
       "name": "Research pipeline: grow fully verified English lead pool to 2000 (continuous - don't stop)",
       "operator": "ge",
@@ -3322,7 +3322,7 @@
       "run_status": "blocked",
       "stage": "DECIDE",
       "target": 2500,
-      "updated_at": "2026-08-23T22:32:41.352403+00:00"
+      "updated_at": "2026-08-23T23:53:44.021362+00:00"
     },
     {
       "created_at": "2026-08-23T14:41:35.284821+00:00",
@@ -3353,6 +3353,21 @@
       "stage": "ACT",
       "target": 40,
       "updated_at": "2026-08-23T19:49:10.038378+00:00"
+    },
+    {
+      "created_at": "2026-08-23T22:55:06.936364+00:00",
+      "goal_status": "proposed",
+      "id": "goal-79f1303194",
+      "latest_activity_at": "2026-08-23T22:55:06.947856+00:00",
+      "metric": "acceptance_tests_passed",
+      "name": "Fix live-sync transition hook: surgical snapshot push that can never clobber concurrent writers",
+      "operator": "ge",
+      "owner_id": "system-improvement",
+      "parent_id": null,
+      "run_status": "awaiting_approval",
+      "stage": "DECIDE",
+      "target": 1,
+      "updated_at": "2026-08-23T22:55:06.946769+00:00"
     }
   ],
   "heartbeat": {
@@ -3368,7 +3383,7 @@
     "run_status": "blocked",
     "stage": "DECIDE",
     "target": 2500,
-    "updated_at": "2026-08-23T22:32:41.353334+00:00"
+    "updated_at": "2026-08-23T23:53:44.022872+00:00"
   },
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
@@ -3388,7 +3403,7 @@
       "run_id": "run-9ff4b879f6",
       "run_status": "blocked",
       "stage": "DECIDE",
-      "updated_at": "2026-08-23T22:32:41.353334+00:00"
+      "updated_at": "2026-08-23T23:53:44.022872+00:00"
     },
     "heartbeat": {
       "business_value": null,
@@ -3403,22 +3418,22 @@
       "run_status": "blocked",
       "stage": "DECIDE",
       "target": 2500,
-      "updated_at": "2026-08-23T22:32:41.353334+00:00"
+      "updated_at": "2026-08-23T23:53:44.022872+00:00"
     },
-    "last_activity_at": "2026-08-23T22:32:41.353334+00:00",
-    "last_sync_at": "2026-08-23T22:32:41.477097+00:00",
+    "last_activity_at": "2026-08-23T23:53:44.022872+00:00",
+    "last_sync_at": "2026-08-23T23:53:44.368919+00:00",
     "state": "running"
   },
   "totals": {
     "approvals": 249,
-    "decisions": 819,
-    "evidence": 12823,
+    "decisions": 822,
+    "evidence": 12838,
     "goals_abandoned": 28,
     "goals_achieved": 159,
     "goals_active": 31,
-    "goals_total": 222,
-    "hypotheses": 73,
+    "goals_total": 223,
+    "hypotheses": 74,
     "memory_claims": 5,
-    "runs": 245
+    "runs": 246
   }
 }
