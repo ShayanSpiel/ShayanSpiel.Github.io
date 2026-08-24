@@ -822,16 +822,16 @@
       "display_title_fa": "بازدید هدفمند و درخواست خدمات رو بیشتر کنیم",
       "goal_status": "active",
       "id": "goal-content-growth-operations-v1-20260812",
-      "latest_activity_at": "2026-08-24T02:52:58.659088+00:00",
+      "latest_activity_at": "2026-08-24T02:58:20.280980+00:00",
       "metric": "all_children_achieved",
       "name": "Operate the content growth program toward 200 daily visits and 10 daily services leads",
       "operator": "eq",
       "owner_id": "director",
       "parent_id": null,
-      "run_status": "running",
-      "stage": "DECIDE",
+      "run_status": "waiting",
+      "stage": "OBSERVE",
       "target": true,
-      "updated_at": "2026-08-24T02:52:58.644429+00:00"
+      "updated_at": "2026-08-24T02:53:05.327963+00:00"
     },
     {
       "business_value": "The company needs evidence about which content creates visits and leads.",
@@ -3373,7 +3373,7 @@
       "created_at": "2026-08-24T02:52:55.244893+00:00",
       "goal_status": "active",
       "id": "goal-599f4162ac",
-      "latest_activity_at": "2026-08-24T02:52:57.701313+00:00",
+      "latest_activity_at": "2026-08-24T02:58:20.280980+00:00",
       "metric": "achieved_children",
       "name": "Partners page: AI implementation partner program at /partners for agency-led lead generation",
       "operator": "ge",
@@ -3383,22 +3383,37 @@
       "stage": "DECIDE",
       "target": 1,
       "updated_at": "2026-08-24T02:52:57.700451+00:00"
+    },
+    {
+      "created_at": "2026-08-24T02:58:18.085330+00:00",
+      "goal_status": "active",
+      "id": "goal-21eba50674",
+      "latest_activity_at": "2026-08-24T02:58:20.280980+00:00",
+      "metric": "seo_reports",
+      "name": "SEO verification: /partners metadata, schema, crawlability audit",
+      "operator": "ge",
+      "owner_id": "seo",
+      "parent_id": "goal-599f4162ac",
+      "run_status": "running",
+      "stage": "DECIDE",
+      "target": 1,
+      "updated_at": "2026-08-24T02:58:20.280061+00:00"
     }
   ],
   "heartbeat": {
-    "business_value": "Useful content should create qualified visits and Agent Brief requests.",
-    "business_value_fa": "محتوای مفید باید بازدید هدفمند و درخواست Agent Brief ایجاد کنه.",
-    "display_title": "Grow qualified visits and service leads",
-    "display_title_fa": "بازدید هدفمند و درخواست خدمات رو بیشتر کنیم",
-    "goal_id": "goal-content-growth-operations-v1-20260812",
-    "goal_name": "Operate the content growth program toward 200 daily visits and 10 daily services leads",
-    "metric": "all_children_achieved",
-    "operator": "eq",
-    "owner_id": "director",
+    "business_value": null,
+    "business_value_fa": null,
+    "display_title": null,
+    "display_title_fa": null,
+    "goal_id": "goal-21eba50674",
+    "goal_name": "SEO verification: /partners metadata, schema, crawlability audit",
+    "metric": "seo_reports",
+    "operator": "ge",
+    "owner_id": "seo",
     "run_status": "running",
     "stage": "DECIDE",
-    "target": true,
-    "updated_at": "2026-08-24T02:52:58.659088+00:00"
+    "target": 1,
+    "updated_at": "2026-08-24T02:58:20.280980+00:00"
   },
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
@@ -3411,44 +3426,44 @@
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-12T14:46:23.315615+00:00",
-      "goal_id": "goal-content-growth-operations-v1-20260812",
-      "goal_name": "Operate the content growth program toward 200 daily visits and 10 daily services leads",
-      "owner_id": "director",
-      "run_id": "run-174fc3c856",
+      "created_at": "2026-08-24T02:58:18.085330+00:00",
+      "goal_id": "goal-21eba50674",
+      "goal_name": "SEO verification: /partners metadata, schema, crawlability audit",
+      "owner_id": "seo",
+      "run_id": "run-1d024b9057",
       "run_status": "running",
       "stage": "DECIDE",
-      "updated_at": "2026-08-24T02:52:58.659088+00:00"
+      "updated_at": "2026-08-24T02:58:20.280980+00:00"
     },
     "heartbeat": {
-      "business_value": "Useful content should create qualified visits and Agent Brief requests.",
-      "business_value_fa": "محتوای مفید باید بازدید هدفمند و درخواست Agent Brief ایجاد کنه.",
-      "display_title": "Grow qualified visits and service leads",
-      "display_title_fa": "بازدید هدفمند و درخواست خدمات رو بیشتر کنیم",
-      "goal_id": "goal-content-growth-operations-v1-20260812",
-      "goal_name": "Operate the content growth program toward 200 daily visits and 10 daily services leads",
-      "metric": "all_children_achieved",
-      "operator": "eq",
-      "owner_id": "director",
+      "business_value": null,
+      "business_value_fa": null,
+      "display_title": null,
+      "display_title_fa": null,
+      "goal_id": "goal-21eba50674",
+      "goal_name": "SEO verification: /partners metadata, schema, crawlability audit",
+      "metric": "seo_reports",
+      "operator": "ge",
+      "owner_id": "seo",
       "run_status": "running",
       "stage": "DECIDE",
-      "target": true,
-      "updated_at": "2026-08-24T02:52:58.659088+00:00"
+      "target": 1,
+      "updated_at": "2026-08-24T02:58:20.280980+00:00"
     },
-    "last_activity_at": "2026-08-24T02:52:58.659088+00:00",
-    "last_sync_at": "2026-08-24T02:52:58.752707+00:00",
-    "state": "resting"
+    "last_activity_at": "2026-08-24T02:58:20.280980+00:00",
+    "last_sync_at": "2026-08-24T02:58:20.335217+00:00",
+    "state": "running"
   },
   "totals": {
     "approvals": 249,
-    "decisions": 824,
-    "evidence": 12874,
+    "decisions": 825,
+    "evidence": 12875,
     "goals_abandoned": 28,
     "goals_achieved": 159,
-    "goals_active": 32,
-    "goals_total": 224,
+    "goals_active": 33,
+    "goals_total": 225,
     "hypotheses": 75,
     "memory_claims": 5,
-    "runs": 247
+    "runs": 248
   }
 }
