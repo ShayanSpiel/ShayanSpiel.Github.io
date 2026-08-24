@@ -822,16 +822,16 @@
       "display_title_fa": "بازدید هدفمند و درخواست خدمات رو بیشتر کنیم",
       "goal_status": "active",
       "id": "goal-content-growth-operations-v1-20260812",
-      "latest_activity_at": "2026-08-21T11:33:01.553475+00:00",
+      "latest_activity_at": "2026-08-24T02:52:58.659088+00:00",
       "metric": "all_children_achieved",
       "name": "Operate the content growth program toward 200 daily visits and 10 daily services leads",
       "operator": "eq",
       "owner_id": "director",
       "parent_id": null,
-      "run_status": "waiting",
-      "stage": "OBSERVE",
+      "run_status": "running",
+      "stage": "DECIDE",
       "target": true,
-      "updated_at": "2026-08-21T11:33:01.536020+00:00"
+      "updated_at": "2026-08-24T02:52:58.644429+00:00"
     },
     {
       "business_value": "The company needs evidence about which content creates visits and leads.",
@@ -3310,10 +3310,10 @@
     },
     {
       "created_at": "2026-08-22T17:17:25.340801+00:00",
-      "current_value": 1587,
+      "current_value": 1619,
       "goal_status": "active",
       "id": "goal-87a4572a0f",
-      "latest_activity_at": "2026-08-23T23:53:44.022872+00:00",
+      "latest_activity_at": "2026-08-24T02:39:42.310560+00:00",
       "metric": "qualified_social_leads",
       "name": "Research pipeline: grow fully verified English lead pool to 2000 (continuous - don't stop)",
       "operator": "ge",
@@ -3322,7 +3322,7 @@
       "run_status": "blocked",
       "stage": "DECIDE",
       "target": 2500,
-      "updated_at": "2026-08-23T23:53:44.021362+00:00"
+      "updated_at": "2026-08-24T02:39:42.308547+00:00"
     },
     {
       "created_at": "2026-08-23T14:41:35.284821+00:00",
@@ -3368,22 +3368,37 @@
       "stage": "DECIDE",
       "target": 1,
       "updated_at": "2026-08-23T22:55:06.946769+00:00"
+    },
+    {
+      "created_at": "2026-08-24T02:52:55.244893+00:00",
+      "goal_status": "active",
+      "id": "goal-599f4162ac",
+      "latest_activity_at": "2026-08-24T02:52:57.701313+00:00",
+      "metric": "achieved_children",
+      "name": "Partners page: AI implementation partner program at /partners for agency-led lead generation",
+      "operator": "ge",
+      "owner_id": "director",
+      "parent_id": "goal-content-growth-operations-v1-20260812",
+      "run_status": "blocked",
+      "stage": "DECIDE",
+      "target": 1,
+      "updated_at": "2026-08-24T02:52:57.700451+00:00"
     }
   ],
   "heartbeat": {
-    "business_value": null,
-    "business_value_fa": null,
-    "display_title": null,
-    "display_title_fa": null,
-    "goal_id": "goal-87a4572a0f",
-    "goal_name": "Research pipeline: grow fully verified English lead pool to 2000 (continuous - don't stop)",
-    "metric": "qualified_social_leads",
-    "operator": "ge",
-    "owner_id": "outbound",
-    "run_status": "blocked",
+    "business_value": "Useful content should create qualified visits and Agent Brief requests.",
+    "business_value_fa": "محتوای مفید باید بازدید هدفمند و درخواست Agent Brief ایجاد کنه.",
+    "display_title": "Grow qualified visits and service leads",
+    "display_title_fa": "بازدید هدفمند و درخواست خدمات رو بیشتر کنیم",
+    "goal_id": "goal-content-growth-operations-v1-20260812",
+    "goal_name": "Operate the content growth program toward 200 daily visits and 10 daily services leads",
+    "metric": "all_children_achieved",
+    "operator": "eq",
+    "owner_id": "director",
+    "run_status": "running",
     "stage": "DECIDE",
-    "target": 2500,
-    "updated_at": "2026-08-23T23:53:44.022872+00:00"
+    "target": true,
+    "updated_at": "2026-08-24T02:52:58.659088+00:00"
   },
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
@@ -3396,44 +3411,44 @@
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-22T17:17:25.340801+00:00",
-      "goal_id": "goal-87a4572a0f",
-      "goal_name": "Research pipeline: grow fully verified English lead pool to 2000 (continuous - don't stop)",
-      "owner_id": "outbound",
-      "run_id": "run-9ff4b879f6",
-      "run_status": "blocked",
+      "created_at": "2026-08-12T14:46:23.315615+00:00",
+      "goal_id": "goal-content-growth-operations-v1-20260812",
+      "goal_name": "Operate the content growth program toward 200 daily visits and 10 daily services leads",
+      "owner_id": "director",
+      "run_id": "run-174fc3c856",
+      "run_status": "running",
       "stage": "DECIDE",
-      "updated_at": "2026-08-23T23:53:44.022872+00:00"
+      "updated_at": "2026-08-24T02:52:58.659088+00:00"
     },
     "heartbeat": {
-      "business_value": null,
-      "business_value_fa": null,
-      "display_title": null,
-      "display_title_fa": null,
-      "goal_id": "goal-87a4572a0f",
-      "goal_name": "Research pipeline: grow fully verified English lead pool to 2000 (continuous - don't stop)",
-      "metric": "qualified_social_leads",
-      "operator": "ge",
-      "owner_id": "outbound",
-      "run_status": "blocked",
+      "business_value": "Useful content should create qualified visits and Agent Brief requests.",
+      "business_value_fa": "محتوای مفید باید بازدید هدفمند و درخواست Agent Brief ایجاد کنه.",
+      "display_title": "Grow qualified visits and service leads",
+      "display_title_fa": "بازدید هدفمند و درخواست خدمات رو بیشتر کنیم",
+      "goal_id": "goal-content-growth-operations-v1-20260812",
+      "goal_name": "Operate the content growth program toward 200 daily visits and 10 daily services leads",
+      "metric": "all_children_achieved",
+      "operator": "eq",
+      "owner_id": "director",
+      "run_status": "running",
       "stage": "DECIDE",
-      "target": 2500,
-      "updated_at": "2026-08-23T23:53:44.022872+00:00"
+      "target": true,
+      "updated_at": "2026-08-24T02:52:58.659088+00:00"
     },
-    "last_activity_at": "2026-08-23T23:53:44.022872+00:00",
-    "last_sync_at": "2026-08-23T23:53:44.368919+00:00",
-    "state": "running"
+    "last_activity_at": "2026-08-24T02:52:58.659088+00:00",
+    "last_sync_at": "2026-08-24T02:52:58.752707+00:00",
+    "state": "resting"
   },
   "totals": {
     "approvals": 249,
-    "decisions": 822,
-    "evidence": 12838,
+    "decisions": 824,
+    "evidence": 12874,
     "goals_abandoned": 28,
     "goals_achieved": 159,
-    "goals_active": 31,
-    "goals_total": 223,
-    "hypotheses": 74,
+    "goals_active": 32,
+    "goals_total": 224,
+    "hypotheses": 75,
     "memory_claims": 5,
-    "runs": 246
+    "runs": 247
   }
 }
