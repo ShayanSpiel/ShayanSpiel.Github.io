@@ -64,7 +64,7 @@ const breadcrumbJsonLd = {
 };
 ---
 
-<Page title={title} description={description} image={image} ogType="article" publishedTime={isoDate} modifiedTime={isoDate} tags={tags} locale={locale}>
+<Page title={title} description={description} image={image || `/assets/og/${note.data.permalink.replaceAll("/", "")}.png`} ogType="article" publishedTime={isoDate} modifiedTime={isoDate} tags={tags} locale={locale}>
   <article class="mx-auto max-w-2xl px-6 pt-8 pb-16">
     <nav class="breadcrumb" aria-label={t(locale, "notes.breadcrumbAria")}>
       <a href={localizePath("/", locale)}>{t(locale, "nav.home")}</a>
