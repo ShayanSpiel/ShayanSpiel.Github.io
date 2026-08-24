@@ -212,9 +212,9 @@
     },
     {
       "created_at": "2026-08-10T14:20:58.249107+00:00",
-      "goal_status": "active",
+      "goal_status": "paused",
       "id": "goal-reply-inbound-v3-20260810",
-      "latest_activity_at": "2026-08-13T21:52:02.062985+00:00",
+      "latest_activity_at": "2026-08-24T03:23:24.657939+00:00",
       "metric": "acceptance_tests_passed",
       "name": "Wire reply.spielos.xyz inbound receiving and forward replies to shayan@spielos.xyz",
       "operator": "eq",
@@ -223,7 +223,7 @@
       "run_status": "blocked",
       "stage": "ACT",
       "target": true,
-      "updated_at": "2026-08-13T21:52:02.061922+00:00"
+      "updated_at": "2026-08-24T03:23:24.657939+00:00"
     },
     {
       "created_at": "2026-08-10T14:30:47.529357+00:00",
@@ -696,9 +696,9 @@
     },
     {
       "created_at": "2026-08-12T01:04:19.765764+00:00",
-      "goal_status": "active",
+      "goal_status": "paused",
       "id": "goal-tts-voice-contract-20260812",
-      "latest_activity_at": "2026-08-12T01:13:59.182416+00:00",
+      "latest_activity_at": "2026-08-24T03:23:32.789372+00:00",
       "metric": "acceptance_tests_passed",
       "name": "Multi-provider TTS fallback chain + definitive masculine narration contract + video order readiness",
       "operator": "eq",
@@ -707,7 +707,7 @@
       "run_status": "blocked",
       "stage": "ACT",
       "target": true,
-      "updated_at": "2026-08-12T01:13:59.181667+00:00"
+      "updated_at": "2026-08-24T03:23:32.789372+00:00"
     },
     {
       "created_at": "2026-08-12T02:03:10.620846+00:00",
@@ -756,9 +756,9 @@
     },
     {
       "created_at": "2026-08-12T14:27:08.413082+00:00",
-      "goal_status": "active",
+      "goal_status": "paused",
       "id": "goal-buffer-graphql-direct-v2-20260812",
-      "latest_activity_at": "2026-08-13T22:15:40.925367+00:00",
+      "latest_activity_at": "2026-08-24T03:23:41.956833+00:00",
       "metric": "acceptance_tests_passed",
       "name": "Enable direct Buffer publishing for Threads and YouTube Shorts",
       "operator": "eq",
@@ -767,7 +767,7 @@
       "run_status": "blocked",
       "stage": "ACT",
       "target": true,
-      "updated_at": "2026-08-13T22:15:40.923537+00:00"
+      "updated_at": "2026-08-24T03:23:41.956833+00:00"
     },
     {
       "created_at": "2026-08-12T14:33:22.007825+00:00",
@@ -822,7 +822,7 @@
       "display_title_fa": "بازدید هدفمند و درخواست خدمات رو بیشتر کنیم",
       "goal_status": "active",
       "id": "goal-content-growth-operations-v1-20260812",
-      "latest_activity_at": "2026-08-24T03:21:04.969568+00:00",
+      "latest_activity_at": "2026-08-24T03:32:35.171923+00:00",
       "metric": "all_children_achieved",
       "name": "Operate the content growth program toward 200 daily visits and 10 daily services leads",
       "operator": "eq",
@@ -856,7 +856,7 @@
       "created_at": "2026-08-12T14:46:37.502499+00:00",
       "goal_status": "achieved",
       "id": "goal-content-first-live-package-v1-20260812",
-      "latest_activity_at": "2026-08-14T01:25:32.584138+00:00",
+      "latest_activity_at": "2026-08-24T03:23:50.459552+00:00",
       "metric": "published_items",
       "name": "Prepare and dispatch the first quality-gated Threads and YouTube Shorts package",
       "operator": "ge",
@@ -959,9 +959,9 @@
     },
     {
       "created_at": "2026-08-12T17:02:13.139400+00:00",
-      "goal_status": "active",
+      "goal_status": "paused",
       "id": "goal-campaign-scene-source-alignment-v1-20260812",
-      "latest_activity_at": "2026-08-14T01:25:32.584138+00:00",
+      "latest_activity_at": "2026-08-24T03:23:50.459552+00:00",
       "metric": "acceptance_tests_passed",
       "name": "Bind campaign narration and motion scenes to one current SpielOS source",
       "operator": "eq",
@@ -970,7 +970,7 @@
       "run_status": "blocked",
       "stage": "ACT",
       "target": true,
-      "updated_at": "2026-08-14T01:25:32.583398+00:00"
+      "updated_at": "2026-08-24T03:23:50.459552+00:00"
     },
     {
       "created_at": "2026-08-12T18:54:38.563122+00:00",
@@ -3313,7 +3313,7 @@
       "current_value": 1619,
       "goal_status": "active",
       "id": "goal-87a4572a0f",
-      "latest_activity_at": "2026-08-24T02:39:42.310560+00:00",
+      "latest_activity_at": "2026-08-24T03:32:13.267289+00:00",
       "metric": "qualified_social_leads",
       "name": "Research pipeline: grow fully verified English lead pool to 2000 (continuous - don't stop)",
       "operator": "ge",
@@ -3322,7 +3322,7 @@
       "run_status": "blocked",
       "stage": "DECIDE",
       "target": 2500,
-      "updated_at": "2026-08-24T02:39:42.308547+00:00"
+      "updated_at": "2026-08-24T03:32:13.266052+00:00"
     },
     {
       "created_at": "2026-08-23T14:41:35.284821+00:00",
@@ -3371,18 +3371,18 @@
     },
     {
       "created_at": "2026-08-24T02:52:55.244893+00:00",
-      "goal_status": "active",
+      "goal_status": "achieved",
       "id": "goal-599f4162ac",
-      "latest_activity_at": "2026-08-24T03:21:04.969568+00:00",
+      "latest_activity_at": "2026-08-24T03:32:35.171923+00:00",
       "metric": "achieved_children",
       "name": "Partners page: AI implementation partner program at /partners for agency-led lead generation",
       "operator": "ge",
       "owner_id": "director",
       "parent_id": "goal-content-growth-operations-v1-20260812",
-      "run_status": "blocked",
-      "stage": "DECIDE",
+      "run_status": "completed",
+      "stage": "OBSERVE",
       "target": 1,
-      "updated_at": "2026-08-24T02:52:57.700451+00:00"
+      "updated_at": "2026-08-24T03:32:35.167250+00:00"
     },
     {
       "created_at": "2026-08-24T02:58:18.085330+00:00",
@@ -3403,7 +3403,7 @@
       "created_at": "2026-08-24T03:20:41.449120+00:00",
       "goal_status": "active",
       "id": "goal-site-audit-remediation-20260824",
-      "latest_activity_at": "2026-08-24T03:20:45.675150+00:00",
+      "latest_activity_at": "2026-08-24T03:21:25.276780+00:00",
       "metric": "achieved_children",
       "name": "Site audit remediation: fix all findings from 2026-08-24 full website audit",
       "operator": "ge",
@@ -3413,6 +3413,81 @@
       "stage": "DECIDE",
       "target": 4,
       "updated_at": "2026-08-24T03:20:45.673720+00:00"
+    },
+    {
+      "created_at": "2026-08-24T03:21:13.161113+00:00",
+      "goal_status": "active",
+      "id": "goal-audit-critical-20260824",
+      "latest_activity_at": "2026-08-24T03:21:17.237232+00:00",
+      "metric": "achieved_children",
+      "name": "Audit remediation A: critical fixes (rounded-pill, tool-key mismatch, sitemap 301 stubs, stale docs)",
+      "operator": "ge",
+      "owner_id": "director",
+      "parent_id": "goal-site-audit-remediation-20260824",
+      "run_status": "blocked",
+      "stage": "DECIDE",
+      "target": 1,
+      "updated_at": "2026-08-24T03:21:17.236068+00:00"
+    },
+    {
+      "created_at": "2026-08-24T03:21:13.397992+00:00",
+      "goal_status": "active",
+      "id": "goal-audit-seo-20260824",
+      "latest_activity_at": "2026-08-24T03:21:17.566660+00:00",
+      "metric": "achieved_children",
+      "name": "Audit remediation B: SEO/schema fixes (Offer schema, breadcrumbs, domains, robots, FA localization)",
+      "operator": "ge",
+      "owner_id": "director",
+      "parent_id": "goal-site-audit-remediation-20260824",
+      "run_status": "blocked",
+      "stage": "DECIDE",
+      "target": 1,
+      "updated_at": "2026-08-24T03:21:17.565265+00:00"
+    },
+    {
+      "created_at": "2026-08-24T03:21:21.111907+00:00",
+      "goal_status": "active",
+      "id": "goal-audit-design-20260824",
+      "latest_activity_at": "2026-08-24T03:21:24.770742+00:00",
+      "metric": "achieved_children",
+      "name": "Audit remediation C: design-system fixes (icons, token dup, icon scale, blob utility, theme toggle)",
+      "operator": "ge",
+      "owner_id": "director",
+      "parent_id": "goal-site-audit-remediation-20260824",
+      "run_status": "blocked",
+      "stage": "DECIDE",
+      "target": 1,
+      "updated_at": "2026-08-24T03:21:24.769478+00:00"
+    },
+    {
+      "created_at": "2026-08-24T03:21:21.253817+00:00",
+      "goal_status": "active",
+      "id": "goal-audit-cleanup-20260824",
+      "latest_activity_at": "2026-08-24T03:21:25.276780+00:00",
+      "metric": "achieved_children",
+      "name": "Audit remediation D: performance + dead weight cleanup (Cal gating, font preloads, orphans, scripts)",
+      "operator": "ge",
+      "owner_id": "director",
+      "parent_id": "goal-site-audit-remediation-20260824",
+      "run_status": "blocked",
+      "stage": "DECIDE",
+      "target": 1,
+      "updated_at": "2026-08-24T03:21:25.275528+00:00"
+    },
+    {
+      "created_at": "2026-08-24T03:25:16.730683+00:00",
+      "goal_status": "active",
+      "id": "goal-36c9f303a4",
+      "latest_activity_at": "2026-08-24T03:25:51.877958+00:00",
+      "metric": "acceptance_tests_passed",
+      "name": "Fix approval surfacing: every awaiting_approval run must appear in status Needs-attention with a pending approval notification until resolved",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "parent_id": null,
+      "run_status": "awaiting_approval",
+      "stage": "ACT",
+      "target": "True",
+      "updated_at": "2026-08-24T03:25:51.875968+00:00"
     }
   ],
   "heartbeat": {
@@ -3420,15 +3495,15 @@
     "business_value_fa": null,
     "display_title": null,
     "display_title_fa": null,
-    "goal_id": "goal-site-audit-remediation-20260824",
-    "goal_name": "Site audit remediation: fix all findings from 2026-08-24 full website audit",
-    "metric": "achieved_children",
+    "goal_id": "goal-87a4572a0f",
+    "goal_name": "Research pipeline: grow fully verified English lead pool to 2000 (continuous - don't stop)",
+    "metric": "qualified_social_leads",
     "operator": "ge",
-    "owner_id": "director",
+    "owner_id": "outbound",
     "run_status": "blocked",
     "stage": "DECIDE",
-    "target": 4,
-    "updated_at": "2026-08-24T03:20:45.675150+00:00"
+    "target": 2500,
+    "updated_at": "2026-08-24T03:32:13.267289+00:00"
   },
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
@@ -3441,44 +3516,44 @@
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-24T03:20:41.449120+00:00",
-      "goal_id": "goal-site-audit-remediation-20260824",
-      "goal_name": "Site audit remediation: fix all findings from 2026-08-24 full website audit",
-      "owner_id": "director",
-      "run_id": "run-be5200b8f7",
+      "created_at": "2026-08-22T17:17:25.340801+00:00",
+      "goal_id": "goal-87a4572a0f",
+      "goal_name": "Research pipeline: grow fully verified English lead pool to 2000 (continuous - don't stop)",
+      "owner_id": "outbound",
+      "run_id": "run-9ff4b879f6",
       "run_status": "blocked",
       "stage": "DECIDE",
-      "updated_at": "2026-08-24T03:20:45.675150+00:00"
+      "updated_at": "2026-08-24T03:32:13.267289+00:00"
     },
     "heartbeat": {
       "business_value": null,
       "business_value_fa": null,
       "display_title": null,
       "display_title_fa": null,
-      "goal_id": "goal-site-audit-remediation-20260824",
-      "goal_name": "Site audit remediation: fix all findings from 2026-08-24 full website audit",
-      "metric": "achieved_children",
+      "goal_id": "goal-87a4572a0f",
+      "goal_name": "Research pipeline: grow fully verified English lead pool to 2000 (continuous - don't stop)",
+      "metric": "qualified_social_leads",
       "operator": "ge",
-      "owner_id": "director",
+      "owner_id": "outbound",
       "run_status": "blocked",
       "stage": "DECIDE",
-      "target": 4,
-      "updated_at": "2026-08-24T03:20:45.675150+00:00"
+      "target": 2500,
+      "updated_at": "2026-08-24T03:32:13.267289+00:00"
     },
-    "last_activity_at": "2026-08-24T03:21:04.969568+00:00",
-    "last_sync_at": "2026-08-24T03:21:05.104901+00:00",
+    "last_activity_at": "2026-08-24T03:32:35.171923+00:00",
+    "last_sync_at": "2026-08-24T03:32:35.481222+00:00",
     "state": "running"
   },
   "totals": {
-    "approvals": 249,
-    "decisions": 828,
-    "evidence": 12878,
+    "approvals": 250,
+    "decisions": 834,
+    "evidence": 12899,
     "goals_abandoned": 28,
-    "goals_achieved": 160,
+    "goals_achieved": 161,
     "goals_active": 33,
-    "goals_total": 226,
-    "hypotheses": 75,
+    "goals_total": 231,
+    "hypotheses": 76,
     "memory_claims": 5,
-    "runs": 249
+    "runs": 254
   }
 }
