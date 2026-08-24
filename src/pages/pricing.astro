@@ -2,7 +2,7 @@
 import Page from "../layouts/Page.astro";
 import SectionHeader from "../components/sections/SectionHeader.astro";
 import FAQList from "../components/sections/FAQList.astro";
-import { SITE } from "../config";
+import { SITE, AUTHOR } from "../config";
 import { type Locale, t } from "../i18n/translations";
 import { localizePath } from "../i18n";
 
@@ -24,6 +24,27 @@ const breadcrumbJsonLd = {
     { "@type": "ListItem", position: 2, name: t(locale, "conversion.pricing.hero.label"), item: `${SITE.url}${localizePath("/pricing/", locale)}` },
   ],
 };
+
+// Price derived from page copy ("$2,990 / month") — one monthly rate for the
+// implementation service. Provider/seller reference the site-wide #person @id.
+const offerJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "@id": `${SITE.url}${localizePath("/pricing/", locale)}#offer`,
+  name: t(locale, "conversion.pricing.pageTitle"),
+  description: t(locale, "conversion.pricing.package.title"),
+  url: `${SITE.url}${localizePath("/pricing/", locale)}`,
+  serviceType: "AI automation implementation",
+  provider: { "@id": `${SITE.url}/#person`, name: AUTHOR.name },
+  offers: {
+    "@type": "Offer",
+    price: "2990",
+    priceCurrency: "USD",
+    url: `${SITE.url}${localizePath("/pricing/", locale)}`,
+    availability: "https://schema.org/InStock",
+    seller: { "@id": `${SITE.url}/#person`, name: AUTHOR.name },
+  },
+};
 ---
 
 <Page
@@ -36,7 +57,7 @@ const breadcrumbJsonLd = {
     <div class="absolute inset-0 bg-panel-deep/50"></div>
     <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
     <div class="absolute left-1/2 top-[42%] h-[34rem] w-[52rem] -translate-x-1/2 -translate-y-1/2 glow-blob opacity-20"></div>
-    <div class="absolute left-[58%] top-[38%] h-64 w-64 rounded-full opacity-10" style="background: radial-gradient(closest-side, var(--accent), transparent 72%);"></div>
+    <div class="absolute left-[58%] top-[38%] h-64 w-64 rounded-full glow-blob-accent opacity-10"></div>
     <div class="relative mx-auto max-w-4xl px-6 text-center" data-aos="fade-up">
       <div>
         <p class="text-2xs font-semibold uppercase tracking-widest text-primary">{t(locale, "conversion.pricing.hero.label")}</p>
@@ -48,6 +69,7 @@ const breadcrumbJsonLd = {
           <a href={localizePath("/apply/", locale)} class="inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:brightness-110">{t(locale, "cta.apply")}</a>
           <span class="text-sm text-foreground-muted sm:ms-2">{t(locale, "conversion.pricing.hero.price")}</span>
         </div>
+        <p class="mt-5 text-xs text-muted-foreground" set:html={t(locale, "partners.fromPricing.pre") + `<a class="font-semibold text-primary hover:underline" href="${localizePath("/partners/", locale)}" data-cta-location="pricing_partners">${t(locale, "partners.fromPricing.link")}</a>${t(locale, "partners.fromPricing.post")}`} />
       </div>
     </div>
   </section>
@@ -122,4 +144,5 @@ const breadcrumbJsonLd = {
   </section>
 
   <script type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
+  <script type="application/ld+json" set:html={JSON.stringify(offerJsonLd)} />
 </Page>

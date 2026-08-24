@@ -12,19 +12,25 @@ The site converts qualified visitors into two outcomes:
 2. Leads who are not ready to buy but will start a conversation (Discovery
    Call), or continue learning through notes and feature pages.
 
-The primary buyer path is `/services/`. Every conversion CTA is a native Cal embed
-trigger — `<button data-cal-link="shayanspiel/15min" data-cal-config='{"layout":"month_view","theme":"dark"}'>`
-(flow.digital pattern) — that opens Cal's booking embed (popup) right on the page:
-no navigation away from the site, no direct cal.com tab, no custom modal wrapper.
-`app.cal.com` embed.js loads site-wide with preconnect so the popup opens as fast
-as possible. The Agent Brief page remains available as an informational experience
-at `/services/agent-brief/` and on the services page; it has no request form. Do
-not replace it with a generic CTA page and do not reintroduce `/book/` navigation
-or direct cal.com links on conversion CTAs.
-The general fallback is `/contact/`. The retired `/waitlist/`, `/architecture/`,
-and all other migration-redirect routes have been removed entirely — there are
-no redirect stubs in `src/pages/`. The former showcase implementation remains recoverable in
-Git history and is not part of the active funnel.
+The primary buyer path is the **Apply — Free Review funnel** at `/apply/`
+(fed by `/services/` and `/pricing/`). The navbar CTA on desktop and mobile
+points at `/apply/`; clicks fire `apply_cta_clicked` (with their
+`data-cta-location`) and a completed wizard submission fires
+`apply_submitted`. Cal booking is an optional secondary action only: a small
+icon CTA on the Contact and Apply pages ("Not sure?" sections) opens Cal's
+native booking embed (popup) right on the page via
+`<button data-cal-link="shayanspiel/15min" data-cal-config='{"layout":"month_view","theme":"dark","ui.color-scheme":"dark"}'>`.
+`app.cal.com` embed.js loads site-wide with preconnect so that popup opens as
+fast as possible. The Agent Brief page remains available as an informational
+experience at `/services/agent-brief/` and on the services page; it has no
+request form. Do not replace it with a generic CTA page and do not
+reintroduce `/book/` navigation or direct cal.com links on conversion CTAs.
+The general fallback is `/contact/`, and `/partners/` covers partnership
+inquiries. The former `/waitlist/` route is gone entirely; legacy software,
+software-hub, and use-case URLs survive only as 301 redirect stubs to the
+`/solutions/**` tree and are excluded from the sitemap. The former showcase
+implementation remains recoverable in Git history and is not part of the
+active funnel.
 
 ## One Idea Hierarchy
 
@@ -47,46 +53,66 @@ to the next relevant step.
 ```text
 Founder / operator with repetitive work
         ↓
-Homepage, founder story, notes, Architecture, Live
+Homepage, founder story, notes, solutions tree, Live
         ↓
-Services implementation offer and Agent Brief framework
+Services and pricing, then the Apply — Free Review wizard (primary CTA)
         ↓
-Discovery Call booking (native Cal embed popup on the page) or contact form
+Free review application (optional Cal Discovery Call icon CTA or contact form)
         ↓
 Qualified buyer conversation
 ```
+
+## Route inventory
+
+Live routes: `/`, `/founder/`, `/notes/**`, `/contact/` (+ thank-you),
+`/services/`, `/services/agent-brief/`, `/pricing/`, `/apply/` (+ thank-you),
+`/live/`, `/partners/` (EN + FA twin), `/landing/lead-researcher/`
+(EN + FA twin), the full `/solutions/**` tree — hub `/solutions/`,
+`/solutions/ai-departments/{index,design,content,marketing,seo,analytics}`
+plus `/solutions/ai-departments/design/gallery/`,
+`/solutions/workflows/{index,[slug]}` with the 8 `WORKFLOW_SOLUTIONS` slugs,
+`/solutions/software/{index,[slug]}` with the 14 `SOFTWARE_SOLUTIONS` keys —
+and `/features/**`. FA thin wrappers exist under `/fa/**` for all of them.
+Legacy `/{key}-ai-automation/`, `/software/`, and `/use-cases/**` URLs
+(EN + FA) remain only as 301 redirect stubs into `/solutions/**`.
 
 ## Route ownership
 
 | Area | Routes | Owner |
 |---|---|---|
 | Positioning | `/`, `/founder/` | Page components + `src/config.ts` |
-| Buyer conversion | `/services/`, `/services/agent-brief/` | Services pages + native Cal embed popup CTAs (`BOOKING_LINK`) |
+| Buyer conversion | `/apply/` (+ thank-you), `/services/`, `/services/agent-brief/`, `/pricing/` | Services, pricing, and Apply wizard pages; navbar Apply CTA (`APPLY_PATH`) |
+| Solutions IA | `/solutions/**` (departments, workflows, software) | Solutions pages + `SOFTWARE_SOLUTIONS` / `WORKFLOW_SOLUTIONS` data |
+| Partnerships | `/partners/` | Partners page + translations |
+| Landing pages | `/landing/lead-researcher/` | Landing page component |
+| Product education | `/features/**`, `/live/` | Feature layouts and Live page components |
 | General leads | `/contact/`, `/contact/thank-you/` | Contact page + `FORMS` config |
-| Product education | `/architecture/`, `/live/` | Architecture and Live page components |
 | Founder-led content | `/notes/**` | Notes collection + post components |
-| Legacy feature detail | `/features/**` subpages | Retained with `noindex, follow` pending evidence-based retirement |
 
-`/use-cases/`, `/contact/thank-you/`, `/fa/contact/thank-you/`, and archived
-product pages are not indexable. They may remain crawlable so search engines
-can process their robots directives. The Design use-case pages under
-`/use-cases/design/` are indexable per the Indexation policy below.
+Thank-you pages (`/contact/thank-you/`, `/apply/thank-you/`, and their FA
+twins) are not indexable. The 301 redirect stubs listed above carry no
+canonical content and are excluded from `sitemap.xml` in `astro.config.mjs`.
+Archived product pages (`/spielos-v1/`) are `noindex, follow`.
 
-## Use-case pages and the build-driven gallery
+## Design department page and the build-driven gallery
 
-The Design use case lives on two routes:
+The AI Design department lives on two routes:
 
-- `/use-cases/design/` - the department case: how it works, workflows,
-  agents, skills, connections, artifacts, and the Changes-live registry panel.
-  Indexable, with EN/FA canonical and hreflang pairs and breadcrumb JSON-LD.
-- `/use-cases/design/gallery/` - a categorized template gallery that is
-  rebuilt from the live registry at every deploy, showing every registered
-  Design archetype: motion (kind `shorts`) and stills (kind `social`), plus
-  the legacy core set and badges for New (v3.4 additions via
-  `content_relevance`) and Preview (unconfirmed, `confirmed: false`).
+- `/solutions/ai-departments/design/` - the department case: how it works,
+  workflows, agents, skills, connections, artifacts, and the Changes-live
+  registry panel. Indexable, with EN/FA canonical and hreflang pairs and
+  breadcrumb JSON-LD. The old `/use-cases/design/` URL 301-redirects here.
+- `/solutions/ai-departments/design/gallery/` - a categorized template
+  gallery that is rebuilt from the live registry at every deploy, showing
+  every registered Design archetype: motion (kind `shorts`) and stills
+  (kind `social`), plus the legacy core set and badges for New (v3.4
+  additions via `content_relevance`) and Preview (unconfirmed,
+  `confirmed: false`). The old `/use-cases/design/gallery/` URL
+  301-redirects here.
 
-Persian thin wrappers at `/fa/use-cases/design/` and
-`/fa/use-cases/design/gallery/` pass `locale="fa"` to the same components.
+Persian thin wrappers at `/fa/solutions/ai-departments/design/` and
+`/fa/solutions/ai-departments/design/gallery/` pass `locale="fa"` to the
+same components.
 
 Build data flow for the gallery:
 
@@ -101,15 +127,19 @@ Build data flow for the gallery:
    automatically. Badges and composition-source lines come from the registry
    entry plus `useCases.design.gallery.*` translations.
 
-Navigation: the default nav renders a How it works dropdown as one flat
-two-category mega menu (Features column: Director, Departments, Workflows,
-Agents, Skills, Evals, Connections, Artifacts; Use Cases column: Design) from
+Navigation: the default nav renders the Solutions dropdown as one flat
+four-category mega menu (AI Departments column: Design, Content, Marketing,
+SEO, Analytics, Design Template Gallery; By Workflow column: the 8
+`WORKFLOW_SOLUTIONS` pages; Software Automation column: 14 of the
+`SOFTWARE_SOLUTIONS` pages; SpielOS → AI Company column: Director,
+Departments, Workflows, Agents, Skills, Evals, Connections, Artifacts) from
 the `NavLink.children` category model in `src/config.ts`;
 `src/components/Nav.astro` renders it (desktop hover-intent with a leave
 delay and a transparent trigger-to-panel bridge, focus/Enter open, Esc close,
 tap-toggle for coarse pointers, mobile category accordion, RTL-aware). There
 are no second-level sub-menus or flyouts. Every menu item carries its own
-distinct boxicon. The Live dot and the Discovery Call booking CTA are preserved.
+distinct boxicon. The Live dot is preserved and the primary navbar CTA is
+the Apply funnel link (`apply_cta_clicked`).
 
 The active website journey surfaces are isolated. The homepage hero uses
 `src/components/HomepageHeroJourney.astro` with its own anchor-timed draw;
@@ -133,12 +163,16 @@ assets under `.agents/company/departments/design/templates/`.
 
 ## Conversion analytics
 
-Booking events (PostHog + GA4): `booking_cta_clicked` (with `cta_type: book_call`)
-fires when a visitor clicks any booking CTA; `booked_call` fires when the Cal
-embed (popup) reports a successful booking. The Cal.com-to-Attio sync captures
-the booked call separately for the `booked_calls` metric. `cta_clicked` still
-covers `/services/` and primary-action clicks. Contact submissions use the generic
-`lead_*` vocabulary; analytics never include form contents or visitor identity.
+Apply funnel events (PostHog + GA4) are primary: `apply_cta_clicked` fires
+(with `data-cta-location`) when a visitor clicks any Apply CTA, and
+`apply_submitted` fires on a completed wizard submission. Cal booking events
+remain for the optional icon CTA: `booking_cta_clicked` (with
+`cta_type: book_call`) when a visitor clicks a booking CTA; `booked_call`
+when the Cal embed (popup) reports a successful booking. The
+Cal.com-to-Attio sync captures the booked call separately for the
+`booked_calls` metric. `cta_clicked` still covers `/services/` and
+primary-action clicks. Contact submissions use the generic `lead_*`
+vocabulary; analytics never include form contents or visitor identity.
 
 No event may contain email addresses, names, messages, business descriptions,
 or other form contents.

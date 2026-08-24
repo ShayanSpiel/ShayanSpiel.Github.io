@@ -22,8 +22,8 @@ const breadcrumbJsonLd = {
   "@type": "BreadcrumbList",
   itemListElement: [
     { "@type": "ListItem", position: 1, name: t(locale, "nav.home"), item: `${SITE.url}${localizePath("/", locale)}` },
-    { "@type": "ListItem", position: 2, name: t(locale, "nav.solutions"), item: `${SITE.url}${localizePath("/features/", locale)}` },
-    { "@type": "ListItem", position: 3, name: t(locale, "nav.bysoftware"), item: `${SITE.url}${localizePath("/software/", locale)}` },
+    { "@type": "ListItem", position: 2, name: t(locale, "nav.solutions"), item: `${SITE.url}${localizePath("/solutions/", locale)}` },
+    { "@type": "ListItem", position: 3, name: t(locale, "nav.bysoftware"), item: `${SITE.url}${localizePath("/solutions/software/", locale)}` },
   ],
 };
 ---
@@ -31,7 +31,7 @@ const breadcrumbJsonLd = {
 <Page title={t(locale, "softwareHub.pageTitle")} description={t(locale, "softwareHub.pageDesc")} image="/assets/og/software-hub.png" locale={locale}>
   <FeatureHero
     locale={locale}
-    breadcrumbs={[{ label: t(locale, "nav.solutions"), href: "/features/" }, { label: t(locale, "nav.bysoftware") }]}
+    breadcrumbs={[{ label: t(locale, "nav.solutions"), href: localizePath("/solutions/", locale) }, { label: t(locale, "nav.bysoftware") }]}
     title={t(locale, "softwareHub.hero.title")}
     description={t(locale, "softwareHub.hero.desc")}
   />

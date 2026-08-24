@@ -99,7 +99,7 @@ const breadcrumbJsonLd = {
         </div>
       </div>
 
-      <script is:inline define:vars={{ formEndpoint: FORMS.contact }}>
+      <script is:inline define:vars={{ formEndpoint: FORMS.contact, thankYouUrl: localizePath("/contact/thank-you/", locale) }}>
       (function() {
         var form = document.getElementById('contact-form');
         var btn = document.getElementById('submit-btn');
@@ -150,9 +150,10 @@ const breadcrumbJsonLd = {
             });
 
             if (response.ok) {
-              form.classList.add('hidden');
-              successState.classList.remove('hidden');
               track('lead_form_success');
+              // Success lands on the localized thank-you page (the inline
+              // success panel is kept as a no-JS/fallback structure).
+              window.location.href = thankYouUrl;
             } else {
               throw new Error('Submission failed');
             }

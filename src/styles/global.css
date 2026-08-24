@@ -44,15 +44,15 @@ i[class*=" bxs-"] {
 
 @layer components {
   /* ── Icon size utilities ── */
-  .icon-xs { font-size: 10px; }
-  .icon-sm { font-size: 12px; }
-  .icon-md { font-size: 14px; }
+  .icon-xs { font-size: var(--font-size-3xs); }
+  .icon-sm { font-size: var(--font-size-xs); }
+  .icon-md { font-size: var(--font-size-sm); }
   .icon-base { font-size: var(--font-size-base); }
   .icon-lg { font-size: var(--font-size-lg); }
   .icon-xl { font-size: var(--font-size-xl); }
-  .icon-2xl { font-size: 20px; }
-  .icon-3xl { font-size: 22px; }
-  .icon-4xl { font-size: 24px; }
+  .icon-2xl { font-size: 22px; } /* contract size — no matching token */
+  .icon-3xl { font-size: var(--font-size-2xl); }
+  .icon-4xl { font-size: var(--font-size-2xl); }
 
   /* ── Skip link ── */
   .skip-link:focus {
@@ -341,6 +341,13 @@ i[class*=" bxs-"] {
   .glow-blob {
     background: radial-gradient(closest-side, var(--primary), transparent 72%);
     border-radius: 50%;
+  }
+  /* Color variants — pair with positioning/size utilities (rounded-full + opacity-*) */
+  .glow-blob-accent {
+    background: radial-gradient(closest-side, var(--accent), transparent 72%);
+  }
+  .glow-blob-purple {
+    background: radial-gradient(closest-side, var(--purple), transparent 72%);
   }
 
   /* ── Feature icon container ── */

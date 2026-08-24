@@ -1,6 +1,8 @@
 ---
 import Page from "../../layouts/Page.astro";
 import { type Locale, t } from "../../i18n/translations";
+import { localizePath } from "../../i18n";
+import { APPLY_PATH } from "../../config";
 import { SOFTWARE_SOLUTIONS } from "../../data/software-solutions";
 import { WORKFLOW_SOLUTIONS } from "../../data/workflow-solutions";
 
@@ -71,13 +73,13 @@ const filters = [
       <div class="mb-8 flex items-end justify-between gap-4 flex-wrap" data-aos="fade-up">
         <div>
           <span class="text-2xs font-semibold uppercase tracking-widest text-primary">{t(locale, "solutions.workflows.group")}</span>
-          <h2 class="font-bold text-foreground-strong tracking-tight mt-2 text-2xl sm:text-3xl">What work do you want off your plate?</h2>
+          <h2 class="font-bold text-foreground-strong tracking-tight mt-2 text-2xl sm:text-3xl">{t(locale, "solutions.workflows.hub.title")}</h2>
         </div>
-        <a href="/solutions/workflows/" class="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:opacity-80">{t(locale, "solutions.viewall.workflows")}<i class="bx bx-chevron-right rtl-flip icon-md" aria-hidden="true"></i></a>
+        <a href={localizePath("/solutions/workflows/", locale)} class="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:opacity-80">{t(locale, "solutions.viewall.workflows")}<i class="bx bx-chevron-right rtl-flip icon-md" aria-hidden="true"></i></a>
       </div>
       <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" data-aos="fade-up">
         {WORKFLOW_SOLUTIONS.map((w) => (
-          <a href={`/solutions/workflows/${w.slug}/`} class="group relative flex flex-col overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
+          <a href={localizePath(`/solutions/workflows/${w.slug}/`, locale)} class="group relative flex flex-col overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
             <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r opacity-80 from-primary via-accent to-transparent"></div>
             <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-md bg-primary-soft text-primary shadow-[0_0_18px_var(--primary-soft)]"><i class={`bx ${WF_ICONS[w.slug] ?? "bx-repeat"} icon-xl`} aria-hidden="true"></i></div>
             <h3 class="text-sm font-semibold text-foreground-strong group-hover:text-primary transition-colors">{t(locale, `wf.${w.slug}.name`)}</h3>
@@ -94,11 +96,11 @@ const filters = [
     <div class="relative mx-auto max-w-6xl px-6">
       <div class="mb-8 max-w-xl" data-aos="fade-up">
         <span class="text-2xs font-semibold uppercase tracking-widest text-primary">{t(locale, "solutions.departments.group")}</span>
-        <h2 class="font-bold text-foreground-strong tracking-tight mt-2 text-2xl sm:text-3xl">Departments that run real company work.</h2>
+        <h2 class="font-bold text-foreground-strong tracking-tight mt-2 text-2xl sm:text-3xl">{t(locale, "solutions.hub.departmentsTitle")}</h2>
       </div>
       <div class="grid gap-3 md:grid-cols-2 lg:grid-cols-3" data-aos="fade-up">
         {departments.map((d) => (
-          <a href={`/solutions/ai-departments/${d.slug}/`} class="group relative flex flex-col overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
+          <a href={localizePath(`/solutions/ai-departments/${d.slug}/`, locale)} class="group relative flex flex-col overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
             <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r opacity-80 from-accent via-purple to-transparent"></div>
             <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-md bg-accent-soft text-accent"><i class={`${d.icon} icon-xl`} aria-hidden="true"></i></div>
             <h3 class="text-sm font-semibold text-foreground-strong group-hover:text-primary transition-colors">{t(locale, `useCases.card.${d.slug}.title`)}</h3>
@@ -114,11 +116,11 @@ const filters = [
     <div class="mx-auto max-w-6xl px-6">
       <div class="mb-8 max-w-xl" data-aos="fade-up">
         <span class="text-2xs font-semibold uppercase tracking-widest text-primary">{t(locale, "solutions.software.group")}</span>
-        <h2 class="font-bold text-foreground-strong tracking-tight mt-2 text-2xl sm:text-3xl">One concrete workflow on the software you already use.</h2>
+        <h2 class="font-bold text-foreground-strong tracking-tight mt-2 text-2xl sm:text-3xl">{t(locale, "solutions.hub.softwareTitle")}</h2>
       </div>
       <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" data-aos="fade-up">
         {SOFTWARE_SOLUTIONS.map((s) => (
-          <a href={`/solutions/software/${s.slug}/`} class="group relative flex items-start gap-4 overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
+          <a href={localizePath(`/solutions/software/${s.slug}/`, locale)} class="group relative flex items-start gap-4 overflow-hidden rounded-lg border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
             <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-primary via-accent to-transparent opacity-60"></div>
             <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border border-border bg-panel-raised shadow-panel transition-all group-hover:-translate-y-0.5 [&>svg]:h-8 [&>svg]:w-8" set:html={brandLogo(s.key)} />
             <span class="min-w-0">
@@ -134,8 +136,8 @@ const filters = [
   <section class="relative overflow-hidden py-24 sm:py-32">
     <div class="absolute inset-0 bg-panel-deep/50"></div>
     <div class="relative mx-auto max-w-3xl px-6 text-center" data-aos="fade-up">
-      <h2 class="text-3xl font-bold tracking-tight text-foreground-strong sm:text-4xl">Not sure which one fits? Show us the work.</h2>
-      <a href="/apply/" data-cta-location="solutions_hub_final" class="mt-8 inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:brightness-110">Apply — Free Review</a>
+      <h2 class="text-3xl font-bold tracking-tight text-foreground-strong sm:text-4xl">{t(locale, "solutions.hub.ctaTitle")}</h2>
+      <a href={localizePath(APPLY_PATH, locale)} data-cta-location="solutions_hub_final" class="mt-8 inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:brightness-110">{t(locale, "cta.apply")}</a>
     </div>
   </section>
 

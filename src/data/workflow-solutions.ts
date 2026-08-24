@@ -96,7 +96,7 @@ export const WORKFLOW_SOLUTIONS: WorkflowSolution[] = [
       { title: "Prepare the team handoff", desc: "An internal summary of who the client is and what they need, ready before kickoff." },
       { title: "Escalate exceptions", desc: "Unusual answers, stalled clients, or special requests go to a person immediately." },
     ],
-    toolKeys: ["gmail", "hubspot", "attio", "google-drive", "notion", "google-calendar"],
+    toolKeys: ["gmail", "hubspot", "attio", "drive", "notion", "calendar"],
     audiences: [
       { name: "Agencies & consultancies", note: "Recurring onboarding per client, high coordination cost." },
       { name: "Accounting & professional services", note: "Document-heavy intake with strict completeness requirements." },
@@ -215,7 +215,7 @@ export const WORKFLOW_SOLUTIONS: WorkflowSolution[] = [
       { title: "Flag uncertain entries", desc: "Low-confidence extractions queue for quick human review instead of corrupting data." },
       { title: "Preserve source evidence", desc: "Every stored value links back to the original email or document it came from." },
     ],
-    toolKeys: ["gmail", "attio", "hubspot", "notion", "google-drive", "zapier"],
+    toolKeys: ["gmail", "attio", "hubspot", "notion", "drive", "zapier"],
     audiences: [
       { name: "Operations teams", note: "High volume of forms, orders, and confirmations daily." },
       { name: "Sales & CRM owners", note: "Lead and contact data arriving from many channels." },
@@ -435,7 +435,7 @@ export const WORKFLOW_SOLUTIONS: WorkflowSolution[] = [
     withText:
       "Every inquiry is captured the same way: structured, completed, categorized, filed, and routed with an internal summary — so the first human conversation happens with context already prepared.",
     flowStates: ["Inquiry arrives", "Requirements extracted", "Gaps asked", "Docs collected", "Categorized", "Routed to owner", "Summary ready"],
-    flowIcons: ["bx-envelope-open","bx-search-alt","bx-help-circle","bx-folder-open","bx-collection","bx-network-chart","bx-file"],
+    flowIcons: ["bx-envelope-open","bx-search-alt","bx-info-square","bx-folder-open","bx-collection","bx-network-chart","bx-file"],
     toolKeys: ["gmail", "hubspot", "attio", "notion", "slack"],
         automateIntro: "What client intake automation handles:",
     automate: [
@@ -564,7 +564,7 @@ export const WORKFLOW_SOLUTIONS: WorkflowSolution[] = [
       { title: "Request replacements", desc: "Expired or wrong documents trigger a specific, polite re-request." },
       { title: "Report true status", desc: "One glance shows what is in, what is missing, and what is blocked." },
     ],
-    toolKeys: ["gmail", "google-drive", "slack", "notion"],
+    toolKeys: ["gmail", "drive", "slack", "notion"],
     audiences: [
       { name: "Accounting firms", note: "Seasonal floods of client documents with hard deadlines." },
       { name: "Recruitment agencies", note: "CVs, IDs, contracts, certifications per placement." },
@@ -798,7 +798,7 @@ export const WORKFLOW_SOLUTIONS: WorkflowSolution[] = [
       { title: "Route exceptions and approvals", desc: "Oddities go to the right reviewer; normal ones to routine approval." },
       { title: "Preserve documents and history", desc: "Original file plus every processing decision, permanently attached." },
     ],
-    toolKeys: ["gmail", "google-drive", "slack", "notion"],
+    toolKeys: ["gmail", "drive", "slack", "notion"],
     audiences: [
       { name: "Small finance teams", note: "Bookkeeping capacity spent on typing, not reviewing." },
       { name: "Agencies & service firms", note: "Project-level cost tracking needs accurate invoice matching." },
@@ -915,7 +915,7 @@ export const WORKFLOW_SOLUTIONS: WorkflowSolution[] = [
       { title: "Update the ATS or CRM", desc: "Consistent records created for every applicant automatically." },
       { title: "Coordinate next steps", desc: "Interview scheduling and status follow-ups handled by the workflow." },
     ],
-    toolKeys: ["gmail", "google-drive", "slack", "google-calendar", "notion"],
+    toolKeys: ["gmail", "drive", "slack", "calendar", "notion"],
     audiences: [
       { name: "Recruitment agencies", note: "Screening volume is the business model's bottleneck." },
       { name: "Internal recruiting teams", note: "Roles open for weeks because review lags applications." },

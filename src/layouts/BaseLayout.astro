@@ -85,10 +85,12 @@ const lang = locale === "fa" ? "fa" : "en";
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="alternate" type="application/rss+xml" title={`${SITE.name} RSS`} href="/feed.xml" />
 
-    <!-- Preload critical fonts to prevent FOUT -->
+    <!-- Preload critical fonts to prevent FOUT. IRANSansX is unicode-range
+         isolated to Arabic/Persian glyphs, so it is only preloaded on FA
+         pages where it can actually be used. -->
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/outfit-latin.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/outfit-latin-ext.woff2" crossorigin />
-    <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/IRANSansXVF.woff2" crossorigin />
+    {locale === "fa" && <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/IRANSansXVF.woff2" crossorigin />}
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/jetbrains-latin.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/boxicons.woff2" crossorigin />
 
@@ -131,8 +133,7 @@ const lang = locale === "fa" ? "fa" : "en";
         try{
           var t=localStorage.getItem('spielos.theme');
           if(t){document.documentElement.dataset.theme=t;}
-          else{document.documentElement.dataset.theme='gruvbox-dark';}
-        }catch(e){document.documentElement.dataset.theme='gruvbox-dark';}
+        }catch(e){}
       })();
     </script>
 
@@ -244,7 +245,11 @@ const lang = locale === "fa" ? "fa" : "en";
              bookingSuccessful on the embed. The Cal.com -> Attio sync still
              captures the booked call separately; this is the page-side funnel
              event for PostHog/GA. ---- */
-        if(typeof window.Cal === 'function'){
+        /* Only register the booking hook on pages that actually contain a
+           data-cal-link trigger (Contact/Apply). Calling Cal(...) anywhere
+           else would append app.cal.com/embed.js and download the embed on
+           pages with zero booking buttons. */
+        if(document.querySelector('[data-cal-link]') && typeof window.Cal === 'function'){
           window.Cal('on', { action: 'bookingSuccessful', callback: function () {
             track('booked_call', { page: getPage(), device: getDevice(), locale: getLocale() });
           } });

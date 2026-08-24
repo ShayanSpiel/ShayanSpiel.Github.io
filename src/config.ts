@@ -102,10 +102,6 @@ export const FORMS = {
   contact: "https://formsubmit.co/66shayan@gmail.com",
 };
 
-// Compatibility alias for older imports. The public waitlist route now redirects here.
-export const WAITLIST_URL = "/features/";
-export const SERVICES_PATH = "/services/";
-
 // Apply funnel (Phase 1): free-review application page fed by the pricing page.
 export const APPLY_PATH = "/apply/";
 
@@ -114,7 +110,6 @@ export const APPLY_PATH = "/apply/";
 // native booking embed (popup) right on the page via data-cal-link — no
 // navigation away from the site. Apply stays the primary action; this is an
 // optional alternative, never a required-call step.
-export const BOOKING_URL = "https://cal.com/shayanspiel/15min?overlayCalendar=true";
 export const BOOKING_LINK = "shayanspiel/15min";
 // ui.color-scheme keeps the embed canvas dark so no white frame shows
 // around the booking shell even when the visitor OS prefers light.
@@ -186,6 +181,8 @@ export const NAV_LINKS: { default: NavLink[]; showcase: NavLink[] } = {
             { label: "Client Intake Automation", href: "/solutions/workflows/client-intake-automation/" },
             { label: "Document Collection Automation", href: "/solutions/workflows/document-collection-automation/" },
             { label: "Lead Qualification Automation", href: "/solutions/workflows/lead-qualification-automation/" },
+            { label: "Invoice Processing Automation", href: "/solutions/workflows/invoice-processing-automation/" },
+            { label: "Candidate Screening Automation", href: "/solutions/workflows/candidate-screening-automation/" },
           ],
           seeAll: { label: "All Workflows", href: "/solutions/workflows/" },
         },
@@ -214,6 +211,8 @@ export const NAV_LINKS: { default: NavLink[]; showcase: NavLink[] } = {
             { label: "Agents", href: "/features/agents/" },
             { label: "Skills", href: "/features/skills/" },
             { label: "Evals", href: "/features/evals/" },
+            { label: "Connections", href: "/features/connections/" },
+            { label: "Artifacts", href: "/features/artifacts/" },
           ],
           seeAll: { label: "See the whole company", href: "/features/" },
         },
@@ -237,6 +236,7 @@ export const FOOTER_LINKS = {
     { label: "Services", href: "/services/" },
     { label: "Pricing", href: "/pricing/" },
     { label: "Apply", href: APPLY_PATH },
+    { label: "Partners", href: "/partners/" },
     { label: "Features", href: "/features/" },
     { label: "Live", href: "/live/" },
     { label: "Notes", href: "/notes/" },

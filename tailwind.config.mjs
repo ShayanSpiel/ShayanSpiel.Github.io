@@ -55,6 +55,7 @@ export default {
         md: "var(--radius-md)",
         lg: "var(--radius-lg)",
         xl: "var(--radius-xl)",
+        pill: "var(--radius-pill)",
       },
       boxShadow: {
         panel: "var(--shadow-panel)",

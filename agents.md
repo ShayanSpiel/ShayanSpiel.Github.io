@@ -30,6 +30,8 @@ rename, move, or modify any file under `src/components/showcase/*`.
 
 ## Routes
 
+### Live routes (EN)
+
 | Route | File | Purpose |
 |---|---|---|
 | `/` | `src/pages/index.astro` | Founder-led homepage (EN) |
@@ -42,46 +44,44 @@ rename, move, or modify any file under `src/components/showcase/*`.
 | `/pricing/` | `src/pages/pricing.astro` | One monthly rate — value-first pricing page (EN) |
 | `/apply/` | `src/pages/apply.astro` | Apply — Free Review 3-step wizard (EN) |
 | `/live/` | `src/pages/live.astro` | Plain-language live company record (EN) |
-| `/fa/` | `src/pages/fa/index.astro` | Homepage (FA) |
-| `/fa/founder/` | `src/pages/fa/founder.astro` | Founder story (FA) |
-| `/fa/notes/` | `src/pages/fa/notes/index.astro` | Notes index (FA) |
-| `/fa/notes/[slug]/` | `src/pages/fa/notes/[...slug].astro` | Individual note pages (FA) |
-| `/fa/contact/` | `src/pages/fa/contact.astro` | Contact form (FA) |
-| `/fa/pricing/` | `src/pages/fa/pricing.astro` | Pricing page (FA thin wrapper) |
-| `/fa/apply/` | `src/pages/fa/apply.astro` | Apply wizard (FA thin wrapper) |
-| `/fa/live/` | `src/pages/fa/live.astro` | Plain-language live company record (FA) |
-| `/fa/waitlist/` | `src/pages/fa/waitlist.astro` | 301 redirect to `/fa/features/` |
-| `/fa/features/` | `src/pages/fa/features/index.astro` | Buyer-facing features — company lego blocks (FA) |
+| `/solutions/` | `src/pages/solutions/index.astro` | Solutions hub — AI departments, workflows, software (EN) |
+| `/solutions/ai-departments/` | `src/pages/solutions/ai-departments/index.astro` | AI Departments overview (EN) |
+| `/solutions/ai-departments/{design,content,marketing,seo,analytics}/` | `src/pages/solutions/ai-departments/*/index.astro` | Department solution pages (EN) |
+| `/solutions/ai-departments/design/gallery/` | `src/pages/solutions/ai-departments/design/gallery.astro` | Build-driven Design template gallery (EN) |
+| `/solutions/workflows/` | `src/pages/solutions/workflows/index.astro` | Workflow automation index (EN) |
+| `/solutions/workflows/[slug]/` | `src/pages/solutions/workflows/[slug].astro` | 8 workflow pages from `WORKFLOW_SOLUTIONS`: follow-up, data-entry, client-onboarding, client-intake, document-collection, lead-qualification, invoice-processing, candidate-screening (`-automation`) (EN) |
+| `/solutions/software/` | `src/pages/solutions/software/index.astro` | Software automation index (EN) |
+| `/solutions/software/[slug]/` | `src/pages/solutions/software/[slug].astro` | 14 software pages driven by `SOFTWARE_SOLUTIONS` keys: zapier, slack, gmail, google-drive, hubspot, attio, jira, notion, whatsapp, telegram, google-calendar, opencode, codex, claude-code → `{key}-automation/` (EN) |
+| `/partners/` | `src/pages/partners.astro` | Partner program (EN). FA twin exists at `/fa/partners/`. |
+| `/landing/lead-researcher/` | `src/pages/landing/lead-researcher.astro` | Lead Researcher landing page (EN) |
 | `/features/` | `src/pages/features/index.astro` | Buyer-facing features — the one loop and eight real blocks (EN) |
-| `/features/director/` | `src/pages/features/director.astro` | Director — the role that owns goals, approvals, evidence, and reports (EN) |
-| `/features/departments/` | `src/pages/features/departments.astro` | Departments — reusable business capabilities (EN) |
-| `/features/workflows/` | `src/pages/features/workflows.astro` | Workflows — repeatable playbooks inside a Department (EN) |
-| `/features/agents/` | `src/pages/features/agents.astro` | Agents — bounded executors for workflow steps (EN) |
-| `/features/skills/` | `src/pages/features/skills.astro` | Skills — reusable methods agents follow (EN) |
-| `/features/evals/` | `src/pages/features/evals.astro` | Evals — LLM-as-judge quality gates (EN) |
-| `/features/connections/` | `src/pages/features/connections.astro` | Connections — approved access to external systems (EN) |
-| `/features/artifacts/` | `src/pages/features/artifacts.astro` | Artifacts — output and evidence from every run (EN) |
-| `/software/` | `src/pages/software/index.astro` | Software automation solutions hub (EN) |
-| `/{slug}-ai-automation/` | `src/pages/{slug}-ai-automation.astro` | 14 software solution pages from `SOFTWARE_SOLUTIONS` (zapier, slack, gmail, google-drive, hubspot, attio, jira, notion, whatsapp, telegram, claude-code, codex, opencode, google-calendar) (EN) |
-| `/use-cases/` | `src/pages/use-cases/index.astro` | Use cases hub (EN) |
-| `/use-cases/design/` | `src/pages/use-cases/design/index.astro` | Live Design department use case (EN) |
-| `/use-cases/analytics/` | `src/pages/use-cases/analytics/index.astro` | Analytics department use case (EN) |
-| `/use-cases/seo/` | `src/pages/use-cases/seo/index.astro` | SEO department use case (EN) |
-| `/use-cases/marketing/` | `src/pages/use-cases/marketing/index.astro` | Marketing department use case (EN) |
-| `/use-cases/content/` | `src/pages/use-cases/content/index.astro` | Content department use case (EN) |
-| `/contact/thank-you/` | `src/pages/contact/thank-you.astro` | Contact form success page (`noindex`) (EN) |
-| `/use-cases/design/gallery/` | `src/pages/use-cases/design/gallery.astro` | Build-driven Design template gallery (EN) |
-| `/fa/use-cases/design/` | `src/pages/fa/use-cases/design/index.astro` | Live Design department use case (FA) |
-| `/fa/use-cases/design/gallery/` | `src/pages/fa/use-cases/design/gallery.astro` | Build-driven Design template gallery (FA) |
-| `/fa/software/` and `/fa/{slug}-ai-automation/` | FA thin wrappers | Software solutions hub + 14 pages (FA) |
-| `/fa/use-cases/{analytics,seo,marketing,content}/` | FA thin wrappers | Department use cases (FA) |
+| `/features/{director,departments,workflows,agents,skills,evals,connections,artifacts}/` | `src/pages/features/*.astro` | Feature detail pages (EN) |
+| `/contact/thank-you/` | `src/pages/contact/thank-you.astro` | Contact form success page (`noindex`) |
+| `/apply/thank-you/` | `src/pages/apply/thank-you.astro` | Apply wizard success page (`noindex`) |
+| `/feed.xml` | `src/pages/feed.xml.js` | RSS feed |
+| `/404/` | `src/pages/404.astro` | Custom 404 |
 | `/spielos-v1/` | `src/pages/spielos-v1.astro` | Archived legacy product page (`noindex`) |
 
-FA wrappers exist for all routes under `/fa/` following the thin-wrapper pattern.
+### Live routes (FA thin wrappers under `/fa/`)
 
-Do not add: enterprise, marketplace, solutions, consulting, templates, teams,
-or unrelated lead magnets. Services and implementation pages are part of
-the current buyer-conversion architecture.
+Every live route above has a FA twin following the thin-wrapper pattern
+(`src/pages/fa/**` passing `locale="fa"`), including `/fa/` (homepage),
+`/fa/solutions/**`, `/fa/partners/`, `/fa/landing/lead-researcher/`,
+`/fa/apply/thank-you/`, `/fa/contact/thank-you/`, and `/fa/404/`.
+
+### 301 redirect stubs (no sitemap entry, kept for backward-compatible redirects)
+
+| Route | Redirects to |
+|---|---|
+| `/{key}-ai-automation/` (14 legacy software pages: zapier, slack, gmail, google-drive, hubspot, attio, jira, notion, whatsapp, telegram, claude-code, codex, opencode, google-calendar) | `/solutions/software/{slug}/` |
+| `/software/`, `/fa/software/` | `/solutions/`, `/fa/solutions/` |
+| `/use-cases/`, `/fa/use-cases/` | `/solutions/`, `/fa/solutions/` |
+| `/use-cases/{design,analytics,seo,marketing,content}/`, FA twins | `/solutions/ai-departments/{...}/`, FA twins |
+| `/use-cases/design/gallery/`, FA twin | `/solutions/ai-departments/design/gallery/`, FA twin |
+
+Do not add: enterprise, marketplace, consulting, templates, teams,
+or unrelated lead magnets. Services, solutions, and implementation pages are
+part of the current buyer-conversion architecture.
 
 ## i18n architecture
 
@@ -113,7 +113,9 @@ Single source of truth: `src/i18n/translations.ts`
 
 ### Font
 
-IRANSansX variable font with `DOTS` axis set to 7 via `@font-face` descriptor.
+IRANSansX variable font with the `DOTS` axis pinned to 7 via
+`font-variation-settings: "DOTS" 7` on `html[dir="rtl"]` (in `base.css`) —
+not a `@font-face` descriptor.
 `unicode-range` restricted to Arabic/Persian characters (no overlap with Outfit).
 Persian headings use heavier font-weight (h1=800, h2=700, h3+=600) via `[dir="rtl"]` rules in `base.css`.
 
@@ -134,12 +136,15 @@ Persian headings use heavier font-weight (h1=800, h2=700, h3+=600) via `[dir="rt
 
 Single source of truth: `src/config.ts` → `NAV_LINKS`.
 
-Default nav: Services → `/services/`, Solutions → `/features/`
-(three-category dropdown: By Departments → `/use-cases/` with Design,
-Content, Marketing, SEO, Analytics; By Software → `/software/` with the 14
-`SOFTWARE_SOLUTIONS` pages; Features → `/features/` with Director,
-Departments, Workflows, Agents, Skills, Evals, Connections, Artifacts),
-Live → `/live/`, Notes → `/notes/`, Founder → `/founder/`.
+Default nav: Services → `/services/`, Solutions → `/solutions/`
+(one mega menu with four labeled categories: AI Departments →
+`/solutions/ai-departments/` with Design, Content, Marketing, SEO,
+Analytics and the Design Template Gallery; By Workflow →
+`/solutions/workflows/` with the 8 `WORKFLOW_SOLUTIONS` pages; Software
+Automation → `/solutions/software/` with 14 of the `SOFTWARE_SOLUTIONS`
+pages; SpielOS → AI Company → `/features/` with Director, Departments,
+Workflows, Agents, Skills, Evals, Connections, Artifacts),
+Pricing → `/pricing/`, Live → `/live/`, Notes → `/notes/`, Founder → `/founder/`.
 The Solutions dropdown is rendered by `src/components/Nav.astro` from the
 `NavLink.children` category model in `src/config.ts`: one mega menu with three
 labeled categories and no second-level sub-menus or flyouts (desktop
@@ -169,9 +174,9 @@ assets under the Design department and does not share website DOM or CSS.
 
 Single source of truth: `src/config.ts` → `FOOTER_LINKS`.
 
-Default footer (`FOOTER_LINKS.default`): Agent Brief, Services, Features, Live,
-Notes, Founder, Contact. The "SpielOS" wordmark is rendered from `SITE.name`
-as a text label, not a link.
+Default footer (`FOOTER_LINKS.default`): Agent Brief, Services, Pricing,
+Apply, Partners, Features, Live, Notes, Founder, Contact. The "SpielOS"
+wordmark is rendered from `SITE.name` as a text label, not a link.
 Social icons: X, GitHub.
 Copyright: dynamic year, "SpielOS is independently built by Shayan Spiel."
 
@@ -339,7 +344,7 @@ Use Tailwind utilities that map to tokens:
 - `bg-primary`, `text-primary-foreground`, `bg-primary-soft`
 - `border-border`, `border-border-strong`
 - `bg-success-soft`, `text-success`, `bg-warning-soft`, `text-warning`, etc.
-- `rounded-sm`, `rounded-md`, `rounded-lg`, `rounded-xl`, `rounded-full`
+- `rounded-sm`, `rounded-md`, `rounded-lg`, `rounded-xl`, `rounded-pill`, `rounded-full`
 - `text-3xs`, `text-2xs`, `text-xs`, `text-sm`, `text-base`, etc.
 - `font-sans` (Outfit), `font-mono` (JetBrains Mono)
 
@@ -431,10 +436,10 @@ Schema:
 Single source of truth: `src/config.ts`.
 
 Exports: `SITE`, `AUTHOR`, `FOUNDER`, `SEO`, `SOCIAL`, `ANALYTICS`, `FORMS`,
-`APPLY_PATH`, `BOOKING_LINK`, `BOOKING_CONFIG`, `SERVICES_PATH`,
-`WAITLIST_URL` (deprecated compatibility alias pointing at `/features/`; the
-public waitlist route itself is retired — do not import it in new code),
-`NAV_LINKS`, `FOOTER_LINKS`, `THEMES`, `RSS`.
+`APPLY_PATH`, `BOOKING_LINK`, `BOOKING_CONFIG`, `AGENT_BRIEFING_PATH`,
+`AGENT_BRIEF_REQUEST_PATH`, `NAV_LINKS`, `FOOTER_LINKS`, `THEMES`, `RSS`,
+`SUPABASE`. The former `WAITLIST_URL`, `SERVICES_PATH`, and `BOOKING_URL`
+aliases have been removed — do not reintroduce them.
 
 Never hardcode site name, URLs, author info, social links, or metrics in page components.
 

@@ -1,7 +1,7 @@
 ---
 import SocialIcons from "./SocialIcons.astro";
 import LanguageSwitcher from "./LanguageSwitcher.astro";
-import { FOOTER_LINKS, SITE } from "../config";
+import { FOOTER_LINKS, SITE, THEMES } from "../config";
 import { type Locale, t } from "../i18n/translations";
 import { localizePath } from "../i18n";
 
@@ -58,7 +58,7 @@ const copyrightText = copyright || t(locale, "footer.copyright", { year });
               class="flex h-6 w-6 items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-panel-raised transition-colors"
               aria-label={t(locale, "common.themeToggle")}
             >
-              <i class="bx bx-moon text-sm" id="theme-icon"></i>
+              <i class="bx bx-moon icon-lg" id="theme-icon"></i>
             </button>
           )}
           {showSocial && <SocialIcons size="sm" show={["x", "github"]} />}
@@ -69,18 +69,17 @@ const copyrightText = copyright || t(locale, "footer.copyright", { year });
 </footer>
 
 {showThemeToggle && (
-  <script is:inline>
+  <script define:vars={{ allThemes: THEMES.all, darkThemes: THEMES.dark, defaultTheme: SITE.defaultTheme }}>
   (function() {
     var btn = document.getElementById('footer-theme-toggle');
     var icon = document.getElementById('theme-icon');
     if (!btn || !icon) return;
-    var themes = {all: ['gruvbox-dark','gruvbox-light','monochrome-dark','monochrome-light','blue-dark','blue-light','discord-dark','discord-light','black-gold-dark','black-gold-light'], dark: ['gruvbox-dark','monochrome-dark','blue-dark','discord-dark','black-gold-dark']};
-    function currentTheme() { return document.documentElement.dataset.theme || 'gruvbox-dark'; }
-    function isDark(t) { return themes.dark.indexOf(t) !== -1; }
+    function currentTheme() { return document.documentElement.dataset.theme || defaultTheme; }
+    function isDark(t) { return darkThemes.indexOf(t) !== -1; }
     function updateIcon() { icon.className = isDark(currentTheme()) ? 'bx bx-moon' : 'bx bx-sun'; }
     btn.addEventListener('click', function() {
       var t = currentTheme();
-      var next = themes.all[(themes.all.indexOf(t) + 1) % themes.all.length];
+      var next = allThemes[(allThemes.indexOf(t) + 1) % allThemes.length];
       document.documentElement.dataset.theme = next;
       try { localStorage.setItem('spielos.theme', next); } catch(e) {}
       updateIcon();

@@ -82,9 +82,9 @@ const breadcrumbJsonLd = {
   "@type": "BreadcrumbList",
   itemListElement: [
     { "@type": "ListItem", position: 1, name: t(locale, "nav.home"), item: `${SITE.url}${localizePath("/", locale)}` },
-    { "@type": "ListItem", position: 2, name: t(locale, "nav.usecases"), item: `${SITE.url}${localizePath("/solutions/", locale)}` },
+    { "@type": "ListItem", position: 2, name: t(locale, "nav.solutions"), item: `${SITE.url}${localizePath("/solutions/", locale)}` },
     { "@type": "ListItem", position: 3, name: t(locale, "nav.design"), item: `${SITE.url}${localizePath("/solutions/ai-departments/design/", locale)}` },
-    { "@type": "ListItem", position: 4, name: t(locale, "nav.gallery"), item: `${SITE.url}${localizePath("/use-cases/design/gallery/", locale)}` },
+    { "@type": "ListItem", position: 4, name: t(locale, "nav.gallery"), item: `${SITE.url}${localizePath("/solutions/ai-departments/design/gallery/", locale)}` },
   ],
 };
 
@@ -100,7 +100,7 @@ const badgeClasses: Record<BadgeKind, string> = {
   <FeatureHero
     locale={locale}
     breadcrumbs={[
-      { label: t(locale, "nav.usecases"), href: "/solutions/" },
+      { label: t(locale, "nav.solutions"), href: "/solutions/" },
       { label: t(locale, "nav.design"), href: "/solutions/ai-departments/design/" },
       { label: t(locale, "nav.gallery") },
     ]}

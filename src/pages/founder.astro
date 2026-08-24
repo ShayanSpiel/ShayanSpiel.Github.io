@@ -86,7 +86,7 @@ const breadcrumbJsonLd = {
     <div class="absolute inset-0 bg-panel-deep/50"></div>
     <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
     <div class="absolute left-1/2 top-[40%] h-[32rem] w-[48rem] -translate-x-1/2 -translate-y-1/2 glow-blob opacity-15"></div>
-    <div class="absolute left-[58%] top-[36%] h-64 w-64 rounded-full opacity-10" style="background: radial-gradient(closest-side, var(--accent), transparent 72%);"></div>
+    <div class="absolute left-[58%] top-[36%] h-64 w-64 rounded-full glow-blob-accent opacity-10"></div>
 
     <div class="relative z-10 mx-auto max-w-3xl px-6 text-center" data-aos="fade-up">
       <div class="relative mx-auto mb-6 h-24 w-24">
@@ -272,7 +272,7 @@ const breadcrumbJsonLd = {
       </div>
 
       <div class="mt-8 text-center" data-aos="fade-up">
-        <a href="/spielos-v1/" class="inline-flex items-center gap-2 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors">
+        <a href={localizePath("/spielos-v1/", locale)} class="inline-flex items-center gap-2 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors">
           <i class="bx bx-history icon-base" aria-hidden="true"></i>
           {t(locale, "founder.spielosV1.link")}
         </a>

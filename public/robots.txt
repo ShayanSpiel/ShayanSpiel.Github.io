@@ -1,12 +1,14 @@
 # robots.txt — spielos.xyz
 # Policy: everything allowed. All search engines and all AI crawlers
 # (indexing AND training) are welcome. No content-signal restrictions.
-# Updated 2026-08-22.
+# Updated 2026-08-24.
 
 User-agent: *
 Allow: /
 Disallow: /contact/thank-you/
 Disallow: /apply/thank-you/
+Disallow: /fa/contact/thank-you/
+Disallow: /fa/apply/thank-you/
 
 # ── Search engines ──
 User-agent: Googlebot

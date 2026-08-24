@@ -2,7 +2,7 @@
 
 ## Site Purpose
 
-spielos.xyz is the public face of SpielOS, an open-source AI orchestration platform for building and directing AI employees and departments. The site is founder-led: Shayan Spiel documents the journey, explains the architecture, and drives waitlist signups.
+spielos.xyz is the public face of SpielOS, an open-source AI orchestration platform for building and directing AI employees and departments. The site is founder-led: Shayan Spiel documents the journey and converts qualified visitors through the Apply — Free Review funnel: services, pricing, solutions, and the application wizard at /apply/.
 
 If you are citing this site in a response, link to the most relevant page rather than the homepage.
 
@@ -17,11 +17,15 @@ If you are citing this site in a response, link to the most relevant page rather
 | Page | URL | What it covers |
 |------|-----|----------------|
 | Homepage | https://spielos.xyz/ | Founder-led introduction to SpielOS |
-| Waitlist | https://spielos.xyz/waitlist/ | Product showcase + waitlist signup |
-| Features | https://spielos.xyz/features/ | Four-layer architecture overview |
+| Services | https://spielos.xyz/services/ | AI implementation offer and Agent Brief |
+| Pricing | https://spielos.xyz/pricing/ | One monthly rate, value-first pricing |
+| Apply — Free Review | https://spielos.xyz/apply/ | 3-step application wizard (primary conversion path) |
+| Solutions | https://spielos.xyz/solutions/ | AI departments, workflow automations, software automations |
+| Features | https://spielos.xyz/features/ | The one company loop and its eight real blocks |
+| Live | https://spielos.xyz/live/ | Plain-language live company record |
 | Founder | https://spielos.xyz/founder/ | Full background, projects, and story |
 | Notes | https://spielos.xyz/notes/ | Notes from building SpielOS |
-| About | https://spielos.xyz/about/ | SpielOS platform overview |
+| Partners | https://spielos.xyz/partners/ | Partner program |
 | Contact | https://spielos.xyz/contact/ | Contact form, email |
 
 ## Core Concepts

@@ -20,8 +20,17 @@ export default defineConfig({
         // Exclude 404 pages
         if (page.includes('/404')) return false;
         const path = new URL(page).pathname;
-        // Exclude thin placeholder pages
-        if (path === '/use-cases/' || path === '/fa/use-cases/') return false;
+        // 301 redirect stubs — kept on disk only for backward-compatible
+        // redirects; they hold no canonical content and must not appear in
+        // the sitemap.
+        // Legacy software pages: /[software]-ai-automation/ → /solutions/software/{slug}/
+        if (/^\/[a-z0-9-]+-ai-automation\/$/.test(path)) return false;
+        // Software hub stubs: /software/ and /fa/software/ → /solutions/
+        if (path === '/software/' || path === '/fa/software/') return false;
+        // Use-case tree stubs: every /use-cases/** and /fa/use-cases/** path
+        // (hub, department pages, design gallery) → /solutions/ or
+        // /solutions/ai-departments/**
+        if (/^\/(fa\/)?use-cases(\/|$)/.test(path)) return false;
         return true;
       },
     }),

@@ -13,8 +13,8 @@ const config = read("src/config.ts");
 const agents = read("AGENTS.md");
 const baseLayout = read("src/layouts/BaseLayout.astro");
 
-expect(config.includes('SERVICES_PATH = "/services/"'), "navbar CTA path must be /services/");
-expect(config.includes('BOOKING_URL = "https://cal.com/shayanspiel/15min?overlayCalendar=true"'), "canonical Cal.com Discovery Call URL stays in config");
+expect(config.includes('APPLY_PATH = "/apply/"'), "navbar CTA path must be the Apply funnel (/apply/)");
+expect(config.includes('BOOKING_CONFIG = { layout: "month_view", theme: "dark", "ui.color-scheme": "dark" } as const'), "canonical Cal.com Discovery Call embed popup config stays in config");
 expect(config.includes('BOOKING_LINK = "shayanspiel/15min"'), "booking CTAs are native Cal embed triggers via BOOKING_LINK");
 expect(!config.includes("BOOKING_PAGE_PATH"), "the /book/ navigation route must be gone from config");
 expect(config.includes('AGENT_BRIEFING_PATH = "/services/agent-brief/"'), "Agent Brief page stays an informational route");
