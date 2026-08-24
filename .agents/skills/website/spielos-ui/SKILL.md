@@ -31,11 +31,11 @@ Read these files:
 4. `src/styles/base.css`, `src/styles/global.css` — site-level styles and RTL overrides
 5. `src/components/SpielOSLogo.astro` — website logo (mirrors `BrandMark`)
 
-Treat `packages/design-system` as authoritative. If code and docs disagree, fix the highest shared owner.
+Treat `packages/design-system` as authoritative when resolvable. If the product repo is not available in this environment, `src/styles/tokens/` plus the Website polish contract below are authoritative for this site. If code and docs disagree, fix the highest shared owner.
 
 ## Token contract
 
-- Structural: radius (`sm/md/lg/xl`, plus `pill` reserved for badges only), motion (`fast/default/slow` + `--ease`), typography, `--bidi-sign` (±1 by direction), `--focus-border`/`--focus-ring`, `--disabled-surface`/`--disabled-border`/`--disabled-foreground`, `--skeleton-bg`, `--overlay-bg`, glass tokens (`--glass-*`), provider brand colors (`--provider-*`).
+- Structural: radius (`sm` 4px, `md` 6px — **the maximum; there are no `lg`/`xl`/`pill` tokens, no pills, no circles**), motion (`fast/default/slow` + `--ease`), typography, `--bidi-sign` (±1 by direction), `--focus-border`/`--focus-ring`, `--disabled-surface`/`--disabled-border`/`--disabled-foreground`, `--skeleton-bg`, `--overlay-bg`, glass tokens (`--glass-*`), provider brand colors (`--provider-*`).
 - Semantic colors (per theme): canvas (`--background`, `--background-deep`), surfaces (`--panel`, `--panel-raised`, `--panel-strong`, `--panel-deep` [website extension], `--input`), interaction (`--hover`, `--selected`, `--border`, `--border-strong`, `--ring`), text (`--foreground`, `--foreground-strong`, `--foreground-muted`, `--muted-foreground`), product (`--primary`, `--primary-foreground`, `--primary-soft`), status (`--success`, `--warning`, `--destructive`, `--info`, `--accent`, `--purple` + soft variants), code (`--code-block`), shadows (`--shadow-panel`, `--shadow-popover`).
 - Never hardcode raw hex/rgb in page code. Theme differences come from token mapping, never component branches.
 - Dark themes use `--code-block: <palette>_bg0_h`; light themes use `<palette>_bg1`.
@@ -44,6 +44,64 @@ Treat `packages/design-system` as authoritative. If code and docs disagree, fix 
 
 The logo is the official diamond mark (`BRAND_MARK_PATH` geometry) on a rounded tile. In-app and on the website, the tile follows the active theme (`bg-panel-raised`) and the glyph inherits `currentColor` (`text-foreground-strong`). Standalone assets (favicon, OG images) use the static palette from `brand.ts`: tile `#282828`, glyph `#ebdbb2`. Do not restate the shape or colors elsewhere; `SpielOSLogo.astro` and the OG templates `src/og-templates/og-single-fact.html` /
   `src/og-templates/og-pull-quote.html` (inline SVG brand lockup) are the website owners.
+
+## Website polish contract (marketing pages)
+
+These are the signature treatments that make a page look "finished". Every new
+page or section must use them — a page without them reads as unstyled. Copy
+the recipes verbatim; do not invent alternatives.
+
+**Radius.** `rounded-md` everywhere (max). Never `rounded-full`/`rounded-pill`/`rounded-lg`/`rounded-xl`.
+
+**Polished card** (the standard content card — hairline, lift, border shift):
+
+```astro
+<article class="group relative overflow-hidden rounded-md border border-border bg-panel p-6 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
+  <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-primary via-accent to-transparent opacity-70" aria-hidden="true"></div>
+  <!-- icon tile, heading, body -->
+</article>
+```
+
+**Hairline gradient palette** (rotate by card index; keep `h-px`, `to-transparent`, `opacity-70`–`opacity-80`):
+`from-primary via-accent` (default) · `from-accent via-purple` · `from-purple via-warning` · `from-purple via-info` · `from-warning via-primary`.
+
+**Icon tile** (always square-ish `rounded-md`, soft background, boxicon):
+
+```astro
+<div class="flex h-10 w-10 items-center justify-center rounded-md bg-primary-soft">
+  <i class="bx bx-{name} icon-xl text-primary" aria-hidden="true"></i>
+</div>
+```
+
+Soft/text color pairs: `primary`, `accent`, `purple`, `success`, `warning`, `info` (e.g. `bg-accent-soft` + `text-accent`).
+
+**Eyebrow / label chip** (mono, uppercase, widest tracking — never a pill):
+
+```astro
+<p class="inline-flex w-fit items-center gap-1.5 rounded-md bg-primary-soft px-3 py-1 font-mono text-2xs font-bold uppercase tracking-widest text-primary">
+  <i class="bx bx-{name} icon-sm" aria-hidden="true"></i> Label
+</p>
+```
+
+**Section headers** always come from `SectionHeader` (`label?`, `title`, `description?`, `align?`) — never hand-rolled. Its `label` renders the eyebrow.
+
+**Section rhythm:** `<section class="relative py-24 sm:py-32"><div class="mx-auto max-w-6xl px-6">…</div></section>`; alternating bands add `overflow-hidden` + `<div class="absolute inset-0 bg-panel-deep/50"></div>` behind relative content.
+
+**Glow blobs** (ambient depth behind heroes/sections — use the utilities, never inline radial gradients):
+
+```astro
+<div class="absolute left-1/2 top-[42%] h-[34rem] w-[52rem] -translate-x-1/2 -translate-y-1/2 glow-blob opacity-20" aria-hidden="true"></div>
+```
+
+Variants: `.glow-blob` (primary), `.glow-blob-accent`, `.glow-blob-purple`. Opacity `10`–`20`; keep them behind `relative` content.
+
+**Buttons:** primary `inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground hover:brightness-110 active:brightness-95 transition-all`; secondary swaps to `border border-border bg-panel hover:bg-panel-raised hover:border-border-strong`. Hero/final-CTA tier: `h-12 px-8`.
+
+**Scroll animation:** every section wrapper carries `data-aos="fade-up"` (AOS is initialized globally).
+
+**Icons:** boxicons only (`<i class="bx bx-{name} icon-{xs…4xl}">`) — size utilities, never inline font-size; never `*-circle` variants; pair directional icons with `rtl-flip`.
+
+If a treatment is missing from this list, extract it from an existing polished page (`src/pages/index.astro`, `services.astro`, `pricing.astro`) before inventing one.
 
 ## Workflow
 
@@ -89,12 +147,12 @@ Runtime messages, reasoning, workflow steps must come from native events. Never 
 ### 5. Verify
 
 ```bash
-npm run check:ui
-npm run typecheck
-npm run lint
+npm run lint        # astro check + architecture checks
+npm run build       # full static build (192 pages) + sitemap postbuild
+npm run seo:check   # when metadata/schema changed
 ```
 
-Run `npm test` when state/behavior changes. Run `npm run build` for shared primitives or routing changes.
+Run `npm test` when state/behavior changes.
 
 Check for:
 - Unexpected layout movement
@@ -119,7 +177,7 @@ State which contract was fixed, which shared owner changed, which consumers veri
 - Do not represent navigation as a checkbox.
 - Do not add borders where spacing or surface transition already groups.
 - Do not update screenshot baselines until human reviews the change.
-- Interactive filter and control buttons are `rounded-md` chips, never `rounded-full` pills; `radius-pill` is for badges only, controls stay sharp.
+- **Everything is `rounded-md` (or `rounded-sm` for tiny tags). Never `rounded-full`, `rounded-pill`, `rounded-lg`, or `rounded-xl` anywhere — chips, badges, buttons, dots, avatars, icon tiles. The design language is slightly-rounded squares only.**
 - Timeline and node icons never get circle wrappers — icons sit directly on their spine or position.
 - Ops and log pages may use a tighter section rhythm than the marketing default (`py-24 sm:py-32`), for example `py-16 sm:py-20`; the default stays for marketing sections.
 - Do not build live status on a client framework — keep a small committed JSON in `public/` regenerated by a sync script, and poll it client-side every 30s with silent failure.
