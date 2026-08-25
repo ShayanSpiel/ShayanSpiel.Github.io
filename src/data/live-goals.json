@@ -3568,7 +3568,7 @@
       "created_at": "2026-08-25T03:36:22.640727+00:00",
       "goal_status": "active",
       "id": "goal-c909b8b270",
-      "latest_activity_at": "2026-08-25T05:40:46.009691+00:00",
+      "latest_activity_at": "2026-08-25T06:30:02.151541+00:00",
       "metric": "qualified_social_leads",
       "name": "Geo expansion research: 500 fully qualified agency & B2B-service leads with client-overflow signals across SA/QA/KW/NZ/TW/HK/SG/PL/DE/PT/JP/US/CA/AE",
       "operator": "ge",
@@ -3577,7 +3577,7 @@
       "run_status": "blocked",
       "stage": "ACT",
       "target": 500,
-      "updated_at": "2026-08-25T05:40:46.007954+00:00"
+      "updated_at": "2026-08-25T06:30:02.149748+00:00"
     },
     {
       "created_at": "2026-08-25T04:41:58.300748+00:00",
@@ -3608,7 +3608,7 @@
     "run_status": "blocked",
     "stage": "ACT",
     "target": 500,
-    "updated_at": "2026-08-25T05:40:46.009691+00:00"
+    "updated_at": "2026-08-25T06:30:02.151541+00:00"
   },
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
@@ -3628,7 +3628,7 @@
       "run_id": "run-ca33270fb5",
       "run_status": "blocked",
       "stage": "ACT",
-      "updated_at": "2026-08-25T05:40:46.009691+00:00"
+      "updated_at": "2026-08-25T06:30:02.151541+00:00"
     },
     "heartbeat": {
       "business_value": null,
@@ -3643,16 +3643,16 @@
       "run_status": "blocked",
       "stage": "ACT",
       "target": 500,
-      "updated_at": "2026-08-25T05:40:46.009691+00:00"
+      "updated_at": "2026-08-25T06:30:02.151541+00:00"
     },
-    "last_activity_at": "2026-08-25T05:40:46.009691+00:00",
-    "last_sync_at": "2026-08-25T05:40:46.063141+00:00",
+    "last_activity_at": "2026-08-25T06:30:02.151541+00:00",
+    "last_sync_at": "2026-08-25T06:30:02.211286+00:00",
     "state": "resting"
   },
   "totals": {
     "approvals": 250,
-    "decisions": 857,
-    "evidence": 13092,
+    "decisions": 859,
+    "evidence": 13116,
     "goals_abandoned": 39,
     "goals_achieved": 161,
     "goals_active": 33,
