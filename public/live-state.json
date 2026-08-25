@@ -5,9 +5,9 @@
     "goal_name": "Geo expansion research stretch: second 500 fully qualified agency & B2B-service leads (combined bar 1000 with goal-c909b8b270)",
     "owner_id": "outbound",
     "run_id": "run-6f777062cf",
-    "run_status": "running",
+    "run_status": "blocked",
     "stage": "ACT",
-    "updated_at": "2026-08-25T04:42:04.207301+00:00"
+    "updated_at": "2026-08-25T04:42:07.446452+00:00"
   },
   "heartbeat": {
     "business_value": null,
@@ -19,13 +19,13 @@
     "metric": "qualified_social_leads",
     "operator": "ge",
     "owner_id": "outbound",
-    "run_status": "running",
+    "run_status": "blocked",
     "stage": "ACT",
     "target": 500,
-    "updated_at": "2026-08-25T04:42:04.207301+00:00"
+    "updated_at": "2026-08-25T04:42:07.446452+00:00"
   },
-  "last_activity_at": "2026-08-25T04:42:04.207301+00:00",
-  "last_sync_at": "2026-08-25T04:42:04.256354+00:00",
+  "last_activity_at": "2026-08-25T04:42:07.446452+00:00",
+  "last_sync_at": "2026-08-25T04:42:07.489444+00:00",
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
     "goal_name": "3 booked calls per day",
