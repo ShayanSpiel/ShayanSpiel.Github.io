@@ -6,6 +6,7 @@ import { type Locale, t } from "../../../i18n/translations";
 import { localizePath } from "../../../i18n";
 import { SITE } from "../../../config";
 import { SOFTWARE_SOLUTIONS } from "../../../data/software-solutions";
+import { brandLogo } from "../../../data/brand-logos";
 
 export interface Props {
   locale?: Locale;
@@ -44,7 +45,11 @@ const breadcrumbJsonLd = {
           >
             <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-primary via-accent to-transparent opacity-60" aria-hidden="true"></div>
             <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-md border border-border bg-panel-raised shadow-panel transition-all group-hover:-translate-y-0.5">
-              <i class={`bx ${s.iconClass} icon-3xl text-primary`} aria-hidden="true"></i>
+              {brandLogo(s.key) ? (
+                <span class="block [&>svg]:h-8 [&>svg]:w-8" set:html={brandLogo(s.key)} />
+              ) : (
+                <i class={`bx ${s.iconClass} icon-3xl text-primary`} aria-hidden="true"></i>
+              )}
             </div>
             <span class="min-w-0">
               <span class="flex items-center gap-2">

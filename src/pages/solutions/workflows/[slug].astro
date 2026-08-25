@@ -4,6 +4,7 @@ import SectionHeader from "../../../components/sections/SectionHeader.astro";
 import FAQList from "../../../components/sections/FAQList.astro";
 import { WORKFLOW_SOLUTIONS, type WorkflowSolution } from "../../../data/workflow-solutions";
 import { SOFTWARE_SOLUTIONS } from "../../../data/software-solutions";
+import { brandLogo } from "../../../data/brand-logos";
 import { APPLY_PATH, SITE } from "../../../config";
 import { localizePath } from "../../../i18n";
 import { t } from "../../../i18n/translations";
@@ -212,7 +213,7 @@ const faqJsonLd = {
         {tools.map((tool) => (
           <a href={localizePath(`/solutions/software/${tool.slug}/`, locale)} class="group relative flex items-center gap-4 overflow-hidden rounded-md border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
             <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r opacity-60 from-primary via-accent to-transparent"></div>
-            <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-md border border-border bg-panel-raised text-primary shadow-panel transition-all group-hover:-translate-y-0.5"><i class={`bx ${tool.iconClass} icon-3xl`} aria-hidden="true"></i></div>
+            <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-md border border-border bg-panel-raised shadow-panel transition-all group-hover:-translate-y-0.5 [&>svg]:h-8 [&>svg]:w-8" set:html={brandLogo(tool.key)}></div>
             <span class="min-w-0">
               <span class="block truncate text-sm font-semibold text-foreground-strong transition-colors group-hover:text-primary">{tool.name}</span>
               <span class="mt-0.5 block text-xs text-muted-foreground">{t(locale, "wf.shared.automationOn", { name: tool.name })}</span>

@@ -5,6 +5,7 @@ import { localizePath } from "../../i18n";
 import { APPLY_PATH } from "../../config";
 import { SOFTWARE_SOLUTIONS } from "../../data/software-solutions";
 import { WORKFLOW_SOLUTIONS } from "../../data/workflow-solutions";
+import { brandLogo } from "../../data/brand-logos";
 
 const WF_ICONS: Record<string, string> = {
   "follow-up-automation": "bx-bell",
@@ -119,7 +120,7 @@ const filters = [
         {SOFTWARE_SOLUTIONS.map((s) => (
           <a href={localizePath(`/solutions/software/${s.slug}/`, locale)} class="group relative flex items-start gap-4 overflow-hidden rounded-md border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
             <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-primary via-accent to-transparent opacity-60"></div>
-            <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-md border border-border bg-panel-raised text-primary shadow-panel transition-all group-hover:-translate-y-0.5"><i class={`bx ${s.iconClass} icon-3xl`} aria-hidden="true"></i></div>
+            <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-md border border-border bg-panel-raised shadow-panel transition-all group-hover:-translate-y-0.5 [&>svg]:h-8 [&>svg]:w-8" set:html={brandLogo(s.key)}></div>
             <span class="min-w-0">
               <span class="block truncate text-sm font-semibold text-foreground-strong transition-colors group-hover:text-primary">{s.name}</span>
               <span class="mt-0.5 block text-xs leading-relaxed text-muted-foreground line-clamp-2">{locale === "fa" ? s.taglineFa : s.taglineEn}</span>

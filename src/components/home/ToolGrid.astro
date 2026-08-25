@@ -2,6 +2,7 @@
 import { type Locale, t } from "../../i18n/translations";
 import { SOFTWARE_SOLUTIONS } from "../../data/software-solutions";
 import { localizePath } from "../../i18n";
+import { brandLogo } from "../../data/brand-logos";
 
 export interface Props { locale?: Locale; }
 const { locale = "en" } = Astro.props;
@@ -34,7 +35,11 @@ const rowDown = tools.slice(7);
           <li class:list={["group relative flex flex-col items-center", tool.rot, lift]}>
             <a href={localizePath(hrefByKey[tool.key] ?? "/solutions/software/", locale)} aria-label={t(locale, `conversion.home.mechanism.tool.${tool.key}.name`)} class="group flex flex-col items-center focus-visible:outline-none">
             <div class="flex h-14 w-14 items-center justify-center rounded-md border border-border bg-panel-raised shadow-panel transition-all duration-fast group-hover:-translate-y-1 group-hover:border-border-strong group-focus-visible:border-border-strong sm:h-16 sm:w-16">
-              <i class={`bx ${tool.icon} icon-3xl text-primary`} aria-hidden="true"></i>
+              {brandLogo(tool.key) ? (
+                <span class="block [&>svg]:h-8 [&>svg]:w-8" set:html={brandLogo(tool.key)} />
+              ) : (
+                <i class={`bx ${tool.icon} icon-3xl text-primary`} aria-hidden="true"></i>
+              )}
             </div>
             <p class="mt-2 text-3xs font-semibold text-muted-foreground">{t(locale, `conversion.home.mechanism.tool.${tool.key}.name`)}</p>
             <span class="pointer-events-none absolute bottom-full left-1/2 z-20 mb-1 w-44 -translate-x-1/2 rounded-md border border-border bg-panel-raised p-2 text-center text-2xs leading-relaxed text-foreground opacity-0 shadow-popover transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">

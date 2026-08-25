@@ -2,6 +2,7 @@
 import SpielOSLogo from "./SpielOSLogo.astro";
 import { NAV_LINKS, APPLY_PATH, type NavChildLink, type NavLink } from "../config";
 import { SOFTWARE_SOLUTIONS } from "../data/software-solutions";
+import { brandLogo } from "../data/brand-logos";
 import { type Locale, t } from "../i18n/translations";
 import { localizePath } from "../i18n";
 
@@ -23,6 +24,14 @@ const trLabel = (label: string) => {
   const value = t(locale, key);
   return value === key ? label : value;
 };
+
+/** Route → software key, so real brand logos can replace generic boxicons in the menu.
+ *  Locale prefixes (/fa, /en) are stripped so the same logo follows both twins. */
+const logoKeyByHref: Record<string, string> = Object.fromEntries(
+  SOFTWARE_SOLUTIONS.map((s) => [`/solutions/software/${s.slug}`, s.key]),
+);
+const logoKeyFor = (href: string) =>
+  logoKeyByHref[normalize(href).replace(/^\/(fa|en)(?=\/|$)/, "")] ?? "";
 
 /** One DISTINCT boxicon per menu item, keyed by route. Every item in the
  *  mega menu has its own icon; no two items share or resemble each other's. */
@@ -152,7 +161,11 @@ const ariaCurrent = (href: string) => (isCurrent(href) ? "page" : undefined);
                           ]}
                         >
                           <span class="flex h-5 w-5 shrink-0 items-center justify-center">
-                            <i class={`bx ${navItemIcon(grand.href)} text-primary/80 text-base leading-none`} aria-hidden="true"></i>
+                            {brandLogo(logoKeyFor(grand.href)) ? (
+                              <span class="flex h-full w-full items-center justify-center [&>svg]:h-3.5 [&>svg]:w-3.5" set:html={brandLogo(logoKeyFor(grand.href))} />
+                            ) : (
+                              <i class={`bx ${navItemIcon(grand.href)} text-primary/80 text-base leading-none`} aria-hidden="true"></i>
+                            )}
                           </span>
                           <span class="truncate">{grand.label}</span>
                         </a>
@@ -242,7 +255,11 @@ const ariaCurrent = (href: string) => (isCurrent(href) ? "page" : undefined);
                         ]}
                       >
                         {grand.live && <span class="nav-live-dot" aria-hidden="true"></span>}
-                        <i class={`bx ${navItemIcon(grand.href)} text-primary/80 icon-sm shrink-0`} aria-hidden="true"></i>
+                        {brandLogo(logoKeyFor(grand.href)) ? (
+                          <span class="flex h-4 w-4 shrink-0 items-center justify-center [&>svg]:h-4 [&>svg]:w-4" set:html={brandLogo(logoKeyFor(grand.href))} />
+                        ) : (
+                          <i class={`bx ${navItemIcon(grand.href)} text-primary/80 icon-sm shrink-0`} aria-hidden="true"></i>
+                        )}
                         {grand.label}
                       </a>
                     ))}
