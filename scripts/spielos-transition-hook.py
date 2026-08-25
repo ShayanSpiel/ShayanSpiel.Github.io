@@ -48,7 +48,22 @@ SYNC_TIMEOUT_S = 15
 LIVE_PUSH_ENV = "SPIELOS_LIVE_PUSH"
 LIVE_PUSH_ENV_FILE = REPO_ROOT / ".spielos" / ".env"
 LIVE_PUSH_MARKER = REPO_ROOT / ".spielos" / "state" / ".live_push_state.json"
-LIVE_PUSH_DEBOUNCE_S = 120
+LIVE_PUSH_DEBOUNCE_DEFAULT_S = 120
+
+
+def push_debounce_s() -> int:
+    """Debounce window between live pushes, in seconds.
+
+    Override via LIVE_PUSH_DEBOUNCE_S (env var first, then .spielos/.env),
+    so the owner can tune publish cadence without touching code.
+    """
+    raw = os.environ.get("LIVE_PUSH_DEBOUNCE_S")
+    if raw is None:
+        raw = env_file_value(LIVE_PUSH_ENV_FILE, "LIVE_PUSH_DEBOUNCE_S")
+    try:
+        return max(0, int(raw)) if raw and raw.strip() else LIVE_PUSH_DEBOUNCE_DEFAULT_S
+    except ValueError:
+        return LIVE_PUSH_DEBOUNCE_DEFAULT_S
 GIT_TIMEOUT_S = 20
 
 
@@ -120,7 +135,7 @@ def push_allowed(marker: dict) -> bool:
         parsed = datetime.fromisoformat(str(pushed_at).replace("Z", "+00:00"))
         if parsed.tzinfo is None:
             parsed = parsed.replace(tzinfo=timezone.utc)
-        return time.time() - parsed.timestamp() >= LIVE_PUSH_DEBOUNCE_S
+        return time.time() - parsed.timestamp() >= push_debounce_s()
     except ValueError:
         return True
 
@@ -242,7 +257,7 @@ def main(argv: list[str]) -> int:
     if marker.get("fingerprint") == fingerprint:
         return 0
     if not push_allowed(marker):
-        log(f"live push skipped: debounce window ({LIVE_PUSH_DEBOUNCE_S}s) not elapsed")
+        log(f"live push skipped: debounce window ({push_debounce_s()}s) not elapsed")
         return 0
     try:
         if not git_push_sequence():
