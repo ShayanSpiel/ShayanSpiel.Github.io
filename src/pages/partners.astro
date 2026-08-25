@@ -11,17 +11,22 @@ export interface Props {
 }
 
 const { locale = "en" } = Astro.props;
-const pricingHref = localizePath("/pricing/", locale);
-const servicesHref = localizePath("/services/", locale);
 const contactHref = localizePath("/contact/", locale);
+const pricingHref = localizePath("/pricing/", locale);
 
 const title = t(locale, "partners.pageTitle");
 const description = t(locale, "partners.pageDesc");
 
-const faqs = [1, 2, 3, 4].map((n) => ({
-  q: t(locale, `partners.faq.q${n}`),
-  a: t(locale, `partners.faq.a${n}`),
-}));
+const faqs = [1, 2, 3, 4].map((n) => {
+  const a = t(locale, `partners.faq.a${n}`);
+  let aHtml: string | undefined;
+  if (n === 4) {
+    const label = locale === "fa" ? "\u0635\u0641\u062d\u0647\u200c\u06cc \u062a\u0639\u0631\u0641\u0647" : "pricing page";
+    const anchor = `<a class="font-semibold text-primary hover:underline" href="${pricingHref}">${label}</a>`;
+    aHtml = locale === "fa" ? a.replace("\u0635\u0641\u062d\u0647\u200c\u06cc \u062a\u0639\u0631\u0641\u0647", anchor) : a.replace("pricing page", anchor);
+  }
+  return { q: t(locale, `partners.faq.q${n}`), a, aHtml };
+});
 
 const breadcrumbJsonLd = {
   "@context": "https://schema.org",
@@ -45,233 +50,99 @@ const faqJsonLd = {
 
 <Page title={title} description={description} locale={locale}>
   <!-- 1 — HERO -->
-  <section class="relative overflow-hidden py-24 sm:py-32">
+  <section class="relative overflow-hidden pt-24 pb-24 sm:pt-32 sm:pb-32">
     <div class="absolute inset-0 bg-panel-deep/50"></div>
     <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
-    <div class="absolute left-1/2 top-[40%] h-[32rem] w-[50rem] -translate-x-1/2 -translate-y-1/2 glow-blob opacity-15"></div>
-    <div class="relative mx-auto max-w-4xl px-6 text-center" data-aos="fade-up">
+    <div class="absolute left-1/2 top-[42%] h-[30rem] w-[46rem] -translate-x-1/2 -translate-y-1/2 glow-blob opacity-15"></div>
+    <div class="relative mx-auto max-w-3xl px-6 text-center" data-aos="fade-up">
       <p class="text-2xs font-semibold uppercase tracking-widest text-primary">{t(locale, "partners.hero.label")}</p>
-      <h1 class="mt-4 text-4xl font-extrabold leading-tightest tracking-tight text-foreground-strong sm:text-5xl lg:text-6xl">
+      <h1 class="mt-5 text-4xl font-extrabold leading-tightest tracking-tight text-foreground-strong sm:text-6xl">
         {t(locale, "partners.hero.titleLead")} <span class="text-primary">{t(locale, "partners.hero.titleAccent")}</span>
       </h1>
-      <p class="mx-auto mt-6 max-w-xl text-base leading-relaxed text-muted-foreground">
-        {t(locale, "partners.hero.line1")}<br />
-        {t(locale, "partners.hero.line2")}<br />
-        {t(locale, "partners.hero.line3")}
-      </p>
-      <div class="mt-8 flex justify-center">
-        <a href={contactHref} data-cta-location={`partners_hero_${locale}`} class="inline-flex h-11 items-center justify-center rounded-md bg-primary px-8 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:brightness-110 active:brightness-95">{t(locale, "partners.cta")}</a>
-      </div>
-
-      <!-- Economics, stated up front -->
-      <div class="mx-auto mt-10 grid max-w-3xl gap-3 sm:grid-cols-2">
-        <div class="rounded-lg border border-border bg-panel px-5 py-4 shadow-panel">
-          <p class="text-2xs font-semibold uppercase tracking-widest text-muted-foreground">{t(locale, "partners.econ.leadLabel")}</p>
-          <p class="mt-1 text-sm font-semibold text-foreground-strong">{t(locale, "partners.econ.lead")}</p>
-        </div>
-        <div class="rounded-lg border border-border-strong bg-panel-raised px-5 py-4 shadow-panel">
-          <p class="text-2xs font-semibold uppercase tracking-widest text-primary">{t(locale, "partners.econ.customerLabel")}</p>
-          <p class="mt-1 text-sm font-semibold text-foreground-strong">{t(locale, "partners.econ.customer")}</p>
-        </div>
-      </div>
-
-      <!-- Flow: Partner -> SpielOS -> Implementation -> Client -->
-      <div class="mx-auto mt-10 flex max-w-2xl flex-wrap items-center justify-center gap-x-2 gap-y-3 text-xs text-muted-foreground sm:text-sm" dir="ltr">
-        <span class="inline-flex items-center gap-1.5 rounded-pill border border-border bg-panel px-3 py-1.5"><i class="bx bx-group icon-base text-accent"></i>{t(locale, "partners.flow.partner")}</span>
-        <i class="bx bx-right-arrow-alt rtl-flip icon-lg text-border-strong" aria-hidden="true"></i>
-        <span class="inline-flex items-center gap-1.5 rounded-pill border border-border bg-panel px-3 py-1.5"><i class="bx bx-layer icon-base text-primary"></i>{t(locale, "partners.flow.spielos")}</span>
-        <i class="bx bx-right-arrow-alt rtl-flip icon-lg text-border-strong" aria-hidden="true"></i>
-        <span class="inline-flex items-center gap-1.5 rounded-pill border border-border bg-panel px-3 py-1.5"><i class="bx bx-code-alt icon-base text-purple"></i>{t(locale, "partners.flow.impl")}</span>
-        <i class="bx bx-right-arrow-alt rtl-flip icon-lg text-border-strong" aria-hidden="true"></i>
-        <span class="inline-flex items-center gap-1.5 rounded-pill border border-border bg-panel px-3 py-1.5"><i class="bx bx-user icon-base text-success"></i>{t(locale, "partners.flow.client")}</span>
+      <p class="mx-auto mt-6 max-w-xl text-base leading-relaxed text-muted-foreground">{t(locale, "partners.hero.body")}</p>
+      <div class="mt-9 flex justify-center">
+        <a href={contactHref} data-cta-location={`partners_hero_${locale}`} class="inline-flex h-12 items-center justify-center rounded-md bg-primary px-8 text-base font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:brightness-110 active:brightness-95">{t(locale, "partners.cta.hero")}</a>
       </div>
     </div>
   </section>
 
-  <!-- 2 — TWO WAYS TO PARTNER -->
+  <!-- 2 — THE DEAL -->
   <section class="relative py-24 sm:py-32">
-    <div class="mx-auto max-w-5xl px-6">
-      <SectionHeader label={t(locale, "partners.ways.label")} title={t(locale, "partners.ways.title")} description={t(locale, "partners.ways.sub")} />
-      <div class="grid gap-6 md:grid-cols-2">
-        <!-- LEAD card -->
-        <article class="relative overflow-hidden rounded-xl border border-border bg-panel p-8 shadow-panel" data-aos="fade-up">
-          <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-accent to-transparent opacity-70" aria-hidden="true"></div>
-          <div class="flex items-center justify-between gap-3">
-            <span class="rounded-pill border border-border bg-panel-raised px-3 py-1 font-mono text-2xs font-bold uppercase tracking-widest text-foreground-muted">{t(locale, "partners.leadBadge")}</span>
-            <i class="bx bx-link icon-xl text-accent"></i>
-          </div>
-          <p class="mt-6 flex items-baseline gap-2 font-extrabold tracking-tight text-foreground-strong" dir="ltr">
-            <span class="text-6xl sm:text-7xl">25%</span>
-            <i class="bx bx-right-arrow-alt icon-lg text-muted-foreground" aria-hidden="true"></i>
-            <span class="text-3xl text-foreground-muted sm:text-4xl">20%</span>
-          </p>
-          <p class="mt-5 text-sm leading-relaxed text-muted-foreground">{t(locale, "partners.lead.body")}</p>
-          <ul class="mt-5 space-y-2 text-sm leading-relaxed text-foreground">
-            <li class="flex items-start gap-2.5"><i class="bx bx-check-square icon-base shrink-0 text-accent"></i><span><strong class="font-semibold text-foreground-strong">{t(locale, "partners.lead.e1")}</strong></span></li>
-            <li class="flex items-start gap-2.5"><i class="bx bx-check-square icon-base shrink-0 text-accent"></i><span>{t(locale, "partners.then")} <strong class="font-semibold text-foreground-strong">{t(locale, "partners.e2")}</strong></span></li>
-          </ul>
-          <div class="mt-6 rounded-md border border-border bg-panel-deep/60 p-4">
-            <p class="text-2xs font-semibold uppercase tracking-widest text-muted-foreground">{t(locale, "partners.priceNote")}</p>
-            <dl class="mt-3 grid grid-cols-2 gap-3">
-              <div>
-                <dt class="text-2xs text-muted-foreground">{t(locale, "partners.firstCommission")}</dt>
-                <dd class="font-mono text-xl font-bold text-foreground-strong">$747.50</dd>
-              </div>
-              <div>
-                <dt class="text-2xs text-muted-foreground">{t(locale, "partners.following")}</dt>
-                <dd class="font-mono text-xl font-bold text-foreground-strong">$598<span class="text-sm font-medium text-muted-foreground">{t(locale, "partners.perMonth")}</span></dd>
-              </div>
-            </dl>
-          </div>
-        </article>
+    <div class="mx-auto max-w-4xl px-6">
+      <h2 class="text-center font-bold tracking-tight text-foreground-strong text-3xl sm:text-4xl" data-aos="fade-up">{t(locale, "partners.deal.title")}</h2>
 
-        <!-- CUSTOMER card -->
-        <article class="relative overflow-hidden rounded-xl border border-border-strong bg-panel p-8 shadow-panel ring-1 ring-primary/30" data-aos="fade-up">
+      <div class="mt-14 grid gap-6 md:grid-cols-[1.4fr_1fr]" data-aos="fade-up">
+        <!-- Bring a Customer -->
+        <article class="group relative flex flex-col overflow-hidden rounded-md border border-border-strong bg-panel-raised p-8 shadow-panel ring-1 ring-primary/30 transition-all hover:-translate-y-1 sm:p-10">
           <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-primary via-accent to-transparent opacity-80" aria-hidden="true"></div>
-          <div class="flex items-center justify-between gap-3">
-            <span class="rounded-pill bg-primary-soft px-3 py-1 font-mono text-2xs font-bold uppercase tracking-widest text-primary">{t(locale, "partners.custBadge")}</span>
-            <i class="bx bx-check-square icon-xl text-primary"></i>
+          <div class="flex items-center gap-3.5">
+            <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-primary-soft">
+              <i class="bx bx-user-check text-primary icon-2xl" aria-hidden="true"></i>
+            </div>
+            <h3 class="font-sans text-xl font-bold text-foreground-strong">{t(locale, "partners.deal.customerTitle")}</h3>
           </div>
-          <p class="mt-6 flex items-baseline gap-2 font-extrabold tracking-tight text-foreground-strong" dir="ltr">
-            <span class="text-6xl text-primary sm:text-7xl">50%</span>
-            <i class="bx bx-right-arrow-alt icon-lg text-muted-foreground" aria-hidden="true"></i>
-            <span class="text-3xl text-foreground-muted sm:text-4xl">20%</span>
-          </p>
-          <p class="mt-5 text-sm leading-relaxed text-muted-foreground">{t(locale, "partners.cust.body")}</p>
-          <ul class="mt-5 space-y-2 text-sm leading-relaxed text-foreground">
-            <li class="flex items-start gap-2.5"><i class="bx bx-check-square icon-base shrink-0 text-primary"></i><span>{t(locale, "partners.cust.b1")}</span></li>
-            <li class="flex items-start gap-2.5"><i class="bx bx-check-square icon-base shrink-0 text-primary"></i><span>{t(locale, "partners.cust.b2")}</span></li>
-            <li class="flex items-start gap-2.5"><i class="bx bx-check-square icon-base shrink-0 text-primary"></i><span>{t(locale, "partners.cust.b3")}</span></li>
-          </ul>
-          <ul class="mt-5 space-y-2 text-sm leading-relaxed text-foreground">
-            <li class="flex items-start gap-2.5"><i class="bx bx-check-square icon-base shrink-0 text-primary"></i><span><strong class="font-semibold text-foreground-strong">{t(locale, "partners.cust.e1")}</strong></span></li>
-            <li class="flex items-start gap-2.5"><i class="bx bx-check-square icon-base shrink-0 text-primary"></i><span>{t(locale, "partners.then")} <strong class="font-semibold text-foreground-strong">{t(locale, "partners.e2")}</strong></span></li>
-          </ul>
-          <div class="mt-6 rounded-md border border-border bg-panel-deep/60 p-4">
-            <p class="text-2xs font-semibold uppercase tracking-widest text-muted-foreground">{t(locale, "partners.priceNote")}</p>
-            <dl class="mt-3 grid grid-cols-2 gap-3">
-              <div>
-                <dt class="text-2xs text-muted-foreground">{t(locale, "partners.firstCommission")}</dt>
-                <dd class="font-mono text-xl font-bold text-primary">$1,495</dd>
-              </div>
-              <div>
-                <dt class="text-2xs text-muted-foreground">{t(locale, "partners.following")}</dt>
-                <dd class="font-mono text-xl font-bold text-foreground-strong">$598<span class="text-sm font-medium text-muted-foreground">{t(locale, "partners.perMonth")}</span></dd>
-              </div>
-            </dl>
+          <p class="mt-4 text-sm leading-relaxed text-muted-foreground">{t(locale, "partners.customerDesc")}</p>
+
+          <div class="mt-auto pt-10">
+            <p class="font-extrabold leading-none tracking-tight text-primary" dir="ltr">
+              <span class="text-7xl sm:text-8xl">50%</span>
+            </p>
+            <p class="mt-3 font-sans text-sm font-semibold text-foreground">{t(locale, "partners.firstPayment")}</p>
+            <p class="mt-2 font-sans text-sm text-muted-foreground">
+              <span class="align-baseline font-extrabold text-foreground-strong" dir="ltr"><span class="text-xl">20%</span></span>
+              {t(locale, "partners.restOfYear")}
+            </p>
+          </div>
+        </article>
+
+        <!-- Bring a Lead -->
+        <article class="group relative flex flex-col overflow-hidden rounded-md border border-border bg-panel p-8 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong sm:p-10">
+          <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-accent to-transparent opacity-50" aria-hidden="true"></div>
+          <div class="flex items-center gap-3.5">
+            <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-accent-soft">
+              <i class="bx bx-link text-accent icon-2xl" aria-hidden="true"></i>
+            </div>
+            <h3 class="font-sans text-xl font-bold text-foreground-strong">{t(locale, "partners.deal.leadTitle")}</h3>
+          </div>
+          <p class="mt-4 text-sm leading-relaxed text-muted-foreground">{t(locale, "partners.leadDesc")}</p>
+
+          <div class="mt-auto pt-10">
+            <p class="font-extrabold leading-none tracking-tight text-foreground-strong" dir="ltr">
+              <span class="text-7xl sm:text-8xl">25%</span>
+            </p>
+            <p class="mt-3 font-sans text-sm font-semibold text-foreground">{t(locale, "partners.firstPayment")}</p>
+            <p class="mt-2 font-sans text-sm text-muted-foreground">
+              <span class="align-baseline font-extrabold text-foreground-strong" dir="ltr"><span class="text-xl">20%</span></span>
+              {t(locale, "partners.restOfYear")}
+            </p>
           </div>
         </article>
       </div>
 
-      <!-- Timeline: first payment vs next 11 months -->
-      <div class="mt-8 overflow-hidden rounded-xl border border-border bg-panel shadow-panel" data-aos="fade-up">
-        <div class="grid sm:grid-cols-[auto_1fr_1fr] sm:items-stretch">
-          <div class="hidden items-center border-e border-border px-5 sm:flex">
-            <p class="text-2xs font-semibold uppercase tracking-widest text-muted-foreground [writing-mode:vertical-rl] rotate-180">{t(locale, "partners.timeline.label")}</p>
-          </div>
-          <div class="border-b border-border p-5 sm:border-b-0 sm:border-e">
-            <p class="font-mono text-2xs font-bold uppercase tracking-widest text-primary">{t(locale, "partners.timeline.first")}</p>
-            <p class="mt-2 text-sm text-muted-foreground">{t(locale, "partners.timeline.leadRow")}</p>
-            <p class="text-2xl font-extrabold text-foreground-strong">25%</p>
-            <p class="mt-3 text-sm text-muted-foreground">{t(locale, "partners.timeline.custRow")}</p>
-            <p class="text-2xl font-extrabold text-primary">50%</p>
-          </div>
-          <div class="p-5">
-            <p class="font-mono text-2xs font-bold uppercase tracking-widest text-foreground-muted">{t(locale, "partners.timeline.next")}</p>
-            <p class="mt-2 text-sm text-muted-foreground">{t(locale, "partners.timeline.both")}</p>
-            <p class="text-2xl font-extrabold text-foreground-strong">20%</p>
-            <p class="mt-3 text-xs leading-relaxed text-muted-foreground">{t(locale, "partners.timeline.collected")}</p>
-          </div>
-        </div>
-      </div>
+      <p class="mt-12 text-center text-xs leading-relaxed text-muted-foreground" data-aos="fade-up">
+        {t(locale, "partners.note")}
+        <a href={pricingHref} data-cta-location={`partners_note_pricing_${locale}`} class="font-semibold text-primary hover:underline">{t(locale, "partners.note.link")}</a>
+      </p>
     </div>
   </section>
 
-  <!-- 3 — WHAT WE CAN IMPLEMENT -->
-  <section class="relative overflow-hidden py-24 sm:py-32">
-    <div class="absolute inset-0 bg-panel-deep/50"></div>
-    <div class="relative mx-auto max-w-5xl px-6">
-      <SectionHeader label={t(locale, "partners.impl.label")} title={t(locale, "partners.impl.title")} />
-      <div class="grid gap-4 sm:grid-cols-2" data-aos="fade-up">
-        <div class="rounded-lg border border-border bg-panel p-6 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
-          <div class="flex h-9 w-9 items-center justify-center rounded-md bg-primary-soft mb-3">
-            <i class="bx bx-run text-primary icon-xl"></i>
-          </div>
-          <h3 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, "partners.impl.agents.t")}</h3>
-          <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, "partners.impl.agents.d")}</p>
-        </div>
-        <div class="rounded-lg border border-border bg-panel p-6 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
-          <div class="flex h-9 w-9 items-center justify-center rounded-md bg-accent-soft mb-3">
-            <i class="bx bx-repeat text-accent icon-xl"></i>
-          </div>
-          <h3 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, "partners.impl.automation.t")}</h3>
-          <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, "partners.impl.automation.d")}</p>
-        </div>
-        <div class="rounded-lg border border-border bg-panel p-6 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
-          <div class="flex h-9 w-9 items-center justify-center rounded-md bg-purple-soft mb-3">
-            <i class="bx bx-network-chart text-purple icon-xl"></i>
-          </div>
-          <h3 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, "partners.impl.systems.t")}</h3>
-          <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, "partners.impl.systems.d")}</p>
-        </div>
-        <div class="rounded-lg border border-border bg-panel p-6 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
-          <div class="flex h-9 w-9 items-center justify-center rounded-md bg-warning-soft mb-3">
-            <i class="bx bx-error text-warning icon-xl"></i>
-          </div>
-          <h3 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, "partners.impl.deslop.t")}</h3>
-          <p class="text-xs text-muted-foreground leading-relaxed">{t(locale, "partners.impl.deslop.d")}</p>
-        </div>
-      </div>
-      <p class="mx-auto mt-8 max-w-2xl text-center text-sm leading-relaxed text-muted-foreground" data-aos="fade-up" set:html={t(locale, "partners.impl.note", { pricing: pricingHref, services: servicesHref })} />
-    </div>
-  </section>
-
-  <!-- 4 — BUILT FOR BUSINESSES THAT ALREADY HAVE CLIENTS -->
+  <!-- 3 — FAQ -->
   <section class="relative py-24 sm:py-32">
-    <div class="mx-auto max-w-5xl px-6">
-      <SectionHeader label={t(locale, "partners.who.label")} title={t(locale, "partners.who.title")} />
-      <div class="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14">
-        <div data-aos="fade-up">
-          <div class="space-y-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
-            <p>{t(locale, "partners.who.p1")}</p>
-            <p>{t(locale, "partners.who.p2")}</p>
-            <p>{t(locale, "partners.who.p3")}</p>
-            <p>{t(locale, "partners.who.p4")}</p>
-          </div>
-          <p class="mt-8 border-t border-border pt-6 text-sm font-semibold leading-relaxed text-foreground-strong sm:text-base">
-            {t(locale, "partners.who.close")}
-          </p>
-        </div>
-        <div data-aos="fade-up">
-          <p class="text-2xs font-semibold uppercase tracking-widest text-primary">{t(locale, "partners.who.audTitle")}</p>
-          <ul class="mt-4 flex flex-wrap gap-2">
-            {t(locale, "partners.who.audiences").split("|").map((label) => (
-              <li class="rounded-pill border border-border bg-panel px-3 py-1.5 text-xs font-medium text-foreground">{label}</li>
-            ))}
-          </ul>
-        </div>
-      </div>
+    <div class="mx-auto max-w-3xl px-6">
+      <SectionHeader label={t(locale, "partners.faq.label")} title={t(locale, "partners.faq.title")} />
+      <FAQList locale={locale} keyPrefix="partners-faq" entries={faqs} />
     </div>
   </section>
 
-  <!-- 5 — CTA + FAQ -->
+  <!-- 4 — FINAL CTA -->
   <section class="relative overflow-hidden py-24 sm:py-32">
-    <div class="absolute inset-0 bg-panel-deep/50"></div>
     <div class="absolute inset-0 opacity-[0.03] hero-grid"></div>
-    <div class="absolute left-1/2 top-[38%] h-[26rem] w-[42rem] -translate-x-1/2 -translate-y-1/2 glow-blob opacity-15"></div>
-    <div class="relative mx-auto max-w-3xl px-6 text-center">
-      <div data-aos="fade-up">
-        <h2 class="text-3xl font-extrabold leading-tightest tracking-tight text-foreground-strong sm:text-5xl">{t(locale, "partners.final.title")}</h2>
-        <p class="mx-auto mt-5 max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-          {t(locale, "partners.final.body")}
-        </p>
-        <div class="mt-8 flex justify-center">
-          <a href={contactHref} data-cta-location={`partners_final_${locale}`} class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-8 h-12 text-base font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20">{t(locale, "partners.cta")}</a>
-        </div>
-      </div>
-      <div class="mt-16 text-left rtl:text-right">
-        <SectionHeader label={t(locale, "partners.faq.label")} title={t(locale, "partners.faq.title")} align="center" />
-        <FAQList locale={locale} keyPrefix="partners-faq" entries={faqs} />
+    <div class="absolute left-1/2 top-[34%] h-[24rem] w-[40rem] -translate-x-1/2 -translate-y-1/2 glow-blob opacity-15"></div>
+    <div class="relative mx-auto max-w-3xl px-6 text-center" data-aos="fade-up">
+      <h2 class="text-3xl font-extrabold leading-tightest tracking-tight text-foreground-strong sm:text-5xl">{t(locale, "partners.final.title")}</h2>
+      <p class="mx-auto mt-5 max-w-lg text-sm leading-relaxed text-muted-foreground sm:text-base">{t(locale, "partners.final.body")}</p>
+      <div class="mt-8 flex justify-center">
+        <a href={contactHref} data-cta-location={`partners_final_${locale}`} class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-8 h-12 text-base font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20">{t(locale, "partners.cta.final")}</a>
       </div>
     </div>
   </section>

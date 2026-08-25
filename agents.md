@@ -478,10 +478,10 @@ The only active skill system is `.agents/skills/`. Do not create a second skill
 tree or copy skills into the repository root. Skills live in two namespaces:
 
 - `.agents/skills/company/` (harness operation): `director`, `department-runner`,
-  `system-improvement`, `outbound`, `outbound-email`
+  `system-improvement`, `outbound`, `outbound-email`, `copywriting-en`,
+  `copywriting-fa` (departments bind these)
 - `.agents/skills/website/` (site-bound): `analytics` (consent, attribution,
-  GA4, PostHog, conversion events), `copywriting-en` / `copywriting-fa`
-  (buyer-focused content creation), `seo` (crawlability, metadata, schemas,
+  GA4, PostHog, conversion events), `seo` (crawlability, metadata, schemas,
   sitemap, internal linking), `spielos-ui` (tokens, components, accessibility,
   visual contracts), `translation-fa` (Persian localization), `video-creation`
   (HTML-to-video production)

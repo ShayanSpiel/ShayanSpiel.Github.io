@@ -1,0 +1,142 @@
+<!doctype html
+><!--
+  SpielOS Partner Deal Sheet — one-page A4 PDF for email attachment.
+  Design structure: gallery archetypes "single-fact" (hook-first title band)
+  + "list-checklist" (flat terms rows with thin rules). Gruvbox-dark tokens,
+  Outfit/JetBrains Mono, flat only — no cards-with-arrows, no stock imagery.
+--><html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>SpielOS Partner Deal Sheet</title>
+<style>
+  /* ── gruvbox-dark semantic tokens (mirrors src/styles/tokens/) ── */
+  :root {
+    --background: #1d2021;
+    --panel-raised: #32302f;
+    --border: #504945;
+    --foreground-strong: #fbf1c7;
+    --foreground: #ebdbb2;
+    --muted-foreground: #a89984;
+    --primary: #458588;
+    --accent: #689d6a;
+  }
+  @font-face { font-family: "Outfit"; src: url("../../public/assets/fonts/outfit-latin.woff2") format("woff2"); font-weight: 100 900; font-style: normal; }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 210mm; height: 297mm; }
+  body {
+    position: relative; overflow: hidden;
+    background:
+      radial-gradient(circle at 50% 30%, rgba(69, 133, 136, 0.10), transparent 42%),
+      #1d2021;
+    color: var(--foreground);
+    font-family: "Outfit", sans-serif;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .page { position: relative; z-index: 2; display: flex; flex-direction: column; height: 100%; padding: 16mm 18mm 12mm; }
+
+  /* Header lockup */
+  header { display: flex; align-items: center; justify-content: space-between; }
+  .brand { display: inline-flex; align-items: center; gap: .5em; color: var(--foreground-strong); font-weight: 700; font-size: 15pt; letter-spacing: -.02em; }
+  .brand svg { display: block; }
+  .eyebrow { color: var(--primary); font-family: "Monaco", monospace; font-size: 8.5pt; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; }
+
+  /* Title band — single-fact archetype */
+  .fact-band { text-align: center; margin-top: 20mm; }
+  h1 { max-width: 21ch; margin: 0 auto; color: var(--foreground-strong); font-size: 33pt; font-weight: 800; line-height: 1.02; letter-spacing: -.035em; }
+  h1 .accent { color: var(--primary); }
+  .fact-rule { width: 22mm; height: 1.2mm; margin: 6mm auto 0; background: var(--primary); }
+  .support { max-width: 128mm; margin: 6mm auto 0; text-align: center; color: var(--muted-foreground); font-size: 11pt; font-weight: 500; line-height: 1.4; }
+
+  /* Terms — list-checklist archetype: flat rows, thin rules */
+  .terms { margin-top: 16mm; border-top: 1px solid var(--border); }
+  .row { display: grid; grid-template-columns: 62mm 1fr 1fr; gap: 8mm; align-items: start; padding: 9.5mm 2mm; border-bottom: 1px solid var(--border); }
+  .tier { font-size: 9.5pt; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+  .row.customer .tier { color: var(--primary); }
+  .row.lead .tier { color: var(--muted-foreground); }
+  .desc { margin-top: 2.5mm; color: var(--muted-foreground); font-size: 10pt; line-height: 1.4; }
+  .stat b { display: block; color: var(--foreground-strong); font-size: 24pt; font-weight: 800; letter-spacing: -.02em; line-height: 1; }
+  .lead-row .stat b { font-weight: 700; color: var(--foreground); }
+  .stat span { display: block; margin-top: 2mm; color: var(--muted-foreground); font-size: 9pt; }
+
+  /* Scope strip */
+  .scope { margin-top: 14mm; text-align: center; }
+  .scope-label { font-family: "Monaco", monospace; font-size: 8pt; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--muted-foreground); }
+  .scope-items { margin-top: 4mm; color: var(--foreground); font-size: 10.5pt; font-weight: 600; white-space: nowrap; }
+  .scope-items em { font-style: normal; color: var(--primary); padding: 0 2.4mm; }
+
+  /* Footnote + footer */
+  .note { margin-top: 14mm; text-align: center; color: var(--muted-foreground); font-size: 9pt; }
+
+/* How it works — three numbered steps, flat, no cards */
+.steps { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8mm; margin-top: 16mm; padding: 0 2mm; }
+.step .num { font-family: "Monaco", monospace; font-size: 8.5pt; font-weight: 600; letter-spacing: .14em; color: var(--primary); }
+.step p { margin-top: 3mm; color: var(--foreground); font-size: 10.5pt; font-weight: 600; line-height: 1.35; }
+  footer { margin-top: auto; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border); padding-top: 5mm; color: var(--muted-foreground); font-family: "Monaco", monospace; font-size: 8.5pt; }
+  footer .cta { color: var(--foreground-strong); font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <span class="brand">
+      <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" fill="none" style="color: var(--foreground-strong);"><path d="M20 2a2 2 0 1 0 0 4 2 2 0 1 0 0-4m-3 10 .5-5.5L12 7l1.75 1.75c-.47.4-1.01.5-1.69.63-1.05.19-2.35.44-3.4 1.93s-.83 2.8-.65 3.85c.15.9.26 1.55-.32 2.38-.58.82-1.23.94-2.12 1.11-1.05.19-2.35.43-3.4 1.93l1.64 1.15c.58-.82 1.22-.94 2.12-1.11 1.05-.19 2.35-.43 3.4-1.93 1.05-1.49.83-2.8.65-3.85-.15-.9-.26-1.55.32-2.38.58-.82 1.23-.94 2.12-1.11.84-.15 1.84-.35 2.74-1.18L16.99 12ZM3.71 8.71l1.79-1.8 1.79 1.8 1.42-1.42-1.8-1.79 1.8-1.79-1.42-1.42-1.79 1.8-1.79-1.8-1.42 1.42 1.8 1.79-1.8 1.79zm16.58 5.58L18 16.59l-2.29-2.3-1.42 1.42 2.3 2.29-2.3 2.29 1.42 1.42 2.29-2.3 2.29 2.3 1.42-1.42-2.3-2.29 2.3-2.29z" fill="currentColor" stroke="currentColor" stroke-width="0.55" stroke-linejoin="round" paint-order="stroke fill"/></svg>
+      SpielOS
+    </span>
+    <span class="eyebrow">Partner Deal Sheet</span>
+  </header>
+
+  <div class="fact-band">
+    <h1>Turn your overflow into <span class="accent">recurring revenue.</span></h1>
+    <div class="fact-rule"></div>
+    <p class="support">Send us the AI work your clients need. We build the workflows, agents and systems. You keep earning from the relationship.</p>
+  </div>
+
+  <div class="terms">
+    <div class="row customer">
+      <div>
+        <p class="tier">Customer</p>
+        <p class="desc">Ready to start with a clear workflow.</p>
+      </div>
+      <div class="stat"><b>50%</b><span>First month payment</span></div>
+      <div class="stat"><b>20%</b><span>Rest of the year</span></div>
+    </div>
+    <div class="row lead lead-row">
+      <div>
+        <p class="tier">Lead</p>
+        <p class="desc">You make the introduction. We handle the discovery.</p>
+      </div>
+      <div class="stat"><b>25%</b><span>First month payment</span></div>
+      <div class="stat"><b>20%</b><span>Rest of the year</span></div>
+    </div>
+  </div>
+
+  <div class="scope">
+    <p class="scope-label">What we implement for your clients</p>
+    <p class="scope-items">AI Agents <em>&middot;</em> Workflow Automation <em>&middot;</em> Internal AI Systems <em>&middot;</em> AI Integrations <em>&middot;</em> AI-built Software Fixes</p>
+  </div>
+
+  <p class="note">Commission is paid on collected revenue. SpielOS starts at $2,990/month, one workflow at a time.</p>
+
+  <div class="steps">
+    <div class="step">
+      <p class="num">01</p>
+      <p>You send us the client with a short context note.</p>
+    </div>
+    <div class="step">
+      <p class="num">02</p>
+      <p>We scope, build and run the AI implementation.</p>
+    </div>
+    <div class="step">
+      <p class="num">03</p>
+      <p>You collect commission on every collected payment.</p>
+    </div>
+  </div>
+
+  <footer>
+    <span class="cta">Got overflow? Send it our way &rarr; spielos.xyz/contact</span>
+    <span>spielos.xyz/partners &middot; shayan@spielos.xyz</span>
+  </footer>
+</div>
+</body>
+</html>

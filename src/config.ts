@@ -14,7 +14,7 @@ export const SITE = {
 
 export const AUTHOR = {
   name: "Shayan Spiel",
-  email: "66shayan@gmail.com",
+  email: "shayan@spielos.xyz",
   handle: "@ShayanSpiel",
   url: "https://spielos.xyz",
   title: "Founder of SpielOS · Agent Harness Architect",
@@ -99,7 +99,8 @@ export const ANALYTICS = {
 };
 
 export const FORMS = {
-  contact: "https://formsubmit.co/66shayan@gmail.com",
+  // FormSubmit AJAX endpoint (JSON responses for the fetch-based contact form).
+  contact: "https://formsubmit.co/ajax/shayan@spielos.xyz",
 };
 
 // Apply funnel (Phase 1): free-review application page fed by the pricing page.

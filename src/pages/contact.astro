@@ -1,6 +1,6 @@
 ---
 import Page from "../layouts/Page.astro";
-import { FORMS, AUTHOR, SITE, SOCIAL, APPLY_PATH, BOOKING_LINK, BOOKING_CONFIG } from "../config";
+import { FORMS, SITE, SOCIAL, APPLY_PATH, BOOKING_LINK, BOOKING_CONFIG } from "../config";
 import { type Locale, t } from "../i18n/translations";
 import { localizePath } from "../i18n";
 
@@ -81,7 +81,7 @@ const breadcrumbJsonLd = {
 
           <button id="submit-btn" type="submit" class="w-full rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2">
             <span id="submit-text">{formCopy.submit}</span>
-            <i id="submit-spinner" class="bx bx-loader icon-base bx-spin" hidden></i>
+            <i id="submit-spinner" class="bx bx-loader icon-base bx-spin" style="display:none" aria-hidden="true"></i>
           </button>
 
           <div id="form-error" class="hidden rounded-md bg-destructive-soft border border-destructive/20 p-3 text-xs text-destructive"></div>
@@ -136,7 +136,7 @@ const breadcrumbJsonLd = {
           btn.disabled = true;
           btn.classList.add('opacity-70', 'cursor-not-allowed');
           text.textContent = originalText.replace('...', '') + '...';
-          spinner.hidden = false;
+          spinner.style.display = '';
 
           var formData = new FormData(form);
           var data = {};
@@ -151,9 +151,14 @@ const breadcrumbJsonLd = {
 
             if (response.ok) {
               track('lead_form_success');
-              // Success lands on the localized thank-you page (the inline
-              // success panel is kept as a no-JS/fallback structure).
-              window.location.href = thankYouUrl;
+              // Success shows the inline thanks panel; the thank-you page
+              // stays available as a no-JS fallback target.
+              form.classList.add('hidden');
+              successState.classList.remove('hidden');
+              text.textContent = originalText;
+              spinner.style.display = 'none';
+              btn.disabled = false;
+              btn.classList.remove('opacity-70', 'cursor-not-allowed');
             } else {
               throw new Error('Submission failed');
             }
@@ -164,7 +169,7 @@ const breadcrumbJsonLd = {
             btn.disabled = false;
             btn.classList.remove('opacity-70', 'cursor-not-allowed');
             text.textContent = originalText;
-            spinner.hidden = true;
+            spinner.style.display = 'none';
           }
         });
 
@@ -180,8 +185,6 @@ const breadcrumbJsonLd = {
       </script>
 
       <div data-aos="fade-up" class="mt-12 text-center space-y-6">
-        <p class="text-xs text-muted-foreground">{t(locale, "contact.orEmail")} <a href={`mailto:${AUTHOR.email}`} class="text-primary hover:opacity-80 transition-opacity">{AUTHOR.email}</a></p>
-
         <div class="rounded-md border border-border bg-panel p-6">
           <h2 class="text-sm font-semibold text-foreground-strong mb-1">{t(locale, "contact.dmTitle")}</h2>
           <p class="text-xs text-muted-foreground mb-4">{t(locale, "contact.dmDesc")}</p>

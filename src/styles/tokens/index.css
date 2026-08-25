@@ -89,7 +89,7 @@
   --leading-relaxed: 1.625;
 
   --font-sans: var(--font-outfit), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Inter, "Helvetica Neue", Arial, sans-serif;
-  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, "JetBrains Mono", "Fira Code", Menlo, Consolas, monospace;
+  --font-mono: Monaco, "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   --skeleton-bg: color-mix(in oklab, var(--panel-raised) 60%, var(--panel) 40%);
   --overlay-bg: color-mix(in oklab, var(--background) 70%, transparent);
@@ -135,5 +135,5 @@
 [dir="rtl"] {
   --bidi-sign: -1;
   --font-sans: var(--font-iransansx), var(--font-outfit), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Tahoma, "Helvetica Neue", Arial, sans-serif;
-  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, "JetBrains Mono", "Fira Code", Menlo, Consolas, monospace;
+  --font-mono: Monaco, "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
