@@ -35,8 +35,9 @@ deterministic, idempotent JSON snapshots:
        { state, current_run, heartbeat, northstar, last_activity_at,
          last_sync_at, totals }
 
-  state is "running" when any cycle joined to an active goal has run_status
-  in ("idle", "waiting"), otherwise "resting". heartbeat is the active
+  state is "running" when any active-goal cycle is in flight ("idle"/
+  "waiting") or the last company transition is within the freshness window
+  (default 6h, SPIELOS_LIVE_ACTIVE_WINDOW_H); otherwise "resting". heartbeat is the active
   business goal (goal_status = "active", owner_id in director/email/outbound)
   whose most recently updated cycle has run_status in ("idle", "waiting"),
   or null when no business goal is in flight. northstar is derived
@@ -183,6 +184,26 @@ def _count(conn: sqlite3.Connection, table: str) -> int:
     return conn.execute(f"SELECT count(*) FROM {table}").fetchone()[0]
 
 
+# A company with a transition younger than this is considered alive even when
+# every run is parked (blocked / awaiting_approval). Hours; override via
+# SPIELOS_LIVE_ACTIVE_WINDOW_H.
+LIVE_ACTIVE_WINDOW_H = 6.0
+
+
+def _recently_active(last_activity: Optional[str]) -> bool:
+    """True when the last company transition is inside the freshness window."""
+    if not last_activity:
+        return False
+    try:
+        parsed = datetime.fromisoformat(str(last_activity).replace("Z", "+00:00"))
+    except ValueError:
+        return False
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    age_h = (datetime.now(timezone.utc) - parsed).total_seconds() / 3600.0
+    return 0 <= age_h <= LIVE_ACTIVE_WINDOW_H
+
+
 def _runtime_state(conn: sqlite3.Connection) -> Dict[str, Any]:
     """Compute the live Running/Resting runtime state.
 
@@ -198,7 +219,6 @@ def _runtime_state(conn: sqlite3.Connection) -> Dict[str, Any]:
         "WHERE g.goal_status = 'active' AND c.run_status IN ('idle', 'waiting') "
         "LIMIT 1"
     ).fetchone()
-    state = "running" if running else "resting"
 
     current_run: Optional[Dict[str, Any]] = None
     row = conn.execute(
@@ -225,6 +245,11 @@ def _runtime_state(conn: sqlite3.Connection) -> Dict[str, Any]:
         "SELECT updated_at FROM goals UNION ALL SELECT updated_at FROM cycles)"
     ).fetchone()["m"]
 
+    # Owner directive 2026-08-25: an in-flight cycle means running, but so does
+    # any company transition within the freshness window -- blocked/awaiting
+    # runs parked for decisions are still a living company, not a sleeping one.
+    state = "running" if running or _recently_active(last_activity) else "resting"
+
     return {
         "state": state,
         "current_run": current_run,
@@ -246,19 +271,16 @@ def _northstar(conn: sqlite3.Connection) -> Optional[Dict[str, Any]]:
     Unlike heartbeat, northstar does not depend on an in-flight cycle — the
     primary goal is shown even while the company is resting.
     """
+    # One unified candidate set, newest first. A retired "-primary-" goal that
+    # was left active must never outrank the current northstar (2026-08-25 fix:
+    # goal-booked-calls-primary-20260815 shadowed goal-northstar-sales-weekly-v1).
     row = conn.execute(
         "SELECT id, name, metric, operator, target_json, goal_status, "
         "updated_at FROM goals WHERE goal_status = 'active' "
-        "AND id LIKE '%-primary-%' "
+        "AND owner_id = 'director' "
+        "AND (id LIKE '%-primary-%' OR metric IN ('booked_calls', 'sales')) "
         "ORDER BY updated_at DESC, id DESC LIMIT 1"
     ).fetchone()
-    if row is None:
-        row = conn.execute(
-            "SELECT id, name, metric, operator, target_json, goal_status, "
-            "updated_at FROM goals WHERE goal_status = 'active' "
-            "AND owner_id = 'director' AND metric IN ('booked_calls', 'sales') "
-            "ORDER BY updated_at DESC, id DESC LIMIT 1"
-        ).fetchone()
     if row is None:
         return None
     return {
