@@ -3310,10 +3310,10 @@
     },
     {
       "created_at": "2026-08-22T17:17:25.340801+00:00",
-      "current_value": 1683,
+      "current_value": 1712,
       "goal_status": "active",
       "id": "goal-87a4572a0f",
-      "latest_activity_at": "2026-08-24T13:43:27.512744+00:00",
+      "latest_activity_at": "2026-08-24T14:50:20.263951+00:00",
       "metric": "qualified_social_leads",
       "name": "Research pipeline: grow fully verified English lead pool to 2000 (continuous - don't stop)",
       "operator": "ge",
@@ -3322,7 +3322,7 @@
       "run_status": "blocked",
       "stage": "DECIDE",
       "target": 2500,
-      "updated_at": "2026-08-24T13:43:27.509436+00:00"
+      "updated_at": "2026-08-24T14:50:20.261939+00:00"
     },
     {
       "created_at": "2026-08-23T14:41:35.284821+00:00",
@@ -3503,6 +3503,66 @@
       "stage": "ACT",
       "target": 1,
       "updated_at": "2026-08-24T04:06:50.735184+00:00"
+    },
+    {
+      "created_at": "2026-08-25T02:48:43.423959+00:00",
+      "goal_status": "active",
+      "id": "goal-northstar-sales-weekly-v1",
+      "latest_activity_at": "2026-08-25T02:51:40.797628+00:00",
+      "metric": "sales",
+      "name": "Northstar: close 1 sale per week",
+      "operator": "ge",
+      "owner_id": "director",
+      "parent_id": null,
+      "run_status": "blocked",
+      "stage": "DECIDE",
+      "target": 1,
+      "updated_at": "2026-08-25T02:48:44.383341+00:00"
+    },
+    {
+      "created_at": "2026-08-25T02:51:12.400524+00:00",
+      "goal_status": "active",
+      "id": "goal-support-reply-5",
+      "latest_activity_at": "2026-08-25T02:51:36.426849+00:00",
+      "metric": "reply_rate",
+      "name": "Outbound reply rate >= 5%",
+      "operator": "ge",
+      "owner_id": "outbound",
+      "parent_id": "goal-northstar-sales-weekly-v1",
+      "run_status": "blocked",
+      "stage": "DECIDE",
+      "target": 0.05,
+      "updated_at": "2026-08-25T02:51:36.426133+00:00"
+    },
+    {
+      "created_at": "2026-08-25T02:51:29.432031+00:00",
+      "goal_status": "active",
+      "id": "goal-support-funnel-quality",
+      "latest_activity_at": "2026-08-25T02:51:36.956740+00:00",
+      "metric": "funnel_reports",
+      "name": "Weekly outbound funnel quality: 100 emails/day, delivery >=95%, open >=60%, click >=40%",
+      "operator": "ge",
+      "owner_id": "analytics",
+      "parent_id": "goal-northstar-sales-weekly-v1",
+      "run_status": "blocked",
+      "stage": "ACT",
+      "target": 7,
+      "updated_at": "2026-08-25T02:51:36.955984+00:00"
+    },
+    {
+      "created_at": "2026-08-25T02:51:40.130403+00:00",
+      "goal_status": "active",
+      "id": "goal-support-wizard-leads",
+      "latest_activity_at": "2026-08-25T02:51:40.797628+00:00",
+      "metric": "attributed_conversions",
+      "name": "Apply-wizard leads: 5/day (35/week) via apply_submitted",
+      "operator": "ge",
+      "owner_id": "analytics",
+      "parent_id": "goal-northstar-sales-weekly-v1",
+      "run_status": "blocked",
+      "stage": "ACT",
+      "target": 35,
+      "updated_at": "2026-08-25T02:51:40.797167+00:00"
     }
   ],
   "heartbeat": {
@@ -3510,15 +3570,15 @@
     "business_value_fa": null,
     "display_title": null,
     "display_title_fa": null,
-    "goal_id": "goal-87a4572a0f",
-    "goal_name": "Research pipeline: grow fully verified English lead pool to 2000 (continuous - don't stop)",
-    "metric": "qualified_social_leads",
+    "goal_id": "goal-support-wizard-leads",
+    "goal_name": "Apply-wizard leads: 5/day (35/week) via apply_submitted",
+    "metric": "attributed_conversions",
     "operator": "ge",
-    "owner_id": "outbound",
+    "owner_id": "analytics",
     "run_status": "blocked",
-    "stage": "DECIDE",
-    "target": 2500,
-    "updated_at": "2026-08-24T13:43:27.512744+00:00"
+    "stage": "ACT",
+    "target": 35,
+    "updated_at": "2026-08-25T02:51:40.797628+00:00"
   },
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
@@ -3531,44 +3591,44 @@
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-22T17:17:25.340801+00:00",
-      "goal_id": "goal-87a4572a0f",
-      "goal_name": "Research pipeline: grow fully verified English lead pool to 2000 (continuous - don't stop)",
-      "owner_id": "outbound",
-      "run_id": "run-9ff4b879f6",
+      "created_at": "2026-08-25T02:51:40.130403+00:00",
+      "goal_id": "goal-support-wizard-leads",
+      "goal_name": "Apply-wizard leads: 5/day (35/week) via apply_submitted",
+      "owner_id": "analytics",
+      "run_id": "run-b00c46ac8b",
       "run_status": "blocked",
-      "stage": "DECIDE",
-      "updated_at": "2026-08-24T13:43:27.512744+00:00"
+      "stage": "ACT",
+      "updated_at": "2026-08-25T02:51:40.797628+00:00"
     },
     "heartbeat": {
       "business_value": null,
       "business_value_fa": null,
       "display_title": null,
       "display_title_fa": null,
-      "goal_id": "goal-87a4572a0f",
-      "goal_name": "Research pipeline: grow fully verified English lead pool to 2000 (continuous - don't stop)",
-      "metric": "qualified_social_leads",
+      "goal_id": "goal-support-wizard-leads",
+      "goal_name": "Apply-wizard leads: 5/day (35/week) via apply_submitted",
+      "metric": "attributed_conversions",
       "operator": "ge",
-      "owner_id": "outbound",
+      "owner_id": "analytics",
       "run_status": "blocked",
-      "stage": "DECIDE",
-      "target": 2500,
-      "updated_at": "2026-08-24T13:43:27.512744+00:00"
+      "stage": "ACT",
+      "target": 35,
+      "updated_at": "2026-08-25T02:51:40.797628+00:00"
     },
-    "last_activity_at": "2026-08-24T13:43:27.512744+00:00",
-    "last_sync_at": "2026-08-24T13:43:28.468801+00:00",
-    "state": "running"
+    "last_activity_at": "2026-08-25T02:51:50.944541+00:00",
+    "last_sync_at": "2026-08-25T02:51:50.994930+00:00",
+    "state": "resting"
   },
   "totals": {
     "approvals": 250,
-    "decisions": 841,
-    "evidence": 12972,
+    "decisions": 846,
+    "evidence": 13007,
     "goals_abandoned": 33,
     "goals_achieved": 161,
-    "goals_active": 29,
-    "goals_total": 232,
+    "goals_active": 33,
+    "goals_total": 236,
     "hypotheses": 76,
     "memory_claims": 5,
-    "runs": 255
+    "runs": 259
   }
 }
