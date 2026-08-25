@@ -65,8 +65,8 @@ body { font-family: var(--font); color: var(--fg1); -webkit-font-smoothing: anti
    fill starts at 10% and grows 80% × (active/4), so it tracks the node
    centers without drift. */
 .loop-rail { position: absolute; top: 11cqh; inset-inline: 0; z-index: 30; display: flex; align-items: flex-start; justify-content: space-between; --tile-size: clamp(26px, 3.4vw, 44px); }
-.loop-line { position: absolute; top: calc(var(--tile-size) / 2); left: 10%; right: 10%; height: 2px; border-radius: var(--radius-pill); background: var(--border-strong); z-index: 0; }
-.loop-fill { position: absolute; top: calc(var(--tile-size) / 2); left: 10%; width: 0%; height: 2px; border-radius: var(--radius-pill); background: linear-gradient(90deg, var(--primary), var(--accent)); transition: width 0.35s linear; z-index: 1; }
+.loop-line { position: absolute; top: calc(var(--tile-size) / 2); left: 10%; right: 10%; height: 2px; border-radius: var(--radius-md); background: var(--border-strong); z-index: 0; }
+.loop-fill { position: absolute; top: calc(var(--tile-size) / 2); left: 10%; width: 0%; height: 2px; border-radius: var(--radius-md); background: linear-gradient(90deg, var(--primary), var(--accent)); transition: width 0.35s linear; z-index: 1; }
 .loop-node { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 10px; width: 20%; }
 .loop-tile { display: grid; place-items: center; width: var(--tile-size); height: var(--tile-size); border-radius: var(--radius-md); border: 1px solid var(--border-strong); background: var(--panel); color: var(--fg4); font-size: clamp(14px, 1.8vw, 22px); transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease; }
 .loop-label { font-family: var(--mono); font-size: clamp(0.55rem, 0.95vw, 0.8rem); font-weight: 600; letter-spacing: 0.1em; color: var(--fg4); opacity: 0.65; transition: color 0.4s ease, opacity 0.4s ease; }
@@ -77,7 +77,7 @@ body { font-family: var(--font); color: var(--fg1); -webkit-font-smoothing: anti
 
 /* ═══ HEADLINE BAND (below the rail) ═══ */
 .band { text-align: center; padding: 0 8%; margin-top: 26cqh; z-index: 10; }
-.band-badge { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 1.4rem; padding: 8px 20px; border: 1px solid var(--border-strong); border-radius: var(--radius-pill); background: var(--panel); font-family: var(--mono); font-size: clamp(0.75rem, 1.3vw, 1rem); font-weight: 700; letter-spacing: 0.14em; color: var(--fg4); }
+.band-badge { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 1.4rem; padding: 8px 20px; border: 1px solid var(--border-strong); border-radius: var(--radius-md); background: var(--panel); font-family: var(--mono); font-size: clamp(0.75rem, 1.3vw, 1rem); font-weight: 700; letter-spacing: 0.14em; color: var(--fg4); }
 .band-badge i { color: var(--primary); font-size: clamp(16px, 2vw, 22px); }
 .band-main { font-size: clamp(3rem, 8vw, 5.5rem); font-weight: 800; color: var(--fg0); line-height: 1.06; letter-spacing: -0.04em; }
 .band-main .accent { color: var(--primary); }
@@ -96,7 +96,7 @@ body { font-family: var(--font); color: var(--fg1); -webkit-font-smoothing: anti
 .cta-url .p { color: var(--primary); font-weight: 700; }
 
 /* ═══ THUMBNAIL STILL TITLE (owner order 2026-08-13) ═══ */
-.thumb-title { display: none; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 60; max-width: 82%; padding: clamp(18px, 3vw, 34px) clamp(28px, 4.5vw, 56px); border-radius: var(--radius-lg); background: rgba(40, 40, 40, 0.72); backdrop-filter: blur(6px); border: 1px solid var(--border-strong); font-family: var(--font); font-weight: 800; font-size: clamp(3.2rem, 7.5vw, 6.5rem); line-height: 1.02; letter-spacing: -0.04em; color: var(--fg0); text-align: center; }
+.thumb-title { display: none; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 60; max-width: 82%; padding: clamp(18px, 3vw, 34px) clamp(28px, 4.5vw, 56px); border-radius: var(--radius-md); background: rgba(40, 40, 40, 0.72); backdrop-filter: blur(6px); border: 1px solid var(--border-strong); font-family: var(--font); font-weight: 800; font-size: clamp(3.2rem, 7.5vw, 6.5rem); line-height: 1.02; letter-spacing: -0.04em; color: var(--fg0); text-align: center; }
 .thumb-title.show { display: block; }
 
 /* ═══ RESPONSIVE — PORTRAIT ═══ */

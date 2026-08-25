@@ -68,6 +68,12 @@ Registered archetypes (14):
 | `single-fact` | social | `templates/social/single-fact.html` | no |
 | `list-checklist` | social | `templates/social/list-checklist.html` | no |
 | `testimonial-pull-quote` | social | `templates/social/testimonial-pull-quote.html` | no |
+
+Website OG images are derivatives, not new archetypes: `og-single-fact` and
+`og-pull-quote` (in the website repo `src/og-templates/`) adapt `single-fact`
+and `testimonial-pull-quote` to exact 1200x630 for per-route OG generation
+(`node scripts/generate-og.mjs`). Change the social archetypes here first;
+port visual changes to the OG derivatives in the same change
 | `loop-rail` | shorts | `templates/video/loop-rail.html` | no |
 | `heartbeat` | shorts | `templates/video/heartbeat.html` | no |
 | `department-map` | social | `templates/social/department-map.html` | no |

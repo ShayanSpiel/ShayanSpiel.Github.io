@@ -27,6 +27,23 @@ def build_parser():
     init = commands.add_parser("init", help="scaffold a self-contained harness home (see README)")
     init.add_argument("--dir", default=".", help="target directory (default: cwd)")
     init.add_argument("--force", action="store_true", help="overwrite existing files")
+    init.add_argument("--minimal", action="store_true",
+                      help="single-department appliance: spine only, no example departments, no website skills")
+    init.add_argument("--department", action="append", default=[],
+                      help="with --minimal: vendor this department from templates (repeatable)")
+    add_cmd = commands.add_parser("add", help="install a department bundle (.sdep) or built-in id into this home")
+    add_cmd.add_argument("source", help="path/to.bundle.sdep, bundle dir, or built-in department id")
+    add_cmd.add_argument("--force", action="store_true")
+    refresh = commands.add_parser("refresh", help="re-vendor the runtime spine + host adapters from newest templates (user layer preserved)")
+    refresh.add_argument("--force", action="store_true", default=True)
+    agent = commands.add_parser("agent", help="first-class worker operations")
+    agent_commands = agent.add_subparsers(dest="agent_command", required=True)
+    compile_cmd = agent_commands.add_parser("compile",
+        help="compile a department workflow into a first-class agent worker")
+    compile_cmd.add_argument("department", help="department id")
+    compile_cmd.add_argument("--workflow", required=True, help="workflow id inside the department")
+    compile_cmd.add_argument("--name", help="worker name (default: <department>-<workflow>)")
+    compile_cmd.add_argument("--force", action="store_true")
     strategy = commands.add_parser("strategy", help="show the read-only Strategy Kernel")
     strategy.add_argument("--topic", action="append", default=[])
     strategy.add_argument("--scope", action="append", default=[])
@@ -48,6 +65,10 @@ def build_parser():
     validate.add_argument("--id", help="override/default department id")
     dept_list = department_commands.add_parser("list")
     dept_list.add_argument("--json", action="store_true")
+    dept_export = department_commands.add_parser("export",
+        help="bundle one department (+ its company skills) into a portable .sdep")
+    dept_export.add_argument("id", help="department id to export")
+    dept_export.add_argument("--out", default=".", help="output directory")
     goal = commands.add_parser("goal")
     goals = goal.add_subparsers(dest="goal_command", required=True)
     create = goals.add_parser("create")
@@ -184,7 +205,8 @@ def _runtime_mode(args) -> str | None:
     read: query-only snapshot. write: an explicit mutating command.
     """
 
-    if args.command in {"departments", "catalog", "strategy"}:
+    if args.command in {"departments", "catalog", "strategy", "init", "add",
+                        "refresh", "agent"}:
         return None
     if args.command == "department":
         return None
@@ -215,11 +237,34 @@ def main(argv=None):
     try:
         if args.command == "init":
             from .runtime.bootstrap import scaffold
-            receipt = scaffold(Path(args.dir).expanduser(), force=args.force)
+            receipt = scaffold(Path(args.dir).expanduser(), force=args.force,
+                               minimal=args.minimal,
+                               departments=args.department or None)
             print(f"SpielOS harness scaffolded at {receipt['root']} "
                   f"({receipt['files_written']} files)")
             for step in receipt["next_steps"]:
                 print(f"  - {step}")
+            return 0
+        if args.command == "add":
+            from .runtime.export import add_department
+            receipt = add_department(args.source, force=args.force)
+            print(json.dumps(receipt, indent=2))
+            return 0
+        if args.command == "department" and args.department_command == "export":
+            from .runtime.export import export_department
+            receipt = export_department(args.id, Path(args.out).expanduser())
+            print(json.dumps(receipt, indent=2))
+            return 0
+        if args.command == "refresh":
+            from .runtime.export import refresh_home
+            receipt = refresh_home(force=True)
+            print(json.dumps(receipt, indent=2))
+            return 0
+        if args.command == "agent" and args.agent_command == "compile":
+            from .runtime.agent_compile import compile_agent
+            receipt = compile_agent(args.department, args.workflow,
+                                    args.name, force=args.force)
+            print(json.dumps(receipt, indent=2))
             return 0
         if args.command == "departments":
             output = [{"id": key, "version": value.version, "description": value.description,

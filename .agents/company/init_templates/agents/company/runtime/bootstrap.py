@@ -29,7 +29,8 @@ from pathlib import Path
 from .paths import package_vendored_root
 
 
-def _template_root() -> Path:
+def template_root() -> Path:
+    """Template source resolution (see module docstring)."""
     import os
 
     env_value = os.environ.get("SPIELOS_TEMPLATE_DIR", "").strip()
@@ -51,14 +52,21 @@ def _template_root() -> Path:
         "containing agents/, opencode/, codex/, dot-env-example.")
 
 
-def _copy_tree(src: Path, dst: Path, overwrite: bool = False) -> list[str]:
+_template_root = template_root  # backward-compatible alias
+
+
+def _copy_tree(src: Path, dst: Path, overwrite: bool = False,
+               skip=None) -> list[str]:
     written: list[str] = []
     for path in sorted(src.rglob("*")):
         if path.is_dir():
             continue
         if "__pycache__" in path.parts or path.suffix == ".pyc":
             continue
-        target = dst / path.relative_to(src)
+        rel = path.relative_to(src).as_posix()
+        if skip is not None and skip(rel):
+            continue
+        target = dst / rel
         if target.exists() and not overwrite:
             continue
         target.parent.mkdir(parents=True, exist_ok=True)
@@ -67,10 +75,16 @@ def _copy_tree(src: Path, dst: Path, overwrite: bool = False) -> list[str]:
     return written
 
 
-def scaffold(target: Path | None = None, *, force: bool = False) -> dict:
-    """Materialize a complete harness home. Returns a receipt dict."""
+def scaffold(target: Path | None = None, *, force: bool = False,
+             minimal: bool = False, departments: list[str] | None = None) -> dict:
+    """Materialize a complete harness home. Returns a receipt dict.
+
+    ``minimal=True`` ships the spine with an EMPTY departments/ folder and
+    no website skills — a single-department appliance. Pass
+    ``departments=["id", ...]`` to also vendor those from the templates.
+    """
     root = (target or Path.cwd()).resolve()
-    templates = _template_root()
+    templates = template_root()
     written: list[str] = []
 
     agents_dst = root / ".agents"
@@ -78,9 +92,33 @@ def scaffold(target: Path | None = None, *, force: bool = False) -> dict:
         raise FileExistsError(
             f"{agents_dst / 'company'} already exists; use --force to overwrite")
 
-    written += _copy_tree(templates / "agents", root / ".agents", overwrite=force)
+    if minimal:
+        # Shared cross-department modules are spine, not lego — always kept.
+        spine_dept_files = {"company/departments/__init__.py",
+                            "company/departments/_evidence.py",
+                            "company/departments/campaign_contract.py"}
+        written += _copy_tree(templates / "agents", root / ".agents",
+                              overwrite=force,
+                              skip=lambda rel: (
+                                  rel.startswith("company/departments/")
+                                  and rel not in spine_dept_files)
+                              or rel.startswith("skills/website/"))
+        # Keep the departments package importable even without its files.
+        dept_pkg = root / ".agents" / "company" / "departments"
+        dept_pkg.mkdir(parents=True, exist_ok=True)
+        (dept_pkg / "__init__.py").touch()
+        written.append(str(dept_pkg / "__init__.py"))
+        for dept_id in departments or []:
+            src = templates / "agents" / "company" / "departments" / dept_id
+            if not src.is_dir():
+                raise ValueError(f"template has no department '{dept_id}'")
+            written += _copy_tree(src, root / ".agents" / "company"
+                                  / "departments" / dept_id, overwrite=force)
+    else:
+        written += _copy_tree(templates / "agents", root / ".agents",
+                              overwrite=force)
 
-    # Host adapters.
+        # Host adapters.
     for name in ("opencode", "codex"):
         src = templates / name
         if src.is_dir():

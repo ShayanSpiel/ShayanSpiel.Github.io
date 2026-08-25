@@ -25,7 +25,7 @@
     header { margin-top: 6cqh; }
     .eyebrow { color: var(--primary); font: 600 clamp(13px, 2.1cqw, 30px)/1 var(--font-mono); letter-spacing: .14em; text-transform: uppercase; }
     main { gap: 3.5cqh; }
-    .loop-symbol { position: relative; width: clamp(120px, 17cqw, 260px); aspect-ratio: 1; border-radius: var(--radius-pill); }
+    .loop-symbol { position: relative; width: clamp(120px, 17cqw, 260px); aspect-ratio: 1; border-radius: var(--radius-md); }
     .loop-ring { position: absolute; inset: 0; border: clamp(3px, .6cqw, 7px) solid var(--primary); border-radius: inherit; opacity: .9; }
     .loop-ring-inner { position: absolute; inset: 16%; border: clamp(2px, .4cqw, 5px) solid var(--primary); border-radius: inherit; opacity: .55; }
     .loop-arrow { position: absolute; color: var(--primary); font-size: clamp(14px, 2.4cqw, 34px); }
@@ -39,7 +39,7 @@
     .loop-phase.p3 { bottom: -2.6em; left: 50%; transform: translateX(-50%); }
     .loop-phase.p4 { left: -3.4em; top: 20%; }
     .loop-phase.p5 { top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--primary); font-size: clamp(8px, 1.1cqw, 15px); letter-spacing: .22em; }
-    .social-goal { position: absolute; inset: 34%; border-radius: var(--radius-pill); border: 2px solid var(--primary); background: var(--background); display: grid; place-items: center; }
+    .social-goal { position: absolute; inset: 34%; border-radius: var(--radius-md); border: 2px solid var(--primary); background: var(--background); display: grid; place-items: center; }
     .social-goal::before { content: ""; width: 52%; aspect-ratio: 1; border-radius: inherit; background: var(--primary); }
     h1 { max-width: 14ch; margin: 0; text-align: center; color: var(--foreground-strong); font-size: clamp(40px, 7.2cqw, 116px); font-weight: 800; line-height: .98; letter-spacing: -.045em; }
     h1 .accent { color: var(--primary); }
@@ -47,7 +47,7 @@
     footer { margin-bottom: 5cqh; color: var(--muted-foreground); font: 500 clamp(20px, 1.7cqw, 26px)/1 var(--font-mono); }
     /* Stations: HTML dots placed at the exact path vertices (the line is
        drawn through them), so a node can never drift off the line. */
-    .station { position: absolute; z-index: 2; width: clamp(10px, 1.4cqw, 18px); height: clamp(10px, 1.4cqw, 18px); border-radius: var(--radius-pill); background: var(--primary); box-shadow: 0 0 0 clamp(2px, .4cqw, 5px) var(--primary-soft); transform: translate(-50%, -50%); }
+    .station { position: absolute; z-index: 2; width: clamp(10px, 1.4cqw, 18px); height: clamp(10px, 1.4cqw, 18px); border-radius: var(--radius-md); background: var(--primary); box-shadow: 0 0 0 clamp(2px, .4cqw, 5px) var(--primary-soft); transform: translate(-50%, -50%); }
     .station::after { content: attr(data-label); position: absolute; left: 150%; top: 50%; transform: translateY(-50%); white-space: nowrap; color: var(--foreground-muted); font: 600 clamp(11px, 1.3cqw, 20px)/1 var(--font-mono); letter-spacing: .05em; }
     .station.s1 { left: 10%; top: 72%; }
     .station.s2 { left: 30%; top: 62%; }

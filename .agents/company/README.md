@@ -3,7 +3,7 @@
 ## Install (one line)
 
 ```sh
-pipx install spielos-harness && spielos init
+pipx install spielos && spielos init
 ```
 
 `spielos init` vendors a complete, self-contained harness into the current
@@ -12,9 +12,47 @@ adapters, `opencode.json`, `AGENTS.md`, and a gitignore — with zero runtime
 dependency on the installed package afterward. Until the package is on PyPI:
 
 ```sh
-pipx install "spielos-harness @ git+https://github.com/shayanspiel/spielos-harness.git" && spielos init
+pipx install "spielos @ git+https://github.com/shayanspiel/spielos-harness.git" && spielos init
 # or, from this repository:
 pipx install ./.agents && spielos init
+```
+
+## Departments as products (lego extraction)
+
+```sh
+spielos department export outbound --out ./dist   # portable outbound.sdep bundle
+spielos add ./outbound.sdep                        # customer side: install/upgrade
+spielos add outbound                               # or install a built-in example
+spielos add ./outbound.sdep --force                # replace an existing department
+```
+
+A bundle carries the department folder plus its company-namespace skills and a
+checksummed manifest. It never carries strategy, assets, credentials, or run
+state — those are user-layer.
+
+Single-department appliance (no company scaffolding beyond one department):
+
+```sh
+spielos init --minimal --department outbound
+```
+
+First-class agent worker (the lead-researcher pattern, generated):
+
+```sh
+spielos agent compile outbound --workflow social-lead-research --name lead-researcher
+```
+
+Emits the OpenCode agent, Codex TOML, and roster entry from one WorkflowSpec.
+The worker runs only that workflow, produces only its declared evidence kinds,
+never edits files, never routes goals; approvals still park in the runtime.
+
+Updating:
+
+```sh
+pipx upgrade spielos    # new CLI
+spielos refresh         # re-vendor spine + host adapters into this home;
+                        # preserves strategy/, assets/, departments/,
+                        # agents/, config.user.json, and .spielos/
 ```
 
 ## Owner operating doctrine
@@ -137,9 +175,10 @@ new architectural layer. It lives at
 
 .agents/skills/            reusable methods
   company/                 harness operation (director, department-runner,
-                           system-improvement, outbound, outbound-email)
+                           system-improvement, outbound, outbound-email,
+                           copywriting-en/fa)
   website/                 site-bound methods (spielos-ui, seo, analytics,
-                           translation-fa, copywriting-en/fa, video-creation)
+                           translation-fa, video-creation)
 .spielos/.env              private credentials (ignored)
 .spielos/data/             private operational inputs (ignored)
 .spielos/state/            durable runtime state (ignored)

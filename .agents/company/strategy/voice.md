@@ -50,6 +50,10 @@ piece. Remove any sentence that does not strengthen the one idea.
 9. Delete any word or sentence that can be removed without losing meaning.
 10. Preserve the original meaning, specificity, and important nuance.
 
+Rules 8–10 are the subtraction pass in miniature. The full
+build → subtract → ship workflow, including the four-question deletion test,
+lives in `focus.md` and applies to every piece before it ships.
+
 ## SpielOS reminder
 
 Every fifth paired social idea is a short reminder that SpielOS is operating

@@ -4,7 +4,10 @@ This directory is the durable authority for what SpielOS believes, who it
 serves, how it is positioned, and how company outcomes are measured.
 
 - `icp.md` — canonical buyer, exclusions, and positioning idea.
-- `positioning.md` — company-level product and implementation positioning.
+- `positioning.md` — the one-sentence positioning statement and company-level
+  product and implementation positioning.
+- `focus.md` — the build → subtract → ship workflow. Required for any content
+  and any thing we do; every surface passes subtraction before it ships.
 - `voice.md` — shared communication principles.
 - `measurement.md` — company evidence and metric rules.
 - `operating-thesis.md` — the product/company/content evidence flywheel.

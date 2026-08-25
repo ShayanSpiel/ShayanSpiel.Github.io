@@ -57,7 +57,7 @@ body { font-family: var(--font); color: var(--fg1); -webkit-font-smoothing: anti
 /* ═══ STORYBOARD RAIL — the numbered time contract (01/02/03/CTA) ═══ */
 .rail { position: absolute; inset-inline: 0; bottom: 14cqh; z-index: 30; display: flex; align-items: center; justify-content: center; gap: clamp(10px, 1.6vw, 20px); }
 .rail-dot { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: clamp(0.7rem, 1.2vw, 0.95rem); font-weight: 600; letter-spacing: 0.08em; color: var(--fg3); opacity: 0.55; transition: opacity 0.4s ease, color 0.4s ease; }
-.rail-dot .rail-num { display: grid; place-items: center; width: clamp(22px, 3vw, 34px); height: clamp(22px, 3vw, 34px); border-radius: var(--radius-pill); border: 1px solid var(--border-strong); background: var(--panel); color: var(--fg3); transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease; }
+.rail-dot .rail-num { display: grid; place-items: center; width: clamp(22px, 3vw, 34px); height: clamp(22px, 3vw, 34px); border-radius: var(--radius-md); border: 1px solid var(--border-strong); background: var(--panel); color: var(--fg3); transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease; }
 .rail-dot.active { opacity: 1; color: var(--fg0); }
 .rail-dot.active .rail-num { background: var(--primary); border-color: var(--primary); color: var(--primary-foreground); }
 .rail-dot.done { opacity: 0.9; color: var(--fg4); }
@@ -65,7 +65,7 @@ body { font-family: var(--font); color: var(--fg1); -webkit-font-smoothing: anti
 
 /* ═══ S1: FRAME 01 — PROBLEM ═══ */
 .frame { text-align: center; padding: 0 8%; z-index: 10; }
-.frame-badge { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 1.4rem; padding: 8px 20px; border: 1px solid var(--border-strong); border-radius: var(--radius-pill); background: var(--panel); font-family: var(--mono); font-size: clamp(0.75rem, 1.3vw, 1rem); font-weight: 700; letter-spacing: 0.14em; color: var(--fg4); }
+.frame-badge { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 1.4rem; padding: 8px 20px; border: 1px solid var(--border-strong); border-radius: var(--radius-md); background: var(--panel); font-family: var(--mono); font-size: clamp(0.75rem, 1.3vw, 1rem); font-weight: 700; letter-spacing: 0.14em; color: var(--fg4); }
 .frame-badge i { color: var(--primary); font-size: clamp(16px, 2vw, 22px); }
 .frame-badge.warn i { color: var(--red); }
 .frame-main { font-size: clamp(3rem, 8vw, 5.5rem); font-weight: 800; color: var(--fg0); line-height: 1.08; letter-spacing: -0.04em; }
@@ -85,7 +85,7 @@ body { font-family: var(--font); color: var(--fg1); -webkit-font-smoothing: anti
 .cta-url .p { color: var(--primary); font-weight: 700; }
 
 /* ═══ THUMBNAIL STILL TITLE (owner order 2026-08-13) ═══ */
-.thumb-title { display: none; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 60; max-width: 82%; padding: clamp(18px, 3vw, 34px) clamp(28px, 4.5vw, 56px); border-radius: var(--radius-lg); background: rgba(40, 40, 40, 0.72); backdrop-filter: blur(6px); border: 1px solid var(--border-strong); font-family: var(--font); font-weight: 800; font-size: clamp(3.2rem, 7.5vw, 6.5rem); line-height: 1.02; letter-spacing: -0.04em; color: var(--fg0); text-align: center; }
+.thumb-title { display: none; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 60; max-width: 82%; padding: clamp(18px, 3vw, 34px) clamp(28px, 4.5vw, 56px); border-radius: var(--radius-md); background: rgba(40, 40, 40, 0.72); backdrop-filter: blur(6px); border: 1px solid var(--border-strong); font-family: var(--font); font-weight: 800; font-size: clamp(3.2rem, 7.5vw, 6.5rem); line-height: 1.02; letter-spacing: -0.04em; color: var(--fg0); text-align: center; }
 .thumb-title.show { display: block; }
 
 /* ═══ RESPONSIVE — PORTRAIT ═══ */

@@ -73,7 +73,7 @@ body { font-family: var(--font); color: var(--fg1); -webkit-font-smoothing: anti
 
 /* ═══ HEADLINE BAND — centered over the frame (round 2: everything center) ═══ */
 .band { position: absolute; left: 50%; top: 6cqh; width: 46cqw; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; text-align: center; z-index: 10; }
-.band-badge { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 1.1cqh; padding: 0.9cqh 1.4cqw; border: 1px solid var(--border-strong); border-radius: var(--radius-pill); background: var(--panel); font-family: var(--font); font-size: clamp(0.75rem, 1.05vw, 1rem); font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg4); }
+.band-badge { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 1.1cqh; padding: 0.9cqh 1.4cqw; border: 1px solid var(--border-strong); border-radius: var(--radius-md); background: var(--panel); font-family: var(--font); font-size: clamp(0.75rem, 1.05vw, 1rem); font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg4); }
 .band-badge i { color: var(--primary); font-size: clamp(16px, 1.6vw, 22px); }
 .band-main { font-family: var(--font); font-size: clamp(2.3rem, 3.6vw, 3.5rem); font-weight: 800; color: var(--fg0); line-height: 1.06; letter-spacing: -0.04em; }
 .band-main .accent { color: var(--primary); }
@@ -128,7 +128,7 @@ body { font-family: var(--font); color: var(--fg1); -webkit-font-smoothing: anti
    like the site loop rail. ── */
 .hbeat-loop { position: relative; width: 100%; margin-top: 2.6cqh; }
 .loop-rail { position: relative; display: flex; justify-content: space-between; align-items: flex-start; }
-.loop-rail::before, .loop-rail::after { content: ""; position: absolute; top: calc(var(--loop-node) / 2 - 1px); inset-inline-start: 10%; inset-inline-end: 10%; height: 2px; border-radius: var(--radius-pill); z-index: 0; }
+.loop-rail::before, .loop-rail::after { content: ""; position: absolute; top: calc(var(--loop-node) / 2 - 1px); inset-inline-start: 10%; inset-inline-end: 10%; height: 2px; border-radius: var(--radius-md); z-index: 0; }
 .loop-rail::before { background: var(--border-strong); }
 .loop-rail::after { inset-inline-end: 50%; background: linear-gradient(to right, var(--primary), var(--accent)); }
 .loop-station { display: flex; flex-direction: column; align-items: center; gap: .7cqh; }
@@ -170,7 +170,7 @@ body { font-family: var(--font); color: var(--fg1); -webkit-font-smoothing: anti
 .cta-url .p { color: var(--primary-foreground); font-weight: 700; opacity: .85; }
 
 /* ═══ THUMBNAIL STILL TITLE ═══ */
-.thumb-title { display: none; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 60; max-width: 82%; padding: clamp(18px, 3vw, 34px) clamp(28px, 4.5vw, 56px); border-radius: var(--radius-lg); background: rgba(40, 40, 40, 0.72); backdrop-filter: blur(6px); border: 1px solid var(--border-strong); font-family: var(--font); font-weight: 800; font-size: clamp(3.2rem, 7.5vw, 6.5rem); line-height: 1.02; letter-spacing: -0.04em; color: var(--fg0); text-align: center; }
+.thumb-title { display: none; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 60; max-width: 82%; padding: clamp(18px, 3vw, 34px) clamp(28px, 4.5vw, 56px); border-radius: var(--radius-md); background: rgba(40, 40, 40, 0.72); backdrop-filter: blur(6px); border: 1px solid var(--border-strong); font-family: var(--font); font-weight: 800; font-size: clamp(3.2rem, 7.5vw, 6.5rem); line-height: 1.02; letter-spacing: -0.04em; color: var(--fg0); text-align: center; }
 .thumb-title.show { display: block; }
 
 /* ═══ RESPONSIVE — PORTRAIT (1080x1920) ═══ */
