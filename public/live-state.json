@@ -5,9 +5,9 @@
     "goal_name": "Geo expansion research: 500 fully qualified agency & B2B-service leads with client-overflow signals across SA/QA/KW/NZ/TW/HK/SG/PL/DE/PT/JP/US/CA/AE",
     "owner_id": "outbound",
     "run_id": "run-ca33270fb5",
-    "run_status": "running",
+    "run_status": "blocked",
     "stage": "ACT",
-    "updated_at": "2026-08-25T04:29:58.948608+00:00"
+    "updated_at": "2026-08-25T04:30:02.270142+00:00"
   },
   "heartbeat": {
     "business_value": null,
@@ -19,13 +19,13 @@
     "metric": "qualified_social_leads",
     "operator": "ge",
     "owner_id": "outbound",
-    "run_status": "running",
+    "run_status": "blocked",
     "stage": "ACT",
     "target": 500,
-    "updated_at": "2026-08-25T04:29:58.948608+00:00"
+    "updated_at": "2026-08-25T04:30:02.270142+00:00"
   },
-  "last_activity_at": "2026-08-25T04:29:58.948608+00:00",
-  "last_sync_at": "2026-08-25T04:29:59.038897+00:00",
+  "last_activity_at": "2026-08-25T04:30:02.270142+00:00",
+  "last_sync_at": "2026-08-25T04:30:02.314317+00:00",
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
     "goal_name": "3 booked calls per day",
