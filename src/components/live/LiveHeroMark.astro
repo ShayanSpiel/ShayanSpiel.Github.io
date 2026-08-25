@@ -1,0 +1,65 @@
+---
+/**
+ * Live-hero background brand mark — the SpielOS glyph only (no wordmark),
+ * rendered oversized as the hero's top-left backdrop.
+ *
+ * The single official path is split into its three semantic parts so each
+ * can carry meaning:
+ *   - the winding journey line   → foreground (theme-aware)
+ *   - the two X marks around it  → destructive/red  (obstacles cleared)
+ *   - the destination dot        → success/green    (the goal reached)
+ * Colors come from semantic tokens via text-* utilities + currentColor, so
+ * every theme (all 10) renders correctly with zero hardcoded hex values.
+ */
+interface Props {
+  /** Wrapper classes for size/position/opacity overrides. */
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+
+// Part 1: the winding journey line (from the old compound path, converted
+// to absolute start; identical geometry).
+const LINE_D =
+  "M17 12l.5-5.5L12 7l1.75 1.75c-.47.4-1.01.5-1.69.63-1.05.19-2.35.44-3.4 1.93s-.83 2.8-.65 3.85c.15.9.26 1.55-.32 2.38-.58.82-1.23.94-2.12 1.11-1.05.19-2.35.43-3.4 1.93l1.64 1.15c.58-.82 1.22-.94 2.12-1.11 1.05-.19 2.35-.43 3.4-1.93 1.05-1.49.83-2.8.65-3.85-.15-.9-.26-1.55.32-2.38.58-.82 1.23-.94 2.12-1.11.84-.15 1.84-.35 2.74-1.18L16.99 12Z";
+
+// Parts 2a/2b: the two X marks flanking the line (absolute-start rewrites
+// of the original relative subpaths; identical geometry).
+const X_LEFT_D =
+  "M3.71 8.71l1.79-1.8 1.79 1.8 1.42-1.42-1.8-1.79 1.8-1.79-1.42-1.42-1.79 1.8-1.79-1.8-1.42 1.42 1.8 1.79-1.8 1.79z";
+const X_RIGHT_D =
+  "M20.29 14.29L18 16.59l-2.29-2.3-1.42 1.42 2.3 2.29-2.3 2.29 1.42 1.42 2.29-2.3 2.29 2.3 1.42-1.42-2.3-2.29 2.3-2.29z";
+
+// Part 3: the destination dot (top right).
+const DOT_D = "M20 2a2 2 0 1 0 0 4 2 2 0 1 0 0-4Z";
+---
+
+<div class:list={["pointer-events-none absolute select-none", className]} aria-hidden="true">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-full w-full" fill="none">
+    <!-- journey line -->
+    <path
+      d={LINE_D}
+      class="text-foreground-strong opacity-[0.09]"
+      fill="currentColor"
+      stroke="currentColor"
+      stroke-width="0.55"
+      stroke-linejoin="round"
+      paint-order="stroke fill"
+    ></path>
+    <!-- the two X marks around the line: red -->
+    <g class="text-destructive opacity-30">
+      <path d={X_LEFT_D} fill="currentColor" stroke="currentColor" stroke-width="0.55" stroke-linejoin="round" paint-order="stroke fill"></path>
+      <path d={X_RIGHT_D} fill="currentColor" stroke="currentColor" stroke-width="0.55" stroke-linejoin="round" paint-order="stroke fill"></path>
+    </g>
+    <!-- destination dot: green -->
+    <path
+      d={DOT_D}
+      class="text-success opacity-50"
+      fill="currentColor"
+      stroke="currentColor"
+      stroke-width="0.55"
+      stroke-linejoin="round"
+      paint-order="stroke fill"
+    ></path>
+  </svg>
+</div>

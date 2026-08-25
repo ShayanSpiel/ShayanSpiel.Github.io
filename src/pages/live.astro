@@ -1,5 +1,6 @@
 ---
 import LiveTimeline, { type LiveGoal } from "../components/live/LiveTimeline.astro";
+import LiveHeroMark from "../components/live/LiveHeroMark.astro";
 import LiveStatus, { type Heartbeat, type Northstar } from "../components/live/LiveStatus.astro";
 import LiveStats, { type LiveTotals } from "../components/live/LiveStats.astro";
 import SectionHeader from "../components/sections/SectionHeader.astro";
@@ -63,6 +64,7 @@ const howTo = [
 <Page title={t(locale, "conversion.live.pageTitle")} description={t(locale, "conversion.live.pageDesc")} image="/assets/og/live.png" locale={locale}>
   <section id="live-hero" class="relative overflow-hidden py-24 sm:py-32">
     <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <LiveHeroMark class="left-[-8%] top-[-6%] h-[22rem] w-[22rem] sm:left-[-4%] sm:h-[30rem] sm:w-[30rem] lg:h-[38rem] lg:w-[38rem]" />
     <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
     <div class="absolute left-1/2 top-[36%] h-[30rem] w-[46rem] -translate-x-1/2 -translate-y-1/2 glow-blob opacity-20"></div>
     <div class="absolute left-[60%] top-[32%] h-64 w-64 rounded-md glow-blob-accent opacity-10"></div>
