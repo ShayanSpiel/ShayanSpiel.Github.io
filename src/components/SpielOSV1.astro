@@ -363,9 +363,9 @@ const faqItems = [
     var btn = document.getElementById(btnId);
     var icon = document.getElementById(iconId);
     if (!box) return;
-    function cp() {
-      try { navigator.clipboard.writeText(COPY_COMMAND); }
-      catch(e) { var ta=document.createElement('textarea'); ta.value=COPY_COMMAND; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); }
+    async function cp() {
+      try { await navigator.clipboard.writeText(COPY_COMMAND); }
+      catch(e) { return; }
       if (icon) { icon.className = 'bx bx-check text-success icon-base'; }
       setTimeout(function(){ if (icon) icon.className = 'bx bx-copy icon-base'; }, 2000);
     }

@@ -15,7 +15,7 @@ const { items, locale = "en" } = Astro.props;
     <li>
       <a href={localizePath("/", locale)} class="hover:text-foreground transition-colors">{t(locale, "nav.home")}</a>
     </li>
-    {items.map((item, i) => (
+    {items.map((item) => (
       <li class="flex items-center gap-1.5">
         <span aria-hidden="true" class="text-border-strong">/</span>
         {item.href ? (

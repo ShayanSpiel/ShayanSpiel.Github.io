@@ -23,7 +23,7 @@ const breadcrumbJsonLd = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: `${SITE.url}${localizePath("/", locale)}` },
+    { "@type": "ListItem", position: 1, name: t(locale, "nav.home"), item: `${SITE.url}${localizePath("/", locale)}` },
     { "@type": "ListItem", position: 2, name: t(locale, "conversion.apply.hero.label"), item: `${SITE.url}${localizePath("/apply/", locale)}` },
   ],
 };
@@ -195,16 +195,6 @@ const breadcrumbJsonLd = {
     </div>
   </section>
 
-  <!-- PREFER A CALL -->
-  <section class="relative py-12 sm:py-16">
-    <div class="mx-auto max-w-3xl px-6 text-center">
-      <a href="mailto:66shayan@gmail.com" class="inline-flex items-center gap-2 rounded-md border border-border bg-panel px-6 py-3 text-sm font-medium text-foreground-strong transition-all hover:border-border-strong hover:bg-panel-raised">
-        <i class="bx bx-phone icon-base" aria-hidden="true"></i>
-        Prefer a call? Book here
-      </a>
-    </div>
-  </section>
-
   <!-- FINAL CTA -->
   <section class="relative overflow-hidden py-24 sm:py-32">
     <div class="absolute inset-0 bg-panel-deep/50"></div>
@@ -218,7 +208,7 @@ const breadcrumbJsonLd = {
     </div>
   </section>
 
-  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
 
   <script is:inline define:vars={{ formEndpoint: FORMS.contact, thankYouPath: localizePath("/apply/thank-you/", locale) }}>
   (function() {

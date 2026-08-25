@@ -61,7 +61,8 @@ function sentenceLengths(html) {
 }
 
 const pages = collectHtml(dist);
-const realPages = pages.filter(isRealPage);
+const redirectPages = new Set(pages.filter((page) => /<meta http-equiv="refresh"/i.test(readFileSync(page, "utf8"))));
+const realPages = pages.filter((page) => isRealPage(page) && !redirectPages.has(page));
 const routeSet = new Set(realPages.map(routeFromFile));
 const pageMeta = new Map();
 const noindexRoutes = new Set();
@@ -80,9 +81,12 @@ for (const page of realPages) {
   check(/<meta property="og:image"/.test(html), "  missing og:image", rel);
   check(/<meta property="og:type"/.test(html), "  missing og:type", rel);
   check(/<meta name="twitter:card"/.test(html), "  missing twitter:card", rel);
-  check(/<link rel="alternate" hreflang="en"/.test(html), "  missing hreflang en", rel);
-  check(/<link rel="alternate" hreflang="fa"/.test(html), "  missing hreflang fa", rel);
-  check(/<link rel="alternate" hreflang="x-default"/.test(html), "  missing hreflang x-default", rel);
+  const pageIsNoindex = /<meta name="robots"[^>]*content="[^"]*noindex/i.test(html);
+  if (!pageIsNoindex) {
+    check(/<link rel="alternate" hreflang="en"/.test(html), "  missing hreflang en", rel);
+    check(/<link rel="alternate" hreflang="fa"/.test(html), "  missing hreflang fa", rel);
+    check(/<link rel="alternate" hreflang="x-default"/.test(html), "  missing hreflang x-default", rel);
+  }
 
   const route = routeFromFile(page);
   const title = meta(html, /<title>([^<]+)<\/title>/i);
@@ -109,10 +113,25 @@ for (const page of realPages) {
   // Structured data
   const blocks = [...html.matchAll(/<script type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)];
   check(blocks.length > 0, "  missing JSON-LD", rel);
+  const schemaNodes = [];
   blocks.forEach((b, i) => {
-    try { JSON.parse(b[1]); }
+    try { schemaNodes.push(JSON.parse(b[1])); }
     catch { check(false, `  invalid JSON-LD block #${i}`, rel); }
   });
+  const ids = new Set();
+  const refs = new Set();
+  const walkSchema = (value) => {
+    if (!value || typeof value !== "object") return;
+    if (typeof value["@id"] === "string") {
+      if (Object.keys(value).length === 1) refs.add(value["@id"]);
+      else ids.add(value["@id"]);
+    }
+    Object.values(value).forEach(walkSchema);
+  };
+  schemaNodes.forEach(walkSchema);
+  for (const ref of refs) {
+    if (ref.startsWith(`${SITE}/#`) && !ids.has(ref)) issues.push(`${rel}  unresolved JSON-LD @id reference: ${ref}`);
+  }
 
   // Readability for note articles (EN + FA)
   if (isNote) {
@@ -156,6 +175,9 @@ for (const [route, values] of pageMeta) {
       continue;
     }
     if (target.robots.includes("noindex")) issues.push(`  ${route} hreflang ${lang} points to noindex page: ${targetRoute}`);
+    const reciprocal = [...target.html.matchAll(/<link rel="alternate" hreflang="([^"]+)" href="([^"]+)"/g)]
+      .some((match) => new URL(match[2]).pathname === route);
+    if (!reciprocal) issues.push(`  ${route} hreflang ${lang} is not reciprocal with ${targetRoute}`);
   }
 }
 
@@ -174,6 +196,7 @@ for (const match of sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)) {
 
 for (const [route, values] of pageMeta) {
   if (values.robots.includes("noindex")) continue;
+  check(sitemap.includes(`<loc>${SITE}${route}</loc>`), `  indexable route missing from sitemap: ${route}`);
   for (const match of values.html.matchAll(/href="(\/[^"#?]*)[^" ]*"/g)) {
     const href = match[1];
     if (href.startsWith("/assets/") || href.startsWith("/_astro/") || href === "/feed.xml" || href === "/robots.txt" || href === "/humans.txt" || href === "/site.webmanifest" || href.endsWith(".xml")) continue;
@@ -184,8 +207,8 @@ for (const [route, values] of pageMeta) {
 
 // Schema coverage expectations per route
 const expectSchema = {
-  "/index.html": ["Person", "WebSite", "SoftwareApplication", "BreadcrumbList"],
-  "/fa/index.html": ["Person", "WebSite", "SoftwareApplication", "BreadcrumbList"],
+  "/index.html": ["Organization", "Person", "WebSite", "SoftwareApplication", "BreadcrumbList"],
+  "/fa/index.html": ["Organization", "Person", "WebSite", "SoftwareApplication", "BreadcrumbList"],
   "/founder/index.html": ["Person", "BreadcrumbList"],
   "/contact/index.html": ["BreadcrumbList"],
   "/notes/index.html": ["CollectionPage", "BreadcrumbList"],
@@ -200,7 +223,13 @@ for (const [route, types] of Object.entries(expectSchema)) {
   blocks.forEach((b) => {
     try {
       const data = JSON.parse(b[1]);
-      (Array.isArray(data) ? data : [data]).forEach((d) => present.add(d["@type"]));
+      const collectTypes = (value) => {
+        if (!value || typeof value !== "object") return;
+        if (typeof value["@type"] === "string") present.add(value["@type"]);
+        if (Array.isArray(value["@type"])) value["@type"].forEach((type) => present.add(type));
+        Object.values(value).forEach(collectTypes);
+      };
+      collectTypes(data);
     } catch {}
   });
   for (const t of types) check(present.has(t), `  missing expected schema ${t}`, route);
@@ -210,7 +239,7 @@ function exists(p) {
   try { statSync(p); return true; } catch { return false; }
 }
 
-console.log(`Checked ${realPages.length} real pages (${pages.length - realPages.length} stubs/assets skipped).`);
+console.log(`Checked ${realPages.length} indexable/noindex pages (${redirectPages.size} redirect stubs skipped).`);
 console.log(`OK checks: ${okCount}`);
 if (issues.length) {
   console.error(`\n${issues.length} SEO issues:\n`);

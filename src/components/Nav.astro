@@ -5,11 +5,6 @@ import { SOFTWARE_SOLUTIONS } from "../data/software-solutions";
 import { type Locale, t } from "../i18n/translations";
 import { localizePath } from "../i18n";
 
-const BRAND_LOGOS = import.meta.glob("../assets/brand-logos/*.svg", { query: "?raw", import: "default", eager: true }) as Record<string, string>;
-const brandLogoByHref: Record<string, string> = Object.fromEntries(
-  SOFTWARE_SOLUTIONS.map((s) => [`/solutions/software/${s.slug}`, BRAND_LOGOS[`../assets/brand-logos/${s.key}.svg`] ?? ""]),
-);
-
 export interface Props {
   links?: NavLink[];
   cta?: { label: string };
@@ -57,7 +52,7 @@ const NAV_ITEM_ICONS: Record<string, string> = {
   "/solutions/ai-departments": "bx-sitemap",
   "/solutions/software": "bx-package",
   "/solutions": "bx-diamond",
-  ...Object.fromEntries(SOFTWARE_SOLUTIONS.map((s) => [`/${s.slug}`, s.iconClass])),
+  ...Object.fromEntries(SOFTWARE_SOLUTIONS.map((s) => [`/solutions/software/${s.slug}`, s.iconClass])),
 };
 /** Route-key lookup that is locale- and trailing-slash-agnostic so the same
  *  distinct icon follows each item on both EN and FA pages. */
@@ -157,11 +152,7 @@ const ariaCurrent = (href: string) => (isCurrent(href) ? "page" : undefined);
                           ]}
                         >
                           <span class="flex h-5 w-5 shrink-0 items-center justify-center">
-                            {brandLogoByHref[normalize(grand.href)] ? (
-                              <span class="flex h-full w-full items-center justify-center [&>svg]:h-3.5 [&>svg]:w-3.5" set:html={brandLogoByHref[normalize(grand.href)]} />
-                            ) : (
-                              <i class={`bx ${navItemIcon(grand.href)} text-primary/80 text-base leading-none`} aria-hidden="true"></i>
-                            )}
+                            <i class={`bx ${navItemIcon(grand.href)} text-primary/80 text-base leading-none`} aria-hidden="true"></i>
                           </span>
                           <span class="truncate">{grand.label}</span>
                         </a>
@@ -251,11 +242,7 @@ const ariaCurrent = (href: string) => (isCurrent(href) ? "page" : undefined);
                         ]}
                       >
                         {grand.live && <span class="nav-live-dot" aria-hidden="true"></span>}
-                        {brandLogoByHref[normalize(grand.href)] ? (
-                            <span class="flex h-4 w-4 shrink-0 items-center justify-center [&>svg]:h-4 [&>svg]:w-4" set:html={brandLogoByHref[normalize(grand.href)]} />
-                          ) : (
-                            <i class={`bx ${navItemIcon(grand.href)} text-primary/80 icon-sm shrink-0`} aria-hidden="true"></i>
-                          )}
+                        <i class={`bx ${navItemIcon(grand.href)} text-primary/80 icon-sm shrink-0`} aria-hidden="true"></i>
                         {grand.label}
                       </a>
                     ))}

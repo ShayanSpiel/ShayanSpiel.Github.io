@@ -18,10 +18,14 @@ export interface Props {
 
 const { locale = "en", items, keyPrefix, entries } = Astro.props;
 const idPrefix = `faq-${keyPrefix.replace(/[^a-z0-9]+/gi, "-")}-${locale}`;
+const faqEntries: FaqEntry[] = entries ?? (items ?? []).map((n) => ({
+  q: t(locale, `${keyPrefix}.q${n}`),
+  a: t(locale, `${keyPrefix}.a${n}`),
+}));
 ---
 
 <div class="faq-list mt-8 space-y-2" data-faq-list data-aos="fade-up">
-  {(entries ?? (items ?? []).map((n) => ({ q: t(locale, `${keyPrefix}.q${n}`), a: t(locale, `${keyPrefix}.a${n}`) }))).map((f, idx) => {
+  {faqEntries.map((f, idx) => {
     const panelId = `${idPrefix}-${idx}`;
     return (
       <article class="group relative overflow-hidden rounded-md border border-border bg-panel shadow-panel transition-colors hover:border-border-strong" data-faq-item>

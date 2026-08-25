@@ -8,7 +8,6 @@
     "@astrojs/sitemap": "^3.3.1",
     "@astrojs/tailwind": "^6.0.2",
     "aos": "^2.3.4",
-    "apexcharts": "^6.6.1",
     "astro": "^5.18.2",
     "boxicons": "^2.1.4",
     "tailwindcss": "^3.4.17",
@@ -20,6 +19,9 @@
     "build": "astro build && node scripts/postbuild-sitemap.mjs",
     "typecheck": "astro check",
     "lint": "npm run typecheck && node scripts/architecture-check.mjs",
+    "icons:generate": "node scripts/generate-boxicons-subset.mjs",
+    "audit:site": "node scripts/site-audit.mjs",
+    "audit:visual": "node scripts/visual-audit.mjs",
     "test": "npm run build && node --test test/site.test.mjs",
     "seo:check": "node scripts/seo-check.mjs",
     "og:generate": "node scripts/generate-og.mjs"

@@ -5,8 +5,6 @@ const { join } = require("path");
 
 const ROOT = "/Users/shayan/ShayanSpiel.Github.io";
 const OUT_DIR = join(ROOT, ".spielos/artifacts/template-preview-20260817/video/frames");
-const TEMPLATE = join(ROOT, ".agents/company/departments/design/templates/video/heartbeat.html");
-
 const MIME = { ".html": "text/html", ".css": "text/css", ".js": "application/javascript",
   ".json": "application/json", ".woff2": "font/woff2", ".png": "image/png", ".svg": "image/svg+xml" };
 

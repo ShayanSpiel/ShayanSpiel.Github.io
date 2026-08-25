@@ -11,8 +11,8 @@
  * noindex documents so the shared SEO audit can still verify them.
  * Exit 0 = ok, exit 1 = broken sitemap found.
  */
-import { readFileSync, readdirSync, writeFileSync, statSync, mkdirSync } from "fs";
-import { join, extname, dirname } from "path";
+import { readFileSync, readdirSync, writeFileSync, statSync } from "fs";
+import { join, extname } from "path";
 
 const dist = join(process.cwd(), "dist");
 const base = "https://spielos.xyz";

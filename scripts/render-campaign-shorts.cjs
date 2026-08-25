@@ -28,7 +28,7 @@
 const puppeteer = require("puppeteer");
 const { execSync } = require("child_process");
 const { createServer } = require("http");
-const { readFileSync, writeFileSync, existsSync, mkdirSync, rmSync, statSync, readdirSync } = require("fs");
+const { readFileSync, writeFileSync, existsSync, mkdirSync, rmSync, statSync } = require("fs");
 const { join, resolve } = require("path");
 
 const ROOT = resolve(__dirname, "..");
@@ -42,7 +42,6 @@ const FPS = 30;
 const FLOW_QA_SCHEMA = "1.0";
 const TEMPORAL_QA_SCHEMA = "1.0";
 const URL_LINE = "spielos.xyz/services";
-const URL_SPOKEN = "go to spielos dot xyz slash services.";
 const DETERMINISTIC_CAPTURE_CSS = `
 *, *::before, *::after {
   transition: none !important;
@@ -261,7 +260,6 @@ function expectedFlowText(plan, sceneIndex) {
    batch renderer. */
 function injectCampaign(plan) {
   const URL_LINE = "spielos.xyz/services";
-  const URL_SPOKEN = "go to spielos dot xyz slash services.";
 function splitLines(text, maxChars) {
     const words = String(text || '').split(/\s+/).filter(Boolean);
     const lines = []; let cur = '';
@@ -286,12 +284,6 @@ function splitLines(text, maxChars) {
   function setIcon(id, icon) { const el = document.getElementById(id); if (!el) return; const i = el.querySelector('i'); if (i) i.className = icon; }
   function hide(id) { const el = document.getElementById(id); if (el) el.style.display = 'none'; }
   function show(id) { const el = document.getElementById(id); if (el) el.style.display = ''; }
-  function twoLines(id1, id2, text, span, maxChars) {
-    const lines = splitLines(text, maxChars);
-    setText(id1, lines[0] || '');
-    if (lines[1]) { show(id2); setHTML(id2, '<span class="' + span + '">' + lines[1] + '</span>'); }
-    else hide(id2);
-  }
   function cta(s, badgeDefault) {
     // FIX: use s.eyebrow when labels is just ['Services'] generic - eyebrow holds actual workflow (MAP ONE XXX)
     let badge = (s.labels && s.labels.length && !/^$/.test(String(s.labels[0])) && String(s.labels[0]).toLowerCase() !== 'services') ? s.labels[0] : '';
@@ -709,7 +701,7 @@ function buildMediaQa(videoPath, thumbPath, expectedDuration, flow, temporal) {
 }
 
 function startServer() {
-  return new Promise((res, rej) => {
+  return new Promise((res) => {
     const server = createServer((req, rsp) => {
       let fp = join(ROOT, decodeURIComponent(req.url.split("?")[0]));
       if (fp.endsWith("/")) fp = join(fp, "index.html");

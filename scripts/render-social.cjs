@@ -1,7 +1,7 @@
 const puppeteer = require("puppeteer");
 const { createServer } = require("http");
 const { readFileSync, mkdirSync, existsSync } = require("fs");
-const { join, resolve } = require("path");
+const { join } = require("path");
 
 const ROOT = "/Users/shayan/ShayanSpiel.Github.io";
 const OUT_DIR = join(ROOT, ".spielos/artifacts/template-preview-20260817/social");

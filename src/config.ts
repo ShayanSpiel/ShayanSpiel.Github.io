@@ -1,4 +1,3 @@
-import { SOFTWARE_SOLUTIONS } from "./data/software-solutions";
 
 export const SITE = {
   name: "SpielOS",

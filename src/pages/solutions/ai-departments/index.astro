@@ -17,7 +17,7 @@ const departments = [
 ---
 
 <Page
-  title={locale === "fa" ? "دپارتمان‌های AI | نمونه‌های واقعی از یک شرکت واقعی | SpielOS" : "AI Departments | Real Examples Running a Real Company | SpielOS"}
+  title={t(locale, "solutions.departments.pageTitle")}
   description={t(locale, "useCases.pageDesc")}
   image="/assets/og/ai-departments.png"
   locale={locale}
@@ -25,14 +25,14 @@ const departments = [
   <section class="relative pt-24 pb-12 sm:pt-28 sm:pb-16 overflow-hidden">
     <div class="absolute inset-0 opacity-[0.03] hero-grid"></div>
     <div class="relative z-10 mx-auto max-w-3xl px-6 text-center">
-      <nav aria-label="Breadcrumb" class="mb-8">
+      <nav aria-label={t(locale, "common.breadcrumbAria")} class="mb-8">
         <ol class="flex items-center justify-center gap-1.5 text-2xs text-muted-foreground flex-wrap">
           <li><a href={localizePath("/", locale)} class="hover:text-foreground transition-colors">{t(locale, "nav.home")}</a></li>
           <li class="flex items-center gap-1.5"><span aria-hidden="true" class="text-border-strong">/</span><a href={localizePath("/solutions/", locale)} class="hover:text-foreground transition-colors">{t(locale, "solutions.hub.title")}</a></li>
           <li class="flex items-center gap-1.5"><span aria-hidden="true" class="text-border-strong">/</span><span class="text-foreground font-medium" aria-current="page">{t(locale, "solutions.departments.group")}</span></li>
         </ol>
       </nav>
-      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground-strong tracking-tight leading-tightest" data-aos="fade-up">AI Departments doing real work.</h1>
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground-strong tracking-tight leading-tightest" data-aos="fade-up">{t(locale, "solutions.departments.title")}</h1>
       <p class="mt-6 text-base text-muted-foreground max-w-2xl leading-relaxed" data-aos="fade-up">{t(locale, "useCases.hero.desc")}</p>
     </div>
   </section>
@@ -55,7 +55,7 @@ const departments = [
     </div>
   </section>
 
-  <script type="application/ld+json" set:html={JSON.stringify({
+  <script is:inline type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [

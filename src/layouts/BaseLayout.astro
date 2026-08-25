@@ -1,7 +1,7 @@
 ---
 import "../styles/global.css";
 import "../assets/fonts/fonts.css";
-import "boxicons/css/boxicons.min.css";
+import "../styles/boxicons-subset.css";
 import { SITE, AUTHOR, SEO, ANALYTICS, SOCIAL } from "../config";
 import { type Locale, t } from "../i18n/translations";
 
@@ -38,6 +38,7 @@ const pageTitle = title.includes(SITE.name) ? title : `${title} — ${SITE.name}
 const imageUrl = image.startsWith("http") ? image : `${SITE.url}${image}`;
 const dir = locale === "fa" ? "rtl" : "ltr";
 const lang = locale === "fa" ? "fa" : "en";
+const bookingEnabled = /^\/(?:fa\/)?(?:apply|contact)\/?$/.test(Astro.url.pathname);
 ---
 
 <!doctype html>
@@ -89,7 +90,6 @@ const lang = locale === "fa" ? "fa" : "en";
          isolated to Arabic/Persian glyphs, so it is only preloaded on FA
          pages where it can actually be used. -->
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/outfit-latin.woff2" crossorigin />
-    <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/outfit-latin-ext.woff2" crossorigin />
     {locale === "fa" && <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/IRANSansXVF.woff2" crossorigin />}
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/jetbrains-latin.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/boxicons.woff2" crossorigin />
@@ -102,11 +102,12 @@ const lang = locale === "fa" ? "fa" : "en";
          bookingSuccessful before Cal finishes loading and the popup opens as
          fast as possible. There is NO custom modal wrapper. Apply remains the
          primary conversion action; booking is an optional alternative. -->
-    <link rel="preconnect" href="https://app.cal.com" crossorigin />
-    <link rel="dns-prefetch" href="https://app.cal.com" />
-    <script is:inline type="text/javascript">
+    {bookingEnabled && <link rel="preconnect" href="https://app.cal.com" crossorigin />}
+    {bookingEnabled && <link rel="dns-prefetch" href="https://app.cal.com" />}
+    {bookingEnabled && <script is:inline type="text/javascript">
+      // @ts-nocheck — official Cal loader intentionally uses a callable queue.
       (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(cal, ar); }; const namespace = ar[1]; api.q = api.q || []; typeof namespace === "string" ? (cal.ns[namespace] = api) : (p(cal, api)); return; } p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
-    </script>
+    </script>}
 
     <!-- hreflang alternates for i18n SEO (indexable pages only —
          noindex pages should not publish alternate clusters) -->
@@ -122,8 +123,6 @@ const lang = locale === "fa" ? "fa" : "en";
         </>
       );
     })()}
-
-    <link rel="preload" as="image" href="/assets/avatars/avatar.jpg" fetchpriority="low" />
 
     <!-- Google Search Console verification -->
     <meta name="google-site-verification" content={ANALYTICS.googleSearchConsoleVerification} />
@@ -143,26 +142,41 @@ const lang = locale === "fa" ? "fa" : "en";
       function gtag(){dataLayer.push(arguments);}
     </script>
 
-    <!-- Organization schema: global brand identity for every page -->
+    <!-- Stable site entities shared by every page. Page schemas may safely
+         reference these IDs without creating dangling structured-data nodes. -->
     <script is:inline type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
-      "@type": "Organization",
-      "@id": `${SITE.url}/#organization`,
-      name: SITE.name,
-      url: SITE.url,
-      logo: {
-        "@type": "ImageObject",
-        url: `${SITE.url}/assets/logos/primary-transparent.svg`,
-        width: 512,
-        height: 512,
-      },
-      founder: {
-        "@type": "Person",
-        name: AUTHOR.name,
-        url: `${SITE.url}/founder/`,
-      },
-      sameAs: [SOCIAL.x, SOCIAL.linkedin, SOCIAL.github],
-      description: SITE.description,
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": `${SITE.url}/#organization`,
+          name: SITE.name,
+          url: SITE.url,
+          logo: { "@type": "ImageObject", url: `${SITE.url}/assets/logos/primary-transparent.svg`, width: 512, height: 512 },
+          founder: { "@id": `${SITE.url}/#person` },
+          sameAs: [SOCIAL.x, SOCIAL.linkedin, SOCIAL.github],
+          description: SITE.description,
+        },
+        {
+          "@type": "Person",
+          "@id": `${SITE.url}/#person`,
+          name: AUTHOR.name,
+          url: `${SITE.url}/founder/`,
+          image: `${SITE.url}/assets/avatars/avatar.jpg`,
+          jobTitle: AUTHOR.jobTitle,
+          sameAs: AUTHOR.sameAs,
+          worksFor: { "@id": `${SITE.url}/#organization` },
+        },
+        {
+          "@type": "WebSite",
+          "@id": `${SITE.url}/#website`,
+          name: SITE.name,
+          url: SITE.url,
+          description: locale === "fa" ? SITE.descriptionFa : SITE.description,
+          inLanguage: lang,
+          publisher: { "@id": `${SITE.url}/#organization` },
+        },
+      ],
     })} />
   </head>
   <body class="bg-background text-foreground antialiased">
@@ -192,8 +206,18 @@ const lang = locale === "fa" ? "fa" : "en";
           }
         });
       }
+      var revealQueued = false;
+      function queueReveal() {
+        if (revealQueued) return;
+        revealQueued = true;
+        requestAnimationFrame(function () {
+          revealQueued = false;
+          revealStuck();
+        });
+      }
       window.addEventListener("load", revealStuck);
-      window.addEventListener("scroll", revealStuck, { passive: true });
+      window.addEventListener("scroll", queueReveal, { passive: true });
+      window.addEventListener("resize", queueReveal, { passive: true });
     </script>
 
     <!-- Deferred: load gtag.js + initialize PostHog unconditionally (full capture, owner directive 2026-08-18) -->
@@ -213,7 +237,7 @@ const lang = locale === "fa" ? "fa" : "en";
              anonymous person profiles for funnel analysis on unauthenticated
              traffic, raw form inputs masked (funnel events still count
              starts/submits/successes). */
-          !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("head")[0]).appendChild(p);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+          !function(t,e){var o,n,p;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",t.getElementsByTagName("head")[0].appendChild(p);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
           posthog.init(phKey,{ api_host: phHost, person_profiles: 'always', mask_all_inputs: true });
         }
         'requestIdleCallback' in window

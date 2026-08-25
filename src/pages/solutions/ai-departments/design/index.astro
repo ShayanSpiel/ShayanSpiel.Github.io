@@ -13,7 +13,6 @@ export interface Props {
 
 const { locale = "en" } = Astro.props;
 
-const color = "accent";
 const steps = t(locale, "useCases.design.how.steps").split(" · ");
 const livePoints = t(locale, "useCases.design.live.points").split(" · ");
 const breadcrumbJsonLd = {
@@ -37,7 +36,7 @@ const breadcrumbJsonLd = {
     label={t(locale, "useCases.design.hero.label")}
     title={t(locale, "useCases.design.hero.title")}
     description={t(locale, "useCases.design.hero.desc")}
-    cta={{ label: t(locale, "useCases.design.hero.primary"), href: localizePath("/use-cases/design/gallery/", locale) }}
+    cta={{ label: t(locale, "useCases.design.hero.primary"), href: localizePath("/solutions/ai-departments/design/gallery/", locale) }}
   />
 
   <section class="relative py-20 sm:py-24">
@@ -198,7 +197,7 @@ const breadcrumbJsonLd = {
         </ul>
       </div>
       <div class="mt-8 text-center">
-        <a href={localizePath("/use-cases/design/gallery/", locale)} class="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:opacity-80">{t(locale, "useCases.design.live.cta")}<i class="bx bx-chevron-right rtl-flip icon-md" aria-hidden="true"></i></a>
+        <a href={localizePath("/solutions/ai-departments/design/gallery/", locale)} class="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:opacity-80">{t(locale, "useCases.design.live.cta")}<i class="bx bx-chevron-right rtl-flip icon-md" aria-hidden="true"></i></a>
       </div>
     </div>
   </section>

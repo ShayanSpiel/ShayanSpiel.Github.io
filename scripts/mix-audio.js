@@ -109,7 +109,7 @@ console.log(`  Spec: ${LUFS_TARGET} LUFS · TP ${TRUE_PEAK} dBTP · 48kHz AAC\n`
 /* Voice bus uses the explicit measured speech window, not the larger visual
    scene window. This preserves the readable visual lead/hold without adding
    silence to, truncating, or shifting the spoken take. */
-const inputs = scenes.map((s, i) => `-i ${join(AUDIO, s.clip)}`).join(" ");
+const inputs = scenes.map((s) => `-i ${join(AUDIO, s.clip)}`).join(" ");
 const prepped = scenes.map((s, i) => {
   const speechStart = Number(s.speech_start);
   const speechEnd = Number(s.speech_end);

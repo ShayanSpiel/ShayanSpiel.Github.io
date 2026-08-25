@@ -15,14 +15,6 @@ export interface Props {
 
 const { solution, locale = "en" } = Astro.props;
 
-// Raw brand SVGs selected by key (mirrors the ToolGrid tile pattern).
-const brandLogos = import.meta.glob("../../assets/brand-logos/*.svg", {
-  query: "?raw",
-  import: "default",
-  eager: true,
-});
-const logoSvg = brandLogos[`../../assets/brand-logos/${solution.key}.svg`] as string | undefined;
-
 const isFa = locale === "fa";
 const name = solution.name;
 const tagline = isFa ? solution.taglineFa : solution.taglineEn;
@@ -96,13 +88,8 @@ const breadcrumbJsonLd = {
         <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
         <div class="relative mx-auto max-w-3xl">
           <div class="flex items-center gap-4">
-            {logoSvg && (
-              <div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-md border border-border bg-panel-raised shadow-panel">
-                <span class="block [&>svg]:h-10 [&>svg]:w-10" set:html={logoSvg} />
-              </div>
-            )}
-            <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-accent-soft text-accent sm:hidden">
-              <i class={`bx ${solution.iconClass} icon-2xl`} aria-hidden="true"></i>
+            <div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-md border border-border bg-panel-raised text-primary shadow-panel">
+              <i class={`bx ${solution.iconClass} icon-3xl`} aria-hidden="true"></i>
             </div>
             <h3 class="text-lg font-semibold text-foreground-strong sm:text-xl">{workflowTitle}</h3>
           </div>
@@ -152,22 +139,15 @@ const breadcrumbJsonLd = {
       <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" data-aos="fade-up">
         {otherSolutions.map((other) => {
           const otherTagline = isFa ? other.taglineFa : other.taglineEn;
-          const otherLogo = brandLogos[`../../assets/brand-logos/${other.key}.svg`] as string | undefined;
           return (
             <a
               href={localizePath(`/solutions/software/${other.slug}/`, locale)}
               class="group relative overflow-hidden rounded-md border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong"
             >
               <div class="mb-4 flex items-center gap-3">
-                {otherLogo ? (
-                  <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-border bg-panel-raised transition-all group-hover:border-border-strong">
-                    <span class="block [&>svg]:h-6 [&>svg]:w-6" set:html={otherLogo} />
-                  </div>
-                ) : (
-                  <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-accent-soft text-accent">
-                    <i class={`bx ${other.iconClass} icon-xl`} aria-hidden="true"></i>
-                  </div>
-                )}
+                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-accent-soft text-accent transition-all group-hover:border-border-strong">
+                  <i class={`bx ${other.iconClass} icon-xl`} aria-hidden="true"></i>
+                </div>
                 <h3 class="text-sm font-semibold text-foreground-strong">{other.name}</h3>
               </div>
               <p class="text-xs leading-relaxed text-muted-foreground">{otherTagline}</p>

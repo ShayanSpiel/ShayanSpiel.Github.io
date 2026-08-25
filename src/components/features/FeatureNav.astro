@@ -25,7 +25,6 @@ const tree = [
   { icon: "bx-file", color: "primary", titleKey: "features.blocks.artifacts.short", href: "/features/artifacts/" },
 ];
 const isRtl = locale === "fa";
-const hiddenTf = isRtl ? "translateX(-100%)" : "translateX(100%)";
 ---
 
 <!-- Mobile toggle button -->
@@ -64,7 +63,7 @@ const hiddenTf = isRtl ? "translateX(-100%)" : "translateX(100%)";
       type="button"
       id="feature-nav-close"
       class="flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-panel-raised transition-colors"
-      aria-label="Close"
+      aria-label={t(locale, "common.close")}
     >
       <i class="bx bx-x icon-lg"></i>
     </button>

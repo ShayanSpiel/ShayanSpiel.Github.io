@@ -57,7 +57,7 @@ const breadcrumbJsonLd = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: `${SITE.url}${localizePath("/", locale)}` },
+    { "@type": "ListItem", position: 1, name: t(locale, "nav.home"), item: `${SITE.url}${localizePath("/", locale)}` },
     { "@type": "ListItem", position: 2, name: t(locale, "notes.title"), item: `${SITE.url}${localizePath("/notes/", locale)}` },
     { "@type": "ListItem", position: 3, name: title, item: articleUrl },
   ],

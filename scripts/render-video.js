@@ -237,7 +237,7 @@ async function videoRenderGate(baseUrl, browser, scenarioKey) {
   await page.evaluate(() => document.fonts.ready);
   try {
     await page.waitForFunction(
-      (key) => {
+      () => {
         const tm = window.__timing;
         const st1 = document.getElementById("st1");
         return tm && st1 && /translate\(/.test(st1.getAttribute("transform") || "");

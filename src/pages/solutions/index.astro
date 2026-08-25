@@ -6,9 +6,6 @@ import { APPLY_PATH } from "../../config";
 import { SOFTWARE_SOLUTIONS } from "../../data/software-solutions";
 import { WORKFLOW_SOLUTIONS } from "../../data/workflow-solutions";
 
-const BRAND_LOGOS = import.meta.glob("../../assets/brand-logos/*.svg", { query: "?raw", import: "default", eager: true }) as Record<string, string>;
-const brandLogo = (key: string) => BRAND_LOGOS[`../../assets/brand-logos/${key}.svg`] ?? "";
-
 const WF_ICONS: Record<string, string> = {
   "follow-up-automation": "bx-bell",
   "data-entry-automation": "bx-data",
@@ -43,7 +40,7 @@ const filters = [
 ---
 
 <Page
-  title={locale === "fa" ? "راهکارهای اتوماسیون AI | ورک‌فلوها، دپارتمان‌ها و نرم‌افزار | SpielOS" : "AI Automation Solutions | Workflows, Departments & Software | SpielOS"}
+  title={t(locale, "solutions.hub.pageTitle")}
   description={t(locale, "solutions.hub.desc")}
   image="/assets/og/solutions.png"
   locale={locale}
@@ -54,7 +51,7 @@ const filters = [
     <div class="relative z-10 mx-auto max-w-3xl px-6 text-center">
       <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground-strong tracking-tight leading-tightest" data-aos="fade-up">{t(locale, "solutions.hub.title")}</h1>
       <p class="mt-6 text-base text-muted-foreground max-w-2xl leading-relaxed" data-aos="fade-up">{t(locale, "solutions.hub.desc")}</p>
-      <div class="mt-8 inline-flex flex-wrap items-center justify-center gap-1.5 rounded-md border border-border bg-panel p-1 shadow-panel" data-aos="fade-up" role="group" aria-label="Filter solutions">
+      <div class="mt-8 inline-flex flex-wrap items-center justify-center gap-1.5 rounded-md border border-border bg-panel p-1 shadow-panel" data-aos="fade-up" role="group" aria-label={t(locale, "solutions.filter.aria")}>
         {filters.map((f, i) => (
           <button
             type="button"
@@ -122,7 +119,7 @@ const filters = [
         {SOFTWARE_SOLUTIONS.map((s) => (
           <a href={localizePath(`/solutions/software/${s.slug}/`, locale)} class="group relative flex items-start gap-4 overflow-hidden rounded-md border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
             <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-primary via-accent to-transparent opacity-60"></div>
-            <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-md border border-border bg-panel-raised shadow-panel transition-all group-hover:-translate-y-0.5 [&>svg]:h-8 [&>svg]:w-8" set:html={brandLogo(s.key)} />
+            <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-md border border-border bg-panel-raised text-primary shadow-panel transition-all group-hover:-translate-y-0.5"><i class={`bx ${s.iconClass} icon-3xl`} aria-hidden="true"></i></div>
             <span class="min-w-0">
               <span class="block truncate text-sm font-semibold text-foreground-strong transition-colors group-hover:text-primary">{s.name}</span>
               <span class="mt-0.5 block text-xs leading-relaxed text-muted-foreground line-clamp-2">{locale === "fa" ? s.taglineFa : s.taglineEn}</span>

@@ -20,7 +20,7 @@ const breadcrumbJsonLd = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: `${SITE.url}${localizePath("/", locale)}` },
+    { "@type": "ListItem", position: 1, name: t(locale, "nav.home"), item: `${SITE.url}${localizePath("/", locale)}` },
     { "@type": "ListItem", position: 2, name: t(locale, "conversion.pricing.hero.label"), item: `${SITE.url}${localizePath("/pricing/", locale)}` },
   ],
 };
@@ -143,6 +143,6 @@ const offerJsonLd = {
     </div>
   </section>
 
-  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
-  <script type="application/ld+json" set:html={JSON.stringify(offerJsonLd)} />
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(offerJsonLd)} />
 </Page>

@@ -430,6 +430,12 @@ i[class*=" bxs-"] {
       background: color-mix(in oklab, var(--primary) 8%, transparent);
       td { @apply font-medium; }
     }
+    @media (max-width: 639px) {
+      display: block;
+      max-width: 100%;
+      overflow-x: auto;
+      overscroll-behavior-inline: contain;
+    }
   }
 
   /* ── Metric row: big number + label side by side ── */
@@ -843,4 +849,3 @@ i[class*=" bxs-"] {
 .brief-table-row:last-child {
   border-bottom: none;
 }
-

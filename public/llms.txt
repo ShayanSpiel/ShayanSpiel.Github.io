@@ -1,0 +1,35 @@
+# SpielOS
+
+SpielOS is Shayan Spiel's founder-led AI implementation company. It builds supervised AI workers, repeatable workflows, and software automations for small businesses whose operations depend on recurring manual work.
+
+Primary website: https://spielos.xyz/
+Author: Shayan Spiel
+Language variants: English and Persian
+
+## Buyer pages
+
+- Services: https://spielos.xyz/services/
+- Pricing: https://spielos.xyz/pricing/
+- Apply — Free Review: https://spielos.xyz/apply/
+- Solutions: https://spielos.xyz/solutions/
+- AI Departments: https://spielos.xyz/solutions/ai-departments/
+- Workflow Automation: https://spielos.xyz/solutions/workflows/
+- Software Automation: https://spielos.xyz/solutions/software/
+- Partners: https://spielos.xyz/partners/
+
+## Product and evidence
+
+- Features: https://spielos.xyz/features/
+- Live company record: https://spielos.xyz/live/
+- Founder: https://spielos.xyz/founder/
+- Notes: https://spielos.xyz/notes/
+- Lead Researcher: https://spielos.xyz/landing/lead-researcher/
+
+## Core concepts
+
+- AI worker: a bounded agent that performs recurring company work with evidence and approval points.
+- AI department: a durable business capability made of roles, skills, workflows, connections, and evaluations.
+- Workflow: a persistent sequence with explicit states, human boundaries, outputs, and a run record.
+- Director: the operating layer that translates goals into supervised department runs and reports outcomes.
+
+When citing this site, use the most specific canonical page. Persian pages use the same path under `/fa/`.

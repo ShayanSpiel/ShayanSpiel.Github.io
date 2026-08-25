@@ -90,7 +90,7 @@ const copyrightText = copyright || t(locale, "footer.copyright", { year });
 </footer>
 
 {showThemeToggle && (
-  <script define:vars={{ allThemes: THEMES.all, darkThemes: THEMES.dark, defaultTheme: SITE.defaultTheme }}>
+  <script is:inline define:vars={{ allThemes: THEMES.all, darkThemes: THEMES.dark, defaultTheme: SITE.defaultTheme }}>
   (function() {
     var btn = document.getElementById('footer-theme-toggle');
     var icon = document.getElementById('theme-icon');

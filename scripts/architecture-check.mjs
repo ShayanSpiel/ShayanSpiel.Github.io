@@ -25,7 +25,7 @@ expect(!existsSync(join(root, "src/components/ContactModal.astro")), "ContactMod
 expect(!existsSync(join(root, "src/components/AgentBriefForm.astro")), "AgentBriefForm must be removed; the Agent Brief page is informational");
 expect(!baseLayout.includes("data-open-contact-modal"), "BaseLayout must not wire the retired contact modal");
 expect(baseLayout.includes("book_call"), "BaseLayout must track booking CTA clicks");
-expect(baseLayout.includes("app.cal.com/embed/embed.js") && baseLayout.includes("rel=\"preconnect\" href=\"https://app.cal.com\""), "BaseLayout must load the Cal embed script site-wide with preconnect for the fastest on-page popup");
+expect(baseLayout.includes("bookingEnabled") && baseLayout.includes("app.cal.com/embed/embed.js") && baseLayout.includes("bookingEnabled && <link rel=\"preconnect\""), "BaseLayout must load Cal resources only on Apply and Contact");
 expect(!baseLayout.includes("isBookPage") && !baseLayout.includes("booking_page_viewed"), "the /book/ page navigation and its page-view event must be gone");
 expect(!baseLayout.includes("Cal('modal'") && !baseLayout.includes("openBookingOverlay"), "BaseLayout must not wrap Cal in a modal overlay");
 expect(baseLayout.includes("booking_cta_clicked"), "BaseLayout must fire the PostHog/GA booking CTA event");
@@ -35,8 +35,11 @@ expect(!existsSync(join(root, "src/pages/book.astro")) && !existsSync(join(root,
 const nav = read("src/components/Nav.astro");
 expect(nav.includes("APPLY_PATH") && nav.includes('data-cta-location="nav"') && nav.includes('data-cta-location="nav_mobile"'), "Nav primary CTA must be the Apply funnel link on desktop and mobile");
 expect(!read("src/components/LanguageSwitcher.astro").includes("<svg"), "LanguageSwitcher must use Boxicons, not an inline SVG icon");
-expect(!read("src/components/SocialIcons.astro").includes("set:html"), "SocialIcons must use Boxicons, not injected SVG markup");
-expect(!read("src/pages/use-cases/index.astro").includes("noindex"), "use-cases hub is a real department page and must stay indexable");
+expect(!read("src/components/SocialIcons.astro").includes("<svg") && !read("src/components/SocialIcons.astro").includes("set:html"), "SocialIcons must use Boxicons only");
+expect(read("src/pages/use-cases/index.astro").includes("Astro.redirect") && read("src/pages/use-cases/index.astro").includes('"/solutions/"'), "legacy use-cases hub must remain a 301 redirect to Solutions");
+expect(baseLayout.includes('boxicons-subset.css') && !baseLayout.includes('boxicons/css/boxicons.min.css'), "the site must ship the generated Boxicons subset, not the full icon library");
+expect(!read("src/pages/apply.astro").includes("66shayan@gmail.com"), "Apply must not hardcode a legacy email address");
+expect(!read("src/components/Nav.astro").includes("brand-logos") && !read("src/components/home/ToolGrid.astro").includes("brand-logos"), "active navigation and tool surfaces must use the Boxicons contract");
 expect(read("src/pages/contact/thank-you.astro").includes('robots="noindex, follow"'), "contact thank-you page must be noindex");
 expect(read("src/pages/spielos-v1.astro").includes('robots="noindex, follow"'), "archived v1 page must be noindex");
 expect(baseLayout.includes("cta_clicked") && baseLayout.includes("book_call"), "BaseLayout must track booking CTA clicks as book_call");

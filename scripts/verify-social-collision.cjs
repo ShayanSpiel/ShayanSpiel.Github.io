@@ -61,7 +61,6 @@ async function main() {
         const ctm = path.getScreenCTM();
         const pt = (x,y) => { const p = new DOMPoint(x,y).matrixTransform(ctm); return [Math.round(p.x), Math.round(p.y)]; };
         // sample the path every 2% of the viewBox
-        const vb = visibleSvg.viewBox.baseVal;
         let xs = [], ys = [];
         const len = path.getTotalLength();
         for (let t = 0; t <= 1.001; t += 0.02) {

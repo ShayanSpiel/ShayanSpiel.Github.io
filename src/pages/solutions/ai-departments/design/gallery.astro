@@ -176,7 +176,7 @@ const badgeClasses: Record<BadgeKind, string> = {
             <article class="gallery-card flex flex-col overflow-hidden rounded-md border border-border bg-panel shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
               <div class="relative border-b border-border bg-background-deep">
                 {still ? (
-                  <img class="mx-auto aspect-[4/5] w-full max-w-[18rem] object-cover" src={still} alt={entry.id} width="1080" height="1350" loading="lazy" />
+                  <img class="mx-auto aspect-[4/5] w-full max-w-[18rem] object-cover" src={still} alt={entry.id} width="1080" height="1350" loading="lazy" decoding="async" />
                 ) : (
                   <div class="mx-auto flex aspect-[4/5] w-full max-w-[18rem] items-center justify-center">
                     <i class="bx bx-image-alt text-foreground-muted icon-4xl" aria-hidden="true"></i>

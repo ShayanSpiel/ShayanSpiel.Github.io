@@ -4,7 +4,7 @@
 // established service business with a manual operational loop).
 
 export interface SoftwareSolution {
-  /** Matches the brand-logo file name in src/assets/brand-logos/. */
+  /** Stable key used by routes, translations, and analytics. */
   key: string;
   name: string;
   slug: string;

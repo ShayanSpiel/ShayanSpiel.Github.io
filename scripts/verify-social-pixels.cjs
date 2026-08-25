@@ -10,7 +10,6 @@ mkdirSync(TMP, { recursive: true });
 function readBmp(file) {
   const b = readFileSync(file);
   const bfOffBits = b.readUInt32LE(10);
-  const dibSize = b.readUInt32LE(14);
   const width = b.readInt32LE(18);
   const heightRaw = b.readInt32LE(22);
   const height = Math.abs(heightRaw);
@@ -35,7 +34,6 @@ function near(c, target, tol = 30) {
 
 // gruvbox-dark primary = aqua #458588 (r69 g133 b136); muted foreground #a89984-ish (r168 g153 b132)
 const PRIMARY = [69, 133, 136];
-const MUTED = [168, 153, 132];
 
 const checks = [
   { file: "single-fact.png", label: "single-fact bottom wave", pts: [[20,1140],[500,1010],[980,970],[1045,930]], color: PRIMARY },

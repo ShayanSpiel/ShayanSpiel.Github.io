@@ -69,7 +69,7 @@ const breadcrumbJsonLd = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: `${SITE.url}${localizePath("/", locale)}` },
+    { "@type": "ListItem", position: 1, name: t(locale, "nav.home"), item: `${SITE.url}${localizePath("/", locale)}` },
     { "@type": "ListItem", position: 2, name: "Founder", item: `${SITE.url}${localizePath("/founder/", locale)}` },
   ],
 };
@@ -91,7 +91,7 @@ const breadcrumbJsonLd = {
     <div class="relative z-10 mx-auto max-w-3xl px-6 text-center" data-aos="fade-up">
       <div class="relative mx-auto mb-6 h-24 w-24">
         <div class="absolute inset-0 rounded-md bg-gradient-to-br from-primary via-accent to-transparent opacity-20 blur-xl"></div>
-        <img src="/assets/avatars/avatar.jpg" alt={AUTHOR.name} width="96" height="96" class="relative rounded-md border border-border bg-panel shadow-panel object-cover w-24 h-24" loading="lazy" />
+        <img src="/assets/avatars/avatar.jpg" alt={AUTHOR.name} width="96" height="96" class="relative rounded-md border border-border bg-panel shadow-panel object-cover w-24 h-24" loading="eager" fetchpriority="high" decoding="async" />
       </div>
 
       <p class="text-2xs font-semibold uppercase tracking-widest text-primary">{t(locale, "founder.authorTitle")}</p>

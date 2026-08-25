@@ -4,7 +4,7 @@ import ToolGrid from "../components/home/ToolGrid.astro";
 import SectionHeader from "../components/sections/SectionHeader.astro";
 import JourneyLine from "../components/JourneyLine.astro";
 import Page from "../layouts/Page.astro";
-import { APPLY_PATH, AUTHOR, SITE } from "../config";
+import { APPLY_PATH, SITE } from "../config";
 import { localizePath } from "../i18n";
 import { type Locale, t } from "../i18n/translations";
 import snapshot from "../data/live-goals.json";
@@ -16,8 +16,6 @@ const liveGoals = (snapshot as { goals: Array<{ name: string; display_title?: st
 const liveGoal = liveGoals.find((goal) => ["director", "email", "outbound"].includes(goal.owner_id) && goal.goal_status === "active") ?? liveGoals[0];
 
 const jsonLd = [
-  { "@context": "https://schema.org", "@type": "Person", "@id": `${SITE.url}/#person`, name: AUTHOR.name, url: SITE.url, image: `${SITE.url}/assets/avatars/avatar.jpg`, jobTitle: AUTHOR.jobTitle, sameAs: AUTHOR.sameAs, worksFor: { "@id": `${SITE.url}/#organization` } },
-  { "@context": "https://schema.org", "@type": "WebSite", "@id": `${SITE.url}/#website`, name: SITE.name, url: SITE.url, description: t(locale, "schema.website.desc"), inLanguage: locale, publisher: { "@id": `${SITE.url}/#organization` } },
   { "@context": "https://schema.org", "@type": "SoftwareApplication", "@id": `${SITE.url}/#software`, name: SITE.name, url: SITE.url, description: t(locale, "schema.software.desc"), applicationCategory: "BusinessApplication", operatingSystem: "Web", author: { "@id": `${SITE.url}/#person` }, publisher: { "@id": `${SITE.url}/#organization` } },
   { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: t(locale, "nav.home"), item: `${SITE.url}${localizePath("/", locale)}` }] },
 ];

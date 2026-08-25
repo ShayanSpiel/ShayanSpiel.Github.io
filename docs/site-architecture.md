@@ -154,7 +154,7 @@ assets under `.agents/company/departments/design/templates/`.
   `src/config.ts`
 - English and Persian UI copy: `src/i18n/translations.ts`
 - URL and locale helpers: `src/i18n/index.ts`
-- Global metadata, analytics, consent, and organization schema:
+- Global metadata, full-capture analytics, and stable Organization, Person, and WebSite schemas:
   `src/layouts/BaseLayout.astro`
 - Standard page shell: `src/layouts/Page.astro`
 - Feature shell and breadcrumbs: `src/layouts/FeaturesLayout.astro`
@@ -204,6 +204,7 @@ npm run typecheck
 npm run lint
 npm run build
 npm run seo:check
+npm run audit:site
 npm test
 ```
 
