@@ -3568,16 +3568,16 @@
       "created_at": "2026-08-25T03:36:22.640727+00:00",
       "goal_status": "active",
       "id": "goal-c909b8b270",
-      "latest_activity_at": "2026-08-25T04:00:53.009303+00:00",
+      "latest_activity_at": "2026-08-25T04:29:55.832402+00:00",
       "metric": "qualified_social_leads",
       "name": "Geo expansion research: 500 fully qualified agency & B2B-service leads with client-overflow signals across SA/QA/KW/NZ/TW/HK/SG/PL/DE/PT/JP/US/CA/AE",
       "operator": "ge",
       "owner_id": "outbound",
       "parent_id": null,
-      "run_status": "blocked",
-      "stage": "ACT",
+      "run_status": "running",
+      "stage": "DECIDE",
       "target": 500,
-      "updated_at": "2026-08-25T04:00:53.007162+00:00"
+      "updated_at": "2026-08-25T04:29:55.831559+00:00"
     }
   ],
   "heartbeat": {
@@ -3590,10 +3590,10 @@
     "metric": "qualified_social_leads",
     "operator": "ge",
     "owner_id": "outbound",
-    "run_status": "blocked",
-    "stage": "ACT",
+    "run_status": "running",
+    "stage": "DECIDE",
     "target": 500,
-    "updated_at": "2026-08-25T04:00:53.009303+00:00"
+    "updated_at": "2026-08-25T04:29:55.832402+00:00"
   },
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
@@ -3611,9 +3611,9 @@
       "goal_name": "Geo expansion research: 500 fully qualified agency & B2B-service leads with client-overflow signals across SA/QA/KW/NZ/TW/HK/SG/PL/DE/PT/JP/US/CA/AE",
       "owner_id": "outbound",
       "run_id": "run-ca33270fb5",
-      "run_status": "blocked",
-      "stage": "ACT",
-      "updated_at": "2026-08-25T04:00:53.009303+00:00"
+      "run_status": "running",
+      "stage": "DECIDE",
+      "updated_at": "2026-08-25T04:29:55.832402+00:00"
     },
     "heartbeat": {
       "business_value": null,
@@ -3625,19 +3625,19 @@
       "metric": "qualified_social_leads",
       "operator": "ge",
       "owner_id": "outbound",
-      "run_status": "blocked",
-      "stage": "ACT",
+      "run_status": "running",
+      "stage": "DECIDE",
       "target": 500,
-      "updated_at": "2026-08-25T04:00:53.009303+00:00"
+      "updated_at": "2026-08-25T04:29:55.832402+00:00"
     },
-    "last_activity_at": "2026-08-25T04:00:53.009303+00:00",
-    "last_sync_at": "2026-08-25T04:00:53.065607+00:00",
+    "last_activity_at": "2026-08-25T04:29:55.832402+00:00",
+    "last_sync_at": "2026-08-25T04:29:55.869448+00:00",
     "state": "resting"
   },
   "totals": {
     "approvals": 250,
     "decisions": 849,
-    "evidence": 13033,
+    "evidence": 13042,
     "goals_abandoned": 39,
     "goals_achieved": 161,
     "goals_active": 32,
