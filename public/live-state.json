@@ -5,9 +5,9 @@
     "goal_name": "Geo expansion research: 500 fully qualified agency & B2B-service leads with client-overflow signals across SA/QA/KW/NZ/TW/HK/SG/PL/DE/PT/JP/US/CA/AE",
     "owner_id": "outbound",
     "run_id": "run-ca33270fb5",
-    "run_status": "blocked",
-    "stage": "ACT",
-    "updated_at": "2026-08-25T04:32:13.605269+00:00"
+    "run_status": "running",
+    "stage": "DECIDE",
+    "updated_at": "2026-08-25T04:38:02.189058+00:00"
   },
   "heartbeat": {
     "business_value": null,
@@ -19,13 +19,13 @@
     "metric": "qualified_social_leads",
     "operator": "ge",
     "owner_id": "outbound",
-    "run_status": "blocked",
-    "stage": "ACT",
+    "run_status": "running",
+    "stage": "DECIDE",
     "target": 500,
-    "updated_at": "2026-08-25T04:32:13.605269+00:00"
+    "updated_at": "2026-08-25T04:38:02.189058+00:00"
   },
-  "last_activity_at": "2026-08-25T04:32:13.605269+00:00",
-  "last_sync_at": "2026-08-25T04:32:13.649614+00:00",
+  "last_activity_at": "2026-08-25T04:38:02.189058+00:00",
+  "last_sync_at": "2026-08-25T04:38:02.280205+00:00",
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
     "goal_name": "3 booked calls per day",
@@ -39,7 +39,7 @@
   "totals": {
     "approvals": 250,
     "decisions": 851,
-    "evidence": 13047,
+    "evidence": 13060,
     "goals_abandoned": 39,
     "goals_achieved": 161,
     "goals_active": 32,
