@@ -3578,6 +3578,21 @@
       "stage": "ACT",
       "target": 500,
       "updated_at": "2026-08-25T04:38:10.643070+00:00"
+    },
+    {
+      "created_at": "2026-08-25T04:41:58.300748+00:00",
+      "goal_status": "active",
+      "id": "goal-351910cc04",
+      "latest_activity_at": "2026-08-25T04:42:00.640224+00:00",
+      "metric": "qualified_social_leads",
+      "name": "Geo expansion research stretch: second 500 fully qualified agency & B2B-service leads (combined bar 1000 with goal-c909b8b270)",
+      "operator": "ge",
+      "owner_id": "outbound",
+      "parent_id": null,
+      "run_status": "running",
+      "stage": "DECIDE",
+      "target": 500,
+      "updated_at": "2026-08-25T04:42:00.639636+00:00"
     }
   ],
   "heartbeat": {
@@ -3585,15 +3600,15 @@
     "business_value_fa": null,
     "display_title": null,
     "display_title_fa": null,
-    "goal_id": "goal-c909b8b270",
-    "goal_name": "Geo expansion research: 500 fully qualified agency & B2B-service leads with client-overflow signals across SA/QA/KW/NZ/TW/HK/SG/PL/DE/PT/JP/US/CA/AE",
+    "goal_id": "goal-351910cc04",
+    "goal_name": "Geo expansion research stretch: second 500 fully qualified agency & B2B-service leads (combined bar 1000 with goal-c909b8b270)",
     "metric": "qualified_social_leads",
     "operator": "ge",
     "owner_id": "outbound",
-    "run_status": "blocked",
-    "stage": "ACT",
+    "run_status": "running",
+    "stage": "DECIDE",
     "target": 500,
-    "updated_at": "2026-08-25T04:38:10.645160+00:00"
+    "updated_at": "2026-08-25T04:42:00.640224+00:00"
   },
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
@@ -3606,32 +3621,32 @@
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-25T03:36:22.640727+00:00",
-      "goal_id": "goal-c909b8b270",
-      "goal_name": "Geo expansion research: 500 fully qualified agency & B2B-service leads with client-overflow signals across SA/QA/KW/NZ/TW/HK/SG/PL/DE/PT/JP/US/CA/AE",
+      "created_at": "2026-08-25T04:41:58.300748+00:00",
+      "goal_id": "goal-351910cc04",
+      "goal_name": "Geo expansion research stretch: second 500 fully qualified agency & B2B-service leads (combined bar 1000 with goal-c909b8b270)",
       "owner_id": "outbound",
-      "run_id": "run-ca33270fb5",
-      "run_status": "blocked",
-      "stage": "ACT",
-      "updated_at": "2026-08-25T04:38:10.645160+00:00"
+      "run_id": "run-6f777062cf",
+      "run_status": "running",
+      "stage": "DECIDE",
+      "updated_at": "2026-08-25T04:42:00.640224+00:00"
     },
     "heartbeat": {
       "business_value": null,
       "business_value_fa": null,
       "display_title": null,
       "display_title_fa": null,
-      "goal_id": "goal-c909b8b270",
-      "goal_name": "Geo expansion research: 500 fully qualified agency & B2B-service leads with client-overflow signals across SA/QA/KW/NZ/TW/HK/SG/PL/DE/PT/JP/US/CA/AE",
+      "goal_id": "goal-351910cc04",
+      "goal_name": "Geo expansion research stretch: second 500 fully qualified agency & B2B-service leads (combined bar 1000 with goal-c909b8b270)",
       "metric": "qualified_social_leads",
       "operator": "ge",
       "owner_id": "outbound",
-      "run_status": "blocked",
-      "stage": "ACT",
+      "run_status": "running",
+      "stage": "DECIDE",
       "target": 500,
-      "updated_at": "2026-08-25T04:38:10.645160+00:00"
+      "updated_at": "2026-08-25T04:42:00.640224+00:00"
     },
-    "last_activity_at": "2026-08-25T04:38:10.645160+00:00",
-    "last_sync_at": "2026-08-25T04:38:10.697223+00:00",
+    "last_activity_at": "2026-08-25T04:42:00.640224+00:00",
+    "last_sync_at": "2026-08-25T04:42:00.706887+00:00",
     "state": "resting"
   },
   "totals": {
@@ -3640,10 +3655,10 @@
     "evidence": 13060,
     "goals_abandoned": 39,
     "goals_achieved": 161,
-    "goals_active": 32,
-    "goals_total": 237,
-    "hypotheses": 77,
+    "goals_active": 33,
+    "goals_total": 238,
+    "hypotheses": 78,
     "memory_claims": 5,
-    "runs": 260
+    "runs": 261
   }
 }
