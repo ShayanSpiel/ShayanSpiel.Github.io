@@ -1492,18 +1492,18 @@
     },
     {
       "created_at": "2026-08-14T21:52:27.077779+00:00",
-      "goal_status": "active",
+      "goal_status": "abandoned",
       "id": "goal-booked-calls-primary-20260815",
-      "latest_activity_at": "2026-08-16T19:52:54.422185+00:00",
+      "latest_activity_at": "2026-08-25T12:53:25.561381+00:00",
       "metric": "booked_calls",
       "name": "3 booked calls per day",
       "operator": "ge",
       "owner_id": "director",
       "parent_id": null,
-      "run_status": "blocked",
+      "run_status": "completed",
       "stage": "EVALUATE",
       "target": 3,
-      "updated_at": "2026-08-16T19:52:54.421189+00:00"
+      "updated_at": "2026-08-25T12:53:25.561381+00:00"
     },
     {
       "created_at": "2026-08-14T21:56:34.516762+00:00",
@@ -3568,7 +3568,7 @@
       "created_at": "2026-08-25T03:36:22.640727+00:00",
       "goal_status": "active",
       "id": "goal-c909b8b270",
-      "latest_activity_at": "2026-08-25T12:29:33.687729+00:00",
+      "latest_activity_at": "2026-08-25T12:45:12.537189+00:00",
       "metric": "qualified_social_leads",
       "name": "Geo expansion research: 500 fully qualified agency & B2B-service leads with client-overflow signals across SA/QA/KW/NZ/TW/HK/SG/PL/DE/PT/JP/US/CA/AE",
       "operator": "ge",
@@ -3577,7 +3577,7 @@
       "run_status": "blocked",
       "stage": "ACT",
       "target": 500,
-      "updated_at": "2026-08-25T12:29:33.685397+00:00"
+      "updated_at": "2026-08-25T12:45:12.534830+00:00"
     },
     {
       "created_at": "2026-08-25T04:41:58.300748+00:00",
@@ -3608,7 +3608,7 @@
     "run_status": "blocked",
     "stage": "ACT",
     "target": 500,
-    "updated_at": "2026-08-25T12:29:33.687729+00:00"
+    "updated_at": "2026-08-25T12:45:12.537189+00:00"
   },
   "northstar": {
     "goal_id": "goal-northstar-sales-weekly-v1",
@@ -3628,7 +3628,7 @@
       "run_id": "run-ca33270fb5",
       "run_status": "blocked",
       "stage": "ACT",
-      "updated_at": "2026-08-25T12:29:33.687729+00:00"
+      "updated_at": "2026-08-25T12:45:12.537189+00:00"
     },
     "heartbeat": {
       "business_value": null,
@@ -3643,19 +3643,19 @@
       "run_status": "blocked",
       "stage": "ACT",
       "target": 500,
-      "updated_at": "2026-08-25T12:29:33.687729+00:00"
+      "updated_at": "2026-08-25T12:45:12.537189+00:00"
     },
-    "last_activity_at": "2026-08-25T12:29:33.687729+00:00",
-    "last_sync_at": "2026-08-25T12:29:33.743331+00:00",
+    "last_activity_at": "2026-08-25T12:53:25.561381+00:00",
+    "last_sync_at": "2026-08-25T12:55:17.663841+00:00",
     "state": "running"
   },
   "totals": {
     "approvals": 250,
-    "decisions": 863,
-    "evidence": 13148,
-    "goals_abandoned": 39,
+    "decisions": 864,
+    "evidence": 13164,
+    "goals_abandoned": 40,
     "goals_achieved": 161,
-    "goals_active": 33,
+    "goals_active": 32,
     "goals_total": 238,
     "hypotheses": 78,
     "memory_claims": 5,

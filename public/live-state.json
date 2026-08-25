@@ -7,7 +7,7 @@
     "run_id": "run-ca33270fb5",
     "run_status": "blocked",
     "stage": "ACT",
-    "updated_at": "2026-08-25T12:29:33.687729+00:00"
+    "updated_at": "2026-08-25T12:45:12.537189+00:00"
   },
   "heartbeat": {
     "business_value": null,
@@ -22,10 +22,10 @@
     "run_status": "blocked",
     "stage": "ACT",
     "target": 500,
-    "updated_at": "2026-08-25T12:29:33.687729+00:00"
+    "updated_at": "2026-08-25T12:45:12.537189+00:00"
   },
-  "last_activity_at": "2026-08-25T12:29:33.687729+00:00",
-  "last_sync_at": "2026-08-25T12:29:33.743331+00:00",
+  "last_activity_at": "2026-08-25T12:53:25.561381+00:00",
+  "last_sync_at": "2026-08-25T12:55:17.663841+00:00",
   "northstar": {
     "goal_id": "goal-northstar-sales-weekly-v1",
     "goal_name": "Northstar: close 1 sale per week",
@@ -38,11 +38,11 @@
   "state": "running",
   "totals": {
     "approvals": 250,
-    "decisions": 863,
-    "evidence": 13148,
-    "goals_abandoned": 39,
+    "decisions": 864,
+    "evidence": 13164,
+    "goals_abandoned": 40,
     "goals_achieved": 161,
-    "goals_active": 33,
+    "goals_active": 32,
     "goals_total": 238,
     "hypotheses": 78,
     "memory_claims": 5,
