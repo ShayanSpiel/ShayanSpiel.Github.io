@@ -696,18 +696,18 @@
     },
     {
       "created_at": "2026-08-12T01:04:19.765764+00:00",
-      "goal_status": "paused",
+      "goal_status": "abandoned",
       "id": "goal-tts-voice-contract-20260812",
-      "latest_activity_at": "2026-08-24T03:23:32.789372+00:00",
+      "latest_activity_at": "2026-08-25T02:52:34.917926+00:00",
       "metric": "acceptance_tests_passed",
       "name": "Multi-provider TTS fallback chain + definitive masculine narration contract + video order readiness",
       "operator": "eq",
       "owner_id": "system-improvement",
       "parent_id": null,
-      "run_status": "blocked",
+      "run_status": "completed",
       "stage": "ACT",
       "target": true,
-      "updated_at": "2026-08-24T03:23:32.789372+00:00"
+      "updated_at": "2026-08-25T02:52:34.917926+00:00"
     },
     {
       "created_at": "2026-08-12T02:03:10.620846+00:00",
@@ -756,18 +756,18 @@
     },
     {
       "created_at": "2026-08-12T14:27:08.413082+00:00",
-      "goal_status": "paused",
+      "goal_status": "abandoned",
       "id": "goal-buffer-graphql-direct-v2-20260812",
-      "latest_activity_at": "2026-08-24T03:23:41.956833+00:00",
+      "latest_activity_at": "2026-08-25T02:52:13.046732+00:00",
       "metric": "acceptance_tests_passed",
       "name": "Enable direct Buffer publishing for Threads and YouTube Shorts",
       "operator": "eq",
       "owner_id": "system-improvement",
       "parent_id": null,
-      "run_status": "blocked",
+      "run_status": "completed",
       "stage": "ACT",
       "target": true,
-      "updated_at": "2026-08-24T03:23:41.956833+00:00"
+      "updated_at": "2026-08-25T02:52:13.046732+00:00"
     },
     {
       "created_at": "2026-08-12T14:33:22.007825+00:00",
@@ -820,18 +820,18 @@
       "created_at": "2026-08-12T14:46:23.315615+00:00",
       "display_title": "Grow qualified visits and service leads",
       "display_title_fa": "بازدید هدفمند و درخواست خدمات رو بیشتر کنیم",
-      "goal_status": "active",
+      "goal_status": "abandoned",
       "id": "goal-content-growth-operations-v1-20260812",
-      "latest_activity_at": "2026-08-24T03:32:45.032982+00:00",
+      "latest_activity_at": "2026-08-25T02:52:45.101598+00:00",
       "metric": "all_children_achieved",
       "name": "Operate the content growth program toward 200 daily visits and 10 daily services leads",
       "operator": "eq",
       "owner_id": "director",
       "parent_id": null,
-      "run_status": "waiting",
+      "run_status": "completed",
       "stage": "OBSERVE",
       "target": true,
-      "updated_at": "2026-08-24T03:32:44.999235+00:00"
+      "updated_at": "2026-08-25T02:51:50.944541+00:00"
     },
     {
       "business_value": "The company needs evidence about which content creates visits and leads.",
@@ -856,7 +856,7 @@
       "created_at": "2026-08-12T14:46:37.502499+00:00",
       "goal_status": "achieved",
       "id": "goal-content-first-live-package-v1-20260812",
-      "latest_activity_at": "2026-08-24T03:23:50.459552+00:00",
+      "latest_activity_at": "2026-08-25T02:51:58.448951+00:00",
       "metric": "published_items",
       "name": "Prepare and dispatch the first quality-gated Threads and YouTube Shorts package",
       "operator": "ge",
@@ -884,18 +884,18 @@
     },
     {
       "created_at": "2026-08-12T15:13:50.459935+00:00",
-      "goal_status": "paused",
+      "goal_status": "abandoned",
       "id": "goal-design-template-driven-batch-v1-20260812",
-      "latest_activity_at": "2026-08-12T15:18:24.964374+00:00",
+      "latest_activity_at": "2026-08-25T02:52:45.101598+00:00",
       "metric": "acceptance_tests_passed",
       "name": "Make the Design Department render title-led themed Batch 1 social and Shorts variants",
       "operator": "eq",
       "owner_id": "system-improvement",
       "parent_id": "goal-content-growth-operations-v1-20260812",
-      "run_status": "blocked",
+      "run_status": "completed",
       "stage": "ACT",
       "target": true,
-      "updated_at": "2026-08-12T15:18:24.964374+00:00"
+      "updated_at": "2026-08-25T02:52:45.101598+00:00"
     },
     {
       "created_at": "2026-08-12T15:18:56.697712+00:00",
@@ -959,18 +959,18 @@
     },
     {
       "created_at": "2026-08-12T17:02:13.139400+00:00",
-      "goal_status": "paused",
+      "goal_status": "abandoned",
       "id": "goal-campaign-scene-source-alignment-v1-20260812",
-      "latest_activity_at": "2026-08-24T03:23:50.459552+00:00",
+      "latest_activity_at": "2026-08-25T02:51:58.448951+00:00",
       "metric": "acceptance_tests_passed",
       "name": "Bind campaign narration and motion scenes to one current SpielOS source",
       "operator": "eq",
       "owner_id": "system-improvement",
       "parent_id": "goal-content-first-live-package-v1-20260812",
-      "run_status": "blocked",
+      "run_status": "completed",
       "stage": "ACT",
       "target": true,
-      "updated_at": "2026-08-24T03:23:50.459552+00:00"
+      "updated_at": "2026-08-25T02:51:58.448951+00:00"
     },
     {
       "created_at": "2026-08-12T18:54:38.563122+00:00",
@@ -3265,9 +3265,9 @@
     },
     {
       "created_at": "2026-08-21T11:31:29.439500+00:00",
-      "goal_status": "active",
+      "goal_status": "paused",
       "id": "goal-c1ca47658d",
-      "latest_activity_at": "2026-08-21T11:32:15.219359+00:00",
+      "latest_activity_at": "2026-08-25T02:51:51.014358+00:00",
       "metric": "booked_calls",
       "name": "Solutions expansion: department AI-automation use cases plus 14 software automation pages",
       "operator": "ge",
@@ -3276,7 +3276,7 @@
       "run_status": "blocked",
       "stage": "DECIDE",
       "target": 1,
-      "updated_at": "2026-08-21T11:32:15.218340+00:00"
+      "updated_at": "2026-08-25T02:51:51.014358+00:00"
     },
     {
       "created_at": "2026-08-21T22:27:37.119024+00:00",
@@ -3310,10 +3310,10 @@
     },
     {
       "created_at": "2026-08-22T17:17:25.340801+00:00",
-      "current_value": 1683,
+      "current_value": 1712,
       "goal_status": "active",
       "id": "goal-87a4572a0f",
-      "latest_activity_at": "2026-08-24T13:43:27.512744+00:00",
+      "latest_activity_at": "2026-08-24T14:50:20.263951+00:00",
       "metric": "qualified_social_leads",
       "name": "Research pipeline: grow fully verified English lead pool to 2000 (continuous - don't stop)",
       "operator": "ge",
@@ -3322,22 +3322,22 @@
       "run_status": "blocked",
       "stage": "DECIDE",
       "target": 2500,
-      "updated_at": "2026-08-24T13:43:27.509436+00:00"
+      "updated_at": "2026-08-24T14:50:20.261939+00:00"
     },
     {
       "created_at": "2026-08-23T14:41:35.284821+00:00",
-      "goal_status": "proposed",
+      "goal_status": "abandoned",
       "id": "goal-908df6b29f",
-      "latest_activity_at": "2026-08-23T14:41:35.298933+00:00",
+      "latest_activity_at": "2026-08-25T02:52:49.477912+00:00",
       "metric": "acceptance_tests_passed",
       "name": "Package Lead Researcher as standalone installable lead-magnet repo (ShayanSpiel/Lead-Researcher)",
       "operator": "ge",
       "owner_id": "system-improvement",
       "parent_id": null,
-      "run_status": "awaiting_approval",
+      "run_status": "completed",
       "stage": "DECIDE",
       "target": 3,
-      "updated_at": "2026-08-23T14:41:35.298070+00:00"
+      "updated_at": "2026-08-25T02:52:49.477912+00:00"
     },
     {
       "created_at": "2026-08-23T19:49:05.948053+00:00",
@@ -3503,6 +3503,81 @@
       "stage": "ACT",
       "target": 1,
       "updated_at": "2026-08-24T04:06:50.735184+00:00"
+    },
+    {
+      "created_at": "2026-08-25T02:48:43.423959+00:00",
+      "goal_status": "active",
+      "id": "goal-northstar-sales-weekly-v1",
+      "latest_activity_at": "2026-08-25T02:51:40.797628+00:00",
+      "metric": "sales",
+      "name": "Northstar: close 1 sale per week",
+      "operator": "ge",
+      "owner_id": "director",
+      "parent_id": null,
+      "run_status": "blocked",
+      "stage": "DECIDE",
+      "target": 1,
+      "updated_at": "2026-08-25T02:48:44.383341+00:00"
+    },
+    {
+      "created_at": "2026-08-25T02:51:12.400524+00:00",
+      "goal_status": "active",
+      "id": "goal-support-reply-5",
+      "latest_activity_at": "2026-08-25T02:51:36.426849+00:00",
+      "metric": "reply_rate",
+      "name": "Outbound reply rate >= 5%",
+      "operator": "ge",
+      "owner_id": "outbound",
+      "parent_id": "goal-northstar-sales-weekly-v1",
+      "run_status": "blocked",
+      "stage": "DECIDE",
+      "target": 0.05,
+      "updated_at": "2026-08-25T02:51:36.426133+00:00"
+    },
+    {
+      "created_at": "2026-08-25T02:51:29.432031+00:00",
+      "goal_status": "active",
+      "id": "goal-support-funnel-quality",
+      "latest_activity_at": "2026-08-25T02:51:36.956740+00:00",
+      "metric": "funnel_reports",
+      "name": "Weekly outbound funnel quality: 100 emails/day, delivery >=95%, open >=60%, click >=40%",
+      "operator": "ge",
+      "owner_id": "analytics",
+      "parent_id": "goal-northstar-sales-weekly-v1",
+      "run_status": "blocked",
+      "stage": "ACT",
+      "target": 7,
+      "updated_at": "2026-08-25T02:51:36.955984+00:00"
+    },
+    {
+      "created_at": "2026-08-25T02:51:40.130403+00:00",
+      "goal_status": "active",
+      "id": "goal-support-wizard-leads",
+      "latest_activity_at": "2026-08-25T02:51:40.797628+00:00",
+      "metric": "attributed_conversions",
+      "name": "Apply-wizard leads: 5/day (35/week) via apply_submitted",
+      "operator": "ge",
+      "owner_id": "analytics",
+      "parent_id": "goal-northstar-sales-weekly-v1",
+      "run_status": "blocked",
+      "stage": "ACT",
+      "target": 35,
+      "updated_at": "2026-08-25T02:51:40.797167+00:00"
+    },
+    {
+      "created_at": "2026-08-25T03:36:22.640727+00:00",
+      "goal_status": "active",
+      "id": "goal-c909b8b270",
+      "latest_activity_at": "2026-08-25T03:36:25.495124+00:00",
+      "metric": "qualified_social_leads",
+      "name": "Geo expansion research: 500 fully qualified agency & B2B-service leads with client-overflow signals across SA/QA/KW/NZ/TW/HK/SG/PL/DE/PT/JP/US/CA/AE",
+      "operator": "ge",
+      "owner_id": "outbound",
+      "parent_id": null,
+      "run_status": "running",
+      "stage": "DECIDE",
+      "target": 500,
+      "updated_at": "2026-08-25T03:36:25.494547+00:00"
     }
   ],
   "heartbeat": {
@@ -3510,15 +3585,15 @@
     "business_value_fa": null,
     "display_title": null,
     "display_title_fa": null,
-    "goal_id": "goal-87a4572a0f",
-    "goal_name": "Research pipeline: grow fully verified English lead pool to 2000 (continuous - don't stop)",
+    "goal_id": "goal-c909b8b270",
+    "goal_name": "Geo expansion research: 500 fully qualified agency & B2B-service leads with client-overflow signals across SA/QA/KW/NZ/TW/HK/SG/PL/DE/PT/JP/US/CA/AE",
     "metric": "qualified_social_leads",
     "operator": "ge",
     "owner_id": "outbound",
-    "run_status": "blocked",
+    "run_status": "running",
     "stage": "DECIDE",
-    "target": 2500,
-    "updated_at": "2026-08-24T13:43:27.512744+00:00"
+    "target": 500,
+    "updated_at": "2026-08-25T03:36:25.495124+00:00"
   },
   "northstar": {
     "goal_id": "goal-booked-calls-primary-20260815",
@@ -3531,44 +3606,44 @@
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-22T17:17:25.340801+00:00",
-      "goal_id": "goal-87a4572a0f",
-      "goal_name": "Research pipeline: grow fully verified English lead pool to 2000 (continuous - don't stop)",
+      "created_at": "2026-08-25T03:36:22.640727+00:00",
+      "goal_id": "goal-c909b8b270",
+      "goal_name": "Geo expansion research: 500 fully qualified agency & B2B-service leads with client-overflow signals across SA/QA/KW/NZ/TW/HK/SG/PL/DE/PT/JP/US/CA/AE",
       "owner_id": "outbound",
-      "run_id": "run-9ff4b879f6",
-      "run_status": "blocked",
+      "run_id": "run-ca33270fb5",
+      "run_status": "running",
       "stage": "DECIDE",
-      "updated_at": "2026-08-24T13:43:27.512744+00:00"
+      "updated_at": "2026-08-25T03:36:25.495124+00:00"
     },
     "heartbeat": {
       "business_value": null,
       "business_value_fa": null,
       "display_title": null,
       "display_title_fa": null,
-      "goal_id": "goal-87a4572a0f",
-      "goal_name": "Research pipeline: grow fully verified English lead pool to 2000 (continuous - don't stop)",
+      "goal_id": "goal-c909b8b270",
+      "goal_name": "Geo expansion research: 500 fully qualified agency & B2B-service leads with client-overflow signals across SA/QA/KW/NZ/TW/HK/SG/PL/DE/PT/JP/US/CA/AE",
       "metric": "qualified_social_leads",
       "operator": "ge",
       "owner_id": "outbound",
-      "run_status": "blocked",
+      "run_status": "running",
       "stage": "DECIDE",
-      "target": 2500,
-      "updated_at": "2026-08-24T13:43:27.512744+00:00"
+      "target": 500,
+      "updated_at": "2026-08-25T03:36:25.495124+00:00"
     },
-    "last_activity_at": "2026-08-24T13:43:27.512744+00:00",
-    "last_sync_at": "2026-08-24T13:43:28.468801+00:00",
-    "state": "running"
+    "last_activity_at": "2026-08-25T03:36:25.495124+00:00",
+    "last_sync_at": "2026-08-25T03:36:25.538318+00:00",
+    "state": "resting"
   },
   "totals": {
     "approvals": 250,
-    "decisions": 841,
-    "evidence": 12972,
-    "goals_abandoned": 33,
+    "decisions": 846,
+    "evidence": 13007,
+    "goals_abandoned": 39,
     "goals_achieved": 161,
-    "goals_active": 29,
-    "goals_total": 232,
-    "hypotheses": 76,
+    "goals_active": 32,
+    "goals_total": 237,
+    "hypotheses": 77,
     "memory_claims": 5,
-    "runs": 255
+    "runs": 260
   }
 }
