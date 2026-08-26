@@ -7,7 +7,7 @@
     "run_id": "run-6e7c6fb412",
     "run_status": "waiting",
     "stage": "EVALUATE",
-    "updated_at": "2026-08-26T13:41:38.783921+00:00"
+    "updated_at": "2026-08-26T14:45:52.266960+00:00"
   },
   "heartbeat": {
     "business_value": null,
@@ -22,10 +22,10 @@
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 1,
-    "updated_at": "2026-08-26T13:41:38.783921+00:00"
+    "updated_at": "2026-08-26T14:45:52.266960+00:00"
   },
-  "last_activity_at": "2026-08-26T13:45:33.113755+00:00",
-  "last_sync_at": "2026-08-26T13:45:33.298683+00:00",
+  "last_activity_at": "2026-08-26T14:45:52.266960+00:00",
+  "last_sync_at": "2026-08-26T14:45:52.520776+00:00",
   "northstar": {
     "goal_id": "goal-apply-single-viewport-20260826",
     "goal_name": "Apply page compaction: single-viewport wizard (title + description + wizard + small footer line with prefer-a-call), zero step-to-step resize on mobile and desktop",
@@ -37,15 +37,15 @@
   },
   "state": "running",
   "totals": {
-    "approvals": 253,
-    "decisions": 893,
-    "evidence": 13439,
+    "approvals": 257,
+    "decisions": 906,
+    "evidence": 13500,
     "goals_abandoned": 40,
-    "goals_achieved": 163,
+    "goals_achieved": 165,
     "goals_active": 34,
-    "goals_total": 242,
+    "goals_total": 244,
     "hypotheses": 79,
     "memory_claims": 5,
-    "runs": 265
+    "runs": 270
   }
 }
