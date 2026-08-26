@@ -2827,7 +2827,6 @@
     },
     {
       "created_at": "2026-08-19T17:16:37.304959+00:00",
-      "current_value": 0.0,
       "goal_status": "active",
       "id": "goal-3fd23da75c",
       "latest_activity_at": "2026-08-21T19:08:52.710437+00:00",
@@ -3568,7 +3567,7 @@
       "created_at": "2026-08-25T03:36:22.640727+00:00",
       "goal_status": "active",
       "id": "goal-c909b8b270",
-      "latest_activity_at": "2026-08-25T22:26:47.160778+00:00",
+      "latest_activity_at": "2026-08-26T12:39:11.566877+00:00",
       "metric": "qualified_social_leads",
       "name": "Geo expansion research: 500 fully qualified agency & B2B-service leads with client-overflow signals across SA/QA/KW/NZ/TW/HK/SG/PL/DE/PT/JP/US/CA/AE",
       "operator": "ge",
@@ -3577,7 +3576,7 @@
       "run_status": "blocked",
       "stage": "ACT",
       "target": 500,
-      "updated_at": "2026-08-25T22:26:47.156060+00:00"
+      "updated_at": "2026-08-26T12:39:11.559859+00:00"
     },
     {
       "created_at": "2026-08-25T04:41:58.300748+00:00",
@@ -3596,18 +3595,19 @@
     },
     {
       "created_at": "2026-08-25T22:19:53.550305+00:00",
+      "current_value": 0.0,
       "goal_status": "active",
       "id": "goal-8d01b54d9b",
-      "latest_activity_at": "2026-08-25T22:20:13.873813+00:00",
+      "latest_activity_at": "2026-08-26T13:41:38.783921+00:00",
       "metric": "booked_calls",
       "name": "Lead-gen-signal batch: 18 signal-verified contacts, enrich+verify ALL first, then one Brevo send",
       "operator": "ge",
       "owner_id": "outbound",
       "parent_id": null,
-      "run_status": "blocked",
-      "stage": "DECIDE",
+      "run_status": "waiting",
+      "stage": "EVALUATE",
       "target": 1,
-      "updated_at": "2026-08-25T22:20:13.872602+00:00"
+      "updated_at": "2026-08-26T13:41:38.780483+00:00"
     },
     {
       "created_at": "2026-08-25T22:52:04.937838+00:00",
@@ -3638,6 +3638,21 @@
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-25T23:13:32.500746+00:00"
+    },
+    {
+      "created_at": "2026-08-26T13:03:25.908244+00:00",
+      "goal_status": "achieved",
+      "id": "goal-client-delivery-groundwork-v1",
+      "latest_activity_at": "2026-08-26T13:45:33.113755+00:00",
+      "metric": "acceptance_tests_passed",
+      "name": "Client Delivery groundwork: register activepieces/google-drive/google-sheets Connections and department method skill",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "parent_id": null,
+      "run_status": "completed",
+      "stage": "OBSERVE",
+      "target": true,
+      "updated_at": "2026-08-26T13:45:33.108773+00:00"
     }
   ],
   "heartbeat": {
@@ -3645,15 +3660,15 @@
     "business_value_fa": null,
     "display_title": null,
     "display_title_fa": null,
-    "goal_id": "goal-apply-single-viewport-20260826",
-    "goal_name": "Apply page compaction: single-viewport wizard (title + description + wizard + small footer line with prefer-a-call), zero step-to-step resize on mobile and desktop",
+    "goal_id": "goal-8d01b54d9b",
+    "goal_name": "Lead-gen-signal batch: 18 signal-verified contacts, enrich+verify ALL first, then one Brevo send",
     "metric": "booked_calls",
     "operator": "ge",
-    "owner_id": "director",
-    "run_status": "blocked",
-    "stage": "DECIDE",
+    "owner_id": "outbound",
+    "run_status": "waiting",
+    "stage": "EVALUATE",
     "target": 1,
-    "updated_at": "2026-08-25T22:52:10.788248+00:00"
+    "updated_at": "2026-08-26T13:41:38.783921+00:00"
   },
   "northstar": {
     "goal_id": "goal-apply-single-viewport-20260826",
@@ -3666,44 +3681,44 @@
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-25T22:52:04.937838+00:00",
-      "goal_id": "goal-apply-single-viewport-20260826",
-      "goal_name": "Apply page compaction: single-viewport wizard (title + description + wizard + small footer line with prefer-a-call), zero step-to-step resize on mobile and desktop",
-      "owner_id": "director",
-      "run_id": "run-c7344d9057",
-      "run_status": "blocked",
-      "stage": "DECIDE",
-      "updated_at": "2026-08-25T22:52:10.788248+00:00"
+      "created_at": "2026-08-25T22:19:53.550305+00:00",
+      "goal_id": "goal-8d01b54d9b",
+      "goal_name": "Lead-gen-signal batch: 18 signal-verified contacts, enrich+verify ALL first, then one Brevo send",
+      "owner_id": "outbound",
+      "run_id": "run-6e7c6fb412",
+      "run_status": "waiting",
+      "stage": "EVALUATE",
+      "updated_at": "2026-08-26T13:41:38.783921+00:00"
     },
     "heartbeat": {
       "business_value": null,
       "business_value_fa": null,
       "display_title": null,
       "display_title_fa": null,
-      "goal_id": "goal-apply-single-viewport-20260826",
-      "goal_name": "Apply page compaction: single-viewport wizard (title + description + wizard + small footer line with prefer-a-call), zero step-to-step resize on mobile and desktop",
+      "goal_id": "goal-8d01b54d9b",
+      "goal_name": "Lead-gen-signal batch: 18 signal-verified contacts, enrich+verify ALL first, then one Brevo send",
       "metric": "booked_calls",
       "operator": "ge",
-      "owner_id": "director",
-      "run_status": "blocked",
-      "stage": "DECIDE",
+      "owner_id": "outbound",
+      "run_status": "waiting",
+      "stage": "EVALUATE",
       "target": 1,
-      "updated_at": "2026-08-25T22:52:10.788248+00:00"
+      "updated_at": "2026-08-26T13:41:38.783921+00:00"
     },
-    "last_activity_at": "2026-08-25T23:13:32.502457+00:00",
-    "last_sync_at": "2026-08-25T23:13:32.722353+00:00",
+    "last_activity_at": "2026-08-26T13:45:33.113755+00:00",
+    "last_sync_at": "2026-08-26T13:45:33.298683+00:00",
     "state": "running"
   },
   "totals": {
-    "approvals": 251,
-    "decisions": 876,
-    "evidence": 13253,
+    "approvals": 253,
+    "decisions": 893,
+    "evidence": 13439,
     "goals_abandoned": 40,
-    "goals_achieved": 162,
+    "goals_achieved": 163,
     "goals_active": 34,
-    "goals_total": 241,
+    "goals_total": 242,
     "hypotheses": 79,
     "memory_claims": 5,
-    "runs": 264
+    "runs": 265
   }
 }
