@@ -191,6 +191,9 @@ const bookingEnabled = /^\/(?:fa\/)?(?:apply|contact)\/?$/.test(Astro.url.pathna
       import AOS from "aos";
       AOS.init({ duration: 550, easing: "ease-out-cubic", once: true, offset: 60 });
       AOS.refresh();
+      // Arm the AOS hiding only after a successful init — see the
+      // html:not(.aos-ready) failsafe in global.css.
+      document.documentElement.classList.add("aos-ready");
 
       // Reveal-fallback: if an animated element is already in the viewport but
       // AOS never fired (e.g. observer flakiness), force it visible so no

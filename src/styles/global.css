@@ -849,3 +849,14 @@ i[class*=" bxs-"] {
 .brief-table-row:last-child {
   border-bottom: none;
 }
+
+/* ---- AOS failsafe (owner incident 2026-08-26): every [data-aos] element
+   ships at opacity:0 from aos.css and only becomes visible when the AOS
+   module runs. If that module ever fails to load or execute, entire page
+   sections stay invisible. Rule: content is VISIBLE by default; hiding is
+   only armed once BaseLayout's script successfully initializes AOS by
+   adding .aos-ready to <html>. No JS = fully rendered page, always. ---- */
+html:not(.aos-ready) [data-aos] {
+  opacity: 1 !important;
+  transform: none !important;
+}

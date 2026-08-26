@@ -237,11 +237,10 @@ export const FOOTER_LINKS = {
     { label: "Pricing", href: "/pricing/" },
     { label: "Apply", href: APPLY_PATH },
     { label: "Partners", href: "/partners/" },
-    { label: "Features", href: "/features/" },
+    { label: "Solutions", href: "/features/" },
     { label: "Live", href: "/live/" },
     { label: "Notes", href: "/notes/" },
     { label: "Founder", href: "/founder/" },
-    { label: "Contact", href: "/contact/" },
   ],
   showcase: [
     { label: "Privacy", href: "#" },
