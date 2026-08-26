@@ -3598,7 +3598,7 @@
       "current_value": 0.0,
       "goal_status": "active",
       "id": "goal-8d01b54d9b",
-      "latest_activity_at": "2026-08-26T14:45:52.266960+00:00",
+      "latest_activity_at": "2026-08-26T16:43:42.380590+00:00",
       "metric": "booked_calls",
       "name": "Lead-gen-signal batch: 18 signal-verified contacts, enrich+verify ALL first, then one Brevo send",
       "operator": "ge",
@@ -3607,7 +3607,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 1,
-      "updated_at": "2026-08-26T14:45:52.265380+00:00"
+      "updated_at": "2026-08-26T16:43:42.379704+00:00"
     },
     {
       "created_at": "2026-08-25T22:52:04.937838+00:00",
@@ -3683,6 +3683,36 @@
       "stage": "OBSERVE",
       "target": 1,
       "updated_at": "2026-08-26T14:37:04.182389+00:00"
+    },
+    {
+      "created_at": "2026-08-26T15:55:16.815130+00:00",
+      "goal_status": "active",
+      "id": "goal-content-copy-simulation-20260826",
+      "latest_activity_at": "2026-08-26T15:57:19.374611+00:00",
+      "metric": "acceptance_tests_passed",
+      "name": "Install specific automation ICP and simulation-first copy workflow without Python prompts",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "parent_id": null,
+      "run_status": "blocked",
+      "stage": "ACT",
+      "target": true,
+      "updated_at": "2026-08-26T15:57:19.373711+00:00"
+    },
+    {
+      "created_at": "2026-08-26T16:45:08.206464+00:00",
+      "goal_status": "achieved",
+      "id": "goal-human-pain-copy-20260826",
+      "latest_activity_at": "2026-08-26T16:48:58.736157+00:00",
+      "metric": "acceptance_tests_passed",
+      "name": "Add human pain capture to copy workflow",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "parent_id": null,
+      "run_status": "completed",
+      "stage": "OBSERVE",
+      "target": true,
+      "updated_at": "2026-08-26T16:48:58.734765+00:00"
     }
   ],
   "heartbeat": {
@@ -3698,7 +3728,7 @@
     "run_status": "waiting",
     "stage": "EVALUATE",
     "target": 1,
-    "updated_at": "2026-08-26T14:45:52.266960+00:00"
+    "updated_at": "2026-08-26T16:43:42.380590+00:00"
   },
   "northstar": {
     "goal_id": "goal-apply-single-viewport-20260826",
@@ -3718,7 +3748,7 @@
       "run_id": "run-6e7c6fb412",
       "run_status": "waiting",
       "stage": "EVALUATE",
-      "updated_at": "2026-08-26T14:45:52.266960+00:00"
+      "updated_at": "2026-08-26T16:43:42.380590+00:00"
     },
     "heartbeat": {
       "business_value": null,
@@ -3733,22 +3763,22 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 1,
-      "updated_at": "2026-08-26T14:45:52.266960+00:00"
+      "updated_at": "2026-08-26T16:43:42.380590+00:00"
     },
-    "last_activity_at": "2026-08-26T14:45:52.266960+00:00",
-    "last_sync_at": "2026-08-26T14:45:52.520776+00:00",
+    "last_activity_at": "2026-08-26T16:48:58.736157+00:00",
+    "last_sync_at": "2026-08-26T16:48:58.933165+00:00",
     "state": "running"
   },
   "totals": {
-    "approvals": 257,
-    "decisions": 906,
-    "evidence": 13500,
+    "approvals": 259,
+    "decisions": 912,
+    "evidence": 13525,
     "goals_abandoned": 40,
-    "goals_achieved": 165,
-    "goals_active": 34,
-    "goals_total": 244,
+    "goals_achieved": 166,
+    "goals_active": 35,
+    "goals_total": 246,
     "hypotheses": 79,
     "memory_claims": 5,
-    "runs": 270
+    "runs": 272
   }
 }
