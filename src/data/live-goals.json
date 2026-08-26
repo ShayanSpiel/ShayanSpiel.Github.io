@@ -3598,7 +3598,7 @@
       "current_value": 0.0,
       "goal_status": "active",
       "id": "goal-8d01b54d9b",
-      "latest_activity_at": "2026-08-26T19:28:50.884813+00:00",
+      "latest_activity_at": "2026-08-26T20:36:01.108305+00:00",
       "metric": "booked_calls",
       "name": "Lead-gen-signal batch: 18 signal-verified contacts, enrich+verify ALL first, then one Brevo send",
       "operator": "ge",
@@ -3607,7 +3607,7 @@
       "run_status": "waiting",
       "stage": "EVALUATE",
       "target": 1,
-      "updated_at": "2026-08-26T19:28:50.882976+00:00"
+      "updated_at": "2026-08-26T20:36:01.104753+00:00"
     },
     {
       "created_at": "2026-08-25T22:52:04.937838+00:00",
@@ -3733,16 +3733,16 @@
       "created_at": "2026-08-26T17:09:13.759925+00:00",
       "goal_status": "active",
       "id": "goal-email-send-resume-20260826",
-      "latest_activity_at": "2026-08-26T19:28:51.479211+00:00",
+      "latest_activity_at": "2026-08-26T20:30:19.909490+00:00",
       "metric": "reply_rate",
       "name": "English outbound send — resumed 2026-08-26",
       "operator": "ge",
       "owner_id": "outbound",
       "parent_id": null,
       "run_status": "waiting",
-      "stage": "ACT",
+      "stage": "EVALUATE",
       "target": 0.3,
-      "updated_at": "2026-08-26T19:28:51.477963+00:00"
+      "updated_at": "2026-08-26T20:30:19.908108+00:00"
     },
     {
       "created_at": "2026-08-26T19:30:14.425057+00:00",
@@ -3758,6 +3758,36 @@
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-26T19:32:30.220821+00:00"
+    },
+    {
+      "created_at": "2026-08-26T19:57:41.133704+00:00",
+      "goal_status": "achieved",
+      "id": "goal-content-significance-automation-20260826",
+      "latest_activity_at": "2026-08-26T19:59:49.326917+00:00",
+      "metric": "acceptance_tests_passed",
+      "name": "Add author lens significance and automation mechanism to content workflow",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "parent_id": null,
+      "run_status": "completed",
+      "stage": "OBSERVE",
+      "target": true,
+      "updated_at": "2026-08-26T19:59:49.323631+00:00"
+    },
+    {
+      "created_at": "2026-08-26T20:23:32.324135+00:00",
+      "goal_status": "achieved",
+      "id": "goal-revert-content-expansion-20260826",
+      "latest_activity_at": "2026-08-26T20:25:32.859605+00:00",
+      "metric": "acceptance_tests_passed",
+      "name": "Revert latest content workflow expansion",
+      "operator": "eq",
+      "owner_id": "system-improvement",
+      "parent_id": null,
+      "run_status": "completed",
+      "stage": "OBSERVE",
+      "target": true,
+      "updated_at": "2026-08-26T20:25:32.857851+00:00"
     }
   ],
   "heartbeat": {
@@ -3765,15 +3795,15 @@
     "business_value_fa": null,
     "display_title": null,
     "display_title_fa": null,
-    "goal_id": "goal-email-send-resume-20260826",
-    "goal_name": "English outbound send — resumed 2026-08-26",
-    "metric": "reply_rate",
+    "goal_id": "goal-8d01b54d9b",
+    "goal_name": "Lead-gen-signal batch: 18 signal-verified contacts, enrich+verify ALL first, then one Brevo send",
+    "metric": "booked_calls",
     "operator": "ge",
     "owner_id": "outbound",
     "run_status": "waiting",
-    "stage": "ACT",
-    "target": 0.3,
-    "updated_at": "2026-08-26T19:28:51.479211+00:00"
+    "stage": "EVALUATE",
+    "target": 1,
+    "updated_at": "2026-08-26T20:36:01.108305+00:00"
   },
   "northstar": {
     "goal_id": "goal-apply-single-viewport-20260826",
@@ -3786,44 +3816,44 @@
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-26T17:09:13.759925+00:00",
-      "goal_id": "goal-email-send-resume-20260826",
-      "goal_name": "English outbound send — resumed 2026-08-26",
+      "created_at": "2026-08-25T22:19:53.550305+00:00",
+      "goal_id": "goal-8d01b54d9b",
+      "goal_name": "Lead-gen-signal batch: 18 signal-verified contacts, enrich+verify ALL first, then one Brevo send",
       "owner_id": "outbound",
-      "run_id": "run-ecec478dcd",
+      "run_id": "run-6e7c6fb412",
       "run_status": "waiting",
-      "stage": "ACT",
-      "updated_at": "2026-08-26T19:28:51.479211+00:00"
+      "stage": "EVALUATE",
+      "updated_at": "2026-08-26T20:36:01.108305+00:00"
     },
     "heartbeat": {
       "business_value": null,
       "business_value_fa": null,
       "display_title": null,
       "display_title_fa": null,
-      "goal_id": "goal-email-send-resume-20260826",
-      "goal_name": "English outbound send — resumed 2026-08-26",
-      "metric": "reply_rate",
+      "goal_id": "goal-8d01b54d9b",
+      "goal_name": "Lead-gen-signal batch: 18 signal-verified contacts, enrich+verify ALL first, then one Brevo send",
+      "metric": "booked_calls",
       "operator": "ge",
       "owner_id": "outbound",
       "run_status": "waiting",
-      "stage": "ACT",
-      "target": 0.3,
-      "updated_at": "2026-08-26T19:28:51.479211+00:00"
+      "stage": "EVALUATE",
+      "target": 1,
+      "updated_at": "2026-08-26T20:36:01.108305+00:00"
     },
-    "last_activity_at": "2026-08-26T19:32:30.223209+00:00",
-    "last_sync_at": "2026-08-26T19:32:30.593267+00:00",
+    "last_activity_at": "2026-08-26T20:36:01.108305+00:00",
+    "last_sync_at": "2026-08-26T20:36:01.874006+00:00",
     "state": "running"
   },
   "totals": {
-    "approvals": 262,
-    "decisions": 917,
-    "evidence": 13632,
+    "approvals": 264,
+    "decisions": 923,
+    "evidence": 13741,
     "goals_abandoned": 41,
-    "goals_achieved": 167,
+    "goals_achieved": 169,
     "goals_active": 36,
-    "goals_total": 249,
+    "goals_total": 251,
     "hypotheses": 79,
     "memory_claims": 5,
-    "runs": 275
+    "runs": 277
   }
 }
