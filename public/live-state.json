@@ -1,31 +1,31 @@
 {
   "current_run": {
-    "created_at": "2026-08-25T22:19:53.550305+00:00",
-    "goal_id": "goal-8d01b54d9b",
-    "goal_name": "Lead-gen-signal batch: 18 signal-verified contacts, enrich+verify ALL first, then one Brevo send",
+    "created_at": "2026-08-26T17:09:13.759925+00:00",
+    "goal_id": "goal-email-send-resume-20260826",
+    "goal_name": "English outbound send — resumed 2026-08-26",
     "owner_id": "outbound",
-    "run_id": "run-6e7c6fb412",
+    "run_id": "run-ecec478dcd",
     "run_status": "waiting",
     "stage": "EVALUATE",
-    "updated_at": "2026-08-26T20:36:01.108305+00:00"
+    "updated_at": "2026-08-26T21:50:14.983148+00:00"
   },
   "heartbeat": {
     "business_value": null,
     "business_value_fa": null,
     "display_title": null,
     "display_title_fa": null,
-    "goal_id": "goal-8d01b54d9b",
-    "goal_name": "Lead-gen-signal batch: 18 signal-verified contacts, enrich+verify ALL first, then one Brevo send",
-    "metric": "booked_calls",
+    "goal_id": "goal-email-send-resume-20260826",
+    "goal_name": "English outbound send — resumed 2026-08-26",
+    "metric": "reply_rate",
     "operator": "ge",
     "owner_id": "outbound",
     "run_status": "waiting",
     "stage": "EVALUATE",
-    "target": 1,
-    "updated_at": "2026-08-26T20:36:01.108305+00:00"
+    "target": 0.3,
+    "updated_at": "2026-08-26T21:50:14.983148+00:00"
   },
-  "last_activity_at": "2026-08-26T20:36:01.108305+00:00",
-  "last_sync_at": "2026-08-26T20:36:01.874006+00:00",
+  "last_activity_at": "2026-08-26T21:52:05.317912+00:00",
+  "last_sync_at": "2026-08-26T21:52:05.569409+00:00",
   "northstar": {
     "goal_id": "goal-apply-single-viewport-20260826",
     "goal_name": "Apply page compaction: single-viewport wizard (title + description + wizard + small footer line with prefer-a-call), zero step-to-step resize on mobile and desktop",
@@ -38,14 +38,14 @@
   "state": "running",
   "totals": {
     "approvals": 264,
-    "decisions": 923,
-    "evidence": 13741,
+    "decisions": 925,
+    "evidence": 13806,
     "goals_abandoned": 41,
-    "goals_achieved": 169,
+    "goals_achieved": 170,
     "goals_active": 36,
-    "goals_total": 251,
-    "hypotheses": 79,
+    "goals_total": 252,
+    "hypotheses": 80,
     "memory_claims": 5,
-    "runs": 277
+    "runs": 278
   }
 }
