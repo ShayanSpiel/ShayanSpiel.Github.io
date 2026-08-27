@@ -860,3 +860,16 @@ html:not(.aos-ready) [data-aos] {
   opacity: 1 !important;
   transform: none !important;
 }
+
+/* Crawler / post-load reveal (owner incident 2026-08-27): AOS ships [data-aos]
+   at opacity:0 and only reveals on scroll, so renderers that capture near the
+   top (Googlebot Live Test) miss below-fold sections. When <html> carries
+   .aos-revealed, every [data-aos] element is forced visible. BaseLayout adds
+   this class immediately for crawlers and shortly after load for all visitors,
+   while the normal scroll animation still plays for humans who reach a section
+   first. */
+html.aos-revealed [data-aos] {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}

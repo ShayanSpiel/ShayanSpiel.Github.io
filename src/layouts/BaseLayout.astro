@@ -195,6 +195,26 @@ const bookingEnabled = /^\/(?:fa\/)?(?:apply|contact)\/?$/.test(Astro.url.pathna
       // html:not(.aos-ready) failsafe in global.css.
       document.documentElement.classList.add("aos-ready");
 
+      // Crawler-safe reveal (owner incident 2026-08-27): AOS keeps below-fold
+      // [data-aos] sections at opacity:0 until they scroll into view.
+      // Googlebot and other renderers often capture the page near the top and
+      // never scroll every section, so their screenshots miss most of the page
+      // (the "simplified / missing sections" symptom seen in Search Console
+      // Live Test). Fix: force-reveal everything for crawlers immediately, and
+      // for all visitors add a post-load failsafe so no section can stay
+      // invisible. Human visitors still get the scroll-in animation for
+      // anything they reach before the failsafe fires.
+      function isCrawler() {
+        try {
+          return /bot|googlebot|bingbot|slurp|duckduckbot|baiduspider|yandexbot|sogou|exabot|facebookexternalhit|linkedinbot|twitterbot|applebot|perplexitybot|claudebot|gptbot|ccbot|bytespider|petalbot|dataforseo/i.test(navigator.userAgent || "");
+        } catch (e) { return false; }
+      }
+      function revealAllAos() {
+        document.documentElement.classList.add("aos-revealed");
+      }
+      if (isCrawler()) {
+        revealAllAos();
+      }
       // Reveal-fallback: if an animated element is already in the viewport but
       // AOS never fired (e.g. observer flakiness), force it visible so no
       // section can ever stay stuck at opacity 0.
@@ -218,7 +238,12 @@ const bookingEnabled = /^\/(?:fa\/)?(?:apply|contact)\/?$/.test(Astro.url.pathna
           revealStuck();
         });
       }
-      window.addEventListener("load", revealStuck);
+      window.addEventListener("load", function () {
+        revealStuck();
+        // Post-load failsafe: guarantee the full page is visible in any render
+        // (crawler or human) that does not scroll through every section.
+        setTimeout(revealAllAos, 2000);
+      });
       window.addEventListener("scroll", queueReveal, { passive: true });
       window.addEventListener("resize", queueReveal, { passive: true });
     </script>
