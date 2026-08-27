@@ -111,31 +111,72 @@ _INSTALLED_DIR = Path(__file__).resolve().parent / "installed"
 # Skills live in two namespaces under .agents/skills/: company/ (harness
 # operation: director, departments, outbound) and website/ (site-bound methods).
 # Resolution is recursive so callers never depend on the namespace layout.
-SKILLS_ROOT = Path(__file__).resolve().parents[2] / "skills"
-COMPANY_SKILLS_SUBROOT = SKILLS_ROOT / "company"
+# Skill discovery: skills live INSIDE the thing that uses them.
+#
+#   company/skills/<id>/SKILL.md                   operator methods (director,
+#                                                  department-runner, system-improvement)
+#   company/departments/<id>/skills/<id>/SKILL.md  department-bound methods
+#   company/departments/_shared/skills/<id>/       shared by departments
+#                                                  (e.g. copywriting-en/fa)
+#
+# Vendored homes may also carry the legacy .agents/skills/{company,website}/
+# layout; those roots are still scanned for backward compatibility.
+
+_PACKAGE_ROOT = Path(__file__).resolve().parents[1]
+_DEPARTMENTS_ROOT = _PACKAGE_ROOT / "departments"
+_OPERATOR_SKILLS_ROOT = _PACKAGE_ROOT / "skills"
+_LEGACY_SKILLS_ROOT = _PACKAGE_ROOT.parents[1] / ".agents" / "skills"
+
+
+def _skill_search_roots() -> list[Path]:
+    roots = [root for root in (
+        _OPERATOR_SKILLS_ROOT,
+        _DEPARTMENTS_ROOT / "_shared" / "skills",
+        *sorted(_DEPARTMENTS_ROOT.glob("*/skills")),
+    ) if root.is_dir()]
+    if _LEGACY_SKILLS_ROOT.is_dir():
+        roots.extend(sorted(_LEGACY_SKILLS_ROOT.glob("*")))
+    return roots
 
 
 def skill_files() -> list[Path]:
-    """Every installed SKILL.md across all skill namespaces."""
+    """Every installed SKILL.md across all skill locations."""
 
-    if not SKILLS_ROOT.is_dir():
-        return []
-    return sorted(SKILLS_ROOT.glob("*/*/SKILL.md"))
+    found: list[Path] = []
+    seen: set[str] = set()
+    for root in _skill_search_roots():
+        for path in sorted(root.glob("*/SKILL.md")):
+            key = str(path)
+            if key not in seen:
+                seen.add(key)
+                found.append(path)
+    return found
 
 
 def known_skill_ids() -> set[str]:
-    """Skill ids (directory names owning a SKILL.md) in any namespace."""
+    """Skill ids (directory names owning a SKILL.md) anywhere."""
 
     return {path.parent.name for path in skill_files()}
 
 
 def known_company_skill_ids() -> set[str]:
-    """Skill ids under skills/company/ — the only ones Departments may bind."""
+    """Skill ids Departments may bind — every discovered skill.
 
-    root = COMPANY_SKILLS_SUBROOT
-    if not root.is_dir():
-        return set()
-    return {path.parent.name for path in sorted(root.glob("*/SKILL.md"))}
+    Departments own their methods, so the historical company/website
+    namespace split no longer exists; all discoverable skills are bindable.
+    """
+
+    return known_skill_ids()
+
+
+def find_skill_dir(skill_id: str) -> Path | None:
+    """Locate one skill directory by id across all discovery roots."""
+
+    for root in _skill_search_roots():
+        candidate = root / skill_id
+        if (candidate / "SKILL.md").is_file():
+            return candidate
+    return None
 
 
 def installed_agents_dir() -> Path:
@@ -158,13 +199,22 @@ def _load_installed_agents() -> dict[str, AgentSpec]:
         agent_id = str(payload.get("id") or "").strip()
         if not agent_id:
             continue
+        skill_ids = payload.get("skill_ids")
+        if skill_ids is None:  # schema 1 compatibility
+            skill_ids = payload.get("skills") or ()
+        produces = payload.get("produces")
+        if produces is None:  # schema 1 compatibility
+            produces = payload.get("evidence_kinds") or ("artifact",)
+        permissions = payload.get("permissions")
+        if permissions is None:
+            permissions = ["read_strategy", "write_evidence", *(
+                f"use_connection:{item}" for item in (payload.get("connections") or ()))]
         values[agent_id] = AgentSpec(
             id=agent_id,
             description=str(payload.get("description") or agent_id),
-            skill_ids=tuple(str(item) for item in (payload.get("skill_ids") or ())),
-            permissions=tuple(str(item) for item in (
-                payload.get("permissions") or ("read_strategy", "write_evidence"))),
-            produces=tuple(str(item) for item in (payload.get("produces") or ("artifact",))),
+            skill_ids=tuple(str(item) for item in skill_ids),
+            permissions=tuple(str(item) for item in permissions),
+            produces=tuple(str(item) for item in produces),
         )
     return values
 

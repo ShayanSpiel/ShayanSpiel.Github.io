@@ -22,7 +22,7 @@ from .templates import expand_brief_workflows, infer_template
 COMPANY_ROOT = Path(__file__).resolve().parents[1]
 DEPARTMENTS_ROOT = COMPANY_ROOT / "departments"
 AGENTS_INSTALLED_ROOT = COMPANY_ROOT / "agents" / "installed"
-REPO_ROOT = COMPANY_ROOT.parents[1]
+REPO_ROOT = COMPANY_ROOT.parent
 
 _ID_RE = re.compile(r"^[a-z][a-z0-9_]*$")
 _AGENT_ID_RE = re.compile(r"^[a-z][a-z0-9_-]*$")
@@ -241,16 +241,14 @@ def validate_department_spec(spec: dict[str, Any]) -> list[str]:
     if not normalized["agent_ids"]:
         defects.append("no agent_ids")
     from ..agents import AGENTS, agents as installed_agents
-    from ..agents import known_company_skill_ids, known_skill_ids
+    from ..agents import known_skill_ids
     from ..connections import connections as installed_connections
     known_agents = set(installed_agents()) | {
         item["id"] for item in normalized.get("agents") or []
     }
-    # Two skill namespaces exist under .agents/skills/ (company/ and website/).
-    # Resolution is recursive, but Departments may only bind company skills —
-    # website skills (seo, analytics, spielos-ui, ...) belong to the website.
+    # Skills live inside the departments that use them (plus operator skills
+    # under company/skills/); every discovered skill is department-bindable.
     known_skills = known_skill_ids()
-    company_skills = known_company_skill_ids()
     known_connections = set(installed_connections())
     explicit_agent_ids = {
         str(item.get("id") or "") for item in (spec.get("agents") or [])
@@ -259,14 +257,8 @@ def validate_department_spec(spec: dict[str, Any]) -> list[str]:
         defects.append(f"agent {agent_id} is built-in and cannot be redefined")
 
     def skill_defect(owner: str, skill_id: str) -> str | None:
-        # Departments may only bind company-namespace skills; website skills
-        # are out of bounds for installable packages.
         if skill_id not in known_skills:
             return f"{owner} references unknown skill {skill_id}"
-        if skill_id not in company_skills:
-            return (
-                f"{owner} references website-bound skill {skill_id}; "
-                "departments may only bind skills under .agents/skills/company/")
         return None
 
     for agent in normalized.get("agents") or []:

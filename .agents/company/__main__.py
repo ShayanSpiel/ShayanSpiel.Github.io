@@ -20,6 +20,8 @@ DEFAULT_DB = PROJECT_ROOT / ".spielos" / "state" / "company.sqlite"
 def build_parser():
     parser = argparse.ArgumentParser(prog="python3 -m company")
     parser.add_argument("--db", default=str(DEFAULT_DB))
+    parser.add_argument("--version", action="store_true",
+                        help="print the spielos version and exit")
     commands = parser.add_subparsers(dest="command", required=True)
     departments_parser = commands.add_parser("departments")
     departments_parser.add_argument("--json", action="store_true")
@@ -31,6 +33,10 @@ def build_parser():
                       help="single-department appliance: spine only, no example departments, no website skills")
     init.add_argument("--department", action="append", default=[],
                       help="with --minimal: vendor this department from templates (repeatable)")
+    init.add_argument("-y", "--yes", action="store_true",
+                      help="non-interactive: accept defaults, never prompt")
+    init.add_argument("--json", action="store_true",
+                      help="print the machine-readable receipt instead of the human card")
     add_cmd = commands.add_parser("add", help="install a department bundle (.sdep) or built-in id into this home")
     add_cmd.add_argument("source", help="path/to.bundle.sdep, bundle dir, or built-in department id")
     add_cmd.add_argument("--force", action="store_true")
@@ -135,6 +141,13 @@ def build_parser():
     runner_commands = runner.add_subparsers(dest="runner_command", required=True)
     tick = runner_commands.add_parser("tick"); tick.add_argument("goal_id", nargs="?"); tick.add_argument("--max-advances", type=int, default=100)
     watch = runner_commands.add_parser("watch"); watch.add_argument("goal_id", nargs="?"); watch.add_argument("--interval", type=float, default=2.0); watch.add_argument("--max-ticks", type=int)
+    wake = runner_commands.add_parser("wake", help="sleep and emit deterministic Director wake events for one Goal")
+    wake.add_argument("goal_id")
+    wake.add_argument("--every", type=float, default=600.0,
+                      help="seconds between wake events (default: 600)")
+    wake.add_argument("--instruction", default="Continue the Goal cycle and handle its next actionable work.")
+    wake.add_argument("--at", help="one wake at an ISO-8601 timestamp; then exit")
+    wake.add_argument("--max-wakes", type=int)
     start = runner_commands.add_parser("start"); start.add_argument("--interval", type=float, default=2.0)
     start.add_argument("--json", action="store_true")
     runner_commands.add_parser("enable")
@@ -230,21 +243,24 @@ def _runtime_mode(args) -> str | None:
 
 
 def main(argv=None):
+    argv = list(sys.argv[1:] if argv is None else argv)
+    if "--version" in argv or "-V" in argv:
+        # Checked before argparse: required subcommands would reject a bare
+        # --version otherwise.
+        from .runtime.config import VERSION
+        print(f"spielos {VERSION}")
+        return 0
     args = build_parser().parse_args(argv)
     mode = _runtime_mode(args)
     runtime = Runtime(args.db, readonly=(mode == "read")) if mode else None
     exit_code = 0
     try:
         if args.command == "init":
-            from .runtime.bootstrap import scaffold
-            receipt = scaffold(Path(args.dir).expanduser(), force=args.force,
-                               minimal=args.minimal,
-                               departments=args.department or None)
-            print(f"SpielOS harness scaffolded at {receipt['root']} "
-                  f"({receipt['files_written']} files)")
-            for step in receipt["next_steps"]:
-                print(f"  - {step}")
-            return 0
+            from .runtime.onboard import run_init
+            return run_init(dir=args.dir, force=args.force,
+                            minimal=args.minimal,
+                            departments=args.department or None,
+                            assume_yes=args.yes, as_json=args.json)
         if args.command == "add":
             from .runtime.export import add_department
             receipt = add_department(args.source, force=args.force)
@@ -258,7 +274,10 @@ def main(argv=None):
         if args.command == "refresh":
             from .runtime.export import refresh_home
             receipt = refresh_home(force=True)
-            print(json.dumps(receipt, indent=2))
+            if getattr(args, "json", False):
+                print(json.dumps(receipt, indent=2))
+            else:
+                print(render_refresh(receipt))
             return 0
         if args.command == "agent" and args.agent_command == "compile":
             from .runtime.agent_compile import compile_agent
@@ -389,13 +408,22 @@ def main(argv=None):
             if args.runner_command == "tick":
                 output = runner.tick(args.goal_id, args.max_advances)
             elif args.runner_command == "watch":
-                # The daemon's watch cycle delivers pending notifications on
-                # every tick so they do not accumulate unseen while it is on.
-                from .runtime.notifications import deliver_pending
+                # The daemon reports pending attention but never acknowledges
+                # it. Only a host that actually displays an exact id may mark
+                # that notification delivered.
+                from .runtime.notifications import pending_notifications
                 for result in runner.watch(args.interval, args.goal_id, args.max_ticks):
-                    delivered = deliver_pending(runtime.store)
-                    print(json.dumps({**result, "notifications_delivered": delivered},
+                    pending = len(pending_notifications(runtime.store))
+                    print(json.dumps({**result, "notifications_pending": pending},
                                      ensure_ascii=False, default=str), flush=True)
+                return 0
+            elif args.runner_command == "wake":
+                for event in runner.wake(
+                        args.goal_id, every_seconds=args.every,
+                        instruction=args.instruction, at=args.at,
+                        max_wakes=args.max_wakes,
+                        runner_status=lambda: RunnerService(PROJECT_ROOT, Path(args.db)).status()):
+                    print(json.dumps(event, ensure_ascii=False, default=str), flush=True)
                 return 0
             else:
                 service = RunnerService(PROJECT_ROOT, Path(args.db))
@@ -703,6 +731,8 @@ def _render_default(args, output) -> str:
     projection: they are machine views or runtime plumbing.
     """
     command = args.command
+    if command == "refresh":
+        return render_refresh(output)
     if command == "departments":
         return render_departments(output)
     if command == "strategy":
@@ -815,6 +845,17 @@ def render_notification_ack(item):
              f"- Kind: `{item['kind']}`",
              f"- Goal: `{item['goal_id']}`",
              f"- Status: `{item['status']}`"]
+    return "\n".join(lines) + "\n"
+
+
+def render_refresh(value):
+    """Card for `company refresh` — the update step after `pipx upgrade`."""
+    lines = ["# SpielOS home refreshed", "",
+             f"- Refreshed files: `{value.get('refreshed_files', 0)}`",
+             "- Preserved: strategy, assets, departments, installed agents, "
+             "config.user.json, .spielos/ state"]
+    lines += ["", "Confirm with `PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=.agents "
+              "python3 -B -m company status`."]
     return "\n".join(lines) + "\n"
 
 

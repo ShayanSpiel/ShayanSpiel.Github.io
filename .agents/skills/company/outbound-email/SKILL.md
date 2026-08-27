@@ -159,7 +159,7 @@ Example shape:
   assets/                    # approved channel templates
 .spielos/.env                # secrets + local config (gitignored)
 .spielos/data/outbound/      # operational campaign inputs (gitignored)
-  leads.xlsx                 # lead database (EMAIL_LIST_PATH)
+  # Lead DB (EMAIL_LIST_PATH) = Desktop canonical SPIELOS_MASTER_LEADS_v4.xlsx, sheet "Master Leads"
 .spielos/state/outbound/      # ignored ledgers and domain data
 .spielos/artifacts/outbound/  # previews and reports
 ```
@@ -237,4 +237,4 @@ Bounce events auto-suppress in the master; a bounced address never re-enters
 the queue.
 
 Lead file flow: staging drops → bounded lead-research workflow → master workbook
-(`.spielos/data/outbound/leads.xlsx`). Sources are tagged for cohort diagnosis.
+(`/Users/shayan/Desktop/Spiel Logos/Outbound/SPIELOS_MASTER_LEADS_v4.xlsx (sheet "Master Leads")`). Sources are tagged for cohort diagnosis.

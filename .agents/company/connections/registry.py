@@ -53,6 +53,29 @@ _CONNECTIONS = {
              "list_entries", "notes"),
             ("opencode",),
         ),
+        ConnectionSpec(
+            "activepieces",
+            "Activepieces flow building through the active OpenCode host Activepieces "
+            "MCP: create/update/validate/publish flows, read runs. Client Delivery "
+            "builds both real client workflows and labeled demo workflows here.",
+            ("list_flows", "create_flow", "update_flow", "validate_flow",
+             "publish_flow", "read_run", "retry_run"),
+            ("opencode",),
+        ),
+        ConnectionSpec(
+            "google-drive",
+            "Google Drive organization for Client Delivery orders (lean per-order "
+            "folders, real vs demo separation) through the host Google Drive MCP.",
+            ("create_folder", "upload_file", "list_files", "share"),
+            ("opencode",),
+        ),
+        ConnectionSpec(
+            "google-sheets",
+            "Google Sheets order registry and delivery trackers for Client "
+            "Delivery through the host Google Sheets MCP.",
+            ("create_spreadsheet", "append_row", "read_rows", "update_row"),
+            ("opencode",),
+        ),
     )
 }
 

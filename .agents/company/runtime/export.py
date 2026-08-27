@@ -5,7 +5,7 @@ A bundle is a directory (or a ``.tar.gz`` of one) containing::
 
     manifest.json          id, version, files[] with sha256, requires
     department/**          the whole departments/<id>/ folder
-    skills/company/**      every company-namespace skill the workflows bind
+    skills/company/**      every skill the workflows bind (flat skills/<id>/)
     README.md              human summary
 
 Bundles never contain strategy, assets, credentials, or run state — those
@@ -93,7 +93,7 @@ def export_department(department_id: str, out_dir: Path | None = None) -> dict:
                 "which is not installed; install it first")
         for path in sorted(skill_dir.rglob("*")):
             if path.is_file() and "__pycache__" not in path.parts:
-                _emit(path, f"skills/company/{skill_id}/{path.relative_to(skill_dir)}")
+                _emit(path, f"skills/{skill_id}/{path.relative_to(skill_dir)}")
 
     # Connections this department declares (names only; credentials stay local).
     connections = sorted(set(__import__("re").findall(
@@ -121,14 +121,9 @@ def export_department(department_id: str, out_dir: Path | None = None) -> dict:
 
 
 def _find_skill_dir(skill_id: str) -> Path | None:
-    from .paths import skills_root
+    from ..agents import find_skill_dir as _locate
 
-    root = skills_root()
-    for namespace in ("company", ""):
-        candidate = root / namespace / skill_id if namespace else root / skill_id
-        if candidate.is_dir():
-            return candidate
-    return None
+    return _locate(skill_id)
 
 
 def add_department(source: str, *, force: bool = False) -> dict:
@@ -196,11 +191,12 @@ def _install_bundle_dir(bundle: Path, *, force: bool) -> dict:
     department_id = manifest["id"]
     home = _home_agents_dir()
 
-    # Skills first so validation sees them.
-    skills_src = bundle / "skills" / "company"
+    # Skills first so validation sees them. Bundled skills install into the
+    # shared department-skills shelf (methods used across departments).
+    skills_src = bundle / "skills"
     installed_skills: list[str] = []
     if skills_src.is_dir():
-        skills_dst = home / "skills" / "company"
+        skills_dst = home / "company" / "departments" / "_shared" / "skills"
         for skill_dir in sorted(skills_src.iterdir()):
             if skill_dir.is_dir():
                 shutil.copytree(skills_src / skill_dir.name,
@@ -276,20 +272,24 @@ def refresh_home(*, force: bool = True) -> dict:
     _sync(spine / "runtime", home / "company" / "runtime")
     _sync(spine / "evals", home / "company" / "evals")
     _sync(spine / "connections", home / "company" / "connections")
+    _sync(spine / "agents", home / "company" / "agents",
+          preserve={"installed"})
+    _sync(spine / "skills", home / "company" / "skills")
+    # Note: the contract test suite deliberately does NOT ship to homes.
+    # It validates this product repository's packaging layout and belongs
+    # to the source checkout and CI. Homes verify through company status,
+    # catalog, and their departments' own evals.
     for top_level in spine.glob("*.py"):
         shutil.copy2(top_level, home / "company" / top_level.name)
         refreshed.append(str(home / "company" / top_level.name))
 
-    skills_src = templates / "agents" / "skills" / "company"
-    if skills_src.is_dir():
-        _sync(skills_src, home / "skills" / "company")
-
     for name in ("opencode", "codex"):
-        src = templates / name
+        src = templates / "hosts" / name
         if src.is_dir():
             _sync(src, home.parent / ("." + name),
                   preserve=set())
 
     return {"refreshed_files": len(refreshed),
             "preserved": ["strategy/", "assets/", "departments/",
-                          "agents/", "config.user.json", ".spielos/"]}
+                          "agents/installed/", "config.user.json",
+                          ".spielos/"]}

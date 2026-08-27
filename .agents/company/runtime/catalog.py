@@ -11,12 +11,13 @@ from .registry import departments as installed_departments
 from .strategy import strategy_kernel_summary
 
 COMPANY_ROOT = Path(__file__).resolve().parents[1]
-SKILLS_ROOT = COMPANY_ROOT.parent / "skills"
 
 
 def _skills():
+    from ..agents import skill_files
+
     values = []
-    for path in sorted(SKILLS_ROOT.glob("*/*/SKILL.md")):
+    for path in sorted(skill_files()):
         name, description = path.parent.name, ""
         for line in path.read_text().splitlines()[1:20]:
             if line.startswith("name:"):

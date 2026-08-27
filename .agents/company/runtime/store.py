@@ -464,18 +464,38 @@ class Store:
 
     @staticmethod
     def _repair_attention_states(con: sqlite3.Connection) -> None:
-        """Keep only attention that matches the run's current suspension."""
+        """Keep only attention that matches the run's current suspension.
+
+        This repair runs once per process per database file on Store open.
+        It closes pending actionable notifications that no longer have a
+        matching active-state run, EXCEPT ``approval_required`` notifications
+        that belong to any cycle of a goal with an ``awaiting_approval`` run
+        (not just the latest cycle).  The broader match prevents the repair
+        from silencing a long-parked approval when the goal has multiple
+        cycles — the notification's run_id points at the *parking* cycle,
+        but the latest-cycle-only subquery can miss it.
+        """
 
         marks = ",".join("?" for _ in ACTIONABLE_NOTIFICATION_KINDS)
         con.execute(f"""UPDATE notifications AS n
             SET status='delivered',delivered_at=COALESCE(delivered_at,?)
             WHERE n.status='pending' AND n.kind IN ({marks}) AND NOT EXISTS (
+                -- Standard match: the notification's own cycle is still in
+                -- a state that justifies this kind of notification.
                 SELECT 1 FROM goals g JOIN cycles c ON c.id=n.run_id
                 WHERE g.id=n.goal_id AND g.goal_status='active' AND (
                     (c.run_status='awaiting_approval' AND n.kind='approval_required') OR
                     (c.run_status='blocked' AND n.kind IN ('blocked','action_required')) OR
                     (c.run_status='failed' AND n.kind='failed')
                 )
+            ) AND NOT EXISTS (
+                -- Broader match for approval_required: any cycle of this goal
+                -- is still awaiting_approval, so the notification must stay
+                -- visible regardless of which cycle created it.
+                SELECT 1 FROM goals g2 JOIN cycles c2 ON c2.goal_id=g2.id
+                WHERE g2.id=n.goal_id AND n.kind='approval_required'
+                  AND g2.goal_status='active'
+                  AND c2.run_status='awaiting_approval'
             )""", (now(), *ACTIONABLE_NOTIFICATION_KINDS))
 
     @staticmethod

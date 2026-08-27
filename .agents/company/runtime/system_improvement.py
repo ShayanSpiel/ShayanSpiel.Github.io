@@ -221,7 +221,7 @@ class SystemImprovement(GoalHandler):
         results = []
         allowed = {("department", "list"), ("catalog",), ("departments",)}
         environment = {**os.environ, "PYTHONDONTWRITEBYTECODE": "1",
-                       "PYTHONPATH": ".agents"}
+                       "PYTHONPATH": "."}
         with tempfile.TemporaryDirectory() as directory:
             acceptance_db = os.path.join(directory, "company.sqlite")
             for command in commands:

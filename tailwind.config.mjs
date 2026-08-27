@@ -53,6 +53,7 @@ export default {
       borderRadius: {
         sm: "var(--radius-sm)",
         md: "var(--radius-md)",
+        full: "9999px",
       },
       boxShadow: {
         panel: "var(--shadow-panel)",

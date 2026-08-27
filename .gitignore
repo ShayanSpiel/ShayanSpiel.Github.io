@@ -57,3 +57,9 @@ Thumbs.db
 dist-build/
 
 .spielos/.env.*
+
+# Runtime databases at repo root — never commit (PII / company state)
+company.db
+company.sqlite
+company.sqlite-*
+company.db-*

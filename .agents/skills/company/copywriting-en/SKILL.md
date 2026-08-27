@@ -1,111 +1,54 @@
 ---
 name: copywriting-en
-description: Write clear, compact English content for the canonical SpielOS ICP from one customer-relevant idea.
+description: Simulation-first English copy with human pain capture for the canonical SpielOS ICP.
 ---
 
-# SpielOS English copywriting
+# English copywriting
 
-Read `../../../company/strategy/icp.md` and `../../../company/strategy/voice.md`.
+Read these authorities before writing:
 
-## Brief
+- `.agents/company/strategy/icp.md`
+- `.agents/company/strategy/positioning.md`
+- `.agents/company/strategy/voice.md`
 
-Use only:
+Do not copy their rules into a brief or another skill.
 
-- reader
-- customer moment
-- one idea
-- desired result
-- intent (`value`, `proof`, or `conversion`)
-- spielos relevance (one or two sentences: where the supervised-workflow role lands)
-- optional proof
+## Input
 
-Internal work is evidence, not the topic. Do not write for developers, AI
-builders, or people interested in our operating machinery.
+Use one reader, one concrete work situation, one idea, desired result, intent, relevant proof, and platform. The reader and situation must match one ICP segment. Context, familiarity, and relevance outrank any formula.
 
-## Write
+## Method
 
-1. Open with one sharp statement the reader understands immediately.
-2. Explain it in one short paragraph or a short list.
-3. Connect SpielOS only when the connection is natural.
-4. Add a CTA only when the post earns one.
-5. Remove everything that does not serve the one idea.
+1. **Simulation:** start with the maximum world, narrow to the minimum focus, and preserve the complete work sequence. Record what happens, why it matters, what changes, what does not, constraints, second-order effects, contradiction, numbers, and ICP relevance. Do not write content yet.
+2. **Human reality:** preserve the scene as its own artifact. Record what the person checks, copies, switches between, waits for, fixes, and remembers. Keep the systems, documents, handoffs, decisions, and felt difficulty. Do not turn the scene into a headline or summary.
+3. **Discovery:** derive the useful insight, proof, decision rule, or warning from the simulation and human reality. Add meaning without deleting, compressing, or renaming the scene. Keep `human_reality` and `discovery` separate.
+4. **Draft:** require the simulation, human reality, and discovery as separate inputs. Let the first paragraph come from the observed scene. Start with concrete actions and felt difficulty, then explain the discovery and mechanism. No platform mechanics. For Shorts, write the whole narration before scenes.
+5. **Platform edit:** adapt the draft to the actual platform and creative. Preserve the scene and the derived insight. Change length, pacing, and formatting only when needed. Do not rewrite the argument into a generic hook, explanation, proof, and CTA sequence. Hooks, rhythm, technical hooks, punchlines, narration, proof, and CTA are optional tools.
 
-Use direct, conversational English. Prefer the buyer's words: staff time,
-missed details, slow replies, repeated work, delivery speed, cost, capacity,
-and errors. Explain `workflow` through the real work around it.
+## Readiness and platform judgment
 
-Avoid internal terms such as batch, campaign, hook, review gate, Department,
-Artifact, runtime, harness rule, approval record, creative signature, or
-content dispatch. Avoid generic SaaS claims and theatrical contrast formulas.
+- Demo-ready readers can see the actual mechanism, scope, evidence, and next step. Show the workflow or exception; do not replace a needed demonstration with a numerical headline.
+- Readers who are not ready to buy get useful context and an indirect next step. Do not put the offer in their face.
+- Threads can use short paragraphs, bullets, and a separated link when useful.
+- Shorts need a concise description. Use `Link in bio.` when appropriate. Do not paste a long UTM URL into the description.
+- Match the actual creative. A technical workflow, screen demo, narration, and proof story each need a different edit.
+- Keep claims supported. Do not invent numbers, systems, outcomes, features, or customer stories.
+- Preserve one idea. Cut filler, repetition, generic business language, and internal production terms.
+- Reject the default openings "This is not X", "X is not Y", "The problem is not X", and similar binary contrasts unless the observed moment truly depends on that contrast.
+- Reject an opening that could be written without knowing what the operator actually did.
 
-## Social shape
+## Shorts narration
 
-The useful default is:
-
-- sharp opening
-- one explanation
-- optional bullets
-- optional SpielOS bridge
-- optional CTA
-
-Do not force the same structure when fewer lines are stronger.
-
-Threads:
-
-- Use real paragraph breaks.
-- Put each bullet on its own line.
-- Put a link on its own line after the CTA.
-
-YouTube Shorts:
-
-- Keep the description concise.
-- Write `Link in bio.` when a CTA is needed.
-- Never include a UTM URL in the description.
-
-Every fifth paired social idea uses the canonical SpielOS reminder from
-`voice.md`. It is a short brand reminder, not an internal process report.
-
-## Short-form narration (YouTube Shorts storytelling)
-
-Short-form narration is ONE complete story, never a list of independent
-slides:
-
-1. Write the whole narration first — `narration.script` — covering the
-   conversion arc in order: Hook → Pain/Context → Why it matters → AI/workflow
-   mechanism → SpielOS role → Outcome → CTA. Each scene causes the next.
-2. After the whole story passes `content-story-whole`, split it into the
-   assigned template's scenes (registry.json `scene_control.scenes` keeps the
-   per-archetype order) and lock each scene's delivery `intent`
-   (`question/rising`, `statement/falling`, `command/falling`).
-3. Keep ONE exact narrator persona for the whole campaign. Never write copy
-   that requires a different voice or a silent fallback switch; every scene
-   must sound like the same founder.
+Write one complete story, then pass the whole-story evaluation, then split it into registry scenes. Begin with a recognizable work moment. Use only the arc the story needs: situation, felt friction, consequence, mechanism, SpielOS role, outcome, and an earned next step. One narrator and one voice stay consistent.
 
 ## Final check
 
-- One reader, one moment, one idea.
-- Cold-audience clarity: understandable to someone who has never heard of
-  SpielOS.
-- Concrete buyer language.
-- Natural flow and spacing.
-- No unsupported claim.
-- No literal `\n` or `\r`.
+Before returning copy, ask:
 
-Before a campaign can advance, the judge-enforced rubrics
-(`.agents/company/departments/content/evals.py`) apply:
+- Does the first paragraph preserve a real action sequence from `human_reality`?
+- Does it name what the operator checks, copies, switches between, waits for, fixes, or remembers?
+- Is the `discovery` visible as an explanation after the scene, not a replacement for it?
+- Does the copy sound speakable by a knowledgeable human?
+- Did platform formatting change the argument or invent a hook?
 
-- `content-copy-top10` — the ten ICP-grounded criteria above — `one_reader`,
-  `one_moment`, `one_idea`, `cold_audience_clarity`, `buyer_language`,
-  `sharp_opening`, `honest_claims`, `platform_native`, `flow_brevity`,
-  `fifth_item_reminder` — per item against the brief and both renditions.
-- `content-story-whole` — the six whole-story criteria —
-  `cold_audience_context`, `causal_flow`, `solution_clarity`,
-  `spielos_relevance`, `earned_cta`, `founder_personality` — per item against
-  the COMPLETE narration, BEFORE any template is assigned.
-
-Run them with
-`company eval run content-copy-top10 --payload <campaign>.json` and
-`company eval run content-story-whole --payload <campaign>.json`; a failing
-criterion must be fixed in the copy, never waived.
-
-Return only the final copy unless notes are requested.
+Return the final requested copy or draft. Keep private reasoning private unless the brief asks for the decision log.

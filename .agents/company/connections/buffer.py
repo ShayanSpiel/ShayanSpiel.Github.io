@@ -49,7 +49,7 @@ from ..departments.campaign_contract import (
 
 
 API_URL = "https://api.buffer.com"
-REPO_ROOT = Path(__file__).resolve().parents[3]
+REPO_ROOT = Path(__file__).resolve().parents[2]
 ENV_PATH = REPO_ROOT / ".spielos" / ".env"
 DEFAULT_ORGANIZATION_ID = "62f24e9ed7fef68ddf794937"
 

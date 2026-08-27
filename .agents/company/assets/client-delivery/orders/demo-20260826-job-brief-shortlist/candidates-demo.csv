@@ -1,0 +1,13 @@
+Candidate ID,Full Name,Current Title,Years Experience,Skills,Industry,Location,Work Preference,Salary Expectation GBP,Notice Period,Right to Work UK,Email,Availability,Notes
+C-001,Ava Thompson,Senior Backend Engineer,8,"Python, Django, PostgreSQL, AWS",Software,Manchester,Remote,75000,4 weeks,Yes,ava.t@example.com,Immediate,Strong AWS experience
+C-002,Liam Patel,Frontend Developer,4,"React, TypeScript, CSS",Software,London,Hybrid,55000,2 weeks,Yes,liam.p@example.com,2 weeks,Portfolio strong
+C-003,Sophie Nguyen,Data Scientist,6,"Python, ML, SQL, TensorFlow",Data/AI,Remote,Remote,82000,1 month,Yes,sophie.n@example.com,Immediate,Published 2 papers
+C-004,Oliver Brown,DevOps Engineer,5,"Kubernetes, Terraform, CI/CD",Software,Leeds,On-site,68000,3 weeks,Yes,oliver.b@example.com,1 month,Certifications pending
+C-005,Emma Wilson,Marketing Manager,7,"SEO, Content, HubSpot",Marketing,Bristol,Hybrid,60000,4 weeks,Yes,emma.w@example.com,Immediate,Led 3 launches
+C-006,Noah Khan,Full Stack Engineer,3,"Node, React, MongoDB",Software,Birmingham,Remote,50000,2 weeks,Yes,noah.k@example.com,Immediate,Junior-mid
+C-007,Grace Lee,Product Designer,5,"Figma, UX, Prototyping",Design,Remote,Remote,70000,3 weeks,Yes,grace.l@example.com,2 weeks,Strong portfolio
+C-008,James Smith,Sales Executive,4,"B2B, CRM, Negotiation",Sales,London,On-site,45000,1 week,Yes,james.s@example.com,Immediate,Exceeded quota
+C-009,Mia Rodriguez,ML Engineer,6,"Python, PyTorch, NLP",Data/AI,Remote,Remote,88000,1 month,No,mia.r@example.com,2 months,Needs visa sponsor
+C-010,Ethan Davis,Backend Engineer,2,"Java, Spring, REST",Software,Glasgow,Hybrid,42000,2 weeks,Yes,ethan.d@example.com,Immediate,Career starter
+C-011,Charlotte Evans,Engineering Manager,10,"Leadership, AWS, Microservices",Software,London,Hybrid,110000,1 month,Yes,charlotte.e@example.com,1 month,Scaled team to 20
+C-012,Daniel Kim,QA Automation Engineer,4,"Selenium, Cypress, Python",Software,Remote,Remote,58000,3 weeks,Yes,daniel.k@example.com,2 weeks,Strong test infra

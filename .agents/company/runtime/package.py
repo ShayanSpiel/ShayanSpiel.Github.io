@@ -5,12 +5,9 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from ..agents import agents as installed_agents
+from ..agents import agents as installed_agents, known_skill_ids
 from ..connections import connections as installed_connections
 from .models import Department, WorkflowSpec, WorkflowStep
-from .paths import skills_root
-
-SKILLS_ROOT = skills_root()
 
 
 def _step(item: WorkflowStep | str) -> dict[str, Any]:
@@ -75,7 +72,7 @@ def validate_package(department: Department) -> list[str]:
         defects.append("no workflows declared")
     agents = set(getattr(department, "agent_ids", ()) or ())
     known_agents = set(installed_agents()) | agents
-    known_skills = {path.parent.name for path in SKILLS_ROOT.glob("*/*/SKILL.md")}
+    known_skills = set(known_skill_ids())
     known_connections = set(installed_connections())
     workflow_ids: set[str] = set()
     for workflow in workflows:

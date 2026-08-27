@@ -43,8 +43,8 @@ const { locale = "en" } = Astro.props;
           <ol class="mt-6 space-y-4">
             {([1, 2, 3] as const).map((n) => (
               <li class="flex items-start gap-3">
-                <span class="font-mono text-2xs font-bold text-primary">0{n}</span>
-                <span class="text-sm leading-relaxed text-muted-foreground">{t(locale, `conversion.apply.thanks.i${n}`)}</span>
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-border bg-primary-soft font-sans text-xs font-bold text-primary" aria-hidden="true">{n}</span>
+                <span class="pt-1 text-sm leading-relaxed text-muted-foreground">{t(locale, `conversion.apply.thanks.i${n}`)}</span>
               </li>
             ))}
           </ol>

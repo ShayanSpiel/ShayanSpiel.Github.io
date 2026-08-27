@@ -1,0 +1,15 @@
+{
+  "id": "workflow-builder",
+  "description": "Builds ActivePieces flows for real and demo orders via the Activepieces host MCP.",
+  "skill_ids": [
+    "client-delivery"
+  ],
+  "permissions": [
+    "read_strategy",
+    "use_connection:activepieces",
+    "write_evidence"
+  ],
+  "produces": [
+    "flow_receipt"
+  ]
+}

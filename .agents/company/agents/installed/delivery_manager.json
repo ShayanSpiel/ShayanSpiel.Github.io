@@ -1,0 +1,20 @@
+{
+  "id": "delivery-manager",
+  "description": "Client Delivery order manager: intake, scoping, folder/registry organization, verification and handoff.",
+  "skill_ids": [
+    "client-delivery"
+  ],
+  "permissions": [
+    "read_strategy",
+    "use_connection:activepieces",
+    "use_connection:google-drive",
+    "use_connection:google-sheets",
+    "write_evidence"
+  ],
+  "produces": [
+    "order_brief",
+    "workflow_spec",
+    "workflow_delivery_record",
+    "demo_delivery_record"
+  ]
+}

@@ -15,6 +15,7 @@ from ..campaign_contract import (
     publication_package,
     validate_campaign,
 )
+# Compatibility export for older callers; rotation itself belongs to Design.
 from ..design.department import _rotation_errors as _design_rotation_errors
 from ...runtime.models import Department, WorkflowSpec, WorkflowStep
 
@@ -29,15 +30,7 @@ VARIATION_FIELDS = ("format", "layout", "theme", "background", "color_role", "al
 SEMANTIC_COLOR_ROLES = {"primary", "accent", "purple", "info", "success", "warning"}
 SEMANTIC_BACKGROUNDS = {"background", "panel", "panel-raised", "panel-strong", "panel-deep"}
 
-PUBLICATION_RECEIPT_CONTRACT = (
-    "dispatch = publish commitment: every accepted dispatch result is a Buffer "
-    "commitment (scheduled or sent), so scheduled == published for the experiment "
-    "loop. A valid publication_receipt requires ok:true, per-item provider post "
-    "ids, and a commitment_type of scheduled or sent; it is FINAL and never "
-    "reverted to reopen dispatch. The next-batch experiment advances on "
-    "commitment while measure/evaluate still use the sent-window evidence; "
-    "measurement never reopens a committed batch."
-)
+PUBLICATION_RECEIPT_CONTRACT = "publication_receipt is final; scheduled or sent is a commitment"
 
 
 def _compact(value: Any) -> str:
@@ -53,13 +46,6 @@ def _variation_signature(idea: str, item: dict[str, Any]) -> str:
 
 
 def _validate_single_campaign(package: dict[str, Any], prior_packages: list[dict[str, Any]] | None = None) -> list[str]:
-    """Return quality-gate errors for one multi-platform ContentPackage.
-
-    The gate intentionally validates a creative *manifest*, not just copy: the
-    package has to name an approved channel rendition, design-system roles, a
-    public final asset, a measurable website destination, and the exact owner
-    note. This makes a duplicate template impossible to advance to Buffer.
-    """
     errors: list[str] = []
     idea = str(package.get("one_idea") or package.get("idea") or "").strip()
     if not idea:
@@ -177,7 +163,6 @@ def _validate_batch(package: dict[str, Any], prior_packages: list[dict[str, Any]
 
 
 def validate_campaign_package(package: dict[str, Any], prior_packages: list[dict[str, Any]] | None = None) -> list[str]:
-    """Validate a campaign through the shared contract, or reject retired shapes."""
     if package.get("schema_version") in COMPATIBLE_SCHEMA_VERSIONS:
         return validate_campaign(package, str(package.get("phase") or "strategy"))
     return [
@@ -187,13 +172,20 @@ def validate_campaign_package(package: dict[str, Any], prior_packages: list[dict
 
 
 def ready_campaign_package(package: dict[str, Any]) -> dict[str, Any]:
-    """Add immutable delivery fields only after the quality gate passes."""
     if package.get("schema_version") not in COMPATIBLE_SCHEMA_VERSIONS:
         raise ValueError(
             "legacy campaign package is retired; migrate to campaign_contract "
             f"schema {CAMPAIGN_SCHEMA_VERSION}")
     if package.get("phase") == "approved":
         return publication_package(package)
+    if package.get("phase") == "strategy":
+        errors = validate_campaign(package, "strategy")
+        if errors:
+            raise ValueError("campaign editorial review is invalid: " + "; ".join(errors))
+        return {"schema_version": CAMPAIGN_SCHEMA_VERSION,
+                "campaign_id": package["campaign_id"], "batch_id": package["batch_id"],
+                "campaign_manifest": package, "quality_gate": "passed",
+                "next_phase": "designed"}
     if package.get("phase") != "rendered":
         raise ValueError("campaign must be rendered before it can enter approval")
     errors = validate_campaign(package, "rendered")
@@ -207,15 +199,6 @@ def ready_campaign_package(package: dict[str, Any]) -> dict[str, Any]:
 
 def _eval_gate_errors(evidence: list[dict[str, Any]], package: dict[str, Any],
                       suite_ids: tuple[str, ...] = ()) -> list[str]:
-    """Require a passing eval_report for every declared eval suite.
-
-    Mechanical validation never reads copy for clarity; the LLM-as-judge
-    eval_report is the copy-quality gate.  A campaign cannot produce
-    campaign_ready without an eval_report evidence (kind eval_report) whose
-    suite_id is declared, whose payload_id matches the batch, and whose
-    overall verdict is pass.  Failures are reported as attention errors that
-    name the failed criteria.
-    """
     errors: list[str] = []
     batch_id = str(package.get("batch_id") or "")
     reports = [item.get("payload") or {} for item in evidence
@@ -224,7 +207,7 @@ def _eval_gate_errors(evidence: list[dict[str, Any]], package: dict[str, Any],
         matches = [report for report in reports if report.get("suite_id") == suite_id]
         if not matches:
             errors.append(
-                f"eval_report for suite '{suite_id}' is required before campaign_ready")
+                f"eval_report for suite '{suite_id}' is required before content_ready")
             continue
         report = matches[-1]
         if report.get("payload_id") != batch_id:
@@ -244,18 +227,9 @@ def _eval_gate_errors(evidence: list[dict[str, Any]], package: dict[str, Any],
 
 class ContentDepartment(EvidenceDepartment, Department):
     id = department_id = "content"
-    version = "3.6.0"
-    description = ("Carries one short customer-first idea through platform-native copy, a judge-enforced "
-                   "LLM-as-judge quality gate (copy suite + whole-story narration suite), Design registry "
-                   "rotation, Design, approval, Buffer delivery, and measurement without exposing "
-                   "production metadata to the writer. Dispatch commits a batch to publish "
-                   "(scheduled == published) and a valid publication receipt is final.")
-    agent_ids = ("content-strategist", "content-writer", "publisher")
-    # Eval suites whose passing eval_report evidence the quality_gate requires.
-    # Suites are defined in departments/content/evals.py (Lego contract: any
-    # department may declare its own suites the same way). The whole-story
-    # suite gates the complete narration before a template can be locked; the
-    # copy suite gates the item brief + both renditions.
+    version = "4.3.0"
+    description = "Preserves simulated work scenes and discoveries through drafting, editorial gate, Design, approval, and delivery."
+    agent_ids = ("content-strategist", "content-writer", "publisher", "video-producer")
     eval_suites = ("content-copy-top10", "content-story-whole")
     production_ready = True
     workflows = (
@@ -290,24 +264,39 @@ class ContentDepartment(EvidenceDepartment, Department):
         ),
         WorkflowSpec(
             "content-campaign",
-            ("Carry five short one-idea customer briefs through native Threads and YouTube renditions, "
-             "Design, one batch approval, Buffer delivery, and measurement. " + PUBLICATION_RECEIPT_CONTRACT),
-            ("strategy", "design_order", "render_handoff", "quality_gate", "approve", "dispatch", "measure", "evaluate"),
-            ("content-strategist", "content-writer", "publisher"), ("copywriting-en", "spielos-ui", "video-creation"),
-            ("publish",), ("campaign_manifest", "design_order", "render_report", "campaign_ready", "publication_receipt", "funnel_report", "optimization_decision"), ("buffer",),
+            "Preserve the work scene and discovery before drafting, then edit for platform, Design, approval, delivery, and measurement. " + PUBLICATION_RECEIPT_CONTRACT,
+            ("simulation", "human_reality", "discovery", "draft", "platform_edit", "quality_gate", "render_handoff", "approve", "dispatch", "measure", "evaluate"),
+            ("content-strategist", "content-writer", "video-producer", "publisher"), ("copywriting-en", "spielos-ui", "video-creation"),
+            ("publish",), ("simulation", "human_reality", "discovery", "content_draft", "campaign_manifest", "design_order", "render_report", "campaign_ready", "publication_receipt", "funnel_report", "optimization_decision"), ("buffer",),
             graph=(
-                WorkflowStep("strategy", "employee", "content-strategist",
+                WorkflowStep("simulation", "employee", "content-strategist",
+                             produces=("simulation",),
+                             skill_ids=("copywriting-en",)),
+                WorkflowStep("human_reality", "employee", "content-strategist",
+                             requires=("simulation",),
+                             produces=("human_reality",),
+                             skill_ids=("copywriting-en",)),
+                WorkflowStep("discovery", "employee", "content-strategist",
+                             requires=("simulation", "human_reality"),
+                             produces=("discovery",),
+                             skill_ids=("copywriting-en",)),
+                WorkflowStep("draft", "employee", "content-writer",
+                             requires=("simulation", "human_reality", "discovery"),
+                             produces=("content_draft",),
+                             skill_ids=("copywriting-en",)),
+                WorkflowStep("platform_edit", "employee", "content-writer",
+                             requires=("content_draft", "human_reality", "discovery"),
                              produces=("campaign_manifest", "design_order"),
                              skill_ids=("copywriting-en",)),
-                WorkflowStep("render_handoff", "employee", "content-strategist",
-                             requires=("design_order",),
-                             produces=("render_report",),
-                             skill_ids=("copywriting-en", "spielos-ui")),
                 WorkflowStep("quality_gate", "machine",
-                             requires=("campaign_manifest", "render_report"),
-                             produces=("campaign_ready",)),
-                WorkflowStep("approve", "approval", requires=("campaign_ready",)),
-                WorkflowStep("dispatch", "connection", requires=("campaign_ready",), produces=("publication_receipt",),
+                             requires=("campaign_manifest",),
+                             produces=("content_ready", "campaign_ready")),
+                WorkflowStep("render_handoff", "employee", "video-producer",
+                             requires=("content_ready", "design_order"),
+                             produces=("render_report",),
+                             skill_ids=("video-creation", "spielos-ui")),
+                WorkflowStep("approve", "approval", requires=("content_ready", "render_report")),
+                WorkflowStep("dispatch", "connection", requires=("content_ready", "render_report"), produces=("publication_receipt",),
                              connection_ids=("buffer",)),
             ),
         ),
@@ -338,32 +327,19 @@ class ContentDepartment(EvidenceDepartment, Department):
 
     def run_machine_step(self, ctx, decision):
         if decision.get("step_id") != "quality_gate":
-            return {"run_status": "blocked", "message": "Unknown content machine step"}
+            return {"run_status": "blocked", "message": "Unknown machine step"}
         evidence = list(ctx.cycle.get("evidence") or ())
         packages = [item.get("payload") or {} for item in evidence
                     if item.get("kind") in {"campaign_manifest", "content_package"}]
         package = packages[-1] if packages else {}
-        if package.get("schema_version") in COMPATIBLE_SCHEMA_VERSIONS:
-            reports = [item.get("payload") or {} for item in evidence if item.get("kind") == "render_report"]
-            if not reports:
-                return {"run_status": "blocked", "message": "Design Department render_report is required",
-                        "attention": {"errors": ["No Design-owned render handoff is attached"]}}
-            report = reports[-1]
-            if report.get("campaign_id") != package.get("campaign_id") or report.get("batch_id") != package.get("batch_id"):
-                return {"run_status": "blocked", "message": "Design handoff identity mismatch",
-                        "attention": {"errors": ["render_report must match campaign_id and batch_id"]}}
         errors = validate_campaign_package(package, packages[:-1])
-        rotation_errors = (
-            _design_rotation_errors(package)
-            if package.get("schema_version") in COMPATIBLE_SCHEMA_VERSIONS
-            else [])
-        all_errors = errors + rotation_errors
-        if all_errors:
-            return {"run_status": "blocked", "message": "Campaign quality gate needs changes", "attention": {"errors": all_errors}}
+        if errors:
+            return {"run_status": "blocked", "message": "Campaign contract failed", "attention": {"errors": errors}}
         eval_errors = _eval_gate_errors(evidence, package, tuple(getattr(self, "eval_suites", ()) or ()))
         if eval_errors:
-            return {"run_status": "blocked", "message": "Campaign quality gate needs changes", "attention": {"errors": eval_errors}}
+            return {"run_status": "blocked", "message": "Content eval failed", "attention": {"errors": eval_errors}}
         ready = ready_campaign_package(package)
-        return {"message": "Campaign quality gate passed", "evidence": [{
-            "kind": "campaign_ready", "source": "content-quality-gate", "validity": "technical_only", "payload": ready,
-        }]}
+        return {"message": "Campaign ready", "evidence": [
+            {"kind": "content_ready", "source": "content-editorial-gate", "validity": "technical_only", "payload": ready},
+            {"kind": "campaign_ready", "source": "content-editorial-gate", "validity": "technical_only", "payload": ready},
+        ]}

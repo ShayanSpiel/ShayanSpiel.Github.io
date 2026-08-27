@@ -64,16 +64,9 @@
         "scopes": ["content", "outbound", "product", "sales"]
       },
       {
-        "id": "policy.voice.one_idea",
+        "id": "policy.voice",
         "source": "strategy/voice.md",
-        "heading": "One idea",
-        "topics": ["content", "voice", "writing"],
-        "scopes": ["content"]
-      },
-      {
-        "id": "policy.voice.copy_shape",
-        "source": "strategy/voice.md",
-        "heading": "Copy shape",
+        "heading": "Company voice",
         "topics": ["content", "voice", "writing"],
         "scopes": ["content"]
       },

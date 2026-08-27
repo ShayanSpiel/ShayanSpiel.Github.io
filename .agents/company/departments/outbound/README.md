@@ -23,7 +23,7 @@ their own scheduler, approval system, or state machine.
 After each dispatched email batch, the sync adapter pushes send/reply/booked-call
 state from the durable send engine into Attio (people matched by the
 `email_addresses` unique key; sent-history notes mirror the goal-7bbd594426
-deployment style). The send engine itself is never touched: leads.xlsx remains
+deployment style). The send engine itself is never touched: the canonical Master Leads (Desktop `SPIELOS_MASTER_LEADS_v4.xlsx`) remains
 the master lead list, SQLite + sent.json remain the durable send authority, and
 the dedupe/approval gates are unchanged.
 
