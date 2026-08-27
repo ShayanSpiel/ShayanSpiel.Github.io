@@ -1,31 +1,31 @@
 {
   "current_run": {
-    "created_at": "2026-08-26T17:09:13.759925+00:00",
-    "goal_id": "goal-email-send-resume-20260826",
-    "goal_name": "English outbound send — resumed 2026-08-26",
-    "owner_id": "outbound",
-    "run_id": "run-ecec478dcd",
-    "run_status": "waiting",
-    "stage": "EVALUATE",
-    "updated_at": "2026-08-26T21:50:14.983148+00:00"
+    "created_at": "2026-08-27T03:26:57.400472+00:00",
+    "goal_id": "goal-98c6827367",
+    "goal_name": "Create Videography Department: humanized demo recording and showcase video pipeline",
+    "owner_id": "system-improvement",
+    "run_id": "run-662bf822a8",
+    "run_status": "running",
+    "stage": "DECIDE",
+    "updated_at": "2026-08-27T03:27:09.264227+00:00"
   },
   "heartbeat": {
     "business_value": null,
     "business_value_fa": null,
     "display_title": null,
     "display_title_fa": null,
-    "goal_id": "goal-email-send-resume-20260826",
-    "goal_name": "English outbound send — resumed 2026-08-26",
-    "metric": "reply_rate",
-    "operator": "ge",
-    "owner_id": "outbound",
-    "run_status": "waiting",
-    "stage": "EVALUATE",
-    "target": 0.3,
-    "updated_at": "2026-08-26T21:50:14.983148+00:00"
+    "goal_id": "goal-98c6827367",
+    "goal_name": "Create Videography Department: humanized demo recording and showcase video pipeline",
+    "metric": "acceptance_tests_passed",
+    "operator": "eq",
+    "owner_id": "system-improvement",
+    "run_status": "running",
+    "stage": "DECIDE",
+    "target": true,
+    "updated_at": "2026-08-27T03:27:09.264227+00:00"
   },
-  "last_activity_at": "2026-08-26T21:52:05.317912+00:00",
-  "last_sync_at": "2026-08-26T21:52:05.569409+00:00",
+  "last_activity_at": "2026-08-27T03:27:09.264227+00:00",
+  "last_sync_at": "2026-08-27T03:27:09.358391+00:00",
   "northstar": {
     "goal_id": "goal-apply-single-viewport-20260826",
     "goal_name": "Apply page compaction: single-viewport wizard (title + description + wizard + small footer line with prefer-a-call), zero step-to-step resize on mobile and desktop",
@@ -38,14 +38,14 @@
   "state": "running",
   "totals": {
     "approvals": 264,
-    "decisions": 925,
-    "evidence": 13806,
-    "goals_abandoned": 41,
+    "decisions": 926,
+    "evidence": 14187,
+    "goals_abandoned": 43,
     "goals_achieved": 170,
-    "goals_active": 36,
-    "goals_total": 252,
-    "hypotheses": 80,
+    "goals_active": 35,
+    "goals_total": 253,
+    "hypotheses": 81,
     "memory_claims": 5,
-    "runs": 278
+    "runs": 280
   }
 }
