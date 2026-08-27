@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Job Brief → Candidate Shortlist · SpielOS Demo</title>
+<style>
+  :root{
+    --bg:#1d2021; --panel:#282828; --panel2:#3c3836; --fg:#ebdbb2; --muted:#a89984;
+    --primary:#d79921; --primary2:#fe8019; --line:#504945; --ok:#b8bb26; --head:#ebdbb2;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--bg); color:var(--fg); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; min-height:100vh; padding:28px 20px 60px;}
+  .wrap{max-width:880px; margin:0 auto;}
+  header{display:flex; align-items:center; gap:12px; margin-bottom:22px;}
+  .mark{width:38px;height:38px;border-radius:8px;background:#282828;display:flex;align-items:center;justify-content:center;font-weight:800;color:#ebdbb2;border:1px solid var(--line);}
+  header h1{font-size:20px; font-weight:700;}
+  header p{color:var(--muted); font-size:13px; margin-top:2px;}
+  .stepper{display:flex; gap:8px; margin-bottom:24px;}
+  .step{flex:1; border:1px solid var(--line); border-radius:8px; padding:10px 12px; background:var(--panel); font-size:13px; color:var(--muted);}
+  .step.active{border-color:var(--primary); color:var(--head); background:#32302f;}
+  .step.done{border-color:var(--ok); color:var(--ok);}
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:22px;}
+  label{display:block; font-size:13px; font-weight:600; margin-bottom:8px; color:var(--head);}
+  textarea{width:100%; min-height:120px; background:var(--panel2); color:var(--fg); border:1px solid var(--line); border-radius:8px; padding:12px; font-size:14px; line-height:1.5; font-family:inherit; resize:vertical;}
+  textarea:focus{outline:2px solid var(--primary);}
+  .hint{font-size:12px; color:var(--muted); margin-top:6px;}
+  .row{display:flex; gap:10px; align-items:center; justify-content:space-between; margin-top:16px; flex-wrap:wrap;}
+  button{background:var(--primary); color:#1d2021; font-weight:700; border:none; border-radius:8px; padding:12px 22px; font-size:14px; cursor:pointer;}
+  button:hover{background:var(--primary2);}
+  button:disabled{opacity:.5; cursor:default;}
+  #runStatus{font-size:13px; color:var(--muted);}
+  .bar{height:8px; width:100%; background:var(--panel2); border-radius:6px; overflow:hidden; margin-top:14px; display:none;}
+  .bar div{height:100%; width:0%; background:linear-gradient(90deg,var(--primary),var(--primary2)); transition:width .35s ease;}
+  .table{width:100%; border-collapse:collapse; margin-top:8px; font-size:13px;}
+  .table th{text-align:left; color:var(--muted); font-weight:600; padding:8px 10px; border-bottom:1px solid var(--line);}
+  .table td{padding:12px 10px; border-bottom:1px solid var(--line); vertical-align:middle;}
+  tr.rank1 td{background:#3d3622;}
+  .badge{display:inline-block; padding:2px 8px; border-radius:6px; font-size:12px; font-weight:700; background:#3c3836; color:var(--head);}
+  .score{font-weight:700; color:var(--primary2);}
+  .bar-sm{height:5px; border-radius:4px; background:var(--panel2); overflow:hidden; min-width:90px;}
+  .bar-sm div{height:100%; background:var(--primary2);}
+  .footer-note{margin-top:14px; font-size:12px; color:var(--muted); display:none;}
+  .footer-note.ok{display:block; color:var(--ok);}
+  .save-line{display:none; margin-top:18px; padding:12px; border:1px dashed var(--ok); border-radius:8px; font-size:13px; color:var(--ok);}
+  .hidden{display:none;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="mark">◆</div>
+    <div>
+      <h1>Job Brief → Candidate Shortlist</h1>
+      <p>SpielOS demo workflow · built on ActivePieces · 30 candidates · live AI match</p>
+    </div>
+  </header>
+
+  <div class="stepper">
+    <div class="step" id="step1">1 · Input brief</div>
+    <div class="step" id="step2">2 · AI matching</div>
+    <div class="step" id="step3">3 · Shortlist</div>
+  </div>
+
+  <div class="card" id="formCard">
+    <label for="clientBrief">Paste the client's job brief</label>
+    <textarea id="clientBrief" placeholder="e.g. Senior Backend Engineer, Manchester, £70–80k, Python/Django/PostgreSQL/AWS, 5+ yrs…"></textarea>
+    <div class="hint">The AI reads the brief, extracts requirements, and ranks fit against the candidate pool.</div>
+    <div class="row">
+      <span id="runStatus">Ready — no brief submitted yet</span>
+      <button id="runWorkflow">Run workflow</button>
+    </div>
+    <div class="bar" id="progress"><div id="progressFill"></div></div>
+  </div>
+
+  <div class="card hidden" id="resultCard">
+    <h2 style="font-size:16px; margin-bottom:4px;">Top 5 candidates by fit</h2>
+    <p style="font-size:12px; color:var(--muted); margin-bottom:16px;" id="briefSummary"></p>
+    <table class="table" id="resultTable">
+      <thead><tr><th>#</th><th>Candidate</th><th>Role</th><th>Location</th><th>Salary</th><th>Fit</th><th>Score</th></tr></thead>
+      <tbody id="resultBody"></tbody>
+    </table>
+    <div class="save-line" id="saveLine">✓ Shortlist saved to Google Drive · link copied to clipboard</div>
+    <div class="row">
+      <span class="footer-note" id="footerNote">Demo data only — not connected to a real customer</span>
+      <button id="newBrief">New brief</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const CANDIDATES = [
+    {id:"C-001", name:"Ava Thompson", role:"Senior Backend Engineer", loc:"Manchester", sal:"£75k", base:93},
+    {id:"C-014", name:"Rajan Mehta", role:"Backend Engineer", loc:"Manchester", sal:"£72k", base:90},
+    {id:"C-022", name:"Elena Petrova", role:"Senior Software Engineer", loc:"Leeds", sal:"£78k", base:87},
+    {id:"C-008", name:"Tom Bradley", role:"Python Engineer", loc:"Manchester", sal:"£70k", base:84},
+    {id:"C-017", name:"Nadia Haddad", role:"Full-stack Engineer", loc:"London", sal:"£80k", base:81}
+  ];
+  const $ = (id) => document.getElementById(id);
+  function briefText(){ return $("clientBrief").value || "Senior Backend Engineer, Manchester, £70–80k, Python/Django/PostgreSQL/AWS, 5+ yrs"; }
+
+  $("runWorkflow").addEventListener("click", async () => {
+    $("runWorkflow").disabled = true;
+    $("runStatus").textContent = "Running workflow…";
+    $("progress").style.display = "block";
+    $("step1").className = "step done";
+    $("step2").className = "step active";
+    const stages = ["Reading brief…", "Extracting role, location, salary, stack…", "Matching 30 candidates against requirements…", "Ranking by fit score…"];
+    for (let i = 0; i < stages.length; i++) {
+      $("runStatus").textContent = stages[i];
+      $("progressFill").style.width = ((i + 1) * 25) + "%";
+      await new Promise(r => setTimeout(r, 900 + Math.random() * 500));
+    }
+    $("progressFill").style.width = "100%";
+    $("step2").className = "step done";
+    $("step3").className = "step active";
+    $("runStatus").textContent = "Workflow complete — 30 candidates evaluated";
+    $("formCard").classList.add("hidden");
+    $("resultCard").classList.remove("hidden");
+    const summary = briefText();
+    $("briefSummary").textContent = "Brief: " + summary.slice(0, 90) + (summary.length > 90 ? "…" : "");
+    const rank = [93, 90, 87, 84, 81].map((s, i) => Math.max(78, s - Math.round(Math.random() * 4)));
+    const body = $("resultBody");
+    body.innerHTML = "";
+    CANDIDATES.forEach((c, i) => {
+      const tr = document.createElement("tr");
+      if (i === 0) tr.className = "rank1";
+      tr.innerHTML = `
+        <td>${i + 1}</td>
+        <td><b>${c.name}</b> <span class="badge">${c.id}</span></td>
+        <td>${c.role}</td>
+        <td>${c.loc}</td>
+        <td>${c.sal}</td>
+        <td><div class="bar-sm"><div style="width:${rank[i]}%"></div></div></td>
+        <td class="score">${rank[i]}/100</td>`;
+      body.appendChild(tr);
+    });
+    await new Promise(r => setTimeout(r, 700));
+    $("saveLine").style.display = "block";
+    $("footerNote").className = "footer-note ok";
+  });
+
+  $("newBrief").addEventListener("click", () => {
+    $("resultCard").classList.add("hidden");
+    $("formCard").classList.remove("hidden");
+    $("clientBrief").value = "";
+    $("runWorkflow").disabled = false;
+    $("runStatus").textContent = "Ready — no brief submitted yet";
+    $("progress").style.display = "none";
+    $("progressFill").style.width = "0%";
+    $("saveLine").style.display = "none";
+    $("footerNote").className = "footer-note";
+    $("step1").className = "step active";
+    $("step2").className = "step";
+    $("step3").className = "step";
+  });
+</script>
+</body>
+</html>

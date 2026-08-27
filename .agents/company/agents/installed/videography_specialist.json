@@ -1,0 +1,14 @@
+{
+  "id": "videography-specialist",
+  "description": "Authors and validates humanistic demo scenarios from Client Delivery order records.",
+  "skill_ids": [
+    "videography"
+  ],
+  "permissions": [
+    "read_strategy",
+    "write_evidence"
+  ],
+  "produces": [
+    "demo_scenario"
+  ]
+}

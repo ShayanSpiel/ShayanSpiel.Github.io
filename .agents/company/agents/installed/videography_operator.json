@@ -1,0 +1,14 @@
+{
+  "id": "videography-operator",
+  "description": "Runs the humanized recorder and renders showcase videos from real browser sessions.",
+  "skill_ids": [
+    "videography"
+  ],
+  "permissions": [
+    "read_strategy",
+    "write_evidence"
+  ],
+  "produces": [
+    "showcase_video"
+  ]
+}

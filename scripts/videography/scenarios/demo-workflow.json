@@ -1,0 +1,23 @@
+{
+  "name": "fixture-job-brief-shortlist",
+  "title": "Job Brief → Candidate Shortlist — humanized browser demo",
+  "seed": 7,
+  "personality": "careful",
+  "viewport": [1440, 900],
+  "steps": [
+    {"type": "goto", "url": "file:///Users/shayan/ShayanSpiel.Github.io/scripts/videography/fixtures/demo-workflow.html"},
+    {"type": "wait", "seconds": 1.2},
+    {"type": "shot", "name": "landing", "wait_after": 0.3},
+    {"type": "read", "text": "Opening the job-brief shortlist workflow."},
+    {"type": "click", "selector": "textarea#clientBrief", "wait_after": 0.5},
+    {"type": "type", "selector": "textarea#clientBrief", "text": "Senior Backend Engineer, Manchester, UK. £70-80k. Python, Django, PostgreSQL, AWS. 5+ years."},
+    {"type": "shot", "name": "typed", "wait_after": 0.3},
+    {"type": "read", "text": "The brief is complete. Running the workflow now."},
+    {"type": "click", "selector": "button#runWorkflow", "wait_after": 1.2},
+    {"type": "wait_for", "selector": "#resultTable", "timeout_ms": 60000, "wait_after": 1.0},
+    {"type": "shot", "name": "result", "wait_after": 0.5},
+    {"type": "read", "text": "AI matching finished. Here is the ranked shortlist."},
+    {"type": "scroll", "selector": "#resultCard", "by": 240},
+    {"type": "wait", "seconds": 2.4}
+  ]
+}
