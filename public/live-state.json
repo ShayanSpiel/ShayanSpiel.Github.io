@@ -1,31 +1,31 @@
 {
   "current_run": {
-    "created_at": "2026-08-27T03:26:57.400472+00:00",
-    "goal_id": "goal-98c6827367",
-    "goal_name": "Create Videography Department: humanized demo recording and showcase video pipeline",
-    "owner_id": "system-improvement",
-    "run_id": "run-662bf822a8",
+    "created_at": "2026-08-25T03:36:22.640727+00:00",
+    "goal_id": "goal-c909b8b270",
+    "goal_name": "Geo expansion research: 500 fully qualified agency & B2B-service leads with client-overflow signals across SA/QA/KW/NZ/TW/HK/SG/PL/DE/PT/JP/US/CA/AE",
+    "owner_id": "outbound",
+    "run_id": "run-ca33270fb5",
     "run_status": "running",
     "stage": "DECIDE",
-    "updated_at": "2026-08-27T03:27:09.264227+00:00"
+    "updated_at": "2026-08-27T09:54:45.992219+00:00"
   },
   "heartbeat": {
     "business_value": null,
     "business_value_fa": null,
     "display_title": null,
     "display_title_fa": null,
-    "goal_id": "goal-98c6827367",
-    "goal_name": "Create Videography Department: humanized demo recording and showcase video pipeline",
-    "metric": "acceptance_tests_passed",
-    "operator": "eq",
-    "owner_id": "system-improvement",
+    "goal_id": "goal-c909b8b270",
+    "goal_name": "Geo expansion research: 500 fully qualified agency & B2B-service leads with client-overflow signals across SA/QA/KW/NZ/TW/HK/SG/PL/DE/PT/JP/US/CA/AE",
+    "metric": "qualified_social_leads",
+    "operator": "ge",
+    "owner_id": "outbound",
     "run_status": "running",
     "stage": "DECIDE",
-    "target": true,
-    "updated_at": "2026-08-27T03:27:09.264227+00:00"
+    "target": 500,
+    "updated_at": "2026-08-27T09:54:45.992219+00:00"
   },
-  "last_activity_at": "2026-08-27T03:27:09.264227+00:00",
-  "last_sync_at": "2026-08-27T03:27:09.358391+00:00",
+  "last_activity_at": "2026-08-27T09:54:45.992219+00:00",
+  "last_sync_at": "2026-08-27T09:54:46.153751+00:00",
   "northstar": {
     "goal_id": "goal-apply-single-viewport-20260826",
     "goal_name": "Apply page compaction: single-viewport wizard (title + description + wizard + small footer line with prefer-a-call), zero step-to-step resize on mobile and desktop",
@@ -37,15 +37,15 @@
   },
   "state": "running",
   "totals": {
-    "approvals": 264,
-    "decisions": 926,
-    "evidence": 14187,
+    "approvals": 265,
+    "decisions": 928,
+    "evidence": 14231,
     "goals_abandoned": 43,
-    "goals_achieved": 170,
-    "goals_active": 35,
+    "goals_achieved": 171,
+    "goals_active": 34,
     "goals_total": 253,
-    "hypotheses": 81,
+    "hypotheses": 96,
     "memory_claims": 5,
-    "runs": 280
+    "runs": 295
   }
 }
