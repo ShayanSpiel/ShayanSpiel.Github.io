@@ -5,9 +5,9 @@
     "goal_name": "Geo expansion research: 500 fully qualified agency & B2B-service leads with client-overflow signals across SA/QA/KW/NZ/TW/HK/SG/PL/DE/PT/JP/US/CA/AE",
     "owner_id": "outbound",
     "run_id": "run-ca33270fb5",
-    "run_status": "running",
-    "stage": "DECIDE",
-    "updated_at": "2026-08-27T09:54:45.992219+00:00"
+    "run_status": "blocked",
+    "stage": "ACT",
+    "updated_at": "2026-08-27T09:54:55.682581+00:00"
   },
   "heartbeat": {
     "business_value": null,
@@ -19,13 +19,13 @@
     "metric": "qualified_social_leads",
     "operator": "ge",
     "owner_id": "outbound",
-    "run_status": "running",
-    "stage": "DECIDE",
+    "run_status": "blocked",
+    "stage": "ACT",
     "target": 500,
-    "updated_at": "2026-08-27T09:54:45.992219+00:00"
+    "updated_at": "2026-08-27T09:54:55.682581+00:00"
   },
-  "last_activity_at": "2026-08-27T09:54:45.992219+00:00",
-  "last_sync_at": "2026-08-27T09:54:46.153751+00:00",
+  "last_activity_at": "2026-08-27T09:54:55.682581+00:00",
+  "last_sync_at": "2026-08-27T22:01:39.812816+00:00",
   "northstar": {
     "goal_id": "goal-apply-single-viewport-20260826",
     "goal_name": "Apply page compaction: single-viewport wizard (title + description + wizard + small footer line with prefer-a-call), zero step-to-step resize on mobile and desktop",
@@ -35,11 +35,11 @@
     "target": 1,
     "updated_at": "2026-08-25T22:52:10.783978+00:00"
   },
-  "state": "running",
+  "state": "resting",
   "totals": {
     "approvals": 265,
-    "decisions": 928,
-    "evidence": 14231,
+    "decisions": 929,
+    "evidence": 14657,
     "goals_abandoned": 43,
     "goals_achieved": 171,
     "goals_active": 34,
