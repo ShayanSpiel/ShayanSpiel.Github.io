@@ -20,7 +20,7 @@
 import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 
-const KEY = "7fa891bc6d8d4e46a848710ea8f65b96";
+const KEY = "9cccdab0b19a4ea799188c5876ff96ac";
 const HOST = "spielos.xyz";
 const KEY_LOCATION = `https://${HOST}/${KEY}.txt`;
 const SITEMAP_URL = "https://spielos.xyz/sitemap.xml";
