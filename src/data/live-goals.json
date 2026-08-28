@@ -3819,6 +3819,21 @@
       "stage": "OBSERVE",
       "target": true,
       "updated_at": "2026-08-27T03:28:38.402048+00:00"
+    },
+    {
+      "created_at": "2026-08-27T23:44:29.825324+00:00",
+      "goal_status": "active",
+      "id": "goal-a340a09dba",
+      "latest_activity_at": "2026-08-27T23:44:29.825324+00:00",
+      "metric": "showcase_videos",
+      "name": "Recruitment demo polish: polished overlay sync, 30-45s pacing, AI voice + copy",
+      "operator": "ge",
+      "owner_id": "videography",
+      "parent_id": null,
+      "run_status": "idle",
+      "stage": "OBSERVE",
+      "target": 1,
+      "updated_at": "2026-08-27T23:44:29.825324+00:00"
     }
   ],
   "heartbeat": {
@@ -3826,15 +3841,15 @@
     "business_value_fa": null,
     "display_title": null,
     "display_title_fa": null,
-    "goal_id": "goal-c909b8b270",
-    "goal_name": "Geo expansion research: 500 fully qualified agency & B2B-service leads with client-overflow signals across SA/QA/KW/NZ/TW/HK/SG/PL/DE/PT/JP/US/CA/AE",
-    "metric": "qualified_social_leads",
+    "goal_id": "goal-a340a09dba",
+    "goal_name": "Recruitment demo polish: polished overlay sync, 30-45s pacing, AI voice + copy",
+    "metric": "showcase_videos",
     "operator": "ge",
-    "owner_id": "outbound",
-    "run_status": "blocked",
-    "stage": "ACT",
-    "target": 500,
-    "updated_at": "2026-08-27T09:54:55.682581+00:00"
+    "owner_id": "videography",
+    "run_status": "idle",
+    "stage": "OBSERVE",
+    "target": 1,
+    "updated_at": "2026-08-27T23:44:29.825324+00:00"
   },
   "northstar": {
     "goal_id": "goal-apply-single-viewport-20260826",
@@ -3847,33 +3862,33 @@
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-25T03:36:22.640727+00:00",
-      "goal_id": "goal-c909b8b270",
-      "goal_name": "Geo expansion research: 500 fully qualified agency & B2B-service leads with client-overflow signals across SA/QA/KW/NZ/TW/HK/SG/PL/DE/PT/JP/US/CA/AE",
-      "owner_id": "outbound",
-      "run_id": "run-ca33270fb5",
-      "run_status": "blocked",
-      "stage": "ACT",
-      "updated_at": "2026-08-27T09:54:55.682581+00:00"
+      "created_at": "2026-08-27T23:44:29.825324+00:00",
+      "goal_id": "goal-a340a09dba",
+      "goal_name": "Recruitment demo polish: polished overlay sync, 30-45s pacing, AI voice + copy",
+      "owner_id": "videography",
+      "run_id": "run-19f2f2c9c8",
+      "run_status": "idle",
+      "stage": "OBSERVE",
+      "updated_at": "2026-08-27T23:44:29.825324+00:00"
     },
     "heartbeat": {
       "business_value": null,
       "business_value_fa": null,
       "display_title": null,
       "display_title_fa": null,
-      "goal_id": "goal-c909b8b270",
-      "goal_name": "Geo expansion research: 500 fully qualified agency & B2B-service leads with client-overflow signals across SA/QA/KW/NZ/TW/HK/SG/PL/DE/PT/JP/US/CA/AE",
-      "metric": "qualified_social_leads",
+      "goal_id": "goal-a340a09dba",
+      "goal_name": "Recruitment demo polish: polished overlay sync, 30-45s pacing, AI voice + copy",
+      "metric": "showcase_videos",
       "operator": "ge",
-      "owner_id": "outbound",
-      "run_status": "blocked",
-      "stage": "ACT",
-      "target": 500,
-      "updated_at": "2026-08-27T09:54:55.682581+00:00"
+      "owner_id": "videography",
+      "run_status": "idle",
+      "stage": "OBSERVE",
+      "target": 1,
+      "updated_at": "2026-08-27T23:44:29.825324+00:00"
     },
-    "last_activity_at": "2026-08-27T09:54:55.682581+00:00",
-    "last_sync_at": "2026-08-27T22:01:39.812816+00:00",
-    "state": "resting"
+    "last_activity_at": "2026-08-27T23:44:29.825324+00:00",
+    "last_sync_at": "2026-08-28T00:37:32.146160+00:00",
+    "state": "running"
   },
   "totals": {
     "approvals": 265,
@@ -3881,10 +3896,10 @@
     "evidence": 14657,
     "goals_abandoned": 43,
     "goals_achieved": 171,
-    "goals_active": 34,
-    "goals_total": 253,
+    "goals_active": 35,
+    "goals_total": 254,
     "hypotheses": 96,
     "memory_claims": 5,
-    "runs": 295
+    "runs": 296
   }
 }
