@@ -1,31 +1,31 @@
 {
   "current_run": {
-    "created_at": "2026-08-28T22:04:59.253283+00:00",
-    "goal_id": "goal-204e09a83b",
-    "goal_name": "Demo — Sales Manager → Dispatch Manager (Freight Inquiry to Quote-Ready Dispatch)",
-    "owner_id": "client_delivery",
-    "run_id": "run-b24b6b764d",
+    "created_at": "2026-08-28T23:03:56.991486+00:00",
+    "goal_id": "goal-e848b19b7e",
+    "goal_name": "Videography — Sales Manager → Dispatch Manager (65s+ demo)",
+    "owner_id": "videography",
+    "run_id": "run-91e02f8d38",
     "run_status": "running",
     "stage": "DECIDE",
-    "updated_at": "2026-08-28T22:05:07.165888+00:00"
+    "updated_at": "2026-08-28T23:05:26.835550+00:00"
   },
   "heartbeat": {
     "business_value": null,
     "business_value_fa": null,
     "display_title": null,
     "display_title_fa": null,
-    "goal_id": "goal-204e09a83b",
-    "goal_name": "Demo — Sales Manager → Dispatch Manager (Freight Inquiry to Quote-Ready Dispatch)",
-    "metric": "demos_delivered",
+    "goal_id": "goal-e848b19b7e",
+    "goal_name": "Videography — Sales Manager → Dispatch Manager (65s+ demo)",
+    "metric": "showcase_videos",
     "operator": "ge",
-    "owner_id": "client_delivery",
+    "owner_id": "videography",
     "run_status": "running",
     "stage": "DECIDE",
     "target": 1,
-    "updated_at": "2026-08-28T22:05:07.165888+00:00"
+    "updated_at": "2026-08-28T23:05:26.835550+00:00"
   },
-  "last_activity_at": "2026-08-28T22:05:07.165888+00:00",
-  "last_sync_at": "2026-08-28T22:05:07.466638+00:00",
+  "last_activity_at": "2026-08-28T23:05:26.835550+00:00",
+  "last_sync_at": "2026-08-28T23:05:27.115389+00:00",
   "northstar": {
     "goal_id": "goal-apply-single-viewport-20260826",
     "goal_name": "Apply page compaction: single-viewport wizard (title + description + wizard + small footer line with prefer-a-call), zero step-to-step resize on mobile and desktop",
@@ -37,15 +37,15 @@
   },
   "state": "running",
   "totals": {
-    "approvals": 265,
-    "decisions": 935,
-    "evidence": 14692,
+    "approvals": 269,
+    "decisions": 949,
+    "evidence": 14701,
     "goals_abandoned": 46,
-    "goals_achieved": 172,
+    "goals_achieved": 174,
     "goals_active": 39,
-    "goals_total": 262,
+    "goals_total": 264,
     "hypotheses": 99,
     "memory_claims": 0,
-    "runs": 304
+    "runs": 306
   }
 }
