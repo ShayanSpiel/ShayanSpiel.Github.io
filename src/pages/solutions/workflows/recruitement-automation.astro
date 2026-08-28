@@ -170,16 +170,17 @@ const faqJsonLd = {
       </div>
       <div class="relative overflow-hidden rounded-md border border-border bg-panel shadow-panel" data-aos="fade-up">
         <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r opacity-80 from-primary via-accent to-transparent"></div>
-        <div class="aspect-[9/16] w-full bg-black">
-          <iframe
+        <div class="aspect-video w-full bg-black">
+          <video
             class="h-full w-full"
-            src="https://www.youtube.com/embed/XHI1vMsPyzQ?rel=0&modestbranding=1&enablejsapi=1"
-            title="AI Optimized HR Automation Workflow for Recruitment Teams — SpielOS"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen
-            loading="lazy"
-          ></iframe>
+            src="/videos/recruitment-demo.mp4"
+            poster="/videos/recruitment-demo-poster.jpg"
+            controls
+            preload="metadata"
+            playsinline
+          >
+            Your browser does not support the video tag.
+          </video>
         </div>
       </div>
       <p class="mt-4 text-center text-2xs text-muted-foreground">SpielOS ranking candidates from a brief — sourced, screened, and shortlisted on your stack.</p>
@@ -243,42 +244,34 @@ const faqJsonLd = {
       <div class="grid gap-4 md:grid-cols-2" data-aos="fade-up">
         <div class="group relative flex flex-col overflow-hidden rounded-md border border-destructive/30 bg-panel shadow-panel transition-all hover:border-destructive/50">
           <div class="absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r opacity-70 from-destructive via-destructive-soft to-transparent"></div>
-          <div class="relative h-52 overflow-hidden bg-[#F5F1E8] sm:h-60">
-            <img src="/images/recruitment/before-hr.png" alt="Before — HR manager overwhelmed by copy-paste hiring" width="720" height="540" loading="lazy" decoding="async" class="h-full w-full object-cover object-center transition-all duration-300 group-hover:scale-[1.02]" />
-            <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-panel/40 via-transparent to-transparent"></div>
-          </div>
           <div class="p-6">
             <div class="mb-3 flex items-center gap-2">
-              <span class="flex h-7 w-7 items-center justify-center rounded-md bg-destructive-soft"><i class="bx bx-user text-destructive icon-base" aria-hidden="true"></i></span>
+              <span class="flex h-7 w-7 items-center justify-center rounded-md bg-destructive-soft"><i class="bx bx-sad text-destructive icon-base" aria-hidden="true"></i></span>
               <h3 class="text-sm font-semibold uppercase tracking-wide text-destructive">Before — manual</h3>
             </div>
             <ul class="space-y-2">
-              <li class="flex items-start gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x-circle text-destructive/70 icon-sm shrink-0 mt-0.5" aria-hidden="true"></i>Copy candidate profiles.</li>
-              <li class="flex items-start gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x-circle text-destructive/70 icon-sm shrink-0 mt-0.5" aria-hidden="true"></i>Screen CVs manually.</li>
-              <li class="flex items-start gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x-circle text-destructive/70 icon-sm shrink-0 mt-0.5" aria-hidden="true"></i>Update spreadsheets and ATS records.</li>
-              <li class="flex items-start gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x-circle text-destructive/70 icon-sm shrink-0 mt-0.5" aria-hidden="true"></i>Chase candidate availability.</li>
-              <li class="flex items-start gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x-circle text-destructive/70 icon-sm shrink-0 mt-0.5" aria-hidden="true"></i>Coordinate calendars.</li>
-              <li class="flex items-start gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x-circle text-destructive/70 icon-sm shrink-0 mt-0.5" aria-hidden="true"></i>Prepare shortlists.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x-circle text-destructive/70 icon-sm shrink-0" aria-hidden="true"></i>Copy candidate profiles.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x-circle text-destructive/70 icon-sm shrink-0" aria-hidden="true"></i>Screen CVs manually.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x-circle text-destructive/70 icon-sm shrink-0" aria-hidden="true"></i>Update spreadsheets and ATS records.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x-circle text-destructive/70 icon-sm shrink-0" aria-hidden="true"></i>Chase candidate availability.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x-circle text-destructive/70 icon-sm shrink-0" aria-hidden="true"></i>Coordinate calendars.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x-circle text-destructive/70 icon-sm shrink-0" aria-hidden="true"></i>Prepare shortlists.</li>
             </ul>
           </div>
         </div>
         <div class="group relative flex flex-col overflow-hidden rounded-md border border-primary/30 bg-panel shadow-panel transition-all hover:border-primary/50">
           <div class="absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r opacity-80 from-primary via-accent to-transparent"></div>
-          <div class="relative h-52 overflow-hidden bg-[#F5F1E8] sm:h-60">
-            <img src="/images/recruitment/after-hr.png" alt="With SpielOS — HR calm, shortlist ready, hiring on autopilot" width="720" height="540" loading="lazy" decoding="async" class="h-full w-full object-cover object-center transition-all duration-300 group-hover:scale-[1.02]" />
-            <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-panel/30 via-transparent to-transparent"></div>
-          </div>
           <div class="p-6">
             <div class="mb-3 flex items-center gap-2">
-              <span class="flex h-7 w-7 items-center justify-center rounded-md bg-primary-soft"><i class="bx bx-network-chart text-primary icon-base" aria-hidden="true"></i></span>
+              <span class="flex h-7 w-7 items-center justify-center rounded-md bg-primary-soft"><i class="bx bx-cool text-primary icon-base" aria-hidden="true"></i></span>
               <h3 class="text-sm font-semibold uppercase tracking-wide text-primary">With SpielOS</h3>
             </div>
             <ul class="space-y-2">
-              <li class="flex items-start gap-2 text-sm leading-relaxed text-foreground"><i class="bx bx-check-square text-primary/70 icon-sm shrink-0 mt-0.5" aria-hidden="true"></i>Candidates get sourced.</li>
-              <li class="flex items-start gap-2 text-sm leading-relaxed text-foreground"><i class="bx bx-check-square text-primary/70 icon-sm shrink-0 mt-0.5" aria-hidden="true"></i>Criteria get checked.</li>
-              <li class="flex items-start gap-2 text-sm leading-relaxed text-foreground"><i class="bx bx-check-square text-primary/70 icon-sm shrink-0 mt-0.5" aria-hidden="true"></i>Shortlists arrive ranked.</li>
-              <li class="flex items-start gap-2 text-sm leading-relaxed text-foreground"><i class="bx bx-check-square text-primary/70 icon-sm shrink-0 mt-0.5" aria-hidden="true"></i>Interviews get scheduled.</li>
-              <li class="flex items-start gap-2 text-sm leading-relaxed text-foreground"><i class="bx bx-check-square text-primary/70 icon-sm shrink-0 mt-0.5" aria-hidden="true"></i>Records stay updated.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-foreground"><i class="bx bx-check-square text-primary/70 icon-sm shrink-0" aria-hidden="true"></i>Candidates get sourced.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-foreground"><i class="bx bx-check-square text-primary/70 icon-sm shrink-0" aria-hidden="true"></i>Criteria get checked.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-foreground"><i class="bx bx-check-square text-primary/70 icon-sm shrink-0" aria-hidden="true"></i>Shortlists arrive ranked.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-foreground"><i class="bx bx-check-square text-primary/70 icon-sm shrink-0" aria-hidden="true"></i>Interviews get scheduled.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-foreground"><i class="bx bx-check-square text-primary/70 icon-sm shrink-0" aria-hidden="true"></i>Records stay updated.</li>
             </ul>
           </div>
         </div>
