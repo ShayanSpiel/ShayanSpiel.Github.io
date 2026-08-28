@@ -3870,7 +3870,7 @@
       "created_at": "2026-08-28T12:28:40.944314+00:00",
       "goal_status": "active",
       "id": "goal-ap-handoff-20260828",
-      "latest_activity_at": "2026-08-28T12:29:58.489079+00:00",
+      "latest_activity_at": "2026-08-28T12:53:15.048240+00:00",
       "metric": "workflows_delivered",
       "name": "ActivePieces automation handoff: receipt OCR upgrade + logistics rebuild + docs",
       "operator": "ge",
@@ -3898,18 +3898,33 @@
     },
     {
       "created_at": "2026-08-28T12:29:55.590457+00:00",
-      "goal_status": "active",
+      "goal_status": "abandoned",
       "id": "goal-ap-logistics-rebuild",
-      "latest_activity_at": "2026-08-28T12:29:58.489079+00:00",
+      "latest_activity_at": "2026-08-28T12:53:15.048240+00:00",
       "metric": "workflows_delivered",
       "name": "Rebuild Logistics — Client Intake (Freight RFQ) flow",
       "operator": "ge",
       "owner_id": "client_delivery",
       "parent_id": "goal-ap-handoff-20260828",
-      "run_status": "blocked",
+      "run_status": "completed",
       "stage": "ACT",
       "target": 1,
-      "updated_at": "2026-08-28T12:29:58.487851+00:00"
+      "updated_at": "2026-08-28T12:53:15.048240+00:00"
+    },
+    {
+      "created_at": "2026-08-28T13:39:56.366061+00:00",
+      "goal_status": "active",
+      "id": "goal-d013d7740c",
+      "latest_activity_at": "2026-08-28T13:40:01.370472+00:00",
+      "metric": "achieved_children",
+      "name": "Construction skill: surface-integrity + one-canonical-workflow discipline",
+      "operator": "ge",
+      "owner_id": "director",
+      "parent_id": null,
+      "run_status": "running",
+      "stage": "DECIDE",
+      "target": 1,
+      "updated_at": "2026-08-28T13:40:01.369138+00:00"
     }
   ],
   "heartbeat": {
@@ -3917,15 +3932,15 @@
     "business_value_fa": null,
     "display_title": null,
     "display_title_fa": null,
-    "goal_id": "goal-ap-logistics-rebuild",
-    "goal_name": "Rebuild Logistics — Client Intake (Freight RFQ) flow",
-    "metric": "workflows_delivered",
+    "goal_id": "goal-d013d7740c",
+    "goal_name": "Construction skill: surface-integrity + one-canonical-workflow discipline",
+    "metric": "achieved_children",
     "operator": "ge",
-    "owner_id": "client_delivery",
-    "run_status": "blocked",
-    "stage": "ACT",
+    "owner_id": "director",
+    "run_status": "running",
+    "stage": "DECIDE",
     "target": 1,
-    "updated_at": "2026-08-28T12:29:58.489079+00:00"
+    "updated_at": "2026-08-28T13:40:01.370472+00:00"
   },
   "northstar": {
     "goal_id": "goal-apply-single-viewport-20260826",
@@ -3938,44 +3953,44 @@
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-28T12:29:55.590457+00:00",
-      "goal_id": "goal-ap-logistics-rebuild",
-      "goal_name": "Rebuild Logistics — Client Intake (Freight RFQ) flow",
-      "owner_id": "client_delivery",
-      "run_id": "run-4432792ca5",
-      "run_status": "blocked",
-      "stage": "ACT",
-      "updated_at": "2026-08-28T12:29:58.489079+00:00"
+      "created_at": "2026-08-28T13:39:56.366061+00:00",
+      "goal_id": "goal-d013d7740c",
+      "goal_name": "Construction skill: surface-integrity + one-canonical-workflow discipline",
+      "owner_id": "director",
+      "run_id": "run-1497b17961",
+      "run_status": "running",
+      "stage": "DECIDE",
+      "updated_at": "2026-08-28T13:40:01.370472+00:00"
     },
     "heartbeat": {
       "business_value": null,
       "business_value_fa": null,
       "display_title": null,
       "display_title_fa": null,
-      "goal_id": "goal-ap-logistics-rebuild",
-      "goal_name": "Rebuild Logistics — Client Intake (Freight RFQ) flow",
-      "metric": "workflows_delivered",
+      "goal_id": "goal-d013d7740c",
+      "goal_name": "Construction skill: surface-integrity + one-canonical-workflow discipline",
+      "metric": "achieved_children",
       "operator": "ge",
-      "owner_id": "client_delivery",
-      "run_status": "blocked",
-      "stage": "ACT",
+      "owner_id": "director",
+      "run_status": "running",
+      "stage": "DECIDE",
       "target": 1,
-      "updated_at": "2026-08-28T12:29:58.489079+00:00"
+      "updated_at": "2026-08-28T13:40:01.370472+00:00"
     },
-    "last_activity_at": "2026-08-28T12:37:20.153711+00:00",
-    "last_sync_at": "2026-08-28T12:37:20.285660+00:00",
+    "last_activity_at": "2026-08-28T13:40:01.370472+00:00",
+    "last_sync_at": "2026-08-28T13:40:01.637567+00:00",
     "state": "running"
   },
   "totals": {
     "approvals": 265,
     "decisions": 935,
-    "evidence": 14691,
-    "goals_abandoned": 43,
+    "evidence": 14692,
+    "goals_abandoned": 44,
     "goals_achieved": 172,
     "goals_active": 39,
-    "goals_total": 259,
-    "hypotheses": 98,
+    "goals_total": 260,
+    "hypotheses": 99,
     "memory_claims": 5,
-    "runs": 301
+    "runs": 302
   }
 }
