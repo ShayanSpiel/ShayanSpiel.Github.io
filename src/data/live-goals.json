@@ -3868,33 +3868,33 @@
     },
     {
       "created_at": "2026-08-28T12:28:40.944314+00:00",
-      "goal_status": "active",
+      "goal_status": "abandoned",
       "id": "goal-ap-handoff-20260828",
-      "latest_activity_at": "2026-08-28T12:53:15.048240+00:00",
+      "latest_activity_at": "2026-08-28T13:42:00.934128+00:00",
       "metric": "workflows_delivered",
       "name": "ActivePieces automation handoff: receipt OCR upgrade + logistics rebuild + docs",
       "operator": "ge",
       "owner_id": "client_delivery",
       "parent_id": null,
-      "run_status": "blocked",
+      "run_status": "completed",
       "stage": "ACT",
       "target": 2,
-      "updated_at": "2026-08-28T12:28:44.551614+00:00"
+      "updated_at": "2026-08-28T13:42:00.934128+00:00"
     },
     {
       "created_at": "2026-08-28T12:29:55.585784+00:00",
-      "goal_status": "active",
+      "goal_status": "abandoned",
       "id": "goal-ap-receipt-pixtral",
-      "latest_activity_at": "2026-08-28T12:29:57.693401+00:00",
+      "latest_activity_at": "2026-08-28T13:42:00.672910+00:00",
       "metric": "workflows_delivered",
       "name": "Receipt flow: pixtral vision OCR upgrade (owner-blocked)",
       "operator": "ge",
       "owner_id": "client_delivery",
       "parent_id": "goal-ap-handoff-20260828",
-      "run_status": "blocked",
+      "run_status": "completed",
       "stage": "ACT",
       "target": 1,
-      "updated_at": "2026-08-28T12:29:57.692065+00:00"
+      "updated_at": "2026-08-28T13:42:00.672910+00:00"
     },
     {
       "created_at": "2026-08-28T12:29:55.590457+00:00",
@@ -3915,16 +3915,46 @@
       "created_at": "2026-08-28T13:39:56.366061+00:00",
       "goal_status": "active",
       "id": "goal-d013d7740c",
-      "latest_activity_at": "2026-08-28T13:40:01.370472+00:00",
+      "latest_activity_at": "2026-08-28T13:43:05.981699+00:00",
       "metric": "achieved_children",
       "name": "Construction skill: surface-integrity + one-canonical-workflow discipline",
       "operator": "ge",
       "owner_id": "director",
       "parent_id": null,
+      "run_status": "blocked",
+      "stage": "DECIDE",
+      "target": 1,
+      "updated_at": "2026-08-28T13:43:05.981699+00:00"
+    },
+    {
+      "created_at": "2026-08-28T22:04:59.253283+00:00",
+      "goal_status": "active",
+      "id": "goal-204e09a83b",
+      "latest_activity_at": "2026-08-28T22:05:07.165888+00:00",
+      "metric": "demos_delivered",
+      "name": "Demo — Sales Manager → Dispatch Manager (Freight Inquiry to Quote-Ready Dispatch)",
+      "operator": "ge",
+      "owner_id": "client_delivery",
+      "parent_id": null,
       "run_status": "running",
       "stage": "DECIDE",
       "target": 1,
-      "updated_at": "2026-08-28T13:40:01.369138+00:00"
+      "updated_at": "2026-08-28T22:05:07.164077+00:00"
+    },
+    {
+      "created_at": "2026-08-28T22:05:05.305121+00:00",
+      "goal_status": "active",
+      "id": "goal-4f791e744b",
+      "latest_activity_at": "2026-08-28T22:05:05.305121+00:00",
+      "metric": "demos_delivered",
+      "name": "Demo — Sales Manager → Inventory Manager (Customer PO to Fulfillment-Ready Order)",
+      "operator": "ge",
+      "owner_id": "client_delivery",
+      "parent_id": null,
+      "run_status": "idle",
+      "stage": "OBSERVE",
+      "target": 1,
+      "updated_at": "2026-08-28T22:05:05.305121+00:00"
     }
   ],
   "heartbeat": {
@@ -3932,15 +3962,15 @@
     "business_value_fa": null,
     "display_title": null,
     "display_title_fa": null,
-    "goal_id": "goal-d013d7740c",
-    "goal_name": "Construction skill: surface-integrity + one-canonical-workflow discipline",
-    "metric": "achieved_children",
+    "goal_id": "goal-204e09a83b",
+    "goal_name": "Demo — Sales Manager → Dispatch Manager (Freight Inquiry to Quote-Ready Dispatch)",
+    "metric": "demos_delivered",
     "operator": "ge",
-    "owner_id": "director",
+    "owner_id": "client_delivery",
     "run_status": "running",
     "stage": "DECIDE",
     "target": 1,
-    "updated_at": "2026-08-28T13:40:01.370472+00:00"
+    "updated_at": "2026-08-28T22:05:07.165888+00:00"
   },
   "northstar": {
     "goal_id": "goal-apply-single-viewport-20260826",
@@ -3953,44 +3983,44 @@
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-28T13:39:56.366061+00:00",
-      "goal_id": "goal-d013d7740c",
-      "goal_name": "Construction skill: surface-integrity + one-canonical-workflow discipline",
-      "owner_id": "director",
-      "run_id": "run-1497b17961",
+      "created_at": "2026-08-28T22:04:59.253283+00:00",
+      "goal_id": "goal-204e09a83b",
+      "goal_name": "Demo — Sales Manager → Dispatch Manager (Freight Inquiry to Quote-Ready Dispatch)",
+      "owner_id": "client_delivery",
+      "run_id": "run-b24b6b764d",
       "run_status": "running",
       "stage": "DECIDE",
-      "updated_at": "2026-08-28T13:40:01.370472+00:00"
+      "updated_at": "2026-08-28T22:05:07.165888+00:00"
     },
     "heartbeat": {
       "business_value": null,
       "business_value_fa": null,
       "display_title": null,
       "display_title_fa": null,
-      "goal_id": "goal-d013d7740c",
-      "goal_name": "Construction skill: surface-integrity + one-canonical-workflow discipline",
-      "metric": "achieved_children",
+      "goal_id": "goal-204e09a83b",
+      "goal_name": "Demo — Sales Manager → Dispatch Manager (Freight Inquiry to Quote-Ready Dispatch)",
+      "metric": "demos_delivered",
       "operator": "ge",
-      "owner_id": "director",
+      "owner_id": "client_delivery",
       "run_status": "running",
       "stage": "DECIDE",
       "target": 1,
-      "updated_at": "2026-08-28T13:40:01.370472+00:00"
+      "updated_at": "2026-08-28T22:05:07.165888+00:00"
     },
-    "last_activity_at": "2026-08-28T13:40:01.370472+00:00",
-    "last_sync_at": "2026-08-28T13:40:01.637567+00:00",
+    "last_activity_at": "2026-08-28T22:05:07.165888+00:00",
+    "last_sync_at": "2026-08-28T22:05:07.466638+00:00",
     "state": "running"
   },
   "totals": {
     "approvals": 265,
     "decisions": 935,
     "evidence": 14692,
-    "goals_abandoned": 44,
+    "goals_abandoned": 46,
     "goals_achieved": 172,
     "goals_active": 39,
-    "goals_total": 260,
+    "goals_total": 262,
     "hypotheses": 99,
-    "memory_claims": 5,
-    "runs": 302
+    "memory_claims": 0,
+    "runs": 304
   }
 }
