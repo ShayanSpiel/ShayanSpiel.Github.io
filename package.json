@@ -24,7 +24,8 @@
     "audit:visual": "node scripts/visual-audit.mjs",
     "test": "npm run build && node --test test/site.test.mjs",
     "seo:check": "node scripts/seo-check.mjs",
-    "og:generate": "node scripts/generate-og.mjs"
+    "og:generate": "node scripts/generate-og.mjs",
+    "indexnow:submit": "node scripts/indexnow-submit.mjs"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",

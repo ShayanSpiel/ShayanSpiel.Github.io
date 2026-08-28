@@ -49,3 +49,17 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
+
+      - name: Checkout (for IndexNow submit script)
+        uses: actions/checkout@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Notify IndexNow of all URLs
+        # Site is live now, so the key file + every sitemap URL resolve.
+        # continue-on-error keeps a transient IndexNow hiccup from rolling back the deploy.
+        run: sleep 20 && node scripts/indexnow-submit.mjs
+        continue-on-error: true
