@@ -34,7 +34,7 @@ const copyrightText = copyright || t(locale, "footer.copyright", { year });
   "border-t border-border",
   locale === "fa" ? "font-iransansx" : "",
 ]}>
-  <div class="mx-auto flex max-w-6xl items-center gap-x-5 px-6 py-3 text-2xs text-muted-foreground">
+  <div class="mx-auto flex max-w-6xl flex-col items-center gap-y-2 px-6 py-3 text-2xs text-muted-foreground sm:flex-row sm:items-center sm:gap-x-5">
     <!-- Section 1: brand -->
     <div class="flex shrink-0 items-center gap-1.5">
       <SpielOSLogo size="sm" boxClass="h-5 w-20" textClass="text-foreground-strong" />
@@ -43,7 +43,7 @@ const copyrightText = copyright || t(locale, "footer.copyright", { year });
     </div>
 
     <!-- Section 2: links -->
-    <nav class="flex flex-1 flex-wrap items-center justify-center gap-x-3 gap-y-2">
+    <nav class="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 py-1 sm:flex-1 sm:py-0">
       {footerLinks.map((link) => (
         <a href={link.href} title={link.label} class="text-2xs text-muted-foreground transition-colors hover:text-foreground">{link.label}</a>
       ))}
@@ -55,7 +55,7 @@ const copyrightText = copyright || t(locale, "footer.copyright", { year });
       <span aria-hidden="true" class="mx-0.5 h-5 w-px bg-border"></span>
       {showThemeToggle ? <div class="flex items-center gap-0.5"><LanguageSwitcher locale={locale} /><button type="button" id="footer-theme-toggle" class="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-panel-raised hover:text-foreground" aria-label={t(locale, "common.themeToggle")} title={t(locale, "common.themeToggle")}><i class="bx bx-moon icon-xl leading-none" id="theme-icon"></i></button></div> : null}
       <span aria-hidden="true" class="mx-0.5 h-5 w-px bg-border"></span>
-      {showSocial && <div class="flex items-center gap-1"><SocialIcons size="sm" show={["x", "linkedin", "github"]} /></div>}
+      {showSocial && <div class="flex items-center gap-1"><SocialIcons size="lg" show={["x", "linkedin", "github"]} /></div>}
     </div>
   </div>
 </footer>
