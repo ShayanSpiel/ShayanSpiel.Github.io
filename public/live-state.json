@@ -1,31 +1,31 @@
 {
   "current_run": {
-    "created_at": "2026-08-27T23:44:29.825324+00:00",
-    "goal_id": "goal-a340a09dba",
-    "goal_name": "Recruitment demo polish: polished overlay sync, 30-45s pacing, AI voice + copy",
-    "owner_id": "videography",
-    "run_id": "run-19f2f2c9c8",
-    "run_status": "idle",
-    "stage": "OBSERVE",
-    "updated_at": "2026-08-27T23:44:29.825324+00:00"
+    "created_at": "2026-08-28T12:29:55.590457+00:00",
+    "goal_id": "goal-ap-logistics-rebuild",
+    "goal_name": "Rebuild Logistics — Client Intake (Freight RFQ) flow",
+    "owner_id": "client_delivery",
+    "run_id": "run-4432792ca5",
+    "run_status": "blocked",
+    "stage": "ACT",
+    "updated_at": "2026-08-28T12:29:58.489079+00:00"
   },
   "heartbeat": {
     "business_value": null,
     "business_value_fa": null,
     "display_title": null,
     "display_title_fa": null,
-    "goal_id": "goal-a340a09dba",
-    "goal_name": "Recruitment demo polish: polished overlay sync, 30-45s pacing, AI voice + copy",
-    "metric": "showcase_videos",
+    "goal_id": "goal-ap-logistics-rebuild",
+    "goal_name": "Rebuild Logistics — Client Intake (Freight RFQ) flow",
+    "metric": "workflows_delivered",
     "operator": "ge",
-    "owner_id": "videography",
-    "run_status": "idle",
-    "stage": "OBSERVE",
+    "owner_id": "client_delivery",
+    "run_status": "blocked",
+    "stage": "ACT",
     "target": 1,
-    "updated_at": "2026-08-27T23:44:29.825324+00:00"
+    "updated_at": "2026-08-28T12:29:58.489079+00:00"
   },
-  "last_activity_at": "2026-08-27T23:44:29.825324+00:00",
-  "last_sync_at": "2026-08-28T00:46:55.178142+00:00",
+  "last_activity_at": "2026-08-28T12:37:20.153711+00:00",
+  "last_sync_at": "2026-08-28T12:37:20.285660+00:00",
   "northstar": {
     "goal_id": "goal-apply-single-viewport-20260826",
     "goal_name": "Apply page compaction: single-viewport wizard (title + description + wizard + small footer line with prefer-a-call), zero step-to-step resize on mobile and desktop",
@@ -38,14 +38,14 @@
   "state": "running",
   "totals": {
     "approvals": 265,
-    "decisions": 929,
-    "evidence": 14657,
+    "decisions": 935,
+    "evidence": 14691,
     "goals_abandoned": 43,
-    "goals_achieved": 171,
-    "goals_active": 35,
-    "goals_total": 254,
-    "hypotheses": 96,
+    "goals_achieved": 172,
+    "goals_active": 39,
+    "goals_total": 259,
+    "hypotheses": 98,
     "memory_claims": 5,
-    "runs": 296
+    "runs": 301
   }
 }
