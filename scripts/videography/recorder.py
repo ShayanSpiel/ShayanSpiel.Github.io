@@ -128,6 +128,10 @@ def main() -> int:
                 elif stype == "type":
                     human.type_text(step["selector"], step["text"],
                                     secret=bool(step.get("secret")))
+                elif stype == "upload":
+                    file_path = REPO / step["file"]
+                    page.locator(step["selector"]).set_input_files(str(file_path))
+                    human.wait(float(step.get("wait_after", 1.2)))
                 elif stype == "press":
                     human.press(step["key"], wait_after=float(step.get("wait_after", 0.4)))
                 elif stype == "scroll":

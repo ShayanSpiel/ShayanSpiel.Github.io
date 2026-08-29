@@ -11,7 +11,7 @@ from pathlib import Path
 
 ALLOWED_STEPS = {
     "goto", "click", "type", "press", "scroll", "wait", "wait_for",
-    "read", "verify_text", "open_tab", "shot",
+    "read", "verify_text", "open_tab", "shot", "upload",
 }
 
 
@@ -45,11 +45,13 @@ class Scenario:
                 raise ScenarioError(f"step {i}: unknown type {stype!r}")
             if stype in ("goto",) and not step.get("url"):
                 raise ScenarioError(f"step {i}: goto needs url")
-            if stype in ("click", "type", "scroll", "wait_for", "verify_text") \
+            if stype in ("click", "type", "scroll", "wait_for", "verify_text", "upload") \
                     and not step.get("selector") and stype not in ("click", "verify_text"):
                 raise ScenarioError(f"step {i}: {stype} needs selector")
             if stype == "type" and not step.get("text"):
                 raise ScenarioError(f"step {i}: type needs text")
+            if stype == "upload" and not step.get("file"):
+                raise ScenarioError(f"step {i}: upload needs file")
             if stype == "open_tab" and not step.get("url"):
                 raise ScenarioError(f"step {i}: open_tab needs url")
         viewport = tuple(raw.get("viewport") or (1440, 900))

@@ -10,7 +10,10 @@
 
 Hey {name}, I'm Shayan. I've seen you {research signal} + {emotional ending}.
 I build AI Agents & Automation. I made a 30s demo automated shortlisting:
-brief goes in, shortlist out. 30s: [youtube link], details: https://spielos.xyz/solutions/workflows/recruitement-automation/.
+brief goes in, shortlist out.
+[Image 1](https://spielos.xyz/solutions/workflows/recruitement-automation/)
+<img src="https://spielos.xyz/images/recruitment/Demo-Job-Brief-to-Candidate-Shortlist.png" alt="Demo Job Brief to Candidate Shortlist" width="600" style="max-width:100%;" />
+Details: https://spielos.xyz/solutions/workflows/recruitement-automation/.
 If that's useful, let me know and i can set it up or any similar workflow
 for you business.
 Regards, Shayan.
@@ -21,15 +24,15 @@ Regards, Shayan.
 
 ### 1. Antoinette Boyd - Boyd Boutique Executive Recruitment (AU)
 
-Hey Antoinette, I'm Shayan. I've seen you Founder & Director at Boyd Boutique Executive Recruitment, running senior GM and C-level searches across Melbourne and Sydney with an unrivalled placement rate. That's smart, that's a lot of manual work per brief. I build AI Agents & Automation. I made a 30s demo automated shortlisting: brief goes in, shortlist out. 30s: [youtube link], details: https://spielos.xyz/solutions/workflows/recruitement-automation/. If that's useful, let me know and i can set it up or any similar workflow for you business. Regards, Shayan.
+Hey Antoinette, I'm Shayan. I've seen you Founder & Director at Boyd Boutique Executive Recruitment, running senior GM and C-level searches across Melbourne and Sydney with an unrivalled placement rate. That's smart, that's a lot of manual work per brief. I build AI Agents & Automation. I made a 30s demo automated shortlisting: brief goes in, shortlist out. [Image 1](https://spielos.xyz/solutions/workflows/recruitement-automation/). <img src="https://spielos.xyz/images/recruitment/Demo-Job-Brief-to-Candidate-Shortlist.png" alt="Demo Job Brief to Candidate Shortlist" width="600" style="max-width:100%;" /> Details: https://spielos.xyz/solutions/workflows/recruitement-automation/. If that's useful, let me know and i can set it up or any similar workflow for you business. Regards, Shayan.
 
 ### 2. Vanessa Robinson - Lawford Robinson (AU)
 
-Hey Vanessa, I'm Shayan. I've seen you Founder & Managing Director at Lawford Robinson, 12 years of 100% female-owned strategy and M&A leadership searches. That's interesting, what a portfolio to maintain manually. I build AI Agents & Automation. I made a 30s demo automated shortlisting: brief goes in, shortlist out. 30s: [youtube link], details: https://spielos.xyz/solutions/workflows/recruitement-automation/. If that's useful, let me know and i can set it up or any similar workflow for you business. Regards, Shayan.
+Hey Vanessa, I'm Shayan. I've seen you Founder & Managing Director at Lawford Robinson, 12 years of 100% female-owned strategy and M&A leadership searches. That's interesting, what a portfolio to maintain manually. I build AI Agents & Automation. I made a 30s demo automated shortlisting: brief goes in, shortlist out. [Image 1](https://spielos.xyz/solutions/workflows/recruitement-automation/). <img src="https://spielos.xyz/images/recruitment/Demo-Job-Brief-to-Candidate-Shortlist.png" alt="Demo Job Brief to Candidate Shortlist" width="600" style="max-width:100%;" /> Details: https://spielos.xyz/solutions/workflows/recruitement-automation/. If that's useful, let me know and i can set it up or any similar workflow for you business. Regards, Shayan.
 
 ### 3. Rrizu Sharma - ALM Recruitment (QA)
 
-Hey Rrizu, I'm Shayan. I've seen you Founder & Managing Director at ALM Recruitment, expanded to Kenya doing high-volume international recruitment across the Gulf and East Africa. That's a lot of work screening candidates at that scale. I build AI Agents & Automation. I made a 30s demo automated shortlisting: brief goes in, shortlist out. 30s: [youtube link], details: https://spielos.xyz/solutions/workflows/recruitement-automation/. If that's useful, let me know and i can set it up or any similar workflow for you business. Regards, Shayan.
+Hey Rrizu, I'm Shayan. I've seen you Founder & Managing Director at ALM Recruitment, expanded to Kenya doing high-volume international recruitment across the Gulf and East Africa. That's a lot of work screening candidates at that scale. I build AI Agents & Automation. I made a 30s demo automated shortlisting: brief goes in, shortlist out. [Image 1](https://spielos.xyz/solutions/workflows/recruitement-automation/). <img src="https://spielos.xyz/images/recruitment/Demo-Job-Brief-to-Candidate-Shortlist.png" alt="Demo Job Brief to Candidate Shortlist" width="600" style="max-width:100%;" /> Details: https://spielos.xyz/solutions/workflows/recruitement-automation/. If that's useful, let me know and i can set it up or any similar workflow for you business. Regards, Shayan.
 
 ---
 
@@ -43,8 +46,8 @@ Hey Rrizu, I'm Shayan. I've seen you Founder & Managing Director at ALM Recruitm
 
 - Video: `public/videos/recruitment-demo.mp4` (ready)
 - Landing page: https://spielos.xyz/solutions/workflows/recruitement-automation/ (deployed)
-- Screenshots: 7 files in `public/` (ready)
-- YouTube link: **HOLD** (not in use)
-- Outbound runtime goal: **WAITING**
+- Image: `/public/images/recruitment/Demo-Job-Brief-to-Candidate-Shortlist.png` (copied from desktop, live at https://spielos.xyz/images/recruitment/Demo-Job-Brief-to-Candidate-Shortlist.png)
+- YouTube link: **REMOVED**
+- Test email to 66shayan@gmail.com: **PENDING**
 
-Swap in YouTube if needed later. Landing page link is live.
+[Image 1] = the demo screenshot, linking to landing page. Image embedded above the link.
