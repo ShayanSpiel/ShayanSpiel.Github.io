@@ -1,7 +1,6 @@
 ---
 import SpielOSLogo from "../SpielOSLogo.astro";
 import { SITE, SOCIAL } from "../../config";
-import { ICONS } from "../../lib/icons";
 import { type Locale, t } from "../../i18n/translations";
 import LanguageSwitcher from "../LanguageSwitcher.astro";
 
@@ -28,18 +27,25 @@ const footerLinks = [
         <a href={link.href} class="text-2xs text-muted-foreground hover:text-foreground transition-colors">{link.label}</a>
       ))}
     </div>
-    <div class="flex items-center gap-4">
+    <div class="flex items-center gap-2">
       <LanguageSwitcher locale={locale} />
+      <a href={SOCIAL.x} target="_blank" rel="noopener noreferrer me" class="flex h-7 w-7 items-center justify-center rounded-md border border-border bg-panel-raised text-muted-foreground transition-colors hover:border-border-strong hover:text-foreground" aria-label={t(locale, "waitlist.followX")} title={t(locale, "waitlist.followX")}>
+        <i class="bx bxl-twitter icon-base" aria-hidden="true"></i>
+      </a>
+      <a href={SOCIAL.linkedin} target="_blank" rel="noopener noreferrer me" class="flex h-7 w-7 items-center justify-center rounded-md border border-border bg-panel-raised text-muted-foreground transition-colors hover:border-border-strong hover:text-foreground" aria-label={t(locale, "waitlist.followLinkedin")} title={t(locale, "waitlist.followLinkedin")}>
+        <i class="bx bxl-linkedin icon-base" aria-hidden="true"></i>
+      </a>
+      <a href={SOCIAL.github} target="_blank" rel="noopener noreferrer me" class="flex h-7 w-7 items-center justify-center rounded-md border border-border bg-panel-raised text-muted-foreground transition-colors hover:border-border-strong hover:text-foreground" aria-label={t(locale, "waitlist.followGithub")} title={t(locale, "waitlist.followGithub")}>
+        <i class="bx bxl-github icon-base" aria-hidden="true"></i>
+      </a>
       <button
         type="button"
         id="footer-theme-toggle"
-        class="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-panel-raised transition-colors"
+        class="flex h-7 w-7 items-center justify-center rounded-md border border-border bg-panel-raised text-muted-foreground hover:text-foreground hover:bg-panel-raised transition-colors"
         aria-label={t(locale, "common.themeToggle")}
       >
-        <span id="theme-icon-wrap"><i class="bx bx-moon icon-base"></i></span>
+        <span id="theme-icon-wrap"><i class="bx bx-moon icon-base" aria-hidden="true"></i></span>
       </button>
-      <a href={SOCIAL.x} target="_blank" rel="noopener noreferrer me" class="text-muted-foreground hover:text-foreground transition-colors" aria-label={t(locale, "waitlist.followX")} set:html={ICONS.x} />
-      <a href={SOCIAL.linkedin} target="_blank" rel="noopener noreferrer me" class="text-muted-foreground hover:text-foreground transition-colors" aria-label={t(locale, "waitlist.followLinkedin")} set:html={ICONS.linkedin} />
     </div>
     <span class="text-2xs text-muted-foreground">&copy; {new Date().getFullYear()} {SITE.name}</span>
   </div>
@@ -56,7 +62,7 @@ const footerLinks = [
 
   function currentTheme(){return document.documentElement.dataset.theme||'gruvbox-dark';}
   function isDark(t){return darkThemes.indexOf(t)!==-1;}
-  function updateIcon(){var t=currentTheme();wrap.innerHTML=isDark(t)?'<i class="bx bx-moon icon-base"></i>':'<i class="bx bx-sun icon-base"></i>';}
+  function updateIcon(){var t=currentTheme();wrap.innerHTML=isDark(t)?'<i class="bx bx-moon icon-base" aria-hidden="true"></i>':'<i class="bx bx-sun icon-base" aria-hidden="true"></i>';}
 
   btn.addEventListener('click',function(){
     var t=currentTheme();

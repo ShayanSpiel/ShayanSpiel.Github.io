@@ -51,11 +51,11 @@ const copyrightText = copyright || t(locale, "footer.copyright", { year });
 
     <!-- Section 3: call │ language+theme │ social marks -->
     <div class="flex shrink-0 items-center gap-1">
-      <a href={contactHref} aria-label={t(locale, "nav.contact")} title={t(locale, "nav.contact")} class="flex h-7 w-7 items-center justify-center text-muted-foreground transition-colors hover:text-foreground"><i class="bx bx-phone icon-xl" aria-hidden="true"></i></a>
+      <a href={contactHref} aria-label={t(locale, "nav.contact")} title={t(locale, "nav.contact")} class="flex h-7 w-7 items-center justify-center rounded-md border border-border bg-panel-raised text-muted-foreground transition-colors hover:border-border-strong hover:text-foreground"><i class="bx bx-phone icon-base" aria-hidden="true"></i></a>
       <span aria-hidden="true" class="mx-0.5 h-5 w-px bg-border"></span>
-      {showThemeToggle ? <div class="flex items-center gap-0.5"><LanguageSwitcher locale={locale} /><button type="button" id="footer-theme-toggle" class="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-panel-raised hover:text-foreground" aria-label={t(locale, "common.themeToggle")} title={t(locale, "common.themeToggle")}><i class="bx bx-moon icon-xl leading-none" id="theme-icon"></i></button></div> : null}
+      {showThemeToggle ? <div class="flex items-center gap-0.5"><LanguageSwitcher locale={locale} /><button type="button" id="footer-theme-toggle" class="flex h-7 w-7 items-center justify-center rounded-md border border-border bg-panel-raised text-muted-foreground transition-colors hover:border-border-strong hover:bg-panel-raised hover:text-foreground" aria-label={t(locale, "common.themeToggle")} title={t(locale, "common.themeToggle")}><i class="bx bx-moon icon-base leading-none" id="theme-icon"></i></button></div> : null}
       <span aria-hidden="true" class="mx-0.5 h-5 w-px bg-border"></span>
-      {showSocial && <div class="flex items-center gap-1"><SocialIcons size="lg" show={["x", "linkedin", "github"]} /></div>}
+      {showSocial && <SocialIcons size="md" show={["x", "linkedin", "github"]} />}
     </div>
   </div>
 </footer>
@@ -68,7 +68,7 @@ const copyrightText = copyright || t(locale, "footer.copyright", { year });
     if (!btn || !icon) return;
     function currentTheme() { return document.documentElement.dataset.theme || defaultTheme; }
     function isDark(t) { return darkThemes.indexOf(t) !== -1; }
-    function updateIcon() { icon.className = isDark(currentTheme()) ? 'bx bx-moon icon-xl leading-none' : 'bx bx-sun icon-xl leading-none'; }
+    function updateIcon() { icon.className = isDark(currentTheme()) ? 'bx bx-moon icon-base leading-none' : 'bx bx-sun icon-base leading-none'; }
     btn.addEventListener('click', function() {
       var t = currentTheme();
       var next = allThemes[(allThemes.indexOf(t) + 1) % allThemes.length];

@@ -151,11 +151,10 @@ const faqJsonLd = {
         <span class="text-2xs text-muted-foreground font-medium">RECRUITMENT WORKFLOW AUTOMATION</span>
       </div>
       <h1 class="mt-4 text-4xl font-extrabold leading-[0.95] tracking-tight text-foreground-strong sm:text-5xl lg:text-6xl" data-aos="fade-up">Recruitment workflow automation for hiring teams.</h1>
-      <p class="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground" data-aos="fade-up">Source, screen, rank, schedule, and update your ATS without copying data between tools.</p>
-      <p class="mx-auto mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground" data-aos="fade-up">SpielOS automates repetitive recruiting work on your existing stack. Your team keeps every hiring decision.</p>
-      <div class="mt-8 flex flex-col items-center gap-3" data-aos="fade-up">
-        <a href="#see-it-run" data-cta-location="workflow_recruitement_hero" class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20">SEE IT RUN</a>
-        <p class="text-sm text-muted-foreground max-w-lg text-center" data-aos="fade-up">From job brief to ranked shortlist.<br>Watch SpielOS's recruitment workflow, take a role brief, find candidates, screen them against your criteria, and return a ranked shortlist with reasons behind each match.</p>
+      <p class="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground" data-aos="fade-up">For recruitment agencies and in-house talent teams — SpielOS sources from LinkedIn &amp; Indeed, screens CVs against your brief, ranks the top 5 with evidence, and schedules interviews on Gmail, Calendar &amp; your ATS. No new platform. No decision handed to AI.</p>
+      <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3" data-aos="fade-up">
+        <a href={localizePath(APPLY_PATH, "en")} data-cta-location="workflow_recruitement_hero_primary" class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20">Apply for a Free Review</a>
+        <a href="#see-it-run" data-cta-location="workflow_recruitement_hero_secondary" class="inline-flex items-center justify-center rounded-md border border-border bg-panel px-6 h-11 text-sm font-medium hover:border-border-strong hover:bg-panel-raised transition-all">See it Run</a>
       </div>
     </div>
   </section>
@@ -246,16 +245,16 @@ const faqJsonLd = {
           <div class="absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r opacity-70 from-destructive via-destructive-soft to-transparent"></div>
           <div class="p-6">
             <div class="mb-3 flex items-center gap-2">
-              <span class="flex h-7 w-7 items-center justify-center rounded-md bg-destructive-soft"><i class="bx bx-sad text-destructive icon-base" aria-hidden="true"></i></span>
+              <span class="flex h-7 w-7 items-center justify-center rounded-md bg-destructive-soft"><i class="bx bx-error text-destructive icon-base" aria-hidden="true"></i></span>
               <h3 class="text-sm font-semibold uppercase tracking-wide text-destructive">Before — manual</h3>
             </div>
             <ul class="space-y-2">
-              <li class="flex items-center gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x-circle text-destructive/70 icon-sm shrink-0" aria-hidden="true"></i>Copy candidate profiles.</li>
-              <li class="flex items-center gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x-circle text-destructive/70 icon-sm shrink-0" aria-hidden="true"></i>Screen CVs manually.</li>
-              <li class="flex items-center gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x-circle text-destructive/70 icon-sm shrink-0" aria-hidden="true"></i>Update spreadsheets and ATS records.</li>
-              <li class="flex items-center gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x-circle text-destructive/70 icon-sm shrink-0" aria-hidden="true"></i>Chase candidate availability.</li>
-              <li class="flex items-center gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x-circle text-destructive/70 icon-sm shrink-0" aria-hidden="true"></i>Coordinate calendars.</li>
-              <li class="flex items-center gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x-circle text-destructive/70 icon-sm shrink-0" aria-hidden="true"></i>Prepare shortlists.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x text-destructive/70 icon-sm shrink-0" aria-hidden="true"></i>Copy candidate profiles.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x text-destructive/70 icon-sm shrink-0" aria-hidden="true"></i>Screen CVs manually.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x text-destructive/70 icon-sm shrink-0" aria-hidden="true"></i>Update spreadsheets and ATS records.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x text-destructive/70 icon-sm shrink-0" aria-hidden="true"></i>Chase candidate availability.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x text-destructive/70 icon-sm shrink-0" aria-hidden="true"></i>Coordinate calendars.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x text-destructive/70 icon-sm shrink-0" aria-hidden="true"></i>Prepare shortlists.</li>
             </ul>
           </div>
         </div>
@@ -263,15 +262,15 @@ const faqJsonLd = {
           <div class="absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r opacity-80 from-primary via-accent to-transparent"></div>
           <div class="p-6">
             <div class="mb-3 flex items-center gap-2">
-              <span class="flex h-7 w-7 items-center justify-center rounded-md bg-primary-soft"><i class="bx bx-cool text-primary icon-base" aria-hidden="true"></i></span>
+              <span class="flex h-7 w-7 items-center justify-center rounded-md bg-primary-soft"><i class="bx bx-check-square text-primary icon-base" aria-hidden="true"></i></span>
               <h3 class="text-sm font-semibold uppercase tracking-wide text-primary">With SpielOS</h3>
             </div>
             <ul class="space-y-2">
-              <li class="flex items-center gap-2 text-sm leading-relaxed text-foreground"><i class="bx bx-check-square text-primary/70 icon-sm shrink-0" aria-hidden="true"></i>Candidates get sourced.</li>
-              <li class="flex items-center gap-2 text-sm leading-relaxed text-foreground"><i class="bx bx-check-square text-primary/70 icon-sm shrink-0" aria-hidden="true"></i>Criteria get checked.</li>
-              <li class="flex items-center gap-2 text-sm leading-relaxed text-foreground"><i class="bx bx-check-square text-primary/70 icon-sm shrink-0" aria-hidden="true"></i>Shortlists arrive ranked.</li>
-              <li class="flex items-center gap-2 text-sm leading-relaxed text-foreground"><i class="bx bx-check-square text-primary/70 icon-sm shrink-0" aria-hidden="true"></i>Interviews get scheduled.</li>
-              <li class="flex items-center gap-2 text-sm leading-relaxed text-foreground"><i class="bx bx-check-square text-primary/70 icon-sm shrink-0" aria-hidden="true"></i>Records stay updated.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-foreground"><i class="bx bx-check text-primary/70 icon-sm shrink-0" aria-hidden="true"></i>Candidates get sourced.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-foreground"><i class="bx bx-check text-primary/70 icon-sm shrink-0" aria-hidden="true"></i>Criteria get checked.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-foreground"><i class="bx bx-check text-primary/70 icon-sm shrink-0" aria-hidden="true"></i>Shortlists arrive ranked.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-foreground"><i class="bx bx-check text-primary/70 icon-sm shrink-0" aria-hidden="true"></i>Interviews get scheduled.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-foreground"><i class="bx bx-check text-primary/70 icon-sm shrink-0" aria-hidden="true"></i>Records stay updated.</li>
             </ul>
           </div>
         </div>

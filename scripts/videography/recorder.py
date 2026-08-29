@@ -57,6 +57,8 @@ def launch_browser(playwright, *, headful: bool, storage_state: str | None):
     args = ["--autoplay-policy=no-user-gesture-required",
             "--disable-blink-features=AutomationControlled"]
     attempts = [
+        {"executable_path": "/Users/shayan/Library/Caches/ms-playwright/chromium-1228/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing"},
+        {"executable_path": "/Users/shayan/Library/Caches/ms-playwright/chromium-1234/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing"},
         {"channel": "chrome"},                      # system Chrome (already installed)
         {},
         {"executable_path": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"},
@@ -98,12 +100,15 @@ def main() -> int:
     pw = load_playwright()
     with pw() as p:
         browser = launch_browser(p, headful=headful, storage_state=args.storage_state)
-        context = browser.new_context(
+        ctx_kwargs = dict(
             viewport={"width": scenario.viewport[0], "height": scenario.viewport[1]},
             record_video_dir=str(out_prefix.parent / f".video-{scenario.name}"),
             record_video_size={"width": scenario.viewport[0], "height": scenario.viewport[1]},
             device_scale_factor=1,
         )
+        if args.storage_state and Path(args.storage_state).exists():
+            ctx_kwargs["storage_state"] = args.storage_state
+        context = browser.new_context(**ctx_kwargs)
         context.add_init_script(script=CURSOR_JS)
         page = context.new_page()
         human = Humanized(page, personality=scenario.personality, seed=scenario.seed)

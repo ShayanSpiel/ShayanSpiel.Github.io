@@ -49,6 +49,7 @@
 .bx-envelope-open:before{content:"\eac2"}
 .bx-error:before{content:"\eac5"}
 .bx-export:before{content:"\eace"}
+.bx-face:before{content:"\ead0"}
 .bx-file:before{content:"\ead5"}
 .bx-film:before{content:"\ead8"}
 .bx-flag:before{content:"\eade"}
@@ -57,6 +58,9 @@
 .bx-globe:before{content:"\eaf8"}
 .bx-grid-alt:before{content:"\eafb"}
 .bx-group:before{content:"\eaff"}
+.bx-happy:before{content:"\eb01"}
+.bx-happy-alt:before{content:"\eb02"}
+.bx-happy-beaming:before{content:"\eb03"}
 .bx-hash:before{content:"\eb05"}
 .bx-hdd:before{content:"\eb06"}
 .bx-heart:before{content:"\eb0a"}
@@ -78,6 +82,7 @@
 .bx-lock:before{content:"\eb49"}
 .bx-lock-alt:before{content:"\eb4a"}
 .bx-map:before{content:"\eb56"}
+.bx-meh:before{content:"\eb5b"}
 .bx-menu:before{content:"\eb5f"}
 .bx-menu-alt-right:before{content:"\eb61"}
 .bx-message:before{content:"\eb63"}
@@ -93,7 +98,6 @@
 .bx-pen:before{content:"\ebb0"}
 .bx-phone:before{content:"\ebb2"}
 .bx-play:before{content:"\ebbd"}
-.bx-play-circle:before{content:"\ebbe"}
 .bx-plus:before{content:"\ebc0"}
 .bx-pulse:before{content:"\ebca"}
 .bx-purchase-tag:before{content:"\ebcb"}
@@ -113,6 +117,7 @@
 .bx-show:before{content:"\ec0c"}
 .bx-sitemap:before{content:"\ec10"}
 .bx-slider:before{content:"\ec16"}
+.bx-smile:before{content:"\ec19"}
 .bx-speaker:before{content:"\ec22"}
 .bx-square:before{content:"\ec25"}
 .bx-sun:before{content:"\ec34"}
@@ -129,6 +134,7 @@
 .bx-user-plus:before{content:"\ec68"}
 .bx-video:before{content:"\ec6e"}
 .bx-video-recording:before{content:"\ec71"}
+.bx-wink-smile:before{content:"\ec88"}
 .bx-world:before{content:"\ec8b"}
 .bx-x:before{content:"\ec8d"}
 .bxl-github:before{content:"\e93a"}

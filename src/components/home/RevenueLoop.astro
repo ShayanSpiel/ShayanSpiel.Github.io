@@ -5,14 +5,15 @@ export interface Props { locale?: string; }
 const { locale = "en" } = Astro.props;
 
 /** Exact 7-step revenue loop — copy of recruitement-automation flow card */
+// Face icons used: bx-smile, bx-happy, bx-happy-beaming, bx-face, bx-happy-alt, bx-meh, bx-wink-smile
 const steps = [
-  { title: "Marketing Specialist", seed: "Marketing Specialist" },
-  { title: "Sales Rep", seed: "Sales Rep" },
-  { title: "Customer", seed: "Customer" },
-  { title: "Account Manager", seed: "Account Manager" },
-  { title: "Finance Specialist", seed: "Finance Specialist" },
-  { title: "IRS", seed: "IRS" },
-  { title: "Customer Success", seed: "Customer Success" },
+  { title: "Marketing Specialist", seed: "Marketing Specialist", icon: "happy" },
+  { title: "Sales Rep", seed: "Sales Rep", icon: "smile" },
+  { title: "Customer", seed: "Customer", icon: "happy-beaming" },
+  { title: "Account Manager", seed: "Account Manager", icon: "face" },
+  { title: "Finance Specialist", seed: "Finance Specialist", icon: "happy-alt" },
+  { title: "IRS", seed: "IRS", icon: "meh" },
+  { title: "Customer Success", seed: "Customer Success", icon: "wink-smile" },
 ];
 
 /** Per-step tool groups — 3-4 famous tools per step, same h-7 w-7 treatment as recruitement page */
@@ -64,11 +65,11 @@ const hrefMap: Record<string, string | undefined> = {
   <ol class="flow-rail relative z-10 grid gap-6 sm:grid-cols-7 sm:gap-0">
     {steps.map((s, i) => {
       const last = i === steps.length - 1;
-      const avatarUrl = `https://api.dicebear.com/10.x/pixelbot/svg?seed=${encodeURIComponent(s.seed)}`;
+
       return (
         <li class="flow-station relative flex items-center gap-4 sm:flex-col sm:gap-3 sm:text-center">
           <div class:list={["flow-node relative z-10 flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-md border bg-panel-raised p-0", last ? "border-success text-success shadow-[0_0_24px_var(--success-soft)]" : i === 0 ? "border-primary text-primary shadow-[0_0_24px_var(--primary-soft)]" : "border-border text-muted-foreground"]}>
-            <img src={avatarUrl} alt={s.title} width="44" height="44" loading="lazy" class="h-full w-full object-cover" />
+            <i class:list={["bx bx-" + s.icon, "icon-xl"]} aria-hidden="true"></i>
           </div>
           <p class:list={["text-xs font-semibold leading-snug", last ? "text-success" : i === 0 ? "text-foreground-strong" : "text-foreground-muted"]}>{s.title}</p>
         </li>
