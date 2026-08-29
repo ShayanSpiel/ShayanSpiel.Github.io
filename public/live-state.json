@@ -1,31 +1,31 @@
 {
   "current_run": {
-    "created_at": "2026-08-28T23:03:56.991486+00:00",
-    "goal_id": "goal-e848b19b7e",
-    "goal_name": "Videography — Sales Manager → Dispatch Manager (65s+ demo)",
-    "owner_id": "videography",
-    "run_id": "run-91e02f8d38",
+    "created_at": "2026-08-29T11:52:51.925181+00:00",
+    "goal_id": "goal-253d91ed26",
+    "goal_name": "Artifact architecture: canonical .spielos/artifacts/{department}/{workflow} layout, tests co-located tagged test, finals-only retention, postprod source restore, junk cleanup",
+    "owner_id": "system-improvement",
+    "run_id": "run-2348a9132b",
     "run_status": "running",
     "stage": "DECIDE",
-    "updated_at": "2026-08-28T23:05:26.835550+00:00"
+    "updated_at": "2026-08-29T11:52:53.525796+00:00"
   },
   "heartbeat": {
     "business_value": null,
     "business_value_fa": null,
     "display_title": null,
     "display_title_fa": null,
-    "goal_id": "goal-e848b19b7e",
-    "goal_name": "Videography — Sales Manager → Dispatch Manager (65s+ demo)",
-    "metric": "showcase_videos",
+    "goal_id": "goal-253d91ed26",
+    "goal_name": "Artifact architecture: canonical .spielos/artifacts/{department}/{workflow} layout, tests co-located tagged test, finals-only retention, postprod source restore, junk cleanup",
+    "metric": "acceptance_tests_passed",
     "operator": "ge",
-    "owner_id": "videography",
+    "owner_id": "system-improvement",
     "run_status": "running",
     "stage": "DECIDE",
     "target": 1,
-    "updated_at": "2026-08-28T23:05:26.835550+00:00"
+    "updated_at": "2026-08-29T11:52:53.525796+00:00"
   },
-  "last_activity_at": "2026-08-28T23:05:26.835550+00:00",
-  "last_sync_at": "2026-08-28T23:05:27.115389+00:00",
+  "last_activity_at": "2026-08-29T11:52:53.525796+00:00",
+  "last_sync_at": "2026-08-29T11:52:53.667688+00:00",
   "northstar": {
     "goal_id": "goal-apply-single-viewport-20260826",
     "goal_name": "Apply page compaction: single-viewport wizard (title + description + wizard + small footer line with prefer-a-call), zero step-to-step resize on mobile and desktop",
@@ -38,14 +38,14 @@
   "state": "running",
   "totals": {
     "approvals": 269,
-    "decisions": 949,
-    "evidence": 14701,
-    "goals_abandoned": 46,
-    "goals_achieved": 174,
+    "decisions": 955,
+    "evidence": 14705,
+    "goals_abandoned": 47,
+    "goals_achieved": 176,
     "goals_active": 39,
-    "goals_total": 264,
+    "goals_total": 267,
     "hypotheses": 99,
     "memory_claims": 0,
-    "runs": 306
+    "runs": 309
   }
 }
