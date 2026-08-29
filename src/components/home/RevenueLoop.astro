@@ -5,15 +5,15 @@ export interface Props { locale?: string; }
 const { locale = "en" } = Astro.props;
 
 /** Exact 7-step revenue loop — copy of recruitement-automation flow card */
-// Role-step icons: fluent-emoji-flat emojis (megaphone, handshake, cart, chart, money, building, party)
+// Role-step icons: fluent-emoji-flat cool face emojis (stars, cool, partyface, think, moneymouth, sweat, love)
 const steps = [
-  { title: "Marketing Specialist", seed: "Marketing Specialist", emoji: "megaphone" },
-  { title: "Sales Rep", seed: "Sales Rep", emoji: "handshake" },
-  { title: "Customer", seed: "Customer", emoji: "cart" },
-  { title: "Account Manager", seed: "Account Manager", emoji: "chart" },
-  { title: "Finance Specialist", seed: "Finance Specialist", emoji: "money" },
-  { title: "IRS", seed: "IRS", emoji: "building" },
-  { title: "Customer Success", seed: "Customer Success", emoji: "party" },
+  { title: "Marketing Specialist", seed: "Marketing Specialist", emoji: "stars" },
+  { title: "Sales Rep", seed: "Sales Rep", emoji: "cool" },
+  { title: "Customer", seed: "Customer", emoji: "partyface" },
+  { title: "Account Manager", seed: "Account Manager", emoji: "think" },
+  { title: "Finance Specialist", seed: "Finance Specialist", emoji: "moneymouth" },
+  { title: "IRS", seed: "IRS", emoji: "sweat" },
+  { title: "Customer Success", seed: "Customer Success", emoji: "love" },
 ];
 
 /** Per-step tool groups — 3-4 famous tools per step, same h-7 w-7 treatment as recruitement page */
