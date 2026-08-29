@@ -1,0 +1,196 @@
+{
+  "name": "flow-wJH1m-test",
+  "title": "Demo \u2014 Job Brief to Candidate Shortlist \u2014 Live TEST showcase",
+  "seed": 7,
+  "personality": "careful",
+  "viewport": [
+    1440,
+    900
+  ],
+  "steps": [
+    {
+      "type": "goto",
+      "url": "http://localhost:8080/projects/rw568MTpQWxjZAQXFOYu5/flows/wJH1m3OOW1nHFREUkGdTN"
+    },
+    {
+      "type": "wait",
+      "seconds": 5.0
+    },
+    {
+      "type": "shot",
+      "name": "01-landing",
+      "wait_after": 0.4
+    },
+    {
+      "type": "read",
+      "text": "Opening Demo \u2014 Job Brief to Candidate Shortlist. Six steps from form submission to AI shortlist and Drive hand-off."
+    },
+    {
+      "type": "wait_for",
+      "selector": "button:has-text(\"Test Flow\")",
+      "timeout_ms": 30000,
+      "wait_after": 1.0
+    },
+    {
+      "type": "shot",
+      "name": "02-flow-loaded",
+      "wait_after": 0.5
+    },
+    {
+      "type": "read",
+      "text": "The canvas is loaded. Trigger plus five processing steps plus the final response."
+    },
+    {
+      "type": "click",
+      "selector": "[data-testid=\"rf__node-trigger\"]",
+      "wait_after": 1.2
+    },
+    {
+      "type": "read",
+      "text": "Trigger \u2014 form_submission. The entry point. A vacancy brief and optional document."
+    },
+    {
+      "type": "shot",
+      "name": "03-trigger",
+      "wait_after": 0.6
+    },
+    {
+      "type": "click",
+      "selector": "[data-testid=\"rf__node-step_1\"]",
+      "wait_after": 1.2
+    },
+    {
+      "type": "read",
+      "text": "Step 2 \u2014 Extract Search Criteria. AI parses role, seniority, location and skills into structured JSON."
+    },
+    {
+      "type": "shot",
+      "name": "04-step1-extract",
+      "wait_after": 0.6
+    },
+    {
+      "type": "click",
+      "selector": "[data-testid=\"rf__node-step_5\"]",
+      "wait_after": 1.2
+    },
+    {
+      "type": "read",
+      "text": "Step 3 \u2014 Read Candidate DB. Pulls candidates from the ActivePieces table."
+    },
+    {
+      "type": "shot",
+      "name": "05-step5-read-db",
+      "wait_after": 0.6
+    },
+    {
+      "type": "click",
+      "selector": "[data-testid=\"rf__node-step_2\"]",
+      "wait_after": 1.2
+    },
+    {
+      "type": "read",
+      "text": "Step 4 \u2014 AI Pick CVs. Ranks and selects the best matching candidates."
+    },
+    {
+      "type": "shot",
+      "name": "06-step2-ai-pick",
+      "wait_after": 0.6
+    },
+    {
+      "type": "click",
+      "selector": "[data-testid=\"rf__node-step_4\"]",
+      "wait_after": 1.2
+    },
+    {
+      "type": "read",
+      "text": "Step 5 \u2014 Pass Shortlist to Drive. Writes the shortlist file for review."
+    },
+    {
+      "type": "shot",
+      "name": "07-step4-drive",
+      "wait_after": 0.6
+    },
+    {
+      "type": "click",
+      "selector": "[data-testid=\"rf__node-step_3\"]",
+      "wait_after": 1.2
+    },
+    {
+      "type": "read",
+      "text": "Step 6 \u2014 Show Result. Returns the ranked shortlist to the requester."
+    },
+    {
+      "type": "shot",
+      "name": "08-step3-result",
+      "wait_after": 0.6
+    },
+    {
+      "type": "read",
+      "text": "Every step inspected. Now running a live TEST of the whole flow."
+    },
+    {
+      "type": "click",
+      "selector": "button:has-text(\"Test Flow\")",
+      "wait_after": 2.0
+    },
+    {
+      "type": "wait",
+      "seconds": 3.0
+    },
+    {
+      "type": "shot",
+      "name": "09-test-clicked",
+      "wait_after": 0.6
+    },
+    {
+      "type": "read",
+      "text": "Test Flow triggered. Watching the steps go Succeeded one by one."
+    },
+    {
+      "type": "wait_for",
+      "selector": "div:has-text(\"Succeeded\")",
+      "timeout_ms": 45000,
+      "wait_after": 1.5
+    },
+    {
+      "type": "shot",
+      "name": "10-running",
+      "wait_after": 0.8
+    },
+    {
+      "type": "wait",
+      "seconds": 6.0
+    },
+    {
+      "type": "shot",
+      "name": "11-after-run",
+      "wait_after": 0.8
+    },
+    {
+      "type": "read",
+      "text": "Flow executed step by step. AI extraction, table read, AI ranking and Drive export all passed."
+    },
+    {
+      "type": "scroll",
+      "selector": "body",
+      "by": 300
+    },
+    {
+      "type": "wait",
+      "seconds": 3.0
+    },
+    {
+      "type": "shot",
+      "name": "12-final",
+      "wait_after": 0.5
+    },
+    {
+      "type": "read",
+      "text": "Demo complete. From job brief to candidate shortlist \u2014 fully automated."
+    },
+    {
+      "type": "wait",
+      "seconds": 2.0
+    }
+  ]
+}

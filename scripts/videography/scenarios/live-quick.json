@@ -1,0 +1,30 @@
+{
+  "name": "live-quick",
+  "title": "Job Brief → Shortlist — live TEST",
+  "seed": 7,
+  "personality": "careful",
+  "viewport": [1440, 900],
+  "steps": [
+    {"type": "goto", "url": "http://localhost:8080/projects/rw568MTpQWxjZAQXFOYu5/flows/wJH1m3OOW1nHFREUkGdTN"},
+    {"type": "wait", "seconds": 4.5},
+    {"type": "shot", "name": "01-landing", "wait_after": 0.4},
+    {"type": "read", "text": "Demo — Job Brief to Candidate Shortlist. Six steps."},
+    {"type": "wait_for", "selector": "button:has-text(\"Test Flow\")", "timeout_ms": 15000, "wait_after": 0.8},
+    {"type": "click", "selector": "[data-testid=\"rf__node-trigger\"]", "wait_after": 1.0},
+    {"type": "click", "selector": "[data-testid=\"rf__node-step_1\"]", "wait_after": 1.0},
+    {"type": "click", "selector": "[data-testid=\"rf__node-step_5\"]", "wait_after": 1.0},
+    {"type": "click", "selector": "[data-testid=\"rf__node-step_2\"]", "wait_after": 1.0},
+    {"type": "click", "selector": "[data-testid=\"rf__node-step_4\"]", "wait_after": 1.0},
+    {"type": "click", "selector": "[data-testid=\"rf__node-step_3\"]", "wait_after": 1.0},
+    {"type": "shot", "name": "02-steps", "wait_after": 0.4},
+    {"type": "read", "text": "Trigger plus Extract, Read DB, AI Pick, Pass to Drive, Show Result. Running TEST now."},
+    {"type": "click", "selector": "button:has-text(\"Test Flow\")", "wait_after": 3.0},
+    {"type": "wait", "seconds": 4.0},
+    {"type": "shot", "name": "03-test-triggered", "wait_after": 0.5},
+    {"type": "wait", "seconds": 8.0},
+    {"type": "shot", "name": "04-running", "wait_after": 0.5},
+    {"type": "wait", "seconds": 5.0},
+    {"type": "shot", "name": "05-final", "wait_after": 0.5},
+    {"type": "wait", "seconds": 1.5}
+  ]
+}

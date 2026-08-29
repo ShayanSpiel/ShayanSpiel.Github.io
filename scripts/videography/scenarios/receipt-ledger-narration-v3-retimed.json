@@ -1,0 +1,88 @@
+{
+  "segments": [
+    {
+      "text": "Forty PDFs in the inbox by nine. You open each one, copy the vendor, the date, the total, and every line item.",
+      "keywords": [
+        "inbox",
+        "vendor",
+        "date",
+        "total"
+      ]
+    },
+    {
+      "text": "Then you switch to the ERP. You remember which account code goes where, you fix the VAT, you hunt down the purchase order.",
+      "keywords": [
+        "ERP",
+        "account code",
+        "VAT",
+        "purchase order"
+      ]
+    },
+    {
+      "text": "I'm Shayan from SpielOS. This ActivePieces flow does that whole loop from a single upload.",
+      "keywords": [
+        "Shayan",
+        "SpielOS",
+        "ActivePieces",
+        "single upload"
+      ]
+    },
+    {
+      "text": "Quick note on the ledger you see here. It is an ActivePieces table standing in. In a live client build it is Xero, QuickBooks, or Sage. Same fields, just wired to your accounting tool.",
+      "keywords": [
+        "table",
+        "Xero",
+        "QuickBooks",
+        "Sage"
+      ]
+    },
+    {
+      "text": "Here is the form. I will upload a real invoice.",
+      "keywords": [
+        "form",
+        "upload",
+        "invoice"
+      ]
+    },
+    {
+      "text": "In production that file could come from inbound email, a Google Sheet, or any connected app. Hit submit and the AI takes over.",
+      "keywords": [
+        "email",
+        "Google Sheet",
+        "submit"
+      ]
+    },
+    {
+      "text": "It is reading the invoice now. Pulling the vendor, the line items and the amounts. Then coding each line to its right account. This normally takes about thirty seconds. I have sped it here.",
+      "keywords": [
+        "reading",
+        "vendor",
+        "coding",
+        "thirty seconds"
+      ]
+    },
+    {
+      "text": "There it is. Vendor, total, VAT. Every line coded to the right account, logged to the ledger and archived to Drive.",
+      "keywords": [
+        "vendor",
+        "VAT",
+        "coded",
+        "Drive"
+      ]
+    },
+    {
+      "text": "One upload. Full capture and coding. No manual typing. No copy paste into accounting software.",
+      "keywords": [
+        "one upload",
+        "no manual typing"
+      ]
+    },
+    {
+      "text": "Want this for your books? Shoot me a DM. Thanks for watching.",
+      "keywords": [
+        "DM",
+        "thanks"
+      ]
+    }
+  ]
+}

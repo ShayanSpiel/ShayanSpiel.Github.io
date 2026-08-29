@@ -1,0 +1,17 @@
+{
+  "strategy": "owner narration v2 - receipt ledger capture & coding demo (regenerated copy)",
+  "voice": "Daniel (macOS TTS)",
+  "note": "Pain-first hook, no flat intro. Keeps mandatory stand-in callout (ActivePieces table = Xero/QuickBooks/Sage).",
+  "segments": [
+    {"text": "Every month, someone manually types receipts into accounting software - copy-pasting vendor, amount, and VAT, line by line. I'm Shayan from SpielOS, and here's an ActivePieces flow that does the whole job in one upload.", "keywords": ["Shayan", "SpielOS", "ActivePieces", "one upload"]},
+    {"text": "You drop in an invoice. AI reads it and pulls out the vendor, the date, the total, and every line item - no fixed template, no special format.", "keywords": ["invoice", "AI", "vendor", "line items"]},
+    {"text": "Then a second AI step codes each line to the right GL account, writes the entry to your ledger, archives the original file to Drive, and gives you a clean summary.", "keywords": ["GL account", "ledger", "Drive", "summary"]},
+    {"text": "Quick note on the ledger step: here it's an ActivePieces table standing in for the real thing. In a client build this is Xero, QuickBooks, or Sage - same fields, just wired to your actual accounting tool.", "keywords": ["table", "Xero", "QuickBooks", "Sage"]},
+    {"text": "Let's run it for real. Here's the form - I'll upload an actual invoice.", "keywords": ["form", "upload", "invoice"]},
+    {"text": "In production that file could land from inbound email, a Google Sheet, or any connected app. I hit submit and the AI takes over.", "keywords": ["email", "Google Sheet", "submit"]},
+    {"text": "It's reading the invoice now - extracting the vendor, the line items, the amounts - then coding each line to its account. Normally about thirty seconds; I've sped it up here.", "keywords": ["reading", "extracting", "coding", "thirty seconds"]},
+    {"text": "And there it is: vendor, total, VAT, every line coded to the right GL account, logged to the ledger and archived to Drive.", "keywords": ["vendor", "VAT", "GL account", "archived"]},
+    {"text": "One upload. Full capture and coding. No manual data entry, nothing copy-pasted into accounting software.", "keywords": ["one upload", "no manual entry"]},
+    {"text": "Want a workflow like this for your books? Shoot me a DM - thanks for watching.", "keywords": ["workflow", "DM", "thanks"]}
+  ]
+}
