@@ -1,0 +1,179 @@
+---
+import { brandLogo } from "../../data/brand-logos";
+
+export interface Props { locale?: string; }
+const { locale = "en" } = Astro.props;
+
+/** Exact 7-step revenue loop — copy of recruitement-automation flow card */
+const steps = [
+  { title: "Marketing Specialist", seed: "Marketing Specialist" },
+  { title: "Sales Rep", seed: "Sales Rep" },
+  { title: "Customer", seed: "Customer" },
+  { title: "Account Manager", seed: "Account Manager" },
+  { title: "Finance Specialist", seed: "Finance Specialist" },
+  { title: "IRS", seed: "IRS" },
+  { title: "Customer Success", seed: "Customer Success" },
+];
+
+/** Per-step tool groups — 3-4 famous tools per step, same h-7 w-7 treatment as recruitement page */
+const stepTools: string[][] = [
+  ["hubspot", "notion", "sheets"],        // Marketing Specialist — 3
+  ["gmail", "calendly"],                  // Sales Rep — 2
+  ["stripe", "zoom", "slack"],            // Customer — 3
+  ["attio", "drive"],                     // Account Manager — 2
+  ["sheets", "zapier", "calendar"],       // Finance Specialist — 3 (sheets 2nd time ok, not 4x)
+  ["drive", "gmail"],                     // IRS — 2 (drive 2nd, gmail 2nd)
+  ["slack", "notion", "telegram"],        // Customer Success — 3 (slack 2nd, notion 2nd)
+];
+
+const toolMeta: Record<string, string> = {
+  zapier: "Zapier",
+  hubspot: "HubSpot",
+  notion: "Notion",
+  sheets: "Google Sheets",
+  gmail: "Gmail",
+  calendar: "Google Calendar",
+  calendly: "Calendly",
+  stripe: "Stripe",
+  slack: "Slack",
+  drive: "Google Drive",
+  linkedin: "LinkedIn",
+  indeed: "Indeed",
+  workable: "Workable",
+  attio: "Attio",
+  zoom: "Zoom",
+  telegram: "Telegram",
+};
+
+const hrefMap: Record<string, string | undefined> = {
+  hubspot: "/solutions/software/hubspot-automation/",
+  notion: "/solutions/software/notion-automation/",
+  gmail: "/solutions/software/gmail-automation/",
+  slack: "/solutions/software/slack-automation/",
+  drive: "/solutions/software/google-drive-automation/",
+  zapier: "/solutions/software/zapier-automation/",
+  calendar: "/solutions/software/google-calendar-automation/",
+  attio: "/solutions/software/attio-automation/",
+  telegram: "/solutions/software/telegram-automation/",
+  // sheets, stripe, zoom, linkedin, indeed, workable, calendly have no dedicated page — no link
+};
+---
+<div class="flow-canvas relative overflow-hidden rounded-md border border-border bg-panel px-5 py-10 shadow-panel sm:px-8 sm:py-14" data-aos="fade-up">
+  <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
+  <div class="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 glow-blob opacity-15"></div>
+  <ol class="flow-rail relative z-10 grid gap-6 sm:grid-cols-7 sm:gap-0">
+    {steps.map((s, i) => {
+      const last = i === steps.length - 1;
+      const avatarUrl = `https://api.dicebear.com/10.x/pixelbot/svg?seed=${encodeURIComponent(s.seed)}`;
+      return (
+        <li class="flow-station relative flex items-center gap-4 sm:flex-col sm:gap-3 sm:text-center">
+          <div class:list={["flow-node relative z-10 flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-md border bg-panel-raised p-0", last ? "border-success text-success shadow-[0_0_24px_var(--success-soft)]" : i === 0 ? "border-primary text-primary shadow-[0_0_24px_var(--primary-soft)]" : "border-border text-muted-foreground"]}>
+            <img src={avatarUrl} alt={s.title} width="44" height="44" loading="lazy" class="h-full w-full object-cover" />
+          </div>
+          <p class:list={["text-xs font-semibold leading-snug", last ? "text-success" : i === 0 ? "text-foreground-strong" : "text-foreground-muted"]}>{s.title}</p>
+        </li>
+      );
+    })}
+    {/* Global connected horizontal shine — one line from Marketing to Customer Success, goes full way then comes back */}
+    <div class="hidden sm:block pointer-events-none absolute top-[1.375rem] left-[calc(100%/14)] right-[calc(100%/14)] h-px overflow-hidden" aria-hidden="true">
+      <div class="absolute top-0 h-full w-8 bg-primary opacity-95 shadow-[0_0_12px_var(--primary)] animate-global-h-shine" style="left: -32px;"></div>
+    </div>
+  </ol>
+  <!-- Per-step tool groups — identical to recruitement page: vertical stem 2-3px below step name, calm shine -->
+  <div class="relative z-10 mt-[2px] sm:mt-[3px]">
+    <div class="grid gap-6 sm:grid-cols-7 sm:gap-0">
+      {stepTools.map((keys, idx) => (
+        <div class="flex flex-col items-center">
+          <div class="relative h-7 w-px overflow-hidden bg-primary/15 sm:h-9">
+            <div class="absolute left-1/2 top-0 h-2 w-px -translate-x-1/2 bg-primary opacity-95 shadow-[0_0_8px_var(--primary)] animate-stem-shine" style={`animation-delay: ${(Math.random() * 1.4).toFixed(2)}s`}></div>
+          </div>
+          <div class="mt-2 flex flex-wrap justify-center gap-1.5 sm:mt-2">
+            {keys.map((k) => {
+              const name = toolMeta[k] ?? k;
+              const logo = brandLogo(k);
+              const href = hrefMap[k];
+              const inner = (
+                <>
+                  <span class="flex h-7 w-7 items-center justify-center rounded-md border border-border bg-panel-raised shadow-panel [&>svg]:h-4 [&>svg]:w-4 group-hover:border-border-strong group-hover:-translate-y-px transition-all" set:html={logo}></span>
+                  <span class="pointer-events-none absolute bottom-full left-1/2 z-20 mb-1.5 hidden -translate-x-1/2 whitespace-nowrap rounded-md border border-border bg-panel-raised px-2 py-1 text-2xs font-medium text-foreground shadow-popover group-hover:block group-focus-visible:block">{name}</span>
+                </>
+              );
+              return href ? (
+                <a href={href} class="group relative flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md" title={name} aria-label={name}>{inner}</a>
+              ) : (
+                <span class="group relative flex items-center justify-center" title={name} aria-label={name}>{inner}</span>
+              );
+            })}
+          </div>
+        </div>
+      ))}
+    </div>
+    <p class="mt-6 text-center text-2xs font-medium tracking-wide text-muted-foreground">Familiar tools, familiar work, delegated to AI.</p>
+  </div>
+</div>
+
+<style>
+  /* Exact copy from recruitement-automation.astro — connector geometry */
+  .flow-station:not(:last-child)::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: 1.375rem;
+    top: 50%;
+    height: 100%;
+    width: 2px;
+    translate: -50% 0;
+    border-radius: var(--radius-md);
+    background: linear-gradient(
+      to bottom,
+      color-mix(in oklab, var(--primary) 40%, transparent),
+      color-mix(in oklab, var(--accent) 40%, transparent)
+    );
+  }
+  @media (min-width: 640px) {
+    .flow-station:not(:last-child)::before { display: none; }
+    .flow-station:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: 1.375rem;
+      height: 2px;
+      inset-inline-start: 50%;
+      width: 100%;
+      border-radius: var(--radius-md);
+      background: linear-gradient(
+        to right,
+        color-mix(in oklab, var(--primary) 45%, transparent),
+        color-mix(in oklab, var(--accent) 45%, transparent)
+      );
+    }
+    [dir="rtl"] .flow-station:not(:last-child)::after {
+      background: linear-gradient(to left, color-mix(in oklab, var(--primary) 45%, transparent), color-mix(in oklab, var(--accent) 45%, transparent));
+    }
+  }
+  @keyframes stem-shine {
+    0% { transform: translateY(-120%); opacity: 0; }
+    8% { opacity: 1; }
+    50% { transform: translateY(420%); opacity: 1; }
+    58% { opacity: 1; }
+    100% { transform: translateY(-120%); opacity: 0; }
+  }
+  .animate-stem-shine {
+    animation: stem-shine 2.8s ease-in-out infinite;
+  }
+  /* Global horizontal: travels the whole connected line Marketing → Success, pauses, then returns */
+  @keyframes global-h-shine {
+    0% { left: -32px; opacity: 0; }
+    6% { opacity: 1; }
+    42% { left: calc(100% - 8px); opacity: 1; }
+    50% { left: calc(100% - 8px); opacity: 0; }
+    58% { opacity: 0; left: calc(100% - 8px); }
+    64% { opacity: 1; }
+    92% { left: -32px; opacity: 1; }
+    100% { left: -32px; opacity: 0; }
+  }
+  .animate-global-h-shine {
+    animation: global-h-shine 6.5s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .animate-stem-shine, .animate-global-h-shine { animation: none; opacity: 0.6; }
+  }
+</style>

@@ -1,0 +1,272 @@
+---
+import Page from "../../../layouts/Page.astro";
+import SectionHeader from "../../../components/sections/SectionHeader.astro";
+import FAQList from "../../../components/sections/FAQList.astro";
+import { brandLogo } from "../../../data/brand-logos";
+import { APPLY_PATH, SITE } from "../../../config";
+import { localizePath } from "../../../i18n";
+import { t } from "../../../i18n/translations";
+
+/** Sales → Dispatch loop — freight inquiry to quote-ready dispatch */
+const steps = [
+  {
+    title: "Inquiry captured",
+    desc: "Freight quote request lands via form or email paste — company, contact, lane, commodity, weight, mode, urgency.",
+    icon: "bx-clipboard",
+  },
+  {
+    title: "Lane extracted",
+    desc: "Pixtral reads the pasted text + optional RFQ PDF and structures origin, destination, commodity, weight, mode, service type.",
+    icon: "bx-search-alt",
+  },
+  {
+    title: "Quote normalized",
+    desc: "CODE validates enums, joins missing questions, and builds a canonical handover JSON for Dispatch.",
+    icon: "bx-code-alt",
+  },
+  {
+    title: "Dispatch row created",
+    desc: "Quote-ready row lands in Freight Intake Table. Table stands in for TMS — swap for TMS Create Order.",
+    icon: "bx-data",
+  },
+  {
+    title: "Quote draft archived",
+    desc: "Markdown handover saved to Drive with lane, commodity, urgency, and missing questions for audit.",
+    icon: "bx-folder",
+  },
+  {
+    title: "Handover delivered",
+    desc: "Sales Manager → Dispatch Manager summary renders on screen with Table id, Drive link, and handover JSON.",
+    icon: "bx-task",
+  },
+];
+
+const tools = [
+  { key: "gmail", name: "Gmail" },
+  { key: "drive", name: "Google Drive" },
+  { key: "sheets", name: "Google Sheets" },
+  { key: "slack", name: "Slack" },
+  { key: "attio", name: "Attio" },
+  { key: "hubspot", name: "HubSpot" },
+  { key: "notion", name: "Notion" },
+  { key: "calendar", name: "Google Calendar" },
+  { key: "zoom", name: "Zoom" },
+];
+
+const stepTools: string[][] = [
+  ["gmail"],                 // Inquiry captured
+  ["drive"],                 // Lane extracted
+  ["sheets", "notion"],      // Quote normalized
+  ["sheets", "attio"],       // Dispatch row created
+  ["drive", "slack"],        // Quote draft archived
+  ["hubspot", "calendar"],   // Handover delivered
+];
+
+const audiences = [
+  { name: "3PLs & freight forwarders", note: "High-volume RFQs where every retype between inbox/PDF and TMS costs minutes and margin." },
+  { name: "LTL & parcel carriers", note: "Accessorials and urgency flags get missed when dispatch info is copied by hand." },
+  { name: "Brokerage desks", note: "One lane, many emails — needs a clean handover from Sales to Dispatch before quoting." },
+];
+
+const faqs = [
+  { q: "What is freight workflow automation?", a: "It is the freight-intake handover on autopilot — a Sales Manager pastes a freight quote request (or uploads the RFQ PDF), SpielOS extracts lane, commodity, weight, mode, service type and urgency, and hands Dispatch a quote-ready row plus a Drive archive. No inbox-to-TMS retyping." },
+  { q: "Do we need to replace our TMS?", a: "No. For the demo we use a Table instead of TMS/ERP (e.g., Oracle TMS, BluJay, MercuryGate) for demo simplicity — swap this step for your TMS Create Order. Your TMS stays exactly where it is." },
+  { q: "What stays human?", a: "Pricing and commitment. Dispatch still owns the quote and the carrier call. The automation handles the extraction, the structuring, and the filing." },
+];
+
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: t("en", "nav.home"), item: `${SITE.url}${localizePath("/", "en")}` },
+    { "@type": "ListItem", position: 2, name: t("en", "nav.solutions"), item: `${SITE.url}${localizePath("/solutions/", "en")}` },
+    { "@type": "ListItem", position: 3, name: t("en", "nav.workflows"), item: `${SITE.url}${localizePath("/solutions/workflows/", "en")}` },
+    { "@type": "ListItem", position: 4, name: "Freight Workflow Automation", item: `${SITE.url}/solutions/workflows/sales-dispatch-automation/` },
+  ],
+};
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+};
+---
+
+<Page
+  title="Freight Workflow Automation | SpielOS"
+  description="Freight workflow automation for logistics teams. Turn any RFQ — email or PDF — into a quote-ready dispatch row without retyping between inbox and TMS."
+  image="/assets/og/SpielOS.png"
+  locale="en"
+  noAlternate
+>
+  <!-- HERO -->
+  <section class="relative flex min-h-[64vh] items-center overflow-hidden py-24 sm:py-32">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
+    <div class="absolute left-1/2 top-[42%] h-[34rem] w-[52rem] -translate-x-1/2 -translate-y-1/2 glow-blob opacity-20"></div>
+    <div class="relative z-10 mx-auto max-w-4xl px-6 text-center">
+      <nav aria-label={t("en", "common.breadcrumbAria")} class="mb-8">
+        <ol class="flex items-center justify-center gap-1.5 text-2xs text-muted-foreground flex-wrap">
+          <li><a href={localizePath("/", "en")} class="hover:text-foreground transition-colors">{t("en", "nav.home")}</a></li>
+          <li class="flex items-center gap-1.5"><span aria-hidden="true" class="text-border-strong">/</span><a href={localizePath("/solutions/", "en")} class="hover:text-foreground transition-colors">{t("en", "nav.solutions")}</a></li>
+          <li class="flex items-center gap-1.5"><span aria-hidden="true" class="text-border-strong">/</span><a href={localizePath("/solutions/workflows/", "en")} class="hover:text-foreground transition-colors">{t("en", "nav.workflows")}</a></li>
+          <li class="flex items-center gap-1.5"><span aria-hidden="true" class="text-border-strong">/</span><span class="text-foreground font-medium" aria-current="page">Sales → Dispatch</span></li>
+        </ol>
+      </nav>
+      <div class="inline-flex items-center gap-2 rounded-md border border-border bg-panel-raised px-3 py-1 mb-6" data-aos="fade-up">
+        <i class="bx bx-task text-primary/80 icon-sm shrink-0" aria-hidden="true"></i>
+        <span class="text-2xs text-muted-foreground font-medium">SALES MANAGER → DISPATCH MANAGER</span>
+      </div>
+      <h1 class="mt-4 text-4xl font-extrabold leading-[0.95] tracking-tight text-foreground-strong sm:text-5xl lg:text-6xl" data-aos="fade-up">Freight workflow automation for <span class="text-primary">logistics teams.</span></h1>
+      <p class="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground" data-aos="fade-up">Turn any freight RFQ — email paste or PDF — into a quote-ready dispatch row without retyping between inbox and TMS.</p>
+      <div class="mt-8 flex flex-col items-center gap-3" data-aos="fade-up">
+        <a href="#see-it-run" data-cta-location="workflow_sales_dispatch_hero" class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20">SEE IT RUN</a>
+        <p class="text-sm text-muted-foreground max-w-lg text-center">From raw RFQ paste + optional PDF to quote-ready row, Drive archive and handover JSON — Sales → Dispatch, no manual copy-paste.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- VIDEO SHOWCASE -->
+  <section id="see-it-run" class="relative overflow-hidden py-16 sm:py-20 scroll-mt-24">
+    <div class="mx-auto max-w-5xl px-6">
+      <div class="mb-10 text-center" data-aos="fade-up">
+        <span class="text-2xs font-semibold uppercase tracking-widest text-primary">FREIGHT INTAKE AUTOMATION</span>
+        <h2 class="font-bold text-foreground-strong tracking-tight mt-3 text-3xl sm:text-4xl">Automate the Sales → Dispatch handover.</h2>
+        <p class="mx-auto mt-4 max-w-2xl text-sm text-muted-foreground leading-relaxed">A live SpielOS run turning a messy RFQ into a structured, quote-ready dispatch record.</p>
+      </div>
+      <div class="relative overflow-hidden rounded-md border border-border bg-panel shadow-panel" data-aos="fade-up">
+        <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r opacity-80 from-primary via-accent to-transparent"></div>
+        <div class="aspect-video w-full bg-black flex items-center justify-center">
+          <p class="text-sm text-muted-foreground">65s+ demo video — recording via Videography Department (human-paced, real browser session). Placeholder until render completes.</p>
+        </div>
+      </div>
+      <p class="mt-4 text-center text-2xs text-muted-foreground">Sales Manager → Dispatch Manager: inquiry captured, lane extracted, dispatch row created — on your stack.</p>
+    </div>
+  </section>
+
+  <!-- HOW IT RUNS -->
+  <section class="relative py-20 sm:py-24">
+    <div class="mx-auto max-w-5xl px-6">
+      <SectionHeader label="WORKS ON YOUR STACK" title="Your freight tools, just automated." />
+      <div class="flow-canvas relative overflow-hidden rounded-md border border-border bg-panel px-5 py-10 shadow-panel sm:px-8 sm:py-14" data-aos="fade-up">
+        <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
+        <div class="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 glow-blob opacity-15"></div>
+        <ol class="flow-rail relative z-10 grid gap-6 sm:grid-cols-6 sm:gap-0">
+          {steps.map((s, i) => {
+            const last = i === steps.length - 1;
+            return (
+              <li class="flow-station relative flex items-center gap-4 sm:flex-col sm:gap-3 sm:text-center">
+                <div class:list={["flow-node relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-md border bg-panel-raised", last ? "border-success text-success shadow-[0_0_24px_var(--success-soft)]" : i === 0 ? "border-primary text-primary shadow-[0_0_24px_var(--primary-soft)]" : "border-border text-muted-foreground"]}>
+                  <i class={`bx ${s.icon} icon-xl`} aria-hidden="true"></i>
+                </div>
+                <p class:list={["text-xs font-semibold leading-snug", last ? "text-success" : i === 0 ? "text-foreground-strong" : "text-foreground-muted"]}>{s.title}</p>
+              </li>
+            );
+          })}
+        </ol>
+        <div class="relative z-10 mt-[2px] sm:mt-[3px]">
+          <div class="grid gap-6 sm:grid-cols-6 sm:gap-0">
+            {stepTools.map((keys, idx) => (
+              <div class="flex flex-col items-center">
+                <div class="relative h-7 w-px overflow-hidden bg-primary/15 sm:h-9">
+                  <div class="absolute left-1/2 top-0 h-2 w-px -translate-x-1/2 bg-primary opacity-95 shadow-[0_0_8px_var(--primary)] animate-stem-shine" style={`animation-delay: ${idx * 0.34}s`}></div>
+                </div>
+                <div class="mt-2 flex flex-wrap justify-center gap-1.5 sm:mt-2">
+                  {keys.map((k) => {
+                    const tl = tools.find((t) => t.key === k)!;
+                    return (
+                      <span class="flex h-7 w-7 items-center justify-center rounded-md border border-border bg-panel-raised shadow-panel [&>svg]:h-4 [&>svg]:w-4" title={tl.name} set:html={brandLogo(tl.key)}></span>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+          <p class="mt-6 text-center text-2xs font-medium tracking-wide text-muted-foreground">We use a Table instead of TMS/ERP for demo simplicity — swap this step for your TMS Create Order.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BEFORE / AFTER -->
+  <section class="relative overflow-hidden py-20 sm:py-24">
+    <div class="absolute inset-0 bg-panel-deep/35"></div>
+    <div class="relative mx-auto max-w-5xl px-6">
+      <div class="mb-12 text-center" data-aos="fade-up">
+        <span class="text-2xs font-semibold uppercase tracking-widest text-primary">LESS RETYPING. MORE DISPATCHING.</span>
+        <h2 class="font-bold text-foreground-strong tracking-tight mt-3 text-3xl sm:text-4xl">Stop retyping RFQs between inbox and TMS.</h2>
+      </div>
+      <div class="grid gap-4 md:grid-cols-2" data-aos="fade-up">
+        <div class="group relative flex flex-col overflow-hidden rounded-md border border-destructive/30 bg-panel shadow-panel">
+          <div class="absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r opacity-70 from-destructive via-destructive-soft to-transparent"></div>
+          <div class="p-6">
+            <div class="mb-3 flex items-center gap-2">
+              <span class="flex h-7 w-7 items-center justify-center rounded-md bg-destructive-soft"><i class="bx bx-error text-destructive icon-base"></i></span>
+              <h3 class="text-sm font-semibold uppercase tracking-wide text-destructive">Before — manual</h3>
+            </div>
+            <ul class="space-y-2">
+              <li class="flex items-center gap-2 text-sm text-muted-foreground"><i class="bx bx-error text-destructive/70 icon-sm"></i>Copy lane and commodity from email/PDF.</li>
+              <li class="flex items-center gap-2 text-sm text-muted-foreground"><i class="bx bx-error text-destructive/70 icon-sm"></i>Re-type weight, mode, service type into TMS.</li>
+              <li class="flex items-center gap-2 text-sm text-muted-foreground"><i class="bx bx-error text-destructive/70 icon-sm"></i>Chase missing questions by phone/email.</li>
+              <li class="flex items-center gap-2 text-sm text-muted-foreground"><i class="bx bx-error text-destructive/70 icon-sm"></i>Re-create the same lane for quoting.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="group relative flex flex-col overflow-hidden rounded-md border border-primary/30 bg-panel shadow-panel">
+          <div class="absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r opacity-80 from-primary via-accent to-transparent"></div>
+          <div class="p-6">
+            <div class="mb-3 flex items-center gap-2">
+              <span class="flex h-7 w-7 items-center justify-center rounded-md bg-primary-soft"><i class="bx bx-check-square text-primary icon-base"></i></span>
+              <h3 class="text-sm font-semibold uppercase tracking-wide text-primary">With SpielOS</h3>
+            </div>
+            <ul class="space-y-2">
+              <li class="flex items-center gap-2 text-sm text-foreground"><i class="bx bx-check-square text-primary/70 icon-sm"></i>RFQs get structured.</li>
+              <li class="flex items-center gap-2 text-sm text-foreground"><i class="bx bx-check-square text-primary/70 icon-sm"></i>Lane, mode, urgency arrive clean.</li>
+              <li class="flex items-center gap-2 text-sm text-foreground"><i class="bx bx-check-square text-primary/70 icon-sm"></i>Dispatch row appears quote-ready.</li>
+              <li class="flex items-center gap-2 text-sm text-foreground"><i class="bx bx-check-square text-primary/70 icon-sm"></i>Missing questions flagged instantly.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="mt-10 text-center" data-aos="fade-up">
+        <p class="text-2xs font-semibold uppercase tracking-[0.14em] text-primary">BUILT FOR LOGISTICS TEAMS</p>
+        <h3 class="mt-2 text-xl font-bold tracking-tight text-foreground-strong sm:text-2xl">Automate the work between inquiry and quote.</h3>
+        <div class="mt-6 flex flex-wrap justify-center gap-2">
+          {audiences.map((a) => (
+            <span class="inline-flex items-center gap-1.5 rounded-md border border-border bg-panel-raised px-3 py-1.5 text-xs font-medium text-foreground-strong shadow-panel"><i class="bx bx-package text-primary icon-sm"></i>{a.name}</span>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative overflow-hidden py-28 sm:py-36">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="relative mx-auto max-w-3xl px-6 text-center" data-aos="fade-up">
+      <p class="text-xs font-semibold uppercase tracking-widest text-primary">FREE WORKFLOW REVIEW</p>
+      <h2 class="mt-5 text-4xl font-extrabold leading-tightest tracking-tight text-foreground-strong sm:text-5xl">Show us one<br /><span class="text-primary">freight handover.</span></h2>
+      <p class="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">We'll show you what can be automated, how it would run on your current TMS, and what stays with Dispatch.</p>
+      <a href={localizePath(APPLY_PATH, "en")} data-cta-location="workflow_sales_dispatch_final" class="mt-8 inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:brightness-110">Get a Free Review</a>
+      <p class="mx-auto mt-4 max-w-xl text-2xs leading-relaxed text-muted-foreground">No new TMS &bull; No platform migration &bull; No dispatch decisions handed to AI</p>
+    </div>
+  </section>
+
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
+</Page>
+
+<style>
+  .flow-station:not(:last-child)::before {
+    content: ""; position: absolute; inset-inline-start: 1.375rem; top: 50%; height: 100%; width: 2px; translate: -50% 0; border-radius: var(--radius-md);
+    background: linear-gradient(to bottom, color-mix(in oklab, var(--primary) 40%, transparent), color-mix(in oklab, var(--accent) 40%, transparent));
+  }
+  @media (min-width: 640px) {
+    .flow-station:not(:last-child)::before { display: none; }
+    .flow-station:not(:last-child)::after {
+      content: ""; position: absolute; top: 1.375rem; height: 2px; inset-inline-start: 50%; width: 100%; border-radius: var(--radius-md);
+      background: linear-gradient(to right, color-mix(in oklab, var(--primary) 45%, transparent), color-mix(in oklab, var(--accent) 45%, transparent));
+    }
+  }
+  @keyframes stem-shine { 0% { transform: translateY(-120%); opacity: 0; } 8% { opacity: 1; } 50% { transform: translateY(420%); opacity: 1; } 100% { transform: translateY(-120%); opacity: 0; } }
+  .animate-stem-shine { animation: stem-shine 2.8s ease-in-out infinite; }
+</style>

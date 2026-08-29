@@ -1,6 +1,6 @@
 ---
 import HomepageHeroJourney from "../components/HomepageHeroJourney.astro";
-import ToolGrid from "../components/home/ToolGrid.astro";
+import RevenueLoop from "../components/home/RevenueLoop.astro";
 import SectionHeader from "../components/sections/SectionHeader.astro";
 import JourneyLine from "../components/JourneyLine.astro";
 import Page from "../layouts/Page.astro";
@@ -84,7 +84,7 @@ const serviceCards = [
     <div class="absolute inset-0 bg-panel-deep/50"></div>
     <div class="relative mx-auto max-w-6xl px-6">
       <SectionHeader label={t(locale, "conversion.home.mechanism.label")} title={t(locale, "conversion.home.mechanism.title")} description={t(locale, "conversion.home.mechanism.body")} />
-      <ToolGrid locale={locale} />
+      <RevenueLoop locale={locale} />
       <div class="mt-8 text-center"><a href={localizePath("/features/", locale)} class="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:opacity-80">{t(locale, "conversion.home.mechanism.cta")}<i class="bx bx-chevron-right rtl-flip icon-md" aria-hidden="true"></i></a></div>
     </div>
   </section>

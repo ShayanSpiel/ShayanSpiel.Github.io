@@ -1,0 +1,209 @@
+---
+import Page from "../../../layouts/Page.astro";
+import SectionHeader from "../../../components/sections/SectionHeader.astro";
+import FAQList from "../../../components/sections/FAQList.astro";
+import { brandLogo } from "../../../data/brand-logos";
+import { APPLY_PATH, SITE } from "../../../config";
+import { localizePath } from "../../../i18n";
+import { t } from "../../../i18n/translations";
+
+const steps = [
+  { title: "PO captured", desc: "Customer PO lands via form or email paste — company, contact, PO text + optional PDF.", icon: "bx-clipboard" },
+  { title: "Order extracted", desc: "Pixtral reads PO text + optional PDF and structures customer, PO number, date, SKUs, qtys, total.", icon: "bx-search-alt" },
+  { title: "Order normalized", desc: "CODE validates, trims, and builds canonical handover JSON for Inventory.", icon: "bx-code-alt" },
+  { title: "Inventory row created", desc: "Fulfillment-ready row lands in Sales Orders Table. Table stands in for ERP — swap for ERP Create Sales Order.", icon: "bx-data" },
+  { title: "Confirmation archived", desc: "Markdown order confirmation saved to Drive with items, total and handover JSON.", icon: "bx-folder" },
+  { title: "Handover delivered", desc: "Sales Manager → Inventory Manager summary renders with Table id, Drive link and fulfillment status.", icon: "bx-task" },
+];
+
+const tools = [
+  { key: "gmail", name: "Gmail" },
+  { key: "drive", name: "Google Drive" },
+  { key: "sheets", name: "Google Sheets" },
+  { key: "slack", name: "Slack" },
+  { key: "attio", name: "Attio" },
+  { key: "hubspot", name: "HubSpot" },
+  { key: "notion", name: "Notion" },
+  { key: "calendar", name: "Google Calendar" },
+  { key: "zoom", name: "Zoom" },
+];
+
+const stepTools: string[][] = [
+  ["gmail"],
+  ["drive"],
+  ["sheets", "notion"],
+  ["sheets", "attio"],
+  ["drive", "slack"],
+  ["hubspot", "calendar"],
+];
+
+const faqs = [
+  { q: "What is purchase order workflow automation?", a: "It is the PO-to-fulfillment handover on autopilot — Sales pastes a customer PO (or uploads the PDF), SpielOS extracts customer, PO number, date, SKUs and total, and hands Inventory a fulfillment-ready row plus a Drive confirmation. No spreadsheet-to-ERP retyping." },
+  { q: "Do we need to replace our ERP?", a: "No. For the demo we use a Table instead of ERP (SAP, Oracle NetSuite, Xero) for demo simplicity — swap this step for your ERP Create Sales Order. Your ERP stays exactly where it is." },
+  { q: "What stays human?", a: "Fulfillment judgment. Inventory still owns stock, allocation and the ship decision. The automation handles the extraction, the structuring and the filing." },
+];
+
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: t("en", "nav.home"), item: `${SITE.url}${localizePath("/", "en")}` },
+    { "@type": "ListItem", position: 2, name: t("en", "nav.solutions"), item: `${SITE.url}${localizePath("/solutions/", "en")}` },
+    { "@type": "ListItem", position: 3, name: t("en", "nav.workflows"), item: `${SITE.url}${localizePath("/solutions/workflows/", "en")}` },
+    { "@type": "ListItem", position: 4, name: "Purchase Order Workflow Automation", item: `${SITE.url}/solutions/workflows/sales-inventory-automation/` },
+  ],
+};
+const faqJsonLd = { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })), };
+---
+
+<Page
+  title="Purchase Order Workflow Automation | SpielOS"
+  description="Purchase order workflow automation for manufacturers. Turn any customer PO — email or PDF — into a fulfillment-ready sales order without retyping in your ERP."
+  image="/assets/og/SpielOS.png"
+  locale="en"
+  noAlternate
+>
+  <section class="relative flex min-h-[64vh] items-center overflow-hidden py-24 sm:py-32">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
+    <div class="absolute left-1/2 top-[42%] h-[34rem] w-[52rem] -translate-x-1/2 -translate-y-1/2 glow-blob opacity-20"></div>
+    <div class="relative z-10 mx-auto max-w-4xl px-6 text-center">
+      <nav aria-label={t("en", "common.breadcrumbAria")} class="mb-8">
+        <ol class="flex items-center justify-center gap-1.5 text-2xs text-muted-foreground flex-wrap">
+          <li><a href={localizePath("/", "en")} class="hover:text-foreground transition-colors">{t("en", "nav.home")}</a></li>
+          <li class="flex items-center gap-1.5"><span aria-hidden="true" class="text-border-strong">/</span><a href={localizePath("/solutions/", "en")} class="hover:text-foreground transition-colors">{t("en", "nav.solutions")}</a></li>
+          <li class="flex items-center gap-1.5"><span aria-hidden="true" class="text-border-strong">/</span><a href={localizePath("/solutions/workflows/", "en")} class="hover:text-foreground transition-colors">{t("en", "nav.workflows")}</a></li>
+          <li class="flex items-center gap-1.5"><span aria-hidden="true" class="text-border-strong">/</span><span class="text-foreground font-medium" aria-current="page">Sales → Inventory</span></li>
+        </ol>
+      </nav>
+      <div class="inline-flex items-center gap-2 rounded-md border border-border bg-panel-raised px-3 py-1 mb-6" data-aos="fade-up">
+        <i class="bx bx-task text-primary/80 icon-sm shrink-0"></i>
+        <span class="text-2xs text-muted-foreground font-medium">SALES MANAGER → INVENTORY MANAGER</span>
+      </div>
+      <h1 class="mt-4 text-4xl font-extrabold leading-[0.95] tracking-tight text-foreground-strong sm:text-5xl lg:text-6xl" data-aos="fade-up">Purchase order workflow automation for <span class="text-primary">ops teams.</span></h1>
+      <p class="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground" data-aos="fade-up">Turn any customer PO — email paste or PDF — into a fulfillment-ready sales order without retyping between inbox and ERP.</p>
+      <div class="mt-8 flex flex-col items-center gap-3" data-aos="fade-up">
+        <a href="#see-it-run" data-cta-location="workflow_sales_inventory_hero" class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 shadow-lg shadow-primary/20">SEE IT RUN</a>
+        <p class="text-sm text-muted-foreground max-w-lg text-center">From raw PO paste + optional PDF to fulfillment-ready row, Drive confirmation and handover JSON — Sales → Inventory, no manual copy-paste.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="see-it-run" class="relative overflow-hidden py-16 sm:py-20 scroll-mt-24">
+    <div class="mx-auto max-w-5xl px-6">
+      <div class="mb-10 text-center" data-aos="fade-up">
+        <span class="text-2xs font-semibold uppercase tracking-widest text-primary">PO-TO-FULFILLMENT AUTOMATION</span>
+        <h2 class="font-bold text-foreground-strong tracking-tight mt-3 text-3xl sm:text-4xl">Automate the Sales → Inventory handover.</h2>
+        <p class="mx-auto mt-4 max-w-2xl text-sm text-muted-foreground leading-relaxed">A live SpielOS run turning a messy PO into a structured, fulfillment-ready sales order.</p>
+      </div>
+      <div class="relative overflow-hidden rounded-md border border-border bg-panel shadow-panel" data-aos="fade-up">
+        <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r opacity-80 from-primary via-accent to-transparent"></div>
+        <div class="aspect-video w-full bg-black flex items-center justify-center">
+          <p class="text-sm text-muted-foreground">65s+ demo video — recording via Videography Department (human-paced, real browser session). Placeholder until render completes.</p>
+        </div>
+      </div>
+      <p class="mt-4 text-center text-2xs text-muted-foreground">Sales Manager → Inventory Manager: PO captured, order extracted, inventory row created — on your stack.</p>
+    </div>
+  </section>
+
+  <section class="relative py-20 sm:py-24">
+    <div class="mx-auto max-w-5xl px-6">
+      <SectionHeader label="WORKS ON YOUR STACK" title="Your order tools, just automated." />
+      <div class="flow-canvas relative overflow-hidden rounded-md border border-border bg-panel px-5 py-10 shadow-panel sm:px-8 sm:py-14" data-aos="fade-up">
+        <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
+        <ol class="flow-rail relative z-10 grid gap-6 sm:grid-cols-6 sm:gap-0">
+          {steps.map((s, i) => {
+            const last = i === steps.length - 1;
+            return (
+              <li class="flow-station relative flex items-center gap-4 sm:flex-col sm:gap-3 sm:text-center">
+                <div class:list={["flow-node relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-md border bg-panel-raised", last ? "border-success text-success shadow-[0_0_24px_var(--success-soft)]" : i === 0 ? "border-primary text-primary" : "border-border text-muted-foreground"]}>
+                  <i class={`bx ${s.icon} icon-xl`}></i>
+                </div>
+                <p class:list={["text-xs font-semibold leading-snug", last ? "text-success" : i === 0 ? "text-foreground-strong" : "text-foreground-muted"]}>{s.title}</p>
+              </li>
+            );
+          })}
+        </ol>
+        <div class="relative z-10 mt-[2px] sm:mt-[3px]">
+          <div class="grid gap-6 sm:grid-cols-6 sm:gap-0">
+            {stepTools.map((keys, idx) => (
+              <div class="flex flex-col items-center">
+                <div class="relative h-7 w-px overflow-hidden bg-primary/15 sm:h-9">
+                  <div class="absolute left-1/2 top-0 h-2 w-px -translate-x-1/2 bg-primary opacity-95 animate-stem-shine" style={`animation-delay: ${idx * 0.34}s`}></div>
+                </div>
+                <div class="mt-2 flex flex-wrap justify-center gap-1.5">
+                  {keys.map((k) => {
+                    const tl = tools.find((t) => t.key === k)!;
+                    return (<span class="flex h-7 w-7 items-center justify-center rounded-md border border-border bg-panel-raised shadow-panel [&>svg]:h-4 [&>svg]:w-4" title={tl.name} set:html={brandLogo(tl.key)}></span>);
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+          <p class="mt-6 text-center text-2xs font-medium tracking-wide text-muted-foreground">We use a Table instead of ERP/SAP/Xero for demo simplicity — swap this step for your ERP Create Sales Order.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative overflow-hidden py-20 sm:py-24">
+    <div class="absolute inset-0 bg-panel-deep/35"></div>
+    <div class="relative mx-auto max-w-5xl px-6">
+      <div class="mb-12 text-center" data-aos="fade-up">
+        <span class="text-2xs font-semibold uppercase tracking-widest text-primary">LESS RETYPING. MORE FULFILLMENT.</span>
+        <h2 class="font-bold text-foreground-strong tracking-tight mt-3 text-3xl sm:text-4xl">Stop retyping POs between inbox and ERP.</h2>
+      </div>
+      <div class="grid gap-4 md:grid-cols-2" data-aos="fade-up">
+        <div class="group relative flex flex-col overflow-hidden rounded-md border border-destructive/30 bg-panel shadow-panel">
+          <div class="absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r opacity-70 from-destructive via-destructive-soft to-transparent"></div>
+          <div class="p-6">
+            <div class="mb-3 flex items-center gap-2"><span class="flex h-7 w-7 items-center justify-center rounded-md bg-destructive-soft"><i class="bx bx-error text-destructive icon-base"></i></span><h3 class="text-sm font-semibold uppercase tracking-wide text-destructive">Before — manual</h3></div>
+            <ul class="space-y-2">
+              <li class="flex items-center gap-2 text-sm text-muted-foreground"><i class="bx bx-error text-destructive/70 icon-sm"></i>Copy customer and SKUs from PDF.</li>
+              <li class="flex items-center gap-2 text-sm text-muted-foreground"><i class="bx bx-error text-destructive/70 icon-sm"></i>Re-type quantities and prices into ERP.</li>
+              <li class="flex items-center gap-2 text-sm text-muted-foreground"><i class="bx bx-error text-destructive/70 icon-sm"></i>Chase PO number and date.</li>
+              <li class="flex items-center gap-2 text-sm text-muted-foreground"><i class="bx bx-error text-destructive/70 icon-sm"></i>Re-create the same order for fulfillment.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="group relative flex flex-col overflow-hidden rounded-md border border-primary/30 bg-panel shadow-panel">
+          <div class="absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r opacity-80 from-primary via-accent to-transparent"></div>
+          <div class="p-6">
+            <div class="mb-3 flex items-center gap-2"><span class="flex h-7 w-7 items-center justify-center rounded-md bg-primary-soft"><i class="bx bx-check-square text-primary icon-base"></i></span><h3 class="text-sm font-semibold uppercase tracking-wide text-primary">With SpielOS</h3></div>
+            <ul class="space-y-2">
+              <li class="flex items-center gap-2 text-sm text-foreground"><i class="bx bx-check-square text-primary/70 icon-sm"></i>POs get structured.</li>
+              <li class="flex items-center gap-2 text-sm text-foreground"><i class="bx bx-check-square text-primary/70 icon-sm"></i>SKUs, qtys, total arrive clean.</li>
+              <li class="flex items-center gap-2 text-sm text-foreground"><i class="bx bx-check-square text-primary/70 icon-sm"></i>Inventory row appears fulfillment-ready.</li>
+              <li class="flex items-center gap-2 text-sm text-foreground"><i class="bx bx-check-square text-primary/70 icon-sm"></i>Confirmation archived instantly.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="mt-10 text-center" data-aos="fade-up">
+        <p class="text-2xs font-semibold uppercase tracking-[0.14em] text-primary">BUILT FOR MAKERS & DISTRIBUTORS</p>
+        <h3 class="mt-2 text-xl font-bold tracking-tight text-foreground-strong sm:text-2xl">Automate the work between PO and shipment.</h3>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative overflow-hidden py-28 sm:py-36">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="relative mx-auto max-w-3xl px-6 text-center" data-aos="fade-up">
+      <p class="text-xs font-semibold uppercase tracking-widest text-primary">FREE WORKFLOW REVIEW</p>
+      <h2 class="mt-5 text-4xl font-extrabold leading-tightest tracking-tight text-foreground-strong sm:text-5xl">Show us one<br /><span class="text-primary">customer PO.</span></h2>
+      <p class="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">We'll show you what can be automated, how it would run on your current ERP, and what stays with Inventory.</p>
+      <a href={localizePath(APPLY_PATH, "en")} data-cta-location="workflow_sales_inventory_final" class="mt-8 inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:brightness-110">Get a Free Review</a>
+      <p class="mx-auto mt-4 max-w-xl text-2xs leading-relaxed text-muted-foreground">No new ERP &bull; No platform migration &bull; No fulfillment decisions handed to AI</p>
+    </div>
+  </section>
+
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
+</Page>
+
+<style>
+  .flow-station:not(:last-child)::before { content: ""; position: absolute; inset-inline-start: 1.375rem; top: 50%; height: 100%; width: 2px; translate: -50% 0; border-radius: var(--radius-md); background: linear-gradient(to bottom, color-mix(in oklab, var(--primary) 40%, transparent), color-mix(in oklab, var(--accent) 40%, transparent)); }
+  @media (min-width: 640px) { .flow-station:not(:last-child)::before { display: none; } .flow-station:not(:last-child)::after { content: ""; position: absolute; top: 1.375rem; height: 2px; inset-inline-start: 50%; width: 100%; border-radius: var(--radius-md); background: linear-gradient(to right, color-mix(in oklab, var(--primary) 45%, transparent), color-mix(in oklab, var(--accent) 45%, transparent)); } }
+  @keyframes stem-shine { 0% { transform: translateY(-120%); opacity: 0; } 8% { opacity: 1; } 50% { transform: translateY(420%); opacity: 1; } 100% { transform: translateY(-120%); opacity: 0; } }
+  .animate-stem-shine { animation: stem-shine 2.8s ease-in-out infinite; }
+</style>
