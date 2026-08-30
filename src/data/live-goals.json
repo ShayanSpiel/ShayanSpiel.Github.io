@@ -3611,18 +3611,18 @@
     },
     {
       "created_at": "2026-08-25T22:52:04.937838+00:00",
-      "goal_status": "active",
+      "goal_status": "abandoned",
       "id": "goal-apply-single-viewport-20260826",
-      "latest_activity_at": "2026-08-25T22:52:10.788248+00:00",
+      "latest_activity_at": "2026-08-30T09:56:18.583044+00:00",
       "metric": "booked_calls",
       "name": "Apply page compaction: single-viewport wizard (title + description + wizard + small footer line with prefer-a-call), zero step-to-step resize on mobile and desktop",
       "operator": "ge",
       "owner_id": "director",
       "parent_id": null,
-      "run_status": "blocked",
+      "run_status": "completed",
       "stage": "DECIDE",
       "target": 1,
-      "updated_at": "2026-08-25T22:52:10.783978+00:00"
+      "updated_at": "2026-08-30T09:56:18.583044+00:00"
     },
     {
       "created_at": "2026-08-25T22:55:24.054672+00:00",
@@ -4050,7 +4050,7 @@
       "created_at": "2026-08-29T19:41:58.498954+00:00",
       "goal_status": "active",
       "id": "goal-recruitment-demo-outbound-test-20260829",
-      "latest_activity_at": "2026-08-29T19:46:26.067478+00:00",
+      "latest_activity_at": "2026-08-30T09:55:04.194467+00:00",
       "metric": "reply_rate",
       "name": "recruitment-demo-outbound-test-20260829",
       "operator": "eq",
@@ -4078,18 +4078,18 @@
     },
     {
       "created_at": "2026-08-29T19:42:31.251309+00:00",
-      "goal_status": "active",
+      "goal_status": "abandoned",
       "id": "goal-7795387c11",
-      "latest_activity_at": "2026-08-29T19:46:26.067478+00:00",
+      "latest_activity_at": "2026-08-30T09:55:04.194467+00:00",
       "metric": "reply_rate",
       "name": "outbound-email-test",
       "operator": "eq",
       "owner_id": "outbound",
       "parent_id": "goal-recruitment-demo-outbound-test-20260829",
-      "run_status": "blocked",
+      "run_status": "completed",
       "stage": "ACT",
       "target": 1,
-      "updated_at": "2026-08-29T19:46:26.065723+00:00"
+      "updated_at": "2026-08-30T09:55:04.194467+00:00"
     },
     {
       "created_at": "2026-08-30T08:33:41.691450+00:00",
@@ -4105,6 +4105,36 @@
       "stage": "OBSERVE",
       "target": 1,
       "updated_at": "2026-08-30T08:40:27.883197+00:00"
+    },
+    {
+      "created_at": "2026-08-30T09:46:18.962756+00:00",
+      "goal_status": "active",
+      "id": "goal-11148124e5",
+      "latest_activity_at": "2026-08-30T09:46:20.262596+00:00",
+      "metric": "booked_calls",
+      "name": "Northstar: Book 1 qualified call per week",
+      "operator": "ge",
+      "owner_id": "director",
+      "parent_id": null,
+      "run_status": "blocked",
+      "stage": "DECIDE",
+      "target": 1,
+      "updated_at": "2026-08-30T09:46:20.261758+00:00"
+    },
+    {
+      "created_at": "2026-08-30T10:43:05.165331+00:00",
+      "goal_status": "active",
+      "id": "goal-7d1eef13e9",
+      "latest_activity_at": "2026-08-30T11:02:14.321262+00:00",
+      "metric": "published_items",
+      "name": "Publish note: How to Automate Recruitment With AI (CV Screening & Candidate Matching)",
+      "operator": "eq",
+      "owner_id": "content",
+      "parent_id": null,
+      "run_status": "running",
+      "stage": "DECIDE",
+      "target": 1,
+      "updated_at": "2026-08-30T11:02:14.320157+00:00"
     }
   ],
   "heartbeat": {
@@ -4112,65 +4142,65 @@
     "business_value_fa": null,
     "display_title": null,
     "display_title_fa": null,
-    "goal_id": "goal-7795387c11",
-    "goal_name": "outbound-email-test",
-    "metric": "reply_rate",
+    "goal_id": "goal-7d1eef13e9",
+    "goal_name": "Publish note: How to Automate Recruitment With AI (CV Screening & Candidate Matching)",
+    "metric": "published_items",
     "operator": "eq",
-    "owner_id": "outbound",
-    "run_status": "blocked",
-    "stage": "ACT",
+    "owner_id": "content",
+    "run_status": "running",
+    "stage": "DECIDE",
     "target": 1,
-    "updated_at": "2026-08-29T19:46:26.067478+00:00"
+    "updated_at": "2026-08-30T11:02:14.321262+00:00"
   },
   "northstar": {
-    "goal_id": "goal-apply-single-viewport-20260826",
-    "goal_name": "Apply page compaction: single-viewport wizard (title + description + wizard + small footer line with prefer-a-call), zero step-to-step resize on mobile and desktop",
+    "goal_id": "goal-11148124e5",
+    "goal_name": "Northstar: Book 1 qualified call per week",
     "goal_status": "active",
     "metric": "booked_calls",
     "operator": "ge",
     "target": 1,
-    "updated_at": "2026-08-25T22:52:10.783978+00:00"
+    "updated_at": "2026-08-30T09:46:20.261758+00:00"
   },
   "runtime_state": {
     "current_run": {
-      "created_at": "2026-08-29T19:37:27.912741+00:00",
-      "goal_id": "goal-9428806afb",
-      "goal_name": "Videography — Receipt → Ledger capture re-record + postprod fix (result visibility, screens, pacing sync, better narration copy, invoice fixture)",
-      "owner_id": "videography",
-      "run_id": "run-839390d107",
-      "run_status": "blocked",
-      "stage": "ACT",
-      "updated_at": "2026-08-29T20:45:02.932930+00:00"
+      "created_at": "2026-08-30T10:43:05.165331+00:00",
+      "goal_id": "goal-7d1eef13e9",
+      "goal_name": "Publish note: How to Automate Recruitment With AI (CV Screening & Candidate Matching)",
+      "owner_id": "content",
+      "run_id": "run-9a48941fd4",
+      "run_status": "running",
+      "stage": "DECIDE",
+      "updated_at": "2026-08-30T11:02:14.321262+00:00"
     },
     "heartbeat": {
       "business_value": null,
       "business_value_fa": null,
       "display_title": null,
       "display_title_fa": null,
-      "goal_id": "goal-7795387c11",
-      "goal_name": "outbound-email-test",
-      "metric": "reply_rate",
+      "goal_id": "goal-7d1eef13e9",
+      "goal_name": "Publish note: How to Automate Recruitment With AI (CV Screening & Candidate Matching)",
+      "metric": "published_items",
       "operator": "eq",
-      "owner_id": "outbound",
-      "run_status": "blocked",
-      "stage": "ACT",
+      "owner_id": "content",
+      "run_status": "running",
+      "stage": "DECIDE",
       "target": 1,
-      "updated_at": "2026-08-29T19:46:26.067478+00:00"
+      "updated_at": "2026-08-30T11:02:14.321262+00:00"
     },
-    "last_activity_at": "2026-08-30T08:40:27.885984+00:00",
-    "last_sync_at": "2026-08-30T08:40:28.077741+00:00",
+    "last_activity_at": "2026-08-30T11:02:14.321262+00:00",
+    "last_sync_at": "2026-08-30T11:02:14.431813+00:00",
     "state": "running"
   },
   "totals": {
     "approvals": 275,
     "decisions": 968,
-    "evidence": 14715,
-    "goals_abandoned": 47,
+    "evidence": 14717,
+    "goals_abandoned": 49,
     "goals_achieved": 180,
     "goals_active": 39,
-    "goals_total": 272,
+    "goals_total": 274,
     "hypotheses": 101,
     "memory_claims": 0,
-    "runs": 314
+    "runs": 316
   }
 }
