@@ -873,3 +873,11 @@ html.aos-revealed [data-aos] {
   transform: none !important;
   transition: none !important;
 }
+
+  /* ── Nav scrolled state — solid backdrop when page scrolls ── */
+  #site-nav[data-scrolled="true"] {
+    background: var(--background);
+    backdrop-filter: saturate(180%) blur(12px);
+    border-color: var(--border);
+    box-shadow: var(--shadow-panel);
+  }
