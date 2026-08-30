@@ -24,11 +24,11 @@ class SeoDepartment(EvidenceDepartment, Department):
             "seo-content-brief",
             "Turn a validated opportunity into a content brief.",
             ("select", "intent", "serp_evidence", "outline", "review"), ("seo-researcher",),
-            ("seo", "copywriting-en"), (), ("keyword_opportunity", "seo_brief"), (),
+            ("seo", "copywriting"), (), ("keyword_opportunity", "seo_brief"), (),
             graph=(WorkflowStep("outline", "employee", "seo-researcher",
                                 produces=("seo_brief",),
                                 requires=("keyword_opportunity",),
-                                skill_ids=("seo", "copywriting-en")),),
+                                skill_ids=("seo", "copywriting")),),
         ),
         WorkflowSpec(
             "technical-audit",

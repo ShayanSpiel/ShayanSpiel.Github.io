@@ -6,7 +6,7 @@ The company harness has one authority: [`company/README.md`](company/README.md).
 - `skills/company/` — reusable harness-operation methods (director,
   department-runner, system-improvement, outbound, outbound-email).
 - `skills/website/` — site-bound methods (spielos-ui, seo, analytics,
-  translation-fa, copywriting-en/fa, video-creation). Departments may only
+  translation-fa, copywriting/fa, video-creation). Departments may only
   bind skills under `skills/company/`; this is enforced by
   `install.py::validate_department_spec`.
 

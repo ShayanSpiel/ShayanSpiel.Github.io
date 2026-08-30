@@ -1,0 +1,199 @@
+---
+title: "How to Automate Recruitment With AI: CV Screening and Candidate Matching"
+date: 2026-08-30 10:00:00 +0000
+description: "How to automate recruitment with AI: candidate screening, CV screening, and candidate matching on the tools your team already uses, with a human still making the calls."
+permalink: /automate-recruitment-ai/
+category: ai-agents
+tags:
+- recruitment automation
+- candidate screening
+- CV screening
+- candidate matching
+- AI workers
+image: /assets/og/automate-recruitment-ai.png
+faq:
+  - q: "What does it mean to automate recruitment with AI?"
+    a: "It means running the coordination loop between brief and interview: capture the vacancy brief, source candidates, screen CVs, score matches, rank a shortlist, schedule interviews, and hand over the ranked result. It does not mean a chatbot answering candidates or a model deciding who gets hired. The recruiter reviews the output and makes the calls that matter."
+  - q: "How does AI candidate screening work?"
+    a: "The vacancy brief is structured into must-have criteria: required stack, years, location, work preference, and salary band. Each CV is read against those criteria, scored, and given fit reasons and gaps. The result is consistent, explainable screening instead of a recruiter judging every résumé from memory of what a strong candidate looks like."
+  - q: "How is CV screening different from candidate matching?"
+    a: "CV screening scores each résumé against the brief. Candidate matching pairs the brief criteria with the candidate pool from a database, LinkedIn, or Indeed and ranks the strongest fits. Screening evaluates, matching compares and orders. Both run on the same structured criteria and both show their work."
+  - q: "Do I need a new ATS or platform to automate recruitment?"
+    a: "No. The loop runs on top of LinkedIn, Indeed, your email, calendar, and Drive. It adds the coordination layer while your existing stack stays exactly where it is. You do not migrate platforms and you do not hand hiring decisions to AI."
+  - q: "What parts of recruitment should stay human?"
+    a: "Judgment calls: fit beyond the checklist, sensitivity in conversations, the actual interview, and the offer. Automation handles the tracking, chasing, and filing so the recruiter spends the day recruiting instead of coordinating."
+  - q: "Where does AI recruitment automation break?"
+    a: "A vague brief produces vague matching, automation inherits whatever criteria you give it, and it cannot fix a weak candidate pool. Define must-haves before automating, review the criteria for bias the way you review a job ad, and keep sourcing fresh or the ranking will rank a weak pool well."
+  - q: "How do I start automating recruitment with AI?"
+    a: "Pick one coordination workflow, not the whole function: role intake, CV screening, shortlist prep, or interview scheduling. Get it reviewed against your real stack, agree the scope and acceptance criteria before any build, and keep the ranked shortlist in front of a recruiter."
+---
+
+import SectionHead from "@/components/posts/SectionHead.astro";
+import ProseCenter from "@/components/posts/ProseCenter.astro";
+import Card from "@/components/posts/Card.astro";
+import Takeaway from "@/components/posts/Takeaway.astro";
+import PostCta from "@/components/posts/PostCta.astro";
+
+<SectionHead tag='The bottleneck' title='The Real Recruiting Bottleneck Is Coordination' sub='Not reading. Copying, chasing, scheduling, and filing. That is the work between the brief and the interview, and it is the part AI can actually run.' />
+
+<ProseCenter text='Hiring has a dirty secret: the recruiter is not reading a pile of CVs. The recruiter is copying candidates into a spreadsheet, updating records, chasing availability, and coordinating calendars. Most of the recruiting workday goes to coordination, not judgment.' />
+
+<ProseCenter text='Automating recruitment with AI does not mean a chatbot answering candidate questions. It does not mean a model that decides who gets hired. It means running the coordination loop: capture the brief, source candidates, screen CVs, score matches, rank the shortlist, schedule interviews, and hand off.' />
+
+<Takeaway text='A loop with gates, not a prompt. Every step has a defined output and a check before it advances.' />
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='Not a chatbot' title='What "Automating Recruitment With AI" Actually Means' sub='The loop, not a prompt. Not a demo. A workflow that runs every week.' />
+
+  <div class='grid grid-2'>
+    <Card icon='message' title='It is not a chatbot' desc='Answering candidate questions from a script is the least useful version of AI in hiring. It does not change the work that eats the day.' />
+    <Card icon='circle-x' title='It does not decide who gets hired' desc='No model should own fit, sensitivity, the interview, or the offer. Those stay human. AI handles the coordination around them.' />
+  </div>
+
+  <ProseCenter text='The useful version is a supervised loop. Every step has a defined output and a check before it advances. That is the difference between a demo that impresses once and a workflow that carries the next fifty roles.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='The loop' title='Brief In, Ranked Shortlist Out' sub='Six steps between a vacancy and a shortlist, run on the tools a recruiting team already uses.' />
+
+  <div class='step-list'>
+    <div class='step-item'>
+      <div class='step-num'>01</div>
+      <div class='step-body'>
+        <strong>Brief captured</strong>
+        Vacancy text lands and is structured: role, stack, salary, location, work preference. Most matching failures start here, because the brief was never actually written down as criteria.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>02</div>
+      <div class='step-body'>
+        <strong>Candidates sourced</strong>
+        The candidate database, LinkedIn, and Indeed get matched to the extracted criteria. No tab hopping, no saved searches that drift.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>03</div>
+      <div class='step-body'>
+        <strong>Screened and scored</strong>
+        CVs are read against the must-haves, scored, and given fit reasons and gaps. This replaces the spreadsheet copy-paste version of screening.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>04</div>
+      <div class='step-body'>
+        <strong>Top 5 ranked</strong>
+        The five strongest fits come back ranked, with evidence for each and one summary paragraph a hiring manager can actually read.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>05</div>
+      <div class='step-body'>
+        <strong>Interviews scheduled</strong>
+        Calendars get coordinated, invites go out, reschedules get handled without the back-and-forth.
+      </div>
+    </div>
+    <div class='step-item'>
+      <div class='step-num'>06</div>
+      <div class='step-body'>
+        <strong>Shortlist delivered</strong>
+        The ranked list is saved where the team already looks: Drive, the ATS, the shared folder.
+      </div>
+    </div>
+  </div>
+
+  <Takeaway text='Six steps. Familiar tools. The work between brief and interview runs itself; the recruiter reviews the output.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='CV screening' title='How AI CV Screening Actually Works' sub='Extraction against a standard, not a vibe check.' />
+
+  <ProseCenter text='CV screening with AI is not "upload a résumé, get a yes or no." It is extraction against a standard. The brief becomes a structured list of must-haves: required stack, years, location, work preference, salary band. Every CV is read against that list, not against a vague sense of "strong candidate."' />
+
+  <div class='grid grid-2'>
+    <Card icon='check-square' title='Score plus reasons' desc='The output is a score with what matched, what is missing, and what is unclear. No black-box yes or no.' />
+    <Card icon='search' title='Gaps surfaced, not hidden' desc='A candidate missing one must-have is flagged as missing it, so a human decides whether it matters.' />
+  </div>
+
+  <ProseCenter text='The value is not that a model reads fast. It is that screening becomes consistent. The same criteria hit every CV in the same order. That consistency is what manual screening loses by the fiftieth résumé.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='Candidate matching' title='How Candidate Matching Works' sub='The brief criteria meeting the candidate pool.' />
+
+  <ProseCenter text='Candidate matching is the pairing step. The system takes the structured brief and runs it against CVs from your database, LinkedIn, and Indeed. A match is not a vibe score. It is criteria crossed against evidence: this candidate has the required stack, this one does not, this one has ten of twelve must-haves and two gaps worth a call.' />
+
+  <div class='grid grid-2'>
+    <Card icon='circle-x' title='The candidate has to be findable first' desc='Matching is only as good as the source step. If the pool is stale or narrow, the ranking ranks a weak pool well.' />
+    <Card icon='check-square' title='The output has to show its work' desc='Ranked without reasons is a black box. Ranked with reasons is a decision aid.' />
+  </div>
+
+  <Takeaway text='The AI ranks. The recruiter decides.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='In practice' title='How Candidate Screening Fits Into the Week' sub='Screening sits between sourcing and the interview.' />
+
+  <ProseCenter text='Sourced candidates get screened against must-haves, scored, ranked, and the top five move toward interviews. The recruiter reviews the ranked shortlist, owns the screen calls, and decides who actually meets the client or the hiring manager.' />
+
+  <ProseCenter text='The screening AI drafts from your rules and your voice. It does not impersonate you in a conversation that matters. Screen calls, interviews, and offers stay with your team.' />
+
+  <Takeaway text='The filter keeps a recruiter from spending Monday on people who will be rejected on Wednesday.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='What stays human' title='Judgment Stays With People' sub='Automation handles the tracking, the chasing, and the filing.' />
+
+  <div class='grid grid-3'>
+    <Card icon='user-check' title='Fit beyond the checklist' desc='Culture, context, and the actual interview. No scoring rubric replaces them.' />
+    <Card icon='message-square' title='Sensitivity' desc='Anything that needs a human touch, especially rejection and difficult conversations.' />
+    <Card icon='dollar' title='The offer' desc='Who gets it, at what number, with what timeline. That stays with the team.' />
+  </div>
+
+  <ProseCenter text='The goal is a recruiter who spends the day recruiting instead of coordinating. Not a recruiter replaced by software.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='Be honest' title='Where Recruitment Automation Breaks' sub='The predictable failure modes, before you buy anything.' />
+
+  <div class='grid grid-3'>
+    <Card icon='circle-x' title='A vague brief produces vague matching' desc='If the role is "someone good with Excel," the system has nothing to match against. Define the must-haves first.' />
+    <Card icon='error' title='Automation inherits your rules' desc='The screen is only as fair as the criteria you give it. Review criteria like a job ad, because they will be applied to every CV.' />
+    <Card icon='circle-x' title='It cannot fix a broken process' desc='A stale database and a dead LinkedIn search stay stale. Automation makes a process faster, not a weak one fairer.' />
+  </div>
+
+  <Takeaway text='Automation makes a process faster. It does not make a weak one fairer.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='Your stack' title='Run It on the Tools You Already Have' sub='No new ATS. No platform migration. No hiring decisions handed to AI.' />
+
+  <ProseCenter text='The loop runs on top of LinkedIn, Indeed, email, calendar, and Drive. Notion or Sheets holds the brief, Slack carries the updates, Zoom or Calendly handles the interviews. We built exactly this loop: [Recruitment and HR workflow automation](/solutions/workflows/recruitement-automation/), with a live demo of the six steps.' />
+
+  <Takeaway text='The coordination layer sits above the stack you already use, so the work lands where your team already looks.' />
+</section>
+
+<hr class='divider' />
+
+<section class='section'>
+  <SectionHead tag='Where to start' title='Pick One Workflow, Not the Whole Function' sub='Scope and acceptance criteria come before any build.' />
+
+  <ProseCenter text='Start with the one loop that costs the most coordination today: role intake, CV screening, shortlist prep, or interview scheduling. Then get it reviewed against your real stack. Automation is not the hard part. Deciding which workflow to hand over, and what stays with your team, is.' />
+
+  <PostCta takeaway='Show us one recruiting workflow.' echo='We will show you what can be automated, how it would run on your current tools, and what stays with your team.' btnText='Apply — Free Review' btnHref='/apply/' />
+</section>

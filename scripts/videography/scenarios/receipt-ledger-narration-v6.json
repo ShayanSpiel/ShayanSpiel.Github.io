@@ -1,0 +1,170 @@
+{
+  "voice": "en_paul_confident",
+  "provider": "mistral",
+  "model": "voxtral-mini-tts-latest",
+  "mode": "voxtral",
+  "chain": "gemini -> mistral voxtral -> cartesia -> elevenlabs (deterministic fallback; voice never changes mid-scenario)",
+  "total_duration": 0,
+  "speech_lead": 0.65,
+  "minimum_visual_dwell": 3,
+  "cta_minimum_visual_dwell": 4,
+  "mix": {
+    "narration_lufs": -16,
+    "true_peak_dbtp": -1,
+    "deliverable": "48kHz AAC",
+    "music": "none"
+  },
+  "strategy": "videography-v6 re-author — canonical narration.json contract (design/templates/video/narration.json) + copywriting-en simulation-first on real delivered flow (upload → AI extract → GL-coded lines → ActivePieces Table ledger stand-in → Drive archive → 'Receipt captured'); identity scene dropped per owner (no intro); standin_note added per mandatory handoff rule; stop at 05-result, no Drive click/mention; narration-led-v2 contract: speech_lead 0.65, min dwell 3, cta dwell 4; measured scene_timing land in postprod synthesis",
+  "segments": [
+    {
+      "index": 0,
+      "scene": "hook",
+      "text": "Eight fifty-seven. Forty vendor PDFs in the inbox. Open one. Copy the vendor, the date, the total, every line.",
+      "keywords": [
+        "inbox",
+        "vendor",
+        "date",
+        "total"
+      ],
+      "start": 0,
+      "end": 0,
+      "duration": 0,
+      "path": ""
+    },
+    {
+      "index": 1,
+      "scene": "problem_bridge",
+      "text": "Switch to the ERP. Remember the account code for this supplier. Fix the VAT. Then hunt the purchase order. It is not on the PDF. Enter it. Save the file. One invoice done. Thirty-nine left.",
+      "keywords": [
+        "ERP",
+        "account code",
+        "VAT",
+        "purchase order",
+        "PDF"
+      ],
+      "start": 0,
+      "end": 0,
+      "duration": 0,
+      "path": ""
+    },
+    {
+      "index": 2,
+      "scene": "promise",
+      "text": "The typing is the small part. The switching is the cost. PDF to ERP. Codes to remember. POs to find. Files to file.",
+      "keywords": [
+        "switching",
+        "PDF to ERP",
+        "codes",
+        "POs"
+      ],
+      "start": 0,
+      "end": 0,
+      "duration": 0,
+      "path": ""
+    },
+    {
+      "index": 3,
+      "scene": "workflow_walkthrough",
+      "text": "This flow takes one upload and carries the whole loop. It reads the receipt. Codes every line to the chart of accounts. Logs the ledger. Files the copy.",
+      "keywords": [
+        "upload",
+        "chart of accounts",
+        "ledger",
+        "files the copy"
+      ],
+      "start": 0,
+      "end": 0,
+      "duration": 0,
+      "path": ""
+    },
+    {
+      "index": 4,
+      "scene": "standin_note",
+      "text": "The ledger here is an ActivePieces table standing in for Xero, QuickBooks, or Sage. Same fields. Wired to your accounting tool in a real build.",
+      "keywords": [
+        "ActivePieces table",
+        "Xero",
+        "QuickBooks",
+        "Sage"
+      ],
+      "start": 0,
+      "end": 0,
+      "duration": 0,
+      "path": ""
+    },
+    {
+      "index": 5,
+      "scene": "live_test",
+      "text": "Let's run it with a real invoice. Upload it. Submit.",
+      "keywords": [
+        "real invoice",
+        "upload",
+        "submit"
+      ],
+      "start": 0,
+      "end": 0,
+      "duration": 0,
+      "path": ""
+    },
+    {
+      "index": 6,
+      "scene": "processing",
+      "text": "It is reading now. Vendor, lines, amounts. Coding each line to its account. About thirty seconds in production. Sped up here.",
+      "keywords": [
+        "reading",
+        "vendor",
+        "coding",
+        "thirty seconds"
+      ],
+      "start": 0,
+      "end": 0,
+      "duration": 0,
+      "path": ""
+    },
+    {
+      "index": 7,
+      "scene": "reveal",
+      "text": "Receipt captured. Vendor, date, amount, category. Every line coded and logged to the ledger.",
+      "keywords": [
+        "Receipt captured",
+        "vendor",
+        "date",
+        "category",
+        "ledger"
+      ],
+      "start": 0,
+      "end": 0,
+      "duration": 0,
+      "path": ""
+    },
+    {
+      "index": 8,
+      "scene": "payoff",
+      "text": "One upload. Captured, coded, logged. No copying. No ERP hopping. No PO hunting. Nothing to file.",
+      "keywords": [
+        "one upload",
+        "captured",
+        "no copying",
+        "no PO hunting"
+      ],
+      "start": 0,
+      "end": 0,
+      "duration": 0,
+      "path": ""
+    },
+    {
+      "index": 9,
+      "scene": "cta",
+      "text": "If this is your Monday, send me a DM.",
+      "keywords": [
+        "Monday",
+        "DM"
+      ],
+      "start": 0,
+      "end": 0,
+      "duration": 0,
+      "path": ""
+    }
+  ],
+  "narration_wav": ""
+}

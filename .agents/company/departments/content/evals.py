@@ -4,7 +4,7 @@ from ...evals.models import EvalCriterion, EvalSuite
 
 ICPC = ".agents/company/strategy/icp.md"
 VOICE = ".agents/company/strategy/voice.md"
-COPYWRITING_EN = ".agents/skills/company/copywriting-en/SKILL.md"
+COPYWRITING_EN = ".agents/skills/company/copywriting/SKILL.md"
 
 def _criterion(identifier: str, name: str, source: str) -> EvalCriterion:
     return EvalCriterion(id=identifier, name=name, description=f"Source: {source}", source=source)

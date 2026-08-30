@@ -8,6 +8,7 @@ const noteSchema = z.object({
   category: z.enum(["journey", "ai-agents"]).default("journey"),
   tags: z.array(z.string()).default([]),
   image: z.string().optional(),
+  faq: z.array(z.object({ q: z.string(), a: z.string() })).optional(),
 });
 
 const notes = defineCollection({

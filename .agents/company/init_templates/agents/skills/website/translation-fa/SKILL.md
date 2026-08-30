@@ -26,7 +26,7 @@ Before translating, read:
 
 - `persian-glossary.md` — the single source of truth for all terminology
 - `../../../company/strategy/icp.md` — the single source of truth for the customer profile (shared with copywriting skills)
-- `../copywriting-fa/SKILL.md` — when the task involves creating content from work sessions, not translating existing copy
+- `../../copywriting/SKILL.md` — when the task involves creating content from work sessions, not translating existing copy
 
 ---
 

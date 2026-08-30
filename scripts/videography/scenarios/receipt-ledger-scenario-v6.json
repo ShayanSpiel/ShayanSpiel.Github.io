@@ -1,0 +1,182 @@
+{
+  "name": "receipt-ledger-capture-coding-demo",
+  "title": "Receipt — Ledger Capture & Coding — v6 re-record (explicit 01-05 screens, result HOLD through reveal, pain-first narration, no Drive click)",
+  "seed": 42,
+  "personality": "careful",
+  "viewport": [
+    1440,
+    900
+  ],
+  "steps": [
+    {
+      "type": "goto",
+      "url": "http://localhost:8080/projects/rw568MTpQWxjZAQXFOYu5/flows/9cC7eE7Q0btMTzl99R4rt"
+    },
+    {
+      "type": "wait",
+      "seconds": 3.0
+    },
+    {
+      "type": "shot",
+      "name": "01-flow-overview",
+      "wait_after": 0.4
+    },
+    {
+      "type": "read",
+      "align_scene": "hook",
+      "text": "Forty PDFs by nine. Open each one. Copy the vendor, the date, the VAT, every line.",
+      "wpm": 150
+    },
+    {
+      "type": "scroll",
+      "selector": "body",
+      "by": 300
+    },
+    {
+      "type": "wait",
+      "seconds": 0.7
+    },
+    {
+      "type": "shot",
+      "name": "02-flow-steps",
+      "wait_after": 0.4
+    },
+    {
+      "type": "read",
+      "align_scene": "problem_bridge",
+      "text": "Then hop from Outlook to PDF to ERP. Remember the GL codes. Fix the VAT. Hunt the PO.",
+      "wpm": 150
+    },
+    {
+      "type": "read",
+      "align_scene": "promise",
+      "text": "One workflow does the whole loop from a single upload. Here it is.",
+      "wpm": 150
+    },
+    {
+      "type": "scroll",
+      "selector": "body",
+      "by": 260
+    },
+    {
+      "type": "wait",
+      "seconds": 0.6
+    },
+    {
+      "type": "read",
+      "align_scene": "workflow_walkthrough",
+      "text": "Upload triggers it. AI reads the invoice. AI codes every line to the chart of accounts. Logs it to the ledger, archives the file, returns the summary.",
+      "wpm": 150
+    },
+    {
+      "type": "scroll",
+      "selector": "body",
+      "by": 240
+    },
+    {
+      "type": "wait",
+      "seconds": 0.6
+    },
+    {
+      "type": "read",
+      "align_scene": "standin_note",
+      "text": "Quick note on the ledger: it is an ActivePieces table standing in for Xero, QuickBooks, or Sage. Same fields, wired to your accounting tool in a real build.",
+      "wpm": 150
+    },
+    {
+      "type": "goto",
+      "url": "http://localhost:8080/forms/9cC7eE7Q0btMTzl99R4rt?useDraft=true"
+    },
+    {
+      "type": "wait",
+      "seconds": 2.5
+    },
+    {
+      "type": "wait_for",
+      "selector": "text=Receipt Image",
+      "timeout_ms": 30000,
+      "wait_after": 1.0
+    },
+    {
+      "type": "shot",
+      "name": "03-form-open",
+      "wait_after": 0.4
+    },
+    {
+      "type": "read",
+      "align_scene": "live_test",
+      "text": "Let's run it with a real invoice. Dropping it in, hitting submit.",
+      "wpm": 150
+    },
+    {
+      "type": "upload",
+      "selector": "#receiptImage",
+      "file": "scripts/videography/fixtures/example-invoice.png",
+      "wait_after": 1.2
+    },
+    {
+      "type": "shot",
+      "name": "04-file-uploaded",
+      "wait_after": 0.6
+    },
+    {
+      "type": "click",
+      "selector": "button[type=submit], button:has-text('Submit')",
+      "wait_after": 1.0
+    },
+    {
+      "type": "wait",
+      "seconds": 1.5
+    },
+    {
+      "type": "read",
+      "align_scene": "processing",
+      "text": "It's reading now. Vendor, lines, amounts. Coding each line to its account. Normally about thirty seconds; I sped it here.",
+      "wpm": 150
+    },
+    {
+      "type": "wait_for",
+      "selector": "text=Receipt captured",
+      "timeout_ms": 300000,
+      "wait_after": 2.0
+    },
+    {
+      "type": "shot",
+      "name": "05-result",
+      "wait_after": 0.5
+    },
+    {
+      "type": "read",
+      "align_scene": "reveal",
+      "text": "There it is. Receipt captured. Vendor, date, amount, category. Every line coded and logged to the ledger.",
+      "wpm": 150
+    },
+    {
+      "type": "wait_for",
+      "selector": "text=Receipt Ledger",
+      "timeout_ms": 10000,
+      "wait_after": 2.0
+    },
+    {
+      "type": "read",
+      "align_scene": "payoff",
+      "text": "One upload. Captured, coded, logged. No copying. No ERP hopping. No GL codes to remember. No PO to hunt.",
+      "wpm": 150
+    },
+    {
+      "type": "read",
+      "align_scene": "cta",
+      "text": "Want this wired to your Xero or QuickBooks? Send me a DM.",
+      "wpm": 150
+    },
+    {
+      "type": "shot",
+      "name": "05-result-hold",
+      "wait_after": 0.4
+    },
+    {
+      "type": "wait",
+      "seconds": 1.5
+    }
+  ]
+}

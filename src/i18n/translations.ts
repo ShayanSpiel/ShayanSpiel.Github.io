@@ -266,6 +266,7 @@ export const translations: Record<Locale, Translations> = {
     "notes.tagsAria": "Post tags",
     "notes.readMore": "Read more",
     "notes.breadcrumbAria": "Breadcrumb",
+    "notes.faqTitle": "Frequently asked questions",
 
     // Post CTA defaults
     "postCta.joinWaitlist": "Join the waitlist",
@@ -2276,6 +2277,7 @@ export const translations: Record<Locale, Translations> = {
     "notes.tagsAria": "برچسب‌های نوشته",
     "notes.readMore": "ادامه مطلب",
     "notes.breadcrumbAria": "مسیر صفحه",
+    "notes.faqTitle": "پرسشهای پرتکرار",
 
     // Post CTA defaults
     "postCta.joinWaitlist": "به لیست انتظار بپیوند",

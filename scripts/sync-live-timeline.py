@@ -177,6 +177,12 @@ _PUBLIC_GOAL_COPY: Dict[str, Dict[str, str]] = {
         "business_value": "Buyer-focused content creates useful reach and routes operators to Services.",
         "business_value_fa": "محتوای مناسب خریدار، مخاطب مفید رو به صفحه خدمات می‌رسونه.",
     },
+    "goal-11148124e5": {
+        "display_title": "Book 1 qualified call per week",
+        "display_title_fa": "احرز کردن ۱ تماس واجد شرط در هفته",
+        "business_value": "One qualified conversation per week proves the outbound machine creates revenue pipeline.",
+        "business_value_fa": "یک گفت‌وگوی واجد شرط در هفته ثابت می‌کند ماشین آوت‌باند لایه درآمد می‌سازد.",
+    },
 }
 
 
@@ -283,6 +289,7 @@ def _northstar(conn: sqlite3.Connection) -> Optional[Dict[str, Any]]:
     ).fetchone()
     if row is None:
         return None
+    public = _PUBLIC_GOAL_COPY.get(row["id"], {})
     return {
         "goal_id": row["id"],
         "goal_name": row["name"],
@@ -291,6 +298,10 @@ def _northstar(conn: sqlite3.Connection) -> Optional[Dict[str, Any]]:
         "target": _decode_target(row["target_json"]),
         "goal_status": row["goal_status"],
         "updated_at": row["updated_at"],
+        "display_title": public.get("display_title"),
+        "display_title_fa": public.get("display_title_fa"),
+        "business_value": public.get("business_value"),
+        "business_value_fa": public.get("business_value_fa"),
     }
 
 

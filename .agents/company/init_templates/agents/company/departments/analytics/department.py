@@ -80,13 +80,13 @@ class AnalyticsDepartment(EvidenceDepartment, Department):
             "cro-experiment",
             "Propose and evaluate one bounded single-variable, A/B, factorial, or funnel experiment.",
             ("diagnose", "hypothesis", "approve", "run", "evaluate"), ("cro-optimizer",),
-            ("analytics", "copywriting-en", "spielos-ui"), ("start_experiment",),
+            ("analytics", "copywriting", "spielos-ui"), ("start_experiment",),
             ("funnel_report", "cro_experiment"), ("website",),
             graph=(
                 WorkflowStep("approve", "approval"),
                 WorkflowStep("run", "employee", "cro-optimizer",
                              produces=("cro_experiment",),
-                             skill_ids=("analytics", "copywriting-en", "spielos-ui")),
+                             skill_ids=("analytics", "copywriting", "spielos-ui")),
             ),
         ),
         WorkflowSpec(

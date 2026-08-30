@@ -41,8 +41,8 @@ This skill does NOT own:
 3. `src/layouts/BaseLayout.astro` — global head: meta, OG, hreflang, canonical, Search Console, Organization schema
 4. `src/i18n/translations.ts` — all user-facing strings via `t(locale, key)`
 5. `../../../company/strategy/icp.md` — canonical Ideal Customer Profile
-6. `.agents/skills/website/copywriting-en/SKILL.md` — English copy quality
-7. `.agents/skills/website/copywriting-fa/SKILL.md` — Persian copy quality
+6. `.agents/skills/website/copywriting/SKILL.md` — English copy quality
+7. `.agents/skills/website/copywriting/SKILL.md` — Persian copy quality
 8. `.agents/skills/website/translation-fa/SKILL.md` — Persian translation quality
 9. `persian-glossary.md` — Persian terminology
 

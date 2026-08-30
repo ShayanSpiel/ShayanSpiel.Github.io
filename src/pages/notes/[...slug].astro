@@ -4,6 +4,7 @@ import Page from "../../layouts/Page.astro";
 import { SITE, AUTHOR } from "../../config";
 import { type Locale, t } from "../../i18n/translations";
 import { localizePath } from "../../i18n";
+import FAQList from "../../components/sections/FAQList.astro";
 
 export async function getStaticPaths() {
   const notes = await getCollection("notes");
@@ -21,6 +22,10 @@ interface Props {
 const { note, locale } = Astro.props;
 const { Content } = await note.render();
 const { title, description, date, tags, image } = note.data;
+
+const faPermalinks = new Set((await getCollection("notesFa")).map((n) => n.data.permalink));
+const enPermalinks = new Set((await getCollection("notes")).map((n) => n.data.permalink));
+const hasTwin = locale === "fa" ? enPermalinks.has(note.data.permalink) : faPermalinks.has(note.data.permalink);
 
 const localeCode = locale === "fa" ? "fa-IR" : "en-US";
 const formattedDate = date.toLocaleDateString(localeCode, { year: "numeric", month: "long", day: "numeric" });
@@ -62,9 +67,23 @@ const breadcrumbJsonLd = {
     { "@type": "ListItem", position: 3, name: title, item: articleUrl },
   ],
 };
+
+
+const faqJsonLd = note.data.faq?.length
+  ? {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "@id": `${articleUrl}#faq`,
+      mainEntity: note.data.faq.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: f.a },
+      })),
+    }
+  : null;
 ---
 
-<Page title={title} description={description} image={image || `/assets/og/${note.data.permalink.replaceAll("/", "")}.png`} ogType="article" publishedTime={isoDate} modifiedTime={isoDate} tags={tags} locale={locale}>
+<Page title={title} description={description} image={image || `/assets/og/${note.data.permalink.replaceAll("/", "")}.png`} ogType="article" publishedTime={isoDate} modifiedTime={isoDate} tags={tags} locale={locale} noAlternate={!hasTwin}>
   <article class="mx-auto max-w-3xl px-6 pt-8 pb-16">
     <nav class="breadcrumb" aria-label={t(locale, "notes.breadcrumbAria")}>
       <a href={localizePath("/", locale)}>{t(locale, "nav.home")}</a>
@@ -85,6 +104,17 @@ const breadcrumbJsonLd = {
 
     <div class="post-content">
       <Content />
+
+      {note.data.faq && note.data.faq.length > 0 && (
+        <section aria-label={t(locale, "notes.faqTitle")}>
+          <h2>{t(locale, "notes.faqTitle")}</h2>
+          <FAQList
+            locale={locale}
+            keyPrefix="note-faq"
+            entries={note.data.faq.map((f) => ({ q: f.q, a: f.a }))}
+          />
+        </section>
+      )}
     </div>
 
     <div class="post-end-sep" aria-hidden="true">· · ·</div>
@@ -100,6 +130,7 @@ const breadcrumbJsonLd = {
 
   <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
+  {faqJsonLd && <script is:inline type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />}
 
   <script>
     document.querySelectorAll('.post-content .war-reveal').forEach((el) => {

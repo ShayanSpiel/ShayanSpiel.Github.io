@@ -1,6 +1,6 @@
 ---
 name: videography
-description: Record authentic, human-paced browser demos of delivered Client Delivery workflows and render them into showcase MP4s using the four-module resolve/author/record/render pipeline under scripts/videography. Use when the owner wants a real demo video of a delivered workflow (or a new demo type) rather than a staged/brand-motion video.
+description: Record authentic, human-paced browser demos of delivered Client Delivery workflows and render them into showcase MP4s using the five-module resolve/author/narration-routing/record/render pipeline under scripts/videography. Use when the owner wants a real demo video of a delivered workflow (or a new demo type) rather than a staged/brand-motion video.
 ---
 
 # Videography
@@ -15,7 +15,7 @@ This Department is the **opposite trust model** from Design's brand-motion
 `video-creation`: it never stages, scripts visuals, or fabricates results.
 It captures what really happened.
 
-## Pipeline (four isolated modules)
+## Pipeline (five isolated modules)
 
 1. **resolve** — pick a delivered order from the Client Delivery registry
    (`.agents/company/assets/client-delivery/registry.csv`) and resolve the
@@ -24,10 +24,28 @@ It captures what really happened.
 2. **author** — write a humanistic scenario JSON under
    `scripts/videography/scenarios/` (see the job-brief demo scenario). A new
    demo type = a new scenario file; the recorder never changes.
-3. **record** — `scripts/videography/recorder.py` runs the scenario in a real
+3. **narration routing** — before ANY narration copy is drafted, resolve the
+   demo-owner narration instance and the canonical contract:
+   - Canonical contract (required reading):
+     `.agents/company/departments/design/templates/video/narration.json` —
+     `tone_contract`, `provider_chain`, `provider_voices`, `voice_direction`,
+     `voice_selection`, `mix` (narration-only: -16 LUFS / -1 dBTP / 48kHz
+     AAC, no music), `scene_timing` `narration-led-v2` (`speech_lead` 0.65,
+     `minimum_visual_dwell` 3, `cta_minimum_visual_dwell` 4), `quality_gates`.
+   - Demo instance (where the copy lives and where every narration ask must
+     route): `.spielos/artifacts/videography/{workflow}/narration.json`
+     (runtime instance) AND the source scenario mirror under
+     `scripts/videography/scenarios/{workflow}-narration-*.json` when
+     present. The instance must carry the runtime segment shape: `voice`,
+     `provider`, `model`, `mode`, `total_duration`, `strategy`,
+     `segments[{index, scene, text, keywords, start, end, duration, path}]`,
+     `narration_wav` — never a bespoke `{strategy, voice, note, segments}`
+     shape.
+   Narration routing: every narration ask for a workflow demo resolves the demo-owned narration instance (`.spielos/artifacts/videography/{workflow}/narration.json`, mirrored by `scripts/videography/scenarios/{workflow}-narration-*.json`) before drafting any copy. The canonical contract `.agents/company/departments/design/templates/video/narration.json` is required reading. No ad-hoc narration JSON shapes.
+4. **record** — `scripts/videography/recorder.py` runs the scenario in a real
    Chromium with a visible humanized cursor, natural typing/scroll/read dwell,
    seeded determinism, and captures video + a per-step DOM-state audit.
-4. **render** — `scripts/videography/render.py` encodes the capture to a
+5. **render** — `scripts/videography/render.py` encodes the capture to a
    web-optimized MP4 (h264, yuv420p, faststart). Polish (captions, TTS,
    narration, zooms) is a later pass that never alters the raw capture.
 
@@ -37,6 +55,12 @@ It captures what really happened.
 # Session (one-time, human login) — needed for authenticated ActivePieces flows
 python3 scripts/videography/session.py --url http://localhost:8080 \
   --out .spielos/videography/activepieces-state.json
+
+# Narration routing — resolve the demo-owned narration instance + canonical
+# contract BEFORE drafting any narration copy (pipeline step 3):
+cat .agents/company/departments/design/templates/video/narration.json
+cat .spielos/artifacts/videography/{workflow}/narration.json \
+    scripts/videography/scenarios/{workflow}-narration-*.json
 
 # Record a scenario (local/proof or authenticated ActivePieces demo)
 python3 scripts/videography/recorder.py \
@@ -80,3 +104,5 @@ A recording is accepted evidence of `showcase_videos` only when ALL hold:
   name and steps.json must name the resolved order.
 - The recorder is the only source of the video; post-production only layers
   presentation (captions/narration/zoom) on top of the real capture.
+- Never draft narration copy outside the demo-owned narration.json instance
+  shape; a narration ask always routes through that instance.

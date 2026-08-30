@@ -19,7 +19,7 @@ Campaign work runs:
 ## Boundaries
 
 - Canonical ICP, positioning, and voice live in `.agents/company/strategy/`.
-- Copy method lives in `.agents/skills/company/copywriting-en/SKILL.md`; Persian language adaptation lives in `.agents/skills/company/copywriting-fa/SKILL.md`.
+- Copy method lives in `.agents/skills/company/copywriting/SKILL.md`; Persian language adaptation lives in `.agents/skills/company/copywriting/SKILL.md`.
 - `evals.py` contains criterion IDs, thresholds, and source references only.
 - Templates, registry files, connections, public routes, artifact kinds, daily targets, and existing workflow names remain unchanged.
 - Generated artifacts belong under `.spielos/artifacts/`.

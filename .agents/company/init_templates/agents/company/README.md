@@ -176,7 +176,7 @@ new architectural layer. It lives at
 .agents/skills/            reusable methods
   company/                 harness operation (director, department-runner,
                            system-improvement, outbound, outbound-email,
-                           copywriting-en/fa)
+                           copywriting/fa)
   website/                 site-bound methods (spielos-ui, seo, analytics,
                            translation-fa, video-creation)
 .spielos/.env              private credentials (ignored)

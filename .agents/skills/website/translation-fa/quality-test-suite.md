@@ -1,6 +1,6 @@
 # SpielOS Quality Test Suite
 
-Shared bilingual test cases for translation-fa, copywriting-fa, and copywriting-en skills. At least 45 examples across all required categories.
+Shared bilingual test cases for translation-fa, copywriting, and copywriting skills. At least 45 examples across all required categories.
 
 Each example includes: source material, ICP and awareness level, weak output, why it fails, correct output (English and/or Persian), and which rule corrected it.
 
@@ -476,7 +476,7 @@ Or:
 
 > When I asked an AI agent to plan SpielOS's SEO structure, it proposed dozens of pages for teams, templates, and solutions that did not exist in the product.
 
-**Rule:** Reader-context rule (copywriting-en §Reader-context rule).
+**Rule:** Reader-context rule (copywriting §Reader-context rule).
 
 ---
 
@@ -498,7 +498,7 @@ Or:
 
 > Bad translation does not always come from a bad model. Sometimes the product has not decided how to describe itself. I discovered this when three SpielOS pages had three different translations for the same concept.
 
-**Rule:** Work sessions are evidence, not structure (copywriting-en §Work sessions are evidence).
+**Rule:** Work sessions are evidence, not structure (copywriting §Work sessions are evidence).
 
 ---
 
@@ -520,7 +520,7 @@ Or:
 
 > Your AI employees need clear roles, instructions, company knowledge, and a way to hand work between them. SpielOS gives you all of that in one system.
 
-**Rule:** Product truth versus customer language (copywriting-en §Product truth versus customer language).
+**Rule:** Product truth versus customer language (copywriting §Product truth versus customer language).
 
 ---
 
@@ -542,7 +542,7 @@ Or:
 
 > Your agents now remember company context between sessions. When one agent finishes its part, the next one picks up where it left off — and you can review the work before it moves forward.
 
-**Rule:** Customer language over internal labels (copywriting-en §Product truth versus customer language).
+**Rule:** Customer language over internal labels (copywriting §Product truth versus customer language).
 
 ---
 
@@ -568,7 +568,7 @@ Or:
 
 > Direct Mode runs a workflow step by step. Director Mode lets a long-running agent manage an entire pipeline with checkpoints and approvals.
 
-**Rule:** Awareness levels — do not write every page as if it addresses all levels (copywriting-en §Awareness levels).
+**Rule:** Awareness levels — do not write every page as if it addresses all levels (copywriting §Awareness levels).
 
 ---
 
@@ -590,7 +590,7 @@ Or:
 
 > Define an AI role, write its instructions, connect the tools it needs, and hand it real work. When something important comes up, you approve it before it goes out.
 
-**Rule:** English voice — avoid generic SaaS language (copywriting-en §English voice, §Banned phrases).
+**Rule:** English voice — avoid generic SaaS language (copywriting §English voice, §Banned phrases).
 
 ---
 
@@ -612,7 +612,7 @@ Or:
 
 > I built a glossary that locks every product term to one Persian equivalent. Now the site uses the same language everywhere.
 
-**Rule:** Evidence over slogans, banned phrases (copywriting-en §English voice, §Evidence over slogans).
+**Rule:** Evidence over slogans, banned phrases (copywriting §English voice, §Evidence over slogans).
 
 ---
 
@@ -634,7 +634,7 @@ Or:
 
 > Translating sentence by sentence broke the article. The Persian version only made sense if you already knew the English. I had to read the full piece, understand the argument, and rebuild it in Persian from a paragraph outline.
 
-**Rule:** Avoid repeated contrast formulas (copywriting-en §English voice, §Evidence over slogans).
+**Rule:** Avoid repeated contrast formulas (copywriting §English voice, §Evidence over slogans).
 
 ---
 
@@ -656,7 +656,7 @@ Or:
 
 > SpielOS can support work across marketing, research, support, analytics, HR, and documentation — but each area needs roles, instructions, and tool connections set up first.
 
-**Rule:** Product truth (copywriting-en §Product truth versus customer language).
+**Rule:** Product truth (copywriting §Product truth versus customer language).
 
 ---
 
@@ -682,7 +682,7 @@ Or:
 
 > See how SpielOS works
 
-**Rule:** CTAs must be direct and specific (copywriting-en §CTAs).
+**Rule:** CTAs must be direct and specific (copywriting §CTAs).
 
 ---
 
@@ -934,7 +934,7 @@ These tests show the same evidence expressed naturally in both languages. Neithe
 
 > محصول هنوز زبان مشخصی نداشت. هر صفحه برای یه چیز یه اسم جداگانه گذاشته بود.
 
-**Rule:** ICP simulation — how would an Iranian founder describe this aloud? (copywriting-fa §Persian-specific simulation questions).
+**Rule:** ICP simulation — how would an Iranian founder describe this aloud? (copywriting §Persian-specific simulation questions).
 
 ---
 
@@ -956,7 +956,7 @@ These tests show the same evidence expressed naturally in both languages. Neithe
 
 > چند ایجنت رو طوری به هم وصل کردیم که با هم کار کنن. هرکدوم بخشی از کار رو انجام می‌ده و بقیه ادامه می‌دن.
 
-**Rule:** Explanation before terminology, awareness levels (copywriting-fa §Persian-specific simulation questions, §Awareness levels).
+**Rule:** Explanation before terminology, awareness levels (copywriting §Persian-specific simulation questions, §Awareness levels).
 
 ---
 
@@ -982,7 +982,7 @@ Or:
 
 > سیستم کارمند و دپارتمان AI
 
-**Rule:** Persian SEO localization — prefer phrases people naturally type (copywriting-fa §Persian SEO localization).
+**Rule:** Persian SEO localization — prefer phrases people naturally type (copywriting §Persian SEO localization).
 
 ---
 
@@ -1004,7 +1004,7 @@ Or:
 
 > صفحه دقیقاً همون چیزی رو توضیح می‌ده که SpielOS واقعاً انجام می‌ده.
 
-**Rule:** Each sentence must work without its English source (copywriting-fa §Persian-specific simulation questions).
+**Rule:** Each sentence must work without its English source (copywriting §Persian-specific simulation questions).
 
 ---
 

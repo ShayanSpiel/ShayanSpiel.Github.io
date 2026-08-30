@@ -13,7 +13,7 @@ REGISTRY = ".agents/company/departments/design/templates/registry.json"
 BRAND_MOTION = ".agents/company/departments/design/templates/video/brand-motion.css"
 VIDEO_CREATION = ".agents/skills/website/video-creation/SKILL.md"
 NARRATION = ".agents/company/departments/design/templates/video/narration.json"
-COPYWRITING_EN = ".agents/skills/website/copywriting-en/SKILL.md"
+COPYWRITING_EN = ".agents/skills/website/copywriting/SKILL.md"
 
 VIDEO_CTA_LINK = EvalSuite(
     id="video-cta-link",
@@ -116,7 +116,7 @@ VIDEO_TEXT_SYNC = EvalSuite(
             id="no_em_dash",
             name="No em dash in copy",
             description=(
-                "No `—` (em dash) in any rendered headline, supporting, eyebrow, or badge. Copy uses period or comma per copywriting-en. Canonical `SpielOS is running itself — an AI company.` is the only exception and must appear exactly once per fifth item."
+                "No `—` (em dash) in any rendered headline, supporting, eyebrow, or badge. Copy uses period or comma per copywriting. Canonical `SpielOS is running itself — an AI company.` is the only exception and must appear exactly once per fifth item."
             ),
             source=COPYWRITING_EN,
         ),
