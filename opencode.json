@@ -14,12 +14,14 @@
     "posthog": {
       "type": "remote",
       "url": "https://mcp.posthog.com/mcp",
-      "oauth": false,
-      "headers": {
-        "Authorization": "Bearer {env:POSTHOG_PERSONAL_API_KEY}",
-        "x-posthog-read-only": "true"
-      },
+      "oauth": true,
       "enabled": true
+    },
+    "attio": {
+      "type": "remote",
+      "url": "https://mcp.attio.com/mcp",
+      "enabled": true,
+      "oauth": true
     }
   }
 }
