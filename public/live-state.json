@@ -5,9 +5,9 @@
     "goal_name": "Supabase lead CRM: consolidate all outbound sources, dedupe, upload, and make Supabase the read/write source of truth",
     "owner_id": "director",
     "run_id": "run-6cdb058690",
-    "run_status": "running",
+    "run_status": "waiting",
     "stage": "DECIDE",
-    "updated_at": "2026-09-01T16:55:03.102488+00:00"
+    "updated_at": "2026-09-01T16:55:14.745955+00:00"
   },
   "heartbeat": {
     "business_value": null,
@@ -19,13 +19,13 @@
     "metric": "all_children_achieved",
     "operator": "ge",
     "owner_id": "director",
-    "run_status": "running",
+    "run_status": "waiting",
     "stage": "DECIDE",
     "target": 1,
-    "updated_at": "2026-09-01T16:55:03.102488+00:00"
+    "updated_at": "2026-09-01T16:55:14.745955+00:00"
   },
-  "last_activity_at": "2026-09-01T16:55:03.102488+00:00",
-  "last_sync_at": "2026-09-01T16:55:03.219109+00:00",
+  "last_activity_at": "2026-09-01T18:32:05.423744+00:00",
+  "last_sync_at": "2026-09-01T18:32:05.524814+00:00",
   "northstar": {
     "business_value": null,
     "business_value_fa": null,
@@ -42,14 +42,14 @@
   "state": "running",
   "totals": {
     "approvals": 275,
-    "decisions": 970,
-    "evidence": 14720,
+    "decisions": 971,
+    "evidence": 14721,
     "goals_abandoned": 49,
-    "goals_achieved": 181,
+    "goals_achieved": 182,
     "goals_active": 41,
     "goals_total": 277,
     "hypotheses": 101,
-    "memory_claims": 0,
+    "memory_claims": 1,
     "runs": 319
   }
 }

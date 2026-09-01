@@ -263,7 +263,7 @@
       "display_title_fa": "گفت‌وگوهای فروش باکیفیت رو بیشتر کنیم",
       "goal_status": "active",
       "id": "goal-email-campaign-20260810",
-      "latest_activity_at": "2026-09-01T16:55:03.102488+00:00",
+      "latest_activity_at": "2026-09-01T16:55:14.745955+00:00",
       "metric": "reply_rate",
       "name": "Resume daily English outbound to 30% reply rate",
       "operator": "ge",
@@ -4033,18 +4033,18 @@
     },
     {
       "created_at": "2026-08-29T19:37:27.912741+00:00",
-      "goal_status": "paused",
+      "goal_status": "achieved",
       "id": "goal-9428806afb",
-      "latest_activity_at": "2026-08-30T08:32:51.222875+00:00",
+      "latest_activity_at": "2026-09-01T18:32:05.423744+00:00",
       "metric": "showcase_videos",
       "name": "Videography — Receipt → Ledger capture re-record + postprod fix (result visibility, screens, pacing sync, better narration copy, invoice fixture)",
       "operator": "ge",
       "owner_id": "videography",
       "parent_id": null,
-      "run_status": "blocked",
-      "stage": "ACT",
+      "run_status": "completed",
+      "stage": "OBSERVE",
       "target": 1,
-      "updated_at": "2026-08-30T08:32:51.222875+00:00"
+      "updated_at": "2026-09-01T18:32:05.422597+00:00"
     },
     {
       "created_at": "2026-08-29T19:41:58.498954+00:00",
@@ -4174,16 +4174,16 @@
       "created_at": "2026-09-01T15:41:55.345213+00:00",
       "goal_status": "active",
       "id": "goal-c48f1505d7",
-      "latest_activity_at": "2026-09-01T16:55:03.102488+00:00",
+      "latest_activity_at": "2026-09-01T16:55:14.745955+00:00",
       "metric": "all_children_achieved",
       "name": "Supabase lead CRM: consolidate all outbound sources, dedupe, upload, and make Supabase the read/write source of truth",
       "operator": "ge",
       "owner_id": "director",
       "parent_id": "goal-email-campaign-20260810",
-      "run_status": "running",
+      "run_status": "waiting",
       "stage": "DECIDE",
       "target": 1,
-      "updated_at": "2026-09-01T16:55:03.101730+00:00"
+      "updated_at": "2026-09-01T16:55:14.745082+00:00"
     }
   ],
   "heartbeat": {
@@ -4196,10 +4196,10 @@
     "metric": "all_children_achieved",
     "operator": "ge",
     "owner_id": "director",
-    "run_status": "running",
+    "run_status": "waiting",
     "stage": "DECIDE",
     "target": 1,
-    "updated_at": "2026-09-01T16:55:03.102488+00:00"
+    "updated_at": "2026-09-01T16:55:14.745955+00:00"
   },
   "northstar": {
     "business_value": null,
@@ -4221,9 +4221,9 @@
       "goal_name": "Supabase lead CRM: consolidate all outbound sources, dedupe, upload, and make Supabase the read/write source of truth",
       "owner_id": "director",
       "run_id": "run-6cdb058690",
-      "run_status": "running",
+      "run_status": "waiting",
       "stage": "DECIDE",
-      "updated_at": "2026-09-01T16:55:03.102488+00:00"
+      "updated_at": "2026-09-01T16:55:14.745955+00:00"
     },
     "heartbeat": {
       "business_value": null,
@@ -4235,25 +4235,25 @@
       "metric": "all_children_achieved",
       "operator": "ge",
       "owner_id": "director",
-      "run_status": "running",
+      "run_status": "waiting",
       "stage": "DECIDE",
       "target": 1,
-      "updated_at": "2026-09-01T16:55:03.102488+00:00"
+      "updated_at": "2026-09-01T16:55:14.745955+00:00"
     },
-    "last_activity_at": "2026-09-01T16:55:03.102488+00:00",
-    "last_sync_at": "2026-09-01T16:55:03.219109+00:00",
+    "last_activity_at": "2026-09-01T18:32:05.423744+00:00",
+    "last_sync_at": "2026-09-01T18:32:05.524814+00:00",
     "state": "running"
   },
   "totals": {
     "approvals": 275,
-    "decisions": 970,
-    "evidence": 14720,
+    "decisions": 971,
+    "evidence": 14721,
     "goals_abandoned": 49,
-    "goals_achieved": 181,
+    "goals_achieved": 182,
     "goals_active": 41,
     "goals_total": 277,
     "hypotheses": 101,
-    "memory_claims": 0,
+    "memory_claims": 1,
     "runs": 319
   }
 }
