@@ -91,7 +91,7 @@ const bookingEnabled = /^\/(?:fa\/)?(?:apply|contact)\/?$/.test(Astro.url.pathna
          pages where it can actually be used. -->
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/outfit-latin.woff2" crossorigin />
     {locale === "fa" && <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/IRANSansXVF.woff2" crossorigin />}
-    <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/jetbrains-latin.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/marcellus-latin.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/boxicons.woff2" crossorigin />
 
     <!-- Cal.com native embed (owner directive 2026-08-23, flow.digital
@@ -249,7 +249,7 @@ const bookingEnabled = /^\/(?:fa\/)?(?:apply|contact)\/?$/.test(Astro.url.pathna
     </script>
 
     <!-- Deferred: load gtag.js + initialize PostHog unconditionally (full capture, owner directive 2026-08-18) -->
-    <script is:inline define:vars={{ gaId: ANALYTICS.googleAnalyticsId, phKey: ANALYTICS.posthogApiKey, phHost: ANALYTICS.posthogApiHost }}>
+    <script is:inline define:vars={{ gaId: ANALYTICS.googleAnalyticsId, phKey: ANALYTICS.posthogApiKey, phHost: ANALYTICS.posthogApiHost, attributionParameters: ANALYTICS.attributionParameters }}>
       (function(){
         var started = false;
         function loadAnalytics(){
@@ -266,7 +266,49 @@ const bookingEnabled = /^\/(?:fa\/)?(?:apply|contact)\/?$/.test(Astro.url.pathna
              traffic, raw form inputs masked (funnel events still count
              starts/submits/successes). */
           !function(t,e){var o,n,p;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",t.getElementsByTagName("head")[0].appendChild(p);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
-          posthog.init(phKey,{ api_host: phHost, person_profiles: 'always', mask_all_inputs: true });
+          /* Compute attribution for the initial $pageview so source/medium are never undefined. */
+          var sp = new URLSearchParams(window.location.search);
+          var _attribution = { landing_path: window.location.pathname };
+          (attributionParameters || []).forEach(function(key){
+            var _v = (sp.get(key) || '').trim().toLowerCase();
+            if(_v && /^[a-z0-9._-]{1,120}$/.test(_v)) _attribution[key] = _v;
+          });
+          var _hasCampaign = Object.keys(_attribution).length > 1;
+          if(!_hasCampaign){
+            try {
+              var _stored = JSON.parse(sessionStorage.getItem('spielos.content-attribution') || '{}');
+              if(Object.keys(_stored).length > 0) _attribution = _stored;
+            } catch(err) {}
+          }
+          var _source = _attribution.utm_source || 'direct';
+          var _medium = _attribution.utm_medium || 'none';
+          var _campaign = _attribution.utm_campaign || 'none';
+          var _content_id = _attribution.utm_content || 'none';
+          /* PostHog: full capture for all visitors — session replay stays ON,
+             anonymous person profiles for funnel analysis on unauthenticated
+             traffic, raw form inputs masked (funnel events still count
+             starts/submits/successes). Disable autocapture so we can fire
+             the initial $pageview with explicit source/medium and avoid
+             the "direct undefined" reporting gap. */
+          var _env = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.indexOf('localhost') !== -1) ? 'development' : 'production';
+          posthog.init(phKey,{ api_host: phHost, person_profiles: 'always', mask_all_inputs: true, capture_pageview: false, persistence: 'localStorage+cookie' });
+          try {
+            var _heFinal = _attribution.he || _he || '';
+            if(_heFinal){
+              posthog.identify(_heFinal);
+              if(posthog.people && typeof posthog.people.set === 'function') posthog.people.set({ email: _heFinal });
+              posthog.register({ he: _heFinal, email: _heFinal, utm_source: _source, utm_medium: _medium, utm_campaign: _campaign, utm_content: _content_id });
+            } else if(_campaign !== 'none' || _source !== 'direct'){
+              posthog.register({ utm_source: _source, utm_medium: _medium, utm_campaign: _campaign, utm_content: _content_id });
+            }
+            if(_env) posthog.register({ env: _env });
+          } catch(e) {}
+          /* Fire the initial $pageview with explicit attribution so every
+           channel reports a valid source + medium pair (no "direct undefined"). */
+          var _pageviewProps = { $source: _source, $medium: _medium, $campaign: _campaign, $content_id: _content_id, landing_path: _attribution.landing_path || window.location.pathname, $initial_path: window.location.pathname, $current_url: window.location.href, env: _env, he: (_attribution.he || _he || undefined), email: (_attribution.he || _he || undefined), utm_source: _source, utm_medium: _medium, utm_campaign: _campaign, utm_content: _content_id };
+          if(!_pageviewProps.he) delete _pageviewProps.he;
+          if(!_pageviewProps.email) delete _pageviewProps.email;
+          posthog.capture('$pageview', _pageviewProps);
         }
         'requestIdleCallback' in window
           ? requestIdleCallback(loadAnalytics, {timeout: 2000})
@@ -337,12 +379,24 @@ const bookingEnabled = /^\/(?:fa\/)?(?:apply|contact)\/?$/.test(Astro.url.pathna
             var value = (params.get(key) || '').trim().toLowerCase();
             if(value && /^[a-z0-9._-]{1,120}$/.test(value)) current[key] = value;
           });
+          var heRaw = (params.get('he') || '').trim();
+          if(heRaw && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(heRaw) && heRaw.length <= 254) current.he = heRaw.toLowerCase();
+          if(current.he){
+            try { localStorage.setItem('spielos.he', current.he); } catch(e) {}
+            try { sessionStorage.setItem('spielos.he', current.he); } catch(e) {}
+          }
           var hasCampaign = Object.keys(current).length > 1;
           var stored = {};
           try {
             stored = JSON.parse(sessionStorage.getItem('spielos.content-attribution') || '{}');
           } catch(err) {}
           var context = hasCampaign ? current : stored;
+          if(!context.he){
+            try {
+              var ph = localStorage.getItem('spielos.he') || sessionStorage.getItem('spielos.he');
+              if(ph) context.he = ph;
+            } catch(e) {}
+          }
           if(hasCampaign){
             try { sessionStorage.setItem('spielos.content-attribution', JSON.stringify(current)); } catch(err) {}
           }
@@ -351,7 +405,14 @@ const bookingEnabled = /^\/(?:fa\/)?(?:apply|contact)\/?$/.test(Astro.url.pathna
             source: context.utm_source || 'direct',
             medium: context.utm_medium || 'none',
             campaign: context.utm_campaign || 'none',
-            content_id: context.utm_content || 'none'
+            content_id: context.utm_content || 'none',
+            he: context.he || undefined,
+            email: context.he || undefined,
+            utm_source: context.utm_source || 'direct',
+            utm_medium: context.utm_medium || 'none',
+            utm_campaign: context.utm_campaign || 'none',
+            utm_content: context.utm_content || 'none',
+            env: (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') ? 'development' : 'production'
           };
         }
 
