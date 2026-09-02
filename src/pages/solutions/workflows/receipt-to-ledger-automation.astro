@@ -1,0 +1,385 @@
+---
+import Page from "../../../layouts/Page.astro";
+import SectionHeader from "../../../components/sections/SectionHeader.astro";
+import FAQList from "../../../components/sections/FAQList.astro";
+import { brandLogo } from "../../../data/brand-logos";
+import { APPLY_PATH, SITE } from "../../../config";
+import { localizePath } from "../../../i18n";
+import { t } from "../../../i18n/translations";
+
+/** The receipt-to-ledger loop, mirrored to the live demo and the finance ICP stack. */
+const steps = [
+  {
+    title: "Invoice captured",
+    desc: "Supplier invoice lands from email, upload, or drag-and-drop — PDF or scan, any layout.",
+    icon: "bx-clipboard",
+  },
+  {
+    title: "Fields extracted",
+    desc: "Vendor, date, amount, VAT, and every line item read from the document — no retyping.",
+    icon: "bx-search-alt",
+  },
+  {
+    title: "Lines coded",
+    desc: "Each line matched to your chart of accounts with the reasoning attached, ready to review.",
+    icon: "bx-task",
+  },
+  {
+    title: "Ledger row created",
+    desc: "A posted-ready ledger entry appears in your books — Xero, QuickBooks, or Sage in a real build.",
+    icon: "bx-data",
+  },
+  {
+    title: "Confirmation archived",
+    desc: "The original document and the coded entry are filed together, permanently findable.",
+    icon: "bx-folder",
+  },
+  {
+    title: "Handover delivered",
+    desc: "Your team gets the finished entry with full history — review and approve, that's the only manual step.",
+    icon: "bx-check-square",
+  },
+];
+
+/** Familiar ICP tools — real marks, colored recent logos */
+const tools = [
+  { key: "gmail", name: "Gmail" },
+  { key: "drive", name: "Google Drive" },
+  { key: "sheets", name: "Google Sheets" },
+  { key: "notion", name: "Notion" },
+  { key: "slack", name: "Slack" },
+  { key: "attio", name: "Attio" },
+  { key: "hubspot", name: "HubSpot" },
+  { key: "zapier", name: "Zapier" },
+];
+
+/** Per-step tool groups — each step connects down to its 1–3 tools */
+const stepTools: string[][] = [
+  ["gmail", "drive"],               // Invoice captured
+  ["zapier", "sheets"],             // Fields extracted
+  ["notion"],                       // Lines coded
+  ["sheets", "attio"],              // Ledger row created
+  ["drive", "slack"],               // Confirmation archived
+  ["hubspot"],                      // Handover delivered
+];
+
+const audiences = [
+  {
+    name: "Accounting & bookkeeping firms",
+    note: "Every new client multiplies document intake. Coding capacity, not headcount, caps how many mandates you can serve.",
+  },
+  {
+    name: "In-house finance teams",
+    note: "Supplier invoices pile up between month-ends. Processing eats the hours that closing and reviewing should use.",
+  },
+  {
+    name: "Growing businesses",
+    note: "Volume already broke the manual process — every invoice is a typing job with real money attached.",
+  },
+];
+
+const faqs = [
+  {
+    q: "What is receipt-to-ledger automation?",
+    a: "It is a workflow that runs the whole intake side of bookkeeping — capturing a supplier invoice, reading the vendor, date, amount, and line items, coding every line to your chart of accounts, and writing a posted-ready ledger entry — instead of a person copying numbers between a PDF and your books.",
+  },
+  {
+    q: "Do we need to replace our accounting system?",
+    a: "No. In the demo, the ledger is a table standing in for your books; in a real build that step writes to Xero, QuickBooks, or Sage through their own interfaces. Your accounting system stays exactly where it is.",
+  },
+  {
+    q: "Does it post to our books without us?",
+    a: "No. The workflow prepares the coded entry with the original document attached. Your accountant reviews and approves — the posting decision stays human, always.",
+  },
+  {
+    q: "What happens with an invoice it can't read confidently?",
+    a: "Anything ambiguous — an unknown supplier, a code it can't justify, a mismatched total — is held and routed to a person with the document and its reasoning side by side. Nothing unclear books silently.",
+  },
+  {
+    q: "What stays human?",
+    a: "Judgment. Approving postings, handling exceptions, month-end review, and every conversation with clients. The automation handles the reading, the coding, and the filing.",
+  },
+];
+
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: t("en", "nav.home"), item: `${SITE.url}${localizePath("/", "en")}` },
+    { "@type": "ListItem", position: 2, name: t("en", "nav.solutions"), item: `${SITE.url}${localizePath("/solutions/", "en")}` },
+    { "@type": "ListItem", position: 3, name: t("en", "nav.workflows"), item: `${SITE.url}${localizePath("/solutions/workflows/", "en")}` },
+    { "@type": "ListItem", position: 4, name: "Receipt-to-Ledger Workflow Automation", item: `${SITE.url}/solutions/workflows/receipt-to-ledger-automation/` },
+  ],
+};
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
+---
+
+<Page
+  title="Receipt-to-Ledger Workflow Automation | SpielOS"
+  description="Receipt-to-ledger workflow automation for accountants and finance teams. Invoice in, coded ledger entry out — no retyping, no ERP hopping, no PO hunting."
+  image="/assets/og/SpielOS.png"
+  locale="en"
+  noAlternate
+>
+  <!-- 1 - HERO with video -->
+  <section class="relative flex min-h-[calc(100dvh-4rem)] items-center overflow-hidden py-10 sm:py-14">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
+    <div class="absolute left-1/2 top-[42%] h-[34rem] w-[52rem] -translate-x-1/2 -translate-y-1/2 glow-blob opacity-20"></div>
+    <div class="absolute left-[58%] top-[38%] h-64 w-64 rounded-md glow-blob-accent opacity-10"></div>
+    <div class="relative z-10 mx-auto w-full max-w-4xl px-6 text-center">
+      <h1 class="mt-4 text-[clamp(1.875rem,8vw,3rem)] font-extrabold leading-[1.05] tracking-tight text-foreground-strong whitespace-normal sm:whitespace-nowrap sm:text-[clamp(1.05rem,4.6vw,3rem)] sm:leading-[0.95]" data-aos="fade-up">Receipt in↓<br class="sm:hidden" aria-hidden="true" />{" "}<span class="text-primary">Coded ledger out↑</span></h1>
+      <p class="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground" data-aos="fade-up">See an AI agent read a supplier invoice, code every line to the chart of accounts, and hand you the posted-ready ledger entry.</p>
+      <div class="relative mx-auto mt-8 max-w-2xl overflow-hidden rounded-md border border-border bg-panel shadow-panel" data-aos="fade-up">
+        <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r opacity-80 from-primary via-accent to-transparent"></div>
+        <div class="w-full bg-black">
+          <video
+            class="w-full"
+            src="/videos/receipt-ledger-demo.mp4"
+            poster="/videos/receipt-ledger-demo-poster.jpg"
+            controls
+            preload="metadata"
+            playsinline
+          >
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+      <div class="mt-8 flex items-center justify-center" data-aos="fade-up">
+        <a href={localizePath(APPLY_PATH, "en")} data-cta-location="workflow_receipt_ledger_hero_primary" class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20">Show me your workflow</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 - STILL CODING MANUALLY? + WORKFLOW COMPONENTS + CTA -->
+  <section id="show-me-workflow" class="relative overflow-hidden py-20 sm:py-24 scroll-mt-24">
+    <div class="mx-auto max-w-5xl px-6">
+      <div class="mb-12 text-center" data-aos="fade-up">
+        <span class="text-2xs font-semibold uppercase tracking-widest text-primary">STILL CODING MANUALLY?</span>
+        <h2 class="font-bold text-foreground-strong tracking-tight mt-3 text-3xl sm:text-4xl">Still coding invoices by hand?</h2>
+        <p class="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground">Send me one workflow. I'll show you exactly how I'd automate it on your existing stack.</p>
+      </div>
+
+      <!-- Workflow components -->
+      <div class="flow-canvas relative overflow-hidden rounded-md border border-border bg-panel px-5 py-10 shadow-panel sm:px-8 sm:py-14" data-aos="fade-up">
+        <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
+        <div class="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 glow-blob opacity-15"></div>
+        <ol class="flow-rail relative z-10 grid gap-6 sm:grid-cols-6 sm:gap-0">
+          {steps.map((s, i) => {
+            const last = i === steps.length - 1;
+            return (
+              <li class="flow-station relative flex items-start gap-4 sm:flex-col sm:items-center sm:gap-3 sm:text-center">
+                <div class:list={["flow-node relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-md border bg-panel-raised", last ? "border-success text-success shadow-[0_0_24px_var(--success-soft)]" : i === 0 ? "border-primary text-primary shadow-[0_0_24px_var(--primary-soft)]" : "border-border text-muted-foreground"]}>
+                  <i class={`bx ${s.icon} icon-xl`} aria-hidden="true"></i>
+                </div>
+                <div class="min-w-0 flex-1 sm:contents">
+                  <p class:list={["pt-1 sm:pt-0 text-xs font-semibold leading-snug", last ? "text-success" : i === 0 ? "text-foreground-strong" : "text-foreground-muted"]}>{s.title}</p>
+                  <div class="mt-3 flex flex-wrap gap-1.5 sm:hidden">
+                    {(stepTools[i] ?? []).map((k) => {
+                      const tl = tools.find((t) => t.key === k)!;
+                      return (
+                        <span class="flex h-7 w-7 items-center justify-center rounded-md border border-border bg-panel-raised shadow-panel [&>svg]:h-4 [&>svg]:w-4" title={tl.name} set:html={brandLogo(tl.key)}></span>
+                      );
+                    })}
+                  </div>
+                </div>
+              </li>
+            );
+          })}
+        </ol>
+        <!-- Per-step tool groups — vertical stem with calm back-and-forth shine -->
+        <div class="relative z-10 mt-[2px] hidden sm:mt-[3px] sm:block">
+          <div class="grid gap-6 sm:grid-cols-6 sm:gap-0">
+            {stepTools.map((keys, idx) => (
+              <div class="flex flex-col items-center">
+                <div class="relative h-7 w-px overflow-hidden bg-primary/15 sm:h-9">
+                  <div class="absolute left-1/2 top-0 h-2 w-px -translate-x-1/2 bg-primary opacity-95 shadow-[0_0_8px_var(--primary)] animate-stem-shine" style={`animation-delay: ${idx * 0.34}s`}></div>
+                </div>
+                <div class="mt-2 flex flex-wrap justify-center gap-1.5 sm:mt-2">
+                  {keys.map((k) => {
+                    const tl = tools.find((t) => t.key === k)!;
+                    return (
+                      <span class="flex h-7 w-7 items-center justify-center rounded-md border border-border bg-panel-raised shadow-panel [&>svg]:h-4 [&>svg]:w-4" title={tl.name} set:html={brandLogo(tl.key)}></span>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+          <p class="mt-6 text-center text-2xs font-medium tracking-wide text-muted-foreground">Familiar tools, familiar work, delegated to AI.</p>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="mt-12 text-center" data-aos="fade-up">
+        <a href={localizePath(APPLY_PATH, "en")} data-cta-location="workflow_receipt_ledger_mid" class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20">Show me your workflow</a>
+        <p class="mt-4 text-2xs text-muted-foreground">I'll review it personally in 48 hours. FREE</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 - BEFORE / AFTER + BUILT FOR FINANCE TEAMS -->
+  <section class="relative overflow-hidden py-20 sm:py-24">
+    <div class="absolute inset-0 bg-panel-deep/35"></div>
+    <div class="relative mx-auto max-w-5xl px-6">
+      <div class="mb-12 text-center" data-aos="fade-up">
+        <span class="text-2xs font-semibold uppercase tracking-widest text-primary">LESS TYPING. MORE CLOSING.</span>
+        <h2 class="font-bold text-foreground-strong tracking-tight mt-3 text-3xl sm:text-4xl">Stop doing bookkeeping data entry by hand.</h2>
+      </div>
+      <div class="grid gap-4 md:grid-cols-2" data-aos="fade-up">
+        <div class="group relative flex flex-col overflow-hidden rounded-md border border-destructive/30 bg-panel shadow-panel transition-all hover:border-destructive/50">
+          <div class="absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r opacity-70 from-destructive via-destructive-soft to-transparent"></div>
+          <div class="p-6">
+            <div class="mb-3 flex items-center gap-2">
+              <span class="flex h-7 w-7 items-center justify-center rounded-md bg-destructive-soft"><img src="/assets/emojis/fluent-sad.svg" alt="sad face emoji" class="h-5 w-5" aria-hidden="true" /></span>
+              <h3 class="text-sm font-semibold uppercase tracking-wide text-destructive">Before — manual</h3>
+            </div>
+            <ul class="space-y-2">
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x text-destructive/70 icon-sm shrink-0" aria-hidden="true"></i>Open every invoice PDF.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x text-destructive/70 icon-sm shrink-0" aria-hidden="true"></i>Copy vendor, date, VAT, and every line.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x text-destructive/70 icon-sm shrink-0" aria-hidden="true"></i>Code each line to the chart of accounts.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x text-destructive/70 icon-sm shrink-0" aria-hidden="true"></i>Retype it into the books.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x text-destructive/70 icon-sm shrink-0" aria-hidden="true"></i>Hunt for duplicates in history.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x text-destructive/70 icon-sm shrink-0" aria-hidden="true"></i>File the PDF somewhere findable — hopefully.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="group relative flex flex-col overflow-hidden rounded-md border border-primary/30 bg-panel shadow-panel transition-all hover:border-primary/50">
+          <div class="absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r opacity-80 from-primary via-accent to-transparent"></div>
+          <div class="p-6">
+            <div class="mb-3 flex items-center gap-2">
+              <span class="flex h-7 w-7 items-center justify-center rounded-md bg-primary-soft"><img src="/assets/emojis/fluent-cool.svg" alt="cool face emoji" class="h-5 w-5" aria-hidden="true" /></span>
+              <h3 class="text-sm font-semibold uppercase tracking-wide text-primary">With SpielOS</h3>
+            </div>
+            <ul class="space-y-2">
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-foreground"><i class="bx bx-check text-primary/70 icon-sm shrink-0" aria-hidden="true"></i>Invoices get read.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-foreground"><i class="bx bx-check text-primary/70 icon-sm shrink-0" aria-hidden="true"></i>Fields get extracted.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-foreground"><i class="bx bx-check text-primary/70 icon-sm shrink-0" aria-hidden="true"></i>Lines get coded.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-foreground"><i class="bx bx-check text-primary/70 icon-sm shrink-0" aria-hidden="true"></i>Ledger entries arrive ready to post.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-foreground"><i class="bx bx-check text-primary/70 icon-sm shrink-0" aria-hidden="true"></i>Documents stay attached to every entry.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <p class="mt-8 text-center text-sm text-foreground-strong font-medium" data-aos="fade-up">Your accountants review the entries and make the decisions.</p>
+      <!-- Built for finance teams -->
+      <div class="mt-10 text-center" data-aos="fade-up">
+        <p class="text-2xs font-semibold uppercase tracking-[0.14em] text-primary">BUILT FOR FINANCE TEAMS</p>
+        <h3 class="mt-2 text-xl font-bold tracking-tight text-foreground-strong sm:text-2xl">Automate the work between invoice and ledger.</h3>
+        <div class="mt-6 flex flex-wrap justify-center gap-2">
+          <span class="inline-flex items-center gap-1.5 rounded-md border border-border bg-panel-raised px-3 py-1.5 text-xs font-medium text-foreground-strong shadow-panel"><i class="bx bx-briefcase text-primary icon-sm" aria-hidden="true"></i>Accounting &amp; bookkeeping firms</span>
+          <span class="inline-flex items-center gap-1.5 rounded-md border border-border bg-panel-raised px-3 py-1.5 text-xs font-medium text-foreground-strong shadow-panel"><i class="bx bx-group text-primary icon-sm" aria-hidden="true"></i>In-house finance teams</span>
+          <span class="inline-flex items-center gap-1.5 rounded-md border border-border bg-panel-raised px-3 py-1.5 text-xs font-medium text-foreground-strong shadow-panel"><i class="bx bx-trending-up text-primary icon-sm" aria-hidden="true"></i>Growing businesses</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 - WHO IT'S FOR + FAQ -->
+  <section class="relative overflow-hidden py-20 sm:py-24">
+    <div class="absolute left-0 top-1/3 h-64 w-64 glow-blob opacity-10"></div>
+    <div class="relative mx-auto max-w-5xl px-6">
+      <SectionHeader label="WHO IT'S FOR" title="Built for teams whose books depend on accuracy." />
+      <div class="grid gap-3 md:grid-cols-3" data-aos="fade-up">
+        {audiences.map((a) => (
+          <article class="group relative overflow-hidden rounded-md border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
+            <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r opacity-60 from-info via-primary to-transparent"></div>
+            <h3 class="text-sm font-semibold text-foreground-strong mb-1 transition-colors group-hover:text-primary">{a.name}</h3>
+            <p class="text-xs leading-relaxed text-muted-foreground">{a.note}</p>
+          </article>
+        ))}
+      </div>
+      <div class="mx-auto mt-16 max-w-3xl">
+        <SectionHeader label="QUESTIONS" title="Receipt-to-ledger questions, answered." />
+        <FAQList locale="en" entries={faqs} keyPrefix="wf-receipt-ledger" />
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 - FINAL CTA -->
+  <section class="relative overflow-hidden py-28 sm:py-36">
+    <div class="absolute inset-0 bg-panel-deep/50"></div>
+    <div class="absolute inset-0 opacity-[0.03] hero-grid"></div>
+    <div class="absolute left-1/2 top-[52%] h-[28rem] w-[44rem] -translate-x-1/2 -translate-y-1/2 glow-blob opacity-15"></div>
+    <div class="relative mx-auto max-w-3xl px-6 text-center" data-aos="fade-up">
+      <p class="text-xs font-semibold uppercase tracking-widest text-primary">FREE WORKFLOW REVIEW</p>
+      <h2 class="mt-5 text-4xl font-extrabold leading-tightest tracking-tight text-foreground-strong sm:text-5xl">Show us one<br /><span class="text-primary">bookkeeping workflow.</span></h2>
+      <p class="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">We'll show you what can be automated, how it would run on your current tools, and what stays with your team.</p>
+      <a href={localizePath(APPLY_PATH, "en")} data-cta-location="workflow_receipt_ledger_final" class="mt-8 inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:brightness-110">Get a Free Review</a>
+    </div>
+  </section>
+
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
+</Page>
+
+<style>
+  /*
+   * Connector geometry: every li draws ONE segment from the center of its
+   * own icon to the center of the NEXT icon, so lines can never overshoot
+   * the first or last icon. Icons are opaque and sit above the line (z-10).
+   */
+
+  /* Flow rail — mobile: vertical segments between icon centers (h-11 -> 1.375rem). */
+  .flow-station:not(:last-child)::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: 1.375rem;
+    top: 1.375rem;
+    height: calc(100% + 1.5rem);
+    width: 2px;
+    translate: -50% 0;
+    border-radius: var(--radius-md);
+    background: linear-gradient(
+      to bottom,
+      color-mix(in oklab, var(--primary) 40%, transparent),
+      color-mix(in oklab, var(--accent) 40%, transparent)
+    );
+  }
+
+  /* Flow rail — sm+: horizontal segments, node center sits at 1.375rem
+     from the station top (h-11 icon, flex-col). */
+  @media (min-width: 640px) {
+    .flow-station:not(:last-child)::before { display: none; }
+    .flow-station:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: 1.375rem;
+      height: 2px;
+      inset-inline-start: 50%;
+      width: 100%;
+      border-radius: var(--radius-md);
+      background: linear-gradient(
+        to right,
+        color-mix(in oklab, var(--primary) 45%, transparent),
+        color-mix(in oklab, var(--accent) 45%, transparent)
+      );
+    }
+    [dir="rtl"] .flow-station:not(:last-child)::after {
+      background: linear-gradient(to left, color-mix(in oklab, var(--primary) 45%, transparent), color-mix(in oklab, var(--accent) 45%, transparent));
+    }
+  }
+
+  @keyframes stem-shine {
+    0% { transform: translateY(-120%); opacity: 0; }
+    8% { opacity: 1; }
+    50% { transform: translateY(420%); opacity: 1; }
+    58% { opacity: 1; }
+    100% { transform: translateY(-120%); opacity: 0; }
+  }
+  .animate-stem-shine {
+    animation: stem-shine 2.8s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .animate-stem-shine { animation: none; opacity: 0.6; }
+  }
+</style>
