@@ -1,0 +1,853 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+const title = "SpielOS · Graph Space — One Goal to Every Workflow";
+const description = "A living map of the AI company: one company goal spreading through sub-goals into departments and the workflows that run them.";
+---
+<BaseLayout title={title} description={description} robots="noindex, nofollow" noAlternate>
+<style is:global>
+  /* ================= NEURON GRAPH SPACE =================
+     One canvas: North Star → goals → sub-goals → departments → workflows.
+     All color from semantic tokens; all motion from duration tokens; the
+     instrument language is inherited from the live company map. */
+
+  html, body { height: 100%; overflow: hidden; }
+  #main-content { height: 100vh; overflow: hidden; }
+  #site-nav, footer { display: none !important; }
+
+  :root {
+    --g-bg: var(--background);
+    --g-fg: var(--foreground);
+    --g-fg-2: var(--muted-foreground);
+    --g-fg-3: color-mix(in srgb, var(--foreground) 55%, transparent);
+    --g-hair: color-mix(in srgb, var(--foreground) 42%, transparent);
+    --g-hair-dim: color-mix(in srgb, var(--foreground) 18%, transparent);
+    --g-glass: color-mix(in srgb, var(--background) 84%, transparent);
+    --g-line: color-mix(in srgb, var(--foreground) 10%, transparent);
+  }
+
+  body {
+    background: var(--g-bg);
+    background-image: radial-gradient(circle, color-mix(in srgb, var(--foreground) 5%, transparent) 1px, transparent 1px);
+    background-size: 14px 14px;
+    color: var(--g-fg);
+    cursor: grab;
+    -webkit-font-smoothing: antialiased;
+  }
+  body.panning { cursor: grabbing; }
+
+  /* ambient starfield — the space the company thinks in */
+  #stars { position: fixed; inset: -100px; pointer-events: none; opacity: 0; transition: opacity 1.2s ease; }
+  body.ready #stars { opacity: 1; }
+  .bgstar { position: absolute; border-radius: 9999px; background: var(--foreground-muted);
+    animation: gtwinkle 6s ease-in-out infinite; }
+  @keyframes gtwinkle { 0%,100% { opacity:.45; } 50% { opacity:.1; } }
+
+  #viewport { position: fixed; inset: 0; overflow: hidden; clip-path: inset(0); }
+  #world { position: absolute; left: 50%; top: 50%; transform-origin: 0 0; will-change: transform; overflow: visible; }
+
+  /* ghost headline — the depth layer of the canvas */
+  .ghost {
+    position: absolute; transform: translate(-50%,-50%);
+    font-family: var(--font-sans); font-size: 290px; font-weight: 800; letter-spacing: .12em;
+    color: color-mix(in srgb, var(--foreground) 3%, transparent); white-space: nowrap; pointer-events: none;
+    text-transform: uppercase; user-select: none;
+  }
+
+  /* ================= NEURAL HUB (North Star) ================= */
+  #hub {
+    position: absolute; width: 128px; height: 128px; margin: -64px 0 0 -64px;
+    border-radius: 9999px; cursor: pointer; z-index: 6; overflow: visible;
+    display: grid; place-items: center;
+    background: radial-gradient(circle, color-mix(in srgb, var(--foreground) 8%, transparent), transparent 72%);
+    border: 2px solid color-mix(in srgb, var(--foreground) 78%, transparent);
+    box-shadow: 0 0 0 14px color-mix(in srgb, var(--foreground) 6%, transparent), 0 0 48px color-mix(in srgb, var(--foreground) 14%, transparent);
+    transition: transform var(--duration-slow) var(--ease), border-color var(--duration) var(--ease);
+  }
+  #hub .hub-ring { position: absolute; inset: -2px; border-radius: 9999px; border: 1px solid color-mix(in srgb, var(--foreground) 22%, transparent); animation: hubring 3.4s ease-in-out infinite; }
+  #hub .hub-ring.r2 { animation-delay: -1.7s; }
+  @keyframes hubring { 0% { transform: scale(1); opacity: .5; } 70% { transform: scale(1.9); opacity: 0; } 100% { transform: scale(1.9); opacity: 0; } }
+  #hub .hubcore { position: relative; width: 96px; height: 96px; border-radius: 9999px; display: grid; place-items: center;
+    background: var(--g-fg); color: var(--background);
+    box-shadow: 0 0 32px color-mix(in srgb, var(--foreground) 22%, transparent); }
+  #hub .hubcore i { font-size: 34px; }
+  #hub .hname {
+    position: absolute; left: 50%; top: 84px; transform: translateX(-50%);
+    text-align: center; white-space: nowrap;
+    font-size: 11px; font-weight: 700; letter-spacing: .3em; color: var(--g-fg);
+  }
+  #hub .hname .hz { font-size: 8.5px; font-weight: 700; letter-spacing: .3em; color: var(--primary); margin: 3px 0 2px; }
+  #hub .hname .hsub { font-size: 9px; font-weight: 500; letter-spacing: .12em; color: var(--g-fg-3); }
+  #hub:hover { transform: scale(1.06); }
+  #hub:focus-visible { outline: 2px solid var(--focus-border, var(--foreground)); outline-offset: 6px; }
+
+  /* ================= NODES ================= */
+  .gnode {
+    position: absolute; border-radius: 9999px; cursor: pointer; z-index: 5;
+    display: grid; place-items: center;
+    transition: transform var(--duration) var(--ease), box-shadow var(--duration) var(--ease), opacity var(--duration) var(--ease), border-color var(--duration) var(--ease);
+    opacity: 0; animation: gpop var(--duration-slow) cubic-bezier(.2,.9,.3,1.4) forwards;
+    animation-delay: var(--d, 0s);
+  }
+  @keyframes gpop { from { opacity: 0; transform: scale(.3); } to { opacity: 1; transform: scale(1); } }
+  @media (prefers-reduced-motion: reduce) { .gnode, .gnode * { animation-duration: .01s !important; } }
+
+  .gnode > i.bx { line-height: 1; }
+  .gnode .nlabel {
+    position: absolute; left: 50%; transform: translateX(-50%);
+    font-size: 11px; font-weight: 700; letter-spacing: .1em; color: var(--g-fg);
+    white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity var(--duration-fast) var(--ease);
+    text-shadow: 0 1px 12px var(--background);
+  }
+  .gnode:hover .nlabel, .gnode.is-selected .nlabel { opacity: 1; }
+  /* zoomed-in mode: every node is named, no hover hunting */
+  body.zoomedin .gnode:not(.is-dim) .nlabel { opacity: 1; }
+
+  /* level states — same grammar as the live map */
+  .gnode.lv-live {
+    background: var(--g-fg);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--foreground) 25%, transparent), 0 4px 18px color-mix(in srgb, var(--background) 50%, transparent);
+  }
+  .gnode.lv-live > i.bx { color: var(--background); }
+  .gnode.lv-dev {
+    background: color-mix(in srgb, var(--foreground) 7%, transparent);
+    border: 1.5px solid color-mix(in srgb, var(--foreground) 70%, transparent);
+  }
+  .gnode.lv-dev > i.bx { color: var(--g-fg); }
+  .gnode.lv-plan {
+    background: color-mix(in srgb, var(--foreground) 3%, transparent);
+    border: 1.5px solid color-mix(in srgb, var(--foreground) 18%, transparent);
+  }
+  .gnode.lv-plan > i.bx { color: color-mix(in srgb, var(--foreground) 45%, transparent); }
+
+  .gnode:hover { transform: scale(1.1); }
+  .gnode.is-selected {
+    transform: scale(1.14);
+    box-shadow: 0 0 0 10px color-mix(in srgb, var(--primary) 14%, transparent), 0 0 30px color-mix(in srgb, var(--primary) 26%, transparent);
+  }
+  .gnode.is-dim { opacity: .16; }
+  .gnode:focus-visible { outline: 2px solid var(--focus-border, var(--foreground)); outline-offset: 4px; }
+  .gnode:focus { outline: none; }
+
+  /* per-rank sizing (pixels, not tokens — like the sample's jdot grammar) */
+  .gnode.r-goal { width: 74px; height: 74px; margin: -37px 0 0 -37px; }
+  .gnode.r-goal > i.bx { font-size: 27px; }
+  .gnode.r-goal .nlabel { top: 84px; }
+  .gnode.r-sub { width: 56px; height: 56px; margin: -28px 0 0 -28px; }
+  .gnode.r-sub > i.bx { font-size: 20px; }
+  .gnode.r-sub .nlabel { top: 64px; font-size: 10px; }
+  .gnode.r-dept { width: 66px; height: 66px; margin: -33px 0 0 -33px; }
+  .gnode.r-dept > i.bx { font-size: 25px; }
+  .gnode.r-dept .nlabel { top: 76px; font-size: 10.5px; }
+  .gnode.r-flow { width: 42px; height: 42px; margin: -21px 0 0 -21px; }
+  .gnode.r-flow > i.bx { font-size: 15px; }
+  .gnode.r-flow .nlabel { top: 48px; font-size: 9px; letter-spacing: .06em; }
+
+  /* the rank chip above a node — GOAL / SUB / DEPT / FLOW */
+  .gnode .ftag {
+    position: absolute; top: -26px; left: 50%; transform: translateX(-50%);
+    font-size: 8px; font-weight: 800; letter-spacing: .26em; color: var(--primary);
+    white-space: nowrap; pointer-events: none;
+  }
+  .gnode.r-flow .ftag, .gnode.r-sub .ftag { display: none; }
+
+  /* ================= EDGES ================= */
+  #edges { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+  #edges path.edge {
+    fill: none; stroke: var(--g-hair-dim); stroke-width: 1.6;
+    transition: stroke var(--duration) var(--ease), stroke-opacity var(--duration) var(--ease);
+  }
+  #edges path.edge.is-on {
+    stroke: var(--primary); stroke-opacity: .85; stroke-width: 2;
+  }
+  /* flowing pulses along edges — the graph is alive and working */
+  #edges circle.pulse {
+    opacity: 0;
+  }
+  #edges circle.pulse.is-on {
+    opacity: .9; fill: var(--primary);
+    animation: flownode var(--duration-slow) linear infinite;
+    animation-delay: var(--pd, 0s);
+  }
+  @keyframes flownode {
+    from { offset-distance: 0%; } to { offset-distance: 100%; }
+  }
+  #edges circle.pulse.on-rev { animation-direction: reverse; }
+  @media (prefers-reduced-motion: reduce) { #edges circle.pulse { display: none; } }
+
+  /* ================= CHROME ================= */
+  .chrome { position: fixed; z-index: 10; }
+  #topbar {
+    top: 0; left: 0; right: 0; height: 54px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 20px; pointer-events: none;
+  }
+  #topbar .brand {
+    font-family: var(--font-sans); font-size: 18px; font-weight: 700; letter-spacing: .16em;
+    color: var(--g-fg); text-decoration: none; pointer-events: auto;
+    display: inline-flex; align-items: center; gap: 9px;
+  }
+  #topbar .state { font-size: 10px; font-weight: 700; letter-spacing: .24em; color: var(--primary); }
+  #topbar .state .sub { color: var(--g-fg-3); margin-left: 10px; font-weight: 500; letter-spacing: .1em; }
+
+  /* intro strip — what the visitor is looking at (non-technical framing) */
+  #intro {
+    left: 20px; top: 68px; max-width: 320px;
+    background: var(--g-glass); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+    border: 1px solid var(--g-line); border-radius: var(--radius-md);
+    padding: 14px 16px;
+    opacity: 0; transform: translateY(10px);
+    animation: introIn .6s var(--ease) forwards; animation-delay: .4s;
+  }
+  @keyframes introIn { to { opacity: 1; transform: none; } }
+  #intro .ik { font-size: 9px; font-weight: 800; letter-spacing: .22em; color: var(--primary); margin-bottom: 6px; }
+  #intro .it { font-family: var(--font-sans); font-size: 15px; font-weight: 700; letter-spacing: .01em; color: var(--g-fg); margin-bottom: 5px; }
+  #intro .id { font-size: 12px; line-height: 1.6; color: var(--g-fg-2); }
+  #intro .ilegend { display: flex; gap: 14px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--g-line); }
+  #intro .ilegend .lg { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; color: var(--g-fg-2); }
+  #intro .ilegend .lg i.dot { width: 9px; height: 9px; border-radius: 9999px; flex: none; }
+  #intro .ilegend .lg i.dot.live { background: var(--foreground); }
+  #intro .ilegend .lg i.dot.dev { background: transparent; border: 1.5px solid color-mix(in srgb, var(--foreground) 70%, transparent); }
+  #intro .ilegend .lg i.dot.plan { background: transparent; border: 1px solid color-mix(in srgb, var(--foreground) 22%, transparent); }
+
+  /* detail card — glass, same language as the live map */
+  #card {
+    top: 190px; left: 20px; width: 330px; max-height: calc(100vh - 260px);
+    background: var(--g-glass); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+    border: 1px solid var(--g-line); border-radius: var(--radius-md);
+    padding: 18px 18px 16px; display: none; flex-direction: column;
+    box-shadow: var(--shadow-popover); overflow-y: auto; overscroll-behavior: contain;
+  }
+  #card.open { display: flex; }
+  #card::-webkit-scrollbar { width: 4px; }
+  #card::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--foreground) 18%, transparent); border-radius: 2px; }
+  #card .c-x {
+    position: absolute; top: 12px; right: 12px; width: 28px; height: 28px;
+    display: grid; place-items: center; font-family: inherit; font-size: 13px;
+    color: var(--g-fg-2); background: none; border: 1px solid var(--g-line); border-radius: 9999px; cursor: pointer;
+  }
+  #card .c-x:hover { color: var(--g-fg); border-color: var(--primary); }
+  #card .c-state { font-size: 10px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: var(--primary); margin-bottom: 3px; }
+  #card .c-name { font-family: var(--font-sans); font-size: 23px; letter-spacing: .03em; color: var(--g-fg); margin-bottom: 4px; }
+  #card .c-crumb { font-size: 11px; letter-spacing: .04em; color: var(--g-fg-2); margin-bottom: 10px; }
+  #card .c-desc { font-size: 13px; line-height: 1.65; color: color-mix(in srgb, var(--foreground) 82%, transparent); margin-bottom: 14px; }
+  #card .c-sec { font-size: 9px; font-weight: 800; letter-spacing: .2em; color: var(--g-fg-3); margin: 0 0 7px; }
+  #card .skills { display: flex; flex-wrap: wrap; gap: 6px; }
+  #card .skill { font-size: 11px; color: var(--g-fg-2); border: 1px solid color-mix(in srgb, var(--foreground) 24%, transparent); border-radius: var(--radius-sm); padding: 3px 8px; }
+  #card .c-cta { display: inline-flex; align-items: center; justify-content: center; gap: 7px; margin-top: 14px;
+    height: 38px; padding: 0 16px; border-radius: var(--radius-md);
+    background: var(--foreground); color: var(--background); font-size: 12px; font-weight: 700; letter-spacing: .06em; text-decoration: none; }
+  #card .c-cta:hover { opacity: .9; }
+
+  /* legend dock (bottom-left) */
+  #legend {
+    bottom: 18px; left: 20px; display: flex; gap: 16px; align-items: center;
+    background: var(--g-glass); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    border: 1px solid var(--g-line); border-radius: var(--radius-md); padding: 9px 14px;
+    font-size: 10px; letter-spacing: .04em; color: var(--g-fg-2);
+  }
+  #legend .lg { display: inline-flex; align-items: center; gap: 6px; }
+  #legend .lg i.dot { width: 9px; height: 9px; border-radius: 9999px; flex: none; }
+  #legend .lg i.dot.live { background: var(--foreground); }
+  #legend .lg i.dot.dev { background: transparent; border: 1.5px solid color-mix(in srgb, var(--foreground) 70%, transparent); }
+  #legend .lg i.dot.plan { background: transparent; border: 1px solid color-mix(in srgb, var(--foreground) 22%, transparent); }
+
+  /* zoom controls */
+  #controls {
+    bottom: 18px; right: 18px; display: flex; align-items: center; gap: 2px;
+    background: var(--g-glass); border: 1px solid var(--g-line); border-radius: var(--radius-md);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); padding: 3px;
+  }
+  #controls button { font-family: inherit; font-size: 14px; color: var(--g-fg);
+    background: none; border: none; border-radius: var(--radius-md); width: 30px; height: 28px; cursor: pointer; }
+  #controls button:hover { background: color-mix(in srgb, var(--foreground) 10%, transparent); }
+  #controls .fit { font-size: 11px; width: auto; padding: 0 10px; font-weight: 600; }
+  #zoom-pct { font-size: 11px; color: var(--g-fg-2); width: 44px; text-align: center; }
+
+  /* hint line (bottom-center) */
+  #hint {
+    bottom: 22px; left: 50%; transform: translateX(-50%);
+    font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: var(--g-fg-3);
+    opacity: 0; transition: opacity .8s ease 1.4s; pointer-events: none; text-align: center; white-space: nowrap;
+  }
+  body.ready #hint { opacity: 1; }
+  #hint b { color: var(--g-fg-2); font-weight: 700; }
+
+  /* light themes — the instrument on paper */
+  body.light #hub { border-color: color-mix(in srgb, var(--foreground) 80%, transparent); box-shadow: 0 0 0 14px color-mix(in srgb, var(--foreground) 4%, transparent), 0 2px 20px color-mix(in srgb, var(--foreground) 12%, transparent); }
+  body.light #hub .hubcore { box-shadow: 0 2px 12px color-mix(in srgb, var(--foreground) 18%, transparent); }
+  body.light .gnode.lv-live { box-shadow: 0 0 0 1px color-mix(in srgb, var(--foreground) 18%, transparent), 0 4px 14px color-mix(in srgb, var(--foreground) 16%, transparent); }
+  body.light .gnode.lv-dev { background: var(--background); border-color: color-mix(in srgb, var(--foreground) 80%, transparent); }
+  body.light .gnode.lv-plan { background: var(--background); border-color: color-mix(in srgb, var(--foreground) 42%, transparent); }
+  body.light .gnode.lv-plan > i.bx { color: color-mix(in srgb, var(--foreground) 55%, transparent); }
+  body.light .gnode.is-selected { box-shadow: 0 0 0 10px color-mix(in srgb, var(--primary) 12%, transparent), 0 0 26px color-mix(in srgb, var(--primary) 20%, transparent); }
+
+  @media (max-width: 700px) {
+    #intro { max-width: 260px; padding: 11px 13px; }
+    #intro .id { display: none; }
+    #intro .it { font-size: 13px; }
+    #card { top: auto; bottom: 64px; left: 12px; right: 12px; width: auto; max-height: 42vh; }
+    #controls { bottom: 14px; right: 12px; }
+    #legend { display: none; }
+    #hint { display: none; }
+    #topbar .state .sub { display: none; }
+  }
+</style>
+
+<div id="viewport"><div id="world">
+  <div id="sky"></div>
+  <div id="fanwrap"></div>
+</div></div>
+
+<div id="stars"></div>
+
+<div id="topbar" class="chrome">
+  <a class="brand" href="/" aria-label="SpielOS home">SPIELOS</a>
+  <div class="state">GRAPH SPACE<span class="sub">one goal · every workflow</span></div>
+</div>
+
+<div id="intro" class="chrome">
+  <div class="ik">WHAT THIS IS</div>
+  <div class="it">One company goal, spreading.</div>
+  <div class="id">This is how a SpielOS company runs: one measurable goal at the top, broken into sub-goals, held by departments, and run by real workflows. Click anything to trace the line.</div>
+  <div class="ilegend">
+    <span class="lg"><i class="dot live"></i> running</span>
+    <span class="lg"><i class="dot dev"></i> in build</span>
+    <span class="lg"><i class="dot plan"></i> planned</span>
+  </div>
+</div>
+
+<div id="card" class="chrome" role="dialog" aria-label="Node detail">
+  <button class="c-x" id="card-x" title="close">✕</button>
+  <div class="c-state" id="card-state"></div>
+  <div class="c-name" id="card-name"></div>
+  <div class="c-crumb" id="card-crumb"></div>
+  <div class="c-desc" id="card-desc"></div>
+  <div class="c-sec" id="card-skills-h">RUNS WITH</div>
+  <div class="skills" id="card-skills"></div>
+  <a class="c-cta" href="/apply/">Apply — Free Review</a>
+</div>
+
+<div id="legend" class="chrome">
+  <span class="lg"><i class="dot live"></i> running</span>
+  <span class="lg"><i class="dot dev"></i> in build</span>
+  <span class="lg"><i class="dot plan"></i> planned</span>
+</div>
+
+<div id="controls" class="chrome">
+  <button id="z-out" title="zoom out">−</button>
+  <span id="zoom-pct">100%</span>
+  <button id="z-in" title="zoom in">+</button>
+  <button class="fit" id="z-fit" title="fit to screen">Fit</button>
+</div>
+
+<div id="hint" class="chrome">drag to roam · scroll to zoom · <b>click a node to trace its line</b></div>
+
+<script is:inline>
+(function(){
+  'use strict';
+
+  /* ---------- tiny helpers ---------- */
+  const NS = 'http://www.w3.org/2000/svg';
+  const REDUCE = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+  /* ---------- canvas ---------- */
+  const world = document.getElementById('world');
+  const sky = document.getElementById('sky');
+  const fanWrap = document.getElementById('fanwrap');
+  const starsEl = document.getElementById('stars');
+
+  /* seedable rand — deterministic composition, like the live map */
+  let seed = 42;
+  const rand = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
+
+  /* ---------- starfield ---------- */
+  (() => {
+    const STAR_N = innerWidth < 700 ? 60 : 160;
+    for (let i = 0; i < STAR_N; i++) {
+      const s = document.createElement('div');
+      const size = rand() < 0.85 ? 1.5 : 2.5;
+      s.className = 'bgstar';
+      s.style.cssText = `left:${rand() * 100}%; top:${rand() * 100}%;
+        width:${size}px; height:${size}px; opacity:${0.06 + rand() * 0.2};
+        animation-delay:${(rand() * 6).toFixed(1)}s; animation-duration:${(5 + rand() * 5).toFixed(1)}s;`;
+      starsEl.appendChild(s);
+    }
+  })();
+
+  /* ================================================================
+     THE GRAPH — one company goal spreading through the company.
+     north → goals → sub-goals → departments → workflows
+     ================================================================ */
+  const GOALS = [
+    {
+      id: 'pipeline', label: 'Pipeline', icon: 'bx-send',
+      desc: 'Create a steady flow of qualified opportunities every month — research the right people, reach out, earn the reply.',
+      skills: ['lead-finder', 'sequence-writer', 'intent-classifier'],
+      subs: [
+        { id: 'research', label: 'Research', icon: 'bx-search-alt', desc: 'Find the right people and learn enough to matter.', skills: ['lead-finder', 'enricher'] },
+        { id: 'outreach', label: 'Outreach', icon: 'bx-envelope', desc: 'Sequences that read human, at scale.', skills: ['sequence-writer', 'dm-sequencer'] },
+        { id: 'reply', label: 'Reply', icon: 'bx-message-rounded', desc: 'Read every reply and route the hot ones instantly.', skills: ['intent-classifier', 'hot-lead-router'] },
+      ],
+    },
+    {
+      id: 'presence', label: 'Presence', icon: 'bx-edit',
+      desc: 'Publish native assets every week — mine what works, create in the house voice, distribute everywhere that matters.',
+      skills: ['hook-miner', 'script-writer', 'api-publisher'],
+      subs: [
+        { id: 'mining', label: 'Mining', icon: 'bx-bulb', desc: 'Rank the corpus — what worked, what to rehash.', skills: ['corpus-ranker'] },
+        { id: 'creation', label: 'Creation', icon: 'bx-pen', desc: 'One idea → native caption, carousel, newsletter.', skills: ['script-writer', 'caption-writer'] },
+        { id: 'distribution', label: 'Distribution', icon: 'bx-globe', desc: 'Schedule and publish via API on autopilot.', skills: ['api-publisher', 'post-scheduler'] },
+      ],
+    },
+    {
+      id: 'delivery', label: 'Delivery', icon: 'bx-package',
+      desc: 'Ship every new client in under two weeks — onboarding, builds, and support that never goes quiet.',
+      skills: ['kickoff-builder', 'workflow-builder', 'incident-triager'],
+      subs: [
+        { id: 'onboarding', label: 'Onboarding', icon: 'bx-rocket', desc: 'Access, data, and stack wiring — day one.', skills: ['kickoff-builder'] },
+        { id: 'build', label: 'Build', icon: 'bx-cube', desc: 'Build the automations, deploy the agents, verify.', skills: ['workflow-builder', 'agent-deployer'] },
+        { id: 'support', label: 'Support', icon: 'bx-message', desc: 'Status without asking. Memory stays current.', skills: ['status-poster', 'context-updater'] },
+      ],
+    },
+  ];
+
+  const DEPTS = [
+    { id: 'outbound', label: 'Outbound', icon: 'bx-send', color: 'var(--primary)', desc: 'The front door of the pipeline.', holds: ['research', 'outreach', 'reply'] },
+    { id: 'content', label: 'Content', icon: 'bx-file', color: 'var(--purple)', desc: 'Ideas into publishable assets.', holds: ['mining', 'creation', 'distribution'] },
+    { id: 'design', label: 'Design', icon: 'bx-palette', color: 'var(--warning)', desc: 'The visual layer of everything.', holds: ['creation'] },
+    { id: 'seo', label: 'SEO', icon: 'bx-search', color: 'var(--success)', desc: 'The compounding channel.', holds: ['distribution'] },
+    { id: 'analytics', label: 'Analytics', icon: 'bx-bar-chart', color: 'var(--info)', desc: "Prove what works, kill what doesn't.", holds: ['reply', 'distribution'] },
+    { id: 'delivery', label: 'Delivery', icon: 'bx-package', color: 'var(--destructive)', desc: 'Promises become results.', holds: ['onboarding', 'build', 'support'] },
+  ];
+
+  const FLOWS = [
+    { id: 'cold-email', dept: 'outbound', label: 'Cold Email', icon: 'bx-envelope', level: 'live', desc: 'Multi-step sequences tuned to the vertical.' },
+    { id: 'linkedin-dm', dept: 'outbound', label: 'LinkedIn DM', icon: 'bx-user-plus', level: 'live', desc: 'Connection notes and DM sequences.' },
+    { id: 'reply-router', dept: 'outbound', label: 'Reply Router', icon: 'bx-transfer', level: 'dev', desc: 'Every reply classified and routed.' },
+    { id: 'script', dept: 'content', label: 'Script', icon: 'bx-edit', level: 'live', desc: 'Reel and video scripts in house voice.' },
+    { id: 'carousel', dept: 'content', label: 'Carousel', icon: 'bx-image-alt', level: 'dev', desc: 'Branded carousels from any source.' },
+    { id: 'newsletter', dept: 'content', label: 'Newsletter', icon: 'bx-note', level: 'plan', desc: 'The weekly email, assembled automatically.' },
+    { id: 'thumbnails', dept: 'design', label: 'Thumbnails', icon: 'bx-image', level: 'live', desc: 'Scroll-stopping covers, on brand.' },
+    { id: 'clip', dept: 'design', label: 'Clip', icon: 'bx-video', level: 'dev', desc: 'Long recordings into short-form clips.' },
+    { id: 'schema', dept: 'seo', label: 'Schema', icon: 'bx-code-alt', level: 'live', desc: 'Structured data for rich results.' },
+    { id: 'internal-links', dept: 'seo', label: 'Internal Links', icon: 'bx-link', level: 'dev', desc: 'Internal link architecture at scale.' },
+    { id: 'funnel', dept: 'analytics', label: 'Funnel', icon: 'bx-pulse', level: 'dev', desc: 'Every step tracked, drop-offs flagged.' },
+    { id: 'dashboards', dept: 'analytics', label: 'Dashboards', icon: 'bx-bar-chart-alt-2', level: 'plan', desc: 'Automated dashboards, daily.' },
+    { id: 'client-onboard', dept: 'delivery', label: 'Client Onboard', icon: 'bx-rocket', level: 'dev', desc: 'Welcome, access, scaffold — day one.' },
+    { id: 'status-updates', dept: 'delivery', label: 'Status Updates', icon: 'bx-time-five', level: 'plan', desc: 'Clients see progress without asking.' },
+  ];
+
+  /* ---------- layout: the polar spread (the sample's fan grammar) ----------
+     North Star at the top. Every tier spreads DOWNWARD from it like a neuron:
+     goals near the soma, sub-goals at mid-dendrite reach, departments and
+     workflows at the terminal branches. P(r, a) is the sample's polar helper
+     with the fan opened downward instead of upward. */
+  const P = (r, a) => [r * Math.sin(a), r * Math.cos(a)]; /* a=0 → straight down */
+  const ROOT = { x: 0, y: 0 };   /* world origin == North Star; camera centers on content */
+  const R_GOAL = 320, R_SUB = 600, R_DEPT = 880, R_FLOW = 1090;
+
+  const POS = { north: { ...ROOT } };
+  const NODES = [{ id: 'north', rank: 'hub' }];
+  const EDGES = [];
+
+  /* tier 1 — goals spread ±58° from straight down */
+  const GOAL_SPREAD = 50 * Math.PI / 180;
+  GOALS.forEach((g, i) => {
+    const a = (i - (GOALS.length - 1) / 2) * (GOAL_SPREAD / (GOALS.length - 1)) * 2;
+    const [dx, dy] = P(R_GOAL, a);
+    POS[g.id] = { x: ROOT.x + dx, y: ROOT.y + dy };
+    g.a = a;
+    NODES.push({ id: g.id, rank: 'goal', ...g });
+    EDGES.push(['north', g.id]);
+  });
+
+  /* tier 2 — each goal's subs fan inside the goal's angular slot, zig so
+     siblings never sit on a mechanical line */
+  GOALS.forEach(g => {
+    const slot = 40 * Math.PI / 180;
+    g.subs.forEach((sub, j) => {
+      const zig = (j % 2 ? 1 : -1) * (j ? 0.09 : 0.05);
+      const a = g.a + (j - (g.subs.length - 1) / 2) * (slot / (g.subs.length - 1 || 1)) + zig;
+      const [dx, dy] = P(R_SUB, a);
+      POS[sub.id] = { x: ROOT.x + dx, y: ROOT.y + dy };
+      sub.a = a;
+      NODES.push({ id: sub.id, rank: 'sub', goal: g.id, ...sub });
+      EDGES.push([g.id, sub.id]);
+    });
+  });
+
+  /* tier 3 — each department sits under the angular centroid of the subs
+     that feed it; collisions resolved by minimum spacing */
+  /* departments: sort by the natural centroid of the subs they hold, then
+     lay them into evenly spaced SYMMETRIC slots around straight-down. Order
+     preserves the semantic mapping; spacing guarantees the composition. */
+  const DEPT_SPREAD = 100 * Math.PI / 180; /* outermost dept ±50° */
+  const natural = DEPTS.map(d => {
+    const held = d.holds.map(sid => {
+      for (const g of GOALS) { const s2 = g.subs.find(x => x.id === sid); if (s2) return s2.a; }
+      return null;
+    }).filter(a => a != null);
+    return { d, a: held.length ? held.reduce((m, a) => m + a, 0) / held.length : 0 };
+  }).sort((x, y) => x.a - y.a);
+  natural.forEach((x, i) => {
+    x.a = -DEPT_SPREAD / 2 + (DEPT_SPREAD / (natural.length - 1)) * i;
+  });
+  deptAngles.forEach(({ d, a }) => {
+    const [dx, dy] = P(R_DEPT, a);
+    POS[d.id] = { x: ROOT.x + dx, y: ROOT.y + dy };
+    d.a = a;
+    NODES.push({ id: d.id, rank: 'dept', ...d });
+    d.holds.forEach(sid => EDGES.push([sid, d.id]));
+  });
+
+  /* tier 4 — workflows hug the department's angle, small tight fans */
+  const byDept = {};
+  FLOWS.forEach(f => (byDept[f.dept] = byDept[f.dept] || []).push(f));
+  Object.entries(byDept).forEach(([deptId, list]) => {
+    const d = DEPTS.find(x => x.id === deptId);
+    const span = Math.min(24, 9 * list.length) * Math.PI / 180;
+    list.forEach((f, j) => {
+      const zig = (j % 2 ? 1 : -1) * (j ? 0.045 : 0.02);
+      const a = d.a + (j - (list.length - 1) / 2) * (span / (list.length - 1 || 1)) + zig;
+      const rr = R_FLOW + (j % 2) * 90;
+      const [dx, dy] = P(rr, a);
+      POS[f.id] = { x: ROOT.x + dx, y: ROOT.y + dy };
+      NODES.push({ id: f.id, rank: 'flow', dept: deptId, ...f });
+      EDGES.push([deptId, f.id]);
+    });
+  });
+
+  /* ================================================================
+     RENDER
+     ================================================================ */
+  const byId = Object.fromEntries(NODES.map(n => [n.id, n]));
+  const parentOf = {};
+  EDGES.forEach(([a, b]) => { parentOf[b] = a; });
+  const childrenOf = {};
+  EDGES.forEach(([a, b]) => { (childrenOf[a] = childrenOf[a] || []).push(b); });
+
+  /* ghost headline behind the graph */
+  const ghost = document.createElement('div');
+  ghost.className = 'ghost';
+  ghost.style.left = ROOT.x + 'px'; ghost.style.top = (ROOT.y + 560) + 'px';
+  ghost.textContent = 'SPIELOS';
+  sky.appendChild(ghost);
+
+  /* ---------- edges ---------- */
+  const edgesSvg = document.createElementNS(NS, 'svg');
+  edgesSvg.id = 'edges';
+  edgesSvg.setAttribute('overflow', 'visible');
+  sky.appendChild(edgesSvg);
+
+  const curve = (a, b) => {
+    const pa = POS[a], pb = POS[b];
+    const dy = (pb.y - pa.y);
+    const c1 = `M ${pa.x} ${pa.y} C ${pa.x} ${pa.y + dy * 0.45}, ${pb.x} ${pb.y - dy * 0.45}, ${pb.x} ${pb.y}`;
+    return c1;
+  };
+
+  EDGES.forEach(([a, b]) => {
+    const p = document.createElementNS(NS, 'path');
+    p.setAttribute('class', 'edge');
+    p.setAttribute('d', curve(a, b));
+    p.dataset.a = a; p.dataset.b = b;
+    edgesSvg.appendChild(p);
+
+    if (!REDUCE) {
+      const pu = document.createElementNS(NS, 'circle');
+      pu.setAttribute('class', 'pulse');
+      pu.setAttribute('r', '2.2');
+      pu.style.setProperty('--pd', (rand() * 2).toFixed(2) + 's');
+      pu.dataset.edge = a + '::' + b;
+      edgesSvg.appendChild(pu);
+    }
+  });
+
+  /* place pulses on their path via offset-path (CSS motion path) */
+  function armPulses() {
+    edgesSvg.querySelectorAll('circle.pulse').forEach(pu => {
+      const path = edgesSvg.querySelector(`path.edge[data-a="${pu.dataset.edge.split('::')[0]}"][data-b="${pu.dataset.edge.split('::')[1]}"]`);
+      if (!path) return;
+      const d = path.getAttribute('d');
+      pu.style.offsetPath = `path("${d}")`;
+    });
+  }
+
+  /* ---------- hub (North Star) ---------- */
+  const hub = document.createElement('div');
+  hub.id = 'hub';
+  hub.setAttribute('role', 'button'); hub.tabIndex = 0;
+  hub.innerHTML = `
+    <div class="hub-ring"></div><div class="hub-ring r2"></div>
+    <div class="hubcore"><i class="bx bx-target-lock"></i></div>
+    <div class="hname"><div class="hz">NORTH STAR</div>Company Goal<div class="hsub">the one outcome everything writes to</div></div>`;
+  hub.style.left = POS.north.x + 'px';
+  hub.style.top = POS.north.y + 'px';
+  sky.appendChild(hub);
+
+  /* ---------- nodes ---------- */
+  const nodeWrap = document.createElement('div');
+  sky.appendChild(nodeWrap);
+
+  const RANK_TAG = { goal: 'GOAL', sub: 'SUB-GOAL', dept: 'DEPARTMENT', flow: 'WORKFLOW' };
+  const RANK_DELAYS = { goal: 0.2, sub: 0.34, dept: 0.5, flow: 0.64 };
+
+  NODES.filter(n => n.rank !== 'hub').forEach(n => {
+    const el = document.createElement('div');
+    el.className = `gnode r-${n.rank} lv-${n.level || 'live'}`;
+    el.style.left = POS[n.id].x + 'px';
+    el.style.top = POS[n.id].y + 'px';
+    el.style.setProperty('--d', (RANK_DELAYS[n.rank] + rand() * 0.18).toFixed(2) + 's');
+    el.dataset.id = n.id;
+    el.setAttribute('role', 'button'); el.tabIndex = 0;
+    el.innerHTML = `<span class="ftag">${RANK_TAG[n.rank]}</span><i class="bx ${n.icon}"></i><span class="nlabel">${n.label}</span>`;
+    nodeWrap.appendChild(el);
+  });
+
+  /* the hub is a node too */
+  const hubNode = { id: 'north', rank: 'hub', label: 'North Star', icon: 'bx-target-lock',
+    desc: 'The single measurable outcome every branch writes back to. No North Star, no autonomy — this is node zero.',
+    skills: ['reply rate', 'booked calls', 'pipeline'], state: 'company goal · director owns' };
+  byId.north = hubNode;
+
+  /* level assignment: goals are live; subs follow goal; depts live; flows declared */
+  NODES.forEach(n => {
+    if (n.rank === 'goal') n.level = 'live';
+    else if (n.rank === 'sub') n.level = 'live';
+    else if (n.rank === 'dept') n.level = 'live';
+  });
+
+  /* ================================================================
+     CAMERA — the sample's contract: fit with margins, clamp pan to bounds,
+     ease every move. World origin sits at left:50%, top:56% (viewport center
+     + optical bias), transform-origin 0 0.
+     ================================================================ */
+  /* graph bounds in world space (node radius margins included) */
+  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+  Object.values(POS).forEach(p2 => {
+    minX = Math.min(minX, p2.x - 60); maxX = Math.max(maxX, p2.x + 60);
+    minY = Math.min(minY, p2.y - 60); maxY = Math.max(maxY, p2.y + 60);
+  });
+
+  let scale = 1, tx = 0, ty = 0, scaleT = 1, txT = 0, tyT = 0;
+  function applyTransform() {
+    world.style.transform = `translate(${tx.toFixed(1)}px, ${ty.toFixed(1)}px) scale(${scale.toFixed(4)})`;
+    document.getElementById('zoom-pct').textContent = Math.round(scale * 100) + '%';
+  }
+  function clampPan() {
+    const M = 60;
+    const ox = innerWidth * 0.5, oy = innerHeight * 0.56;
+    const txMin = M - ox - maxX * scale, txMax = innerWidth - M - ox - minX * scale;
+    const tyMin = M - oy - maxY * scale, tyMax = innerHeight - M - oy - minY * scale;
+    tx = Math.max(txMin, Math.min(txMax, tx)); txT = Math.max(txMin, Math.min(txMax, txT));
+    ty = Math.max(tyMin, Math.min(tyMax, ty)); tyT = Math.max(tyMin, Math.min(tyMax, tyT));
+  }
+  function fitScale() { return scaleT; }
+  function fit() {
+    const isMobile = innerWidth < 700;
+    /* the left rail is chrome (intro/card ~360px); fit inside what remains */
+    const L = isMobile ? 0 : 360, R = isMobile ? 16 : 40, T = isMobile ? 60 : 90, B = isMobile ? 70 : 90;
+    scaleT = Math.min((innerWidth - L - R) / (maxX - minX), (innerHeight - T - B) / (maxY - minY));
+    scaleT = clamp(scaleT, 0.22, 1.15);
+    /* center the graph inside the free region. #world sits at left:50% top:56%,
+       so tx/ty are relative to that anchor — no extra innerWidth math. */
+    const cx = (minX + maxX) / 2, cy = (minY + maxY) / 2;
+    const freeCx = L + (innerWidth - L - R) / 2;
+    const freeCy = T + (innerHeight - T - B) / 2;
+    txT = freeCx - innerWidth * 0.5 - cx * scaleT;
+    tyT = freeCy - innerHeight * 0.56 - cy * scaleT;
+    document.body.classList.remove('zoomedin');
+  }
+  let camSettled = false;
+  function tickCamera() {
+    const k = REDUCE ? 1 : 0.13;
+    scale += (scaleT - scale) * k;
+    tx += (txT - tx) * k;
+    ty += (tyT - ty) * k;
+    clampPan();
+    const moving = Math.abs(scaleT - scale) > 0.001 * scale || Math.abs(txT - tx) > 0.3 || Math.abs(tyT - ty) > 0.3;
+    if (moving === camSettled) { camSettled = !moving; world.style.willChange = moving ? 'transform' : 'auto'; }
+    document.body.classList.toggle('zoomedin', scale >= 1.12);
+    applyTransform();
+    requestAnimationFrame(tickCamera);
+  }
+  fit(); scale = scaleT; tx = txT; ty = tyT; applyTransform();
+  addEventListener('resize', () => { fit(); });
+
+  /* pan */
+  let dragging = false, lastX = 0, lastY = 0, dragDist = 0;
+  addEventListener('pointerdown', e => {
+    if (e.target.closest('#card, #controls, #topbar, #intro, #legend, a, button')) return;
+    dragging = true; dragDist = 0; lastX = e.clientX; lastY = e.clientY;
+    document.body.classList.add('panning');
+  });
+  addEventListener('pointermove', e => {
+    if (!dragging) return;
+    const dx = e.clientX - lastX, dy = e.clientY - lastY;
+    dragDist += Math.abs(dx) + Math.abs(dy);
+    txT = tx + dx; tyT = ty + dy;
+  });
+  const endDrag = () => { dragging = false; document.body.classList.remove('panning'); };
+  addEventListener('pointerup', endDrag);
+  addEventListener('pointercancel', endDrag);
+
+  /* zoom (wheel, at cursor) */
+  addEventListener('wheel', e => {
+    e.preventDefault();
+    const ns = clamp(scaleT * (1 - e.deltaY * 0.0011), 0.25, 2.4);
+    const cx = e.clientX - innerWidth * 0.5, cy = e.clientY - innerHeight * 0.56;
+    txT = cx - (cx - txT) * (ns / scaleT);
+    tyT = cy - (cy - tyT) * (ns / scaleT);
+    scaleT = ns;
+  }, { passive: false });
+
+  /* zoom buttons */
+  function zoomStep(f) {
+    scaleT = clamp(scaleT * f, 0.25, 2.4);
+  }
+  document.getElementById('z-in').addEventListener('click', () => zoomStep(1.25));
+  document.getElementById('z-out').addEventListener('click', () => zoomStep(1 / 1.25));
+  document.getElementById('z-fit').addEventListener('click', () => fit());
+
+  /* ================================================================
+     FOCUS & CHAIN
+     ================================================================ */
+  const card = document.getElementById('card');
+  const cardEls = ['state', 'name', 'crumb', 'desc', 'skills'].reduce((m, k) => (m[k] = document.getElementById('card-' + k), m), {});
+  const cardX = document.getElementById('card-x');
+
+  function chainOf(id) {
+    /* the full ancestor line: north → goal → sub → dept → flow */
+    const chain = [id];
+    let cur = id;
+    while (parentOf[cur]) { cur = parentOf[cur]; chain.unshift(cur); }
+    return chain;
+  }
+  function descendants(id) {
+    const out = [];
+    const walk = pid => (childrenOf[pid] || []).forEach(c => { out.push(c); walk(c); });
+    walk(id);
+    return out;
+  }
+
+  function labelRank(rank) {
+    return ({ hub: 'company goal', goal: 'goal', sub: 'sub-goal', dept: 'department', flow: 'workflow' })[rank] || 'node';
+  }
+  function levelLabel(lv) {
+    return ({ live: 'running now', dev: 'in build', plan: 'planned' })[lv] || 'running';
+  }
+
+  function select(id) {
+    const n = byId[id];
+    if (!n) return;
+    const chain = chainOf(id);
+    const keep = new Set([...chain, ...descendants(id)]);
+
+    /* nodes: keep the chain + descendants lit, dim the rest */
+    nodeWrap.querySelectorAll('.gnode').forEach(el => {
+      const on = keep.has(el.dataset.id);
+      el.classList.toggle('is-dim', !on);
+      el.classList.toggle('is-selected', el.dataset.id === id);
+    });
+    /* hub dims too when focused elsewhere */
+    hub.style.opacity = chain.includes('north') ? '1' : '.35';
+
+    /* edges: chain-lit */
+    edgesSvg.querySelectorAll('path.edge').forEach(p => {
+      const on = chain.some(id2 => p.dataset.a === id2 && chain.includes(p.dataset.b));
+      p.classList.toggle('is-on', on);
+    });
+    /* pulses only on the lit chain */
+    edgesSvg.querySelectorAll('circle.pulse').forEach(pu => {
+      const [a, b] = pu.dataset.edge.split('::');
+      const on = chain.includes(a) && chain.includes(b);
+      pu.classList.toggle('is-on', on);
+    });
+
+    /* camera: center the node in the space the card leaves free */
+    const p = POS[id];
+    const z = id === 'north' ? Math.max(1.0, fitScale() * 1.5) : 1.3;
+    scaleT = z;
+    const freeX = innerWidth > 700 ? innerWidth * 0.62 : innerWidth * 0.5;
+    txT = freeX - p.x * z;
+    tyT = innerHeight * 0.42 - p.y * z;
+    document.body.classList.add('zoomedin');
+
+    /* card */
+    cardEls.state.textContent = (n.rank === 'hub' ? 'company goal' : RANK_TAG[n.rank]?.toLowerCase()) + ' · ' + levelLabel(n.level || 'live');
+    cardEls.name.textContent = n.label;
+    cardEls.crumb.textContent = chain.slice(0, -1).map(c => byId[c]?.label).filter(Boolean).join(' › ') || 'the company';
+    cardEls.desc.textContent = n.desc;
+    cardEls.skills.innerHTML = (n.skills || []).map(s => `<span class="skill">${s}</span>`).join('');
+    document.getElementById('card-skills-h').style.display = (n.skills && n.skills.length) ? '' : 'none';
+    card.classList.add('open');
+  }
+
+  function deselect() {
+    nodeWrap.querySelectorAll('.gnode').forEach(el => el.classList.remove('is-dim', 'is-selected'));
+    edgesSvg.querySelectorAll('path.edge').forEach(p => p.classList.remove('is-on'));
+    edgesSvg.querySelectorAll('circle.pulse').forEach(pu => pu.classList.remove('is-on'));
+    hub.style.opacity = '1';
+    card.classList.remove('open');
+    fit();
+  }
+
+  hub.addEventListener('click', e => { e.stopPropagation(); if (dragDist >= 8) return; select('north'); });
+  hub.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select('north'); } });
+  nodeWrap.addEventListener('click', e => {
+    const el = e.target.closest('.gnode');
+    if (!el || dragDist >= 8) return;
+    e.stopPropagation();
+    select(el.dataset.id);
+  });
+  nodeWrap.addEventListener('keydown', e => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const el = e.target.closest('.gnode');
+    if (!el) return; e.preventDefault(); select(el.dataset.id);
+  });
+  cardX.addEventListener('click', e => { e.stopPropagation(); deselect(); });
+  addEventListener('keydown', e => { if (e.key === 'Escape') deselect(); });
+  document.getElementById('viewport').addEventListener('click', e => {
+    if (e.target.closest('.gnode') || e.target.closest('#hub') || e.target.closest('#card')) return;
+    deselect();
+  });
+
+  /* ================================================================
+     NEURAL DRIFT — synapse sparks between near nodes
+     ================================================================ */
+  if (!REDUCE) {
+    const sparks = document.createElementNS(NS, 'svg');
+    sparks.id = 'sparks';
+    sparks.setAttribute('overflow', 'visible');
+    sparks.style.pointerEvents = 'none';
+    sky.appendChild(sparks);
+    let sparkN = 0;
+    const SPARK_MAX = innerWidth < 700 ? 10 : 22;
+    setInterval(() => {
+      if (sparkN >= SPARK_MAX) return;
+      const [a, b] = EDGES[Math.floor(rand() * EDGES.length)];
+      const c = document.createElementNS(NS, 'circle');
+      c.setAttribute('r', (1.2 + rand() * 1.4).toFixed(1));
+      c.style.fill = 'var(--primary)';
+      c.style.offsetPath = `path("${curve(a, b)}")`;
+      c.style.opacity = '0';
+      sparks.appendChild(c);
+      sparkN++;
+      const dur = 1400 + rand() * 1800;
+      c.animate([
+        { offsetDistance: '0%', opacity: 0 },
+        { offsetDistance: '100%', opacity: .8 }
+      ], { duration: dur, delay: rand() * 800 }).onfinish = () => { c.remove(); sparkN--; };
+    }, 420);
+  }
+
+  /* ---------- boot ---------- */
+  armPulses();
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    document.body.classList.add('ready');
+    tickCamera();
+  }));
+})();
+</script>
+</BaseLayout>

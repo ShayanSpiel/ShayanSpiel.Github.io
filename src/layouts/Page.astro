@@ -14,7 +14,7 @@ export interface Props {
   modifiedTime?: string;
   tags?: string[];
   locale?: Locale;
-  /** Suppress hreflang alternates (EN-only pages with no FA twin yet). */
+  /** EN-only page (no FA twin yet): en+x-default hreflang only, FA switch hidden. */
   noAlternate?: boolean;
 }
 
@@ -25,5 +25,5 @@ const { title, description, image, robots, ogType, publishedTime, modifiedTime, 
   <Nav slot="nav" locale={locale} />
   <slot />
   <div class="mt-16" />
-  <Footer slot="footer" showThemeToggle locale={locale} />
+  <Footer slot="footer" showThemeToggle locale={locale} noFaTwin={noAlternate} />
 </BaseLayout>

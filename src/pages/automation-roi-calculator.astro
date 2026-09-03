@@ -1,0 +1,341 @@
+---
+import Page from "../layouts/Page.astro";
+import { SITE } from "../config";
+
+const SITE_URL = SITE.url;
+
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+    { "@type": "ListItem", position: 2, name: "Automation ROI Calculator", item: `${SITE_URL}/automation-roi-calculator/` },
+  ],
+};
+---
+
+<Page
+  title="Automation ROI Calculator — See Your AI Savings in 60 Seconds"
+  description="Calculate how much revenue AI workflows can unlock for your business."
+  robots="index, follow"
+  noAlternate
+>
+  <div class="relative flex h-[calc(100vh-4rem)] flex-col supports-[height:100dvh]:h-[calc(100dvh-4rem)]">
+    <div class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+      <div class="canvas-grid"></div>
+      <div class="glow-blob absolute -top-24 left-[10%] h-80 w-80 rounded-md opacity-20"></div>
+      <div class="glow-blob-accent absolute -bottom-24 right-[8%] h-80 w-80 rounded-md opacity-15"></div>
+    </div>
+
+    <header class="relative z-10 w-full shrink-0 px-6 pb-1.5 pt-[max(0.5rem,env(safe-area-inset-top))] text-center sm:pb-2.5 sm:pt-3">
+      <h1 class="mx-auto max-w-4xl text-4xl font-extrabold leading-tight tracking-tight text-foreground-strong sm:text-5xl">
+        How much revenue can <span class="text-primary">AI workflows</span> unlock?
+      </h1>
+      <p class="mx-auto mt-2 max-w-3xl text-xs font-semibold text-muted-foreground sm:text-sm">Find repetitive work your team can automate — see your ROI in 60 seconds.</p>
+    </header>
+
+    <section class="relative z-10 flex min-h-0 w-full flex-1 flex-col px-4 sm:px-6">
+      <div class="relative z-10 mx-auto flex w-full max-w-5xl min-h-0 flex-1 flex-col overflow-hidden rounded-md border border-border bg-panel shadow-panel">
+        <div class="absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r from-primary via-accent to-transparent opacity-80" aria-hidden="true"></div>
+
+        <!-- ═══ INPUT ═══ -->
+        <div id="calc-inputs" class="flex min-h-0 flex-1 flex-col overflow-y-auto px-6 py-6 sm:px-8 sm:py-7">
+          <div class="grid gap-3 sm:grid-cols-2">
+            <div>
+              <label for="sl-team" class="flex items-center justify-between text-sm font-semibold text-foreground-strong">
+                <span>What's your team size?</span><span id="val-team" class="font-mono text-primary">5</span>
+              </label>
+              <input id="sl-team" type="range" min="1" max="100" value="5" step="1" class="calc-range mt-3 w-full" />
+              <p class="mt-1 text-3xs text-muted-foreground">Employees doing computer work</p>
+            </div>
+            <div>
+              <label for="sl-hours" class="flex items-center justify-between text-sm font-semibold text-foreground-strong">
+                <span>Manual work per employee / week?</span><span id="val-hours" class="font-mono text-primary">10 hrs</span>
+              </label>
+              <input id="sl-hours" type="range" min="1" max="40" value="10" step="1" class="calc-range mt-3 w-full" />
+              <p class="mt-1 text-3xs text-muted-foreground">Hours of repetitive tasks</p>
+            </div>
+            <div>
+              <label for="sl-rate" class="flex items-center justify-between text-sm font-semibold text-foreground-strong">
+                <span>Team's average hourly rate?</span><span id="val-rate" class="font-mono text-primary">$40</span>
+              </label>
+              <input id="sl-rate" type="range" min="10" max="150" value="40" step="5" class="calc-range mt-3 w-full" />
+              <p class="mt-1 text-3xs text-muted-foreground">Fully loaded cost per hour</p>
+            </div>
+            <div>
+              <label for="sl-ai" class="flex items-center justify-between text-sm font-semibold text-foreground-strong">
+                <span>AI tools cost you monthly?</span><span id="val-ai" class="font-mono text-primary">$50</span>
+              </label>
+              <input id="sl-ai" type="range" min="0" max="500" value="50" step="10" class="calc-range mt-3 w-full" />
+              <p class="mt-1 text-3xs text-muted-foreground">Scattered AI subscriptions</p>
+            </div>
+          </div>
+          <div class="mt-5">
+            <p class="text-sm font-semibold text-foreground-strong mb-2">What tools does your team use?</p>
+            <p class="text-3xs text-muted-foreground mb-2">Each disconnected tool adds hidden overhead — training, maintenance, context switching.</p>
+            <div id="tool-grid" class="grid grid-cols-3 gap-1.5 sm:grid-cols-5"></div>
+          </div>
+          <div class="mt-auto pt-4">
+            <button id="calc-btn" type="button" class="group flex w-full items-center justify-center gap-2 rounded-md bg-primary px-6 py-3.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:brightness-110 active:brightness-95">
+              <span>See My Automation Opportunities</span>
+              <i class="bx bx-chevron-right icon-md transition-transform group-hover:translate-x-0.5"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- ═══ RESULT — no chart, horizontal KPIs + opportunity cards ═══ -->
+        <div id="calc-result" class="hidden min-h-0 flex-1 flex flex-col overflow-y-auto">
+          <div class="flex flex-col gap-5 px-6 py-6 sm:px-8 sm:py-6">
+
+            <!-- Headline -->
+            <div class="text-center">
+              <p class="inline-flex items-center gap-1.5 rounded-md bg-destructive-soft px-3 py-1 font-mono text-2xs font-bold uppercase tracking-widest text-destructive">
+                <i class="bx bx-error icon-sm" aria-hidden="true"></i> You&rsquo;re leaking
+              </p>
+              <p class="mt-3 text-4xl font-extrabold leading-none tracking-tight text-foreground-strong sm:text-5xl">~$<span id="res-leak">0</span><span class="text-base font-semibold text-muted-foreground">/year</span></p>
+              <p class="mt-1.5 text-xs leading-relaxed text-muted-foreground">on manual repetitive work. Here&rsquo;s what automation recovers.</p>
+            </div>
+
+            <!-- KPIs — horizontal, Net → ROI → Speed -->
+            <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
+              <!-- 1 · Net savings (primary) -->
+              <div class="group relative overflow-hidden rounded-md border border-border bg-panel p-4 shadow-panel transition-colors hover:border-border-strong sm:p-5">
+                <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-primary via-accent to-transparent opacity-70" aria-hidden="true"></div>
+                <div class="flex items-start justify-between gap-3">
+                  <div>
+                    <p class="text-2xs font-semibold uppercase tracking-wide text-muted-foreground">Net savings</p>
+                    <p class="mt-1 text-2xl font-extrabold leading-none tracking-tight text-foreground-strong sm:text-[28px]">+$<span id="res-net-card">0</span><span class="text-xs font-semibold text-muted-foreground">/yr</span></p>
+                    <p class="mt-1 text-2xs leading-tight text-muted-foreground">after SpielOS cost · <span class="font-semibold text-foreground">Save $<span id="res-save-mo">0</span>/mo</span></p>
+                  </div>
+                  <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-primary-soft"><i class="bx bx-trending-up icon-base text-primary" aria-hidden="true"></i></div>
+                </div>
+                <!-- hidden mirrors for JS compat (chart removed) -->
+                <span id="res-net" class="hidden">0</span>
+              </div>
+              <!-- 2 · ROI -->
+              <div class="group relative overflow-hidden rounded-md border border-border bg-panel p-4 shadow-panel transition-colors hover:border-border-strong sm:p-5">
+                <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-success to-transparent opacity-60" aria-hidden="true"></div>
+                <div class="flex items-start justify-between gap-3">
+                  <div>
+                    <p class="text-2xs font-semibold uppercase tracking-wide text-muted-foreground">ROI</p>
+                    <p class="mt-1 text-2xl font-extrabold leading-none text-success sm:text-[28px]">~<span id="res-roi-card">0</span>X</p>
+                    <p class="mt-1 text-2xs leading-tight text-muted-foreground">return on investment</p>
+                  </div>
+                  <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-success-soft"><i class="bx bx-bar-chart-alt-2 icon-base text-success" aria-hidden="true"></i></div>
+                </div>
+                <span id="res-roi" class="hidden">0</span>
+              </div>
+              <!-- 3 · Output speed -->
+              <div class="group relative overflow-hidden rounded-md border border-border bg-panel p-4 shadow-panel transition-colors hover:border-border-strong sm:p-5">
+                <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-accent to-transparent opacity-60" aria-hidden="true"></div>
+                <div class="flex items-start justify-between gap-3">
+                  <div>
+                    <p class="text-2xs font-semibold uppercase tracking-wide text-muted-foreground">Output speed</p>
+                    <p class="mt-1 text-2xl font-extrabold leading-none text-success sm:text-[28px]">+<span id="res-speed">2</span>X</p>
+                    <p class="mt-1 text-2xs leading-tight text-muted-foreground">faster than manual</p>
+                  </div>
+                  <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-accent-soft"><i class="bx bxs-bolt icon-base text-accent" aria-hidden="true"></i></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Automation opportunities — titled card grid -->
+            <div class="rounded-md border border-border bg-panel p-4 shadow-panel sm:p-5">
+              <div class="flex items-center gap-2.5">
+                <div class="flex h-8 w-8 items-center justify-center rounded-md bg-primary-soft"><i class="bx bx-bulb icon-base text-primary" aria-hidden="true"></i></div>
+                <div>
+                  <h3 class="text-sm font-semibold leading-none text-foreground-strong">Top automation opportunities</h3>
+                  <p class="mt-1 text-2xs leading-none text-muted-foreground">Tailored to your stack — ready to automate</p>
+                </div>
+              </div>
+              <div id="res-workflows" class="mt-4 grid grid-cols-1 gap-2.5 sm:grid-cols-3"></div>
+            </div>
+
+            <!-- Actions — always one row on desktop, stacked on mobile -->
+            <div class="grid grid-cols-1 gap-3 border-t border-border pt-5 sm:grid-cols-3">
+              <button id="copy-btn" type="button" class="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-border bg-panel px-4 text-xs font-medium text-foreground transition-all hover:border-border-strong hover:bg-panel-raised">
+                <i class="bx bx-copy icon-sm" aria-hidden="true"></i><span>Copy Results</span>
+              </button>
+              <button id="recalc-btn" type="button" class="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-border bg-panel px-4 text-xs font-medium text-foreground transition-all hover:border-border-strong hover:bg-panel-raised">
+                <i class="bx bx-slider icon-sm" aria-hidden="true"></i><span>Recalculate</span>
+              </button>
+              <a href="/apply/" data-cta-location="roi_calculator_apply" class="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-primary px-4 text-xs font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:brightness-110 active:brightness-95">
+                <span>Apply for a FREE review</span><i class="bx bx-chevron-right icon-sm rtl-flip" aria-hidden="true"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="relative z-10 flex w-full shrink-0 items-center justify-center py-2.5 text-center">
+      <span class="text-2xs text-foreground-muted sm:text-xs">Free calculator · No signup required · Results in 60 seconds</span>
+    </footer>
+  </div>
+
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
+
+  <script is:inline define:vars={{ siteUrl: SITE_URL }}>
+  (function () {
+    var TOOLS = [
+      { id: "hubspot",     name: "HubSpot",        slug: "hubspot" },
+      { id: "salesforce",  name: "Salesforce",      slug: "salesforce" },
+      { id: "quickbooks",  name: "QuickBooks",      slug: "quickbooks" },
+      { id: "xero",        name: "Xero",            slug: "xero" },
+      { id: "slack",       name: "Slack",           slug: "slack" },
+      { id: "gmail",       name: "Gmail",           slug: "gmail" },
+      { id: "sheets",      name: "Google Sheets",   slug: "google-sheets" },
+      { id: "excel",       name: "Excel",           slug: "microsoft-excel" },
+      { id: "shopify",     name: "Shopify",         slug: "shopify" },
+      { id: "jira",        name: "Jira",            slug: "jira" },
+      { id: "asana",       name: "Asana",           slug: "asana" },
+      { id: "zendesk",     name: "Zendesk",         slug: "zendesk" },
+      { id: "teams",       name: "MS Teams",        slug: "microsoft-teams" },
+      { id: "notion",      name: "Notion",          slug: "notion" },
+      { id: "monday",      name: "Monday.com",      slug: "monday" },
+      { id: "intercom",    name: "Intercom",        slug: "intercom" },
+      { id: "attio",       name: "Attio",           slug: "attio" },
+      { id: "docusign",    name: "DocuSign",        slug: "docusign" },
+    ];
+
+    var WORKFLOWS = {
+      hubspot:     ["Lead nurturing sequences", "Contact enrichment", "Pipeline reporting"],
+      salesforce:  ["Opportunity tracking", "Lead assignment rules", "Sales forecasting"],
+      quickbooks:  ["Invoice processing", "Expense categorization", "Financial reporting"],
+      xero:        ["Bank reconciliation", "Bill processing", "Cash flow tracking"],
+      slack:       ["Alert routing", "Status updates", "Team notifications"],
+      gmail:       ["Email classification", "Auto-replies", "Follow-up sequences"],
+      sheets:      ["Data synchronization", "Report generation", "Spreadsheet automation"],
+      excel:       ["Data processing", "Report automation", "Template filling"],
+      shopify:     ["Order processing", "Inventory sync", "Customer workflows"],
+      jira:        ["Issue triage", "Sprint reporting", "Task automation"],
+      asana:       ["Project updates", "Deadline tracking", "Team coordination"],
+      zendesk:     ["Ticket routing", "Auto-categorization", "Response templates"],
+      teams:       ["Meeting summaries", "Channel alerts", "Task handoffs"],
+      notion:      ["Knowledge sync", "Document automation", "Database workflows"],
+      monday:      ["Pipeline management", "Task assignments", "Status automations"],
+      intercom:    ["Customer onboarding", "Support triage", "Knowledge routing"],
+      attio:       ["Deal tracking", "Contact enrichment", "Pipeline automation"],
+      docusign:    ["Contract routing", "Signature follow-ups", "Document filing"],
+    };
+
+    var SPIELOS_ANNUAL = 35880;
+    var MIN_ROI = 1.0;
+    var grid = document.getElementById("tool-grid");
+    var selected = {};
+    var LOGO_BASE = "https://thesvg.org/icons/";
+
+    TOOLS.forEach(function (t) {
+      var lbl = document.createElement("label");
+      lbl.className = "tool-chip group relative flex cursor-pointer items-center gap-2 overflow-hidden rounded-md border border-border bg-panel-raised px-2.5 py-2 transition-all hover:border-border-strong has-[:checked]:border-primary has-[:checked]:bg-primary-soft/20";
+      lbl.innerHTML =
+        '<input type="checkbox" value="' + t.id + '" class="sr-only peer" />' +
+        '<img src="' + LOGO_BASE + t.slug + '/default.svg" alt="" width="16" height="16" class="h-4 w-4 shrink-0 object-contain" loading="lazy" decoding="async" onerror="this.style.display=\'none\'" />' +
+        '<span class="text-3xs font-medium text-foreground truncate peer-checked:text-primary transition-colors">' + t.name + '</span>' +
+        '<i class="bx bx-check-square ml-auto hidden text-primary icon-sm peer-checked:inline-block"></i>';
+      grid.appendChild(lbl);
+      lbl.querySelector("input").addEventListener("change", function () { selected[t.id] = this.checked; });
+    });
+
+    [
+      { id: "sl-team",  valId: "val-team",  fmt: function (v) { return v; } },
+      { id: "sl-hours", valId: "val-hours", fmt: function (v) { return v + " hrs"; } },
+      { id: "sl-rate",  valId: "val-rate",  fmt: function (v) { return "$" + Number(v).toLocaleString(); } },
+      { id: "sl-ai",    valId: "val-ai",    fmt: function (v) { return "$" + Number(v).toLocaleString(); } },
+    ].forEach(function (s) {
+      var el = document.getElementById(s.id);
+      var val = document.getElementById(s.valId);
+      el.addEventListener("input", function () { val.textContent = s.fmt(this.value); });
+    });
+
+    function fmt(n) { return Math.round(n).toLocaleString(); }
+    function anim(el, end, dur) {
+      var s = null;
+      function step(t) { if (!s) s = t; var p = Math.min((t - s) / dur, 1); el.textContent = fmt(end * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(step); }
+      requestAnimationFrame(step);
+    }
+
+    var inputsEl = document.getElementById("calc-inputs");
+    var resultEl = document.getElementById("calc-result");
+
+    function calculate() {
+      var team   = +document.getElementById("sl-team").value;
+      var hours  = +document.getElementById("sl-hours").value;
+      var rate   = +document.getElementById("sl-rate").value;
+      var tools  = Object.values(selected).filter(Boolean).length;
+
+      var annualWaste = team * hours * rate * 48;
+      var annualSave  = annualWaste * 0.7;
+      var monthlySave = annualSave / 12;
+      var netAnnual   = annualSave - SPIELOS_ANNUAL;
+      var roi         = annualSave / SPIELOS_ANNUAL;
+
+      var displayRoi  = Math.max(roi, MIN_ROI);
+      var displayNet  = Math.max(netAnnual, 0);
+      var speed       = Math.max(Math.round(annualWaste / (annualSave / 70) / 48), 1);
+
+      inputsEl.classList.add("hidden");
+      resultEl.classList.remove("hidden");
+      resultEl.classList.add("flex");
+
+      /* Big number */
+      anim(document.getElementById("res-leak"), annualWaste, 600);
+
+      /* Stats — all IDs that exist in HTML */
+      var _el;
+      (_el = document.getElementById("res-roi")) && (_el.textContent = displayRoi.toFixed(1));
+      (_el = document.getElementById("res-roi-card")) && (_el.textContent = displayRoi.toFixed(1));
+      (_el = document.getElementById("res-save-mo")) && (_el.textContent = fmt(monthlySave));
+      (_el = document.getElementById("res-net")) && (_el.textContent = fmt(displayNet));
+      (_el = document.getElementById("res-net-card")) && (_el.textContent = fmt(displayNet));
+      (_el = document.getElementById("res-speed")) && (_el.textContent = speed);
+
+      /* Workflows */
+      var pool = [];
+      Object.keys(selected).forEach(function (k) { if (selected[k] && WORKFLOWS[k]) pool = pool.concat(WORKFLOWS[k]); });
+      if (!pool.length) pool = ["Data processing", "Reporting automation", "Internal operations"];
+      var uniq = []; var seen = {};
+      pool.forEach(function (w) { if (!seen[w]) { uniq.push(w); seen[w] = true; } });
+      document.getElementById("res-workflows").innerHTML = uniq.slice(0, 3).map(function (w) {
+        return '<div class="group flex items-center gap-2.5 rounded-md border border-border bg-panel-raised p-3 transition-colors hover:border-border-strong hover:bg-panel"><div class="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-success-soft"><i class="bx bx-check-square text-success icon-sm" aria-hidden="true"></i></div><span class="text-xs font-medium leading-tight text-foreground">' + w + '</span></div>';
+      }).join("");
+
+      if (typeof window.spielosTrack === "function") {
+        window.spielosTrack("roi_calculated", { team: team, hours: hours, rate: rate, tools: tools, savings: Math.round(annualSave) });
+      }
+    }
+
+    document.getElementById("calc-btn").addEventListener("click", calculate);
+
+    document.getElementById("recalc-btn").addEventListener("click", function () {
+      resultEl.classList.add("hidden");
+      inputsEl.classList.remove("hidden");
+      // ensure inputs stays flex (hidden removal keeps its original flex)
+
+      inputsEl.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    document.getElementById("copy-btn").addEventListener("click", function () {
+      var team = +document.getElementById("sl-team").value, hours = +document.getElementById("sl-hours").value, rate = +document.getElementById("sl-rate").value;
+      var waste = team * hours * rate * 48, save = waste * 0.7, net = save - SPIELOS_ANNUAL;
+      navigator.clipboard.writeText("AI Automation ROI\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\nLeaking: ~$" + fmt(waste) + "/yr\nSpielOS: $2,990/mo, saves ~$" + fmt(save/12) + "/mo\n~" + (save/SPIELOS_ANNUAL).toFixed(1) + "x ROI \u00B7 +~$" + fmt(net) + "/yr net\n\n" + siteUrl + "/apply/").then(function () {
+        var btn = document.getElementById("copy-btn");
+        btn.innerHTML = '<i class="bx bx-check-square icon-base text-success"></i><span>Copied!</span>';
+        setTimeout(function () { btn.innerHTML = '<i class="bx bx-copy icon-base"></i><span>Copy Results</span>'; }, 2000);
+      });
+    });
+  })();
+  </script>
+</Page>
+
+<style is:inline>
+  /* Range track: 6px tall, so --radius-md (6px) renders identical to a full
+     round — the design language has no pills, and the token keeps it that way. */
+  .calc-range{-webkit-appearance:none;appearance:none;height:6px;border-radius:var(--radius-md);background:var(--border);outline:none;cursor:pointer}
+  .calc-range::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:20px;height:20px;border-radius:var(--radius-md);background:var(--primary);border:2px solid var(--panel);box-shadow:0 1px 3px color-mix(in srgb,var(--background-deep) 30%,transparent);cursor:grab;transition:transform var(--duration-fast) var(--ease),box-shadow var(--duration-fast) var(--ease)}
+  .calc-range::-webkit-slider-thumb:hover{transform:scale(1.1);box-shadow:0 2px 6px color-mix(in srgb,var(--background-deep) 40%,transparent)}
+  .calc-range::-webkit-slider-thumb:active{cursor:grabbing;transform:scale(1.15)}
+  .calc-range::-moz-range-thumb{width:20px;height:20px;border-radius:var(--radius-md);background:var(--primary);border:2px solid var(--panel);box-shadow:0 1px 3px color-mix(in srgb,var(--background-deep) 30%,transparent);cursor:grab}
+  .calc-range:focus-visible{outline:2px solid var(--ring);outline-offset:2px}
+  .tool-chip:has(input:checked){border-color:var(--primary);background:color-mix(in oklab,var(--primary) 12%,transparent)}
+</style>

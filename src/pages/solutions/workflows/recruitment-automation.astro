@@ -1,103 +1,88 @@
 ---
 import Page from "../../../layouts/Page.astro";
-import SectionHeader from "../../../components/sections/SectionHeader.astro";
-import FAQList from "../../../components/sections/FAQList.astro";
 import { brandLogo } from "../../../data/brand-logos";
 import { APPLY_PATH, SITE } from "../../../config";
 import { localizePath } from "../../../i18n";
 import { t } from "../../../i18n/translations";
 
-/** The receipt-to-ledger loop, mirrored to the live demo and the finance ICP stack. */
+/** The recruiting loop, mirrored to the demo and the ICP's general stack. */
 const steps = [
   {
-    title: "Invoice captured",
-    desc: "Supplier invoice lands from email, upload, or drag-and-drop — PDF or scan, any layout.",
+    title: "Brief captured",
+    desc: "Vacancy text lands and is structured — role, stack, salary, location, work preference.",
     icon: "bx-clipboard",
   },
   {
-    title: "Fields extracted",
-    desc: "Vendor, date, amount, VAT, and every line item read from the document — no retyping.",
+    title: "Candidates sourced",
+    desc: "Your candidate DB, LinkedIn and Indeed matched to the extracted criteria — no tab-hopping.",
     icon: "bx-search-alt",
   },
   {
-    title: "Lines coded",
-    desc: "Each line matched to your chart of accounts with the reasoning attached, ready to review.",
+    title: "Screened & scored",
+    desc: "CVs read against must-haves, scored with fit reasons and gaps — no spreadsheet copy-paste.",
     icon: "bx-task",
   },
   {
-    title: "Ledger row created",
-    desc: "A posted-ready ledger entry appears in your books — Xero, QuickBooks, or Sage in a real build.",
-    icon: "bx-data",
+    title: "Top 5 ranked",
+    desc: "The five best fits ranked with evidence and a client-ready summary paragraph.",
+    icon: "bx-trophy",
   },
   {
-    title: "Confirmation archived",
-    desc: "The original document and the coded entry are filed together, permanently findable.",
+    title: "Interviews scheduled",
+    desc: "Calendars coordinated, invites sent, reschedules handled without the back-and-forth.",
+    icon: "bx-calendar-check",
+  },
+  {
+    title: "Shortlist delivered",
+    desc: "Ranked shortlist saved to Drive and handed over where your team and client already look.",
     icon: "bx-folder",
-  },
-  {
-    title: "Handover delivered",
-    desc: "Your team gets the finished entry with full history — review and approve, that's the only manual step.",
-    icon: "bx-check-square",
   },
 ];
 
 /** Familiar ICP tools — real marks, colored recent logos */
 const tools = [
-  { key: "gmail", name: "Gmail" },
-  { key: "drive", name: "Google Drive" },
-  { key: "sheets", name: "Google Sheets" },
   { key: "notion", name: "Notion" },
+  { key: "sheets", name: "Google Sheets" },
+  { key: "linkedin", name: "LinkedIn" },
+  { key: "indeed", name: "Indeed" },
+  { key: "workable", name: "Workable" },
+  { key: "gmail", name: "Gmail" },
   { key: "slack", name: "Slack" },
   { key: "attio", name: "Attio" },
   { key: "hubspot", name: "HubSpot" },
-  { key: "zapier", name: "Zapier" },
+  { key: "calendar", name: "Google Calendar" },
+  { key: "zoom", name: "Zoom" },
+  { key: "calendly", name: "Calendly" },
+  { key: "drive", name: "Google Drive" },
 ];
 
 /** Per-step tool groups — each step connects down to its 1–3 tools */
 const stepTools: string[][] = [
-  ["gmail", "drive"],               // Invoice captured
-  ["zapier", "sheets"],             // Fields extracted
-  ["notion"],                       // Lines coded
-  ["sheets", "attio"],              // Ledger row created
-  ["drive", "slack"],               // Confirmation archived
-  ["hubspot"],                      // Handover delivered
+  ["notion", "sheets"],                 // Brief captured
+  ["linkedin", "indeed", "workable"],   // Candidates sourced
+  ["gmail", "slack"],                   // Screened & scored
+  ["attio", "hubspot"],                 // Top 5 ranked
+  ["calendar", "zoom", "calendly"],     // Interviews scheduled
+  ["drive"],                            // Shortlist delivered
 ];
 
-const audiences = [
-  {
-    name: "Accounting & bookkeeping firms",
-    note: "Every new client multiplies document intake. Coding capacity, not headcount, caps how many mandates you can serve.",
-  },
-  {
-    name: "In-house finance teams",
-    note: "Supplier invoices pile up between month-ends. Processing eats the hours that closing and reviewing should use.",
-  },
-  {
-    name: "Growing businesses",
-    note: "Volume already broke the manual process — every invoice is a typing job with real money attached.",
-  },
-];
 
 const faqs = [
   {
-    q: "What is receipt-to-ledger automation?",
-    a: "It is a workflow that runs the whole intake side of bookkeeping — capturing a supplier invoice, reading the vendor, date, amount, and line items, coding every line to your chart of accounts, and writing a posted-ready ledger entry — instead of a person copying numbers between a PDF and your books.",
+    q: "What is recruitment & HR workflow automation?",
+    a: "It is a workflow that runs the coordination side of hiring — capturing the brief, sourcing and screening candidates, ranking a shortlist, scheduling interviews, and collecting references — automatically on the tools you already use, instead of a person copying data between tabs.",
   },
   {
-    q: "Do we need to replace our accounting system?",
-    a: "No. In the demo, the ledger is a table standing in for your books; in a real build that step writes to Xero, QuickBooks, or Sage through their own interfaces. Your accounting system stays exactly where it is.",
+    q: "Do we need to replace our ATS or job boards?",
+    a: "No. SpielOS works on top of LinkedIn, Indeed, your email, calendar, and drive. It adds the coordination layer; your existing stack stays exactly where it is.",
   },
   {
-    q: "Does it post to our books without us?",
-    a: "No. The workflow prepares the coded entry with the original document attached. Your accountant reviews and approves — the posting decision stays human, always.",
-  },
-  {
-    q: "What happens with an invoice it can't read confidently?",
-    a: "Anything ambiguous — an unknown supplier, a code it can't justify, a mismatched total — is held and routed to a person with the document and its reasoning side by side. Nothing unclear books silently.",
+    q: "Will candidates or clients know it's automated?",
+    a: "They experience faster, consistent responses. The AI drafts from your voice and your rules; your recruiter still owns every conversation that matters — screen calls, interviews, and offers.",
   },
   {
     q: "What stays human?",
-    a: "Judgment. Approving postings, handling exceptions, month-end review, and every conversation with clients. The automation handles the reading, the coding, and the filing.",
+    a: "Judgment calls. Fit, sensitivity, the actual interview, and the offer stay with your team. The automation handles the tracking, the chasing, and the filing.",
   },
 ];
 
@@ -108,7 +93,7 @@ const breadcrumbJsonLd = {
     { "@type": "ListItem", position: 1, name: t("en", "nav.home"), item: `${SITE.url}${localizePath("/", "en")}` },
     { "@type": "ListItem", position: 2, name: t("en", "nav.solutions"), item: `${SITE.url}${localizePath("/solutions/", "en")}` },
     { "@type": "ListItem", position: 3, name: t("en", "nav.workflows"), item: `${SITE.url}${localizePath("/solutions/workflows/", "en")}` },
-    { "@type": "ListItem", position: 4, name: "Receipt-to-Ledger Workflow Automation", item: `${SITE.url}/solutions/workflows/receipt-to-ledger-automation/` },
+    { "@type": "ListItem", position: 4, name: "Recruitment Workflow Automation", item: `${SITE.url}/solutions/workflows/recruitment-automation/` },
   ],
 };
 
@@ -124,8 +109,8 @@ const faqJsonLd = {
 ---
 
 <Page
-  title="Receipt-to-Ledger Workflow Automation | SpielOS"
-  description="Receipt-to-ledger workflow automation for accountants and finance teams. Invoice in, coded ledger entry out — no retyping, no ERP hopping, no PO hunting."
+  title="Recruitment Workflow Automation | SpielOS"
+  description="Recruitment workflow automation for hiring teams. Source, screen, rank, schedule, and update your ATS without copying data between tools."
   image="/assets/og/SpielOS.png"
   locale="en"
   noAlternate
@@ -137,15 +122,15 @@ const faqJsonLd = {
     <div class="absolute left-1/2 top-[42%] h-[34rem] w-[52rem] -translate-x-1/2 -translate-y-1/2 glow-blob opacity-20"></div>
     <div class="absolute left-[58%] top-[38%] h-64 w-64 rounded-md glow-blob-accent opacity-10"></div>
     <div class="relative z-10 mx-auto w-full max-w-4xl px-6 text-center">
-      <h1 class="mt-4 text-[clamp(1.875rem,8vw,3rem)] font-extrabold leading-[1.05] tracking-tight text-foreground-strong whitespace-normal sm:whitespace-nowrap sm:text-[clamp(1.05rem,4.6vw,3rem)] sm:leading-[0.95]" data-aos="fade-up">Receipt in↓<br class="sm:hidden" aria-hidden="true" />{" "}<span class="text-primary">Coded ledger out↑</span></h1>
-      <p class="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground" data-aos="fade-up">See an AI agent read a supplier invoice, code every line to the chart of accounts, and hand you the posted-ready ledger entry.</p>
+      <h1 class="mt-4 text-[clamp(1.875rem,8vw,3rem)] font-extrabold leading-[1.05] tracking-tight text-foreground-strong whitespace-normal sm:whitespace-nowrap sm:text-[clamp(1.05rem,4.6vw,3rem)] sm:leading-[0.95]" data-aos="fade-up">Job brief in↓<br class="sm:hidden" aria-hidden="true" />{" "}<span class="text-primary">Ranked candidates out↑</span></h1>
+      <p class="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground" data-aos="fade-up">See how an AI agent screens candidates against the brief, ranks the strongest matches, and prepares the shortlist for recruiter review.</p>
       <div class="relative mx-auto mt-8 max-w-2xl overflow-hidden rounded-md border border-border bg-panel shadow-panel" data-aos="fade-up">
         <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r opacity-80 from-primary via-accent to-transparent"></div>
         <div class="w-full bg-black">
           <video
             class="w-full"
-            src="/videos/receipt-ledger-demo.mp4"
-            poster="/videos/receipt-ledger-demo-poster.jpg"
+            src="/videos/recruitment-demo.mp4"
+            poster="/videos/recruitment-demo-poster.jpg"
             controls
             preload="metadata"
             playsinline
@@ -155,21 +140,21 @@ const faqJsonLd = {
         </div>
       </div>
       <div class="mt-8 flex items-center justify-center" data-aos="fade-up">
-        <a href={localizePath(APPLY_PATH, "en")} data-cta-location="workflow_receipt_ledger_hero_primary" class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20">Show me your workflow</a>
+        <a href={localizePath(APPLY_PATH, "en")} data-cta-location="workflow_recruitment_hero_primary" class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20">Show me your workflow</a>
       </div>
     </div>
   </section>
 
-  <!-- 2 - STILL CODING MANUALLY? + WORKFLOW COMPONENTS + CTA -->
+  <!-- 2 - STILL SCREENING MANUALLY? + WORKFLOW COMPONENTS + CTA -->
   <section id="show-me-workflow" class="relative overflow-hidden py-20 sm:py-24 scroll-mt-24">
     <div class="mx-auto max-w-5xl px-6">
       <div class="mb-12 text-center" data-aos="fade-up">
-        <span class="text-2xs font-semibold uppercase tracking-widest text-primary">STILL CODING MANUALLY?</span>
-        <h2 class="font-bold text-foreground-strong tracking-tight mt-3 text-3xl sm:text-4xl">Still coding invoices by hand?</h2>
+        <span class="text-2xs font-semibold uppercase tracking-widest text-primary">STILL SCREENING MANUALLY?</span>
+        <h2 class="font-bold text-foreground-strong tracking-tight mt-3 text-3xl sm:text-4xl">Still screening candidates manually?</h2>
         <p class="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground">Send me one workflow. I'll show you exactly how I'd automate it on your existing stack.</p>
       </div>
 
-      <!-- Workflow components -->
+      <!-- Workflow components (from former section 3) -->
       <div class="flow-canvas relative overflow-hidden rounded-md border border-border bg-panel px-5 py-10 shadow-panel sm:px-8 sm:py-14" data-aos="fade-up">
         <div class="absolute inset-0 opacity-[0.04] hero-grid"></div>
         <div class="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 glow-blob opacity-15"></div>
@@ -196,11 +181,12 @@ const faqJsonLd = {
             );
           })}
         </ol>
-        <!-- Per-step tool groups — vertical stem with calm back-and-forth shine -->
+        <!-- Per-step tool groups — vertical stem 2-3px below step name, with calm back-and-forth shine -->
         <div class="relative z-10 mt-[2px] hidden sm:mt-[3px] sm:block">
           <div class="grid gap-6 sm:grid-cols-6 sm:gap-0">
             {stepTools.map((keys, idx) => (
               <div class="flex flex-col items-center">
+                {/* vertical stem — straight line down from workflow node to its tools */}
                 <div class="relative h-7 w-px overflow-hidden bg-primary/15 sm:h-9">
                   <div class="absolute left-1/2 top-0 h-2 w-px -translate-x-1/2 bg-primary opacity-95 shadow-[0_0_8px_var(--primary)] animate-stem-shine" style={`animation-delay: ${idx * 0.34}s`}></div>
                 </div>
@@ -221,19 +207,19 @@ const faqJsonLd = {
 
       <!-- CTA -->
       <div class="mt-12 text-center" data-aos="fade-up">
-        <a href={localizePath(APPLY_PATH, "en")} data-cta-location="workflow_receipt_ledger_mid" class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20">Show me your workflow</a>
+        <a href={localizePath(APPLY_PATH, "en")} data-cta-location="workflow_recruitment_mid" class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 h-11 text-sm font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20">Show me your workflow</a>
         <p class="mt-4 text-2xs text-muted-foreground">I'll review it personally in 48 hours. FREE</p>
       </div>
     </div>
   </section>
 
-  <!-- 3 - BEFORE / AFTER + BUILT FOR FINANCE TEAMS -->
+  <!-- 3 - BEFORE / AFTER — with HR illustrations + BUILT FOR RECRUITMENT TEAMS -->
   <section class="relative overflow-hidden py-20 sm:py-24">
     <div class="absolute inset-0 bg-panel-deep/35"></div>
     <div class="relative mx-auto max-w-5xl px-6">
       <div class="mb-12 text-center" data-aos="fade-up">
-        <span class="text-2xs font-semibold uppercase tracking-widest text-primary">LESS TYPING. MORE CLOSING.</span>
-        <h2 class="font-bold text-foreground-strong tracking-tight mt-3 text-3xl sm:text-4xl">Stop doing bookkeeping data entry by hand.</h2>
+        <span class="text-2xs font-semibold uppercase tracking-widest text-primary">LESS ADMIN. MORE RECRUITING.</span>
+        <h2 class="font-bold text-foreground-strong tracking-tight mt-3 text-3xl sm:text-4xl">Stop doing recruiting work by hand.</h2>
       </div>
       <div class="grid gap-4 md:grid-cols-2" data-aos="fade-up">
         <div class="group relative flex flex-col overflow-hidden rounded-md border border-destructive/30 bg-panel shadow-panel transition-all hover:border-destructive/50">
@@ -244,12 +230,12 @@ const faqJsonLd = {
               <h3 class="text-sm font-semibold uppercase tracking-wide text-destructive">Before — manual</h3>
             </div>
             <ul class="space-y-2">
-              <li class="flex items-center gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x text-destructive/70 icon-sm shrink-0" aria-hidden="true"></i>Open every invoice PDF.</li>
-              <li class="flex items-center gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x text-destructive/70 icon-sm shrink-0" aria-hidden="true"></i>Copy vendor, date, VAT, and every line.</li>
-              <li class="flex items-center gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x text-destructive/70 icon-sm shrink-0" aria-hidden="true"></i>Code each line to the chart of accounts.</li>
-              <li class="flex items-center gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x text-destructive/70 icon-sm shrink-0" aria-hidden="true"></i>Retype it into the books.</li>
-              <li class="flex items-center gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x text-destructive/70 icon-sm shrink-0" aria-hidden="true"></i>Hunt for duplicates in history.</li>
-              <li class="flex items-center gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x text-destructive/70 icon-sm shrink-0" aria-hidden="true"></i>File the PDF somewhere findable — hopefully.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x text-destructive/70 icon-sm shrink-0" aria-hidden="true"></i>Copy candidate profiles.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x text-destructive/70 icon-sm shrink-0" aria-hidden="true"></i>Screen CVs manually.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x text-destructive/70 icon-sm shrink-0" aria-hidden="true"></i>Update spreadsheets and ATS records.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x text-destructive/70 icon-sm shrink-0" aria-hidden="true"></i>Chase candidate availability.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x text-destructive/70 icon-sm shrink-0" aria-hidden="true"></i>Coordinate calendars.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-muted-foreground"><i class="bx bx-x text-destructive/70 icon-sm shrink-0" aria-hidden="true"></i>Prepare shortlists.</li>
             </ul>
           </div>
         </div>
@@ -261,64 +247,43 @@ const faqJsonLd = {
               <h3 class="text-sm font-semibold uppercase tracking-wide text-primary">With SpielOS</h3>
             </div>
             <ul class="space-y-2">
-              <li class="flex items-center gap-2 text-sm leading-relaxed text-foreground"><i class="bx bx-check text-primary/70 icon-sm shrink-0" aria-hidden="true"></i>Invoices get read.</li>
-              <li class="flex items-center gap-2 text-sm leading-relaxed text-foreground"><i class="bx bx-check text-primary/70 icon-sm shrink-0" aria-hidden="true"></i>Fields get extracted.</li>
-              <li class="flex items-center gap-2 text-sm leading-relaxed text-foreground"><i class="bx bx-check text-primary/70 icon-sm shrink-0" aria-hidden="true"></i>Lines get coded.</li>
-              <li class="flex items-center gap-2 text-sm leading-relaxed text-foreground"><i class="bx bx-check text-primary/70 icon-sm shrink-0" aria-hidden="true"></i>Ledger entries arrive ready to post.</li>
-              <li class="flex items-center gap-2 text-sm leading-relaxed text-foreground"><i class="bx bx-check text-primary/70 icon-sm shrink-0" aria-hidden="true"></i>Documents stay attached to every entry.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-foreground"><i class="bx bx-check text-primary/70 icon-sm shrink-0" aria-hidden="true"></i>Candidates get sourced.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-foreground"><i class="bx bx-check text-primary/70 icon-sm shrink-0" aria-hidden="true"></i>Criteria get checked.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-foreground"><i class="bx bx-check text-primary/70 icon-sm shrink-0" aria-hidden="true"></i>Shortlists arrive ranked.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-foreground"><i class="bx bx-check text-primary/70 icon-sm shrink-0" aria-hidden="true"></i>Interviews get scheduled.</li>
+              <li class="flex items-center gap-2 text-sm leading-relaxed text-foreground"><i class="bx bx-check text-primary/70 icon-sm shrink-0" aria-hidden="true"></i>Records stay updated.</li>
             </ul>
           </div>
         </div>
       </div>
-      <p class="mt-8 text-center text-sm text-foreground-strong font-medium" data-aos="fade-up">Your accountants review the entries and make the decisions.</p>
-      <!-- Built for finance teams -->
+      <p class="mt-8 text-center text-sm text-foreground-strong font-medium" data-aos="fade-up">Your recruiters review the candidates and make the decisions.</p>
+      <!-- Built for recruitment teams — below the before/after cards, same section -->
       <div class="mt-10 text-center" data-aos="fade-up">
-        <p class="text-2xs font-semibold uppercase tracking-[0.14em] text-primary">BUILT FOR FINANCE TEAMS</p>
-        <h3 class="mt-2 text-xl font-bold tracking-tight text-foreground-strong sm:text-2xl">Automate the work between invoice and ledger.</h3>
+        <p class="text-2xs font-semibold uppercase tracking-[0.14em] text-primary">BUILT FOR RECRUITMENT TEAMS</p>
+        <h3 class="mt-2 text-xl font-bold tracking-tight text-foreground-strong sm:text-2xl">Automate the work between brief and interview.</h3>
         <div class="mt-6 flex flex-wrap justify-center gap-2">
-          <span class="inline-flex items-center gap-1.5 rounded-md border border-border bg-panel-raised px-3 py-1.5 text-xs font-medium text-foreground-strong shadow-panel"><i class="bx bx-briefcase text-primary icon-sm" aria-hidden="true"></i>Accounting &amp; bookkeeping firms</span>
-          <span class="inline-flex items-center gap-1.5 rounded-md border border-border bg-panel-raised px-3 py-1.5 text-xs font-medium text-foreground-strong shadow-panel"><i class="bx bx-group text-primary icon-sm" aria-hidden="true"></i>In-house finance teams</span>
-          <span class="inline-flex items-center gap-1.5 rounded-md border border-border bg-panel-raised px-3 py-1.5 text-xs font-medium text-foreground-strong shadow-panel"><i class="bx bx-trending-up text-primary icon-sm" aria-hidden="true"></i>Growing businesses</span>
+          <span class="inline-flex items-center gap-1.5 rounded-md border border-border bg-panel-raised px-3 py-1.5 text-xs font-medium text-foreground-strong shadow-panel"><i class="bx bx-briefcase text-primary icon-sm" aria-hidden="true"></i>Recruitment agencies</span>
+          <span class="inline-flex items-center gap-1.5 rounded-md border border-border bg-panel-raised px-3 py-1.5 text-xs font-medium text-foreground-strong shadow-panel"><i class="bx bx-group text-primary icon-sm" aria-hidden="true"></i>In-house talent teams</span>
+          <span class="inline-flex items-center gap-1.5 rounded-md border border-border bg-panel-raised px-3 py-1.5 text-xs font-medium text-foreground-strong shadow-panel"><i class="bx bx-user text-primary icon-sm" aria-hidden="true"></i>HR teams</span>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 4 - WHO IT'S FOR + FAQ -->
-  <section class="relative overflow-hidden py-20 sm:py-24">
-    <div class="absolute left-0 top-1/3 h-64 w-64 glow-blob opacity-10"></div>
-    <div class="relative mx-auto max-w-5xl px-6">
-      <SectionHeader label="WHO IT'S FOR" title="Built for teams whose books depend on accuracy." />
-      <div class="grid gap-3 md:grid-cols-3" data-aos="fade-up">
-        {audiences.map((a) => (
-          <article class="group relative overflow-hidden rounded-md border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
-            <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r opacity-60 from-info via-primary to-transparent"></div>
-            <h3 class="text-sm font-semibold text-foreground-strong mb-1 transition-colors group-hover:text-primary">{a.name}</h3>
-            <p class="text-xs leading-relaxed text-muted-foreground">{a.note}</p>
-          </article>
-        ))}
-      </div>
-      <div class="mx-auto mt-16 max-w-3xl">
-        <SectionHeader label="QUESTIONS" title="Receipt-to-ledger questions, answered." />
-        <FAQList locale="en" entries={faqs} keyPrefix="wf-receipt-ledger" />
-      </div>
-    </div>
-  </section>
-
-  <!-- 5 - FINAL CTA -->
+<!-- 4 - FINAL CTA -->
   <section class="relative overflow-hidden py-28 sm:py-36">
     <div class="absolute inset-0 bg-panel-deep/50"></div>
     <div class="absolute inset-0 opacity-[0.03] hero-grid"></div>
     <div class="absolute left-1/2 top-[52%] h-[28rem] w-[44rem] -translate-x-1/2 -translate-y-1/2 glow-blob opacity-15"></div>
     <div class="relative mx-auto max-w-3xl px-6 text-center" data-aos="fade-up">
       <p class="text-xs font-semibold uppercase tracking-widest text-primary">FREE WORKFLOW REVIEW</p>
-      <h2 class="mt-5 text-4xl font-extrabold leading-tightest tracking-tight text-foreground-strong sm:text-5xl">Show us one<br /><span class="text-primary">bookkeeping workflow.</span></h2>
+      <h2 class="mt-5 text-4xl font-extrabold leading-tightest tracking-tight text-foreground-strong sm:text-5xl">Show us one<br /><span class="text-primary">recruiting workflow.</span></h2>
       <p class="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">We'll show you what can be automated, how it would run on your current tools, and what stays with your team.</p>
-      <a href={localizePath(APPLY_PATH, "en")} data-cta-location="workflow_receipt_ledger_final" class="mt-8 inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:brightness-110">Get a Free Review</a>
+      <a href={localizePath(APPLY_PATH, "en")} data-cta-location="workflow_recruitment_final" class="mt-8 inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:brightness-110">Get a Free Review</a>
     </div>
   </section>
 
-  <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
   <script is:inline type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
 </Page>
 

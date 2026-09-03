@@ -16,7 +16,7 @@ export interface Props {
   tags?: string[];
   robots?: string;
   locale?: Locale;
-  /** Skip emitting hreflang alternates (EN-only pages). */
+  /** EN-only page: skip the fa twin, keep en + x-default self-references. */
   noAlternate?: boolean;
 }
 
@@ -110,10 +110,21 @@ const bookingEnabled = /^\/(?:fa\/)?(?:apply|contact)\/?$/.test(Astro.url.pathna
     </script>}
 
     <!-- hreflang alternates for i18n SEO (indexable pages only —
-         noindex pages should not publish alternate clusters) -->
-    {!robots.includes("noindex") && !noAlternate && (() => {
+         noindex pages should not publish alternate clusters).
+         EN-only pages (noAlternate) still declare their language: a valid
+         en + x-default self-cluster with no fa target, which is the correct
+         pattern when no FA twin exists. -->
+    {!robots.includes("noindex") && (() => {
       const path = Astro.url.pathname;
       const enPath = locale === "fa" ? path.replace(/^\/fa/, "") || "/" : path;
+      if (noAlternate) {
+        return (
+          <>
+            <link rel="alternate" hreflang="en" href={`${SITE.url}${enPath}`} />
+            <link rel="alternate" hreflang="x-default" href={`${SITE.url}${enPath}`} />
+          </>
+        );
+      }
       const faPath = locale === "fa" ? path : `/fa${path}`;
       return (
         <>

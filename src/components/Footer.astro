@@ -11,11 +11,12 @@ export interface Props {
   links?: { label: string; href: string }[];
   showThemeToggle?: boolean;
   showSocial?: boolean;
-  copyright?: string;
   locale?: Locale;
+  /** EN-only page: hide the FA language switch (no twin exists). */
+  noFaTwin?: boolean;
 }
 
-const { variant = "default", links, showThemeToggle = variant === "showcase", showSocial = variant !== "showcase", copyright, locale = "en" } = Astro.props;
+const { variant = "default", links, showThemeToggle = variant === "showcase", showSocial = variant !== "showcase", locale = "en", noFaTwin = false } = Astro.props;
 
 const footerLinks = links || (variant === "showcase" ? FOOTER_LINKS.showcase : FOOTER_LINKS.default.map(link => {
   const key = link.label.toLowerCase().replace(/\s+/g, '');
@@ -27,7 +28,6 @@ const footerLinks = links || (variant === "showcase" ? FOOTER_LINKS.showcase : F
 }));
 const year = new Date().getFullYear();
 const contactHref = localizePath("/contact/", locale);
-const copyrightText = copyright || t(locale, "footer.copyright", { year });
 ---
 
 <footer class:list={[
@@ -53,7 +53,7 @@ const copyrightText = copyright || t(locale, "footer.copyright", { year });
     <div class="flex shrink-0 items-center gap-1">
       <a href={contactHref} aria-label={t(locale, "nav.contact")} title={t(locale, "nav.contact")} class="flex h-7 w-7 items-center justify-center rounded-md border border-border bg-panel-raised text-muted-foreground transition-colors hover:border-border-strong hover:text-foreground"><i class="bx bx-phone icon-base" aria-hidden="true"></i></a>
       <span aria-hidden="true" class="mx-0.5 h-5 w-px bg-border"></span>
-      {showThemeToggle ? <div class="flex items-center gap-0.5"><LanguageSwitcher locale={locale} /><button type="button" id="footer-theme-toggle" class="flex h-7 w-7 items-center justify-center rounded-md border border-border bg-panel-raised text-muted-foreground transition-colors hover:border-border-strong hover:bg-panel-raised hover:text-foreground" aria-label={t(locale, "common.themeToggle")} title={t(locale, "common.themeToggle")}><i class="bx bx-moon icon-base leading-none" id="theme-icon"></i></button></div> : null}
+      {showThemeToggle ? <div class="flex items-center gap-0.5">{!noFaTwin && <LanguageSwitcher locale={locale} />}{noFaTwin && <span class="h-7 w-7" aria-hidden="true"></span>}<button type="button" id="footer-theme-toggle" class="flex h-7 w-7 items-center justify-center rounded-md border border-border bg-panel-raised text-muted-foreground transition-colors hover:border-border-strong hover:bg-panel-raised hover:text-foreground" aria-label={t(locale, "common.themeToggle")} title={t(locale, "common.themeToggle")}><i class="bx bx-moon icon-base leading-none" id="theme-icon"></i></button></div> : null}
       <span aria-hidden="true" class="mx-0.5 h-5 w-px bg-border"></span>
       {showSocial && <SocialIcons size="md" show={["x", "linkedin", "github"]} />}
     </div>

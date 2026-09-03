@@ -89,7 +89,7 @@
   --leading-relaxed: 1.625;
 
   --font-sans: var(--font-outfit), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Inter, "Helvetica Neue", Arial, sans-serif;
-  --font-mono: Monaco, "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-mono: "Marcellus", "Outfit", Georgia, serif;
 
   --skeleton-bg: color-mix(in oklab, var(--panel-raised) 60%, var(--panel) 40%);
   --overlay-bg: color-mix(in oklab, var(--background) 70%, transparent);
@@ -122,6 +122,15 @@
   --provider-gemini-purple: #9B72CB;
   --provider-gemini-pink: #D96570;
   --provider-logo-text: #fff;
+  /* Apply-page tool marks (ToolLogos) — real brand colors, owner directive 2026-08-26. */
+  --provider-excel: #107C41;
+  --provider-dynamics365: #002050;
+  --provider-salesforce: #00A1E0;
+  --provider-hubspot: #FF7A59;
+  --provider-outlook: #0078D4;
+  --provider-claude: #D97757;
+  --provider-github: #181717;
+  --provider-replit: #F26207;
   --provider-google-docs-blue-light: #A1C2FA;
   --provider-google-red-light: #F28B82;
 }
@@ -135,5 +144,5 @@
 [dir="rtl"] {
   --bidi-sign: -1;
   --font-sans: var(--font-iransansx), var(--font-outfit), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Tahoma, "Helvetica Neue", Arial, sans-serif;
-  --font-mono: Monaco, "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-mono: "Marcellus", "Outfit", Georgia, serif;
 }

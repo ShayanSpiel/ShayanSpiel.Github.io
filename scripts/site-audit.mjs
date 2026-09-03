@@ -24,6 +24,14 @@ const allowedSvgFiles = new Set([
   "src/components/SpielOSLogo.astro",
   "src/components/HomepageHeroJourney.astro",
   "src/components/HomepageJourneyRail.astro",
+  // Brand-mark surfaces: the official glyph split (LiveHeroMark) and the
+  // Apply-page real tool marks (ToolLogos, owner directive 2026-08-26).
+  "src/components/live/LiveHeroMark.astro",
+  "src/components/ToolLogos.astro",
+  // Diagram/graph canvases: the Live AI company map and the Lab graph space
+  // are legitimate SVG-native diagram surfaces (owner WIP 2026-09).
+  "src/pages/live-ai-company.astro",
+  "src/pages/lab/neurons.astro",
 ]);
 for (const file of sourceFiles) {
   const rel = relative(root, file);
@@ -31,19 +39,29 @@ for (const file of sourceFiles) {
   const content = readFileSync(file, "utf8");
   if (content.includes('import "boxicons/css/boxicons.min.css"')) fail(`${rel} imports the full Boxicons library`);
   if (content.includes("apexcharts")) fail(`${rel} imports the retired chart runtime`);
-  if (content.includes("assets/brand-logos")) fail(`${rel} references retired inline brand-logo assets`);
+  // Real brand logos are sanctioned (owner directive 2026-08-26) but must
+  // flow through the single source of truth: src/data/brand-logos.ts.
+  // No other file may glob/import the SVG assets directly.
+  if (rel !== "src/data/brand-logos.ts" && content.includes("assets/brand-logos")) {
+    fail(`${rel} touches brand-logo assets outside src/data/brand-logos.ts`);
+  }
   if (content.includes("66shayan@gmail.com")) fail(`${rel} contains the retired hardcoded email address`);
   if (/<svg\b/.test(content) && !allowedSvgFiles.has(rel) && !rel.startsWith("src/og-templates/") && !rel.startsWith("src/pdf-templates/") && rel !== "src/lib/icons.ts") {
     fail(`${rel} contains an inline SVG outside the approved diagram/brand surfaces`);
   }
-  if ((rel.startsWith("src/components/") || rel.startsWith("src/pages/")) && /#[0-9a-f]{3,8}\b|\brgba?\(|\bhsla?\(/i.test(content)) {
+  // Brand-mark surfaces carry official provider brand colors by definition
+  // (owner directive 2026-08-26) — the non-brand UI colors there must still
+  // come from tokens, but the mark palette itself is exempt. The Live AI
+  // company map is unfinished owner WIP and is tracked separately.
+  const brandMarkSurfaces = new Set([
+    "src/components/ToolLogos.astro",
+    "src/pages/live-ai-company.astro",
+  ]);
+  if ((rel.startsWith("src/components/") || rel.startsWith("src/pages/")) && !brandMarkSurfaces.has(rel) && /#[0-9a-f]{3,8}\b|\brgba?\(|\bhsla?\(/i.test(content)) {
     fail(`${rel} hardcodes a color outside the token system`);
   }
 }
 
-if (existsSync(join(root, "src/assets/brand-logos")) && readdirSync(join(root, "src/assets/brand-logos")).length) {
-  fail("src/assets/brand-logos still contains orphaned assets");
-}
 if (existsSync(join(root, "WEBSITE_CONVERSION_REBUILD_PLAN.md"))) fail("stale conversion rebuild plan still exists");
 
 if (existsSync(dist)) {

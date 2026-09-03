@@ -1,0 +1,2755 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+const title = "SpielOS Live · AI Company Map";
+const description = "Interactive spatial map of the SpielOS company — 7 departments, real workflows, measurable outcomes.";
+---
+
+<BaseLayout title={title} description={description} noAlternate>
+<style is:global>
+  :root {
+  --bg: var(--background, #0E1118);
+  --ivory: var(--foreground, #E9E4D6);
+  --ivory-2: var(--foreground-muted, #B9B4A6);
+  --ink-2: var(--muted-foreground, #8A8DA0);
+  --ink-3: var(--muted-foreground, #565A6E);
+  --copper: var(--primary, #C58B5F);
+  --line: var(--border, color-mix(in srgb, var(--foreground) 10%, transparent));
+  --lnrgb: 233,228,214;
+  --badge-glyph: var(--background, #181a24);
+  --glass: color-mix(in oklab, var(--background, #0e1118) 85%, transparent);
+}
+  body.light {
+    --bg: #E9EBEE;
+    --ivory: #1B1E26;
+    --ivory-2: #3E424D;
+    --ink-2: #5C606B;
+    --ink-3: #888D98;
+    --copper: #9A6535;
+    --line: color-mix(in srgb, var(--foreground) 28%, transparent);
+    --lnrgb: 27,30,38;
+    --badge-glyph: #FFFFFF;
+    --glass: color-mix(in srgb, var(--foreground) 94%, transparent);
+  }
+  /* smooth cross-document crossfade between MAP and DASHBOARDS (same-origin) */
+  @view-transition { navigation: auto; }
+  @media (prefers-reduced-motion: no-preference) {
+    ::view-transition-old(root) { animation: stFadeOut .2s ease both; }
+    ::view-transition-new(root) { animation: stFadeIn .3s ease both; }
+  }
+  @keyframes stFadeOut { to { opacity: 0; } }
+  @keyframes stFadeIn { from { opacity: 0; } }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    font-family: var(--font-sans);
+    background: var(--background, var(--bg));
+    background-image: radial-gradient(circle, color-mix(in srgb, var(--foreground) 5%, transparent) 1px, transparent 1px);
+    background-size: 14px 14px;
+    color: var(--ivory);
+    -webkit-font-smoothing: antialiased;
+    cursor: grab;
+  }
+  body.panning { cursor: grabbing; }
+  /* during a transition the cursor doesn't exist · no hovers, no clicks, until the scene settles */
+  body.transitioning #world, body.transitioning .edge-dept, body.transitioning #back, body.transitioning .wchev { pointer-events: none !important; }
+  body.transitioning { cursor: default; }
+
+  /* light mode · the instrument on paper (v1 dot-grid canvas energy) */
+  body.light {
+    background: var(--bg);
+    background-image: radial-gradient(circle, color-mix(in srgb, var(--foreground) 20%, transparent) 1px, transparent 1px);
+    background-size: 14px 14px;
+  }
+  body.light #stars { display: none; }
+  body.light .node.deployed { box-shadow: 0 0 0 1px color-mix(in srgb, var(--foreground) 18%, transparent), 0 4px 14px color-mix(in srgb, var(--foreground) 16%, transparent); }
+  body.light .node.dev { background: var(--badge-glyph); border-color: color-mix(in srgb, var(--foreground) 85%, transparent); box-shadow: 0 2px 9px color-mix(in srgb, var(--foreground) 14%, transparent); }
+  body.light .node.plan { background: var(--badge-glyph); border-color: color-mix(in srgb, var(--foreground) 60%, transparent); box-shadow: 0 2px 8px color-mix(in srgb, var(--foreground) 10%, transparent); }
+  body.light .node.plan svg { stroke: color-mix(in srgb, var(--foreground) 66%, transparent); }
+  body.light .node.selected::after { border-color: color-mix(in srgb, var(--foreground) 80%, transparent); }
+  body.light .node.selected::before { border-color: color-mix(in srgb, var(--foreground) 18%, transparent); }
+  body.light .mini .jdot { box-shadow: 0 0 6px color-mix(in srgb, var(--foreground) 15%, transparent); }
+  body.light .mini .jdot.dev { background: var(--badge-glyph); border-color: color-mix(in srgb, var(--foreground) 62%, transparent); }
+  body.light .mini .jdot.plan { background: var(--badge-glyph); border-color: color-mix(in srgb, var(--foreground) 42%, transparent); }
+  body.light #hub .ring { background: color-mix(in srgb, var(--foreground) 2%, transparent); border-color: color-mix(in srgb, var(--foreground) 50%, transparent);
+    box-shadow: 0 0 0 10px color-mix(in srgb, var(--foreground) 2.5%, transparent); }
+  body.light #hub .ring::before { border-color: color-mix(in srgb, var(--foreground) 14%, transparent); }
+  body.light .ghost { color: color-mix(in srgb, var(--foreground) 5%, transparent); }
+  body.light .root-badge, body.light .mini .rootb { background: var(--badge-glyph); }
+  body.light #card .skill { border-color: color-mix(in srgb, var(--foreground) 25%, transparent); }
+  body.light #progress .bar { background: color-mix(in srgb, var(--foreground) 14%, transparent); }
+  body.light .horizon { background: radial-gradient(ellipse 50% 100% at 50% 100%, color-mix(in srgb, var(--foreground) 5%, transparent), transparent 70%); }
+
+  #stars { position: fixed; inset: -100px; pointer-events: none; opacity: 0; transition: opacity 1.2s ease; }
+  body.ready #stars { opacity: 1; }
+  .bgstar { position: absolute; border-radius: 50%; background: var(--foreground-muted);
+    animation: twinkle 6s ease-in-out infinite; }
+  @keyframes twinkle { 0%,100% { opacity: .45; } 50% { opacity: .1; } }
+  @media (prefers-reduced-motion: reduce) {
+    .bgstar { animation: none !important; }
+  }
+
+  #viewport { position: fixed; inset: 0; overflow: hidden; clip-path: inset(0); }
+  /* will-change is toggled from JS: on while the camera moves, off once settled —
+     leaving it on permanently makes the browser scale a cached raster (blurry zoom) */
+  #world { position: absolute; left: 50%; top: 56%; transform-origin: 0 0; overflow: visible; }
+
+  /* ================== SKY ================== */
+  #sky { position: absolute; left: 0; top: 0; perspective: 2000px; transform-style: flat; }
+  .tree { position: absolute; opacity: 0; }
+  body.ready .tree { animation: treein .9s cubic-bezier(.2,.75,.25,1) forwards; animation-delay: var(--d); }
+  @keyframes treein { from { opacity: 0; transform: translateY(34px); } to { opacity: 1; transform: translateY(0); } }
+  .tree.dim { transition: opacity .45s ease, filter .45s ease; opacity: .12 !important; filter: blur(6px); }
+  .tree .warp { transform: rotateY(var(--ry)); transform-style: flat; }
+  .tree svg.lines { position: absolute; overflow: visible; pointer-events: none; }
+
+  .sigil { position: absolute; pointer-events: none; opacity: 0; transition: opacity .8s ease; }
+  body.ready .sigil { opacity: 1; transition-delay: calc(var(--d) + .5s); }
+  .sigil g { fill: none; stroke: var(--c); stroke-linecap: round; stroke-linejoin: round; }
+  .sigil .soft { stroke-width: 5; opacity: .1; }
+  .sigil .sharp { stroke-width: 1.3; opacity: .26; }
+  .sigil .sd { fill: var(--c); stroke: none; }
+
+  .star { position: absolute; pointer-events: none; }
+  .star .core {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
+    border-radius: 50%;
+    background: radial-gradient(circle, white 0%, var(--c) 55%, transparent 75%);
+  }
+  .s-leaf .core { width: 9px; height: 9px; box-shadow: 0 0 9px var(--c), 0 0 20px color-mix(in srgb, var(--c) 45%, transparent); }
+  .s-leaf .lbl {
+    position: absolute; top: 50%;
+    font-size: 40px; font-weight: 500; color: color-mix(in srgb, var(--foreground) 70%, transparent);
+    width: 300px; line-height: 1.2;
+  }
+  body.light .s-leaf .lbl { color: color-mix(in srgb, var(--foreground) 97%, transparent); font-weight: 600; }
+  .s-leaf.lr .lbl { left: 13px; text-align: left; transform-origin: 0 50%; transform: translateY(-50%) scale(.3333); }
+  .s-leaf.ll .lbl { right: 13px; text-align: right; transform-origin: 100% 50%; transform: translateY(-50%) scale(.3333); }
+
+  .s-fn { width: 34px; height: 34px; margin: -17px 0 0 -17px; }
+  .s-fn .ic {
+    position: absolute; inset: 0; border-radius: 50%;
+    display: grid; place-items: center; color: white;
+    background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--c) 75%, white), var(--c));
+    box-shadow: 0 0 14px var(--c), 0 0 36px color-mix(in srgb, var(--c) 50%, transparent);
+  }
+  .s-fn .ic svg { position: absolute; left: 50%; top: 50%; width: 51px; height: 51px; transform: translate(-50%,-50%) scale(.3333); }
+  .s-fn .lbl {
+    position: absolute; top: 40px; left: 50%;
+    transform-origin: 50% 0; transform: translateX(-50%) scale(.3333);
+    font-size: 40px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+    color: color-mix(in srgb, var(--foreground) 90%, transparent); white-space: nowrap; text-align: center;
+  }
+  body.light .s-fn .lbl { color: var(--background); }
+  .s-fn.stag .lbl { top: 62px; }
+
+  .s-dom { width: 58px; height: 58px; margin: -29px 0 0 -29px; }
+  .s-dom .ic {
+    position: absolute; inset: 0; border-radius: 50%;
+    display: grid; place-items: center; color: white;
+    background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--c) 70%, white), var(--c));
+    box-shadow: 0 0 22px var(--c), 0 0 60px color-mix(in srgb, var(--c) 55%, transparent), 0 0 130px color-mix(in srgb, var(--c) 30%, transparent);
+  }
+  .s-dom .ic svg { position: absolute; left: 50%; top: 50%; width: 81px; height: 81px; transform: translate(-50%,-50%) scale(.3333); }
+  .s-dom .lbl {
+    position: absolute; top: 70px; left: 50%;
+    transform-origin: 50% 0; transform: translateX(-50%) scale(.3333);
+    font-family: var(--font-sans);
+    font-size: 144px; letter-spacing: .24em; text-transform: uppercase;
+    color: var(--ivory); white-space: nowrap; text-align: center;
+  }
+  .s-dom .sub { font-family: var(--font-sans); font-size: 60px; letter-spacing: .04em; text-transform: none; color: var(--ink-2); margin-top: 14px; }
+
+  /* the ground · both states grow from the same horizon */
+  .horizon { position: absolute; pointer-events: none;
+    background: radial-gradient(ellipse 50% 100% at 50% 100%, color-mix(in srgb, var(--foreground) 6%, transparent), transparent 70%); }
+
+  /* ====== SKY = seven miniature fans, same language as navigation ====== */
+  .mini { cursor: pointer; transition: opacity .35s ease, filter .35s ease; }
+  .mini .scaler { transition: transform .35s ease; transform-origin: 0 0; }
+  .tree.settled { animation: none !important; opacity: 1; }
+  .mini.dim2 { opacity: .42; }
+  .mini.focused { opacity: 1; }
+  .mini.focused .scaler { transform: scale(1.05); }
+  /* hovering ANY part of a department lights the whole thing and darkens the rest of the wheel */
+  .mini .hit { position: absolute; left: -250px; top: -420px; width: 500px; height: 470px; border-radius: 50%; }
+  @media (hover: hover) and (pointer: fine) {
+    #sky:has(.mini:hover) .mini:not(:hover) { opacity: .18 !important; }
+    #sky:has(.mini:hover) #hub, #sky:has(.mini:hover) #spokes { opacity: .3; }
+  }
+  #hub { transition: opacity .35s ease, transform .45s cubic-bezier(.2,.8,.25,1); }
+  #spokes { transition: opacity .35s ease; }
+  /* hub focused (card open) · same treatment as a focused department */
+  #sky.hubfocus #hub { transform: scale(1.65); }
+  #sky.hubfocus #hub .hname { color: var(--copper); }
+  #sky.hubfocus .mini { opacity: .18 !important; }
+  #sky.hubfocus #spokes { opacity: .3; }
+  @media (hover: hover) and (pointer: fine) {
+    .mini:hover { opacity: 1 !important; }
+    .mini:hover .scaler { transform: scale(1.08); }
+    .mini:hover .wname .nm { color: var(--c); }
+    .mini:hover .jdot { box-shadow: 0 0 10px color-mix(in srgb, var(--c) 55%, transparent); }
+  }
+  .mini .jdot { position: absolute; width: 15px; height: 15px; margin: -7.5px 0 0 -7.5px; border-radius: 50%;
+    background: var(--ivory); box-shadow: 0 0 7px color-mix(in srgb, var(--foreground) 35%, transparent); }
+  .mini .jdot.dev { background: color-mix(in srgb, var(--foreground) 10%, transparent); border: 1.5px solid color-mix(in srgb, var(--foreground) 65%, transparent); box-shadow: none; }
+  .mini .jdot.plan { background: color-mix(in srgb, var(--foreground) 4%, transparent); border: 1px solid color-mix(in srgb, var(--foreground) 16%, transparent); box-shadow: none; }
+  .mini .rootb {
+    position: absolute; width: 64px; height: 64px; margin: -32px 0 0 -32px;
+    border-radius: 50%; display: grid; place-items: center;
+    background: color-mix(in srgb, var(--foreground) 5%, transparent);
+    border: 1.5px solid color-mix(in srgb, var(--c) 65%, transparent);
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--c) 7%, transparent);
+  }
+  .mini .rootb svg { width: 27px; height: 27px; stroke: var(--c); }
+  .mini .wname { position: absolute; transform: translate(-50%,-50%); text-align: center; cursor: pointer; }
+  .mini .wname .nm {
+    transform-origin: 50% 50%; transform: scale(.3333);
+    font-family: var(--font-sans); font-size: 126px; letter-spacing: .24em;
+    color: var(--ivory); text-transform: uppercase; white-space: nowrap;
+  }
+  .mini .wname .sb {
+    transform-origin: 50% 0; transform: scale(.3333);
+    font-size: 42px; letter-spacing: .06em; color: var(--ink-2); white-space: nowrap; margin-top: -28px;
+  }
+
+  /* the company brain · a living neural core at the centre of the wheel */
+  #hub { position: absolute; left: 0; top: 0; pointer-events: none; }
+  #hub .core { position: absolute; left: -155px; top: -155px; }
+  /* light mode · a whisper of dark circular haze so the brain pops off the paper */
+  body.light #hub::before { content: ''; position: absolute; left: 0; top: 0; width: 460px; height: 460px; margin: -230px 0 0 -230px; border-radius: 50%; background: radial-gradient(circle, color-mix(in srgb, var(--foreground) 16%, transparent) 0%, color-mix(in srgb, var(--foreground) 8%, transparent) 44%, transparent 72%); pointer-events: none; }
+  #hub .spinslow { animation: hspin 170s linear infinite; transform-origin: 0 0; }
+  @keyframes hspin { to { transform: rotate(360deg); } }
+  #hub .drift { animation: hdrift 12s ease-in-out infinite alternate; }
+  @keyframes hdrift { from { transform: translate(2.2px, -2.6px); } to { transform: translate(-2.2px, 2.6px); } }
+  #hub .bn { animation: bpulse 3.2s ease-in-out infinite; }
+  @keyframes bpulse { 0%, 100% { opacity: .85; } 50% { opacity: .2; } }
+  #hub .nucleus { animation: npulse 2.6s ease-in-out infinite; }
+  @keyframes npulse { 0%, 100% { opacity: 1; r: 5; } 50% { opacity: .65; r: 6.5; } }
+  #hub .hname {
+    position: absolute; left: 0; top: 136px; transform: translateX(-50%);
+    text-align: center; white-space: nowrap;
+    font-size: 11px; font-weight: 700; letter-spacing: .3em; color: var(--ivory-2);
+    transition: color .25s ease;
+  }
+  #hub .hname div { font-size: 9.5px; font-weight: 500; letter-spacing: .14em; color: var(--ink-3); margin-top: 3px; }
+  #hub .hname .hz { font-size: 8.5px; font-weight: 700; letter-spacing: .3em; color: var(--copper); margin: 0 0 4px; }
+  /* the hub is node zero · clickable */
+  #hub .hubhit {
+    position: absolute; left: -156px; top: -156px; width: 312px; height: 312px;
+    border-radius: 50%; pointer-events: auto; cursor: pointer;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    #hub:has(.hubhit:hover) { transform: scale(1.18); }
+    #hub:has(.hubhit:hover) .hname { color: var(--copper); }
+    #hub:has(.hubhit:hover) .nucleus { animation-duration: 1.1s; }
+    #sky:has(.hubhit:hover) .mini { opacity: .35; }
+  }
+  #spokes { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+
+  /* ================== FAN ================== */
+  #fanwrap { position: absolute; left: 0; top: 0; overflow: visible; }
+  .fan { position: absolute; left: 0; top: 0; transition: opacity .45s ease, transform .45s ease; }
+  .fan.enter-r { opacity: 0; transform: translateX(460px); }
+  .fan.enter-l { opacity: 0; transform: translateX(-460px); }
+  .fan.exit-l { opacity: 0; transform: translateX(-460px); pointer-events: none; }
+  .fan.exit-r { opacity: 0; transform: translateX(460px); pointer-events: none; }
+  .fan.collapse { opacity: 0; transform: scale(.86); pointer-events: none; }
+  .fan svg.under { position: absolute; overflow: visible; pointer-events: none; }
+
+  .fan path.draw { stroke-dasharray: 1; stroke-dashoffset: 1; animation: drawline .55s ease forwards; animation-delay: var(--d, 0s); }
+  @keyframes drawline { to { stroke-dashoffset: 0; } }
+  .fan circle.popdot { opacity: 0; animation: fadein .3s ease forwards; animation-delay: var(--d, 0s); }
+  @keyframes fadein { to { opacity: 1; } }
+
+  .ghost {
+    position: absolute; transform: translate(-50%,-50%);
+    font-family: var(--font-sans); font-size: 290px; letter-spacing: .12em;
+    color: color-mix(in srgb, var(--foreground) 3%, transparent); white-space: nowrap; pointer-events: none;
+    text-transform: uppercase;
+  }
+
+  .node {
+    position: absolute; width: 74px; height: 74px; margin: -37px 0 0 -37px;
+    border-radius: 50%; cursor: pointer;
+    display: grid; place-items: center;
+    transition: transform .18s ease, box-shadow .18s ease, opacity .3s ease;
+    opacity: 0; animation: nodepop .45s cubic-bezier(.2,.9,.3,1.4) forwards; animation-delay: var(--d, 0s);
+  }
+  @keyframes nodepop { from { opacity: 0; transform: scale(.3); } to { opacity: 1; transform: scale(1); } }
+  .node > svg { width: 36px; height: 36px; pointer-events: none; }   /* the job icon only — not the leaves svg */
+  .node .leaves svg { width: 200px; height: 200px; pointer-events: none; }
+  @media (hover: hover) and (pointer: fine) { .node:hover { transform: scale(1.12); } }
+  .node:focus { outline: none; }
+  .node:focus-visible, .team-label:focus-visible, .root-badge:focus-visible {
+    outline: 2px solid var(--ivory); outline-offset: 4px; border-radius: 50%; }
+  .team-label:focus-visible { border-radius: var(--radius-md); }
+  .node.deployed { background: var(--ivory); box-shadow: 0 0 0 1px color-mix(in srgb, var(--foreground) 25%, transparent), 0 4px 18px color-mix(in srgb, var(--background) 50%, transparent); }
+  .node.deployed svg { stroke: var(--badge-glyph); }
+  .node.dev { background: color-mix(in srgb, var(--foreground) 7%, transparent); border: 1.5px solid color-mix(in srgb, var(--foreground) 70%, transparent); }
+  .node.dev svg { stroke: var(--ivory); }
+  .node.plan { background: color-mix(in srgb, var(--foreground) 3%, transparent); border: 1.5px solid color-mix(in srgb, var(--foreground) 18%, transparent); }
+  .node.plan svg { stroke: color-mix(in srgb, var(--foreground) 30%, transparent); }
+  .node.faded { opacity: .25; }
+  .node.selected { transform: scale(1.12); }
+  .node.selected::after { content: ''; position: absolute; inset: -12px;
+    border: 2px solid color-mix(in srgb, var(--foreground) 85%, transparent); border-radius: 50%; }
+  .node.selected::before { content: ''; position: absolute; inset: -22px;
+    border: 1px solid color-mix(in srgb, var(--foreground) 18%, transparent); border-radius: 50%; }
+  .node .nlabel {
+    position: absolute; top: 74px; left: 50%;
+    transform-origin: 50% 0; transform: translateX(-50%) scale(.3333);
+    font-size: 36px; font-weight: 600; color: var(--ivory-2);
+    white-space: nowrap; opacity: 0; transition: opacity .2s ease; pointer-events: none;
+  }
+  .node:hover .nlabel, .node.selected .nlabel { opacity: 1; }
+  /* once you're zoomed in, every job is named · no hover hunting */
+  body.zoomedin .node:not(.faded) .nlabel { opacity: 1; }
+
+  /* selected node · clear the stage: tag gone, title down + bigger, leaves pushed out with names */
+  .node .nlabel, .node .ftag { transition: opacity .2s ease, transform .3s cubic-bezier(.2,.8,.25,1), top .3s cubic-bezier(.2,.8,.25,1); }
+  .node.selected .ftag { opacity: 0; }
+  .node.selected .nlabel { top: 86px; transform: translateX(-50%) scale(.46); color: var(--ivory); }
+  .node .leaves { transition: transform .35s cubic-bezier(.2,.8,.25,1); }
+  .node.selected .leaves { transform: scale(1.45); }
+  .node.selected .leaf::after { opacity: 1; }
+
+  /* alveoli · each job's sub-skills as terminal leaf clusters · click one to see what it is */
+  .node .leaves { position: absolute; left: 50%; top: 50%; width: 0; height: 0; pointer-events: none; }
+  .node .leaves svg { position: absolute; left: -100px; top: -100px; overflow: visible; }
+  .leaf {
+    position: absolute; width: 20px; height: 20px; margin: -10px 0 0 -10px; border-radius: 50%;
+    pointer-events: auto; cursor: pointer;
+  }
+  .leaf::before {
+    content: ''; position: absolute; inset: 3.5px; border-radius: 50%;
+    background: var(--lc); opacity: .6; transition: transform .18s ease, opacity .18s ease;
+  }
+  .leaf:hover::before { transform: scale(1.3); opacity: .95; }
+  /* the title · only on hover, crisp under zoom */
+  .leaf::after {
+    content: attr(data-sk); position: absolute; left: 50%; top: 21px;
+    transform-origin: 50% 0; transform: translateX(-50%) scale(.3333);
+    font-size: 30px; font-weight: 600; letter-spacing: .02em;
+    color: var(--ivory-2); white-space: nowrap;
+    opacity: 0; transition: opacity .15s ease; pointer-events: none;
+  }
+  @media (hover: hover) and (pointer: fine) { .leaf:hover::after { opacity: 1; } }
+
+
+  .root-badge {
+    position: absolute; width: 150px; height: 150px; margin: -75px 0 0 -75px;
+    border-radius: 50%; display: grid; place-items: center;
+    background: radial-gradient(circle, color-mix(in srgb, var(--c) 12%, transparent), transparent 70%);
+    border: 2px solid color-mix(in srgb, var(--c) 70%, transparent);
+    box-shadow: 0 0 0 12px color-mix(in srgb, var(--c) 8%, transparent), 0 0 40px color-mix(in srgb, var(--c) 15%, transparent);
+    opacity: 0; animation: nodepop .5s cubic-bezier(.2,.9,.3,1.3) forwards;
+  }
+  .root-badge svg { width: 56px; height: 56px; stroke: var(--c); fill: none; }
+
+  .fan-dname {
+    position: absolute; left: 0; top: 76px; text-align: center;
+    transform-origin: 50% 0; transform: translateX(-50%) scale(.3333);
+    font-family: var(--font-sans); font-size: 126px; letter-spacing: .22em;
+    text-transform: uppercase; color: var(--ivory); white-space: nowrap;
+    opacity: 0; animation: fadein .5s ease forwards .4s;
+  }
+  .fan-dname .fan-dsub { font-family: var(--font-sans); font-size: 42px;
+    letter-spacing: .06em; color: var(--ink-2); margin-top: 12px; text-transform: none; }
+
+  .team-label {
+    position: absolute; transform: translate(-50%,-50%); text-align: center;
+    cursor: pointer; user-select: none;
+    opacity: 0; animation: fadein .5s ease forwards; animation-delay: var(--d, 0s);
+  }
+  .team-label .t {
+    font-family: var(--font-sans); font-size: 68px; letter-spacing: .28em;
+    transform-origin: 50% 100%; transform: scale(.3333);
+    color: var(--ivory-2); text-transform: uppercase; white-space: nowrap;
+    transition: color .2s ease;
+  }
+  .team-label:hover .t { color: var(--ivory); }
+  .team-label .tc { font-size: 14px; letter-spacing: .18em; color: var(--ink-3); margin-top: 2px; text-transform: uppercase; }
+
+  /* neighbouring departments at the screen edges, with constellation chevrons */
+  .edge-dept {
+    position: fixed; top: 50%; transform: translateY(-50%); z-index: 9;
+    cursor: pointer; user-select: none;
+    display: flex; align-items: center; gap: 11px;
+    color: var(--ivory-2);
+    transition: color .2s ease, opacity .4s ease; opacity: 0; pointer-events: none;
+  }
+  body.fanmode .edge-dept { opacity: 1; pointer-events: auto; }
+  .edge-dept:hover { color: var(--ivory); }
+  .edge-dept .et {
+    font-family: var(--font-sans); font-size: 17px; letter-spacing: .3em;
+    text-transform: uppercase; writing-mode: vertical-rl;
+  }
+  .edge-dept .echev { width: 13px; height: 22px; opacity: .9; }
+  .edge-dept:hover .echev { animation: chevnudge 1.1s ease-in-out infinite; }
+  #edge-l { left: 20px; }
+  #edge-l .et { transform: rotate(180deg); }
+  #edge-r { right: 20px; }
+  @keyframes chevnudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(var(--nx, -3px)); } }
+  #edge-r .echev { --nx: 3px; }
+
+  /* wheel chevrons · flank the seated department, step the wheel */
+  .wchev {
+    position: fixed; bottom: 8.5%; z-index: 9;
+    width: 48px; height: 48px; display: grid; place-items: center;
+    background: none; border: none; cursor: pointer; color: var(--ivory-2);
+    opacity: 0; pointer-events: none; transition: opacity .5s ease, color .2s ease;
+  }
+  body.ready:not(.fanmode) .wchev { opacity: 1; pointer-events: auto; }
+  .wchev svg { width: 15px; height: 25px; }
+  @media (hover: hover) and (pointer: fine) {
+    .wchev:hover { color: var(--ivory); }
+    .wchev:hover svg { animation: chevnudge 1.1s ease-in-out infinite; }
+  }
+  #wchev-l { left: calc(50% - 215px); }
+  #wchev-r { right: calc(50% - 215px); --nx: 3px; }
+  @media (max-width: 700px) {
+    .wchev { bottom: 14%; }
+    #wchev-l { left: calc(50% - 150px); }
+    #wchev-r { right: calc(50% - 150px); }
+  }
+
+  /* ================== CHROME ================== */
+  .chrome { position: fixed; z-index: 10; }
+  #topbar {
+    top: 0; left: 0; right: 0; height: 52px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 18px; pointer-events: none;
+  }
+  .brand { font-family: var(--font-sans); font-size: 19px; letter-spacing: .14em; color: var(--ivory); }
+  #topright { display: flex; align-items: center; gap: 14px; margin-right: 0; }
+  #state-name { font-size: 10px; font-weight: 700; letter-spacing: .22em; color: var(--copper); }
+  #counts { display: none; }
+  #bookcall {
+    pointer-events: auto; display: inline-flex; align-items: center; gap: 7px;
+    height: 34px; padding: 0 15px; box-sizing: border-box;
+    font-size: 12.5px; font-weight: 600; color: var(--background);
+    text-decoration: none; white-space: nowrap; border-radius: var(--radius-md);
+    border: 1px solid color-mix(in srgb, var(--background) 10%, transparent); background: var(--foreground);
+    box-shadow: 0 1px 2px color-mix(in srgb, var(--background) 6%, transparent);
+    transition: color .18s, border-color .18s, background .18s;
+  }
+  #bookcall:hover { border-color: color-mix(in srgb, var(--background) 22%, transparent); background: color-mix(in srgb, var(--foreground) 96%, var(--background)); }
+
+  /* light / dark switch · top right, the one control that never moves */
+  #themetog {
+    position: fixed; top: 13px; right: 18px; z-index: 12;
+    width: 46px; height: 25px; border-radius: var(--radius-md);
+    background: var(--glass); border: 1px solid var(--line);
+    cursor: pointer; padding: 0;
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    transition: border-color .2s;
+  }
+  #themetog:hover { border-color: color-mix(in srgb, var(--ivory) 28%, transparent); }
+  #themetog .tt-thumb {
+    position: absolute; top: 50%; left: 3px; margin-top: -9.5px;
+    width: 19px; height: 19px; border-radius: 50%;
+    background: var(--ivory); color: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    transition: transform .28s cubic-bezier(.4,0,.2,1);
+  }
+  body.light #themetog .tt-thumb { transform: translateX(19px); }
+  #themetog svg { width: 11px; height: 11px; position: absolute; transition: opacity .2s, transform .28s cubic-bezier(.4,0,.2,1); }
+  #themetog .tt-sun { opacity: 0; transform: rotate(-45deg); }
+  body.light #themetog .tt-moon { opacity: 0; transform: rotate(45deg); }
+  body.light #themetog .tt-sun { opacity: 1; transform: rotate(0deg); }
+
+  #back {
+    top: 64px; left: 24px; display: none;
+    font-size: 11px; font-weight: 700; letter-spacing: .2em; color: var(--ink-2);
+    background: none; border: none; cursor: pointer; font-family: inherit;
+    padding: 6px 0;
+  }
+  #back:hover { color: var(--ivory); }
+  body.fanmode #back { display: block; }
+
+  #card {
+    top: 104px; left: 28px; width: 364px; display: none;
+    background: var(--glass); backdrop-filter: blur(16px);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 20px 18px 20px 20px;
+    max-height: calc(100vh - 200px); overflow-y: auto; overscroll-behavior: contain;
+  }
+  #card::-webkit-scrollbar { width: 4px; }
+  #card::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--foreground) 18%, transparent); border-radius: 2px; }
+  body.light #card::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--foreground) 20%, transparent); }
+  #card.open { display: block; }
+  /* drag the right edge to widen the skill card */
+  #cresize { position: fixed; width: 11px; margin-left: -5px; z-index: 11; display: none; cursor: ew-resize; touch-action: none; }
+  #cresize::after { content: ''; position: absolute; left: 4px; top: 10px; bottom: 10px; width: 2px; border-radius: 2px; background: transparent; transition: background .15s; }
+  #cresize:hover::after, #cresize.dragged::after { background: var(--copper); }
+  @media (max-width: 640px) { #cresize { display: none !important; } }
+  #card .c-x {
+    position: sticky; top: 0; float: right; margin: -6px -6px 0 10px;
+    width: 30px; height: 30px; display: grid; place-items: center;
+    font-family: inherit; font-size: 13px; color: var(--ivory-2);
+    background: var(--glass); border: 1px solid var(--line); border-radius: 50%;
+    cursor: pointer; z-index: 2;
+  }
+  #card .c-x:hover { color: var(--ivory); border-color: var(--copper); }
+  /* scrollable surfaces must keep native touch scrolling */
+  #card, #reader .rbody, #about .panel, #search .sres { touch-action: pan-y; }
+  #card .c-state { font-size: 11px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--copper); margin-bottom: 2px; }
+  #card .c-name { font-family: var(--font-sans); font-size: 26px; letter-spacing: .04em; margin-bottom: 6px; }
+  #card .c-crumb { font-size: 11px; color: var(--ink-2); letter-spacing: .06em; margin-bottom: 12px; }
+  #card .c-desc { font-size: 13px; line-height: 1.65; color: color-mix(in srgb, var(--foreground) 80%, transparent); margin-bottom: 14px; }
+  body.light #card .c-desc { color: color-mix(in srgb, var(--foreground) 82%, transparent); }
+  #card .c-sec { font-size: 10px; font-weight: 700; letter-spacing: .2em; color: var(--ink-3); margin-bottom: 7px; }
+  #card .skills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  #card .skill { font-size: 11px; color: var(--ivory-2); border: 1px solid color-mix(in srgb, var(--foreground) 25%, transparent); border-radius: var(--radius-sm); padding: 3px 8px; }
+  #card .tools { font-size: 12px; color: var(--ink-2); margin-bottom: 14px; }
+  #card .cta {
+    display: inline-flex; align-items: center; gap: 7px; font-family: inherit; font-size: 11px; font-weight: 700; letter-spacing: .14em;
+    color: var(--copper); text-decoration: none; background: none; cursor: pointer; border: 1px solid color-mix(in srgb, var(--copper) 50%, transparent);
+    border-radius: var(--radius-sm); padding: 7px 12px; text-transform: uppercase;
+    transition: background .2s ease, color .2s ease;
+  }
+  #card .cta .cta-q { display: inline-grid; place-items: center; width: 15px; height: 15px; border-radius: 50%; border: 1px solid currentColor; font-size: 9px; letter-spacing: 0; }
+  #card .cta:hover { background: var(--copper); color: var(--background); }
+
+  /* ===== playbook layer (deep entries) ===== */
+  #card .c-found {
+    display: inline-block; font-size: 9px; font-weight: 700; letter-spacing: .18em;
+    color: var(--copper); border: 1px solid color-mix(in srgb, var(--copper) 45%, transparent);
+    border-radius: var(--radius-sm); padding: 2px 6px; margin-left: 9px; vertical-align: 4px; white-space: nowrap;
+  }
+  #card .c-replaces {
+    font-size: 12.5px; line-height: 1.6; color: var(--ivory-2); margin-bottom: 14px;
+    padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--foreground) 3%, transparent);
+  }
+  body.light #card .c-replaces { background: color-mix(in srgb, var(--foreground) 3%, transparent); }
+  #card .reqs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+  #card .req {
+    font-size: 11px; color: var(--ivory-2); border: 1px dashed color-mix(in srgb, var(--foreground) 35%, transparent);
+    border-radius: var(--radius-sm); padding: 3px 8px; cursor: pointer;
+    transition: color .15s ease, border-color .15s ease;
+  }
+  body.light #card .req { border-color: color-mix(in srgb, var(--foreground) 35%, transparent); }
+  #card .req:hover { color: var(--ivory); border-color: var(--ivory); }
+  /* the node card is greyscale too · the constellation keeps its colours */
+  #card { --copper: var(--muted-foreground); --copper-line: color-mix(in srgb, var(--foreground) 22%, transparent); }
+  body.light #card { --copper: var(--muted-foreground); --copper-line: color-mix(in srgb, var(--foreground) 22%, transparent); }
+  #card .req.hubchip { color: var(--copper);
+    border: 1px solid color-mix(in srgb, var(--copper) 45%, transparent); }
+  #card .req.hubchip:hover { color: var(--copper); border-color: var(--copper); }
+  #card .ladder { margin-bottom: 14px; }
+  #card .lrow { display: flex; gap: 10px; padding: 7px 0; border-top: 1px solid var(--line);
+    font-size: 12px; line-height: 1.55; }
+  #card .lrow .lk { flex: 0 0 88px; font-size: 9.5px; font-weight: 700; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--ink-3); padding-top: 2px; }
+  #card .lrow.cur .lk { color: var(--copper); }
+  #card .lrow .lv { color: var(--ivory-2); }
+  #card .lrow.cur .lv { color: var(--ivory); }
+  #card .c-notes { font-size: 12.5px; line-height: 1.65; color: var(--ivory-2); margin-bottom: 14px; }
+  #card .files { margin-bottom: 14px; }
+  /* high-up cue: there's a runnable, downloadable skill here */
+  #card .c-skillcue { margin: 0 0 14px; }
+  #card .c-skillcue:empty { display: none; }
+  #card .skillcue {
+    display: flex; align-items: center; gap: 10px; cursor: pointer;
+    border: 1px solid var(--copper-line, color-mix(in srgb, var(--muted-foreground) 50%, transparent)); border-radius: var(--radius-md);
+    padding: 11px 13px; background: color-mix(in srgb, var(--muted-foreground) 7%, transparent);
+    transition: background .2s ease, border-color .2s ease;
+  }
+  #card .skillcue:hover { background: color-mix(in srgb, var(--muted-foreground) 13%, transparent); border-color: var(--copper); }
+  #card .skillcue .sc-ic {
+    flex: 0 0 auto; width: 26px; height: 26px; border-radius: var(--radius-md); display: flex;
+    align-items: center; justify-content: center; font-size: 15px;
+    color: var(--copper); background: color-mix(in srgb, var(--muted-foreground) 14%, transparent); border: 1px solid color-mix(in srgb, var(--muted-foreground) 35%, transparent);
+  }
+  #card .skillcue .sc-tx { flex: 1; font-size: 12px; color: var(--ivory-2); line-height: 1.4; }
+  #card .skillcue .sc-tx b { color: var(--ivory); font-weight: 700; }
+  #card .skillcue .sc-lock {
+    flex: 0 0 auto; font-size: 11px; font-weight: 700; color: var(--copper);
+    border: 1px solid var(--copper); border-radius: var(--radius-md); padding: 4px 11px; white-space: nowrap;
+  }
+  #card .skillcue .sc-go { flex: 0 0 auto; font-size: 11px; font-weight: 700; color: var(--copper); }
+  /* "Take it" → glow the actual download so it is obvious where to grab the skill */
+  @keyframes dlGlow { 0%,100% { box-shadow: 0 0 0 1px color-mix(in srgb, var(--muted-foreground) 30%, transparent); } 50% { box-shadow: 0 0 0 3px color-mix(in srgb, var(--muted-foreground) 50%, transparent), 0 0 22px color-mix(in srgb, var(--muted-foreground) 55%, transparent); } }
+  #card .files.glow .dl { animation: dlGlow 1.15s ease-in-out 3; box-shadow: 0 0 0 1.5px var(--copper); border-color: var(--copper); }
+  #card .files.glow .dl .dlt { color: var(--copper); }
+  /* "Need help building this?" dialog · solid + readable, above everything */
+  #helpdlg, #buydlg { position: fixed; inset: 0; z-index: 9999; display: none; place-items: center; padding: 20px; cursor: default; background: color-mix(in srgb, var(--background) 64%, transparent); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+  body.light #helpdlg, body.light #buydlg { background: color-mix(in srgb, var(--background) 44%, transparent); }
+  #helpdlg.open, #buydlg.open { display: grid; }
+  .hd-panel { width: min(450px,100%); position: relative; cursor: default; background: var(--panel); border: 1px solid color-mix(in srgb, var(--foreground) 13%, transparent); border-radius: var(--radius-md); padding: 30px 28px 28px; box-shadow: 0 40px 100px -28px color-mix(in srgb, var(--background) 72%, transparent); }
+  body.light .hd-panel { background: var(--badge-glyph); border-color: color-mix(in srgb, var(--foreground) 12%, transparent); box-shadow: 0 40px 100px -34px color-mix(in srgb, var(--foreground) 28%, transparent); }
+  .hd-x { position: absolute; top: 16px; right: 16px; width: 30px; height: 30px; display: grid; place-items: center; border: 1px solid var(--line); background: none; color: var(--ink-2); border-radius: var(--radius-md); cursor: pointer; font-size: 13px; transition: color .15s, border-color .15s; }
+  .hd-x:hover { color: var(--ivory); border-color: var(--copper); }
+  .hd-eye { font-size: 10px; font-weight: 700; letter-spacing: .22em; color: var(--copper); margin-bottom: 12px; }
+  .hd-h { font-family: var(--font-sans); font-size: 25px; letter-spacing: .01em; color: var(--ivory); font-weight: 400; line-height: 1.15; margin-bottom: 14px; }
+  .hd-p { font-size: 14px; line-height: 1.72; color: var(--ivory-2); margin-bottom: 13px; }
+  body.light .hd-p { color: var(--ivory-2); }
+  .hd-cta { display: inline-flex; align-items: center; gap: 7px; margin-top: 8px; font-size: 13px; font-weight: 700; letter-spacing: .02em; text-decoration: none; border: none; font-family: inherit; color: var(--background); background: var(--foreground); padding: 12px 20px; border-radius: var(--radius-md); cursor: pointer; transition: opacity .15s ease, transform .15s ease; }
+  body.light .hd-cta { color: var(--foreground); background: var(--background); }
+  .hd-cta:hover { opacity: .9; transform: translateY(-1px); }
+  #buydlg .hd-sub { margin-top: 12px; font-size: 11.5px; color: var(--ink-2); }
+
+  /* founding strip · standalone visits only (never in embeds) */
+  #fstrip { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 900; display: flex; align-items: center; gap: 12px; background: color-mix(in srgb, var(--background) 78%, transparent); -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2); border: 1px solid color-mix(in srgb, var(--foreground) 16%, transparent); border-radius: var(--radius-md); padding: 7px 7px 7px 17px; white-space: nowrap; }
+  #fstrip[hidden] { display: none; }
+  body.light #fstrip { background: color-mix(in srgb, var(--foreground) 86%, transparent); border-color: color-mix(in srgb, var(--foreground) 16%, transparent); }
+  #fstrip .fs-t { font-size: 12px; letter-spacing: .02em; color: var(--ink-2); }
+  #fstrip .fs-t b { color: var(--ivory); font-weight: 700; }
+  #fstrip .fs-join { border: none; font-family: inherit; background: var(--foreground); color: var(--background); font-weight: 700; font-size: 12px; border-radius: var(--radius-md); padding: 9px 16px; cursor: pointer; }
+  body.light #fstrip .fs-join { background: var(--background); color: var(--foreground); }
+  @media (max-width: 640px) { #fstrip .fs-x { display: none; } }
+  html.embed #fstrip, html.embed #mapgate { display: none !important; }
+
+  /* email gate · one field between a direct visit and the live map (waitlist design system) */
+  #mapgate { position: fixed; inset: 0; z-index: 9998; display: grid; place-items: center; padding: 24px; background: color-mix(in srgb, var(--background) 35%, transparent); -webkit-backdrop-filter: blur(3px) saturate(1.3); backdrop-filter: blur(3px) saturate(1.3); }
+  #mapgate[hidden] { display: none; }
+  #mapgate .mg-scrim { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 60% 50% at 50% 42%, color-mix(in srgb, var(--background) 88%, transparent), color-mix(in srgb, var(--background) 60%, transparent) 55%, color-mix(in srgb, var(--background) 30%, transparent) 100%); }
+  #mapgate .mg-card { position: relative; width: 100%; max-width: 460px; text-align: center; animation: mgIn .4s cubic-bezier(.2,.7,.2,1); font-family: var(--font-sans); }
+  @keyframes mgIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  #mapgate .mg-brand { margin-bottom: 26px; }
+  #mapgate .mg-brand b { font-family: var(--font-sans); font-weight: 400; font-size: 26px; letter-spacing: .18em; text-transform: uppercase; color: var(--foreground); }
+  #mapgate .mg-h { font-size: clamp(26px,4vw,34px); font-weight: 700; letter-spacing: -.02em; line-height: 1.12; color: var(--foreground); margin: 0 0 14px; }
+  #mapgate .mg-sub { color: var(--ivory-2); font-size: 15.5px; line-height: 1.55; max-width: 400px; margin: 0 auto 28px; }
+  #mapgate .mg-form { display: flex; gap: 10px; max-width: 420px; margin: 0 auto; flex-wrap: wrap; }
+  #mapgate .mg-form input { flex: 1; min-width: 200px; width: auto; background: color-mix(in srgb, var(--foreground) 5%, transparent); border: 1px solid color-mix(in srgb, var(--foreground) 17%, transparent); border-radius: var(--radius-md); padding: 14px 16px; color: var(--foreground); font-size: 16px; font-family: inherit; outline: none; transition: border-color .18s; }
+  #mapgate .mg-form input:focus { border-color: color-mix(in srgb, var(--primary) 50%, transparent); }
+  #mapgate .mg-form input::placeholder { color: var(--ink-3); }
+  #mapgate .mg-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: 15px; font-weight: 600; border-radius: var(--radius-md); cursor: pointer; border: 1px solid transparent; font-family: inherit; padding: 14px 22px; white-space: nowrap; transition: box-shadow .25s, filter .2s; background: linear-gradient(180deg, var(--primary), color-mix(in srgb, var(--primary) 90%, var(--background))); color: var(--primary-foreground); box-shadow: 0 10px 26px -12px color-mix(in srgb, var(--primary) 70%, transparent), inset 0 1px 0 color-mix(in srgb, var(--foreground) 30%, transparent); }
+  #mapgate .mg-btn:hover { filter: brightness(1.09); }
+  #mapgate .mg-foot { margin-top: 18px; font-size: 12.5px; color: var(--ink-3); }
+  /* locked skill rows + unlock button */
+  #card .dl.locked { cursor: pointer; border-style: dashed; opacity: .92; }
+  #card .dl.locked .dla { filter: none; font-size: 12px; }
+  #card .dl.locked .dlt { color: var(--copper); }
+  #card .skbuy {
+    display: block; text-align: center; text-decoration: none; cursor: pointer;
+    margin-top: 10px; padding: 12px; border-radius: var(--radius-md);
+    background: var(--foreground); color: var(--background); font-size: 13px; font-weight: 700;
+    transition: opacity .15s ease;
+  }
+  body.light #card .skbuy { background: var(--background); color: var(--foreground); }
+  #card .skbuy:hover { opacity: .88; }
+  #card .skcta { display: flex; gap: 8px; margin-top: 10px; }
+  #card .skcta .skbuy { flex: 1.3; margin-top: 0; }
+  #card .skbook { flex: 1; display: flex; align-items: center; justify-content: center; text-align: center; text-decoration: none; cursor: pointer; padding: 12px; border-radius: var(--radius-md); background: transparent; color: var(--ivory); border: 1px solid color-mix(in srgb, var(--foreground) 22%, transparent); font-size: 13px; font-weight: 700; transition: background .15s ease; }
+  body.light #card .skbook { color: var(--background); border-color: color-mix(in srgb, var(--foreground) 22%, transparent); }
+  #card .skbook:hover { background: color-mix(in srgb, var(--foreground) 7%, transparent); }
+  body.light #card .skbook:hover { background: color-mix(in srgb, var(--foreground) 5%, transparent); }
+  #card .dl {
+    display: flex; align-items: center; flex-wrap: wrap; gap: 4px 9px;
+    font-size: 12px; font-weight: 600; color: var(--ivory); text-decoration: none;
+    border: 1px solid var(--line); border-radius: var(--radius-md); padding: 9px 11px; margin-bottom: 6px;
+    transition: border-color .2s ease;
+  }
+  #card .dl .dld { flex-basis: 100%; font-size: 11px; font-weight: 400; line-height: 1.55;
+    color: var(--ink-2); }
+  #card .dl:hover { border-color: var(--copper); }
+  #card .dl .dla { color: var(--copper); font-size: 13px; }
+  #card .dl .dlt { margin-left: auto; font-size: 8.5px; font-weight: 700; letter-spacing: .14em;
+    color: var(--ink-3); }
+  #card .my { display: flex; gap: 4px; margin: 2px 0 16px; }
+  #card .my button {
+    font-family: inherit; flex: 1; font-size: 9px; font-weight: 700; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--ink-2); background: none;
+    border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 8px 2px; cursor: pointer;
+    transition: color .15s ease, background .15s ease, border-color .15s ease;
+  }
+  #card .my button:hover { color: var(--ivory); }
+  #card .my button.on { background: var(--c, var(--copper)); color: var(--background); border-color: transparent; }
+
+  /* your-tree markers on nodes */
+  /* a job you've marked LIVE lights up · the map comes alive as you build your workforce */
+  .node.mine { outline: 2px solid var(--c); outline-offset: 4px;
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--c) 20%, transparent), 0 0 24px color-mix(in srgb, var(--c) 62%, transparent);
+    animation: livepulse 2.8s ease-in-out infinite; }
+  @keyframes livepulse {
+    0%, 100% { box-shadow: 0 0 0 3px color-mix(in srgb, var(--c) 16%, transparent), 0 0 16px color-mix(in srgb, var(--c) 44%, transparent); }
+    50%      { box-shadow: 0 0 0 5px color-mix(in srgb, var(--c) 26%, transparent), 0 0 30px color-mix(in srgb, var(--c) 72%, transparent); }
+  }
+  @media (max-width: 700px) { .node.mine { animation: none; } }
+  @media (prefers-reduced-motion: reduce) { .node.mine { animation: none; } }
+  .node.minedev { outline: 2px dashed color-mix(in srgb, var(--c) 65%, transparent); outline-offset: 4px; }
+  /* per-job notes · the member's operating manual, saved to their tree */
+  .c-note-in { width: 100%; margin-top: 2px; resize: vertical; min-height: 62px; font: inherit; font-size: 13px; line-height: 1.5;
+    color: var(--ivory); background: color-mix(in srgb, var(--foreground) 3%, transparent); border: 1px solid color-mix(in srgb, var(--foreground) 14%, transparent); border-radius: var(--radius-md); padding: 10px 12px; outline: none; }
+  .c-note-in:focus { border-color: var(--copper); }
+  .c-note-in::placeholder { color: var(--ink-3); }
+  body.light .c-note-in { background: color-mix(in srgb, var(--foreground) 2%, transparent); border-color: color-mix(in srgb, var(--foreground) 16%, transparent); }
+  .node .mybadge {
+    position: absolute; top: -5px; right: -5px; width: 19px; height: 19px; border-radius: 50%;
+    background: var(--c); display: none; place-items: center;
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--background) 40%, transparent);
+  }
+  .node.mine .mybadge { display: grid; }
+  .node .mybadge svg { width: 10px; height: 10px; stroke: var(--background); }
+  .node .ftag {
+    position: absolute; top: -34px; left: 50%;
+    transform-origin: 50% 100%; transform: translateX(-50%) scale(.3333);
+    font-size: 26px; font-weight: 800; letter-spacing: .26em;
+    color: var(--copper); white-space: nowrap; pointer-events: none;
+  }
+
+  /* ===== version chip + about ===== */
+  .brand { display: flex; align-items: baseline; gap: 16px; pointer-events: auto; }
+  /* centered segmented nav with fill */
+  #tabs {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    display: flex; gap: 2px; padding: 3px; border-radius: var(--radius-md); height: 34px; box-sizing: border-box;
+    background: var(--glass); border: 1px solid var(--line); pointer-events: auto;
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  }
+  #tabs a {
+    display: flex; align-items: center;
+    font-family: var(--font-sans);
+    font-size: 10px; font-weight: 700; letter-spacing: .18em; color: var(--ink-2);
+    text-decoration: none; padding: 0 16px; border-radius: var(--radius-md); cursor: pointer; transition: color .15s;
+  }
+  #tabs a.on { background: var(--ivory); color: var(--bg); }
+  #tabs a:not(.on):hover { color: var(--ivory); }
+  .brand .ver {
+    font-family: var(--font-sans);
+    font-size: 9px; font-weight: 700; letter-spacing: .18em; color: var(--copper);
+    border: 1px solid color-mix(in srgb, var(--copper) 45%, transparent);
+    border-radius: var(--radius-sm); padding: 3px 7px; cursor: pointer;
+    transition: background .2s ease, color .2s ease;
+  }
+  .brand .ver:hover { background: var(--copper); color: var(--background); }
+  #about {
+    position: fixed; inset: 0; z-index: 40; display: none;
+    background: color-mix(in srgb, var(--bg) 70%, transparent); backdrop-filter: blur(10px);
+  }
+  #about.open { display: grid; place-items: center; }
+  #about .panel {
+    width: min(580px, calc(100vw - 48px)); max-height: calc(100vh - 90px); overflow-y: auto;
+    background: var(--glass); border: 1px solid var(--line); border-radius: var(--radius-md);
+    padding: 36px 40px; position: relative;
+  }
+  #about .panel::-webkit-scrollbar { width: 4px; }
+  #about .panel::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--foreground) 18%, transparent); border-radius: 2px; }
+  #about .ab-x {
+    position: absolute; top: 14px; right: 16px; font-family: inherit; font-size: 16px;
+    color: var(--ink-2); background: none; border: none; cursor: pointer; padding: 6px;
+  }
+  #about .ab-x:hover { color: var(--ivory); }
+  #about h1 { font-family: var(--font-sans); font-size: 27px; letter-spacing: .12em; font-weight: 400; }
+  #about .ab-tag { font-size: 12.5px; color: var(--ink-2); margin: 8px 0 22px; line-height: 1.6; }
+  #about .ab-sec { font-size: 10px; font-weight: 700; letter-spacing: .2em; color: var(--copper);
+    margin: 22px 0 8px; }
+  #about p { font-size: 13px; line-height: 1.7; color: var(--ivory-2); }
+  #about p b { color: var(--ivory); font-weight: 600; }
+  #about .ab-steps { margin: 4px 0 0; padding: 0; list-style: none; counter-reset: st; }
+  #about .ab-steps li { font-size: 13px; line-height: 1.7; color: var(--ivory-2);
+    counter-increment: st; display: flex; gap: 12px; padding: 5px 0; }
+  #about .ab-steps li::before { content: counter(st, decimal-leading-zero);
+    font-family: var(--font-sans); color: var(--copper); font-size: 14px; padding-top: 1px; }
+  #about .ab-steps li b { color: var(--ivory); font-weight: 600; }
+  #about .ab-btns { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+  #about .ab-btns button {
+    font-family: inherit; font-size: 9.5px; font-weight: 700; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--ivory-2);
+    background: none; border: 1px solid var(--line); border-radius: var(--radius-sm);
+    padding: 8px 13px; cursor: pointer; transition: color .15s ease, border-color .15s ease;
+  }
+  #about .ab-btns button:hover { color: var(--ivory); border-color: var(--copper); }
+  #about .ab-foot { margin-top: 26px; padding-top: 16px; border-top: 1px solid var(--line);
+    font-size: 11.5px; color: var(--ink-3); line-height: 1.7; }
+  #about .ab-foot a { color: var(--copper); text-decoration: none; }
+  #about .ab-lists { margin: 16px 0 2px; display: flex; flex-direction: column; gap: 16px; }
+  #about .ab-lgroup .ab-lh { font-size: 10px; font-weight: 700; letter-spacing: .2em; color: var(--copper); margin-bottom: 7px; }
+  #about .ab-lgroup .ab-lh.dev { color: var(--ivory-2); }
+  #about .ab-items { display: flex; flex-direction: column; gap: 1px; }
+  #about .ab-item { display: flex; align-items: center; gap: 9px; width: 100%; text-align: left; font: inherit; color: var(--ivory-2); background: none; border: none; padding: 6px 8px; border-radius: var(--radius-md); cursor: pointer; }
+  #about .ab-item:hover { background: color-mix(in srgb, var(--foreground) 6%, transparent); color: var(--ivory); }
+  body.light #about .ab-item:hover { background: color-mix(in srgb, var(--foreground) 5%, transparent); }
+  #about .ab-item .dot { width: 7px; height: 7px; border-radius: 50%; flex: 0 0 auto; }
+  #about .ab-item .dot.devdot { background: transparent; border: 1.5px solid currentColor; }
+  #about .ab-item .it-name { font-size: 13px; }
+  #about .ab-item .it-dept { margin-left: auto; font-size: 10px; letter-spacing: .04em; color: var(--ink-2); }
+
+  /* ===== skill file reader · read before you take ===== */
+  #reader {
+    position: fixed; inset: 0; z-index: 50; display: none;
+    background: color-mix(in srgb, var(--bg) 72%, transparent); backdrop-filter: blur(10px);
+  }
+  #reader.open { display: grid; place-items: center; }
+  #reader .rpanel {
+    width: min(760px, calc(100vw - 48px)); height: calc(100vh - 90px);
+    display: flex; flex-direction: column;
+    background: var(--glass); border: 1px solid var(--line); border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  #reader .rhead {
+    display: flex; align-items: center; gap: 14px;
+    padding: 18px 24px; border-bottom: 1px solid var(--line); flex: 0 0 auto;
+  }
+  #reader .rname { font-family: var(--font-sans); font-size: 18px; letter-spacing: .06em; }
+  #reader .rtag { font-size: 8.5px; font-weight: 700; letter-spacing: .16em; color: var(--copper);
+    border: 1px solid color-mix(in srgb, var(--copper) 45%, transparent); border-radius: var(--radius-sm); padding: 3px 7px; }
+  #reader .rbtns { margin-left: auto; display: flex; gap: 6px; }
+  #reader .rbtns button, #reader .rbtns a {
+    font-family: inherit; font-size: 9.5px; font-weight: 700; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--ivory-2); text-decoration: none;
+    background: none; border: 1px solid var(--line); border-radius: var(--radius-sm);
+    padding: 7px 11px; cursor: pointer; transition: color .15s ease, border-color .15s ease;
+  }
+  #reader .rbtns button:hover, #reader .rbtns a:hover { color: var(--ivory); border-color: var(--copper); }
+  #reader .rbody { flex: 1; overflow-y: auto; padding: 24px 28px 34px; }
+  #reader .rglance {
+    border: 1px solid color-mix(in srgb, var(--copper) 35%, transparent);
+    border-radius: var(--radius-md); padding: 14px 16px; margin-bottom: 22px;
+  }
+  #reader .rglance .rg-sec { font-size: 9px; font-weight: 700; letter-spacing: .2em;
+    color: var(--copper); margin: 0 0 5px; }
+  #reader .rglance .rg-sec:not(:first-child) { margin-top: 12px; }
+  #reader .rglance p { margin: 0; font-size: 12.5px; line-height: 1.65; color: var(--ivory-2); }
+  #reader .rglance .rg-covers { display: flex; flex-wrap: wrap; gap: 5px; }
+  #reader .rglance .rg-job { font-size: 10.5px; color: var(--ivory-2);
+    border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 2px 7px; }
+  #reader .rbody::-webkit-scrollbar { width: 4px; }
+  #reader .rbody::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--foreground) 18%, transparent); border-radius: 2px; }
+  #reader .rbody h2 { font-family: var(--font-sans); font-size: 21px; font-weight: 400;
+    letter-spacing: .04em; margin: 26px 0 10px; }
+  #reader .rbody h3 { font-size: 11px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--copper); margin: 22px 0 8px; }
+  #reader .rbody h4 { font-size: 12.5px; font-weight: 700; color: var(--ivory); margin: 16px 0 6px; }
+  #reader .rbody p, #reader .rbody li { font-size: 13px; line-height: 1.75; color: var(--ivory-2); margin: 0 0 10px; }
+  #reader .rbody .mdic { width: 1.02em; height: 1.02em; display: inline-block; vertical-align: -.16em; margin: 0 2px 0 0; color: var(--ink-2); stroke-width: 1.9; }
+  #reader .rbody ul, #reader .rbody ol { padding-left: 20px; margin: 0 0 12px; }
+  #reader .rbody li { margin: 0 0 4px; }
+  #reader .rbody b { color: var(--ivory); font-weight: 600; }
+  #reader .rbody code {
+    font-family: ui-monospace, Menlo, monospace; font-size: 11.5px;
+    background: color-mix(in srgb, var(--foreground) 6%, transparent); border: 1px solid var(--line);
+    border-radius: var(--radius-sm); padding: 1px 5px; color: var(--ivory);
+  }
+  body.light #reader .rbody code { background: color-mix(in srgb, var(--foreground) 5%, transparent); }
+  #reader .rbody pre {
+    font-family: ui-monospace, Menlo, monospace; font-size: 11px; line-height: 1.55;
+    background: color-mix(in srgb, var(--foreground) 4%, transparent); border: 1px solid var(--line);
+    border-radius: var(--radius-md); padding: 14px 16px; overflow-x: auto; margin: 0 0 14px;
+    color: var(--ivory-2); white-space: pre;
+  }
+  body.light #reader .rbody pre { background: color-mix(in srgb, var(--foreground) 4%, transparent); }
+  #reader .rbody pre code { background: none; border: none; padding: 0; font-size: inherit; }
+  #reader .rbody hr { border: none; border-top: 1px solid var(--line); margin: 22px 0; }
+  #reader .rbody blockquote { border-left: 2px solid var(--copper); padding: 2px 0 2px 14px; margin: 0 0 12px; }
+  #reader .rbody blockquote p { color: var(--ivory-2); font-style: italic; }
+  #reader .rbody table { border-collapse: collapse; margin: 0 0 14px; font-size: 12px; }
+  #reader .rbody th, #reader .rbody td { border: 1px solid var(--line); padding: 6px 10px;
+    text-align: left; color: var(--ivory-2); line-height: 1.5; }
+  #reader .rbody th { color: var(--ivory); font-weight: 600; }
+
+  /* deployment progress · quiet, top right, department view only */
+  #progress { top: 66px; right: 18px; text-align: right; pointer-events: none;
+    opacity: 0; transition: opacity .4s ease; }
+  body.fanmode #progress { opacity: 1; }
+  #progress .p-num { display: inline; font-family: var(--font-sans); font-size: 16px; color: var(--copper); }
+  #progress .p-lbl { display: inline; font-size: 9.5px; letter-spacing: .16em; color: var(--ivory-2); margin-left: 6px; }
+  #progress .p-lbl b { color: var(--ivory); font-weight: 700; }
+  #progress .bar { width: 132px; height: 2px; margin: 7px 0 0 auto; background: color-mix(in srgb, var(--foreground) 15%, transparent); border-radius: 2px; position: relative; }
+  body.light #progress .bar { background: color-mix(in srgb, var(--foreground) 14%, transparent); }
+  #progress .bar i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--copper); border-radius: 2px; transition: width .8s cubic-bezier(.2,.8,.2,1) .5s; }
+  #progress .bar i.dev { background: color-mix(in srgb, var(--foreground) 34%, transparent); transition: width .8s cubic-bezier(.2,.8,.2,1) .5s, left .8s cubic-bezier(.2,.8,.2,1) .5s; }
+  body.light #progress .bar i.dev { background: color-mix(in srgb, var(--foreground) 32%, transparent); }
+
+  #skycta {
+    bottom: 64px; left: 50%; transform: translateX(-50%); text-align: center;
+    font-size: 11px; letter-spacing: .26em; color: var(--ink-3); text-transform: uppercase;
+    opacity: 0; transition: opacity .8s ease 1.6s; pointer-events: none;
+  }
+  body.ready:not(.fanmode) #skycta { opacity: 1; }
+
+  #domnav {
+    position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 11;
+    display: flex; gap: 2px; padding: 3px;
+    background: var(--glass); border: 1px solid var(--line); border-radius: var(--radius-md);
+    backdrop-filter: blur(12px);
+    opacity: 0; transition: opacity .8s ease 1.2s;
+  }
+  body.ready #domnav { opacity: 1; }
+  #domnav button {
+    font-family: inherit; font-size: 11px; font-weight: 600; color: var(--ink-2);
+    background: none; border: none; border-radius: var(--radius-md); padding: 6px 12px; cursor: pointer;
+    letter-spacing: .04em; display: flex; align-items: center; gap: 6px;
+  }
+  #domnav button .dotc { width: 6px; height: 6px; border-radius: 50%; background: var(--c); }
+  #domnav button:hover { color: var(--ivory); }
+  #domnav button.active { background: color-mix(in srgb, var(--foreground) 10%, transparent); color: var(--ivory); }
+
+  #controls {
+    bottom: 16px; right: 16px; display: flex; align-items: center; gap: 2px;
+    background: var(--glass); border: 1px solid var(--line); border-radius: var(--radius-md);
+    backdrop-filter: blur(12px); padding: 3px;
+  }
+  #controls button { font-family: inherit; font-size: 14px; color: var(--ivory);
+    background: none; border: none; border-radius: var(--radius-md); width: 30px; height: 28px; cursor: pointer; }
+  #controls button:hover { background: color-mix(in srgb, var(--foreground) 10%, transparent); }
+  #zoom-pct { font-size: 11px; color: var(--ink-2); width: 44px; text-align: center; }
+  #controls .fit { font-size: 11px; width: auto; padding: 0 10px; font-weight: 600; }
+
+
+  /* ===== search ===== */
+  #search {
+    position: fixed; inset: 0; z-index: 45; display: none;
+    background: color-mix(in srgb, var(--bg) 62%, transparent); backdrop-filter: blur(8px);
+  }
+  #search.open { display: block; }
+  #search .spanel {
+    width: min(540px, calc(100vw - 24px)); margin: 11vh auto 0;
+    background: var(--glass); border: 1px solid var(--line); border-radius: var(--radius-md); overflow: hidden;
+  }
+  #search input {
+    width: 100%; font-family: inherit; font-size: 15px; color: var(--ivory);
+    background: none; border: none; outline: none; padding: 15px 18px;
+    border-bottom: 1px solid var(--line);
+  }
+  #search input::placeholder { color: var(--ink-3); }
+  #search .sres { max-height: 46vh; overflow-y: auto; }
+  #search .sres::-webkit-scrollbar { width: 4px; }
+  #search .sres::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--foreground) 18%, transparent); border-radius: 2px; }
+  #search .sit { display: flex; align-items: center; gap: 11px; padding: 11px 17px; cursor: pointer; }
+  #search .sit.sel, #search .sit:hover { background: color-mix(in srgb, var(--foreground) 7%, transparent); }
+  body.light #search .sit.sel, body.light #search .sit:hover { background: color-mix(in srgb, var(--foreground) 5%, transparent); }
+  #search .sdot { width: 8px; height: 8px; border-radius: 50%; background: var(--c); flex: none; }
+  #search .sname { font-size: 13px; font-weight: 600; color: var(--ivory); }
+  #search .scrumb { font-size: 10.5px; color: var(--ink-3); margin-left: auto; white-space: nowrap; padding-left: 12px; }
+  #search .snone { padding: 16px 18px; font-size: 12px; color: var(--ink-3); }
+  #controls .srch { font-size: 13px; }
+
+  /* ===== first-visit nudge ===== */
+  #nudge {
+    position: fixed; bottom: 88px; left: 50%; transform: translateX(-50%); z-index: 12;
+    font-size: 12px; letter-spacing: .04em; color: var(--ivory); white-space: nowrap;
+    background: var(--glass); border: 1px solid color-mix(in srgb, var(--copper) 45%, transparent);
+    border-radius: var(--radius-md); padding: 9px 17px;
+    opacity: 0; transition: opacity .5s ease; pointer-events: none;
+  }
+  #nudge.show { opacity: 1; }
+
+  /* sub-skill chips are decomposition, not buttons */
+  #card .skill { cursor: default; }
+
+  /* ================== MOBILE ================== */
+  html, body { touch-action: none; -webkit-tap-highlight-color: transparent; overscroll-behavior: none; }
+  @media (max-width: 700px) {
+    #counts { display: none; }
+    .brand { font-size: 16px; }
+    #topbar { height: 46px; padding: 0 14px; }
+    #back { top: 52px; left: 14px; font-size: 10px; letter-spacing: .16em; }
+    #progress { top: 52px; right: 14px; }
+    #progress .p-num { font-size: 14px; }
+    #progress .p-lbl { font-size: 8.5px; letter-spacing: .12em; }
+    #progress .bar { width: 100px; }
+    /* a real top nav on glass */
+    /* ===== consistent mobile nav (IDENTICAL layout on map / dash / chart so nothing shifts
+       when you switch tabs): search hidden, tabs in the flow tightened, and a LABELED
+       'Book a call' CTA instead of a bare mystery icon. ===== */
+    #topbar {
+      height: 54px; padding: 0 10px;
+      background: var(--glass); backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line);
+    }
+    #topright { display: flex; align-items: center; margin-right: 0; gap: 6px; }
+    #state-name { display: none; }
+    /* !important · map's base .topsearch{display:flex} lives in a later <style> block and
+       would otherwise win on source order (this is why the search stayed visible on map but
+       not dash/chart, shifting the tabs) */
+    .topsearch { display: none !important; }
+    #bookcall { padding: 0 11px; height: 30px; gap: 6px; font-size: 11px; }
+    #bookcall .bc-t { display: none; }
+    #bookcall::after { content: "Book a call"; font-weight: 600; }
+    /* tiny phones (<360px): drop the CTA label to an icon so the bar never overflows */
+    @media (max-width: 360px) { #bookcall::after { content: none; } #bookcall { padding: 7px; } }
+    #tabs { background: none; border: none; -webkit-backdrop-filter: none; backdrop-filter: none; gap: 1px; }
+    #tabs a { padding: 5px 7px; font-size: 9px; letter-spacing: .05em; }
+    #themetog { top: 15px; right: 12px; background: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+    #back { top: 66px; }
+    #progress { top: 66px; }
+    #controls { bottom: 12px; right: 10px; padding: 2px; }
+    #controls button { width: 27px; height: 26px; font-size: 13px; }
+    #zoom-pct { width: 36px; font-size: 10px; }
+    .edge-dept .et { font-size: 13px; letter-spacing: .22em; }
+    .edge-dept .echev { width: 10px; height: 17px; }
+    #edge-l { left: 8px; }
+    #edge-r { right: 8px; }
+    /* the card becomes a bottom sheet · fixed region, node sits centered above it */
+    #card {
+      top: 44%; left: 10px; right: 10px; bottom: 10px;
+      width: auto; max-height: none;
+      border-radius: var(--radius-md); border-left-width: 1px;
+      border-top: 2px solid var(--ivory);
+      padding: 16px 16px 18px;
+    }
+    #card .c-name { font-size: 21px; }
+    #card .c-x { width: 36px; height: 36px; font-size: 15px; color: var(--ivory); }
+    #about .panel { width: calc(100vw - 20px); max-height: calc(100vh - 40px); padding: 26px 22px; }
+    #about h1 { font-size: 22px; }
+    #reader .rpanel { width: calc(100vw - 12px); height: calc(100vh - 24px); }
+    #reader .rhead { padding: 13px 14px; gap: 9px; }
+    #reader .rname { font-size: 15px; }
+    #reader .rbtns button, #reader .rbtns a { padding: 6px 8px; font-size: 8.5px; }
+    #reader .rbody { padding: 16px 16px 28px; }
+    /* the bottom sheet owns the bottom of the screen */
+    #card.open ~ #controls { display: none; }
+    #reader .rbody table { display: block; overflow-x: auto; max-width: 100%; }
+    /* bigger labels · readable at mobile home zoom */
+    .node .nlabel { font-size: 40px; transform: translateX(-50%) scale(.45); }
+    /* edge switchers stay visible on mobile at all zooms, with fatter tap targets */
+    .edge-dept { padding: 18px 10px; }
+    /* PERF: stop every continuous compositor animation on phones. Hundreds of these
+       (starfield twinkle + neural-core pulse/drift/rotation) were re-rasterizing every
+       frame during a spin and crashing mobile Safari. Static reads fine. */
+    .bgstar,
+    #hub .spinslow, #hub .drift, #hub .bn, #hub .nucleus { animation: none !important; }
+    /* PERF (the big one): a backdrop-filter pinned over the spinning wheel forces Safari to
+       re-sample + re-blur the moving content behind it EVERY frame. Three of them (top bar,
+       zoom controls, search) stacked over a 60fps spin is a classic iOS tab-crash. Drop the
+       blur on mobile — the glass background is already 85-94% opaque, so it barely changes. */
+    #topbar, #controls, #domnav, .topsearch {
+      -webkit-backdrop-filter: none !important; backdrop-filter: none !important;
+    }
+    #topbar { background: var(--bg) !important; }
+    /* PERF (THE spin crash): each of the 7 department trees carries a 1400x800px SVG of
+       branch lines plus ~20 job-dot divs. Rotating the wheel forced WebKit to RE-RASTERIZE
+       all 7 of those big SVGs every single frame — the iPhone GPU ran out of texture memory
+       and reloaded the tab. Fix: while the wheel is rotating, promote each rotating tree (and
+       the spokes) to its OWN compositor layer. The rotation then composites a bitmap that was
+       rasterized ONCE, instead of re-rasterizing the SVG per frame. The full constellation
+       stays visible the whole time; the layers are released the instant it settles so a static
+       frame re-rasterizes sharp. */
+    body.wheelspin .tree .rot,
+    body.wheelspin #spokes { will-change: transform; }
+  }
+  @media (min-width: 701px) {
+    /* desktop only: switchers get out of the way when zoomed in */
+    body.fanmode.zoomedin .edge-dept { opacity: 0; pointer-events: none; }
+  }
+
+  #reader{--copper:var(--muted-foreground);--copper-line:color-mix(in srgb, var(--foreground) 22%, transparent);--rfade:var(--background)}
+  body.light #reader{--copper:var(--muted-foreground);--copper-line:color-mix(in srgb, var(--foreground) 22%, transparent);--rfade:var(--foreground)}
+  .rlock{margin-top:18px;padding:22px;border:1px solid var(--line);border-radius:14px;text-align:center;background:color-mix(in srgb, var(--muted-foreground) 5%, transparent)}
+  .rlock-badge{display:inline-block;font-size:12px;letter-spacing:.06em;color:var(--ink-2);border:1px solid var(--line);border-radius:999px;padding:4px 12px;margin-bottom:14px}
+  .rlock-line{font-size:15.5px;color:var(--ivory);margin:0 0 18px;line-height:1.5}
+  .rlock-cta{display:inline-block;background:var(--foreground);color:var(--background);font-weight:600;font-size:15px;border-radius:11px;padding:13px 28px;text-decoration:none;transition:opacity .15s}
+  body.light .rlock-cta{background:var(--background);color:var(--foreground)}
+  .rlock-cta:hover{opacity:.88}
+  .rlock-ctas{display:flex;gap:9px;justify-content:center;flex-wrap:wrap}
+  .rlock-cta.rl-alt{background:transparent;color:var(--ivory);border:1px solid color-mix(in srgb, var(--foreground) 24%, transparent);transition:background .15s}
+  body.light .rlock-cta.rl-alt{color:var(--background);border-color:color-mix(in srgb, var(--foreground) 24%, transparent)}
+  .rlock-cta.rl-alt:hover{opacity:1;background:color-mix(in srgb, var(--foreground) 7%, transparent)}
+  body.light .rlock-cta.rl-alt:hover{background:color-mix(in srgb, var(--foreground) 5%, transparent)}
+  .rlock-sub{font-size:12.5px;color:var(--ink-2);margin:14px 0 0}
+  /* blurred skill preview — see the real opening, depth gated */
+  .rpreview{position:relative;margin-top:16px}
+  .rpreview-body{position:relative;max-height:330px;overflow:hidden;
+    -webkit-mask-image:linear-gradient(180deg,black 0%,black 46%,color-mix(in srgb, black 38%, transparent) 78%,transparent 100%);
+            mask-image:linear-gradient(180deg,black 0%,black 46%,color-mix(in srgb, black 38%, transparent) 78%,transparent 100%)}
+  .rpreview-fade{position:absolute;left:0;right:0;bottom:0;height:150px;pointer-events:none;
+    background:linear-gradient(180deg,transparent 0%,var(--rfade) 100%)}
+  .rpreview + .rlock{margin-top:0}
+
+  /* department + sub-tree titles use Outfit (map only · not the reader/cards or other pages) */
+  .s-dom .lbl, .mini .wname .nm, .ghost, .fan-dname, .team-label .t, .edge-dept .et { font-family: var(--font-sans); }
+
+html.embed #topbar,html.embed #search,html.embed #controls,html.embed #progress{display:none!important}html.embed #stars{opacity:.5}
+html.fanlock #card,html.fanlock #back,html.fanlock .edge-dept,html.fanlock #helpdlg,html.fanlock #themetog{display:none!important}
+/* embeds must chain wheel scroll out to the parent page — the app default (overscroll:none) traps it */
+html.tour, html.tour body, html.fanlock, html.fanlock body{overscroll-behavior:auto!important}
+</style>
+
+<div id="stars"></div>
+<div id="viewport"><div id="world">
+  <div id="sky"></div>
+  <div id="fanwrap"></div>
+</div></div>
+
+<div id="topbar" class="chrome">
+  <div class="topleft">
+    <a class="brand" href="/" style="text-decoration:none;color:var(--ivory);font-family:var(--font-sans);font-size:18px;display:flex;align-items:center;gap:8px;">
+  <svg viewBox="0 0 32 32" width="20" height="20"><rect x="1" y="1" width="30" height="30" rx="6" fill="var(--copper)"/><path d="M16 7l3.09 6.26L26 14.27l-5 4.87 1.18 6.88L16 22.77l-6.18 3.25L11 19.14l-5-4.87 6.91-1.01L16 7z" fill="var(--badge-glyph)"/></svg>
+  SPIELOS
+</a>
+  </div>
+  <div id="topright"><span id="state-name"></span><div id="counts"></div></div>
+</div>
+
+<button id="back" class="chrome">← ALL DEPARTMENTS</button>
+
+<div id="progress" class="chrome">
+  <span class="p-num">0</span>
+  <span class="p-lbl"></span>
+  <div class="bar"><i class="live" style="width:0%"></i><i class="dev" style="width:0%;left:0%"></i></div>
+</div>
+
+<div id="domnav" class="chrome"></div>
+
+
+<div class="edge-dept" id="edge-l"></div>
+<div class="edge-dept" id="edge-r"></div>
+
+<button class="wchev" id="wchev-l" title="previous department"><svg viewBox="0 0 14 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M 11 3 L 4 11 L 11 19"/><circle cx="4" cy="11" r="1.8" fill="currentColor" stroke="none"/></svg></button>
+<button class="wchev" id="wchev-r" title="next department"><svg viewBox="0 0 14 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M 3 3 L 10 11 L 3 19"/><circle cx="10" cy="11" r="1.8" fill="currentColor" stroke="none"/></svg></button>
+
+<div id="card" class="chrome">
+  <button class="c-x" title="close">✕</button>
+  <div class="c-state"></div>
+  <div class="c-name"></div>
+  <div class="c-crumb"></div>
+  <div class="c-desc"></div>
+  <div class="c-skillcue"></div>
+  <div class="c-skills"></div>
+  <div class="c-deep"></div>
+  <button class="cta" type="button" id="needhelp">Need help building this?<span class="cta-q">?</span></button>
+</div>
+<div id="cresize" title="Drag to resize"></div>
+<div id="helpdlg">
+  <div class="hd-panel">
+    <button class="hd-x" title="close">✕</button>
+    <div class="hd-eye">SPIELOS · DONE FOR YOU</div>
+    <h3 class="hd-h">Want this built for you?</h3>
+    <p class="hd-p">SpielOS maps the work. SpielOS builds it. We start with an audit of your stack, prioritize the agents that actually move the needle, and ship them inside your tools · done for you, not handed back as a to-do list.</p>
+    <p class="hd-p">Want one specific agent stood up, or the whole roadmap implemented? That is exactly what we do.</p>
+    <a class="hd-cta" href="/apply/">Apply for a Free Review →</a>
+  </div>
+</div>
+
+<div id="reader">
+  <div class="rpanel">
+    <div class="rhead">
+      <div class="rname"></div>
+      <div class="rtag">SKILL.MD</div>
+      <div class="rbtns">
+        <button id="rcopy">Copy</button>
+        <a id="rdl" href="#" download>Download</a>
+        <button id="rx">✕</button>
+      </div>
+    </div>
+    <div class="rbody"></div>
+  </div>
+</div>
+
+<div id="about">
+  <div class="panel">
+    <button class="ab-x" title="close">✕</button>
+    <h1>SPIELOS</h1>
+    <div class="ab-tag">The map of every AI job-to-be-done in a business.<br>7 departments · real workflows · measurable outcomes.</div>
+
+    <div class="ab-sec">THE DOCTRINE</div>
+    <p><b>Every AI department starts at the same node.</b> The North Star at the centre of the wheel is node zero · every department reads from it and writes back to it. No North Star, no autonomy. From there, each branch has a sequence: jobs closer to the root unlock the jobs further out. This is not an org chart. It is a deployment order.</p>
+
+    <div class="ab-sec">HOW TO USE IT</div>
+    <ol class="ab-steps">
+      <li><b>Explore.</b> Click a department on the wheel to enter its tree. Every node is a job AI can hold today, with the skills that make it run.</li>
+      <li><b>Assess.</b> Open any job and mark where you are · not started, in development, or live. Your tree is saved in this browser. The progress bar is yours.</li>
+      <li><b>Build in order.</b> Start at the node marked START HERE in each department, then follow the branch outward. Jobs list what they build on · respect the sequence and each build makes the next one easier.</li>
+    </ol>
+
+    <div class="ab-sec">WHAT'S INSIDE</div>
+    <p><b>Real workflows mapped across 7 departments.</b> Every workflow is a real job AI can run for you, with the skills that make it function. The whole system is the operating system for your company.</p>
+    <p>Preview any job and its skill at a glance · explore the full map to understand what's possible.</p>
+
+    <div class="ab-sec">READING THE MAP</div>
+    <p>Filled nodes are jobs that can run <b>fully autonomous</b> today. Outlined nodes run <b>human-assisted</b>. Dim nodes are still <b>human-led</b> · mapped so you can see what's coming. A colored ring is your own mark: that job is live in your stack.</p>
+    <p>Nothing on this map removes the human. Every job states who stays in the loop and what they own · autonomy changes the human's job from doing to directing, and the businesses that get this right deploy faster, not slower.</p>
+
+    <div class="ab-sec">YOUR TREE</div>
+    <p id="ab-stat">Nothing marked yet · open any job on the map and set its status.</p>
+    <div class="ab-lists" id="ab-lists"></div>
+    <div class="ab-btns">
+      <button id="texport">Export</button>
+      <button id="tcopy">Copy summary</button>
+      <button id="timport">Import</button>
+      <button id="treset">Reset</button>
+    </div>
+    <input type="file" id="tfile" accept="application/json,.json" style="display:none">
+
+    <div class="ab-foot">
+      SPIELOS · AI Company Map<br>
+      Built by Shayan Spiel. Every department is a real workflow.
+    </div>
+  </div>
+</div>
+
+<div id="search">
+  <div class="spanel">
+    <input type="text" aria-label="Search jobs" placeholder="search real workflows…" autocomplete="off" spellcheck="false">
+    <div class="sres"></div>
+  </div>
+</div>
+
+<div id="nudge"></div>
+
+<div id="controls" class="chrome">
+  <button id="aboutb" title="about this resource">?</button>
+  <button id="zoom-out">−</button>
+  <div id="zoom-pct">100%</div>
+  <button id="zoom-in">+</button>
+  <button class="fit" id="zoom-fit">Fit</button>
+</div>
+
+<script>
+/* ============ ICONS (boxicons) ============ */
+const DOM_ICON = {
+  'Outbound': 'bx-send', 'Content': 'bx-file', 'Design': 'bx-palette',
+  'Analytics': 'bx-bar-chart', 'SEO': 'bx-search', 'Delivery': 'bx-package',
+  'Video': 'bx-video',
+};
+const FN_ICON = {
+  'Research': 'bx-search-alt', 'Outreach': 'bx-send', 'Response': 'bx-message-rounded',
+  'Strategy': 'bx-chip', 'Creation': 'bx-edit', 'Distribution': 'bx-globe',
+  'Visual': 'bx-image', 'Video': 'bx-video', 'Brand': 'bx-palette',
+  'Tracking': 'bx-pulse', 'Insights': 'bx-data', 'Reporting': 'bx-bar-chart',
+  'Technical': 'bx-slider', 'Content': 'bx-note', 'Authority': 'bx-link',
+  'Onboarding': 'bx-rocket', 'Build': 'bx-cube', 'Support': 'bx-message',
+  'Production': 'bx-film', 'Post-Production': 'bx-movie', 'Publishing': 'bx-pulse',
+};
+const JOB_ICON = {};
+
+function icon(bx) {
+  return '<i class="bx ' + (bx || 'bx-bullseye') + '" style="font-size:27px;"></i>';
+}
+function jobIcon(name) {
+  return '<i class="bx ' + (JOB_ICON[name] || 'bx-bullseye') + '" style="font-size:16px; opacity:.5;"></i>';
+}
+
+/* ============ DATA ============ */
+const L = (name, desc, skills, tools, level) => ({ name, desc, skills, tools: tools || [], level: level || 'autonomous' });
+const F = (name, jobs) => ({ name, jobs });
+
+const TREE = [
+  {
+    name: 'Outbound', sub: 'research · outreach · sequences', color: '#d65d0e',
+    intro: 'The front door of pipeline — finding the right people, learning enough to earn a reply, and reaching out at scale without sounding like a template.',
+    functions: [
+      F('Research', [
+        L('ICP Definition', 'Define and refine ideal customer profiles per vertical from closed-won patterns.', ['icp-profiler', 'vertical-scorer']),
+        L('Lead Sourcing', 'Build targeted lead lists from databases, web scraping, and social mining.', ['lead-finder', 'list-builder']),
+        L('Prospect Research', 'Build a personalization dossier per prospect — hooks, context, common ground.', ['dossier-builder', 'hook-finder']),
+        L('Account Enrichment', 'Layer firmographics, tech stack, and growth signals onto target accounts.', ['enricher', 'signal-detector']),
+      ]),
+      F('Outreach', [
+        L('Cold Email', 'Write multi-step cold email sequences tuned to the vertical and offer.', ['sequence-writer', 'subject-generator']),
+        L('LinkedIn DMs', 'Draft connection notes and DM sequences that read human.', ['connection-writer', 'dm-sequencer']),
+        L('Social Prospecting', 'Harvest engaged audiences from competitor posts and viral content.', ['engagement-miner', 'profile-collector']),
+        L('Email Warmup', 'Manage domain health, warmup, and inbox rotation for deliverability.', ['warmup-manager', 'domain-monitor']),
+      ]),
+      F('Response', [
+        L('Reply Classification', 'Read every reply and tag it — interested, objection, referral, not now.', ['intent-classifier', 'auto-labeler']),
+        L('Objection Handling', 'Draft responses to common objections from a tuned winning library.', ['objection-library', 'response-drafter']),
+        L('Lead Routing', 'Route interested replies to the calendar and pipeline instantly.', ['hot-lead-router', 'pipeline-promoter']),
+        L('Meeting Booking', 'Propose slots, book calls, chase no-shows automatically.', ['slot-proposer', 'no-show-recoverer']),
+      ]),
+    ],
+  },
+  {
+    name: 'Content', sub: 'writing · editing · publishing', color: '#b16286',
+    intro: 'The engine that turns ideas into publishable assets — hooks, scripts, captions, carousels, newsletters. Every piece is tuned to the platform it ships on.',
+    functions: [
+      F('Strategy', [
+        L('Content Mining', 'Rank your own content corpus — what worked, what to re-hash, what to kill.', ['corpus-ranker', 'rehash-finder']),
+        L('Trend Monitoring', 'Watch the niche for breaking topics and rising formats in real time.', ['news-watcher', 'format-spotter']),
+        L('Competitor Analysis', 'Scrape and transcribe competitor content; extract hook patterns.', ['reel-transcriber', 'hook-miner']),
+        L('Hook Writing', 'Generate and rank hooks per platform from proven patterns.', ['hook-generator', 'hook-ranker']),
+      ]),
+      F('Creation', [
+        L('Script Writing', 'Full reel and video scripts in the house voice, ready to film.', ['script-writer', 'voice-matcher']),
+        L('Caption Writing', 'Platform-correct captions with CTA placement rules baked in.', ['caption-writer', 'cta-placer']),
+        L('Carousel Production', 'Design and export branded carousel slides from any source.', ['carousel-builder', 'slide-exporter']),
+        L('Newsletter', 'Assemble and write the weekly email in the brand system.', ['newsletter-builder', 'broadcast-sender']),
+      ]),
+      F('Distribution', [
+        L('Cross-Platform Adapt', 'One idea → native formats for every platform, rewritten natively.', ['format-adapter', 'platform-translator']),
+        L('Publishing', 'Schedule and post across platforms via API on autopilot.', ['post-scheduler', 'api-publisher']),
+        L('SEO Content', 'Make every page legible to search engines and language models.', ['schema-marker', 'sitemap-builder']),
+        L('OG Images', 'Every page ships with share-ready open-graph imagery automatically.', ['og-image-generator']),
+      ]),
+    ],
+  },
+  {
+    name: 'Design', sub: 'visual · brand · media', color: '#d79921',
+    intro: 'The visual layer — brand-consistent images, thumbnails, ad creative, and video production. Every asset is generated from a reference library.',
+    functions: [
+      F('Visual', [
+        L('Image Generation', 'Brand-consistent images from reference libraries, every time.', ['brand-image-gen', 'character-consistency']),
+        L('Thumbnail Design', 'Scroll-stopping thumbnails and covers tuned to earn the click.', ['thumbnail-designer', 'cover-tester']),
+        L('Ad Creative', 'Generate and iterate paid-ad variations — hooks, angles, formats.', ['ad-variation-builder', 'angle-tester']),
+        L('Presentation Design', 'Webinar and talk decks in the brand design system, fast.', ['deck-builder', 'slide-templater']),
+      ]),
+      F('Video', [
+        L('Video Production', 'Programmatic video — overlays, captions, motion on recordings.', ['reel-compositor', 'caption-syncer']),
+        L('Clip Extraction', 'Cut long recordings into short-form clips worth posting.', ['clip-finder', 'highlight-extractor']),
+      ]),
+      F('Brand', [
+        L('Brand Guidelines', 'Maintain and enforce the visual identity across all surfaces.', ['brand-enforcer', 'consistency-checker']),
+        L('Template System', 'Reusable design templates for recurring content types.', ['template-builder', 'variant-generator']),
+      ]),
+    ],
+  },
+  {
+    name: 'Analytics', sub: 'data · insights · optimization', color: '#689d6a',
+    intro: 'The measurement layer — tracking what works, what\'s wasted, and where the next dollar should go. Every decision is backed by data.',
+    functions: [
+      F('Tracking', [
+        L('Event Tracking', 'Full-capture analytics with no consent gate — every click, scroll, and conversion.', ['event-tracker', 'conversion-capture']),
+        L('Attribution', 'Multi-touch attribution across channels so you know what actually drove revenue.', ['attribution-modeler', 'channel-attributor']),
+        L('Funnel Analysis', 'Track every step from first touch to closed deal — where people drop off.', ['funnel-analyzer', 'dropoff-detector']),
+      ]),
+      F('Insights', [
+        L('Performance Mining', 'Rank content and campaigns by actual performance, not vanity metrics.', ['performance-analyzer', 'roi-calculator']),
+        L('A/B Testing', 'Design, run, and analyze split tests across pages, emails, and ads.', ['test-designer', 'result-analyzer']),
+        L('Competitor Tracking', 'Monitor competitor traffic, keywords, and content performance over time.', ['competitor-tracker', 'keyword-monitor']),
+      ]),
+      F('Reporting', [
+        L('Dashboard Building', 'Automated dashboards that update daily with the metrics that matter.', ['dashboard-builder', 'metric-pipeline']),
+        L('Weekly Reports', 'Automated weekly reports with insights, not just numbers.', ['report-writer', 'insight-generator']),
+      ]),
+    ],
+  },
+  {
+    name: 'SEO', sub: 'technical · content · authority', color: '#98971a',
+    intro: 'The compounding channel — make the site legible to both search engines and language models. Technical health, content optimization, and authority building.',
+    functions: [
+      F('Technical', [
+        L('Site Audit', 'Crawl the entire site and flag every technical issue blocking indexability.', ['site-crawler', 'issue-prioritizer']),
+        L('Schema Markup', 'Structured data on every page so rich results show up in SERPs.', ['schema-generator', 'validator']),
+        L('Sitemap Management', 'Dynamic sitemaps that update as pages are added and removed.', ['sitemap-builder', 'url-monitor']),
+      ]),
+      F('Content', [
+        L('Keyword Research', 'Map search intent to pages — what people search vs what you publish.', ['keyword-mapper', 'intent-classifier']),
+        L('On-Page Optimization', 'Titles, meta descriptions, headers, and internal links tuned per page.', ['onpage-optimizer', 'meta-writer']),
+        L('Content Gap Analysis', 'Find topics your competitors rank for that you don\'t cover yet.', ['gap-analyzer', 'opportunity-finder']),
+      ]),
+      F('Authority', [
+        L('Internal Linking', 'Strategic internal link architecture that distributes authority.', ['link-architect', 'anchor-optimizer']),
+        L('Backlink Analysis', 'Track referring domains, anchor text, and link velocity.', ['backlink-tracker', 'link-auditor']),
+      ]),
+    ],
+  },
+  {
+    name: 'Delivery', sub: 'onboarding · builds · support', color: '#cc241d',
+    intro: 'Where promises become results — onboarding a new client, wiring their systems, testing the builds, and reporting status before anyone has to ask.',
+    functions: [
+      F('Onboarding', [
+        L('Client Onboarding', 'Welcome, access collection, and project scaffold the day a deal closes.', ['kickoff-builder', 'access-checklister']),
+        L('System Integration', 'Wire client systems — CRMs, calendars, tools — into the workflow.', ['api-integrator', 'webhook-wirer']),
+        L('Data Migration', 'Move and clean data between systems without losing a row.', ['migration-runner', 'field-mapper']),
+      ]),
+      F('Build', [
+        L('Workflow Construction', 'Build the automation workflows that run the client\'s processes.', ['workflow-builder', 'trigger-wirer']),
+        L('Agent Deployment', 'Deploy and configure AI agents for the client\'s specific use cases.', ['agent-deployer', 'config-manager']),
+        L('QA & Testing', 'Verify every build against real data before the client sees it.', ['output-verifier', 'regression-checker']),
+      ]),
+      F('Support', [
+        L('Status Updates', 'Clients see progress without asking for it — automated and human.', ['status-poster', 'milestone-notifier']),
+        L('Issue Resolution', 'Triage, root-cause, fix, and document when something breaks.', ['incident-triager', 'postmortem-writer']),
+        L('Knowledge Base', 'Per-client context files stay current as work happens.', ['context-updater', 'memory-writer']),
+      ]),
+    ],
+  },
+  {
+    name: 'Video', sub: 'production · editing · publishing', color: '#458588',
+    intro: 'The motion layer — turning recordings into publishable content. From raw footage to edited reels, captions, thumbnails, and distribution.',
+    functions: [
+      F('Production', [
+        L('Script Writing', 'Hook, tension, payoff, CTA — ready to film in your voice.', ['script-writer', 'voice-matcher']),
+        L('Recording Support', 'Teleprompter scripts, shot lists, and recording checklists.', ['teleprompter-builder', 'shot-list-generator']),
+        L('B-Roll Sourcing', 'Find and license relevant b-roll footage for any script.', ['footage-finder', 'license-manager']),
+      ]),
+      F('Post-Production', [
+        L('Video Editing', 'Cut, color, and assemble raw footage into publishable content.', ['editor-pipeline', 'color-grader']),
+        L('Caption & Subtitle', 'Auto-generate and style captions for every platform.', ['caption-generator', 'subtitle-styler']),
+        L('Thumbnail Creation', 'Scroll-stopping thumbnails from key frames, on brand.', ['thumbnail-generator', 'frame-extractor']),
+      ]),
+      F('Publishing', [
+        L('Multi-Platform Upload', 'Publish to YouTube, TikTok, Instagram, LinkedIn simultaneously.', ['multi-publisher', 'platform-optimizer']),
+        L('Clip Extraction', 'Cut long-form into short-form clips for maximum reach.', ['clip-finder', 'highlight-extractor']),
+        L('Performance Tracking', 'Track views, engagement, and conversion across all platforms.', ['view-tracker', 'engagement-analyzer']),
+      ]),
+    ],
+  },
+];
+const N = TREE.length;
+const LEVEL_LABEL = { autonomous: 'fully autonomous', assisted: 'human-assisted', manual: 'human-led' };
+
+const HUB = 'North Star';
+const HUMAN_DEFAULT = { autonomous: 'The human sets direction. AI executes.', assisted: 'The human reviews and approves. AI drafts and runs.', manual: 'The human does the work. AI assists when asked.' };
+
+/* ============ YOUR TREE (self-assessment, saved locally) ============ */
+const MY_KEY = 'spielos-my';
+let MY = {};
+try { MY = JSON.parse(localStorage.getItem(MY_KEY) || '{}'); } catch (e) {}
+const myKey = (dom, job) => `${dom.name}::${job.name}`;
+const myOf = (dom, job) => MY[myKey(dom, job)] || '';
+function setMy(dom, job, v) {
+  if (v) MY[myKey(dom, job)] = v; else delete MY[myKey(dom, job)];
+  try { localStorage.setItem(MY_KEY, JSON.stringify(MY)); } catch (e) {}
+}
+const myTotal = () => Object.values(MY).filter(v => v === 'live').length;
+
+/* per-job notes */
+const NOTES_KEY = 'spielos-notes';
+let NOTES = {}; try { NOTES = JSON.parse(localStorage.getItem(NOTES_KEY) || '{}'); } catch (e) {}
+const noteOf = (dom, job) => NOTES[myKey(dom, job)] || '';
+function setNote(dom, job, v) { v = (v || '').trim(); if (v) NOTES[myKey(dom, job)] = v; else delete NOTES[myKey(dom, job)]; try { localStorage.setItem(NOTES_KEY, JSON.stringify(NOTES)); } catch (e) {} }
+const notesTotal = () => Object.keys(NOTES).length;
+
+/* ============ DATA STUBS (removed external file imports) ============ */
+const PLAYBOOK = {};
+const SKILL_META = {};
+const SKILL_PREVIEWS = {};
+const FOUNDATION = new Set();
+const HUB_ENTRY = {
+  desc: 'The North Star — every department traces back to this. SpielOS is the operating system that runs your company.',
+  components: ['Company Memory', 'Goal Tracker', 'Department Router', 'Workflow Engine', 'Skill Library', 'Agent Fleet'],
+  replaces: 'The scattered tools, tribal knowledge, and manual coordination that slow every company down.',
+  ladder: {
+    manual: 'A Notion doc nobody updates and a Slack channel full of context nobody reads.',
+    assisted: 'AI drafts and maintains the company memory; humans edit quarterly.',
+    autonomous: 'The memory updates itself as work happens — goals, context, and decisions are always current.',
+  },
+  human: 'The founder sets the North Star. AI tracks progress and routes work. The human decides what matters.',
+  notes: 'This is node zero. Every department reads from and writes to this hub. Start here.',
+  files: [{ label: 'Company Brain', path: 'skills/company-brain.md' }],
+};
+
+function stTrack() {}
+function isPaidNow() { return true; }
+
+/* High-up cue that this job ships a runnable, downloadable skill. */
+function skillCueHtml(files) {
+  if (!files || !files.length) return '';
+  const n = files.length, s = n > 1 ? 's' : '';
+  return `<div class="skillcue paid"><span class="sc-ic">⤓</span><span class="sc-tx"><b>${n} runnable skill file${s}</b> · yours to download</span><span class="sc-go">Take it ↓</span></div>`;
+}
+
+/* The "take the skill" section — always shows files. */
+function skillFilesHtml(files) {
+  if (!files || !files.length) return '';
+  const rows = files.map(f => {
+    const sm = (typeof SKILL_META !== 'undefined' && SKILL_META[f.path]) || null;
+    const what = sm ? `<span class="dld">${sm.what}</span>` : '';
+    return `<a class="dl" href="#" data-skill="${f.path}" data-label="${f.label}"><span class="dla">⤢</span>${f.label}<span class="dlt">READ · SKILL.MD</span>${what}</a>`;
+  }).join('');
+  return `<div class="c-sec">TAKE THE SKILL</div><div class="files">${rows}</div>`;
+}
+
+/* ============ STARFIELD ============ */
+let seed = 7;
+const rand = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
+(() => {
+  const sky = document.getElementById('stars');
+  const STAR_N = innerWidth < 700 ? 70 : 220;
+  for (let i = 0; i < STAR_N; i++) {
+    const s = document.createElement('div');
+    const size = rand() < 0.85 ? 1.5 : 2.5;
+    s.className = 'bgstar';
+    s.style.cssText = `left:${rand() * 100}%; top:${rand() * 100}%;
+      width:${size}px; height:${size}px; opacity:${0.08 + rand() * 0.25};
+      animation-delay:${(rand() * 6).toFixed(1)}s; animation-duration:${(5 + rand() * 5).toFixed(1)}s;`;
+    sky.appendChild(s);
+  }
+})();
+
+/* ============ BUILD: SKY ============ */
+const skyEl = document.getElementById('sky');
+const fanWrap = document.getElementById('fanwrap');
+const TEAM_W = 132, FN_Y = 560, ROOT_Y = 790, JOB_STEP = 56, TREE_PAD = 150;
+const treeMeta = [];
+
+const W_STEP = 360 / N, R_ROOT = 310;
+let wheelA = 180, wheelT = 180;
+let spokesEl = null;
+
+function buildSky() {
+  const LOWFX = innerWidth < 700;
+  skyEl.innerHTML = '';
+  treeMeta.length = 0;
+  const SPAN = 140 * Math.PI / 180;
+  const r0 = 80, rb = 146, rstep = 56;
+  const P = (r, a) => [r * Math.sin(a), -r * Math.cos(a)];
+
+  spokesEl = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  spokesEl.id = 'spokes';
+  spokesEl.setAttribute('viewBox', '-300 -300 600 600');
+  spokesEl.setAttribute('width', 600); spokesEl.setAttribute('height', 600);
+  spokesEl.style.cssText = 'left:-300px; top:-300px;';
+  let sp = '';
+  [168, 236].forEach((r, k) => {
+    sp += `<circle r="${r}" style="stroke:var(--foreground-muted); stroke-opacity:.07" fill="none" stroke-width="1" stroke-dasharray="${k ? '1 6' : '2 9'}"/>`;
+  });
+  for (let i = 0; i < N; i++) {
+    const a = i * W_STEP * Math.PI / 180;
+    const [x0, y0] = P(115, a), [x1, y1] = P(R_ROOT - 40, a);
+    sp += `<path d="M ${x0.toFixed(1)} ${y0.toFixed(1)} L ${x1.toFixed(1)} ${y1.toFixed(1)}" style="stroke:var(--foreground-muted); stroke-opacity:.14" stroke-width="1.5" stroke-dasharray="2 6" fill="none"/>`;
+    [168, 236].forEach(r => {
+      sp += `<circle cx="${(r * Math.sin(a)).toFixed(1)}" cy="${(-r * Math.cos(a)).toFixed(1)}" r="1.8" style="fill:var(--foreground-muted)" opacity=".3"/>`;
+    });
+    if (!LOWFX) {
+      sp += `<circle r="2.4" style="fill:var(--copper)" opacity=".9"><animateMotion dur="${(2.6 + (i % 3) * 0.7).toFixed(1)}s" begin="${(i * 0.43).toFixed(2)}s" repeatCount="indefinite" path="M ${x0.toFixed(1)} ${y0.toFixed(1)} L ${x1.toFixed(1)} ${y1.toFixed(1)}"/></circle>`;
+      sp += `<circle r="1.7" style="fill:var(--foreground-muted)" opacity=".5"><animateMotion dur="${(3.5 + (i % 2) * 0.9).toFixed(1)}s" begin="${(i * 0.61 + 1.3).toFixed(2)}s" repeatCount="indefinite" path="M ${x1.toFixed(1)} ${y1.toFixed(1)} L ${x0.toFixed(1)} ${y0.toFixed(1)}"/></circle>`;
+    }
+  }
+  for (let k = 0; k < 30; k++) {
+    const a = rand() * Math.PI * 2, r = 132 + rand() * 156;
+    sp += `<circle cx="${(r * Math.sin(a)).toFixed(1)}" cy="${(-r * Math.cos(a)).toFixed(1)}" r="${(0.9 + rand() * 1.2).toFixed(1)}" style="fill:var(--foreground-muted)" opacity="${(0.1 + rand() * 0.18).toFixed(2)}"/>`;
+  }
+  spokesEl.innerHTML = sp;
+  skyEl.appendChild(spokesEl);
+
+  const hub = document.createElement('div');
+  hub.id = 'hub';
+  const DCOL = TREE.map(d => d.color);
+  const pickC = () => rand() < 0.32 ? 'var(--ivory)' : DCOL[Math.floor(rand() * DCOL.length)];
+  const dotEl = (x, y, r, fill, op, pulse) =>
+    `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}" fill="${fill}" opacity="${op.toFixed(2)}"${pulse ? ` class="bn" style="animation-delay:-${(rand() * 4).toFixed(1)}s"` : ''}/>`;
+  const edgeEl = (x0, y0, x1, y1, op, dash) =>
+    `<path d="M ${x0.toFixed(1)} ${y0.toFixed(1)} L ${x1.toFixed(1)} ${y1.toFixed(1)}" style="stroke:var(--foreground-muted);stroke-opacity:${op.toFixed(2)}" stroke-width=".85"${dash ? ' stroke-dasharray="1.5 3"' : ''} fill="none"/>`;
+
+  const HUBF = Math.min(1, N / 7);
+  let freeDots = '';
+  for (let k = 0; k < Math.round((LOWFX ? 55 : 130) * HUBF); k++) {
+    const a = rand() * Math.PI * 2, r = 112 * Math.sqrt(rand());
+    freeDots += dotEl(r * Math.cos(a), r * Math.sin(a), 0.8 + rand() * 1.2, pickC(), 0.25 + rand() * 0.5, !LOWFX && rand() < 0.25);
+  }
+  for (let k = 0; k < Math.round((LOWFX ? 24 : 55) * HUBF); k++) {
+    const a = rand() * Math.PI * 2, r = 96 + rand() * 17;
+    freeDots += dotEl(r * Math.cos(a), r * Math.sin(a), 0.7 + rand() * 1, pickC(), 0.3 + rand() * 0.45, !LOWFX && rand() < 0.2);
+  }
+
+  const burst = (cx, cy, n, spread) => {
+    let s = '';
+    for (let i = 0; i < n; i++) {
+      const a = rand() * Math.PI * 2, r = spread * (0.35 + rand() * 0.65);
+      const x = cx + r * Math.cos(a), y = cy + r * Math.sin(a);
+      s += edgeEl(cx, cy, x, y, 0.16 + rand() * 0.1);
+      s += dotEl(x, y, 1.1 + rand() * 1.3, pickC(), 0.55 + rand() * 0.4, !LOWFX && rand() < 0.4);
+      if (rand() < 0.32) {
+        const a2 = a + (rand() - 0.5) * 0.9, r2 = 8 + rand() * 11;
+        const x2 = x + r2 * Math.cos(a2), y2 = y + r2 * Math.sin(a2);
+        s += edgeEl(x, y, x2, y2, 0.12) + dotEl(x2, y2, 0.9 + rand() * 0.8, pickC(), 0.35 + rand() * 0.35, false);
+      }
+    }
+    return s;
+  };
+  let bursts = burst(-20, -15, Math.round((LOWFX ? 15 : 28) * HUBF), 52) + burst(17, 19, Math.round((LOWFX ? 18 : 35) * HUBF), 58);
+  bursts += edgeEl(-20, -15, 17, 19, 0.16);
+  bursts += `<circle class="nucleus" cx="-20" cy="-15" r="4.5" style="fill:var(--copper)"/>`;
+  bursts += `<circle cx="17" cy="19" r="3.4" fill="var(--ivory)" opacity=".9"/>`;
+
+  let clusters = '';
+  const cCenters = [];
+  const NCL = Math.max(4, Math.round(11 * HUBF));
+  for (let k = 0; k < NCL; k++) {
+    const a = (k / NCL) * Math.PI * 2 + rand() * 0.5, R = 54 + rand() * 42;
+    const cx = R * Math.cos(a), cy = R * Math.sin(a);
+    cCenters.push([cx, cy]);
+    let g = dotEl(cx, cy, 1.7 + rand(), pickC(), 0.85, false);
+    const m = 5 + Math.floor(rand() * 7), base = rand() * Math.PI * 2, span = Math.PI * (0.7 + rand() * 1.3);
+    for (let i = 0; i < m; i++) {
+      const aa = base + span * (i / m) + (rand() - 0.5) * 0.2, rr = 6.5 + rand() * 9;
+      const x = cx + rr * Math.cos(aa), y = cy + rr * Math.sin(aa);
+      g += edgeEl(cx, cy, x, y, 0.18) + dotEl(x, y, 0.9 + rand() * 1, pickC(), 0.45 + rand() * 0.4, !LOWFX && rand() < 0.3);
+    }
+    clusters += LOWFX
+      ? `<g>${g}</g>`
+      : `<g class="drift" style="animation-duration:${(9 + rand() * 8).toFixed(1)}s; animation-delay:-${(rand() * 9).toFixed(1)}s">${g}</g>`;
+  }
+  let xlinks = '';
+  for (let k = 0; k < 6; k++) {
+    const [x0, y0] = cCenters[Math.floor(rand() * cCenters.length)];
+    const [x1, y1] = cCenters[Math.floor(rand() * cCenters.length)];
+    if (x0 !== x1) xlinks += edgeEl(x0, y0, x1, y1, 0.07 + rand() * 0.06, true);
+  }
+
+  hub.innerHTML = `
+    <svg class="core" viewBox="-122 -122 244 244" width="310" height="310">
+      <g class="${LOWFX ? '' : 'spinslow'}">${freeDots}${xlinks}${clusters}${bursts}</g>
+    </svg>
+    <div class="hubhit" title="North Star · node zero"></div>`;
+  skyEl.appendChild(hub);
+  hub.querySelector('.hubhit').addEventListener('click', e => {
+    e.stopPropagation();
+    if (dragDist >= 8) return;
+    selectHub();
+  });
+
+  TREE.forEach((dom, di) => {
+    const totalJobs = dom.functions.reduce((s, f) => s + f.jobs.length, 0);
+
+    const tree = document.createElement('div');
+    tree.className = 'tree mini';
+    tree.dataset.i = di;
+    tree.style.cssText = `--d:${(di * 0.12).toFixed(2)}s; --c:${dom.color};`;
+    const rot = document.createElement('div');
+    rot.className = 'rot';
+    rot.style.cssText = 'position:absolute; left:0; top:0;';
+    tree.appendChild(rot);
+    const sc = document.createElement('div');
+    sc.className = 'scaler';
+    sc.style.cssText = 'position:absolute; left:0; top:0;';
+    rot.appendChild(sc);
+    const hit = document.createElement('div');
+    hit.className = 'hit';
+    rot.appendChild(hit);
+
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('class', 'lines');
+    svg.setAttribute('viewBox', '-360 -370 720 460');
+    svg.setAttribute('width', 720); svg.setAttribute('height', 460);
+    svg.style.cssText = 'left:-360px; top:-370px;';
+    let paths = '';
+    const line = (x0, y0, x1, y1, op) =>
+      `<path d="M ${x0.toFixed(1)} ${y0.toFixed(1)} L ${x1.toFixed(1)} ${y1.toFixed(1)}" style="stroke:var(--foreground-muted); stroke-opacity:${op}" stroke-width="2" fill="none" stroke-linecap="round"/>`;
+
+    const nf = dom.functions.length;
+    const litOf = j => j.level === 'autonomous' ? .42 : j.level === 'assisted' ? .26 : .12;
+    const place = (jx, jy, job, px, py2, op) => {
+      paths += line(px, py2, jx, jy, op);
+      const d = document.createElement('div');
+      d.className = `jdot${job.level === 'assisted' ? ' dev' : job.level === 'manual' ? ' plan' : ''}`;
+      d.style.cssText = `left:${jx.toFixed(1)}px; top:${jy.toFixed(1)}px;`;
+      sc.appendChild(d);
+    };
+    const Rmax = rb + 3 * rstep;
+    let cursor = -SPAN / 2;
+    dom.functions.forEach(fn => {
+      const jobs = fn.jobs.length;
+      const span = SPAN / nf;
+      const aC = cursor + span / 2;
+      const [ex, ey] = P(r0, aC);
+      const [sx2, sy2] = P(36, aC);
+      paths += line(sx2, sy2, ex, ey, .2);
+      paths += `<circle cx="${ex.toFixed(1)}" cy="${ey.toFixed(1)}" r="4" fill="${dom.color}"/>`;
+      let px = ex, py2 = ey;
+      fn.jobs.forEach((job, ji) => {
+        const zig = (ji % 2 ? 1 : -1) * Math.min(span * 0.22, 0.075) * (ji ? 1 : 0.45);
+        const r = rb + (jobs > 1 ? ji * (Rmax - rb) / (jobs - 1) : 0);
+        const [jx, jy] = P(r, aC + zig);
+        place(jx, jy, job, px, py2, litOf(job)); px = jx; py2 = jy;
+      });
+      cursor += span;
+    });
+
+    svg.innerHTML = paths;
+    sc.insertBefore(svg, sc.firstChild);
+
+    const rb2 = document.createElement('div');
+    rb2.className = 'rootb';
+    rb2.style.cssText = 'left:0; top:0;';
+    rb2.innerHTML = icon(DOM_ICON[dom.name]);
+    sc.appendChild(rb2);
+
+    const wn = document.createElement('div');
+    wn.className = 'wname';
+    wn.innerHTML = `<div class="nm">${dom.name}</div><div class="sb">${dom.sub}</div>`;
+    tree.appendChild(wn);
+
+    tree.addEventListener('click', e => { if (dragDist < 8 && state === 'sky') { e.stopPropagation(); dive(di); } });
+    skyEl.appendChild(tree);
+    treeMeta.push({ di, el: tree, rot, wn });
+  });
+  layoutWheel();
+  return 1600;
+}
+
+function layoutWheel() {
+  treeMeta.forEach((m, i) => {
+    const deg = wheelA + i * W_STEP;
+    const a = deg * Math.PI / 180;
+    const x = R_ROOT * Math.sin(a), y = -R_ROOT * Math.cos(a);
+    m.el.style.left = x.toFixed(1) + 'px';
+    m.el.style.top = y.toFixed(1) + 'px';
+    m.rot.style.transform = `rotate(${deg.toFixed(2)}deg)`;
+    const D = 470;
+    m.wn.style.left = (D * Math.sin(a)).toFixed(1) + 'px';
+    m.wn.style.top = (-D * Math.cos(a)).toFixed(1) + 'px';
+  });
+  if (spokesEl) spokesEl.style.transform = `rotate(${wheelA.toFixed(2)}deg)`;
+}
+function focusedIdx() {
+  return ((Math.round((180 - wheelA) / W_STEP)) % N + N) % N;
+}
+function setSkyFocus(i) {
+  document.querySelectorAll('.mini').forEach((el, idx) => {
+    el.classList.toggle('focused', idx === i);
+  });
+}
+
+/* ============ BUILD: FAN ============ */
+const FAN_SPAN = 182 * Math.PI / 180;
+const R0 = 248, R_BASE = 410, R_STEP = 214;
+let currentDept = 0, selectedEl = null, fanEl = null;
+let fanBounds = { minX: -800, maxX: 800, minY: -900, maxY: 140 };
+
+function buildFan(di, dir = 0, animate = true) {
+  const old = fanEl;
+  currentDept = di;
+  const dom = TREE[di];
+  const fan = document.createElement('div');
+  fan.className = 'fan';
+  fan.style.setProperty('--c', dom.color);
+  selectedEl = null;
+  hideCard();
+
+  const totalJobs = dom.functions.reduce((s, f) => s + f.jobs.length, 0);
+  const P = (r, a) => [r * Math.sin(a), -r * Math.cos(a)];
+
+  const ghost = document.createElement('div');
+  ghost.className = 'ghost';
+  ghost.style.cssText = 'left:0px; top:-430px;';
+  ghost.textContent = dom.name;
+  fan.appendChild(ghost);
+
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('class', 'under');
+  let paths = '';
+  const arcPath = (r, a0, a1) => {
+    const [x0, y0] = P(r, a0), [x1, y1] = P(r, a1);
+    return `M ${x0.toFixed(1)} ${y0.toFixed(1)} A ${r} ${r} 0 0 1 ${x1.toFixed(1)} ${y1.toFixed(1)}`;
+  };
+  [R0, R_BASE + R_STEP * 0.5, R_BASE + R_STEP * 2, R_BASE + R_STEP * 3.6].forEach((r, i) => {
+    paths += `<path class="${animate ? 'draw' : ''}" style="--d:${(0.1 + i * 0.07).toFixed(2)}s; stroke:var(--foreground-muted); stroke-opacity:.06" pathLength="1" d="${arcPath(r, -FAN_SPAN / 2 - 0.06, FAN_SPAN / 2 + 0.06)}" stroke-width="1" fill="none"/>`;
+  });
+
+  let maxR = 0;
+  let cursor = -FAN_SPAN / 2;
+  const line = (x0, y0, x1, y1, op, d) =>
+    `<path class="${animate ? 'draw' : ''}" style="--d:${d.toFixed(2)}s; stroke:var(--foreground-muted); stroke-opacity:${op}" pathLength="1" d="M ${x0.toFixed(1)} ${y0.toFixed(1)} L ${x1.toFixed(1)} ${y1.toFixed(1)}" stroke-width="2.5" fill="none" stroke-linecap="round"/>`;
+
+  dom.functions.forEach((fn, fi) => {
+    const span = FAN_SPAN * fn.jobs.length / totalJobs;
+    const aC = cursor + span / 2;
+    const [ex, ey] = P(R0, aC);
+    const [rx, ry] = P(64, aC);
+    paths += line(rx, ry, ex, ey, .22, 0.15);
+    paths += `<circle class="${animate ? 'popdot' : ''}" style="--d:.3s" cx="${ex.toFixed(1)}" cy="${ey.toFixed(1)}" r="5" fill="${dom.color}"/>`;
+
+    let px = ex, py2 = ey;
+    fn.jobs.forEach((job, ji) => {
+      const zig = (ji % 2 ? 1 : -1) * Math.min(span * 0.22, 0.075) * (ji ? 1 : 0.45);
+      const a = aC + zig;
+      const r = R_BASE + ji * R_STEP;
+      maxR = Math.max(maxR, r);
+      const [x, y] = P(r, a);
+      const lit = job.level === 'autonomous' ? .5 : job.level === 'assisted' ? .3 : .14;
+      const delay = 0.32 + ji * 0.12;
+      paths += line(px, py2, x, y, lit, delay);
+      px = x; py2 = y;
+
+      const n = document.createElement('div');
+      const my = myOf(dom, job);
+      n.className = `node ${job.level === 'autonomous' ? 'deployed' : job.level === 'assisted' ? 'dev' : 'plan'}`
+        + (my === 'live' ? ' mine' : my === 'dev' ? ' minedev' : '');
+      n.style.cssText = `left:${x.toFixed(1)}px; top:${y.toFixed(1)}px; --d:${(delay + 0.18).toFixed(2)}s;`;
+      if (!animate) n.style.animation = 'none', n.style.opacity = 1;
+      let lsvg = '', lhtml = '';
+      const pbFiles = (typeof PLAYBOOK !== 'undefined' && PLAYBOOK[job.name] && PLAYBOOK[job.name].files) || [];
+      const side = job.name.length % 2 ? 1 : -1;
+      const spreads = pbFiles.length === 1 ? [1.42 * side] : pbFiles.length === 2 ? [-1.42, 1.42] : [-1.5, 1.5, Math.PI];
+      pbFiles.slice(0, 3).forEach((f, k) => {
+        const th = a + spreads[k] + (rand() - 0.5) * 0.22;
+        const dd = 74 + rand() * 12;
+        const lx = dd * Math.sin(th), ly2 = -dd * Math.cos(th);
+        lsvg += `<path d="M ${(32 * Math.sin(th)).toFixed(1)} ${(-32 * Math.cos(th)).toFixed(1)} L ${lx.toFixed(1)} ${ly2.toFixed(1)}" style="stroke:var(--foreground-muted);stroke-opacity:.4" stroke-width="2" stroke-linecap="round" fill="none"/>`;
+        lhtml += `<div class="leaf" data-file="${f.path}" data-sk="${f.label}" style="left:${lx.toFixed(1)}px; top:${ly2.toFixed(1)}px; --lc:${dom.color};"></div>`;
+      });
+      n.innerHTML = `${jobIcon(job.name)}<span class="nlabel">${job.name}</span>`
+        + (typeof FOUNDATION !== 'undefined' && FOUNDATION.has(job.name) ? `<span class="ftag">START HERE</span>` : '')
+        + `<span class="mybadge"><svg viewBox="0 0 24 24" fill="none" stroke-width="3.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4 10-10"/></svg></span>`
+        + `<div class="leaves"><svg width="200" height="200" viewBox="-100 -100 200 200">${lsvg}</svg>${lhtml}</div>`;
+      n._chain = fi;
+      n._job = job.name;
+      n._sel = () => select(n, dom, fn, job, x, y);
+      const lvlLabel = job.level === 'autonomous' ? 'fully autonomous' : job.level === 'assisted' ? 'human-assisted' : 'human-led';
+      n.setAttribute('tabindex', '0');
+      n.setAttribute('role', 'button');
+      n.setAttribute('aria-label', `${job.name} · ${lvlLabel}${my === 'live' ? ' · live in your stack' : ''}`);
+      n.addEventListener('click', e => {
+        e.stopPropagation();
+        if (dragDist >= 8) return;
+        n._sel();
+      });
+      n.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); n._sel(); }
+      });
+      n.querySelectorAll('.leaf').forEach(lf => lf.addEventListener('click', e => {
+        e.stopPropagation();
+        if (dragDist >= 8) return;
+        openReader(lf.dataset.file, lf.dataset.sk);
+      }));
+      fan.appendChild(n);
+    });
+
+    const [tx2, ty2] = P(R_BASE + fn.jobs.length * R_STEP + 64, aC);
+    const tl = document.createElement('div');
+    tl.className = 'team-label';
+    tl.style.cssText = `left:${tx2.toFixed(1)}px; top:${ty2.toFixed(1)}px; --d:${(0.55 + fi * 0.07).toFixed(2)}s;`;
+    tl.innerHTML = `<div class="t">${fn.name}</div><div class="tc">${fn.jobs.length} jobs</div>`;
+    tl.setAttribute('tabindex', '0');
+    tl.setAttribute('role', 'button');
+    tl.setAttribute('aria-label', `${fn.name} · ${fn.jobs.length} jobs · focus this sub-tree`);
+    const tlFocus = () => focusPoint(tx2, ty2 + 120, 0.9);
+    tl.addEventListener('click', e => { e.stopPropagation(); if (dragDist < 8) tlFocus(); });
+    tl.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); tlFocus(); } });
+    fan.appendChild(tl);
+
+    cursor += span;
+  });
+
+  svg.innerHTML = paths;
+  svg.setAttribute('width', 2400); svg.setAttribute('height', 1600);
+  svg.setAttribute('viewBox', '-1200 -1400 2400 1600');
+  svg.style.left = '-1200px'; svg.style.top = '-1400px';
+  fan.insertBefore(svg, fan.firstChild);
+
+  const root = document.createElement('div');
+  root.className = 'root-badge';
+  root.style.cssText = 'left:0px; top:0px; cursor:pointer;';
+  root.innerHTML = icon(DOM_ICON[dom.name]);
+  const rootDi = di;
+  root.setAttribute('tabindex', '0');
+  root.setAttribute('role', 'button');
+  root.setAttribute('aria-label', `${dom.name} · department root`);
+  root.addEventListener('click', e => { e.stopPropagation(); if (dragDist < 8) selectDept(rootDi); });
+  root.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); selectDept(rootDi); } });
+  fan.appendChild(root);
+
+  const rname = document.createElement('div');
+  rname.className = 'fan-dname';
+  rname.style.cursor = 'pointer';
+  rname.innerHTML = `${dom.name}<div class="fan-dsub">${dom.sub}</div>`;
+  rname.addEventListener('click', e => { e.stopPropagation(); if (dragDist < 8) selectDept(rootDi); });
+  fan.appendChild(rname);
+
+  fanWrap.appendChild(fan);
+  fanEl = fan;
+  if (old && dir !== 0) {
+    fan.classList.add(dir >= 0 ? 'enter-r' : 'enter-l');
+    requestAnimationFrame(() => requestAnimationFrame(() => fan.classList.remove('enter-r', 'enter-l')));
+    old.classList.add(dir >= 0 ? 'exit-l' : 'exit-r');
+    setTimeout(() => old.remove(), 480);
+  } else if (old) { old.remove(); }
+
+  updateProgress();
+  document.querySelectorAll('#domnav button').forEach((b, i) => b.classList.toggle('active', i === currentDept));
+  const prev = TREE[(di - 1 + N) % N], next = TREE[(di + 1) % N];
+  const chevL = '<svg class="echev" viewBox="0 0 14 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M 11 3 L 4 11 L 11 19"/><circle cx="4" cy="11" r="1.8" fill="currentColor" stroke="none"/></svg>';
+  const chevR = '<svg class="echev" viewBox="0 0 14 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M 3 3 L 10 11 L 3 19"/><circle cx="10" cy="11" r="1.8" fill="currentColor" stroke="none"/></svg>';
+  document.getElementById('edge-l').innerHTML = `${chevL}<span class="et">${prev.name}</span>`;
+  document.getElementById('edge-r').innerHTML = `<span class="et">${next.name}</span>${chevR}`;
+
+  fanBounds = { minX: -(maxR + 280), maxX: maxR + 280, minY: -(maxR + 260), maxY: 180 };
+}
+
+/* ============ CAMERA ============ */
+const world = document.getElementById('world');
+let tx = 0, ty = 0, scale = 0.8;
+let txT = 0, tyT = 0, scaleT = 0.8;
+let dragging = false, dragDist = 0, lastX = 0, lastY = 0;
+let state = 'sky';
+let skyW = 1000;
+let zoomIntent = 0, zoomLock = 0;
+
+const clampZFan = v => Math.max(isMobile() ? Math.min(0.42, fanFit()) : 0.42, Math.min(1.9, v));
+const clampZSky = v => Math.max(0.12, Math.min(isMobile() ? 0.56 : 0.42, v));
+
+const isMobile = () => innerWidth < 700;
+function skyFit() {
+  const mx = isMobile() ? 30 : 150, my = isMobile() ? 130 : 170;
+  return Math.min((innerWidth - mx) / 1640, (innerHeight - my) / 1640);
+}
+function fanFit() {
+  const mx = isMobile() ? 56 : 160, my = isMobile() ? 150 : 230;
+  return Math.min((innerWidth - mx) / (fanBounds.maxX - fanBounds.minX), (innerHeight - my) / (fanBounds.maxY - fanBounds.minY));
+}
+function fitCurrent(instant) {
+  if (state === 'fan') {
+    if (isMobile()) {
+      scaleT = 0.42;
+      txT = 0;
+      tyT = innerHeight * 0.31;
+    } else {
+      scaleT = fanFit();
+      txT = 0;
+      /* Fan branches extend upward. Root badge near bottom, branches fill upper screen. */
+      tyT = -innerHeight * 0.55;
+    }
+  } else {
+    if (isMobile()) {
+      const ringSpan = (470 + 130) * 2;
+      const fit = Math.min((innerWidth - 24) / ringSpan, (innerHeight - 150) / ringSpan);
+      scaleT = Math.max(0.34, Math.min(0.62, fit));
+      txT = 0;
+      tyT = innerHeight * 0.04;
+    } else {
+      scaleT = skyFit();
+      txT = 0;
+      tyT = -innerHeight * 0.04;
+    }
+    setSkyFocus(focusedIdx());
+  }
+  if (instant) { scale = scaleT; tx = txT; ty = tyT; }
+  if (selectedEl) { selectedEl.classList.remove('selected'); selectedEl = null; }
+  document.querySelectorAll('.node.faded').forEach(n => n.classList.remove('faded'));
+  hideCard();
+}
+function focusPoint(wx, wy, z) {
+  scaleT = z;
+  txT = -wx * z;
+  tyT = -(wy - 30 / z) * z;
+}
+let selCtx = null;
+let lastSelectArgs = null;
+
+function select(el, dom, fn, job, wx, wy) {
+  if (selectedEl) selectedEl.classList.remove('selected');
+  selectedEl = el; el.classList.add('selected');
+  selCtx = { dom, fn, job };
+  lastSelectArgs = [el, dom, fn, job, wx, wy];
+  fanEl.querySelectorAll('.node').forEach(n => n.classList.toggle('faded', n._chain !== el._chain && n !== el));
+  if (isMobile()) {
+    const z = 1.1;
+    scaleT = z;
+    txT = -wx * z;
+    tyT = -wy * z - innerHeight * 0.34;
+  } else {
+    focusPoint(wx, wy, 1.35);
+  }
+  const card = document.getElementById('card');
+  card.style.setProperty('--c', dom.color);
+  card.querySelector('.c-state').textContent = LEVEL_LABEL[job.level] || job.level;
+  card.querySelector('.c-name').innerHTML = job.name
+    + (typeof FOUNDATION !== 'undefined' && FOUNDATION.has(job.name) ? '<span class="c-found">START HERE</span>' : '');
+  card.querySelector('.c-crumb').textContent = `${dom.name} · ${fn.name}`;
+  card.querySelector('.c-desc').textContent = job.desc;
+  card.querySelector('.c-skills').innerHTML =
+    `<div class="c-sec">BREAKS INTO</div><div class="skills">${job.skills.map(s => `<span class="skill" title="a sub-skill of this job">${s}</span>`).join('')}</div>` +
+    (job.tools.length ? `<div class="c-sec">WIRED INTO</div><div class="tools">${job.tools.join(' · ')}</div>` : '');
+  if (nudgeStep === 2) nudge(3);
+
+  const pb = (typeof PLAYBOOK !== 'undefined' && PLAYBOOK[job.name]) || null;
+  card.querySelector('.c-skillcue').innerHTML = skillCueHtml(pb && pb.files);
+
+  const my = myOf(dom, job);
+  let deep = `<div class="c-sec">YOUR STATUS</div><div class="my">`
+    + [['', 'Not started'], ['dev', 'In development'], ['live', 'Live']].map(([v, lbl]) =>
+      `<button data-my="${v}" class="${my === v ? 'on' : ''}">${lbl}</button>`).join('')
+    + `</div><div class="c-sec">YOUR NOTES</div><textarea class="c-note-in" placeholder="Your prompt, your tools, how you set this up — saved to your tree."></textarea>`;
+  if (pb && pb.req && pb.req.length) {
+    deep += `<div class="c-sec">BUILDS ON</div><div class="reqs">` + pb.req.map(r =>
+      r === HUB
+        ? `<span class="req hubchip">⌂ ${r}</span>`
+        : `<span class="req" data-job="${r}">${r}</span>`
+    ).join('') + `</div>`;
+  }
+  if (pb && pb.replaces) deep += `<div class="c-sec">WHAT IT REPLACES</div><div class="c-replaces">${pb.replaces}</div>`;
+  if (pb && pb.ladder) {
+    deep += `<div class="c-sec">THE LADDER</div><div class="ladder">` +
+      ['manual', 'assisted', 'autonomous'].map(k =>
+        `<div class="lrow${job.level === k ? ' cur' : ''}"><span class="lk">${LEVEL_LABEL[k]}</span><span class="lv">${pb.ladder[k]}</span></div>`
+      ).join('') + `</div>`;
+  }
+  const humanLine = (pb && pb.human) || (typeof HUMAN_DEFAULT !== 'undefined' && HUMAN_DEFAULT[job.level]);
+  if (humanLine) deep += `<div class="c-sec">THE HUMAN</div><div class="c-notes">${humanLine}</div>`;
+  if (pb && pb.notes) deep += `<div class="c-sec">BUILD NOTES</div><div class="c-notes">${pb.notes}</div>`;
+  if (pb && pb.files && pb.files.length) {
+    deep += skillFilesHtml(pb.files);
+  }
+  card.querySelector('.c-deep').innerHTML = deep;
+  const _nt = card.querySelector('.c-note-in'); if (_nt) _nt.value = noteOf(dom, job);
+  card.scrollTop = 0;
+  card.classList.add('open');
+  stTrack('skill_viewed', { job: job.name, dept: dom.name });
+}
+function hideCard() {
+  document.getElementById('card').classList.remove('open');
+  const f = document.querySelector('#card .files'); if (f) f.classList.remove('glow');
+  const hd = document.getElementById('helpdlg'); if (hd) hd.classList.remove('open');
+  selCtx = null;
+  skyEl.classList.remove('hubfocus');
+}
+/* "Need help building this?" dialog */
+(function () {
+  const dlg = document.getElementById('helpdlg'), btn = document.getElementById('needhelp');
+  if (!dlg || !btn) return;
+  const close = () => dlg.classList.remove('open');
+  btn.addEventListener('click', (e) => { e.stopPropagation(); dlg.classList.add('open'); });
+  dlg.querySelector('.hd-x').addEventListener('click', close);
+  ['pointerdown', 'pointerup', 'mousedown', 'mouseup', 'wheel'].forEach(ev => dlg.addEventListener(ev, e => e.stopPropagation()));
+  dlg.addEventListener('click', e => { e.stopPropagation(); if (e.target === dlg) close(); });
+  addEventListener('keydown', e => { if (e.key === 'Escape' && dlg.classList.contains('open')) close(); });
+})();
+
+/* node zero · the hub's own card */
+const HUB_DOM = { name: 'HUB' }, HUB_JOB = { name: HUB };
+function selectHub() {
+  if (selectedEl) { selectedEl.classList.remove('selected'); selectedEl = null; }
+  if (fanEl) fanEl.querySelectorAll('.node.faded').forEach(n => n.classList.remove('faded'));
+  selCtx = { dom: HUB_DOM, job: HUB_JOB };
+  const card = document.getElementById('card');
+  card.style.setProperty('--c', '#458588');
+  card.querySelector('.c-state').textContent = 'node zero';
+  card.querySelector('.c-name').innerHTML = `${HUB}<span class="c-found">BEFORE EVERYTHING</span>`;
+  card.querySelector('.c-crumb').textContent = 'The hub · every department reads & writes';
+  card.querySelector('.c-desc').textContent = HUB_ENTRY.desc;
+  card.querySelector('.c-skillcue').innerHTML = skillCueHtml(HUB_ENTRY.files);
+  card.querySelector('.c-skills').innerHTML =
+    `<div class="c-sec">WHAT LIVES IN IT</div><div class="skills">${HUB_ENTRY.components.map(s => `<span class="skill">${s}</span>`).join('')}</div>`;
+  let deep = '';
+  deep += `<div class="c-sec">WHAT IT REPLACES</div><div class="c-replaces">${HUB_ENTRY.replaces}</div>`;
+  deep += `<div class="c-sec">THE LADDER</div><div class="ladder">` +
+    ['manual', 'assisted', 'autonomous'].map(k =>
+      `<div class="lrow"><span class="lk">${LEVEL_LABEL[k]}</span><span class="lv">${HUB_ENTRY.ladder[k]}</span></div>`
+    ).join('') + `</div>`;
+  deep += `<div class="c-sec">THE HUMAN</div><div class="c-notes">${HUB_ENTRY.human}</div>`;
+  deep += `<div class="c-sec">BUILD NOTES</div><div class="c-notes">${HUB_ENTRY.notes}</div>`;
+  deep += skillFilesHtml(HUB_ENTRY.files);
+  const my = myOf(HUB_DOM, HUB_JOB);
+  deep += `<div class="c-sec">YOUR STATUS</div><div class="my">`
+    + [['', 'Not started'], ['dev', 'In development'], ['live', 'Live']].map(([v, lbl]) =>
+      `<button data-my="${v}" class="${my === v ? 'on' : ''}">${lbl}</button>`).join('')
+    + `</div>`;
+  card.querySelector('.c-deep').innerHTML = deep;
+  card.scrollTop = 0;
+  card.classList.add('open');
+  if (state === 'sky') skyEl.classList.add('hubfocus');
+}
+
+function updateProgress() {
+  const dom = TREE[currentDept];
+  const totalJobs = dom.functions.reduce((s, f) => s + f.jobs.length, 0);
+  const live = dom.functions.reduce((s, f) => s + f.jobs.filter(j => myOf(dom, j) === 'live').length, 0);
+  const dev = dom.functions.reduce((s, f) => s + f.jobs.filter(j => myOf(dom, j) === 'dev').length, 0);
+  document.querySelector('#progress .p-num').textContent = live;
+  document.querySelector('#progress .p-lbl').innerHTML = `OF ${totalJobs} LIVE${dev ? ` · ${dev} IN DEV` : ''} · <b>YOUR TREE</b>`;
+  const liveBar = document.querySelector('#progress .bar i.live');
+  const devBar = document.querySelector('#progress .bar i.dev');
+  liveBar.style.background = dom.color;
+  const liveW = live / totalJobs * 100, devW = dev / totalJobs * 100;
+  setTimeout(() => {
+    liveBar.style.width = liveW.toFixed(1) + '%';
+    devBar.style.left = liveW.toFixed(1) + '%';
+    devBar.style.width = devW.toFixed(1) + '%';
+  }, 60);
+  updateCounts();
+}
+
+function jumpToJob(name) {
+  let di = -1;
+  TREE.forEach((d, i) => d.functions.forEach(f => f.jobs.forEach(j => { if (j.name === name) di = i; })));
+  if (di < 0) return;
+  if (di !== currentDept) { buildFan(di, 0, false); }
+  const n = [...fanEl.querySelectorAll('.node')].find(x => x._job === name);
+  if (n) n._sel();
+}
+
+/* skill card · drag the right edge to widen it */
+(function () {
+  const cardEl = document.getElementById('card');
+  const handle = document.getElementById('cresize');
+  if (!cardEl || !handle) return;
+  function place() {
+    if (!cardEl.classList.contains('open')) { handle.style.display = 'none'; return; }
+    const r = cardEl.getBoundingClientRect();
+    handle.style.display = 'block';
+    handle.style.left = r.right + 'px';
+    handle.style.top = r.top + 'px';
+    handle.style.height = r.height + 'px';
+  }
+  let rz = false, sx = 0, sw = 0;
+  handle.addEventListener('pointerdown', e => {
+    rz = true; sx = e.clientX; sw = cardEl.getBoundingClientRect().width;
+    handle.classList.add('dragging');
+    try { handle.setPointerCapture(e.pointerId); } catch (x) {}
+    document.body.style.userSelect = 'none'; e.preventDefault();
+  });
+  window.addEventListener('pointermove', e => {
+    if (!rz) return;
+    const left = cardEl.getBoundingClientRect().left;
+    const max = Math.min(860, window.innerWidth - left - 16);
+    const w = Math.max(320, Math.min(max, sw + (e.clientX - sx)));
+    cardEl.style.width = w + 'px';
+    place();
+  });
+  window.addEventListener('pointerup', () => {
+    if (!rz) return; rz = false; handle.classList.remove('dragging');
+    document.body.style.userSelect = '';
+    try { localStorage.setItem('st_cardw', cardEl.style.width); } catch (x) {}
+  });
+  window.addEventListener('resize', place);
+  new MutationObserver(() => {
+    if (cardEl.classList.contains('open')) {
+      try { const w = localStorage.getItem('st_cardw'); if (w) cardEl.style.width = w; } catch (x) {}
+      requestAnimationFrame(place);
+    } else { handle.style.display = 'none'; }
+  }).observe(cardEl, { attributes: true, attributeFilter: ['class'] });
+})();
+
+/* card interactions */
+document.getElementById('card').addEventListener('click', e => {
+  if (e.target.closest('.c-x')) {
+    hideCard();
+    if (selectedEl) { selectedEl.classList.remove('selected'); selectedEl = null; }
+    if (fanEl) fanEl.querySelectorAll('.node.faded').forEach(n => n.classList.remove('faded'));
+    return;
+  }
+  const cue = e.target.closest('.skillcue');
+  if (cue) {
+    if (cue.dataset.cueFirst) { openReader(cue.dataset.cueFirst, cue.dataset.cueLabel); return; }
+    const files = document.querySelector('#card .files');
+    if (files) {
+      files.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      files.classList.remove('glow'); void files.offsetWidth; files.classList.add('glow');
+    }
+    return;
+  }
+  const d = e.target.closest('.dl[data-skill]');
+  if (d) { e.preventDefault(); openReader(d.dataset.skill, d.dataset.label); return; }
+  const h = e.target.closest('.req.hubchip');
+  if (h) { selectHub(); return; }
+  const r = e.target.closest('.req[data-job]');
+  if (r) { jumpToJob(r.dataset.job); return; }
+  const b = e.target.closest('.my button');
+  if (b && selCtx) {
+    setMy(selCtx.dom, selCtx.job, b.dataset.my);
+    b.parentElement.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+    if (selectedEl) {
+      selectedEl.classList.toggle('mine', b.dataset.my === 'live');
+      selectedEl.classList.toggle('minedev', b.dataset.my === 'dev');
+    }
+    updateProgress();
+  }
+});
+/* notes save as they type */
+document.getElementById('card').addEventListener('input', e => {
+  const t = e.target.closest('.c-note-in');
+  if (t && selCtx) setNote(selCtx.dom, selCtx.job, t.value);
+});
+
+/* ============ DIVE / RISE ============ */
+function dive(di) {
+  if (nudgeStep === 0 || nudgeStep === 1) { document.getElementById('nudge').classList.remove('show'); setTimeout(() => nudge(2), 2300); }
+  if (state !== 'sky') return;
+  state = 'aligning';
+  document.body.classList.add('transitioning');
+  hideCard();
+  let t = 180 - di * W_STEP;
+  while (t - wheelT > 180) t -= 360;
+  while (t - wheelT < -180) t += 360;
+  wheelT = t;
+  const wait = Math.min(800, 180 + Math.abs(t - wheelA) * 5);
+  setTimeout(() => {
+  state = 'diving';
+  /* Camera will be set by fitCurrent after fan is built */
+  document.querySelectorAll('.tree').forEach(t2 => { if (+t2.dataset.i !== di) t2.classList.add('dim'); });
+  setTimeout(() => {
+    skyEl.style.display = 'none';
+    document.body.classList.add('fanmode');
+    document.getElementById('state-name').textContent = 'NAVIGATION';
+    buildFan(di, 0, true);
+    state = 'fan';
+    scale = 0.5; tx = 0; ty = 120;
+    fitCurrent();
+    setTimeout(() => document.body.classList.remove('transitioning'), 1250);
+  // Safety: ensure transitioning is removed even if timeout chain fails
+  setTimeout(() => document.body.classList.remove('transitioning'), 3000);
+  }, 520);
+  }, wait);
+}
+function selectDept(di) {
+  const dom = TREE[di];
+  if (selectedEl) { selectedEl.classList.remove('selected'); selectedEl = null; }
+  if (fanEl) fanEl.querySelectorAll('.node.faded').forEach(n => n.classList.remove('faded'));
+  selCtx = { dom, job: { name: dom.name } };
+  const jobs = dom.functions.reduce((s, f) => s + f.jobs.length, 0);
+  const files = new Set();
+  dom.functions.forEach(f => f.jobs.forEach(j => (PLAYBOOK[j.name]?.files || []).forEach(x => files.add(x.path))));
+  const startHere = [];
+  dom.functions.forEach(f => f.jobs.forEach(j => { if (typeof FOUNDATION !== 'undefined' && FOUNDATION.has(j.name)) startHere.push(j.name); }));
+
+  if (isMobile()) { scaleT = 1.0; txT = 0; tyT = -innerHeight * 0.30; }
+  fitCurrent();
+
+  const card = document.getElementById('card');
+  card.style.setProperty('--c', dom.color);
+  card.querySelector('.c-state').textContent = 'department';
+  card.querySelector('.c-name').innerHTML = dom.name;
+  card.querySelector('.c-crumb').textContent = dom.sub;
+  card.querySelector('.c-desc').textContent = dom.intro || '';
+  card.querySelector('.c-skillcue').innerHTML = '';
+  card.querySelector('.c-skills').innerHTML =
+    `<div class="c-sec">WHAT IT COVERS</div><div class="skills">${dom.functions.map(f => `<span class="skill">${f.name}</span>`).join('')}</div>`;
+  let deep = '';
+  deep += `<div class="c-sec">THE FUNCTIONS</div><div class="ladder">` +
+    dom.functions.map(f => `<div class="lrow"><span class="lk">${f.name}</span><span class="lv">${f.jobs.length} job${f.jobs.length === 1 ? '' : 's'}</span></div>`).join('') + `</div>`;
+  if (startHere.length) deep += `<div class="c-sec">START HERE</div><div class="c-notes">Begin with <b>${startHere[0]}</b> · the foundation job the rest of this department builds on.</div>`;
+  deep += `<div class="c-sec">THE NUMBERS</div><div class="c-notes"><b>${jobs}</b> jobs across <b>${dom.functions.length}</b> functions · <b>${files.size}</b> downloadable skill file${files.size === 1 ? '' : 's'}. Click any node to open its playbook and take the skill.</div>`;
+  card.querySelector('.c-deep').innerHTML = deep;
+  card.scrollTop = 0;
+  card.classList.add('open');
+}
+function rise() {
+  if (state === 'sky' || state === 'rising') return;
+  state = 'rising';
+  document.body.classList.add('transitioning');
+  hideCard();
+  if (fanEl) fanEl.classList.add('collapse');
+  document.body.classList.remove('fanmode');
+  setTimeout(() => {
+    if (fanEl) { fanEl.remove(); fanEl = null; }
+    skyEl.style.display = '';
+    document.querySelectorAll('.tree').forEach(t => t.classList.remove('dim'));
+    document.getElementById('state-name').textContent = '';
+    state = 'sky';
+    scale = 0.5; tx = 0; ty = -(R_ROOT + 100) * 0.5;
+    layoutWheel();
+    fitCurrent();
+    setTimeout(() => document.body.classList.remove('transitioning'), 450);
+  }, 380);
+  // Safety: ensure transitioning is removed even if timeout fails
+  setTimeout(() => document.body.classList.remove('transitioning'), 2000);
+}
+
+/* ============ LOOP + INPUT ============ */
+function clampPan() {
+  if (document.documentElement.classList.contains('fanlock') && innerWidth < 700) return;
+  if (state === 'diving' || state === 'rising' || state === 'aligning' || state === 'intro') return;
+  if (state === 'sky') {
+    const homeY = -innerHeight * 0.04;
+    tx = Math.max(-40, Math.min(40, tx)); txT = Math.max(-40, Math.min(40, txT));
+    ty = Math.max(homeY - 50, Math.min(homeY + 50, ty)); tyT = Math.max(homeY - 50, Math.min(homeY + 50, tyT));
+    return;
+  }
+  const M = 230;
+  const b = fanBounds;
+  const ox = innerWidth * 0.5, oy = innerHeight * 0.56;
+  const txMin = M - ox - b.maxX * scale, txMax = innerWidth - M - ox - b.minX * scale;
+  const tyMin = M - oy - b.maxY * scale, tyMax = innerHeight - M - oy - b.minY * scale;
+  tx = Math.max(txMin, Math.min(txMax, tx)); txT = Math.max(txMin, Math.min(txMax, txT));
+  ty = Math.max(tyMin, Math.min(tyMax, ty)); tyT = Math.max(tyMin, Math.min(tyMax, tyT));
+}
+
+let camSettled = false;
+let wheelSpinning = false;
+const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function tick() {
+  const ease = reduceMotion ? 1 : 0.13;
+  scale += (scaleT - scale) * ease;
+  tx += (txT - tx) * ease;
+  ty += (tyT - ty) * ease;
+  if (Math.abs(wheelT - wheelA) > 0.01) {
+    wheelA += (wheelT - wheelA) * (reduceMotion ? 1 : 0.11);
+    if (state !== 'fan') { layoutWheel(); setSkyFocus(focusedIdx()); }
+  }
+  clampPan();
+  const spinningNow = state === 'sky' && (Math.abs(wheelT - wheelA) > 0.5 || (dragging && dragDist > 4));
+  if (spinningNow !== wheelSpinning) { wheelSpinning = spinningNow; document.body.classList.toggle('wheelspin', spinningNow); }
+  const moving = Math.abs(scaleT - scale) > 0.001 * scale || Math.abs(txT - tx) > 0.3 || Math.abs(tyT - ty) > 0.3;
+  if (moving === camSettled) { camSettled = !moving; world.style.willChange = moving ? 'transform' : 'auto'; }
+  document.body.classList.toggle('zoomedin', state === 'fan' && scale > (isMobile() ? 0.52 : 1.02));
+  world.style.transform = `translate(${tx.toFixed(1)}px, ${ty.toFixed(1)}px) scale(${scale.toFixed(4)})`;
+  document.getElementById('zoom-pct').textContent = Math.round(scale * 100) + '%';
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+
+/* two-finger pinch (mobile) */
+const ptrs = new Map();
+let pinchD0 = 0, pinchS0 = 1, pinchRatio = 1, pinchAX = 0, pinchAY = 0;
+let flickV = 0, flickT = 0;
+const pinchDist = () => {
+  const [a, b2] = [...ptrs.values()];
+  return Math.hypot(a[0] - b2[0], a[1] - b2[1]);
+};
+const pinchMid = () => {
+  const [a, b2] = [...ptrs.values()];
+  return [(a[0] + b2[0]) / 2, (a[1] + b2[1]) / 2];
+};
+
+addEventListener('pointerdown', e => {
+  if (e.target.closest('#card, #controls, #domnav, #topbar, #back, .edge-dept, .wchev, #reader, #about')) return;
+  ptrs.set(e.pointerId, [e.clientX, e.clientY]);
+  if (ptrs.size === 2) {
+    dragging = false; document.body.classList.remove('panning');
+    pinchD0 = pinchDist(); pinchS0 = scale; pinchRatio = 1;
+    const [mx, my] = pinchMid();
+    pinchAX = (mx - innerWidth * 0.5 - tx) / scale;
+    pinchAY = (my - innerHeight * 0.56 - ty) / scale;
+    dragDist = 99;
+    return;
+  }
+  dragging = true; dragDist = 0; lastX = e.clientX; lastY = e.clientY;
+  flickV = 0; flickT = performance.now();
+  document.body.classList.add('panning');
+});
+addEventListener('pointermove', e => {
+  if (ptrs.has(e.pointerId)) ptrs.set(e.pointerId, [e.clientX, e.clientY]);
+  if (ptrs.size >= 2) {
+    if (pinchD0 > 0) {
+      pinchRatio = pinchDist() / pinchD0;
+      if (state === 'fan') {
+        const s1 = clampZFan(pinchS0 * pinchRatio);
+        const [mx, my] = pinchMid();
+        scale = scaleT = s1;
+        tx = txT = mx - innerWidth * 0.5 - pinchAX * s1;
+        ty = tyT = my - innerHeight * 0.56 - pinchAY * s1;
+      }
+    }
+    return;
+  }
+  if (!dragging) return;
+  const dx = e.clientX - lastX, dy = e.clientY - lastY;
+  dragDist += Math.abs(dx) + Math.abs(dy);
+  if (state === 'sky') {
+    if (isMobile()) {
+      wheelA -= dx * 0.26;
+      const now2 = performance.now();
+      flickV = 0.75 * flickV + 0.25 * (dx / Math.max(1, now2 - flickT));
+      flickT = now2;
+    } else {
+      const cx = innerWidth / 2 + tx, cy = innerHeight * 0.56 + ty;
+      const r0x = lastX - cx, r0y = lastY - cy, r1x = e.clientX - cx, r1y = e.clientY - cy;
+      if (Math.hypot(r0x, r0y) > 48 && Math.hypot(r1x, r1y) > 48) {
+        let dA = (Math.atan2(r1y, r1x) - Math.atan2(r0y, r0x)) * 180 / Math.PI;
+        if (dA > 180) dA -= 360; if (dA < -180) dA += 360;
+        wheelA += dA;
+      } else {
+        wheelA -= dx * 0.12;
+      }
+    }
+    wheelT = wheelA;
+    layoutWheel(); setSkyFocus(focusedIdx());
+    clearTimeout(wheelIdle); wheelIdle = setTimeout(snapWheel, 260);
+    if (nudgeStep === 0 && dragDist > 30) nudge(1);
+  } else if (state === 'fan') {
+    tx += dx; txT = tx; ty += dy; tyT = ty;
+  }
+  lastX = e.clientX; lastY = e.clientY;
+});
+const endPtr = e => {
+  if (ptrs.has(e.pointerId)) {
+    ptrs.delete(e.pointerId);
+    if (ptrs.size < 2 && pinchD0 > 0) {
+      if (state === 'sky' && pinchRatio > 1.35) dive(focusedIdx());
+      if (state === 'fan' && pinchRatio < 0.62 && scaleT <= clampZFan(0) + 0.01) rise();
+      pinchD0 = 0;
+    }
+  }
+  if (dragging && state === 'sky' && isMobile() && Math.abs(flickV) > 0.18) {
+    const contA = Math.max(-1.6 * W_STEP, Math.min(1.6 * W_STEP, -flickV * 140));
+    wheelT = 180 + Math.round((wheelA + contA - 180) / W_STEP) * W_STEP;
+    clearTimeout(wheelIdle);
+  }
+  dragging = false; document.body.classList.remove('panning');
+};
+addEventListener('pointerup', endPtr);
+addEventListener('pointercancel', endPtr);
+
+addEventListener('click', e => {
+  if (dragDist >= 8) return;
+  if (e.target.closest('#card, #controls, #domnav, #topbar, #back, .edge-dept, .node, .team-label, .tree, #hub, #reader, #about')) return;
+  if (state === 'fan') {
+    if (isMobile()) {
+      hideCard();
+      if (selectedEl) { selectedEl.classList.remove('selected'); selectedEl = null; }
+      if (fanEl) fanEl.querySelectorAll('.node.faded').forEach(n => n.classList.remove('faded'));
+    } else fitCurrent();
+  } else hideCard();
+});
+
+let wheelIdle = null;
+const stEmbedScroll = document.documentElement.classList.contains('tour') || document.documentElement.classList.contains('fanlock');
+addEventListener('wheel', e => {
+  if (stEmbedScroll) return;
+  if (e.target.closest('#card, #reader, #about, #search')) return;
+  e.preventDefault();
+  const now = performance.now();
+  if (e.ctrlKey || e.metaKey) {
+    if (now < zoomLock) return;
+    if (state === 'sky') {
+      zoomIntent += -e.deltaY;
+      if (zoomIntent > 110) {
+        dive(focusedIdx()); zoomIntent = 0; zoomLock = now + 900;
+      } else if (zoomIntent < -110) { zoomIntent = 0; }
+    } else if (state === 'fan') {
+      const zn = clampZFan(scale * Math.exp(-e.deltaY * 0.01));
+      if (zn <= 0.43 && e.deltaY > 0) {
+        zoomIntent += -e.deltaY;
+        if (zoomIntent < -110) { rise(); zoomIntent = 0; zoomLock = now + 900; }
+        return;
+      }
+      const cx = innerWidth / 2, cy = innerHeight * 0.56;
+      const k = zn / scale;
+      tx = (e.clientX - cx) - k * ((e.clientX - cx) - tx);
+      ty = (e.clientY - cy) - k * ((e.clientY - cy) - ty);
+      scale = zn; txT = tx; tyT = ty; scaleT = scale;
+    }
+    return;
+  }
+  if (state === 'fan') {
+    tx -= e.deltaX; txT = tx; ty -= e.deltaY; tyT = ty;
+  } else if (state === 'sky') {
+    const d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+    wheelT += d * 0.1;
+    clearTimeout(wheelIdle); wheelIdle = setTimeout(snapWheel, 300);
+  }
+}, { passive: stEmbedScroll });
+
+function snapWheel() {
+  wheelT = 180 + Math.round((wheelT - 180) / W_STEP) * W_STEP;
+}
+
+function zoomStep(dir) {
+  if (state === 'sky') { if (dir > 0) dive(focusedIdx()); return; }
+  scaleT = clampZFan(scaleT * (dir > 0 ? 1.25 : 0.8));
+  if (scaleT <= 0.43 && dir < 0) rise();
+}
+
+addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if (document.getElementById('about').classList.contains('open') || document.getElementById('reader').classList.contains('open')) return;
+    const s = document.getElementById('search');
+    if (s.classList.contains('open')) { s.classList.remove('open'); return; }
+    if (state === 'fan') rise(); else hideCard();
+  }
+  if (e.key === '0') fitCurrent();
+  if (state === 'fan') {
+    if (e.key === 'ArrowRight') buildFan((currentDept + 1) % N, 1, true) || fitCurrent();
+    if (e.key === 'ArrowLeft') buildFan((currentDept - 1 + N) % N, -1, true) || fitCurrent();
+  }
+});
+
+document.getElementById('back').addEventListener('click', rise);
+function stepWheel(d) {
+  if (state !== 'sky') return;
+  clearTimeout(wheelIdle);
+  wheelT = 180 + Math.round((wheelT - 180) / W_STEP) * W_STEP - d * W_STEP;
+}
+document.getElementById('wchev-l').addEventListener('click', () => stepWheel(-1));
+document.getElementById('wchev-r').addEventListener('click', () => stepWheel(1));
+document.getElementById('edge-l').addEventListener('click', () => { buildFan((currentDept - 1 + N) % N, -1, true); fitCurrent(); });
+document.getElementById('edge-r').addEventListener('click', () => { buildFan((currentDept + 1) % N, 1, true); fitCurrent(); });
+document.getElementById('zoom-out').addEventListener('click', () => zoomStep(-1));
+document.getElementById('zoom-in').addEventListener('click', () => zoomStep(1));
+document.getElementById('zoom-fit').addEventListener('click', () => fitCurrent());
+
+/* ============ NAV + COUNTS + INIT ============ */
+function updateCounts() {
+  let fn = 0, jobs = 0, skills = 0;
+  TREE.forEach(d => d.functions.forEach(f => { fn++; jobs += f.jobs.length; f.jobs.forEach(j => skills += j.skills.length); }));
+  const mine = myTotal();
+  document.getElementById('counts').textContent =
+    `${N} departments · ${fn} teams · ${jobs} real workflows · ${skills} skills mapped` + (mine ? ` · ${mine} live in your stack` : '');
+}
+updateCounts();
+
+/* ============ SKILL READER ============ */
+const readerEl = document.getElementById('reader');
+let readerText = '';
+const SKILL_COVERS = {};
+Object.entries(PLAYBOOK).forEach(([job, e]) =>
+  (e.files || []).forEach(f => (SKILL_COVERS[f.path] = SKILL_COVERS[f.path] || []).push(job)));
+HUB_ENTRY.files.forEach(f => (SKILL_COVERS[f.path] = SKILL_COVERS[f.path] || []).push(HUB));
+let lastReaderArgs = null;
+function openReader(path, label) {
+  stTrack('skill_file_opened', { skill: label || path });
+  lastReaderArgs = [path, label];
+  readerEl.querySelector('.rname').textContent = label;
+  readerEl.querySelector('.rbody').innerHTML = '<p>Skill file preview — full content available in the SpielOS platform.</p>';
+  readerEl.classList.add('open');
+}
+document.getElementById('rx').addEventListener('click', () => readerEl.classList.remove('open'));
+readerEl.addEventListener('click', e => { if (e.target === readerEl) readerEl.classList.remove('open'); });
+function copyText(text) {
+  return new Promise(resolve => {
+    const fallback = () => {
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = text; ta.setAttribute('readonly', '');
+        ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
+        document.body.appendChild(ta); ta.focus(); ta.select();
+        const ok = document.execCommand('copy');
+        document.body.removeChild(ta); resolve(ok);
+      } catch (e) { resolve(false); }
+    };
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(() => resolve(true), fallback);
+      else fallback();
+    } catch (e) { fallback(); }
+  });
+}
+document.getElementById('rcopy').addEventListener('click', e => {
+  const btn = e.currentTarget;
+  copyText(readerText).then(ok => { if (ok) { btn.textContent = 'Copied'; setTimeout(() => { btn.textContent = 'Copy'; }, 1400); } });
+});
+addEventListener('keydown', e => { if (e.key === 'Escape' && readerEl.classList.contains('open')) readerEl.classList.remove('open'); });
+
+/* ============ YOUR TREE · export / import / share ============ */
+function treeStats() {
+  let live = 0, dev = 0;
+  const perDept = TREE.map(d => {
+    const total = d.functions.reduce((s, f) => s + f.jobs.length, 0);
+    const l = d.functions.reduce((s, f) => s + f.jobs.filter(j => myOf(d, j) === 'live').length, 0);
+    const dv = d.functions.reduce((s, f) => s + f.jobs.filter(j => myOf(d, j) === 'dev').length, 0);
+    live += l; dev += dv;
+    return { name: d.name, live: l, dev: dv, total };
+  });
+  const hubLive = myOf(HUB_DOM, HUB_JOB) === 'live';
+  return { live, dev, perDept, hubLive };
+}
+function treeSummaryText() {
+  const s = treeStats();
+  const lines = s.perDept.filter(d => d.live || d.dev).map(d =>
+    `${d.name}: ${d.live}/${d.total} live${d.dev ? ` · ${d.dev} in development` : ''}`);
+  return `MY SPIELOS · ${s.live} real workflows live${s.dev ? ` · ${s.dev} in development` : ''}\n`
+    + `North Star (node zero): ${s.hubLive ? 'LIVE' : 'not yet'}\n`
+    + (lines.length ? lines.join('\n') + '\n' : '')
+    + `SpielOS · the operating system for your company`;
+}
+function treeJobsByStatus() {
+  const live = [], dev = [];
+  TREE.forEach(d => d.functions.forEach(f => f.jobs.forEach(j => {
+    const st = myOf(d, j);
+    if (st === 'live') live.push({ name: j.name, dept: d.name, color: d.color });
+    else if (st === 'dev') dev.push({ name: j.name, dept: d.name, color: d.color });
+  })));
+  return { live, dev };
+}
+function renderTreeLists() {
+  const el = document.getElementById('ab-lists');
+  if (!el) return;
+  const { live, dev } = treeJobsByStatus();
+  const group = (title, items, isDev) => {
+    if (!items.length) return '';
+    const rows = items.map(it =>
+      `<button class="ab-item" data-job="${it.name.replace(/"/g, '&quot;')}"><span class="dot${isDev ? ' devdot' : ''}" style="${isDev ? 'color:' + it.color : 'background:' + it.color}"></span><span class="it-name">${it.name}</span><span class="it-dept">${it.dept}</span></button>`).join('');
+    return `<div class="ab-lgroup"><div class="ab-lh${isDev ? ' dev' : ''}">${title} · ${items.length}</div><div class="ab-items">${rows}</div></div>`;
+  };
+  el.innerHTML = group('IN DEVELOPMENT', dev, true) + group('LIVE', live, false);
+}
+function refreshAboutStat() {
+  const s = treeStats();
+  document.getElementById('ab-stat').textContent = (s.live || s.dev)
+    ? `${s.live} real workflows live · ${s.dev} in development · saved in this browser. Export to back it up or move it.`
+    : 'Nothing marked yet · open any job on the map and set its status. Your tree saves in this browser.';
+  renderTreeLists();
+}
+function refreshTreeUI() {
+  updateCounts();
+  if (state === 'fan') buildFan(currentDept, 0, false);
+  refreshAboutStat();
+}
+document.getElementById('texport').addEventListener('click', () => {
+  const data = { resource: 'spielos', version: '1.0', exported: new Date().toISOString(), states: MY };
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
+  a.download = 'spielos-your-tree.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+document.getElementById('tcopy').addEventListener('click', e => {
+  const btn = e.currentTarget;
+  copyText(treeSummaryText()).then(ok => { if (ok) { btn.textContent = 'Copied'; setTimeout(() => { btn.textContent = 'Copy summary'; }, 1400); } });
+});
+document.getElementById('timport').addEventListener('click', () => document.getElementById('tfile').click());
+document.getElementById('tfile').addEventListener('change', e => {
+  const f = e.target.files[0];
+  if (!f) return;
+  f.text().then(t => {
+    try {
+      const data = JSON.parse(t);
+      const states = data.states || data;
+      if (typeof states !== 'object' || Array.isArray(states)) throw new Error('bad shape');
+      MY = {};
+      for (const [k, v] of Object.entries(states)) if ((v === 'live' || v === 'dev') && k.includes('::')) MY[k] = v;
+      localStorage.setItem(MY_KEY, JSON.stringify(MY));
+      refreshTreeUI();
+    } catch (err) {
+      document.getElementById('ab-stat').textContent = 'That file didn\'t look like a SpielOS export.';
+    }
+    e.target.value = '';
+  });
+});
+document.getElementById('treset').addEventListener('click', e => {
+  if (e.target.textContent !== 'Sure?') { e.target.textContent = 'Sure?'; setTimeout(() => { e.target.textContent = 'Reset'; }, 2200); return; }
+  MY = {};
+  localStorage.setItem(MY_KEY, JSON.stringify(MY));
+  e.target.textContent = 'Reset';
+  refreshTreeUI();
+});
+
+/* ============ SEARCH ============ */
+const SEARCH_IX = [{ di: -1, dept: 'Node zero', color: '#458588', fn: 'The hub', name: HUB, hay: 'north star hub brain node zero context memory' }];
+TREE.forEach((d, di) => d.functions.forEach(f => f.jobs.forEach(j =>
+  SEARCH_IX.push({ di, dept: d.name, color: d.color, fn: f.name, name: j.name,
+    hay: `${j.name} ${f.name} ${d.name} ${j.desc} ${j.skills.join(' ')}`.toLowerCase() }))));
+const searchEl = document.getElementById('search');
+const searchIn = searchEl.querySelector('input');
+const searchRes = searchEl.querySelector('.sres');
+let sHits = [], sSel = 0;
+
+function renderSearch(q) {
+  const terms = q.toLowerCase().split(/\s+/).filter(Boolean);
+  sHits = !terms.length
+    ? SEARCH_IX.slice(0, 9)
+    : SEARCH_IX.filter(x => terms.every(t => x.hay.includes(t))).slice(0, 12);
+  sSel = 0;
+  searchRes.innerHTML = sHits.length
+    ? sHits.map((x, i) =>
+        `<div class="sit${i === 0 ? ' sel' : ''}" data-i="${i}" style="--c:${x.color}"><span class="sdot"></span><span class="sname">${x.name}</span><span class="scrumb">${x.dept} · ${x.fn}</span></div>`).join('')
+    : `<div class="snone">nothing on the map matches · yet.</div>`;
+}
+function openSearch() { searchEl.classList.add('open'); searchIn.value = ''; renderSearch(''); searchIn.focus(); }
+function closeSearch() { searchEl.classList.remove('open'); searchIn.blur(); }
+function goSearch(i) {
+  const hit = sHits[i];
+  if (!hit) return;
+  closeSearch();
+  if (hit.di < 0) { selectHub(); return; }
+  if (state === 'fan') {
+    if (hit.di !== currentDept) buildFan(hit.di, 0, false);
+    jumpToJob(hit.name);
+  } else {
+    dive(hit.di);
+    setTimeout(() => jumpToJob(hit.name), 2150);
+  }
+}
+searchIn.addEventListener('input', () => renderSearch(searchIn.value));
+searchIn.addEventListener('keydown', e => {
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+    e.preventDefault();
+    sSel = (sSel + (e.key === 'ArrowDown' ? 1 : -1) + sHits.length) % Math.max(sHits.length, 1);
+    searchRes.querySelectorAll('.sit').forEach((el, i) => el.classList.toggle('sel', i === sSel));
+  } else if (e.key === 'Enter') goSearch(sSel);
+  else if (e.key === 'Escape') closeSearch();
+  e.stopPropagation();
+});
+searchRes.addEventListener('click', e => { const it = e.target.closest('.sit'); if (it) goSearch(+it.dataset.i); });
+searchEl.addEventListener('click', e => { if (e.target === searchEl) closeSearch(); });
+addEventListener('keydown', e => {
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openSearch(); return; }
+  if (e.key === '/' && !searchEl.classList.contains('open') && document.activeElement !== searchIn) { e.preventDefault(); openSearch(); }
+});
+
+/* ============ FIRST-VISIT NUDGE ============ */
+const NUDGES = ['tap a department to enter it', 'tap any job · mark what\'s live in your stack'];
+let nudgeStep = -1;
+const nudgeSeen = () => { try { return !!localStorage.getItem('spielos-seen'); } catch (e) { return true; } };
+function nudge(i) {
+  if (nudgeSeen()) return;
+  const n = document.getElementById('nudge');
+  nudgeStep = i;
+  if (i >= NUDGES.length) {
+    n.classList.remove('show');
+    try { localStorage.setItem('spielos-seen', '1'); } catch (e) {}
+    return;
+  }
+  n.textContent = NUDGES[i];
+  n.classList.add('show');
+}
+
+/* about panel */
+const aboutEl = document.getElementById('about');
+document.getElementById('aboutb').addEventListener('click', () => { refreshAboutStat(); aboutEl.classList.add('open'); });
+document.getElementById('ab-lists').addEventListener('click', e => {
+  const btn = e.target.closest('.ab-item');
+  if (!btn) return;
+  aboutEl.classList.remove('open');
+  jumpToJob(btn.dataset.job);
+});
+aboutEl.querySelector('.ab-x').addEventListener('click', () => aboutEl.classList.remove('open'));
+aboutEl.addEventListener('click', e => { if (e.target === aboutEl) aboutEl.classList.remove('open'); });
+addEventListener('keydown', e => { if (e.key === 'Escape' && aboutEl.classList.contains('open')) aboutEl.classList.remove('open'); });
+
+try { if (!document.documentElement.classList.contains('forcedark') && (localStorage.getItem('spielos-theme') === 'light' || location.hash.includes('light'))) document.body.classList.add('light'); } catch (e) {}
+
+skyW = buildSky();
+/* Populate bottom department nav */
+const domnav = document.getElementById('domnav');
+TREE.forEach((d, i) => {
+  const b = document.createElement('button');
+  b.innerHTML = `x3cspan class="dotc" style="--c:${d.color}"x3ex3c/spanx3e ${d.name}`;
+  b.addEventListener('click', () => { dive(i); });
+  domnav.appendChild(b);
+});
+const m0 = location.hash.match(/fan=(\d)/);
+if (m0) {
+  skyEl.style.display = 'none';
+  document.body.classList.add('fanmode');
+  document.getElementById('state-name').textContent = 'NAVIGATION';
+  state = 'fan';
+  buildFan(+m0[1], 0, true);
+}
+fitCurrent(true);
+function applyEmbedFit() {
+  const doc = document.documentElement;
+  if (doc.classList.contains('fanlock')) {
+    fitCurrent(true);
+    if (innerWidth < 700) {
+      const bw = fanBounds.maxX - fanBounds.minX, bh = fanBounds.maxY - fanBounds.minY;
+      scaleT = Math.min((innerWidth - 28) / bw, (innerHeight - 44) / bh);
+      txT = -((fanBounds.minX + fanBounds.maxX) / 2) * scaleT;
+      tyT = -((fanBounds.minY + fanBounds.maxY) / 2) * scaleT - innerHeight * 0.07;
+    } else {
+      const k = innerWidth < 1100 ? 1.35 : 1.75;
+      scaleT *= k; txT *= k; tyT *= k;
+    }
+    scale = scaleT; tx = txT; ty = tyT;
+  } else if (doc.classList.contains('tour')) {
+    fitCurrent(true);
+    if (innerWidth < 700) {
+      const ringSpan = (470 + 130) * 2;
+      scaleT = Math.min((innerWidth - 44) / ringSpan, (innerHeight - 64) / ringSpan);
+      txT = 0; tyT = -innerHeight * 0.015;
+      scale = scaleT; tx = txT; ty = tyT;
+    }
+  }
+}
+if (document.documentElement.classList.contains('tour') || document.documentElement.classList.contains('fanlock')) {
+  applyEmbedFit();
+  let _eft;
+  addEventListener('resize', () => { clearTimeout(_eft); _eft = setTimeout(applyEmbedFit, 120); });
+}
+requestAnimationFrame(() => requestAnimationFrame(() => document.body.classList.add('ready')));
+setTimeout(() => document.querySelectorAll('.tree').forEach(t => t.classList.add('settled')), 2200);
+
+/* Global transitioning safety: auto-clear after 3s max */
+(function () {
+  let safetyTimer = 0;
+  new MutationObserver(() => {
+    if (document.body.classList.contains('transitioning')) {
+      clearTimeout(safetyTimer);
+      safetyTimer = setTimeout(() => document.body.classList.remove('transitioning'), 3000);
+    }
+  }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+})();
+
+/* Deep-link support */
+(function () {
+  const params = new URLSearchParams(location.search);
+  const slug = (params.get('skill') || (location.hash.match(/skill=([a-z0-9-]+)/i) || [])[1] || '').trim();
+  const dept = (params.get('dept') || '').trim();
+  if (slug) {
+    const label = slug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+    setTimeout(() => { try { openReader('skills/' + slug + '.md', label); } catch (e) {} }, 850);
+    return;
+  }
+  if (dept) {
+    const idx = TREE.findIndex((d) => d.name.toLowerCase() === dept.toLowerCase());
+    if (idx < 0) return;
+    setTimeout(() => {
+      try {
+        skyEl.style.display = 'none';
+        document.body.classList.add('fanmode');
+        const sn = document.getElementById('state-name'); if (sn) sn.textContent = 'NAVIGATION';
+        state = 'fan';
+        buildFan(idx, 0, true);
+        if (typeof fitCurrent === 'function') fitCurrent(true);
+      } catch (e) {}
+    }, 700);
+  }
+})();
+</script>
+</BaseLayout>

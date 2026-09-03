@@ -31,6 +31,10 @@ export default defineConfig({
         // (hub, department pages, design gallery) → /solutions/ or
         // /solutions/ai-departments/**
         if (/^\/(fa\/)?use-cases(\/|$)/.test(path)) return false;
+        // Typo-route 301 stub: /solutions/workflows/recruitement-automation/
+        // → /solutions/workflows/recruitment-automation/ (kept for
+        // backward-compatible redirects, never sitemapped).
+        if (path === '/solutions/workflows/recruitement-automation/') return false;
         return true;
       },
     }),

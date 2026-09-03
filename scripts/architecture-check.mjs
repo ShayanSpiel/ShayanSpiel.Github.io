@@ -39,7 +39,10 @@ expect(!read("src/components/SocialIcons.astro").includes("<svg") && !read("src/
 expect(read("src/pages/use-cases/index.astro").includes("Astro.redirect") && read("src/pages/use-cases/index.astro").includes('"/solutions/"'), "legacy use-cases hub must remain a 301 redirect to Solutions");
 expect(baseLayout.includes('boxicons-subset.css') && !baseLayout.includes('boxicons/css/boxicons.min.css'), "the site must ship the generated Boxicons subset, not the full icon library");
 expect(!read("src/pages/apply.astro").includes("66shayan@gmail.com"), "Apply must not hardcode a legacy email address");
-expect(!read("src/components/Nav.astro").includes("brand-logos") && !read("src/components/home/ToolGrid.astro").includes("brand-logos"), "active navigation and tool surfaces must use the Boxicons contract");
+// Owner directive 2026-08-26: real brand marks are live on Nav + ToolGrid via
+// the single source of truth (src/data/brand-logos.ts). Boxicons remain the
+// icon system for every non-brand UI icon.
+expect(read("src/components/Nav.astro").includes("brandLogo") && read("src/components/home/ToolGrid.astro").includes("brandLogo"), "active navigation and tool surfaces must use the real brand-logo system (brandLogo from src/data/brand-logos.ts)");
 expect(read("src/pages/contact/thank-you.astro").includes('robots="noindex, follow"'), "contact thank-you page must be noindex");
 expect(read("src/pages/spielos-v1.astro").includes('robots="noindex, follow"'), "archived v1 page must be noindex");
 expect(baseLayout.includes("cta_clicked") && baseLayout.includes("book_call"), "BaseLayout must track booking CTA clicks as book_call");

@@ -83,8 +83,12 @@ for (const page of realPages) {
   check(/<meta name="twitter:card"/.test(html), "  missing twitter:card", rel);
   const pageIsNoindex = /<meta name="robots"[^>]*content="[^"]*noindex/i.test(html);
   if (!pageIsNoindex) {
+    // Every indexable page declares its language cluster. Pages with an FA
+    // twin carry en+fa+x-default; EN-only pages (BaseLayout noAlternate)
+    // legitimately carry en+x-default with no fa target — a missing fa
+    // alternate is valid when no twin is built, and any fa alternate that
+    // IS present must resolve and reciprocate (validated below).
     check(/<link rel="alternate" hreflang="en"/.test(html), "  missing hreflang en", rel);
-    check(/<link rel="alternate" hreflang="fa"/.test(html), "  missing hreflang fa", rel);
     check(/<link rel="alternate" hreflang="x-default"/.test(html), "  missing hreflang x-default", rel);
   }
 

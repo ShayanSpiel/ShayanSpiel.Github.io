@@ -1,10 +1,9 @@
 ---
 import { brandLogo } from "../../data/brand-logos";
 
-export interface Props { locale?: string; }
-const { locale = "en" } = Astro.props;
 
-/** Exact 7-step revenue loop — copy of recruitement-automation flow card */
+
+/** Exact 7-step revenue loop — copy of recruitment-automation flow card */
 // Role-step icons: fluent-emoji-flat cool face emojis (stars, cool, partyface, think, moneymouth, sweat, love)
 const steps = [
   { title: "Marketing Specialist", seed: "Marketing Specialist", emoji: "stars" },
@@ -16,7 +15,7 @@ const steps = [
   { title: "Customer Success", seed: "Customer Success", emoji: "love" },
 ];
 
-/** Per-step tool groups — 3-4 famous tools per step, same h-7 w-7 treatment as recruitement page */
+/** Per-step tool groups — 3-4 famous tools per step, same h-7 w-7 treatment as recruitment page */
 const stepTools: string[][] = [
   ["hubspot", "notion", "sheets"],        // Marketing Specialist — 3
   ["gmail", "calendly"],                  // Sales Rep — 2
@@ -69,7 +68,7 @@ const hrefMap: Record<string, string | undefined> = {
       return (
         <li class="flow-station relative flex items-center gap-4 sm:flex-col sm:gap-3 sm:text-center">
           <div class:list={["flow-node relative z-10 flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-md border bg-panel-raised p-0", last ? "border-success text-success shadow-[0_0_24px_var(--success-soft)]" : i === 0 ? "border-primary text-primary shadow-[0_0_24px_var(--primary-soft)]" : "border-border text-muted-foreground"]}>
-            <img src={`/assets/emojis/fluent-${s.emoji}.svg`} alt={s.title} class="h-7 w-7" aria-hidden="true" />
+            <img src={`/assets/emojis/fluent-${s.emoji}.svg`} alt={s.title} width="28" height="28" loading="lazy" decoding="async" class="h-7 w-7" aria-hidden="true" />
           </div>
           <p class:list={["text-xs font-semibold leading-snug", last ? "text-success" : i === 0 ? "text-foreground-strong" : "text-foreground-muted"]}>{s.title}</p>
         </li>
@@ -80,10 +79,10 @@ const hrefMap: Record<string, string | undefined> = {
       <div class="absolute top-0 h-full w-8 bg-primary opacity-95 shadow-[0_0_12px_var(--primary)] animate-global-h-shine" style="left: -32px;"></div>
     </div>
   </ol>
-  <!-- Per-step tool groups — identical to recruitement page: vertical stem 2-3px below step name, calm shine -->
+  <!-- Per-step tool groups — identical to recruitment page: vertical stem 2-3px below step name, calm shine -->
   <div class="relative z-10 mt-[2px] sm:mt-[3px]">
     <div class="grid gap-6 sm:grid-cols-7 sm:gap-0">
-      {stepTools.map((keys, idx) => (
+      {stepTools.map((keys) => (
         <div class="flex flex-col items-center">
           <div class="relative h-7 w-px overflow-hidden bg-primary/15 sm:h-9">
             <div class="absolute left-1/2 top-0 h-2 w-px -translate-x-1/2 bg-primary opacity-95 shadow-[0_0_8px_var(--primary)] animate-stem-shine" style={`animation-delay: ${(Math.random() * 1.4).toFixed(2)}s`}></div>
@@ -114,7 +113,7 @@ const hrefMap: Record<string, string | undefined> = {
 </div>
 
 <style>
-  /* Exact copy from recruitement-automation.astro — connector geometry */
+  /* Exact copy from recruitment-automation.astro — connector geometry */
   .flow-station:not(:last-child)::before {
     content: "";
     position: absolute;
