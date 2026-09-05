@@ -243,8 +243,8 @@
     form.id = "chat-ask-form";
     form.className = "chat-ask-form";
     form.innerHTML =
-      '<label><span class="sr-only">' + escapeHtml(T("name", "Name")) + '</span><input name="name" type="text" required maxlength="80" placeholder="' + escapeHtml(T("namePh", "Name")) + '" autocomplete="name"></label>' +
-      '<label><span class="sr-only">' + escapeHtml(T("contact", "Email or phone")) + '</span><input name="contact" type="text" required maxlength="254" placeholder="' + escapeHtml(T("contactPh", "Email or phone")) + '" autocomplete="email"></label>' +
+      '<label class="chat-ask-field"><span>' + escapeHtml(T("name", "Name")) + '</span><input name="name" type="text" required maxlength="80" placeholder="' + escapeHtml(T("namePh", "Name")) + '" autocomplete="name"></label>' +
+      '<label class="chat-ask-field"><span>' + escapeHtml(T("contact", "Email or phone")) + '</span><input name="contact" type="text" required maxlength="254" placeholder="' + escapeHtml(T("contactPh", "Email or phone")) + '" autocomplete="email"></label>' +
       '<button type="submit" class="chat-ask-send">' + escapeHtml(T("sendContact", "Send")) + "</button>";
     bubble.innerHTML = '<p>' + escapeHtml(T("askTitle", "Can I ask who I\'m talking to — so a human on our side can get back to you fast?")) + '</p>';
     bubble.appendChild(form);
@@ -418,7 +418,7 @@
   els.messages.addEventListener("click", function (e) {
     var retry = e.target.closest("[data-chat-retry]");
     if (retry) {
-      retry.parentNode.remove();
+      retry.closest(".chat-msg-error").remove();
       var last = state.history[state.history.length - 1];
       if (last && last.role === "user") {
         state.history.pop();
