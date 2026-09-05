@@ -63,3 +63,6 @@ company.db
 company.sqlite
 company.sqlite-*
 company.db-*
+
+# Local env (chat dev URL etc.) — never commit; CI must build without it
+.env

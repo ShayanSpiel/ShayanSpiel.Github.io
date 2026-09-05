@@ -4,6 +4,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    }
-  }
+    },
+    "exclude": ["./node_modules", "./dist", "./supabase/functions/chat/test"]
+  },
+  "exclude": ["./node_modules", "./dist", "./supabase/functions"]
 }

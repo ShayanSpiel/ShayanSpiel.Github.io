@@ -1,0 +1,6 @@
+project_id = "shayanspiel-site"
+
+# The static website calls this function anonymously (no Supabase auth on the
+# site); the function's own CORS allowlist + rate limits are the access control.
+[functions.chat]
+verify_jwt = false

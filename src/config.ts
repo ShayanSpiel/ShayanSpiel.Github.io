@@ -271,3 +271,12 @@ export const SUPABASE = {
   url: "https://avyvodinzklyaoketxye.supabase.co",
   anonKey: "sb_publishable_bptu_veUtq7L-qs1ZALYXg_je6vxoh5",
 };
+
+// Chat assistant (goal-3220ae01c4f7): the Supabase Edge Function `chat` on
+// the CRM project. Empty string disables the assistant entirely (the
+// component renders nothing) — the safe default until the function is
+// deployed with its secrets. Local dev sets PUBLIC_CHAT_FUNCTION_URL in an
+// untracked .env; production gets the real URL at deploy time.
+export const CHAT = {
+  functionUrl: import.meta.env.PUBLIC_CHAT_FUNCTION_URL || "",
+};

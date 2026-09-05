@@ -1,0 +1,115 @@
+---
+// ChatAssistant v3 — minimal support-chat widget (Preline structure, site
+// tokens). No default CTAs; the Apply button appears only contextually when
+// the assistant's answer mentions the Free Review. Plan: goal-3220ae01c4f7.
+import { CHAT } from "../../config";
+import { type Locale, t } from "../../i18n/translations";
+import chatLinks from "../../data/chat-links.json";
+
+export interface Props { locale?: Locale; }
+const { locale = "en" } = Astro.props;
+const enabled = !!(CHAT && CHAT.functionUrl);
+---
+
+{enabled && (
+  <chat-assistant
+    class="chat-root"
+    data-locale={locale}
+    data-function-url={CHAT.functionUrl}
+  >
+    <script is:inline type="application/json" id="chat-links-data" set:html={JSON.stringify(chatLinks)} />
+
+    <button
+      type="button"
+      id="chat-launcher"
+      class="chat-launcher"
+      aria-expanded="false"
+      aria-controls="chat-sheet"
+      aria-label={t(locale, "chat.launcherAria")}
+    >
+      <i class="bx bx-chat chat-icon" aria-hidden="true"></i>
+    </button>
+
+    <div id="chat-backdrop" class="chat-backdrop" hidden></div>
+
+    <section
+      id="chat-sheet"
+      class="chat-sheet"
+      role="dialog"
+      aria-modal="true"
+      aria-label={t(locale, "chat.sheetAria")}
+      hidden
+    >
+      <script is:inline type="application/json" id="chat-i18n" set:html={JSON.stringify({
+        retry: t(locale, "chat.retry"),
+        errorLine: t(locale, "chat.errorLine"),
+        captureTitle: t(locale, "chat.captureTitle"),
+        captureSub: t(locale, "chat.captureSub"),
+        name: t(locale, "chat.name"),
+        email: t(locale, "chat.email"),
+        company: t(locale, "chat.company"),
+        needsPlaceholder: t(locale, "chat.needsPlaceholder"),
+        sendContact: t(locale, "chat.sendContact"),
+        captureIntroUser: t(locale, "chat.captureIntroUser"),
+        applyCta: t(locale, "chat.applyCta"),
+      })} />
+
+      <header class="chat-header">
+        <span class="chat-avatar" aria-hidden="true">
+          <i class="bx bx-bot"></i>
+          <span class="chat-status-dot"></span>
+        </span>
+        <div class="chat-header-titles">
+          <span class="chat-header-name">SpielOS</span>
+          <span class="chat-header-sub">{t(locale, "chat.headerSub")}</span>
+        </div>
+        <button
+          type="button"
+          id="chat-close"
+          class="chat-close"
+          aria-label={t(locale, "chat.close")}
+        >
+          <i class="bx bx-x icon-lg" aria-hidden="true"></i>
+        </button>
+      </header>
+
+      <div id="chat-messages" class="chat-messages" aria-live="polite">
+        <div class="chat-msg chat-msg-assistant">
+          <p>{t(locale, "chat.greeting")}</p>
+        </div>
+      </div>
+
+      <form id="chat-composer" class="chat-composer" autocomplete="off">
+        <label for="chat-input" class="sr-only">{t(locale, "chat.inputAria")}</label>
+        <textarea
+          id="chat-input"
+          class="chat-input"
+          rows="1"
+          maxlength="2000"
+          placeholder={t(locale, "chat.placeholder")}
+        ></textarea>
+        <button
+          type="submit"
+          id="chat-send"
+          class="chat-send"
+          aria-label={t(locale, "chat.sendAria")}
+          disabled
+        >
+          <i class="bx bx-send rtl-flip" aria-hidden="true"></i>
+        </button>
+      </form>
+    </section>
+
+    <script is:inline>
+      (function () {
+        try {
+          var links = document.getElementById("chat-links-data");
+          if (links) window.SPIELOS_CHAT_LINKS = JSON.parse(links.textContent);
+        } catch (e) { /* chat renders plain text if allowlist missing */ }
+      })();
+    </script>
+    <script>
+      import "./chat.js";
+    </script>
+  </chat-assistant>
+)}
