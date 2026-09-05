@@ -4,6 +4,7 @@ import "../assets/fonts/fonts.css";
 import "../styles/boxicons-subset.css";
 import { SITE, AUTHOR, SEO, ANALYTICS, SOCIAL } from "../config";
 import { type Locale, t } from "../i18n/translations";
+import ChatAssistant from "../components/features/ChatAssistant.astro";
 
 export interface Props {
   title: string;
@@ -211,6 +212,8 @@ const bookingEnabled = /^\/(?:fa\/)?(?:apply|contact)\/?$/.test(Astro.url.pathna
       <slot />
     </main>
     <slot name="footer" />
+
+    <ChatAssistant locale={locale} />
 
     <script>
       import AOS from "aos";
