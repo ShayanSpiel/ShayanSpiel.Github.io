@@ -941,7 +941,7 @@ html.aos-revealed [data-aos] {
   gap: 0.45rem;
   max-width: min(15.5rem, calc(100vw - 7rem));
   padding: 0.4rem 0.7rem;
-  border-radius: 999px;
+  border-radius: var(--radius-md);
   background: var(--panel);
   color: var(--foreground);
   border: 1px solid var(--border);
@@ -976,7 +976,7 @@ html.aos-revealed [data-aos] {
   flex-shrink: 0;
   width: 0.45rem;
   height: 0.45rem;
-  border-radius: 999px;
+  border-radius: var(--radius-md);
   background: oklch(0.72 0.19 149);
   box-shadow: 0 0 0 0 oklch(0.72 0.19 149 / 0.5);
   animation: chat-teaser-pulse 2.2s ease-out infinite;
@@ -1103,7 +1103,7 @@ html.aos-revealed [data-aos] {
   inset-inline-end: -2px;
   width: 0.5rem;
   height: 0.5rem;
-  border-radius: 9999px;
+  border-radius: var(--radius-md);
   background: var(--success);
   box-shadow: 0 0 0 2px var(--panel);
 }
@@ -1200,7 +1200,7 @@ html.aos-revealed [data-aos] {
 .chat-dot {
   width: 5px;
   height: 5px;
-  border-radius: 9999px;
+  border-radius: var(--radius-sm);
   background: var(--muted-foreground);
   animation: chatDotPulse 1.2s var(--ease) infinite;
 }
