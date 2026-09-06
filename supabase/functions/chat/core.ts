@@ -338,47 +338,47 @@ export async function persistLead(
   const nowIso = now.toISOString();
   const segment = lead.segment ?? "other";
   const bestMatch = deriveBestMatchWorkflow(lead);
-  // Dedupe: email match first; phone-only contacts match on the stored
-  // personalization-hook channel (we park the phone there for v1 until the
-  // CRM grows a phone column) via lead_key "phone:<digits>".
+  // Chat storage is its own world (owner directive 2026-09-06):
+  // public.chat_leads, never the outbound CRM. Dedupe on email first,
+  // then phone:<digits>.
   const leadKey = email ? email : "phone:" + phone;
-  let existing: unknown = null;
-  if (email) {
-    const r = await sb.from("leads").select("id,lead_key,email,contact_name,segment,sources").eq("email", email).maybeSingle();
-    if (r.error) return { ok: false, error: String(r.error) };
-    existing = r.data;
-  }
-  if (!existing && phone) {
-    const r = await sb.from("leads").select("id,lead_key,email,contact_name,segment,sources").eq("lead_key", leadKey).maybeSingle();
-    if (r.error) return { ok: false, error: String(r.error) };
-    existing = r.data;
-  }
-  const readErr = null;
+  const { data: existing, error: selErr } = await sb
+    .from("chat_leads")
+    .select("id,lead_key,email,contact_name,message_count")
+    .eq("lead_key", leadKey)
+    .maybeSingle();
+  if (selErr) return { ok: false, error: String(selErr) };
   if (existing) {
-    const ex = existing as Record<string, unknown>;
-    const prevSources = Array.isArray(ex.sources) ? (ex.sources as unknown[]) : [];
-    const sources = prevSources.includes("website_chat") ? prevSources : [...prevSources, "website_chat"];
-    const patch: Record<string, unknown> = { sources, updated_at: nowIso };
+    const ex = existing as { id: number; contact_name: string | null; message_count: number };
+    const patch: Record<string, unknown> = {
+      updated_at: nowIso,
+      last_session_id: ctx.session_id,
+      message_count: (ex.message_count ?? 1) + 1,
+    };
     if (typeof ex.contact_name !== "string" || ex.contact_name.trim() === "") patch.contact_name = lead.name;
     if (bestMatch) patch.best_match_workflow = bestMatch;
-    // Remember the latest channel; v1 parks phone in personalization_hook.
-    if (phone) patch.personalization_hook = "phone: " + phone;
-    const { error: updErr } = await sb.from("leads").update(patch).eq("id", String(ex.id));
+    if (phone) patch.phone = phone;
+    if (lead.company) patch.company = lead.company;
+    if (lead.needs) patch.needs = lead.needs;
+    const { error: updErr } = await sb.from("chat_leads").update(patch).eq("id", String(ex.id));
     if (updErr) return { ok: false, error: String(updErr) };
     return { ok: true };
   }
   {
-    const { error: insErr } = await sb.from("leads").insert([
+    const { error: insErr } = await sb.from("chat_leads").insert([
       {
         lead_key: leadKey,
         email: email || null,
+        phone: phone || null,
         contact_name: lead.name,
+        company: lead.company || null,
+        needs: lead.needs || null,
         segment,
-        sources: ["website_chat"],
         best_match_workflow: bestMatch,
-        personalization_hook: phone ? "phone: " + phone : null,
-        country: null,
-        icp_score: null,
+        locale: ctx.locale,
+        first_session_id: ctx.session_id,
+        last_session_id: ctx.session_id,
+        message_count: 1,
         created_at: nowIso,
         updated_at: nowIso,
       },
@@ -388,23 +388,30 @@ export async function persistLead(
   }
 }
 
-export async function appendEmailEvent(
+/** Append one completed exchange to the chat transcript table (never blocks capture). */
+export async function appendConversation(
   sb: SupabaseLike,
-  lead: CapturedLead,
-  ctx: { session_id: string; locale: string; needs?: string },
+  ctx: {
+    session_id: string;
+    reply_id: string;
+    locale: string;
+    user_message: string;
+    assistant_reply: string;
+    captured_lead_key?: string;
+    provider?: string;
+  },
   now = new Date(),
 ): Promise<{ ok: boolean; error?: string }> {
-  const { error } = await sb.from("email_events").insert([
+  const { error } = await sb.from("chat_conversations").insert([
     {
-      lead_key: lead.email,
-      email: lead.email,
-      event: "captured",
-      at: now.toISOString(),
-      subject: "Website chat lead captured",
-      provider: "mistral-chat",
-      campaign: "chat-assistant",
-      batch: null,
-      detail: JSON.stringify({ session_id: ctx.session_id, needs: ctx.needs ?? lead.needs, locale: ctx.locale, phone: lead.phone || undefined }),
+      session_id: ctx.session_id,
+      reply_id: ctx.reply_id,
+      locale: ctx.locale,
+      user_message: ctx.user_message,
+      assistant_reply: ctx.assistant_reply,
+      captured_lead_key: ctx.captured_lead_key ?? null,
+      provider: ctx.provider ?? null,
+      created_at: now.toISOString(),
     },
   ]);
   return error ? { ok: false, error: String(error) } : { ok: true };
@@ -590,6 +597,9 @@ export async function handleChat(req: MinimalRequest, deps: HandlerDeps): Promis
 
   const replyId = `r-${Date.now().toString(36)}-${(replyCounter.n++).toString(36)}`;
 
+  // Last user message (for the transcript row; the one that triggered this reply).
+  const lastUserMessage = messages.length > 0 ? String(messages[messages.length - 1]?.content ?? "").slice(0, 2000) : "";
+
   // Upstream call with streaming + provider failover: try Mistral first,
   // fall back to Gemini when Mistral is rate-limited (429) or unavailable.
   // Both expose OpenAI-compatible SSE, so parsing is shared.
@@ -710,8 +720,13 @@ export async function handleChat(req: MinimalRequest, deps: HandlerDeps): Promis
           }
           if (captured && !alreadyCaptured) {
             alreadyCaptured = true;
-            // CRM write happens before the client is told the capture landed.
-            const leadOk = await writeLead(deps, captured, { session_id, locale, now: deps.now?.() });
+            // Chat-lead write happens before the client is told the capture landed.
+            const leadOk = await writeLead(deps, captured, { session_id, locale, now: deps.now?.() }, {
+              reply_id: replyId,
+              user_message: lastUserMessage,
+              assistant_reply: visible,
+              provider,
+            });
             if (leadOk) {
               const ev = sseFrame({ capture: true, thanks_line: thanksLine(locale) });
               controller.enqueue(typeof ev === "string" ? encoder.encode(ev) : ev);
@@ -745,6 +760,11 @@ export async function handleChat(req: MinimalRequest, deps: HandlerDeps): Promis
         const d1 = sseFrame({ done: true, reply_id: replyId });
         controller.enqueue(typeof d1 === "string" ? encoder.encode(d1) : d1);
         controller.close();
+        // Transcript for non-capturing exchanges (capturing ones are logged
+        // inside writeLead). Fire-and-forget; never affects the visitor.
+        if (!alreadyCaptured) {
+          await logConversation(deps, { session_id, reply_id: replyId, locale, provider, now: deps.now?.() }, lastUserMessage, visible);
+        }
       } catch (e) {
         console.error(`[chat] ${session_id}: stream error: ${String(e)}`);
         try {
@@ -793,6 +813,7 @@ async function writeLead(
   deps: HandlerDeps,
   lead: CapturedLead,
   ctx: { session_id: string; locale: string; now?: Date },
+  transcriptCtx: { reply_id: string; user_message: string; assistant_reply: string; provider?: string },
 ): Promise<boolean> {
   const { getEnv, createClient, fetchImpl } = deps;
   const url = getEnv("SUPABASE_URL");
@@ -810,14 +831,51 @@ async function writeLead(
   }
   const leadOk = await persistLead(sb, lead, ctx, ctx.now);
   if (!leadOk.ok) {
-    console.error(`[chat] ${ctx.session_id}: persistLead failed: ${leadOk.error}`);
+    console.error(`[chat] ${ctx.session_id}: persistLead failed; ${leadOk.error}`);
     return false;
   }
-  const evOk = await appendEmailEvent(sb, lead, ctx, ctx.now);
-  if (!evOk.ok) console.error(`[chat] ${ctx.session_id}: email_events insert failed: ${evOk.error}`);
+  // Transcript row for the capturing exchange (non-blocking; failure logged only).
+  const leadKey = lead.email ? lead.email : "phone:" + lead.phone;
+  const convoOk = await appendConversation(sb, {
+    session_id: ctx.session_id,
+    reply_id: transcriptCtx.reply_id,
+    locale: ctx.locale,
+    user_message: transcriptCtx.user_message,
+    assistant_reply: transcriptCtx.assistant_reply,
+    captured_lead_key: leadKey,
+    provider: transcriptCtx.provider,
+  }, ctx.now);
+  if (!convoOk.ok) console.error(`[chat] ${ctx.session_id}: conversations insert failed; ${convoOk.error}`);
   // FormSubmit is a bonus channel - never blocks the capture event.
   await notifyFormSubmit(lead, fetchImpl);
   return true;
+}
+
+/** Persist the transcript of a non-capturing exchange (fire-and-forget, best effort). */
+async function logConversation(
+  deps: HandlerDeps,
+  ctx: { session_id: string; reply_id: string; locale: string; provider?: string; now?: Date },
+  user_message: string,
+  assistant_reply: string,
+): Promise<void> {
+  const url = deps.getEnv("SUPABASE_URL");
+  const key = deps.getEnv("SUPABASE_SERVICE_ROLE_KEY");
+  if (!url || !key) return;
+  let sb: SupabaseLike;
+  try {
+    sb = deps.createClient(url, key);
+  } catch {
+    return;
+  }
+  const ok = await appendConversation(sb, {
+    session_id: ctx.session_id,
+    reply_id: ctx.reply_id,
+    locale: ctx.locale,
+    user_message,
+    assistant_reply,
+    provider: ctx.provider,
+  }, ctx.now);
+  if (!ok.ok) console.error(`[chat] ${ctx.session_id}: transcript insert failed; ${ok.error}`);
 }
 
 // Exported for tests: mistral SSE line parser and helpers.

@@ -120,7 +120,7 @@ async function test(name, fn) {
   } catch (e) {
     failed += 1;
     failures.push({ name, error: e });
-    console.log(`FAIL  ${name}\n      ${e.message.split("\n")[0]}`);
+    console.log(`FAIL  ${name}\n      ${e.message.split("\n").slice(0, 6).join("\n      ")}`);
   }
 }
 
@@ -295,7 +295,12 @@ await test("plain SSE flow: deltas + done, no capture", async () => {
   assert.ok(events.at(-1).reply_id.startsWith("r-"));
   assert.ok(!raw.includes("<<CAPTURE"));
   assert.equal(mock.log.formsubmit.length, 0, "no FormSubmit without capture");
-  assert.equal(mock.log.postgrest.length, 0, "no CRM writes without capture");
+  // New storage model: every completed exchange is transcribed (chat.conversations),
+  // but no lead row is written without a capture.
+  const convoWrites = mock.log.postgrest.filter((p) => p.method === "POST" && p.table === "chat_conversations");
+  assert.equal(convoWrites.length, 1, "transcript written for non-capturing exchange");
+  assert.equal(convoWrites[0].body[0].captured_lead_key, null, "no captured lead key without capture");
+  assert.equal(mock.log.postgrest.filter((p) => p.method === "POST" && p.table === "chat_leads").length, 0, "no lead writes without capture");
 });
 
 await test("capture flow: marker parsed, stripped, lead upserted, event appended, formsubmit sent", async () => {
@@ -313,58 +318,56 @@ await test("capture flow: marker parsed, stripped, lead upserted, event appended
   const deltas = events.filter((e) => typeof e.delta === "string").map((d) => d.delta).join("");
   assert.equal(deltas, "Thanks for sharing! Here's the plan.\n\n I'll have the team reach out.");
 
-  // CRM: read-before-write happened (select by email first)
-  const selects = mock.log.postgrest.filter((p) => p.method === "GET" && p.table === "leads");
+  // Chat store: read-before-write happened (select by lead_key)
+  const selects = mock.log.postgrest.filter((p) => p.method === "GET" && p.table === "chat_leads");
   assert.equal(selects.length, 1);
-  assert.equal(selects[0].emailFilter, "john@example.com", "email must be lowercased");
+  assert.equal(selects[0].emailFilter, null);
   // lead insert
-  const inserts = mock.log.postgrest.filter((p) => p.method === "POST" && p.table === "leads");
+  const inserts = mock.log.postgrest.filter((p) => p.method === "POST" && p.table === "chat_leads");
   assert.equal(inserts.length, 1);
   const lead = inserts[0].body[0];
   assert.equal(lead.lead_key, "john@example.com");
   assert.equal(lead.email, "john@example.com");
   assert.equal(lead.contact_name, "John Doe");
   assert.equal(lead.segment, "software/product");
-  assert.deepEqual(lead.sources, ["website_chat"]);
+  assert.equal(lead.locale, "en");
+  assert.equal(lead.message_count, 1);
   assert.ok(lead.best_match_workflow === null || typeof lead.best_match_workflow === "string");
-  // email_events row
-  const ev = mock.log.postgrest.filter((p) => p.method === "POST" && p.table === "email_events");
+  // conversations transcript row for the capturing exchange
+  const ev = mock.log.postgrest.filter((p) => p.method === "POST" && p.table === "chat_conversations");
   assert.equal(ev.length, 1);
   const row = ev[0].body[0];
-  assert.equal(row.event, "captured");
-  assert.equal(row.campaign, "chat-assistant");
-  assert.equal(row.provider, "mistral-chat");
-  assert.equal(row.subject, "Website chat lead captured");
-  const detail = JSON.parse(row.detail);
-  assert.equal(typeof detail.session_id, "string");
-  assert.equal(detail.needs, "automate invoicing");
-  assert.equal(detail.locale, "en");
+  assert.equal(row.reply_id.length > 0, true);
+  assert.equal(typeof row.user_message, "string");
+  assert.equal(typeof row.assistant_reply, "string");
+  assert.equal(row.captured_lead_key, "john@example.com");
   // FormSubmit attempted
   assert.equal(mock.log.formsubmit.length, 1);
   assert.equal(mock.log.formsubmit[0].body.email, "john@example.com");
   assert.equal(mock.log.formsubmit[0].body._subject, "New chat lead — spielos.xyz");
 });
 
-await test("capture flow: existing lead -> update path (contact_name kept, sources appended)", async () => {
+await test("capture flow: existing lead -> update path (contact_name kept, message_count bumped)", async () => {
   const { deps, mock } = makeDeps("capture-split");
-  // seed the CRM with an existing lead
+  // seed the chat store with an existing lead
   mock.crm.leads.set(42, {
     id: 42,
+    lead_key: "john@example.com",
     email: "john@example.com",
     contact_name: "Pre Existing",
-    sources: ["outbound"],
+    message_count: 3,
     segment: "ops",
   });
   const res = await core.handleChat(makeRequest({ body: validBody() }), deps);
   const { events } = await readSse(res);
   assert.ok(events.some((e) => e.capture === true));
-  const patches = mock.log.postgrest.filter((p) => p.method === "PATCH" && p.table === "leads");
+  const patches = mock.log.postgrest.filter((p) => p.method === "PATCH" && p.table === "chat_leads");
   assert.equal(patches.length, 1);
   const patch = patches[0].body;
   assert.equal(patch.contact_name, undefined, "existing contact_name must NOT be overwritten");
-  assert.deepEqual(patch.sources, ["outbound", "website_chat"]);
+  assert.equal(patch.message_count, 4, "message_count bumped");
   assert.ok(patch.updated_at);
-  assert.equal(mock.log.postgrest.filter((p) => p.method === "POST" && p.table === "leads").length, 0, "no insert on existing");
+  assert.equal(mock.log.postgrest.filter((p) => p.method === "POST" && p.table === "chat_leads").length, 0, "no insert on existing");
 });
 
 await test("capture with invalid email -> no capture event, no CRM writes", async () => {
@@ -373,7 +376,9 @@ await test("capture with invalid email -> no capture event, no CRM writes", asyn
   const { raw, events } = await readSse(res);
   assert.ok(!raw.includes("<<CAPTURE"));
   assert.ok(!events.some((e) => e.capture === true), "invalid capture must not emit capture event");
-  assert.equal(mock.log.postgrest.length, 0);
+  // No lead row; transcript of the exchange is still kept (review value).
+  assert.equal(mock.log.postgrest.filter((p) => p.method === "POST" && p.table === "chat_leads").length, 0, "no lead row on invalid capture");
+  assert.equal(mock.log.postgrest.filter((p) => p.method === "GET" && p.table === "chat_leads").length, 0, "no lead lookup on invalid capture");
   assert.equal(mock.log.formsubmit.length, 0);
 });
 
@@ -382,19 +387,19 @@ await test("capture with segment outside vocabulary -> stored as other", async (
   const res = await core.handleChat(makeRequest({ body: validBody() }), deps);
   const { events } = await readSse(res);
   assert.ok(events.some((e) => e.capture === true));
-  const inserts = mock.log.postgrest.filter((p) => p.method === "POST" && p.table === "leads");
+  const inserts = mock.log.postgrest.filter((p) => p.method === "POST" && p.table === "chat_leads");
   assert.equal(inserts[0].body[0].segment, "other");
 });
 
-await test("capture in FA locale -> Persian thanks_line, locale in event detail", async () => {
+await test("capture in FA locale -> Persian thanks_line, locale in transcript", async () => {
   const { deps, mock } = makeDeps("capture-fa");
   const res = await core.handleChat(makeRequest({ body: validBody({ locale: "fa" }) }), deps);
   const { events } = await readSse(res);
   const cap = events.find((e) => e.capture === true);
   assert.ok(cap);
   assert.ok(/[\u0600-\u06FF]/.test(cap.thanks_line), "FA thanks_line must be Persian");
-  const ev = mock.log.postgrest.filter((p) => p.method === "POST" && p.table === "email_events");
-  assert.equal(JSON.parse(ev[0].body[0].detail).locale, "fa");
+  const leads = mock.log.postgrest.filter((p) => p.method === "POST" && p.table === "chat_leads");
+  assert.equal(leads[0].body[0].locale, "fa");
 });
 
 await test("double marker in one reply -> only one capture event", async () => {
@@ -405,7 +410,7 @@ await test("double marker in one reply -> only one capture event", async () => {
   assert.equal(events.filter((e) => e.capture === true).length, 1);
   const deltas = events.filter((e) => typeof e.delta === "string").map((d) => d.delta).join("");
   assert.equal(deltas, " one  two.");
-  assert.equal(mock.log.postgrest.filter((p) => p.method === "POST" && p.table === "leads").length, 1);
+  assert.equal(mock.log.postgrest.filter((p) => p.method === "POST" && p.table === "chat_leads").length, 1);
 });
 
 await test("marker-only reply -> capture event, empty visible text", async () => {
@@ -423,8 +428,8 @@ await test("FormSubmit 500 does NOT block capture", async () => {
   const { events } = await readSse(res);
   assert.ok(events.some((e) => e.capture === true), "capture:true even when FormSubmit fails");
   assert.equal(mock.log.formsubmit.length, 1, "FormSubmit was attempted");
-  assert.equal(mock.log.postgrest.filter((p) => p.method === "POST" && p.table === "leads").length, 1, "lead still written");
-  assert.equal(mock.log.postgrest.filter((p) => p.method === "POST" && p.table === "email_events").length, 1, "event still written");
+  assert.equal(mock.log.postgrest.filter((p) => p.method === "POST" && p.table === "chat_leads").length, 1, "lead still written");
+  assert.equal(mock.log.postgrest.filter((p) => p.method === "POST" && p.table === "chat_conversations").length, 1, "transcript still written");
 });
 
 await test("PostgREST down -> no capture event, stream still completes", async () => {

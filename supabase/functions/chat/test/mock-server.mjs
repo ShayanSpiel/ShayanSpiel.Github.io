@@ -147,22 +147,25 @@ function postgrestHandler(url, init, { log, crm, status }) {
 
   if (status !== 200) return respond({ message: "postgrest down" }, status);
 
-  if (method === "GET" && table === "leads" && selectMatch) {
-    const found = [...crm.leads.values()].find((l) => l.email === emailFilter) ?? null;
+  if (method === "GET" && table === "chat_leads" && selectMatch) {
+    const leadKeyFilter = parsed.searchParams.get("lead_key");
+    const found = leadKeyFilter
+      ? [...crm.leads.values()].find((l) => l.lead_key === leadKeyFilter) ?? null
+      : null;
     return respond(found ? [found] : [], 200);
   }
-  if (method === "POST" && table === "leads") {
+  if (method === "POST" && table === "chat_leads") {
     const rows = Array.isArray(body) ? body : [body];
     const withIds = rows.map((r) => ({ id: crm.nextId(), ...r }));
     for (const r of withIds) crm.leads.set(r.id, r);
     return respond(withIds, 201);
   }
-  if (method === "POST" && table === "email_events") {
+  if (method === "POST" && table === "chat_conversations") {
     const rows = Array.isArray(body) ? body : [body];
     for (const r of rows) crm.events.push(r);
     return respond(rows, 201);
   }
-  if (method === "PATCH" && table === "leads") {
+  if (method === "PATCH" && table === "chat_leads") {
     const id = parsed.searchParams.get("id");
     const target = [...crm.leads.values()].find((l) => String(l.id) === String(id));
     if (target) Object.assign(target, body);
