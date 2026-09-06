@@ -91,13 +91,26 @@
     // Normalize absolute site URLs to site-relative before matching, so the
     // model's absolute hrefs still hit the allowlist (which is site-relative).
     html = html.replace(/\]\(https:\/\/spielos\.xyz(\/[^)\s]*)\)/g, "]($1)");
+    // Links first, protected as placeholders so emphasis rules never touch
+    // their labels or hrefs.
+    var links = [];
     html = html.replace(LINK_RE, function (m, label, href) {
       if (ALLOWLIST.indexOf(href) === -1) return label; // un-allowlisted: label only
-      return '<a href="' + href + '" class="chat-msg-link" data-chat-nav>' + label + "</a>";
+      links.push('<a href="' + href + '" class="chat-msg-link" data-chat-nav>' + label + "</a>");
+      return "\uE000" + (links.length - 1) + "\uE000";
     });
-    // bold + inline code for a bit of life in replies
-    html = html.replace(/\*\*([^*\n]{1,120})\*\*/g, "<strong>$1</strong>");
+    // Emphasis — standardized so raw stars NEVER render:
+    // bold first (multiline tolerant, non-greedy) ...
+    html = html.replace(/\*\*([\s\S]+?)\*\*/g, "<strong>$1</strong>");
+    // ... then single-star italic within one line ...
+    html = html.replace(/(^|[^*])\*([^*\n]{1,160})\*(?!\*)/g, "$1<em>$2</em>");
+    // ... inline code ...
     html = html.replace(/`([^`\n]{1,80})`/g, "<code>$1</code>");
+    // ... restore link placeholders ...
+    html = html.replace(/\uE000(\d+)\uE000/g, function (m, i) { return links[+i]; });
+    // Cleanup: any unmatched emphasis stars are noise (unpaired **, stray *)
+    // — remove them entirely so the visitor never sees raw asterisks.
+    html = html.replace(/\*/g, "");
     return html;
   }
 
