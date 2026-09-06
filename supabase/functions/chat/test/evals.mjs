@@ -50,22 +50,34 @@ export function runEvals(knowledge, core) {
   includes("capability: AI dept marketing route exists", en, "/solutions/ai-departments/marketing/");
   includes("capability: AI dept SEO route exists", en, "/solutions/ai-departments/seo/");
   includes("capability: AI dept analytics route exists", en, "/solutions/ai-departments/analytics/");
-  includes("capability: ATS is out of scope (honest no)", both, "ATS");
-  includes("capability: resume builder out of scope", en, "resume builder");
-  includes("capability: job board out of scope", en, "job board");
-  includes("capability: ticketing system out of scope", en, "ticketing system");
+  includes("capability: ATS honest pivot (no standalone product, sell the workflow)", both, "ATS");
+  includes("capability: resume builder honest pivot", en, "resume builder");
+  includes("capability: job board honest pivot", en, "job board");
+  includes("capability: ticketing system honest pivot", en, "ticketing system");
 
   // --- ATS edge honesty (3 prompts) -----------------------------------------
-  includes("ats-edge: course platform out of scope", en, "course platform");
-  includes("ats-edge: generic chatbot product out of scope", en, "chatbot product");
-  includes("ats-edge: marketing website out of scope", en, "marketing website");
+  includes("ats-edge: course platform honest pivot", en, "course platform");
+  includes("ats-edge: generic chatbot honest pivot", en, "chatbot product");
+  includes("ats-edge: marketing website honest pivot", en, "marketing website");
+
+  // --- sales personality (owner directive 2026-09-06: sales agent, not FAQ) --
+  includes("sales: never disqualify a willing buyer", en, "NEVER disqualify");
+  includes("sales: money signals are hot leads", en, "HOT LEAD");
+  includes("sales: big budget rule present", en, "Big budget");
+  includes("sales: objection handling pattern", en, "acknowledge → reframe → steer");
+  includes("sales: always-be-closing CTAs", en, "always be closing");
+  includes("sales: emoji directive", en, "emojis naturally");
+  includes("sales: personality — funny", en, "funny");
+  includes("sales: FA money-signal rule", fa, "سرور داغ");
+  includes("sales: FA never-reject rule", fa, "خریدارِ باانگیزه رو رد نکن");
+  includes("sales: FA objection pattern", fa, "تأیید → بازچارچوب → هدایت");
 
   // --- persona directives (checked per transcript in the plan) --------------
   includes("persona: warm acknowledgment at reply start", en, "Begin every reply with a brief warm acknowledgment");
-  includes("persona: thanks before anything on capture", en, "thank them explicitly");
+  includes("persona: thanks on capture with next steps", en, "thank them warmly");
   includes("persona: at most one follow-up per reply", en, "At most one follow-up question per reply");
-  includes("persona: tone matching rule", en, "formal → measured");
-  includes("persona: FA tone matching rule", fa, "رسمی ← دقیق");
+  includes("persona: tone matching rule", en, "formal → warm-professional");
+  includes("persona: FA tone matching rule", fa, "رسمی ← گرم-حرفه‌ای");
 
   // --- language / locale ----------------------------------------------------
   includes("locale: language detection + switch rule", en, "reply in it");
@@ -101,7 +113,7 @@ export function runEvals(knowledge, core) {
   check("segments: vocabulary has no extras", segs.length === expectedSegs.length);
 
   // --- security routing (triage) ---------------------------------------------
-  includes("security: serious data questions routed to email/contact", en, "route to email");
+  includes("security: serious data questions routed to email/contact", en, "human handoff (shayan@spielos.xyz");
   includes("security: built on Supabase + reputable APIs", en, "Supabase and reputable APIs");
   includes("security: never asks for passwords or payment details", both, "password");
 
