@@ -102,7 +102,8 @@ const COOLDOWN_MS = 5 * 60 * 1000;
 class KeyRotator {
   private bench: Map<string, number> = new Map(); // key value -> benched-until ts
   private cursor = 0;
-  constructor(private readonly envNames: string[]) {}
+  private readonly envNames: string[];
+  constructor(envNames: string[]) { this.envNames = envNames; }
   next(getEnv: (k: string) => string | undefined): string | null {
     const n = this.envNames.length;
     for (let i = 0; i < n; i++) {
