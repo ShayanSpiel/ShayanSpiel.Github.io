@@ -21,6 +21,19 @@ const enabled = !!(CHAT && CHAT.functionUrl);
 
     <button
       type="button"
+      id="chat-teaser"
+      class="chat-teaser"
+      data-open="true"
+      aria-hidden="true"
+      tabindex="-1"
+    >
+      <span class="chat-teaser-dot" aria-hidden="true"></span>
+      <span class="chat-teaser-text">{t(locale, "chat.teaser")}</span>
+      <i class="bx bx-x chat-teaser-close" aria-hidden="true" role="button" tabindex="0"></i>
+    </button>
+
+    <button
+      type="button"
       id="chat-launcher"
       class="chat-launcher"
       aria-expanded="false"

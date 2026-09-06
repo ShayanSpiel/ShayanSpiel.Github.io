@@ -1996,6 +1996,7 @@ export const translations: Record<Locale, Translations> = {
 
     // Chat assistant (goal-3220ae01c4f7)
     "chat.launcherAria": "Open the SpielOS chat assistant",
+    "chat.teaser": "Psst… ask me anything 👋 I'm AI, not judgy 😄",
     "chat.headerSub": "Online · replies in seconds",
     "chat.sheetAria": "SpielOS chat assistant",
     "chat.close": "Close chat",
@@ -4012,6 +4013,7 @@ export const translations: Record<Locale, Translations> = {
 
     // Chat assistant (goal-3220ae01c4f7) — FA
     "chat.launcherAria": "\u0686\u062a \u062f\u0633\u062a\u06cc\u0627\u0631 \u0627\u0633\u067e\u06cc\u0644\u200c\u06a9\u0627\u0648\u0633 \u0631\u0648 \u0628\u0627\u0632 \u06a9\u0646\u06cc\u062f",
+    "chat.teaser": "\u067e\u0633\u0633\u062a\u2026 \u0647\u0631\u0686\u06cc \u0645\u06cc\u062e\u0648\u0627\u06cc \u0628\u067e\u0631\u0633 \ud83d\udc4b \u0645\u0646 \u0631\u0648\u0628\u0627\u062a\u0645\u060c \u0645\u062d\u06a9\u0645 \u0646\u06cc\u0633\u062a\u0645 \ud83d\ude04",
     "chat.headerSub": "\u0622\u0646\u0644\u0627\u06cc\u0646 \u00b7 \u067e\u0627\u0633\u062e \u062f\u0631 \u0686\u0646\u062f \u062b\u0627\u0646\u06cc\u0647",
     "chat.sheetAria": "\u0686\u062a \u062f\u0633\u062a\u06cc\u0627\u0631 \u0627\u0633\u067e\u06cc\u0644\u200c\u06a9\u0627\u0648\u0633",
     "chat.close": "\u0628\u0633\u062a\u0646 \u0686\u062a",

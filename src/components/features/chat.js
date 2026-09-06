@@ -35,6 +35,7 @@
 
   var els = {
     launcher: document.getElementById("chat-launcher"),
+    teaser: document.getElementById("chat-teaser"),
     sheet: document.getElementById("chat-sheet"),
     backdrop: document.getElementById("chat-backdrop"),
     close: document.getElementById("chat-close"),
@@ -183,6 +184,7 @@
   function openSheet() {
     if (state.open) return;
     state.open = true;
+    hideTeaser(true);
     // Remove the no-JS hidden state; CSS drives visibility + transition.
     els.sheet.hidden = false;
     els.backdrop.hidden = false;
@@ -208,6 +210,7 @@
     els.backdrop.setAttribute("data-open", "false");
     els.launcher.setAttribute("aria-expanded", "false");
     syncLauncher();
+    scheduleTeaser(15000);   // gentle re-appearance after a close
     // After the transition ends, drop the sheet from the a11y tree fully.
     setTimeout(function () {
       if (!state.open) { els.sheet.hidden = true; els.backdrop.hidden = true; }
@@ -483,6 +486,46 @@
   }
 
   /* ---------- launcher wiring ---------- */
+  /* ---------- teaser chip (tiny funny nudge left of the launcher) -------
+     Shows once per page load; click = open chat (the X = dismiss for this
+     visit). Hides while the sheet is open; re-appears after 90s if ignored,
+     15s after a close. */
+  var teaserTimer = null;
+  function showTeaser() {
+    if (state.open || !els.teaser) return;
+    els.teaser.setAttribute("data-open", "true");
+  }
+  function hideTeaser(quiet) {
+    if (!els.teaser) return;
+    els.teaser.setAttribute("data-open", "false");
+    if (teaserTimer) { clearTimeout(teaserTimer); teaserTimer = null; }
+    if (quiet) return; // caller schedules its own re-appearance
+  }
+  function scheduleTeaser(ms) {
+    if (teaserTimer) clearTimeout(teaserTimer);
+    teaserTimer = setTimeout(showTeaser, ms);
+  }
+  if (els.teaser) {
+    els.teaser.addEventListener("click", function (e) {
+      if (e.target.closest(".chat-teaser-close")) {
+        hideTeaser(true);            // dismissed for this visit
+        try { track("chat_teaser_dismissed", { locale: locale }); } catch (er) {}
+        return;
+      }
+      try { track("chat_teaser_clicked", { locale: locale }); } catch (er) {}
+      openSheet();
+    });
+    els.teaser.addEventListener("keydown", function (e) {
+      if (e.key !== "Enter" && e.key !== " ") return;
+      e.preventDefault();
+      var dismissed = e.target.classList && e.target.classList.contains("chat-teaser-close");
+      if (dismissed) { hideTeaser(true); return; }
+      openSheet();
+    });
+    // If the visitor ignores it, slip away quietly and try again in 90s.
+    scheduleTeaser(90000);
+  }
+
   els.launcher.addEventListener("click", function () {
     if (els.launcher.getAttribute("aria-expanded") === "true") closeSheet();
     else openSheet();

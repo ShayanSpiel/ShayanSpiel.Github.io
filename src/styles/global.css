@@ -928,6 +928,79 @@ html.aos-revealed [data-aos] {
 .chat-launcher[data-door-open="true"] { display: none; }
 .chat-launcher .chat-icon { font-size: 1.4rem; line-height: 1; }
 
+/* ── Teaser chip: tiny funny nudge left of the launcher ─────────────────
+   Appears once per page view, hides when the chat opens (or on dismiss),
+   gently re-appears after 90s. Mirrors to the other side in RTL. */
+.chat-teaser {
+  position: fixed;
+  bottom: 1.9rem;                       /* optically centers against 44px launcher */
+  inset-inline-end: calc(1.5rem + 44px + 0.6rem);
+  z-index: 50;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  max-width: min(15.5rem, calc(100vw - 7rem));
+  padding: 0.4rem 0.7rem;
+  border-radius: 999px;
+  background: var(--panel);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-popover);
+  font-size: 0.75rem;                   /* decorative text — not an input; no zoom risk */
+  font-weight: 500;
+  line-height: 1.2;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transform: translateY(0) scale(1);
+  opacity: 1;
+  visibility: visible;
+  transition:
+    transform var(--duration-default) var(--ease),
+    opacity var(--duration-fast) var(--ease),
+    visibility 0s linear 0s;
+}
+.chat-teaser[data-open="false"] {
+  transform: translateY(6px) scale(0.92);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    transform var(--duration-default) var(--ease),
+    opacity var(--duration-fast) var(--ease),
+    visibility 0s linear var(--duration-fast);
+  pointer-events: none;
+}
+.chat-teaser:hover { border-color: var(--border-strong); }
+.chat-teaser-dot {
+  flex-shrink: 0;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: oklch(0.72 0.19 149);
+  box-shadow: 0 0 0 0 oklch(0.72 0.19 149 / 0.5);
+  animation: chat-teaser-pulse 2.2s ease-out infinite;
+}
+@keyframes chat-teaser-pulse {
+  0%   { box-shadow: 0 0 0 0 oklch(0.72 0.19 149 / 0.5); }
+  70%  { box-shadow: 0 0 0 0.45rem oklch(0.72 0.19 149 / 0); }
+  100% { box-shadow: 0 0 0 0 oklch(0.72 0.19 149 / 0); }
+}
+.chat-teaser-text { overflow: hidden; text-overflow: ellipsis; }
+.chat-teaser-close {
+  flex-shrink: 0;
+  font-size: 0.85rem;
+  line-height: 1;
+  color: var(--muted-foreground);
+  padding: 0.1rem;
+  border-radius: var(--radius-sm);
+}
+.chat-teaser-close:hover { color: var(--foreground); background: var(--hover); }
+@media (prefers-reduced-motion: reduce) {
+  .chat-teaser-dot { animation: none; }
+  .chat-teaser { transition: none; }
+}
+
 /* ── Sheet: mobile bottom sheet / md+ popover, both animate from the FAB ── */
 .chat-sheet {
   position: fixed;
