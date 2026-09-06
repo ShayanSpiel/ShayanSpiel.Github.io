@@ -12,23 +12,25 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 const here = dirname(fileURLToPath(import.meta.url));
 const envPath = "/Users/shayan/Projects/SpielOS-Website/.spielos/.env";
 const MISTRAL_KEYS = ["MISTRAL_API_KEY", "MISTRAL_API_KEY_2", "MISTRAL_API_KEY_3", "MISTRAL_API_KEY_4"];
-let found = 0;
+const GEMINI_KEYS = ["GEMINI_API_KEY", "GEMINI_API_KEY_2", "GEMINI_API_KEY_3", "GEMINI_API_KEY_4", "GEMINI_API_KEY_5", "GEMINI_API_KEY_6"];
+let foundM = 0;
+let foundG = 0;
 try {
   for (const line of readFileSync(envPath, "utf8").split("\n")) {
     const m = line.match(/^(MISTRAL_API_KEY(?:_\d)?)=(.+)$/);
-    if (m && MISTRAL_KEYS.includes(m[1])) { process.env[m[1]] = m[2].trim(); found++; }
-    const g = line.match(/^(GEMINI_API_KEY)=(.+)$/);
-    if (g) process.env.GEMINI_API_KEY = g[2].trim();
+    if (m && MISTRAL_KEYS.includes(m[1])) { process.env[m[1]] = m[2].trim(); foundM++; }
+    const g = line.match(/^(GEMINI_API_KEY(?:_\d)?)=(.+)$/);
+    if (g && GEMINI_KEYS.includes(g[1])) { process.env[g[1]] = g[2].trim(); foundG++; }
   }
 } catch {
   console.error("[dev-serve] harness .env not readable");
   process.exit(1);
 }
-if (found === 0 && !process.env.GEMINI_API_KEY) {
-  console.error("[dev-serve] no mistral keys and no GEMINI_API_KEY");
+if (foundM === 0 && foundG === 0) {
+  console.error("[dev-serve] no mistral keys and no gemini keys found");
   process.exit(1);
 }
-console.log(`[dev-serve] mistral keys loaded: ${found}`);
+console.log(`[dev-serve] mistral keys loaded: ${foundM} | gemini keys loaded: ${foundG}`);
 // CRM intentionally NOT set: capture events return thanks_line but skip the
 // Supabase write locally (core logs it; the reply stream is unaffected).
 

@@ -64,21 +64,62 @@ const CORS_ALLOWLIST = [
 ];
 
 const MISTRAL_URL = "https://api.mistral.ai/v1/chat/completions";
-const MISTRAL_MODEL = "mistral-small-latest";
-// Provider failover (owner incident 2026-09-05: Mistral free-tier
-// completions quota can read 0 req/min even with valid keys — the
-// narration pipeline already carries the same Mistral->Gemini chain).
-// Gemini exposes an OpenAI-compatible endpoint, so the SSE parsing stays
-// identical; only URL + auth header differ.
+// Model choice: reading a module-level env here would be a Deno-only API
+// (getEnv lives in deps and resolves per-request), so the model is set as a
+// plain constant. Free Experiment-plan workspaces cannot serve the paid
+// tiers (mistral-small/medium return 429 code 1300 with 0 console usage);
+// open-mistral-nemo is free and proven live. Flip to mistral-small-latest
+// when the workspace is upgraded, then redeploy (one-line change).
+const MISTRAL_MODEL = "open-mistral-nemo";
+// Provider keys & rotation (owner directive 2026-09-06: proper rotation so
+// quota never runs out; all keys documented in .spielos/.env + project secrets).
+// Gemini model uses the -latest alias so BOTH key generations work: the old
+// AIza key only serves pinned names, the new AQ keys only serve aliases
+// (gemini-2.5-flash returns "no longer available" for them).
 const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
-const GEMINI_MODEL = "gemini-2.5-flash";
-// Third fallback: open-mistral-nemo rides a separate Mistral quota bucket
-// (owner incident 2026-09-05: small-latest monthly + gemini daily both
-// exhausted under test load; nemo still answered 200).
+const GEMINI_MODEL = "gemini-flash-latest";
+// Third fallback: open-mistral-nemo rides a separate Mistral quota bucket.
 const NEMO_MODEL = "open-mistral-nemo";
-// Mistral key pool (owner supplied keys 3+4 on 2026-09-05; big quota — guard it).
-// Tried in order for the primary attempt; the first usable key wins.
+// Mistral key pool: project secrets MISTRAL_API_KEY.._4 (2 unique keys,
+// duplicated entries are harmless — rotation skips dupes via the try-set).
 const MISTRAL_KEY_ENVS = ["MISTRAL_API_KEY", "MISTRAL_API_KEY_2", "MISTRAL_API_KEY_3", "MISTRAL_API_KEY_4"];
+// Gemini key pool: GEMINI_API_KEY plus 5 Google AI Studio keys supplied by
+// the owner 2026-09-06. Round-robin with failure memory: a key that 429s or
+// auth-fails is benched for COOLDOWN_MS, then retried.
+const GEMINI_KEY_ENVS = [
+  "GEMINI_API_KEY",
+  "GEMINI_API_KEY_2",
+  "GEMINI_API_KEY_3",
+  "GEMINI_API_KEY_4",
+  "GEMINI_API_KEY_5",
+  "GEMINI_API_KEY_6",
+];
+const COOLDOWN_MS = 5 * 60 * 1000;
+
+/** Round-robin key rotation with a per-isolate cooldown for failing keys.
+ *  Benching is keyed by the secret VALUE (not the env name) so duplicated
+ *  entries across names share one bench slot. */
+class KeyRotator {
+  private bench: Map<string, number> = new Map(); // key value -> benched-until ts
+  private cursor = 0;
+  constructor(private readonly envNames: string[]) {}
+  next(getEnv: (k: string) => string | undefined): string | null {
+    const n = this.envNames.length;
+    for (let i = 0; i < n; i++) {
+      const idx = (this.cursor + i) % n;
+      const key = getEnv(this.envNames[idx]);
+      if (!key) continue; // not configured; skip
+      const until = this.bench.get(key) ?? 0;
+      if (Date.now() < until) continue; // benched after a failure
+      this.cursor = (idx + 1) % n; // next call starts after this key
+      return key;
+    }
+    return null; // pool exhausted or all benched
+  }
+  fail(key: string): void { this.bench.set(key, Date.now() + COOLDOWN_MS); }
+}
+const mistralRotator = new KeyRotator(MISTRAL_KEY_ENVS);
+const geminiRotator = new KeyRotator(GEMINI_KEY_ENVS);
 const MAX_HISTORY = 16;
 const MAX_CHARS = 2000;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -600,15 +641,15 @@ export async function handleChat(req: MinimalRequest, deps: HandlerDeps): Promis
   // Last user message (for the transcript row; the one that triggered this reply).
   const lastUserMessage = messages.length > 0 ? String(messages[messages.length - 1]?.content ?? "").slice(0, 2000) : "";
 
-  // Upstream call with streaming + provider failover: try Mistral first,
-  // fall back to Gemini when Mistral is rate-limited (429) or unavailable.
-  // Both expose OpenAI-compatible SSE, so parsing is shared.
+  // Upstream call with streaming + provider failover + key rotation:
+  // Mistral pool (rotated) -> Gemini pool (rotated) -> nemo (last resort).
   let upstream: Response | null = null;
   let provider = "mistral";
 
-  for (const envName of MISTRAL_KEY_ENVS) {
-    const mistralKey = getEnv(envName);
-    if (!mistralKey) continue;
+  // --- Mistral pool: rotate keys, bench the ones that fail ----------------
+  for (let attempt = 0; attempt < MISTRAL_KEY_ENVS.length && !upstream; attempt++) {
+    const mistralKey = mistralRotator.next(getEnv);
+    if (!mistralKey) break;
     try {
       const res = await fetchImpl(MISTRAL_URL, {
         method: "POST",
@@ -628,17 +669,21 @@ export async function handleChat(req: MinimalRequest, deps: HandlerDeps): Promis
         upstream = res;
         break;
       }
-      console.error(`[chat] ${session_id}: mistral(${envName}) status ${res.status}`);
+      console.error(`[chat] ${session_id}: mistral key benched (status ${res.status})`);
+      mistralRotator.fail(mistralKey);
     } catch (e) {
-      console.error(`[chat] ${session_id}: mistral(${envName}) fetch failed: ${String(e)}`);
+      console.error(`[chat] ${session_id}: mistral fetch failed: ${String(e)}`);
+      mistralRotator.fail(mistralKey);
     }
   }
   if (!upstream) console.error(`[chat] ${session_id}: mistral pool exhausted — trying gemini`);
 
+  // --- Gemini pool: rotate keys, bench the ones that fail -----------------
   if (!upstream) {
     provider = "gemini";
-    const geminiKey = getEnv("GEMINI_API_KEY");
-    if (geminiKey) {
+    for (let attempt = 0; attempt < GEMINI_KEY_ENVS.length && !upstream; attempt++) {
+      const geminiKey = geminiRotator.next(getEnv);
+      if (!geminiKey) break;
       try {
         const res = await fetchImpl(GEMINI_URL, {
           method: "POST",
@@ -656,20 +701,23 @@ export async function handleChat(req: MinimalRequest, deps: HandlerDeps): Promis
         }) as Response;
         if (res.ok && res.body) {
           upstream = res;
-        } else {
-          console.error(`[chat] ${session_id}: gemini status ${res.status} — trying nemo`);
+          break;
         }
+        console.error(`[chat] ${session_id}: gemini key benched (status ${res.status})`);
+        geminiRotator.fail(geminiKey);
       } catch (e) {
-        console.error(`[chat] ${session_id}: gemini fetch failed: ${String(e)} — trying nemo`);
+        console.error(`[chat] ${session_id}: gemini fetch failed: ${String(e)}`);
+        geminiRotator.fail(geminiKey);
       }
-    } else {
-      console.error(`[chat] ${session_id}: missing GEMINI_API_KEY — trying nemo`);
     }
   }
+  if (!upstream) console.error(`[chat] ${session_id}: gemini pool exhausted — trying nemo`);
 
   if (!upstream) {
     provider = "nemo";
-    const mistralKey2 = getEnv("MISTRAL_API_KEY_2") || getEnv("MISTRAL_API_KEY");
+    // Last resort: nemo rides a separate free quota bucket; use whatever
+    // Mistral key the rotator still trusts (benched keys get skipped).
+    const mistralKey2 = mistralRotator.next(getEnv) ?? getEnv("MISTRAL_API_KEY");
     if (!mistralKey2) {
       console.error(`[chat] ${session_id}: no keys left in fallback chain`);
       return jsonResponse({ error: UPSTREAM_MSG }, 500, { ...cors, ...rateHeaders });
