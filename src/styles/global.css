@@ -938,10 +938,17 @@ html.aos-revealed [data-aos] {
   border: 1px solid var(--border);
   box-shadow: var(--shadow-popover);
   border-radius: var(--radius-md) var(--radius-md) 0 0;
-  /* Mobile bottom sheet */
+  /* Mobile bottom sheet. --chat-vvh is the JS-tracked visual-viewport height
+     (falls back to 88dvh); when the on-screen keyboard opens, the sheet
+     re-anchors above the keyboard instead of growing past the screen. */
   inset-inline: 0;
-  bottom: 0;
+  bottom: var(--chat-keyboard-offset, 0px);
+  /* Height: 88% of the visual viewport, capped 44rem. --chat-vvh is the
+     JS-tracked visual-viewport height (fallback 88dvh when JS hasn't run).
+     bottom already lifts the sheet above the keyboard, so height must NOT
+     subtract the offset again (no double-count). */
   height: min(88dvh, 44rem);
+  height: min(calc(var(--chat-vvh, 88dvh) * 0.88), 44rem);
   padding-block-end: max(0.5rem, env(safe-area-inset-bottom));
   transform: translateY(105%);
   visibility: hidden;
@@ -1146,7 +1153,9 @@ html.aos-revealed [data-aos] {
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   padding: 0.5rem 0.75rem;
-  font-size: var(--font-size-sm);
+  /* 16px minimum: iOS Safari force-zooms into any focused input below 16px.
+     Never go under it for chat inputs (owner directive 2026-09-06). */
+  font-size: max(1rem, var(--font-size-sm));
   font-family: inherit;
   line-height: var(--leading-normal);
 }
@@ -1213,13 +1222,14 @@ html.aos-revealed [data-aos] {
   width: 100%;
   min-width: 0;
   box-sizing: border-box;
-  height: 2.25rem;
+  height: 2.5rem;
   background: var(--input);
   color: var(--foreground);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   padding: 0 0.625rem;
-  font-size: var(--font-size-sm);
+  /* 16px minimum: iOS force-zoom guard (same as .chat-input). */
+  font-size: max(1rem, var(--font-size-sm));
   font-family: inherit;
 }
 .chat-ask-form input::placeholder { color: var(--muted-foreground); }

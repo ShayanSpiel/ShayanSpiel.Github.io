@@ -13,6 +13,26 @@
   var locale = root.getAttribute("data-locale") || "en";
   if (!url) return;
 
+  /* ---------- keyboard-aware sheet sizing (mobile) ----------------------
+     When the on-screen keyboard opens, the visual viewport shrinks while
+     the layout viewport does not — a fixed bottom sheet then overflows the
+     visible area and the browser scrolls/zooms to compensate. Track the
+     visual viewport and expose it as --chat-vvh + --chat-keyboard-offset
+     on the sheet's root so the CSS can re-anchor above the keyboard. */
+  (function trackKeyboard() {
+    var vv = window.visualViewport;
+    if (!vv) return;
+    var apply = function () {
+      // Offset = how much the keyboard covers: layout height minus visual.
+      var offset = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+      root.style.setProperty("--chat-vvh", vv.height + "px");
+      root.style.setProperty("--chat-keyboard-offset", offset + "px");
+    };
+    vv.addEventListener("resize", apply);
+    vv.addEventListener("scroll", apply);
+    apply();
+  })();
+
   var els = {
     launcher: document.getElementById("chat-launcher"),
     sheet: document.getElementById("chat-sheet"),

@@ -293,6 +293,25 @@ input[type="number"]::-webkit-inner-spin-button:hover {
   background: var(--hover);
 }
 
+/* iOS/Android zoom guard: Safari force-zooms into any focused input with a
+   computed font-size under 16px, which wrecks the chat sheet and buttons on
+   mobile. On coarse-pointer (touch) devices only, clamp every text input,
+   textarea, and select to at least 16px. Desktop keeps the smaller sizes. */
+@media (pointer: coarse) {
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="url"],
+  input[type="search"],
+  input[type="number"],
+  input[type="password"],
+  input:not([type]),
+  textarea,
+  select {
+    font-size: max(1rem, 1em);
+  }
+}
+
 @keyframes spiel-drawer-in {
   from {
     opacity: 0;
