@@ -61,8 +61,8 @@ export default {
       },
       fontFamily: {
         sans: ["var(--font-sans)"],
+        display: ["var(--font-display)"],
         mono: ["var(--font-mono)"],
-        iransansx: ["var(--font-iransansx)"],
       },
       fontSize: {
         "3xs": ["var(--font-size-3xs)", { lineHeight: "var(--leading-normal)" }],

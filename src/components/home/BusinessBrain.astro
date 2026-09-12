@@ -1,0 +1,300 @@
+---
+import { brandLogo } from "../../data/brand-logos";
+import { type Locale, t } from "../../i18n/translations";
+
+export interface Props { locale?: Locale; }
+const { locale = "en" } = Astro.props;
+const id = `business-brain-${Math.random().toString(36).slice(2, 8)}`;
+type Point = { x: number; y: number };
+type Tool = { key: string; point: Point };
+type Branch = { key: string; label: string; point: Point; tools: Tool[] };
+const branches: Branch[] = [
+  { key: "claudecode", label: "Claude Code", point: { x: 50, y: 26 }, tools: [{ key: "gmail", point: { x: 20, y: 9 } }, { key: "hubspot", point: { x: 40, y: 7 } }, { key: "notion", point: { x: 60, y: 7 } }, { key: "slack", point: { x: 80, y: 9 } }] },
+  { key: "codex", label: "GPT", point: { x: 74, y: 50 }, tools: [{ key: "drive", point: { x: 91, y: 20 } }, { key: "sheets", point: { x: 93, y: 40 } }, { key: "calendar", point: { x: 93, y: 60 } }, { key: "zapier", point: { x: 91, y: 80 } }] },
+  { key: "opencode", label: "OpenCode", point: { x: 50, y: 74 }, tools: [{ key: "jira", point: { x: 80, y: 91 } }, { key: "stripe", point: { x: 60, y: 93 } }, { key: "workable", point: { x: 40, y: 93 } }, { key: "zoom", point: { x: 20, y: 91 } }] },
+  { key: "grok", label: "Grok", point: { x: 26, y: 50 }, tools: [{ key: "linkedin", point: { x: 9, y: 80 } }, { key: "indeed", point: { x: 7, y: 60 } }, { key: "telegram", point: { x: 7, y: 40 } }, { key: "whatsapp", point: { x: 9, y: 20 } }] },
+];
+const core: Point = { x: 50, y: 50 };
+function path(from: Point, to: Point) {
+  const horizontal = Math.abs(to.x - from.x) > Math.abs(to.y - from.y);
+  const c1 = horizontal ? `${(from.x + to.x) / 2} ${from.y}` : `${from.x} ${(from.y + to.y) / 2}`;
+  const c2 = horizontal ? `${(from.x + to.x) / 2} ${to.y}` : `${to.x} ${(from.y + to.y) / 2}`;
+  return `M ${from.x} ${from.y} C ${c1} ${c2} ${to.x} ${to.y}`;
+}
+// Branch -> tool-key map for the traveler script: it measures real node
+// centers from the DOM and builds pixel-true routes (see script below).
+const branchTools: Record<string, string[]> = Object.fromEntries(branches.map((branch) => [branch.key, branch.tools.map((tool) => tool.key)]));
+---
+
+<article id={id} class="business-brain" data-aos="fade-up">
+  <div class="business-brain__legend" aria-hidden="true">
+    <span>{t(locale, "conversion.home.brain.legendCore")}</span><i class="bx bx-right-arrow-alt rtl-flip icon-sm"></i><span>{t(locale, "conversion.home.brain.legendAi")}</span><i class="bx bx-right-arrow-alt rtl-flip icon-sm"></i><span>{t(locale, "conversion.home.brain.legendTools")}</span>
+  </div>
+
+  <div class="business-brain__map" aria-label={t(locale, "conversion.home.brain.ariaLabel")}>
+    <!-- Pixel-true wire layer: NO viewBox. 1 SVG unit = 1 CSS px, so the
+         film's exact stroke grammar (2px / dash 10 8 / round caps) renders
+         at true size like the videos, and every dash keeps its shape
+         regardless of map aspect. Routes + traveler are drawn by JS from
+         the real measured node centers so lines always land on nodes. -->
+    <svg class="business-brain__wires" data-brain-wires fill="none" aria-hidden="true" focusable="false">
+      <path class="business-brain__journey" data-brain-journey pathLength="100" d="" />
+    </svg>
+
+    <span class="business-brain__layer business-brain__layer--ai">{t(locale, "conversion.home.brain.aiLayer")}</span>
+    <span class="business-brain__layer business-brain__layer--tools">{t(locale, "conversion.home.brain.toolsLayer")}</span>
+
+    <div class="business-brain__core" style={`left:${core.x}%;top:${core.y}%`}>
+      <span data-brain-node><i class="bx bx-brain icon-2xl business-brain__node-icon" aria-hidden="true"></i><i class="bx bx-check icon-sm business-brain__node-check" aria-hidden="true"></i></span>
+      <strong>{t(locale, "conversion.home.brain.coreTitle")}</strong>
+      <small>{t(locale, "conversion.home.brain.coreDesc")}</small>
+    </div>
+
+    {branches.map((branch) => (
+      <>
+        <div class="business-brain__ai" style={`left:${branch.point.x}%;top:${branch.point.y}%`} data-brain-branch={branch.key}>
+          <span set:html={brandLogo(branch.key)}></span><strong>{branch.label}</strong>
+        </div>
+        {branch.tools.map((tool) => (
+          <div class="business-brain__tool" style={`left:${tool.point.x}%;top:${tool.point.y}%`} data-brain-tool={tool.key}>
+            <span data-brain-node><span class="business-brain__node-icon" set:html={brandLogo(tool.key)}></span><i class="bx bx-check icon-sm business-brain__node-check" aria-hidden="true"></i></span>
+            <small>{t(locale, `conversion.home.brain.tool.${tool.key}`)}</small>
+          </div>
+        ))}
+      </>
+    ))}
+  </div>
+
+  <div class="business-brain__mobile" aria-label={t(locale, "conversion.home.brain.ariaLabel")}>
+    <div class="business-brain__mobile-core">
+      <span data-brain-node><i class="bx bx-brain icon-xl business-brain__node-icon" aria-hidden="true"></i><i class="bx bx-check icon-sm business-brain__node-check" aria-hidden="true"></i></span>
+      <div><strong>{t(locale, "conversion.home.brain.coreTitle")}</strong><small>{t(locale, "conversion.home.brain.coreDesc")}</small></div>
+    </div>
+    <div class="business-brain__mobile-spine" aria-hidden="true"></div>
+    <ol>
+      {branches.map((branch) => (
+        <li>
+          <div class="business-brain__mobile-ai"><span set:html={brandLogo(branch.key)}></span><strong>{branch.label}</strong></div>
+          <span class="business-brain__mobile-connection" aria-hidden="true"></span>
+          <div class="business-brain__mobile-tools">
+            {branch.tools.map((tool) => <span data-brain-node title={t(locale, `conversion.home.brain.tool.${tool.key}`)}><span class="business-brain__node-icon" set:html={brandLogo(tool.key)}></span><i class="bx bx-check icon-sm business-brain__node-check" aria-hidden="true"></i></span>)}
+          </div>
+        </li>
+      ))}
+    </ol>
+    <p class="business-brain__mobile-caption">{t(locale, "conversion.home.brain.legendCore")} → {t(locale, "conversion.home.brain.legendAi")} → {t(locale, "conversion.home.brain.legendTools")}</p>
+  </div>
+</article>
+
+<script is:inline define:vars={{ branchTools }}>
+  (function (branchTools) {
+    var REDUCED = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    document.querySelectorAll(".business-brain").forEach(function (root) {
+      if (root.dataset.journeyReady) return;
+      root.dataset.journeyReady = "true";
+      var map = root.querySelector(".business-brain__map");
+      var svg = root.querySelector("[data-brain-wires]");
+      var journey = root.querySelector("[data-brain-journey]");
+      if (!map || !svg || !journey) return;
+
+      var branches = Object.keys(branchTools);
+
+      // Measure a node element's center in map-local pixels.
+      function center(el) {
+        var m = map.getBoundingClientRect();
+        var r = el.getBoundingClientRect();
+        return { x: r.left + r.width / 2 - m.left, y: r.top + r.height / 2 - m.top };
+      }
+      function branchEl(key) { return root.querySelector('.business-brain__ai[data-brain-branch="' + key + '"]'); }
+      function toolEl(key) { return root.querySelector('[data-brain-tool="' + key + '"]'); }
+      function coreEl() { return root.querySelector(".business-brain__core"); }
+
+      // Film grammar: same wandering cubic shape as the videos.
+      function leg(from, to) {
+        var horizontal = Math.abs(to.x - from.x) > Math.abs(to.y - from.y);
+        var c1 = horizontal ? (from.x + to.x) / 2 + "," + from.y : from.x + "," + (from.y + to.y) / 2;
+        var c2 = horizontal ? (from.x + to.x) / 2 + "," + to.y : to.x + "," + (from.y + to.y) / 2;
+        return " C " + c1 + " " + c2 + " " + to.x + "," + to.y;
+      }
+
+      // Build all dashed routes (core->AI, AI->tool) and the svg size.
+      function buildRoutes() {
+        var mr = map.getBoundingClientRect();
+        svg.setAttribute("width", mr.width);
+        svg.setAttribute("height", mr.height);
+        svg.setAttribute("viewBox", "0 0 " + mr.width + " " + mr.height);
+        // wipe old routes, keep the traveler path
+        Array.prototype.slice.call(svg.querySelectorAll(".business-brain__route")).forEach(function (p) { p.remove(); });
+        var core = center(coreEl());
+        branches.forEach(function (bKey) {
+          var bEl = branchEl(bKey);
+          if (!bEl) return;
+          var b = center(bEl);
+          var d1 = "M " + core.x + "," + core.y + leg(core, b);
+          var p1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+          p1.setAttribute("class", "business-brain__route");
+          p1.setAttribute("d", d1);
+          svg.insertBefore(p1, journey);
+          (branchTools[bKey] || []).forEach(function (tKey) {
+            var tEl = toolEl(tKey);
+            if (!tEl) return;
+            var t = center(tEl);
+            var d2 = "M " + b.x + "," + b.y + leg(b, t);
+            var p2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            p2.setAttribute("class", "business-brain__route");
+            p2.setAttribute("d", d2);
+            svg.insertBefore(p2, journey);
+          });
+        });
+      }
+
+      if (REDUCED) {
+        buildRoutes();
+        return; // fully static film: dashed routes only, no traveler
+      }
+
+      // Dashed routes are static decoration: build them right away so the
+      // map is never bare, then re-measure on resize.
+      buildRoutes();
+
+      var pathLen = 0;
+      var lastWalk = -1;
+      var toolsAll = [];
+      branches.forEach(function (bKey) { (branchTools[bKey] || []).forEach(function (tKey) { toolsAll.push({ b: bKey, t: tKey }); }); });
+
+      // One journey = core -> AI -> tool. The solid line draws along it
+      // (film style: stroke-dashoffset per frame), the tool's green check
+      // fires exactly when the line arrives, then after a hold the line
+      // fades and a NEW random journey begins. Slow and random.
+      var DRAW_MS = 5600;   // draw speed — slow, like the films
+      var HOLD_MS = 2400;   // line stays drawn on arrival (film holds)
+      var FADE_MS = 700;    // quiet fade before the next wander
+
+      function journeyPath(walk) {
+        var core = center(coreEl());
+        var b = center(branchEl(walk.b));
+        var t = center(toolEl(walk.t));
+        return "M " + core.x + "," + core.y + leg(core, b) + leg(b, t);
+      }
+
+      function popCheck(key) {
+        var el = toolEl(key);
+        var node = el ? el.querySelector("[data-brain-node]") : null;
+        if (node) {
+          root.querySelectorAll("[data-brain-node].is-checked").forEach(function (n) { n.classList.remove("is-checked"); });
+          node.classList.add("is-checked");
+        }
+      }
+
+      function startWalk(walk) {
+        journey.setAttribute("d", journeyPath(walk));
+        try { pathLen = journey.getTotalLength(); } catch (e) { pathLen = 0; }
+        if (!pathLen) { setTimeout(next, 800); return; }
+        journey.style.transition = "none";
+        journey.style.strokeDasharray = String(pathLen);
+        journey.style.strokeDashoffset = String(pathLen);
+        journey.getBoundingClientRect(); // flush
+        journey.style.transition = "stroke-dashoffset " + DRAW_MS + "ms linear, opacity " + FADE_MS + "ms ease";
+        journey.style.opacity = "1";
+        journey.style.strokeDashoffset = "0";
+      }
+
+      function next() {
+        var pick = Math.floor(Math.random() * toolsAll.length);
+        if (pick === lastWalk && toolsAll.length > 1) pick = (pick + 1) % toolsAll.length;
+        lastWalk = pick;
+        var walk = toolsAll[pick];
+        startWalk(walk);
+        // Tool check fires exactly at line arrival.
+        setTimeout(function () { popCheck(walk.t); }, DRAW_MS + 60);
+        // Film behavior: hold the drawn line, then fade, then wander again.
+        setTimeout(function () {
+          journey.style.opacity = "0";
+          setTimeout(function () {
+            root.querySelectorAll("[data-brain-node].is-checked").forEach(function (n) { n.classList.remove("is-checked"); });
+            next();
+          }, FADE_MS + 300);
+        }, DRAW_MS + HOLD_MS);
+      }
+
+      function begin() { next(); }
+
+      // Start when the map scrolls into view; rebuild on resize so the
+      // pixel-true geometry never drifts off the nodes.
+      var started = false;
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting && !started) { started = true; begin(); }
+        });
+      }, { threshold: 0.25 });
+      observer.observe(map);
+      var resizeTimer = null;
+      window.addEventListener("resize", function () {
+        if (resizeTimer) clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(buildRoutes, 150);
+      });
+    });
+  })(branchTools);
+</script>
+
+<style is:global>
+  .business-brain { position: relative; margin-top: 3rem; overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--panel); box-shadow: var(--shadow-panel); }
+  .business-brain::before { position: absolute; inset: 0; content: ""; pointer-events: none; opacity: .025; background-image: linear-gradient(var(--foreground) 1px, transparent 1px), linear-gradient(90deg, var(--foreground) 1px, transparent 1px); background-size: 2rem 2rem; }
+  .business-brain__legend { position: relative; z-index: 3; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: .4rem; border-bottom: 1px solid var(--border); padding: .75rem 1rem; color: var(--muted-foreground); font-size: var(--font-size-3xs); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+  .business-brain__legend i { color: var(--primary); }
+  .business-brain__map { position: relative; display: block; width: min(100%, 68rem); aspect-ratio: 16 / 10; min-height: 38rem; margin: 0 auto; }
+  .business-brain__wires { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+  /* Journey lines at the EXACT /learn graph sizes (owner directive, source
+     src/styles/learn-roadmap.css .learn-map__edge-ghost / __edge-fill):
+     dashed route — foreground-muted, 1px, dash 9 8, .65 opacity, round
+     caps/joins. Pixel-true svg keeps 9 8 = 9px/8px on screen. */
+  .business-brain__route { fill: none; stroke: var(--foreground-muted); stroke-width: 1; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 9 8; opacity: .65; }
+  /* Solid journey fill — primary, 1.5px like the learn edge-fill; no
+     drop-shadow (learn has none). */
+  .business-brain__journey { fill: none; stroke: var(--primary); stroke-width: 1.5; stroke-linecap: round; opacity: 0; }
+  .business-brain__layer { position: absolute; z-index: 1; color: var(--muted-foreground); font-size: var(--font-size-3xs); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+  .business-brain__layer--ai { top: 17%; left: 50%; color: var(--primary); transform: translateX(-50%); }
+  .business-brain__layer--tools { top: 2.5%; left: 50%; transform: translateX(-50%); }
+  .business-brain__core, .business-brain__ai, .business-brain__tool { position: absolute; z-index: 2; transform: translate(-50%, -50%); }
+  .business-brain__core { display: flex; width: 11.5rem; flex-direction: column; align-items: center; padding: .9rem; text-align: center; }
+  .business-brain__core > span { display: grid; width: 3rem; height: 3rem; place-items: center; border: 1px solid var(--primary); border-radius: var(--radius-md); background: color-mix(in oklab, var(--primary) 20%, var(--panel)); color: var(--primary); box-shadow: 0 0 2rem var(--primary-soft); }
+  .business-brain__node-icon,.business-brain__node-check{grid-area:1/1}.business-brain__node-icon{display:grid;width:1.2rem;height:1.2rem;place-items:center}.business-brain__node-icon svg{width:100%;height:100%}.business-brain__node-check{display:none!important;color:var(--success)}[data-brain-node].is-checked{border-color:var(--success)!important;background:color-mix(in oklab,var(--success) 20%,var(--panel-raised))!important}[data-brain-node].is-checked>.business-brain__node-icon{display:none}[data-brain-node].is-checked>.business-brain__node-check{display:block!important}
+  .business-brain__core strong { margin-top: .55rem; color: var(--foreground-strong); font-size: var(--font-size-sm); }
+  .business-brain__core small { margin-top: .2rem; color: var(--muted-foreground); font-size: var(--font-size-3xs); line-height: 1.35; }
+  .business-brain__ai { display: flex; min-width: 6.5rem; align-items: center; gap: .45rem; border: 1px solid var(--primary); border-radius: var(--radius-md); background: var(--panel-raised); padding: .48rem .6rem; box-shadow: 0 0 0 .22rem var(--primary-soft), var(--shadow-panel); }
+  .business-brain__ai > span { display: grid; width: 1.5rem; height: 1.5rem; place-items: center; color: var(--foreground-strong); }
+  .business-brain__ai > span > svg { max-width: 1.4rem; max-height: 1.4rem; }
+  .business-brain__ai strong { color: var(--foreground-strong); font-size: var(--font-size-3xs); white-space: nowrap; }
+  .business-brain__tool { display: flex; width: 4.6rem; flex-direction: column; align-items: center; gap: .28rem; color: var(--foreground-muted); text-align: center; }
+  .business-brain__tool > span { display: grid; width: 2.1rem; height: 2.1rem; place-items: center; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--panel-raised); box-shadow: var(--shadow-panel); }
+  .business-brain__tool > span > svg { max-width: 1.2rem; max-height: 1.2rem; }
+  .business-brain__node-icon svg { max-width: 1.2rem; max-height: 1.2rem; }
+  .business-brain__tool small { font-size: var(--font-size-3xs); font-weight: 600; line-height: 1.15; }
+  .business-brain__mobile { display: none; }
+  @media (max-width: 860px) {
+    .business-brain__map { display: none; }
+    .business-brain__mobile { position: relative; z-index: 1; display: block; padding: 1rem; }
+    .business-brain__mobile-core { position: relative; z-index: 2; display: flex; max-width: 18rem; flex-direction: column; align-items: center; gap: .45rem; margin: 0 auto; padding: .65rem; background: var(--panel); text-align: center; }
+    .business-brain__mobile-core::after { position: absolute; top: 100%; left: 50%; width: 1px; height: 1.3rem; content: ""; background: var(--primary); }
+    .business-brain__mobile-core > span { display: grid; width: 2.5rem; height: 2.5rem; place-items: center; border: 1px solid var(--primary); border-radius: var(--radius-md); background: color-mix(in oklab, var(--primary) 20%, var(--panel)); color: var(--primary); box-shadow: 0 0 1.4rem var(--primary-soft); }
+    .business-brain__mobile-core strong, .business-brain__mobile-core small { display: block; }
+    .business-brain__mobile-core strong { color: var(--foreground-strong); font-size: var(--font-size-sm); }
+    .business-brain__mobile-core small { margin-top: .1rem; color: var(--muted-foreground); font-size: var(--font-size-3xs); }
+    .business-brain__mobile-spine { position: absolute; z-index: 0; top: 4rem; bottom: 3.2rem; left: 50%; width: 1px; overflow: hidden; background: var(--primary); opacity: .8; }
+    .business-brain__mobile-spine::after { position: absolute; top: 0; left: 0; width: 100%; height: 2rem; content: ""; background: var(--foreground-strong); box-shadow: 0 0 .5rem var(--foreground-strong); animation: business-brain-mobile-signal calc(var(--duration-slow) * 20) linear infinite; }
+    .business-brain__mobile ol { position: relative; z-index: 1; display: grid; gap: 1.5rem; margin: 1.3rem 0 0; padding: 0; list-style: none; }
+    .business-brain__mobile li { position: relative; display: flex; flex-direction: column; align-items: center; }
+    .business-brain__mobile-ai { display: flex; width: 8rem; min-width: 0; align-items: center; justify-content: center; gap: .4rem; border: 1px solid var(--primary); border-radius: var(--radius-md); background: var(--panel-raised); padding: .45rem .5rem; box-shadow: 0 0 0 .16rem var(--primary-soft); }
+    .business-brain__mobile-ai > span { display: grid; width: 1.35rem; height: 1.35rem; flex: 0 0 auto; place-items: center; color: var(--foreground-strong); }
+    .business-brain__mobile-ai > span > svg { max-width: 1.2rem; max-height: 1.2rem; }
+    .business-brain__mobile-ai strong { overflow: hidden; color: var(--foreground-strong); font-size: var(--font-size-3xs); text-overflow: ellipsis; white-space: nowrap; }
+    .business-brain__mobile-connection { width: 1px; height: .8rem; border-left: 1px dashed var(--foreground-muted); opacity: .65; }
+    .business-brain__mobile-tools { position: relative; display: grid; grid-template-columns: repeat(4, 2.4rem); justify-content: center; gap: .55rem; padding-top: .7rem; }
+    .business-brain__mobile-tools::before { position: absolute; top: 0; left: 1.2rem; right: 1.2rem; border-top: 1px dashed var(--foreground-muted); content: ""; opacity: .65; }
+    .business-brain__mobile-tools > span { position: relative; display: grid; width: 2.4rem; height: 2.4rem; place-items: center; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--panel-raised); }
+    .business-brain__mobile-tools > span::before { position: absolute; bottom: 100%; left: 50%; width: 1px; height: .7rem; border-left: 1px dashed var(--foreground-muted); content: ""; opacity: .65; }
+    .business-brain__mobile-tools .business-brain__node-icon svg { max-width: 1.1rem; max-height: 1.1rem; }
+    .business-brain__mobile-caption { margin: 1.1rem 0 0; color: var(--muted-foreground); font-size: var(--font-size-3xs); font-weight: 650; letter-spacing: .04em; text-align: center; text-transform: uppercase; }
+  }
+  @keyframes business-brain-mobile-signal { from { transform: translateY(-2rem); } to { transform: translateY(28rem); } }
+  @media (prefers-reduced-motion: reduce) { .business-brain__journey { display: none; } .business-brain__mobile-spine::after { animation: none !important; opacity: 0; } }</style>

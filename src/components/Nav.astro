@@ -113,7 +113,6 @@ const ariaCurrent = (href: string) => (isCurrent(href) ? "page" : undefined);
   class:list={[
     "fixed top-0 left-0 right-0 z-50 border-b border-transparent",
     "transition-[background-color,backdrop-filter,border-color,box-shadow] duration-300",
-    locale === "fa" ? "font-iransansx" : "",
   ]}
   data-scrolled="false"
 >
@@ -206,8 +205,9 @@ const ariaCurrent = (href: string) => (isCurrent(href) ? "page" : undefined);
       <a
         href={ctaHref}
         data-cta-location="nav"
-        class="hidden sm:inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-4 h-8 text-xs font-medium hover:brightness-110 active:brightness-95 transition-all"
+        class="hidden sm:inline-flex items-center justify-center gap-1.5 rounded-md bg-primary text-primary-foreground px-4 h-8 text-xs font-medium hover:brightness-110 active:brightness-95 transition-all"
       >
+        <i class="bx bx-mouse icon-sm" aria-hidden="true"></i>
         {ctaLink.label}
       </a>
 

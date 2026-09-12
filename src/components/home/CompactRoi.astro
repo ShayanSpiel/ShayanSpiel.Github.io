@@ -1,0 +1,83 @@
+---
+import { APPLY_PATH } from "../../config";
+import { localizePath } from "../../i18n";
+import { type Locale, t } from "../../i18n/translations";
+
+export interface Props { locale?: Locale; }
+const { locale = "en" } = Astro.props;
+const id = `compact-roi-${Math.random().toString(36).slice(2, 8)}`;
+const applyHref = localizePath(APPLY_PATH, locale);
+const servicesHref = localizePath("/services/", locale);
+---
+
+<article id={id} class="roi-offer">
+  <div class="roi-offer__promise">
+    <span class="roi-offer__promise-icon"><i class="bx bx-target-lock icon-xl" aria-hidden="true"></i></span>
+    <div><p>{t(locale, "conversion.home.roi.promiseLabel")}</p><strong>{t(locale, "conversion.home.roi.promiseTitle")}</strong><small>{t(locale, "conversion.home.roi.promiseBody")}</small></div>
+  </div>
+  <div class="roi-offer__calculator">
+    <div class="roi-offer__calculator-head"><div><p>{t(locale, "conversion.home.roi.baselineLabel")}</p><strong>{t(locale, "conversion.home.roi.baselineTitle")}</strong></div><i class="bx bx-calculator icon-xl" aria-hidden="true"></i></div>
+    <div class="roi-offer__inputs">
+      <label><span>{t(locale, "conversion.home.roi.people")}</span><output data-roi-output="people">5</output><small>{t(locale, "conversion.home.roi.peopleHint")}</small><input data-roi-input="people" type="range" min="1" max="50" value="5" /></label>
+      <label><span>{t(locale, "conversion.home.roi.hours")}</span><output data-roi-output="hours">8 hrs</output><small>{t(locale, "conversion.home.roi.hoursHint")}</small><input data-roi-input="hours" type="range" min="1" max="40" value="8" /></label>
+      <label><span>{t(locale, "conversion.home.roi.rate")}</span><output data-roi-output="rate">$50</output><small>{t(locale, "conversion.home.roi.rateHint")}</small><input data-roi-input="rate" type="range" min="15" max="200" step="5" value="50" /></label>
+    </div>
+    <button type="button" class="roi-offer__calculate" data-roi-submit aria-controls={`${id}-result`} aria-expanded="false"><i class="bx bx-pointer icon-base" aria-hidden="true"></i>{t(locale, "conversion.home.roi.calculate")}</button>
+  </div>
+  <div id={`${id}-result`} class="roi-offer__result" data-roi-result-panel hidden aria-live="polite">
+    <div class="roi-offer__result-value"><p>{t(locale, "conversion.home.roi.resultLabel")}</p><strong><span>$</span><output data-roi-result>8,660</output><small>{t(locale, "conversion.home.roi.resultSuffix")}</small></strong><em><i class="bx bx-time-five icon-sm" aria-hidden="true"></i><output data-roi-hours>173</output>{t(locale, "conversion.home.roi.hoursSuffix")}</em></div>
+    <div class="roi-offer__result-copy"><strong>{t(locale, "conversion.home.roi.resultTitle")}</strong><p>{t(locale, "conversion.home.roi.resultBody")}</p><div><a href={applyHref} data-cta-location="home_roi_result" class="roi-offer__apply"><i class="bx bx-pointer icon-base" aria-hidden="true"></i>{t(locale, "conversion.home.roi.apply")}</a><a href={servicesHref} class="roi-offer__services"><i class="bx bx-network-chart icon-base" aria-hidden="true"></i>{t(locale, "conversion.home.roi.services")}</a></div></div>
+    <button type="button" class="roi-offer__reset" data-roi-reset><i class="bx bx-reset icon-sm" aria-hidden="true"></i>{t(locale, "conversion.home.roi.reset")}</button>
+  </div>
+</article>
+
+<script>
+  document.querySelectorAll<HTMLElement>(".roi-offer").forEach((root) => {
+    if (root.dataset.roiReady === "true") return;
+    root.dataset.roiReady = "true";
+    const inputs = root.querySelectorAll<HTMLInputElement>("[data-roi-input]");
+    const result = root.querySelector<HTMLOutputElement>("[data-roi-result]");
+    const hours = root.querySelector<HTMLOutputElement>("[data-roi-hours]");
+    const button = root.querySelector<HTMLButtonElement>("[data-roi-submit]");
+    const reset = root.querySelector<HTMLButtonElement>("[data-roi-reset]");
+    const panel = root.querySelector<HTMLElement>("[data-roi-result-panel]");
+    const values = () => {
+      const total: Record<string, number> = {};
+      inputs.forEach((input) => {
+        const key = input.dataset.roiInput ?? "";
+        total[key] = Number(input.value);
+        const output = root.querySelector<HTMLOutputElement>(`[data-roi-output="${key}"]`);
+        if (output) output.textContent = key === "hours" ? `${input.value} hrs` : key === "rate" ? `$${input.value}` : input.value;
+      });
+      return total;
+    };
+    const calculate = () => {
+      const current = values();
+      const monthlyHours = current.people * current.hours * 4.33;
+      const monthly = monthlyHours * current.rate;
+      if (result) result.textContent = Math.round(monthly).toLocaleString();
+      if (hours) hours.textContent = Math.round(monthlyHours).toLocaleString();
+      if (panel) panel.hidden = false;
+      button?.setAttribute("aria-expanded", "true");
+      root.classList.add("has-result");
+    };
+    const clear = () => {
+      if (panel) panel.hidden = true;
+      button?.setAttribute("aria-expanded", "false");
+      root.classList.remove("has-result");
+    };
+    inputs.forEach((input) => input.addEventListener("input", () => {
+      values();
+      if (root.classList.contains("has-result")) calculate();
+    }));
+    button?.addEventListener("click", calculate);
+    reset?.addEventListener("click", clear);
+    values();
+  });
+</script>
+
+<style is:global>
+  .roi-offer { position: relative; overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--panel); box-shadow: var(--shadow-panel); }.roi-offer::before { position: absolute; inset: 0; content: ""; pointer-events: none; opacity: .03; background-image: linear-gradient(var(--foreground) 1px, transparent 1px), linear-gradient(90deg, var(--foreground) 1px, transparent 1px); background-size: 2rem 2rem; }.roi-offer::after { position: absolute; inset: 0 0 auto; height: 2px; content: ""; background: linear-gradient(to right, var(--primary), var(--accent), var(--success), transparent); opacity: .8; }.roi-offer__promise, .roi-offer__calculator, .roi-offer__result { position: relative; z-index: 1; }.roi-offer__promise { display: grid; grid-template-columns: 2.5rem minmax(0, 1fr); align-items: start; gap: .8rem; padding: 1.5rem 1.5rem .7rem; }.roi-offer__promise-icon { display: grid; width: 2.5rem; height: 2.5rem; place-items: center; border: 1px solid var(--success); border-radius: var(--radius-md); background: var(--success-soft); color: var(--success); }.roi-offer__promise p, .roi-offer__calculator-head p, .roi-offer__result-value p { margin: 0; color: var(--primary); font-size: var(--font-size-3xs); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }.roi-offer__promise strong { display: block; margin-top: .3rem; color: var(--foreground-strong); font-size: var(--font-size-sm); line-height: 1.3; }.roi-offer__promise small { display: block; max-width: 48rem; margin-top: .3rem; color: var(--muted-foreground); font-size: var(--font-size-xs); line-height: 1.45; }.roi-offer__calculator { padding: .8rem 1.5rem 1.5rem; }.roi-offer__calculator-head { display: flex; align-items: flex-start; justify-content: space-between; gap: .75rem; }.roi-offer__calculator-head strong { display: block; margin-top: .25rem; color: var(--foreground-strong); font-size: var(--font-size-sm); }.roi-offer__calculator-head > i { color: var(--primary); }.roi-offer__inputs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .75rem; margin-top: 1rem; }.roi-offer__inputs label { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: .6rem; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--panel-raised); padding: .75rem; color: var(--foreground-strong); font-size: var(--font-size-xs); font-weight: 650; }.roi-offer__inputs output { color: var(--primary); font-size: var(--font-size-xs); font-weight: 700; }.roi-offer__inputs small { grid-column: 1 / -1; margin-top: .12rem; color: var(--muted-foreground); font-size: var(--font-size-3xs); font-weight: 500; }.roi-offer__inputs input { grid-column: 1 / -1; width: 100%; margin-top: .45rem; accent-color: var(--primary); border: 0; background: transparent; }.roi-offer__inputs input:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }.roi-offer__calculate, .roi-offer__apply, .roi-offer__services { display: inline-flex; min-height: 2.6rem; align-items: center; justify-content: center; gap: .45rem; border-radius: var(--radius-md); font-size: var(--font-size-xs); font-weight: 700; transition: transform var(--duration) var(--ease), filter var(--duration) var(--ease), border-color var(--duration) var(--ease), background-color var(--duration) var(--ease); }.roi-offer__calculate, .roi-offer__apply { border: 0; background: var(--primary); color: var(--primary-foreground); cursor: pointer; }.roi-offer__calculate:hover, .roi-offer__apply:hover { filter: brightness(1.08); transform: translateY(-1px); }.roi-offer__calculate { width: 100%; margin-top: .8rem; padding: 0 1rem; }.roi-offer__result { display: grid; grid-template-columns: minmax(10rem, .8fr) minmax(0, 1.2fr) auto; gap: 1.25rem; align-items: center; border-top: 1px solid var(--success); background: linear-gradient(90deg, var(--success-soft), transparent 60%); padding: 1.25rem 1.5rem; }.roi-offer__result[hidden] { display: none; }.roi-offer__result-value { border-right: 1px solid color-mix(in oklab, var(--success) 35%, var(--border)); padding-right: 1.25rem; }.roi-offer__result-value p { color: var(--success); }.roi-offer__result-value strong { display: flex; align-items: baseline; gap: .12rem; margin-top: .3rem; color: var(--foreground-strong); font-size: var(--font-size-4xl); letter-spacing: -.045em; line-height: 1; }.roi-offer__result-value strong span { color: var(--success); font-size: var(--font-size-xl); letter-spacing: 0; }.roi-offer__result-value strong small { margin-left: .2rem; color: var(--muted-foreground); font-size: var(--font-size-3xs); font-weight: 600; letter-spacing: 0; }.roi-offer__result-value em { display: inline-flex; align-items: center; gap: .25rem; margin-top: .6rem; color: var(--foreground-muted); font-size: var(--font-size-3xs); font-style: normal; }.roi-offer__result-value em i { color: var(--success); }.roi-offer__result-copy > strong { color: var(--foreground-strong); font-size: var(--font-size-sm); }.roi-offer__result-copy p { max-width: 35rem; margin: .35rem 0 0; color: var(--muted-foreground); font-size: var(--font-size-xs); line-height: 1.45; }.roi-offer__result-copy > div { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .8rem; }.roi-offer__apply, .roi-offer__services { padding: 0 .85rem; text-decoration: none; }.roi-offer__services { border: 1px solid var(--border); background: var(--panel); color: var(--foreground); }.roi-offer__services:hover { border-color: var(--border-strong); background: var(--panel-raised); }.roi-offer__reset { align-self: start; display: inline-flex; align-items: center; gap: .3rem; border: 0; background: transparent; color: var(--muted-foreground); cursor: pointer; font-size: var(--font-size-3xs); font-weight: 650; }.roi-offer__reset:hover { color: var(--foreground-strong); }
+  @media (max-width: 720px) { .roi-offer__promise { padding: 1.25rem 1rem .55rem; }.roi-offer__calculator { padding: .7rem 1rem 1rem; }.roi-offer__inputs { grid-template-columns: 1fr; }.roi-offer__result { grid-template-columns: 1fr; gap: .85rem; padding: 1.1rem 1rem; }.roi-offer__result-value { border-right: 0; border-bottom: 1px solid color-mix(in oklab, var(--success) 35%, var(--border)); padding: 0 0 .85rem; }.roi-offer__reset { justify-self: start; } }
+  @media (prefers-reduced-motion: reduce) { .roi-offer * { transition-duration: 0ms !important; } }
+</style>

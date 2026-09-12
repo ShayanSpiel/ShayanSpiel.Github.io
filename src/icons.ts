@@ -22,6 +22,10 @@ export const VALID_BOXICONS = [
   'bx-error',            // error / failure / problem
   'bx-check-square',     // success / done / correct
   'bx-time-five',        // warning / time / waiting
+  'bx-briefcase',        // business / work (Learn roadmap root)
+  'bx-bot',              // agent / robot (Learn roadmap agents)
+  'bx-download',         // download (Learn PDF action)
+  'bx-share-alt',        // share (Learn share action)
 
   // Actions
   'bxs-bolt',            // energy / lightning / speed (solid; plain bx-bolt does NOT exist)
@@ -111,6 +115,10 @@ export const iconMap: Record<string, string> = {
   'circle-x':      'bx-error',
   'circle-check':  'bx-check-square',
   'alert-triangle':'bx-error',
+  'briefcase':     'bx-briefcase',
+  'bot':           'bx-bot',
+  'download':      'bx-download',
+  'share':         'bx-share-alt',
 
   // Actions / Energy
   'zap':           'bxs-bolt',            // solid bolt; plain bx-bolt does NOT exist

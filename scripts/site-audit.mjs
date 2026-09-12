@@ -28,10 +28,11 @@ const allowedSvgFiles = new Set([
   // Apply-page real tool marks (ToolLogos, owner directive 2026-08-26).
   "src/components/live/LiveHeroMark.astro",
   "src/components/ToolLogos.astro",
-  // Diagram/graph canvases: the Live AI company map and the Lab graph space
-  // are legitimate SVG-native diagram surfaces (owner WIP 2026-09).
-  "src/pages/live-ai-company.astro",
-  "src/pages/lab/neurons.astro",
+  // Diagram/graph canvases are gone (owner directive 2026-09-03): the Live
+  // AI company map and the Lab graph space were removed from the site.
+  // The BusinessBrain wires svg is a diagram canvas of the same class:
+  // runtime-drawn routes on a measured viewBox, not decorative markup.
+  "src/components/home/BusinessBrain.astro",
 ]);
 for (const file of sourceFiles) {
   const rel = relative(root, file);
@@ -55,7 +56,6 @@ for (const file of sourceFiles) {
   // company map is unfinished owner WIP and is tracked separately.
   const brandMarkSurfaces = new Set([
     "src/components/ToolLogos.astro",
-    "src/pages/live-ai-company.astro",
   ]);
   if ((rel.startsWith("src/components/") || rel.startsWith("src/pages/")) && !brandMarkSurfaces.has(rel) && /#[0-9a-f]{3,8}\b|\brgba?\(|\bhsla?\(/i.test(content)) {
     fail(`${rel} hardcodes a color outside the token system`);

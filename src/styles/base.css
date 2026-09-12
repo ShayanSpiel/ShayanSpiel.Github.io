@@ -19,12 +19,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* RTL — set DOTS axis on html so all children inherit it (Tailwind reset overrides @font-face descriptor) */
-html[dir="rtl"] {
-  font-variation-settings: "DOTS" 7;
-}
-
-/* RTL heading weight boost — IRANSansX needs heavier weights to match Outfit's visual weight */
+/* RTL heading weight boost keeps the same visual hierarchy in both directions. */
 [dir="rtl"] h1, [dir="rtl"] .text-3xl, [dir="rtl"] .text-4xl, [dir="rtl"] .text-5xl, [dir="rtl"] .text-6xl {
   font-weight: 800;
 }
@@ -47,9 +42,9 @@ html[dir="rtl"] {
   text-align: left;
 }
 
-/* RTL — use Persian font for numerals in tables (JetBrains Mono lacks Persian glyphs) */
+/* RTL numeric cells retain the site sans face. */
 [dir="rtl"] .data-table td.num {
-  font-family: 'IRANSansX', 'Outfit', sans-serif;
+  font-family: var(--font-sans);
 }
 
 /* RTL list markers — keep bullets inside in RTL for proper alignment */

@@ -15,6 +15,7 @@
 .bx-briefcase:before{content:"\ea00"}
 .bx-bulb:before{content:"\ea0d"}
 .bx-bullseye:before{content:"\ea0e"}
+.bx-calculator:before{content:"\ea14"}
 .bx-calendar:before{content:"\ea15"}
 .bx-calendar-check:before{content:"\ea17"}
 .bx-calendar-event:before{content:"\ea19"}
@@ -55,6 +56,7 @@
 .bx-flag:before{content:"\eade"}
 .bx-folder:before{content:"\eadf"}
 .bx-folder-open:before{content:"\eae1"}
+.bx-git-branch:before{content:"\eaf0"}
 .bx-globe:before{content:"\eaf8"}
 .bx-grid-alt:before{content:"\eafb"}
 .bx-group:before{content:"\eaff"}
@@ -85,6 +87,7 @@
 .bx-message-rounded:before{content:"\eb74"}
 .bx-microphone:before{content:"\eb89"}
 .bx-moon:before{content:"\eb94"}
+.bx-mouse:before{content:"\eb95"}
 .bx-movie:before{content:"\eb9a"}
 .bx-network-chart:before{content:"\eb9e"}
 .bx-note:before{content:"\eba1"}
@@ -95,11 +98,13 @@
 .bx-phone:before{content:"\ebb2"}
 .bx-play:before{content:"\ebbd"}
 .bx-plus:before{content:"\ebc0"}
+.bx-pointer:before{content:"\ef5e"}
 .bx-pulse:before{content:"\ebca"}
 .bx-purchase-tag:before{content:"\ebcb"}
 .bx-receipt:before{content:"\ebd5"}
 .bx-refresh:before{content:"\ebd9"}
 .bx-repeat:before{content:"\ebdc"}
+.bx-reset:before{content:"\ebe0"}
 .bx-revision:before{content:"\ebe2"}
 .bx-right-arrow-alt:before{content:"\ebe6"}
 .bx-rocket:before{content:"\ebeb"}
@@ -110,6 +115,7 @@
 .bx-search-alt:before{content:"\ebf8"}
 .bx-send:before{content:"\ebfc"}
 .bx-server:before{content:"\ebfd"}
+.bx-share-alt:before{content:"\ec03"}
 .bx-shield-quarter:before{content:"\ec08"}
 .bx-show:before{content:"\ec0c"}
 .bx-sitemap:before{content:"\ec10"}
@@ -142,3 +148,5 @@
 .bxs-check-shield:before{content:"\ed32"}
 .bxs-crown:before{content:"\ed6f"}
 .bxs-edit:before{content:"\ed9b"}
+.bxs-quote-alt-left:before{content:"\ee81"}
+.bxs-star:before{content:"\eeb8"}

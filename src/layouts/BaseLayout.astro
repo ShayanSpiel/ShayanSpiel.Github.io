@@ -19,6 +19,12 @@ export interface Props {
   locale?: Locale;
   /** EN-only page: skip the fa twin, keep en + x-default self-references. */
   noAlternate?: boolean;
+  /** Optional canonical host for a standalone campaign/subdomain surface. */
+  alternateBaseUrl?: string;
+  /** Public path when a built route is mounted at a different subdomain path. */
+  alternatePathOverride?: string;
+  /** Standalone experiences can deliberately omit the global chat launcher. */
+  showChat?: boolean;
 }
 
 const {
@@ -33,6 +39,9 @@ const {
   robots = SEO.robots,
   locale = SITE.locale as Locale,
   noAlternate = false,
+  alternateBaseUrl = SITE.url,
+  alternatePathOverride,
+  showChat = true,
 } = Astro.props;
 
 const pageTitle = title.includes(SITE.name) ? title : `${title} — ${SITE.name}`;
@@ -46,7 +55,7 @@ const bookingEnabled = /^\/(?:fa\/)?(?:apply|contact)\/?$/.test(Astro.url.pathna
 <html lang={lang} dir={dir} data-theme={SITE.defaultTheme}>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content" />
     <meta name="theme-color" content={SITE.themeColor} />
     <meta name="color-scheme" content={SITE.colorScheme} />
     <meta name="robots" content={robots} />
@@ -87,12 +96,9 @@ const bookingEnabled = /^\/(?:fa\/)?(?:apply|contact)\/?$/.test(Astro.url.pathna
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="alternate" type="application/rss+xml" title={`${SITE.name} RSS`} href="/feed.xml" />
 
-    <!-- Preload critical fonts to prevent FOUT. IRANSansX is unicode-range
-         isolated to Arabic/Persian glyphs, so it is only preloaded on FA
-         pages where it can actually be used. -->
+    <!-- Preload the two typefaces used by the site. -->
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/outfit-latin.woff2" crossorigin />
-    {locale === "fa" && <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/IRANSansXVF.woff2" crossorigin />}
-    <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/marcellus-latin.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/ttf" href="/assets/fonts/dm-serif-display-latin.ttf" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/boxicons.woff2" crossorigin />
 
     <!-- Cal.com native embed (owner directive 2026-08-23, flow.digital
@@ -121,8 +127,8 @@ const bookingEnabled = /^\/(?:fa\/)?(?:apply|contact)\/?$/.test(Astro.url.pathna
       if (noAlternate) {
         return (
           <>
-            <link rel="alternate" hreflang="en" href={`${SITE.url}${enPath}`} />
-            <link rel="alternate" hreflang="x-default" href={`${SITE.url}${enPath}`} />
+            <link rel="alternate" hreflang="en" href={`${alternateBaseUrl}${alternatePathOverride ?? enPath}`} />
+            <link rel="alternate" hreflang="x-default" href={`${alternateBaseUrl}${alternatePathOverride ?? enPath}`} />
           </>
         );
       }
@@ -213,7 +219,7 @@ const bookingEnabled = /^\/(?:fa\/)?(?:apply|contact)\/?$/.test(Astro.url.pathna
     </main>
     <slot name="footer" />
 
-    <ChatAssistant locale={locale} />
+    {showChat && <ChatAssistant locale={locale} />}
 
     <script>
       import AOS from "aos";

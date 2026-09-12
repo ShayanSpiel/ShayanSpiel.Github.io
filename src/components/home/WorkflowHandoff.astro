@@ -1,0 +1,29 @@
+---
+import { type Locale, t } from "../../i18n/translations";
+
+export interface Props { locale?: Locale; }
+const { locale = "en" } = Astro.props;
+const steps = [
+  { key: "show", icon: "bx-show" },
+  { key: "system", icon: "bx-network-chart" },
+  { key: "implement", icon: "bx-code-alt" },
+  { key: "handoff", icon: "bx-check-square" },
+] as const;
+---
+
+<article class="workflow-handoff">
+  <div class="workflow-handoff__eyebrow"><i class="bx bx-git-branch icon-sm" aria-hidden="true"></i>{t(locale, "conversion.home.handoff.label")}</div>
+  <ol>
+    <span class="workflow-handoff__track" aria-hidden="true"></span>
+    {steps.map((step) => (
+      <li>
+        <span class="workflow-handoff__node"><i class:list={["bx", step.icon, "icon-xl"]} aria-hidden="true"></i></span>
+        <div><strong>{t(locale, `conversion.home.handoff.${step.key}.title`)}</strong><small>{t(locale, `conversion.home.handoff.${step.key}.desc`)}</small></div>
+      </li>
+    ))}
+  </ol>
+</article>
+
+<style is:global>
+  .workflow-handoff{position:relative;margin-top:3rem;overflow:hidden;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--panel);padding:0 1.25rem 2.5rem;box-shadow:var(--shadow-panel)}.workflow-handoff::before{position:absolute;inset:0;content:"";background-image:linear-gradient(var(--foreground) 1px,transparent 1px),linear-gradient(90deg,var(--foreground) 1px,transparent 1px);background-size:2rem 2rem;opacity:.025}.workflow-handoff__eyebrow{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;gap:.35rem;margin:0 -1.25rem 2rem;border-bottom:1px solid var(--border);padding:.75rem 1rem;color:var(--primary);font-size:var(--font-size-3xs);font-weight:700;letter-spacing:.1em;text-transform:uppercase}.workflow-handoff ol{position:relative;z-index:1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;margin:0;padding:0;list-style:none}.workflow-handoff__track{position:absolute;z-index:0;top:1.3rem;left:12.5%;right:12.5%;height:2px;background:linear-gradient(to right,var(--primary),var(--accent),var(--purple),var(--success))}.workflow-handoff li{position:relative;z-index:1;display:flex;min-width:0;flex-direction:column;align-items:center;gap:.7rem;padding:0 .7rem;text-align:center}.workflow-handoff__node{display:grid;width:2.6rem;height:2.6rem;place-items:center;border:1px solid var(--primary);border-radius:var(--radius-md);background:var(--panel-raised);color:var(--primary);box-shadow:0 0 1.25rem var(--primary-soft)}.workflow-handoff li:nth-child(3) .workflow-handoff__node{border-color:var(--accent);color:var(--accent)}.workflow-handoff li:nth-child(4) .workflow-handoff__node{border-color:var(--purple);color:var(--purple)}.workflow-handoff li:nth-child(5) .workflow-handoff__node{border-color:var(--success);color:var(--success)}.workflow-handoff strong,.workflow-handoff small{display:block}.workflow-handoff strong{color:var(--foreground-strong);font-size:var(--font-size-xs);line-height:1.25}.workflow-handoff small{margin-top:.25rem;color:var(--muted-foreground);font-size:var(--font-size-3xs);line-height:1.4}@media(max-width:640px){.workflow-handoff{padding:0 1rem 1.5rem}.workflow-handoff__eyebrow{margin:0 -1rem 1.25rem}.workflow-handoff ol{grid-template-columns:1fr;gap:1rem}.workflow-handoff__track{top:1.3rem;bottom:1.3rem;left:1.3rem;right:auto;width:2px;height:auto;background:linear-gradient(to bottom,var(--primary),var(--accent),var(--purple),var(--success))}.workflow-handoff li{display:grid;grid-template-columns:2.6rem minmax(0,1fr);gap:.8rem;align-items:center;padding:0;text-align:start}.workflow-handoff li>div{min-width:0}}
+</style>

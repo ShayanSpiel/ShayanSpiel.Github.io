@@ -4,27 +4,28 @@ export interface Props {
   title: string;
   description?: string;
   align?: "center" | "left";
+  animate?: boolean;
 }
 
-const { label, title, description, align = "center" } = Astro.props;
+const { label, title, description, align = "center", animate = true } = Astro.props;
 ---
 
 <div class:list={[
-  "mb-12",
+  "mb-12 section-header",
   align === "center" ? "text-center" : "",
-]} data-aos="fade-up">
+]} data-aos={animate ? "fade-up" : undefined}>
   {label && (
     <span class="text-2xs font-semibold uppercase tracking-widest text-primary">{label}</span>
   )}
   <h2 class:list={[
-    "font-bold text-foreground-strong tracking-tight",
+    "font-extrabold text-foreground-strong tracking-tight leading-tight",
     label ? "mt-3" : "",
-    "text-3xl sm:text-4xl",
+    "text-3xl sm:text-5xl",
   ]} set:html={title} />
   {description && (
     <p class:list={[
-      "mt-4 text-sm text-muted-foreground leading-relaxed",
-      align === "center" ? "max-w-xl mx-auto" : "max-w-2xl",
+      "mt-5 text-base text-muted-foreground leading-relaxed",
+      align === "center" ? "max-w-2xl mx-auto" : "max-w-2xl",
     ]} set:html={description} />
   )}
 </div>

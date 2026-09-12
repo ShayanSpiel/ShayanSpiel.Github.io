@@ -13,8 +13,8 @@ export interface Props {
 const { locale = "en" } = Astro.props;
 
 const covers = [1, 2, 3, 4, 5, 6] as const;
-const howSteps = [1, 2, 3, 4] as const;
-const faqs = [1, 2, 3, 4, 5, 7] as const;
+const faqs = [1, 2, 3, 4, 5, 6, 7] as const;
+const handoffSteps = ["show", "system", "implement", "handoff"] as const;
 
 const breadcrumbJsonLd = {
   "@context": "https://schema.org",
@@ -62,7 +62,7 @@ const offerJsonLd = {
       <div>
         <p class="text-2xs font-semibold uppercase tracking-widest text-primary">{t(locale, "conversion.pricing.hero.label")}</p>
         <h1 class="mt-4 text-4xl font-extrabold leading-tightest tracking-tight text-foreground-strong sm:text-6xl">
-          {t(locale, "conversion.pricing.hero.titleLead")}<br /><span class="text-primary">{t(locale, "conversion.pricing.hero.titleAccent")}</span>
+          {t(locale, "conversion.pricing.hero.titleLead")}<br /><span set:html={t(locale, "conversion.pricing.hero.titleAccent")} />
         </h1>
         <p class="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground">{t(locale, "conversion.pricing.hero.l2")}</p>
         <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row sm:items-center">
@@ -95,31 +95,13 @@ const offerJsonLd = {
         </div>
         </div>
       </div>
-    </div>
-  </section>
 
-  <section class="relative py-24 sm:py-32">
-    <div class="mx-auto max-w-5xl px-6">
-      <SectionHeader label={t(locale, "conversion.pricing.how.label")} title={t(locale, "conversion.pricing.how.title")} />
-      <ol class="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-4" data-aos="fade-up">
-        {howSteps.map((n) => (
-          <li class="group relative overflow-hidden rounded-md border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
-            <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-primary via-accent to-transparent opacity-70" aria-hidden="true"></div>
-            <span class="font-mono text-2xs font-bold text-primary">0{n}</span>
-            <h3 class="mt-4 text-base font-bold text-foreground-strong">{t(locale, `conversion.pricing.how.s${n}.t`)}</h3>
-            <p class="mt-2 text-sm leading-relaxed text-muted-foreground">{t(locale, `conversion.pricing.how.s${n}.d`)}</p>
-          </li>
-        ))}
-      </ol>
-    </div>
-  </section>
-
-  <section class="relative overflow-hidden py-20 sm:py-24">
-    <div class="absolute inset-0 bg-panel-deep/50"></div>
-    <div class="relative mx-auto max-w-4xl px-6">
-      <SectionHeader label={t(locale, "conversion.pricing.deal.label")} title={t(locale, "conversion.pricing.deal.title")} />
-      <div class="grid gap-3 md:grid-cols-3" data-aos="fade-up">
-        {["d1", "d2", "d3"].map((key, index) => <div class="group relative overflow-hidden rounded-md border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong"><div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-accent via-purple to-transparent opacity-70" aria-hidden="true"></div><span class="font-mono text-2xs font-bold text-primary">0{index + 1}</span><p class="mt-4 text-sm font-semibold leading-relaxed text-foreground-strong">{t(locale, `conversion.pricing.deal.${key}`)}</p></div>)}
+      <!-- The guarantee — exactly the homepage offer line: two colors,
+           two fonts. -->
+      <div class="mx-auto mt-14 max-w-4xl text-center" data-aos="fade-up">
+        <h3 class="text-3xl font-extrabold leading-tight tracking-tight text-foreground-strong sm:text-5xl">
+          {t(locale, "conversion.home.roi.titleLead")}<br /><span class="text-primary" set:html={t(locale, "conversion.home.roi.titleAccent")} />
+        </h3>
       </div>
     </div>
   </section>
@@ -131,15 +113,28 @@ const offerJsonLd = {
     </div>
   </section>
 
-  <section class="relative overflow-hidden py-28 sm:py-36">
+  <section class="relative overflow-hidden py-24 sm:py-32">
     <div class="absolute inset-0 bg-panel-deep/50"></div>
-    <div class="absolute inset-0 opacity-[0.03] hero-grid"></div>
-    <div class="absolute left-1/2 top-[52%] h-[28rem] w-[44rem] -translate-x-1/2 -translate-y-1/2 glow-blob opacity-15"></div>
-    <div class="relative mx-auto max-w-3xl px-6 text-center" data-aos="fade-up">
-      <p class="text-xs font-semibold uppercase tracking-widest text-primary">{t(locale, "conversion.pricing.ready.kicker")}</p>
-      <h2 class="mt-5 text-4xl font-extrabold leading-tightest tracking-tight text-foreground-strong sm:text-5xl">{t(locale, "conversion.pricing.ready.titleLead")}<br /><span class="text-primary">{t(locale, "conversion.pricing.ready.titleAccent")}</span></h2>
-      <p class="mx-auto mt-6 max-w-xl text-base leading-relaxed text-muted-foreground">{t(locale, "conversion.pricing.ready.body")}</p>
-      <a href={localizePath("/apply/", locale)} class="mt-10 inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-8 h-12 text-base font-semibold hover:brightness-110 active:brightness-95 transition-all shadow-lg shadow-primary/20">{t(locale, "cta.apply")}</a>
+    <div class="absolute inset-0 opacity-[0.03] hero-grid" aria-hidden="true"></div>
+    <div class="relative mx-auto max-w-6xl px-6">
+      <SectionHeader
+        label={t(locale, "conversion.home.handoff.label")}
+        title={t(locale, "conversion.pricing.show.title")}
+        description={t(locale, "conversion.pricing.show.body")}
+      />
+      <ol class="relative mx-auto mt-12 grid max-w-5xl gap-4 sm:grid-cols-2 lg:grid-cols-4" data-aos="fade-up">
+        {handoffSteps.map((step, index) => (
+          <li class="group relative overflow-hidden rounded-md border border-border bg-panel p-5 shadow-panel transition-all hover:-translate-y-1 hover:border-border-strong">
+            <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-primary via-accent to-transparent opacity-70" aria-hidden="true"></div>
+            <span class="font-mono text-2xs font-bold text-primary">0{index + 1}</span>
+            <h3 class="mt-4 text-base font-bold text-foreground-strong">{t(locale, `conversion.home.handoff.${step}.title`)}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-muted-foreground">{t(locale, `conversion.home.handoff.${step}.desc`)}</p>
+          </li>
+        ))}
+      </ol>
+      <div class="mx-auto mt-12 max-w-3xl text-center">
+        <a href={localizePath("/apply/", locale)} class="mt-2 inline-flex h-12 items-center justify-center rounded-md bg-primary px-8 text-base font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:brightness-110">{t(locale, "cta.apply")}</a>
+      </div>
     </div>
   </section>
 

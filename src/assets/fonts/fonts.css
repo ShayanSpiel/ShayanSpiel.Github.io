@@ -1,7 +1,6 @@
 :root {
   --font-outfit: "Outfit";
-  --font-marcellus: "Marcellus";
-  --font-iransansx: "IRANSansX";
+  --font-dm-serif: "DM Serif Display";
 }
 
 /* ── Outfit (Latin) ── */
@@ -22,13 +21,20 @@
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
-/* ── Marcellus (serif display) ── */
+/* ── DM Serif Display (a deliberate, sparing display accent) ── */
 @font-face {
-  font-family: "Marcellus";
+  font-family: "DM Serif Display";
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("/assets/fonts/marcellus-latin.woff2") format("woff2");
+  src: url("/assets/fonts/dm-serif-display-latin.ttf") format("truetype");
+}
+@font-face {
+  font-family: "DM Serif Display";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/assets/fonts/dm-serif-display-latin-italic.ttf") format("truetype");
 }
 
 /* ── Boxicons — icon font ── */
@@ -38,15 +44,4 @@
   font-weight: 400;
   font-display: swap;
   src: url("/assets/fonts/boxicons.woff2") format("woff2");
-}
-
-/* ── IRANSansX ─ Variable font, Arabic/Persian only ── */
-/* DOTS axis applied via CSS on html[dir="rtl"] — NOT as @font-face descriptor */
-@font-face {
-  font-family: "IRANSansX";
-  font-style: normal;
-  font-weight: 100 1000;
-  font-display: swap;
-  src: url("/assets/fonts/IRANSansXVF.woff2") format("woff2");
-  unicode-range: U+0600-06FF, U+0750-077F, U+0870-088F, U+0890-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE9F, U+10E60-10E7E, U+1EE00-1EEFF;
 }

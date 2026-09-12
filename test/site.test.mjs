@@ -240,7 +240,11 @@ test("conversion pages preserve the distinctive grid, light, and connected-progr
     assert.match(html, /hero-grid/);
     assert.match(html, /text-primary/);
   }
-  assert.match(read(""), /homepage-hero-journey/);
+  // The homepage hero deliberately stays rail-free; the merged business-brain
+  // section carries the connected system language below it without a second loop.
+  assert.doesNotMatch(read(""), /homepage-hero-journey/);
+  assert.doesNotMatch(read(""), /manual-work-loop/);
+  assert.match(read(""), /business-brain/);
   assert.match(read("services"), /deal-canvas/);
   assert.match(read("services/agent-brief"), /brief-rail/);
   assert.match(read("features"), /department-canvas/);
