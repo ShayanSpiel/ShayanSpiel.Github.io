@@ -137,13 +137,14 @@
 }
 
 /*
- * Directional overrides. When the document direction is RTL, inline
- * motion and corner mapping mirror through the logical token, and the
- * type remains in the same two-family system in every locale.
+ * Directional overrides. When the document direction is RTL, Persian type
+ * leads with IranSansX (variable font, Persian unicode-range only) and
+ * falls back to Outfit for Latin/digits. Latin pages keep the standing
+ * two-family system (Outfit + DM Serif Display) untouched.
  */
 [dir="rtl"] {
   --bidi-sign: -1;
-  --font-sans: var(--font-outfit), ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-  --font-display: var(--font-dm-serif), Georgia, serif;
+  --font-sans: "IRANSansX", var(--font-outfit), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Tahoma, "Helvetica Neue", Arial, sans-serif;
+  --font-display: "IRANSansX", var(--font-dm-serif), Georgia, serif;
   --font-mono: var(--font-outfit), ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
 }

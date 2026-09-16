@@ -96,10 +96,15 @@ const bookingEnabled = /^\/(?:fa\/)?(?:apply|contact)\/?$/.test(Astro.url.pathna
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="alternate" type="application/rss+xml" title={`${SITE.name} RSS`} href="/feed.xml" />
 
-    <!-- Preload the two typefaces used by the site. -->
+    <!-- Preload typefaces (FOUT fix 2026-09-16): Outfit latin + latin-ext,
+         DM Serif normal + italic (both TTF), boxicons, and IranSansX VF
+         on fa pages only (unicode-range keeps EN from downloading it). -->
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/outfit-latin.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/outfit-latin-ext.woff2" crossorigin />
     <link rel="preload" as="font" type="font/ttf" href="/assets/fonts/dm-serif-display-latin.ttf" crossorigin />
+    <link rel="preload" as="font" type="font/ttf" href="/assets/fonts/dm-serif-display-latin-italic.ttf" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/boxicons.woff2" crossorigin />
+    {locale === "fa" && <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/IRANSansXVF.woff2" crossorigin />}
 
     <!-- Cal.com native embed (owner directive 2026-08-23, flow.digital
          pattern): the small icon-only call CTAs on Contact and Apply are
@@ -153,10 +158,10 @@ const bookingEnabled = /^\/(?:fa\/)?(?:apply|contact)\/?$/.test(Astro.url.pathna
         --muted-foreground:#928374;--border:#504945;
         --primary:#b8bb26;--primary-foreground:#1d2021;
         --success:#b8bb26;--destructive:#fb4934;
-        --font-sans:"Outfit",ui-sans-serif,system-ui,sans-serif;
+        --font-sans:"IRANSansX","Outfit",ui-sans-serif,system-ui,sans-serif;
       }
       html{background:var(--background);color:var(--foreground)}
-      body{margin:0}
+      body{margin:0;font-family:var(--font-sans)}
     </style>
 
     <script is:inline>
