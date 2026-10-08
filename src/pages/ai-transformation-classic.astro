@@ -1,0 +1,15 @@
+---
+import TransformationDeck from "../components/infrastructure/presentation-classic/TransformationDeck";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { SITE } from "../config";
+interface Props {locale?: 'en' | 'fa'}
+const {locale='en'} = Astro.props;
+const fa=locale==='fa';
+const title=fa?'تحول با هوش مصنوعی — نسخهٔ مرجع کلاسیک':'AI Transformation — Classic reference edition';
+const description=fa?'نسخهٔ کلاسیک ارائهٔ تحول با هوش مصنوعی: از هدف کسب‌وکار و تیم تحول تا هارنس، حافظه، سیستم‌عامل و ارزیابی نتایج.':'The preserved classic presentation explaining how AI Transformation improves work, builds a shared operating system, and scales proven workflows across departments.';
+const jsonLd = { "@context": "https://schema.org", "@type": "WebPage", name: title, description, inLanguage:locale, url: `${SITE.url}/${fa?'fa/':''}ai-transformation-classic/`, isPartOf: { "@id": `${SITE.url}/#website` } };
+---
+<BaseLayout title={`${title} | SpielOS`} description={description} locale={locale} image="/assets/og/home.png" showChat={false}>
+  <TransformationDeck locale={locale} client:load />
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+</BaseLayout>

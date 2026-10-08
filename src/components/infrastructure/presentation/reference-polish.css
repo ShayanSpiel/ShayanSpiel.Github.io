@@ -1,0 +1,146 @@
+/* Reference finish, intentionally confined to the compact edition.
+   Geometry, narrative, semantic colors and the classic archive stay independent. */
+.transformation-deck[data-edition="compact"] {
+  --reference-blue: var(--primary);
+  --reference-ink: color-mix(in oklab, var(--background-deep, var(--background)) 78%, black);
+  --reference-surface: color-mix(in oklab, var(--panel) 44%, var(--reference-ink));
+  --reference-muted: color-mix(in oklab, var(--foreground-strong) 72%, var(--reference-ink));
+  --reference-edge: color-mix(in oklab, var(--reference-blue) 48%, var(--border-strong));
+  --deck-muted: var(--reference-muted);
+  background: var(--reference-ink);
+}
+.transformation-deck[data-edition="compact"] .deck-canonical-frame {
+  background:
+    radial-gradient(ellipse at 97% 22%, color-mix(in oklab, var(--reference-blue) 9%, transparent), transparent 39%),
+    radial-gradient(ellipse at 8% 88%, color-mix(in oklab, var(--reference-blue) 7%, transparent), transparent 34%),
+    var(--reference-ink);
+}
+/* Tiny pinpoints, not a noisy texture. The quiet middle preserves type contrast. */
+.transformation-deck[data-edition="compact"] .deck-canonical-frame::before {
+  background-image: radial-gradient(circle, color-mix(in oklab, var(--reference-blue) 76%, transparent) .65px, transparent .95px);
+  background-size: 24px 24px;
+  background-position: 5px 10px;
+  opacity: .43;
+  mask-image: radial-gradient(ellipse at 48% 42%, transparent 23%, #0009 54%, #000 81%);
+  -webkit-mask-image: radial-gradient(ellipse at 48% 42%, transparent 23%, #0009 54%, #000 81%);
+}
+.transformation-deck[data-edition="compact"] .deck-canonical-frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 12.3% 14.4%, var(--reference-blue) 0 1px, color-mix(in oklab, var(--reference-blue) 16%, transparent) 2px, transparent 9px),
+    radial-gradient(circle at 2.5% 83.8%, var(--reference-blue) 0 1px, color-mix(in oklab, var(--reference-blue) 15%, transparent) 2px, transparent 9px),
+    radial-gradient(circle at 14% 59.8%, color-mix(in oklab, var(--reference-blue) 80%, white) 0 .7px, color-mix(in oklab, var(--reference-blue) 12%, transparent) 2px, transparent 7px),
+    radial-gradient(circle at 93.1% 12.8%, var(--reference-blue) 0 1px, color-mix(in oklab, var(--reference-blue) 15%, transparent) 2px, transparent 9px),
+    radial-gradient(circle at 84.8% 22.6%, var(--reference-blue) 0 .8px, transparent 5px),
+    radial-gradient(circle at 90.4% 87.2%, var(--reference-blue) 0 1px, color-mix(in oklab, var(--reference-blue) 12%, transparent) 2px, transparent 9px);
+  opacity: .62;
+}
+.transformation-deck[data-edition="compact"] .deck-slide { isolation: isolate; z-index: 1; }
+.transformation-deck[data-edition="compact"] .deck-chapter-mark { opacity: .025; }
+.transformation-deck[data-edition="compact"] .deck-heading h1 {
+  color: var(--foreground-strong);
+  text-shadow: 0 2px 12px color-mix(in oklab, var(--reference-ink) 80%, transparent);
+}
+.transformation-deck[data-edition="compact"] .deck-heading em {
+  color: var(--reference-blue);
+  background: linear-gradient(172deg, color-mix(in oklab, var(--reference-blue) 73%, var(--foreground-strong)) 0%, var(--reference-blue) 38%, color-mix(in oklab, var(--reference-blue) 81%, var(--reference-ink)) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: none;
+  filter: drop-shadow(0 2px 2px color-mix(in oklab, var(--reference-ink) 70%, transparent));
+}
+.transformation-deck[data-edition="compact"] .deck-heading p { color: var(--reference-muted); }
+/* Directional top light, a fine colored edge, and a separate contact shadow. */
+.transformation-deck[data-edition="compact"] :is(.deck-tile, .premium-panel, .pr-panel, .pr-flow-node, .pr-composer, .pr-document, .pr-decision-record, .pr-build-run-lane, .pr-code-artifact, .pr-focus-boundary, .pr-layer, .pr-focus-sources>div, .pr-terminal, .pr-pilot-plan>section) {
+  --reference-tone: var(--tile-tone, var(--reference-blue));
+  background:
+    radial-gradient(ellipse at 18% 0%, color-mix(in oklab, var(--reference-tone) 11%, transparent), transparent 64%),
+    linear-gradient(153deg, color-mix(in oklab, var(--reference-surface) 89%, var(--foreground-strong)) 0%, var(--reference-surface) 32%, var(--reference-ink) 100%);
+  border-color: color-mix(in oklab, var(--reference-tone) 42%, var(--border-strong));
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklab, var(--reference-tone) 30%, #ffffff42),
+    inset 0 -1px 0 color-mix(in oklab, var(--reference-ink) 80%, transparent),
+    0 5px 10px color-mix(in oklab, var(--reference-ink) 60%, transparent),
+    0 20px 38px color-mix(in oklab, var(--reference-ink) 44%, transparent);
+}
+.transformation-deck[data-edition="compact"] .pr-flow-node--gate { --reference-tone: var(--warning); }
+.transformation-deck[data-edition="compact"] .pr-build-run-lane--run { --reference-tone: var(--success); }
+.transformation-deck[data-edition="compact"] :is(.tone-accent, .tone-purple) { --reference-tone: var(--accent); }
+.transformation-deck[data-edition="compact"] :is(.tone-success, .tone-green) { --reference-tone: var(--success); }
+.transformation-deck[data-edition="compact"] :is(.tone-warning, .tone-yellow) { --reference-tone: var(--warning); }
+.transformation-deck[data-edition="compact"] :is(.deck-tile p, .deck-tile li, .pr-panel p, .pr-flow-node small, .pr-document p, .pr-layer p, .pr-composer footer, .pr-code-artifact>small, .pr-pilot-plan p, .pr-pilot-plan small) { color: var(--reference-muted); }
+/* A glossy inset icon, with a small cast shadow rather than a large halo. */
+.transformation-deck[data-edition="compact"] :is(.deck-icon, .premium-icon) {
+  --reference-icon: var(--tile-tone, var(--reference-tone, var(--reference-blue)));
+  color: var(--foreground-strong);
+  border-color: color-mix(in oklab, var(--reference-icon) 55%, var(--foreground-strong));
+  background:
+    radial-gradient(ellipse at 20% 2%, #ffffff59, transparent 61%),
+    linear-gradient(145deg, color-mix(in oklab, var(--reference-icon) 78%, var(--foreground-strong)), color-mix(in oklab, var(--reference-icon) 58%, var(--reference-ink)));
+  box-shadow: inset 0 1px 1px #ffffff59, inset 0 -2px 3px #0005, 0 3px 8px #0005, 0 0 14px color-mix(in oklab, var(--reference-icon) 16%, transparent);
+}
+.transformation-deck[data-edition="compact"] :is(.deck-icon, .premium-icon) .deck-vector { filter: drop-shadow(0 1px 1px #0006); }
+/* Existing single glyph boxes keep their exact dimensions and optical size. */
+.transformation-deck[data-edition="compact"] :is(.pr-flow-node, .pr-document, .pr-focus-sources>div, .pr-focus-harness-contract>div)>.deck-vector {
+  color: color-mix(in oklab, var(--reference-tone, var(--reference-blue)) 72%, var(--foreground-strong));
+  filter: drop-shadow(0 2px 2px #0008) drop-shadow(0 0 5px color-mix(in oklab, var(--reference-tone, var(--reference-blue)) 23%, transparent));
+}
+/* Two planes of light make the same authored path feel slightly lifted. */
+.transformation-deck[data-edition="compact"] .deck-line {
+  stroke: color-mix(in oklab, var(--reference-blue) 83%, var(--foreground-strong));
+  stroke-width: 2.5;
+  filter: drop-shadow(0 2px 1px #000a) drop-shadow(0 0 4px color-mix(in oklab, var(--reference-blue) 38%, transparent));
+}
+.transformation-deck[data-edition="compact"] .deck-connection-port {
+  fill: var(--reference-ink);
+  stroke: color-mix(in oklab, var(--reference-blue) 88%, var(--foreground-strong));
+  stroke-width: 1.8;
+  filter: drop-shadow(0 0 3px color-mix(in oklab, var(--reference-blue) 35%, transparent));
+}
+.transformation-deck[data-edition="compact"] .ribbon-solid {
+  stroke: var(--reference-blue);
+  stroke-width: 6;
+  stroke-linecap: round;
+  filter: drop-shadow(0 3px 2px #0009) drop-shadow(0 0 5px color-mix(in oklab, var(--reference-blue) 30%, transparent));
+}
+.transformation-deck[data-edition="compact"] .ribbon-future { stroke: var(--reference-blue); stroke-width: 2; opacity: .12; }
+.transformation-deck[data-edition="compact"] .ribbon-arrow { fill: var(--reference-blue); filter: drop-shadow(0 1px 3px #0009); }
+.transformation-deck[data-edition="compact"] .ribbon-wake { stroke: var(--reference-blue); stroke-width: 12; opacity: .07; filter: blur(4px); }
+.transformation-deck[data-edition="compact"] .ribbon-arrival circle { stroke: var(--reference-blue); opacity: .18; }
+.transformation-deck[data-edition="compact"] .ribbon-arrival circle:last-child { fill: var(--reference-blue); opacity: 1; filter: drop-shadow(0 0 5px color-mix(in oklab, var(--reference-blue) 40%, transparent)); }
+.transformation-deck[data-edition="compact"][data-assembly="true"] .ribbon-solid { stroke-width: 2.5; }
+.transformation-deck[data-edition="compact"] :is(.pr-flow-node:not(:last-child)::after, .pr-handoff-arrow, .pr-focus-funnel) { color: var(--reference-blue); text-shadow: 0 1px 2px #0009, 0 0 6px color-mix(in oklab, var(--reference-blue) 30%, transparent); }
+.transformation-deck[data-edition="compact"] :is(.pr-evidence-loop, .pr-evidence-loop::after, .pr-focus-boundary .pr-orbit) { border-color: color-mix(in oklab, var(--reference-blue) 64%, var(--border)); }
+.transformation-deck[data-edition="compact"] :is(.pr-pill, .pr-note, .pr-pilot-decision) { background: linear-gradient(135deg, color-mix(in oklab, var(--reference-blue) 9%, var(--reference-surface)), color-mix(in oklab, var(--reference-blue) 3%, var(--reference-ink))); }
+.transformation-deck[data-edition="compact"] :is(.pr-pill--warn) { color: var(--warning); background: color-mix(in oklab, var(--warning) 8%, var(--reference-surface)); }
+.transformation-deck[data-edition="compact"] :is(.pr-pill--success) { color: var(--success); background: color-mix(in oklab, var(--success) 8%, var(--reference-surface)); }
+.transformation-deck[data-edition="compact"] :is(.pr-terminal, .pr-window, .pr-mandate-table, .pr-acceptance-table) { border-color: color-mix(in oklab, var(--reference-blue) 22%, var(--border)); }
+.transformation-deck[data-edition="compact"] .practical-surface--focused .pr-window { background: none; box-shadow: none; }
+.transformation-deck[data-edition="compact"] :is(.pr-eyebrow, .deck-eyebrow) { color: color-mix(in oklab, var(--reference-blue) 65%, var(--foreground-strong)); }
+@media (prefers-contrast: more) {
+  .transformation-deck[data-edition="compact"] { --reference-muted: var(--foreground); }
+  .transformation-deck[data-edition="compact"] :is(.deck-tile, .premium-panel, .pr-panel, .pr-flow-node, .pr-composer, .pr-document) { border-color: var(--foreground); }
+}
+
+.transformation-deck[data-edition="compact"] :is(.pr-flow-node, .pr-document, .pr-focus-sources>div)>.deck-vector {
+  --reference-icon: var(--reference-tone, var(--reference-blue));
+  color: var(--foreground-strong);
+  border-radius: 4px;
+  background: linear-gradient(145deg, color-mix(in oklab, var(--reference-icon) 72%, var(--foreground-strong)), color-mix(in oklab, var(--reference-icon) 60%, var(--reference-ink)));
+  box-shadow: 0 0 0 5px color-mix(in oklab, var(--reference-icon) 64%, var(--reference-ink)), 0 0 0 6px color-mix(in oklab, var(--reference-icon) 54%, var(--foreground-strong)), 0 5px 11px color-mix(in oklab, var(--reference-icon) 19%, transparent);
+}
+.transformation-deck[data-edition="compact"] .pr-baseline-timeline i {
+  box-shadow: inset 0 1px 0 #ffffff26, inset 0 -1px 0 #0006, 0 5px 16px #0003;
+  background-image: linear-gradient(170deg, #ffffff14, transparent 55%, #0002);
+}
+
+
+.deck-example-scale{transform:scale(.7333333333);transform-origin:top left;width:900px;height:580px;position:absolute;top:17px;left:0}.deck-example .practical-surface{font-size:20px}.transformation-deck[data-edition="compact"] [data-node="improve"]{background:none;border:0;box-shadow:none;padding:8px;gap:10px;text-align:center}.transformation-deck[data-edition="compact"] [data-node="improve"]>header strong{font-size:22px}.transformation-deck[data-edition="compact"] [data-node="improve"] p{font-size:13px}
+.deck-chapter-journey{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}.deck-chapter-journey path{fill:none;stroke:url(#chapter-line);stroke-width:5;stroke-linecap:round}.deck-chapter-journey .chapter-path-glow{stroke-width:15;opacity:.45;filter:url(#chapter-glow)}.deck-chapter-journey .chapter-path{stroke-dasharray:2400;animation:chapter-line-in 1.6s cubic-bezier(.22,1,.36,1) both}[lang=fa] .deck-chapter-journey{transform:scaleX(-1)}@keyframes chapter-line-in{from{stroke-dashoffset:2400}to{stroke-dashoffset:0}}
+
+.deck-restart{position:absolute;z-index:20;top:20px;left:24px;width:30px;height:30px;padding:6px;border:0;background:transparent;color:var(--muted-foreground);cursor:pointer;opacity:.6}.deck-restart:hover{opacity:1;color:var(--primary)}.deck-restart svg{width:100%;height:100%}

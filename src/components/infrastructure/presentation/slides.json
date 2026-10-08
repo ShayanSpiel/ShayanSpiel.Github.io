@@ -1,0 +1,352 @@
+[
+  {
+    "id": 1,
+    "chapter": 0,
+    "title": "How do you turn a company into an AI-first organization?",
+    "line": "Not by adding more AI tools.",
+    "assembly": false
+  },
+  {
+    "id": 2,
+    "chapter": 0,
+    "title": "AI Transformation redesigns how work happens.",
+    "line": "The goal is better outcomes, not more AI.",
+    "assembly": false
+  },
+  {
+    "id": 3,
+    "chapter": 0,
+    "title": "One workflow at a time.",
+    "line": "Improve the work. Measure it. Scale what works.",
+    "assembly": false
+  },
+  {
+    "id": 4,
+    "chapter": 1,
+    "title": "Goal",
+    "line": "What outcome matters?",
+    "assembly": false
+  },
+  {
+    "id": 5,
+    "chapter": 1,
+    "title": "Observe",
+    "line": "What is actually happening?",
+    "assembly": false
+  },
+  {
+    "id": 6,
+    "chapter": 1,
+    "title": "Decide",
+    "line": "What should change next?",
+    "assembly": false
+  },
+  {
+    "id": 7,
+    "chapter": 1,
+    "title": "Act",
+    "line": "Change the work.",
+    "assembly": false
+  },
+  {
+    "id": 8,
+    "chapter": 1,
+    "title": "Evaluate",
+    "line": "Did it work?",
+    "assembly": false
+  },
+  {
+    "id": 9,
+    "chapter": 1,
+    "title": "Goal \u2192 Observe \u2192 Decide \u2192 Act \u2192 Evaluate",
+    "line": "A continuous management cycle for every workflow and department.",
+    "assembly": true
+  },
+  {
+    "id": 10,
+    "chapter": 2,
+    "title": "There is a manager for the transformation.",
+    "line": "Business analysis, agent engineering and observability connect priorities, system design and measurable outcomes.",
+    "assembly": false
+  },
+  {
+    "id": 11,
+    "chapter": 2,
+    "title": "Understand the work before automating it.",
+    "line": "Business Process Analysts find how work really happens and where leverage exists.",
+    "assembly": false
+  },
+  {
+    "id": 12,
+    "chapter": 2,
+    "title": "Design the system, not just the prompt.",
+    "line": "Research & Architecture chooses patterns, models and tools.",
+    "assembly": false
+  },
+  {
+    "id": 13,
+    "chapter": 2,
+    "title": "Build the new way of working.",
+    "line": "Agent & Workflow Engineers turn decisions into production systems.",
+    "assembly": false
+  },
+  {
+    "id": 14,
+    "chapter": 2,
+    "title": "Measure everything that matters.",
+    "line": "Observability & Evals connects AI quality to business results.",
+    "assembly": false
+  },
+  {
+    "id": 15,
+    "chapter": 2,
+    "title": "One transformation team. Every department.",
+    "line": "A central capability that continuously upgrades how the organization works.",
+    "assembly": true
+  },
+  {
+    "id": 16,
+    "chapter": 3,
+    "title": "AI needs company context.",
+    "line": "Strategy, policies, processes, knowledge, people, systems and data.",
+    "assembly": false
+  },
+  {
+    "id": 17,
+    "chapter": 3,
+    "title": "One shared intelligence layer.",
+    "line": "Context, memory, harness, tools, guardrails and observability.",
+    "assembly": false
+  },
+  {
+    "id": 18,
+    "chapter": 3,
+    "title": "Different departments. Different work.",
+    "line": "Each department gets its own workflows, agents, tools and KPIs.",
+    "assembly": false
+  },
+  {
+    "id": 19,
+    "chapter": 3,
+    "title": "Use the tools you already have.",
+    "line": "AI runtimes and workflow platforms remain execution providers.",
+    "assembly": false
+  },
+  {
+    "id": 20,
+    "chapter": 3,
+    "title": "Company Context \u2192 AI Operating System \u2192 Department Systems \u2192 Outcomes",
+    "line": "One common foundation powering many different kinds of work.",
+    "assembly": true
+  },
+  {
+    "id": 21,
+    "chapter": 4,
+    "title": "Every run starts with work.",
+    "line": "A prompt, task, trigger or event.",
+    "assembly": false
+  },
+  {
+    "id": 22,
+    "chapter": 4,
+    "title": "Context before action.",
+    "line": "Give the runtime only what this piece of work needs.",
+    "assembly": false
+  },
+  {
+    "id": 23,
+    "chapter": 4,
+    "title": "The model works in a loop.",
+    "line": "Reason. Use tools. Observe. Repeat.",
+    "assembly": false
+  },
+  {
+    "id": 24,
+    "chapter": 4,
+    "title": "Workers specialize.",
+    "line": "Delegate research, building, analysis or review when useful.",
+    "assembly": false
+  },
+  {
+    "id": 25,
+    "chapter": 4,
+    "title": "Guardrails close the loop.",
+    "line": "Only valid, safe and complete work can finish.",
+    "assembly": false
+  },
+  {
+    "id": 26,
+    "chapter": 4,
+    "title": "Every step leaves a trace.",
+    "line": "Model calls, tools, workers, latency, errors, cost and artifacts.",
+    "assembly": false
+  },
+  {
+    "id": 27,
+    "chapter": 4,
+    "title": "Prompt \u2192 Context \u2192 Runtime \u2194 Tools & Workers \u2192 Guardrails \u2192 Result",
+    "line": "One observable execution loop.",
+    "assembly": true
+  },
+  {
+    "id": 28,
+    "chapter": 5,
+    "title": "Procedural memory knows how.",
+    "line": "Skills, playbooks, procedures, templates and proven methods.",
+    "assembly": false
+  },
+  {
+    "id": 29,
+    "chapter": 5,
+    "title": "Semantic memory knows what.",
+    "line": "Facts, concepts, company knowledge and domain information.",
+    "assembly": false
+  },
+  {
+    "id": 30,
+    "chapter": 5,
+    "title": "Episodic memory remembers what happened.",
+    "line": "Runs, decisions, outcomes and important past events.",
+    "assembly": false
+  },
+  {
+    "id": 31,
+    "chapter": 5,
+    "title": "Context is assembled for the work in front of us.",
+    "line": "Retrieve \u2192 filter \u2192 compose \u2192 inject.",
+    "assembly": false
+  },
+  {
+    "id": 32,
+    "chapter": 5,
+    "title": "Experience becomes knowledge.",
+    "line": "Useful traces can become episodes, durable facts or reusable methods.",
+    "assembly": false
+  },
+  {
+    "id": 33,
+    "chapter": 5,
+    "title": "Context + Memory + Learning",
+    "line": "The system remembers what matters without carrying everything forever.",
+    "assembly": true
+  },
+  {
+    "id": 34,
+    "chapter": 6,
+    "title": "A workflow is a business process.",
+    "line": "Not a platform. Not a prompt.",
+    "assembly": false
+  },
+  {
+    "id": 35,
+    "chapter": 6,
+    "title": "Understand the current work first.",
+    "line": "Who does what, with which information, decisions and constraints?",
+    "assembly": false
+  },
+  {
+    "id": 36,
+    "chapter": 6,
+    "title": "Redesign before you automate.",
+    "line": "Remove waste. Define decisions. Preserve human judgment where it matters.",
+    "assembly": false
+  },
+  {
+    "id": 37,
+    "chapter": 6,
+    "title": "Then choose the right execution.",
+    "line": "Skills, agents, code, workflow engines, MCPs, APIs or humans.",
+    "assembly": false
+  },
+  {
+    "id": 38,
+    "chapter": 6,
+    "title": "Run the new workflow beside the old one.",
+    "line": "Prove quality before replacing production work.",
+    "assembly": false
+  },
+  {
+    "id": 39,
+    "chapter": 6,
+    "title": "Manual Process \u2192 AI-Assisted Workflow \u2192 Measured Production System",
+    "line": "Technology follows the process design.",
+    "assembly": true
+  },
+  {
+    "id": 40,
+    "chapter": 7,
+    "title": "One workflow becomes a department capability.",
+    "line": "Multiple proven workflows begin changing how the team operates.",
+    "assembly": false
+  },
+  {
+    "id": 41,
+    "chapter": 7,
+    "title": "Departments share the platform, not the work.",
+    "line": "Same infrastructure. Different context, agents, workflows and KPIs.",
+    "assembly": false
+  },
+  {
+    "id": 42,
+    "chapter": 7,
+    "title": "One workflow at a time.",
+    "line": "From workflows to departments. From departments to an AI-first company.",
+    "assembly": false
+  },
+  {
+    "id": 43,
+    "chapter": 7,
+    "title": "The AI-first organization",
+    "line": "Shared intelligence underneath specialized department systems.",
+    "assembly": true
+  },
+  {
+    "id": 44,
+    "chapter": 8,
+    "title": "If you can't observe it, you can't improve it.",
+    "line": "Every production run should be measurable.",
+    "assembly": false
+  },
+  {
+    "id": 45,
+    "chapter": 8,
+    "title": "Tracing tells you what happened.",
+    "line": "Context, model calls, tools, workers, errors, timing and artifacts.",
+    "assembly": false
+  },
+  {
+    "id": 46,
+    "chapter": 8,
+    "title": "Evals tell you whether it was good.",
+    "line": "Correctness, relevance, safety, task success and custom criteria.",
+    "assembly": false
+  },
+  {
+    "id": 47,
+    "chapter": 8,
+    "title": "Business metrics tell you whether it mattered.",
+    "line": "Time, cost, quality, adoption and business outcomes.",
+    "assembly": false
+  },
+  {
+    "id": 48,
+    "chapter": 8,
+    "title": "Trace \u2192 Evaluate \u2192 Learn \u2192 Improve",
+    "line": "Observability feeds Observe. Evals and outcomes feed Evaluate.",
+    "assembly": true
+  },
+  {
+    "id": 49,
+    "chapter": 9,
+    "title": "AI Transformation is not deploying AI.",
+    "line": "It is building an organization that can continuously redesign how work gets done.",
+    "assembly": false
+  },
+  {
+    "id": 50,
+    "chapter": 9,
+    "title": "One workflow at a time.",
+    "line": "Goal \u2192 Observe \u2192 Decide \u2192 Act \u2192 Evaluate \u2192 \u221e",
+    "assembly": true
+  }
+]

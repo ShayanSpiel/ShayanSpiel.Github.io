@@ -1,0 +1,83 @@
+{
+  "checked": "2026-10-07",
+  "assets": [
+    {
+      "slug": "codex",
+      "source": "https://thesvg.org/icons/codex/dark.svg",
+      "catalog": "https://thesvg.org/icon/codex",
+      "variant": "dark"
+    },
+    {
+      "slug": "openai-chatgpt",
+      "source": "https://thesvg.org/icons/openai-chatgpt/default.svg",
+      "catalog": "https://thesvg.org/icon/openai-chatgpt",
+      "variant": "default"
+    },
+    {
+      "slug": "claude-code",
+      "source": "https://thesvg.org/icons/claude-code/default.svg",
+      "catalog": "https://thesvg.org/icon/claude-code",
+      "variant": "default"
+    },
+    {
+      "slug": "opencode",
+      "source": "https://thesvg.org/icons/opencode/default.svg",
+      "catalog": "https://thesvg.org/icon/opencode",
+      "variant": "default"
+    },
+    {
+      "slug": "n8n",
+      "source": "https://thesvg.org/icons/n8n/default.svg",
+      "catalog": "https://thesvg.org/icon/n8n",
+      "variant": "default"
+    },
+    {
+      "slug": "python",
+      "source": "https://thesvg.org/icons/python/default.svg",
+      "catalog": "https://thesvg.org/icon/python",
+      "variant": "default"
+    },
+    {
+      "slug": "zapier",
+      "source": "https://thesvg.org/icons/zapier/default.svg",
+      "catalog": "https://thesvg.org/icon/zapier",
+      "variant": "default"
+    },
+    {
+      "slug": "salesforce",
+      "source": "https://thesvg.org/icons/salesforce/default.svg",
+      "catalog": "https://thesvg.org/icon/salesforce",
+      "variant": "default"
+    },
+    {
+      "slug": "zendesk",
+      "source": "https://thesvg.org/icons/zendesk/default.svg",
+      "catalog": "https://thesvg.org/icon/zendesk",
+      "variant": "default"
+    },
+    {
+      "slug": "langfuse",
+      "source": "https://thesvg.org/icons/langfuse/default.svg",
+      "catalog": "https://thesvg.org/icon/langfuse",
+      "variant": "default"
+    },
+    {
+      "slug": "langsmith-langchain",
+      "source": "https://thesvg.org/icons/langsmith-langchain/default.svg",
+      "catalog": "https://thesvg.org/icon/langsmith-langchain",
+      "variant": "default"
+    },
+    {
+      "slug": "notion",
+      "source": "https://thesvg.org/icons/notion/default.svg",
+      "catalog": "https://thesvg.org/icon/notion",
+      "variant": "default"
+    },
+    {
+      "slug": "trello",
+      "source": "https://thesvg.org/icons/trello/default.svg",
+      "catalog": "https://thesvg.org/icon/trello",
+      "variant": "default"
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+import react from "@astrojs/react";
 import { defineConfig } from "astro/config";
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
@@ -15,6 +16,7 @@ export default defineConfig({
   trailingSlash: "ignore",
   integrations: [
     mdx(),
+    react(),
     sitemap({
       filter: (page) => {
         // Exclude 404 pages
