@@ -219,7 +219,7 @@ function Deck() {
             setFullscreen(false);
         }
     }
-    return <div ref={root} className="transformation-deck" data-edition="compact" lang={locale} dir={rtl ? 'rtl' : 'ltr'} data-slide={slide.id} data-slide-count={slides.length} data-concept={slide.concept} data-intro={slide.intro} data-chapter={slide.chapter} data-assembly={slide.assembly} data-leaving={leaving} onTouchStart={e => { touch.current = { x: e.changedTouches[0].clientX, y: e.changedTouches[0].clientY }; }} onTouchEnd={e => {
+    return <div ref={root} className="transformation-deck" data-theme="blue-dark" data-edition="compact" lang={locale} dir={rtl ? 'rtl' : 'ltr'} data-slide={slide.id} data-slide-count={slides.length} data-concept={slide.concept} data-intro={slide.intro} data-chapter={slide.chapter} data-assembly={slide.assembly} data-leaving={leaving} onTouchStart={e => { touch.current = { x: e.changedTouches[0].clientX, y: e.changedTouches[0].clientY }; }} onTouchEnd={e => {
             const dx = touch.current.x - e.changedTouches[0].clientX, dy = touch.current.y - e.changedTouches[0].clientY;
             if (Math.max(Math.abs(dx), Math.abs(dy)) > 55)
                 go(index + (Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 1 : -1) * (rtl ? -1 : 1) : dy > 0 ? 1 : -1));
