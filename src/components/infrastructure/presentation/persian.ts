@@ -1,5 +1,8 @@
 // Complete presentation copy. Product names, code identifiers and filenames remain unchanged.
 export const persian: Record<string,string> = Object.fromEntries(`
+Viewing options	گزینه‌های نمایش
+Close	بستن
+This browser cannot make the whole slide fullscreen. Rotate your phone for the best view. On iPhone, use Share → Add to Home Screen for an app-style view.	این مرورگر نمی‌تواند کل اسلاید را تمام‌صفحه کند. برای نمایش بهتر گوشی را افقی کنید. در آیفون از اشتراک‌گذاری ← افزودن به صفحهٔ اصلی برای نمایش شبیه برنامه استفاده کنید.
 The management loop sets direction. Specialists turn each decision into working systems.	چرخهٔ مدیریت مسیر را تعیین می‌کند؛ متخصصان هر تصمیم را به سیستم‌های عملی تبدیل می‌کنند.
 The business thesis	منطق کسب‌وکار
 The transformation process	فرایند تحول
@@ -754,3 +757,70 @@ Presentation navigation	ناوبری ارائه
 of	از
  task success	موفقیت وظیفه
 `.trim().split('\n').map(line=>{const [key,...value]=line.split('\t');return [key.trim(),value.join('\t')];}));
+
+Object.assign(persian, {
+  "Choose one valuable workflow.": "یک گردش‌کار ارزشمند را انتخاب کنید.",
+  "Rank recurring work by business impact, volume, data readiness and risk. Give the strongest candidate an owner and a place in the build backlog.": "کارهای تکراری را بر اساس اثر تجاری، حجم، آمادگی داده و ریسک رتبه‌بندی کنید. برای بهترین گزینه مسئول تعیین کنید و آن را وارد صف ساخت کنید.",
+  "For this illustrative Support pilot: reduce handling time from 12 to 6 minutes, lower cost per resolution from $8 to $6, and protect quality.": "هدف این پایلوت نمایشی پشتیبانی: کاهش زمان رسیدگی از ۱۲ به ۶ دقیقه، کاهش هزینهٔ هر حل از ۸ به ۶ دلار و حفظ کیفیت.",
+  "Rank opportunities by impact, feasibility and risk. Move the best ready item from the backlog into a scoped build brief.": "فرصت‌ها را بر اساس اثر، امکان اجرا و ریسک رتبه‌بندی کنید. بهترین گزینهٔ آماده را از صف کار به شرح ساخت با دامنهٔ مشخص تبدیل کنید.",
+  "An AI OS connects the pieces.": "سیستم‌عامل هوش مصنوعی اجزا را به هم متصل می‌کند.",
+  "AI OS": "سیستم‌عامل هوش مصنوعی",
+  "AI OS.": "سیستم‌عامل هوش مصنوعی.",
+  "Context, memory, execution and checks form a shared foundation for building workflows. SpielOS is the implementation shown here.": "زمینه، حافظه، اجرا و کنترل‌ها زیرساخت مشترک ساخت گردش‌کارها هستند. پیاده‌سازی نمایش‌داده‌شده در اینجا SpielOS است.",
+  "Company context. AI OS. Department systems.": "زمینهٔ شرکت. سیستم‌عامل هوش مصنوعی. سیستم‌های واحدها.",
+  "Shared context and controls support each department’s workflows, with its relevant tools connected where the work happens.": "زمینه و کنترل‌های مشترک از گردش‌کارهای هر واحد پشتیبانی می‌کنند؛ ابزارهای مرتبط در محل انجام کار متصل‌اند.",
+  "Prove it before replacing it.": "پیش از جایگزینی، آن را اثبات کنید.",
+  "Prove it": "اثبات کنید",
+  "Compare both workflows on 100 representative cases. Check time, cost and quality against agreed targets before an owner approves release.": "هر دو گردش‌کار را روی ۱۰۰ مورد نماینده مقایسه کنید. پیش از تأیید انتشار توسط مسئول، زمان، هزینه و کیفیت را با اهداف توافق‌شده بسنجید.",
+  "One workflow is the first building block.": "یک گردش‌کار، نخستین بلوک سازنده است.",
+  "first building block.": "نخستین بلوک سازنده.",
+  "Prove delivery exceptions first. Add returns and refunds next. Together, these workflows become a reliable Support system.": "ابتدا استثناهای تحویل را اثبات کنید. سپس مرجوعی و بازپرداخت را اضافه کنید. این گردش‌کارها با هم سیستم پشتیبانی قابل‌اتکایی می‌سازند.",
+  "What should every department reuse?": "هر واحد چه چیزهایی را باید دوباره استفاده کند؟",
+  "every department reuse?": "هر واحد دوباره استفاده کند؟",
+  "Sales and Support do different work. Both need trusted context, tool access, memory and quality checks. Those shared needs define the AI OS.": "فروش و پشتیبانی کار متفاوتی دارند؛ اما هر دو به زمینهٔ معتبر، دسترسی ابزار، حافظه و کنترل کیفیت نیاز دارند. این نیازهای مشترک، سیستم‌عامل هوش مصنوعی را تعریف می‌کنند.",
+  "Different departments. One shared AI OS.": "واحدهای متفاوت. یک سیستم‌عامل هوش مصنوعی مشترک.",
+  "shared AI OS.": "سیستم‌عامل هوش مصنوعی مشترک.",
+  "Each team owns its workflows and outcomes. The shared foundation keeps context, access, memory and evaluation consistent.": "هر تیم مسئول گردش‌کارها و نتایج خود است. زیرساخت مشترک، زمینه، دسترسی، حافظه و ارزیابی را هماهنگ نگه می‌دارد.",
+  "Next: turn the opportunity into a buildable workflow.": "در ادامه: تبدیل فرصت به گردش‌کاری قابل‌ساخت.",
+  "Next, these pieces come together in one picture.": "در ادامه، این اجزا در یک تصویر کنار هم قرار می‌گیرند.",
+  "Now: how to build and prove the first workflow.": "اکنون: چگونه اولین گردش‌کار را بسازیم و اثبات کنیم.",
+  "Next: the management loop that keeps this improving.": "در ادامه: چرخهٔ مدیریتی که بهبود را ادامه می‌دهد.",
+  "Next: the shared architecture this team builds.": "در ادامه: معماری مشترکی که این تیم می‌سازد.",
+  "Next: follow a workflow brief through the harness.": "در ادامه: مسیر شرح گردش‌کار در هارنس را دنبال کنید.",
+  "Next: retain the lesson so the next build starts smarter.": "در ادامه: درس را نگه دارید تا ساخت بعدی هوشمندانه‌تر آغاز شود.",
+  "Use Activepieces MCP. Build a draft, test the branches, and return the evidence for review.": "از MCP اکتیوپیسز استفاده کن. پیش‌نویس بساز، شاخه‌ها را آزمون کن و شواهد را برای بازبینی ارائه بده.",
+  "Handling time": "زمان رسیدگی",
+  "≤6 min": "≤۶ دقیقه",
+  "≤$6": "≤۶ دلار",
+  "≥95%": "≥۹۵٪",
+  "from 12 min baseline": "از مبنای ۱۲ دقیقه",
+  "from $8 per resolution": "از ۸ دلار برای هر حل",
+  "quality acceptance target": "هدف پذیرش کیفیت",
+  "Illustrative pilot targets · validate before scaling.": "اهداف پایلوت نمایشی · پیش از توسعه اعتبارسنجی کنید.",
+  "handling time · from 12 min": "زمان رسیدگی · از ۱۲ دقیقه",
+  "cost per resolution · from $8": "هزینهٔ هر حل · از ۸ دلار",
+  "Illustrative pilot · ≥95% quality": "پایلوت نمایشی · کیفیت ≥۹۵٪",
+  "AI OS / SHARED FOUNDATION": "سیستم‌عامل هوش مصنوعی / زیرساخت مشترک",
+  "100 comparable cases": "۱۰۰ مورد قابل‌مقایسه",
+  "Proposed pilot · same inputs for both workflows": "پایلوت پیشنهادی · ورودی یکسان برای هر دو گردش‌کار",
+  "12 → ≤6 minutes": "۱۲ ← ≤۶ دقیقه",
+  "Target handling time · measured against baseline": "هدف زمان رسیدگی · مقایسه با خط مبنا",
+  "≥95% quality": "کیفیت ≥۹۵٪",
+  "No critical policy failures · owner approves release": "بدون نقض جدی سیاست · انتشار با تأیید مسئول",
+  "Impact × volume": "اثر × حجم",
+  "Frequent delivery exceptions consume team capacity": "استثناهای پرتکرار تحویل ظرفیت تیم را مصرف می‌کنند",
+  "Readiness × risk": "آمادگی × ریسک",
+  "Order data exists · policy is clear · review is possible": "دادهٔ سفارش موجود · سیاست روشن · بازبینی ممکن",
+  "Prioritized backlog": "صف کار اولویت‌بندی‌شده",
+  "Delivery exceptions → owner + acceptance brief": "استثناهای تحویل ← مسئول و شرح پذیرش",
+  "First workflow": "نخستین گردش‌کار",
+  "Delivery exceptions · prove the result": "استثناهای تحویل · اثبات نتیجه",
+  "Next workflows": "گردش‌کارهای بعدی",
+  "Returns and refunds · reuse the controls": "مرجوعی و بازپرداخت · استفادهٔ دوباره از کنترل‌ها",
+  "Department system": "سیستم واحد",
+  "One owner · shared policies · measured outcomes": "یک مسئول · سیاست‌های مشترک · نتایج سنجیده‌شده"
+});
+
+Object.assign(persian, {"Baseline → pilot target":"خط مبنا ← هدف پایلوت","handling time":"زمان رسیدگی","cost per resolution":"هزینهٔ هر حل","quality acceptance":"پذیرش کیفیت","TARGET":"هدف","Proposed pilot · business results pending. Passed build tests alone do not prove ROI.":"پایلوت پیشنهادی · نتایج تجاری هنوز سنجیده نشده‌اند. آزمون موفق ساخت به‌تنهایی بازگشت سرمایه را اثبات نمی‌کند."});
+
+Object.assign(persian,{"First candidate: delivery exceptions":"گزینهٔ نخست: استثناهای تحویل"});

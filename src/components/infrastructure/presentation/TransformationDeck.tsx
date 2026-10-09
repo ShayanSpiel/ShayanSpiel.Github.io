@@ -1,3 +1,4 @@
+const anticipation:Record<number,string>={3:'Next: turn the opportunity into a buildable workflow.',41:'Next, these pieces come together in one picture.',140:'Now: how to build and prove the first workflow.',39:'Next: the management loop that keeps this improving.',51:'Next: follow a workflow brief through the harness.',126:'Next: retain the lesson so the next build starts smarter.'};
 import { LocalizedContent, PresentationLocaleProvider, usePresentationLocale, translate, type PresentationLocale } from './Localization';
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
 import { storySlides as slides, chapterOpenings, titleOverrides, emphases } from './compact-story';
@@ -101,6 +102,7 @@ function Deck() {
     const locale = usePresentationLocale();
     const rtl = locale === 'fa';
     const t = (text: string) => translate(text, locale);
+    const [fullscreenSupported, setFullscreenSupported] = useState(false), [fullscreenHelp, setFullscreenHelp] = useState(false);
     const [index, setIndex] = useState(0), [fullscreen, setFullscreen] = useState(false), [scale, setScale] = useState(1), [leaving, setLeaving] = useState(false);
     const root = useRef<HTMLDivElement>(null), viewport = useRef<HTMLDivElement>(null), rects = useRef(new Map<string, DOMRect>()), lastInput = useRef(0), touch = useRef({ x: 0, y: 0 }), goRef = useRef<(i: number, history?: boolean) => void>(() => { });
     const transition = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -115,7 +117,8 @@ function Deck() {
         if (next === indexRef.current || transition.current)
             return;
         const commit = () => {
-            rects.current.clear();
+
+        rects.current.clear();
             root.current?.querySelectorAll<HTMLElement>('[data-node]').forEach(el => rects.current.set(el.dataset.node!, el.getBoundingClientRect()));
             setIndex(next);
             setLeaving(false);
@@ -144,13 +147,33 @@ function Deck() {
             else
                 el.animate([{ opacity: 0, transform: 'translateY(22px) scale(.97)' }, { opacity: 1, transform: 'translateY(0) scale(1)' }], { duration: 760, delay: slide.assembly ? 80 + Math.max(0, parseFloat(el.style.top)) / Math.max(1, geometry.h) * 320 : 100, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'backwards' });
         });
+        if (!reduced) root.current?.querySelectorAll<HTMLElement>('[data-assembly-part]').forEach((el,i)=>el.animate([{opacity:0,transform:'translateY(14px)'},{opacity:1,transform:'translateY(0)'}],{duration:700,delay:100+i*90,easing:'cubic-bezier(.22,1,.36,1)',fill:'backwards'}));
         rects.current.clear();
     }, [index, scale]);
     useEffect(() => {
         document.documentElement.classList.add('transformation-deck-active');
         const hash = () => { const m = location.hash.match(/^#slide-(\d+)$/); goRef.current(m ? Number(m[1]) - 1 : 0, false); };
         hash();
-        const fit = () => { setScale(Math.min(window.innerWidth / 1680, window.innerHeight / 940)); };
+        const viewportMeta = document.querySelector<HTMLMetaElement>('meta[name=viewport]');
+        const originalViewport = viewportMeta?.content;
+        if (viewportMeta && !viewportMeta.content.includes('viewport-fit')) viewportMeta.content += ', viewport-fit=cover';
+        setFullscreenSupported(Boolean(document.fullscreenEnabled && root.current?.requestFullscreen));
+        const fit = () => {
+            const host = root.current;
+            if (!host) return;
+            const visual = window.visualViewport;
+            host.style.height = `${visual?.height ?? window.innerHeight}px`;
+            host.style.width = `${visual?.width ?? window.innerWidth}px`;
+            host.style.top = `${visual?.offsetTop ?? 0}px`;
+            host.style.left = `${visual?.offsetLeft ?? 0}px`;
+            const box = host.getBoundingClientRect(), css = getComputedStyle(host);
+            const width = box.width - parseFloat(css.paddingLeft) - parseFloat(css.paddingRight);
+            const height = box.height - parseFloat(css.paddingTop) - parseFloat(css.paddingBottom);
+            setScale(Math.min(width / 1680, height / 940));
+        };
+        window.visualViewport?.addEventListener('resize', fit);
+        window.visualViewport?.addEventListener('scroll', fit);
+        window.addEventListener('resize', fit);
         const observer = new ResizeObserver(fit);
         if (root.current)
             observer.observe(root.current);
@@ -177,15 +200,19 @@ function Deck() {
             if (e.key.toLowerCase() === 'f')
                 toggleFullscreen();
         };
+        let wheelDistance = 0, lastWheel = 0;
         const wheel = (e: WheelEvent) => {
-            if (Math.abs(e.deltaY) < 12 || e.ctrlKey)
-                return;
+            if (e.ctrlKey || !e.deltaY) return;
             e.preventDefault();
             const now = performance.now();
-            if (now - lastInput.current < 900)
-                return;
+            if (now - lastInput.current < 900) { wheelDistance = 0; return; }
+            if (now - lastWheel > 180 || Math.sign(wheelDistance) !== Math.sign(e.deltaY)) wheelDistance = 0;
+            lastWheel = now;
+            wheelDistance += e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? window.innerHeight : 1);
+            if (Math.abs(wheelDistance) < 24) return;
             lastInput.current = now;
-            goRef.current(indexRef.current + (e.deltaY > 0 ? 1 : -1));
+            goRef.current(indexRef.current + (wheelDistance > 0 ? 1 : -1));
+            wheelDistance = 0;
         };
         const fs = () => setFullscreen(Boolean(document.fullscreenElement));
         window.addEventListener('keydown', key);
@@ -198,6 +225,10 @@ function Deck() {
             if (transition.current)
                 clearTimeout(transition.current);
             observer.disconnect();
+            window.visualViewport?.removeEventListener('resize', fit);
+            window.visualViewport?.removeEventListener('scroll', fit);
+            window.removeEventListener('resize', fit);
+            if (viewportMeta && originalViewport) viewportMeta.content = originalViewport;
             document.documentElement.classList.remove('transformation-deck-active');
             window.removeEventListener('keydown', key);
             window.removeEventListener('popstate', hash);
@@ -212,11 +243,13 @@ function Deck() {
         try {
             if (document.fullscreenElement)
                 await document.exitFullscreen();
-            else
-                await root.current?.requestFullscreen();
+            else if (document.fullscreenEnabled && root.current?.requestFullscreen)
+                await root.current.requestFullscreen();
+            else setFullscreenHelp(true);
         }
         catch {
             setFullscreen(false);
+            setFullscreenHelp(true);
         }
     }
     return <div ref={root} className="transformation-deck" data-theme="blue-dark" data-edition="compact" lang={locale} dir={rtl ? 'rtl' : 'ltr'} data-slide={slide.id} data-slide-count={slides.length} data-concept={slide.concept} data-intro={slide.intro} data-chapter={slide.chapter} data-assembly={slide.assembly} data-leaving={leaving} onTouchStart={e => { touch.current = { x: e.changedTouches[0].clientX, y: e.changedTouches[0].clientY }; }} onTouchEnd={e => {
@@ -225,13 +258,14 @@ function Deck() {
                 go(index + (Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 1 : -1) * (rtl ? -1 : 1) : dy > 0 ? 1 : -1));
         }}>
 <button className="deck-restart" aria-label={rtl?'شروع دوباره از اسلاید اول':'Restart from the first slide'} title={rtl?'شروع دوباره':'Restart presentation'} onClick={()=>go(0)}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true"><path d="M20 7v5h-5M20 12a8 8 0 1 0-2.3 5.7M20 7l-2.4-2.4"/></svg></button>
- <button className="deck-fullscreen" onClick={toggleFullscreen} aria-label={t(fullscreen ? 'Exit fullscreen' : 'Enter fullscreen')} title={t('Fullscreen · F')}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d={fullscreen ? 'M4 9h5V4m6 0v5h5M4 15h5v5m6 0v-5h5' : 'M9 4H4v5m11-5h5v5M4 15v5h5m6 0h5v-5'}/></svg></button>
+ <button className="deck-fullscreen" onClick={toggleFullscreen} aria-label={t(fullscreenSupported ? (fullscreen ? 'Exit fullscreen' : 'Enter fullscreen') : 'Viewing options')} title={t(fullscreenSupported ? 'Fullscreen · F' : 'Viewing options')}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d={fullscreen ? 'M4 9h5V4m6 0v5h5M4 15h5v5m6 0v-5h5' : 'M9 4H4v5m11-5h5v5M4 15v5h5m6 0h5v-5'}/></svg></button>
+ {fullscreenHelp && <div className="deck-fullscreen-help" role="dialog" aria-label={t('Viewing options')}><button onClick={()=>setFullscreenHelp(false)} aria-label={t('Close')}>×</button><strong>{t('Viewing options')}</strong><p>{t('This browser cannot make the whole slide fullscreen. Rotate your phone for the best view. On iPhone, use Share → Add to Home Screen for an app-style view.')}</p></div>}
  <div className="deck-canonical-frame" style={{ transform: `translate(-50%, -50%) scale(${scale})` }} data-guide-design-width="1680" data-guide-design-height="940" data-guide-geometry-valid={scene.edges.every(([a, b]) => scene.tiles.some(t => t.id === a) && scene.tiles.some(t => t.id === b))} data-guide-geometry-resolved="true">
  <LocalizedContent value={slide.intro && <ChapterLead chapter={slide.chapter}/>}/>
  {slide.intro && <svg className="deck-chapter-journey" viewBox="0 0 1680 940" aria-hidden="true"><defs><linearGradient id="chapter-line"><stop stopColor="var(--primary)" stopOpacity="0"/><stop offset=".58" stopColor="var(--primary)"/><stop offset="1" stopColor="var(--primary)" stopOpacity=".7"/></linearGradient><filter id="chapter-glow"><feGaussianBlur stdDeviation="12"/></filter></defs><path className="chapter-path-glow" d="M-80 795H1080C1220 795 1190 600 1320 575S1535 495 1535 355S1595 195 1760 210"/><path className="chapter-path" d="M-80 795H1080C1220 795 1190 600 1320 575S1535 495 1535 355S1595 195 1760 210"/></svg>}
  <LocalizedContent value={!slide.intro && slide.concept !== 50 && <JourneyRibbon scene={scene} index={index} leaving={leaving}/>}/>
  <main className="deck-slide" aria-label={`${t(chapters[slide.chapter])}, ${rtl?'اسلاید':'slide'} ${slide.id} / ${slides.length}`}>
- <header className="deck-heading" key={slide.id}><h1><Title id={slide.concept} introChapter={slide.intro ? slide.chapter : undefined} text={titleOverrides[slide.concept] || slide.title}/></h1><p><LocalizedContent value={slide.line}/></p></header>
+ <header className="deck-heading" key={slide.id}><h1><Title id={slide.concept} introChapter={slide.intro ? slide.chapter : undefined} text={titleOverrides[slide.concept] || slide.title}/></h1><p><LocalizedContent value={slide.line}/></p>{!slide.intro && anticipation[slide.concept] && <div className="deck-anticipation"><i/><LocalizedContent value={anticipation[slide.concept]}/></div>}</header>
  <LocalizedContent value={!slide.intro && <div ref={viewport} className="deck-visual-viewport"><div className={`deck-artboard deck-artboard--${scene.kind || 'primitive'}`} style={{ left: rtl ? 1680 - geometry.x - geometry.w * geometry.scale : geometry.x, top: geometry.y, width: geometry.w, height: geometry.h, transform: `scale(${geometry.scale})` }}>
  <Connections tiles={scene.tiles} edges={scene.edges} width={geometry.w} height={geometry.h}/>
  <LocalizedContent value={scene.tiles.map(node => <ComponentSurface key={node.id} node={rtl ? {...node,x:geometry.w-node.x-node.w} : node} kind={scene.kind}/>)}/>
@@ -247,4 +281,4 @@ function Deck() {
  </div>;
 }
 
-export default function TransformationDeck({locale='en'}:{locale?:PresentationLocale}) { return <PresentationLocaleProvider locale={locale}><Deck/></PresentationLocaleProvider>; }
+export default function TransformationDeck({locale='en'}:{locale?:PresentationLocale}) { return <PresentationLocaleProvider locale={locale} buildExample><Deck/></PresentationLocaleProvider>; }

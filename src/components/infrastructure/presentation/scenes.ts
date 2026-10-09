@@ -32,7 +32,7 @@ export const definitions: Record<string, Omit<Tile, 'id' | 'x' | 'y' | 'w' | 'h'
     scale: { title: 'Prove it. Then multiply it.', icon: 'sitemap', tone: 'primary' },
     operations: { title: 'Operations', icon: 'cog', tone: 'primary', rows: ['Workflow automation', 'Resource planning', 'Cross-team execution'] },
     hr: { title: 'HR', icon: 'group', tone: 'accent', rows: ['Onboarding', 'Employee experience', 'People operations'] },
-    workflow: { title: 'Resolve a customer request', icon: 'support', note: 'One owner. One measurable outcome.', tone: 'primary' },
+    workflow: { title: 'First candidate: delivery exceptions', icon: 'support', note: 'One owner. One measurable outcome.', tone: 'primary' },
     outcomes: { title: 'Better business outcomes', icon: 'trending-up', rows: ['Faster execution', 'Lower operating cost', 'Higher quality'] },
     goal: { title: 'Goal', icon: 'target-lock', tone: 'primary', note: 'Define what success looks like.', file: 'goal.md' },
     observe: { title: 'Observe', icon: 'bar-chart-alt-2', tone: 'success', note: 'Collect signals, traces and metrics.', file: 'observations.md' },
@@ -118,7 +118,7 @@ export function sceneFor(id: number): Scene {
     }
     if(id===15)return {kind:'team',tiles:[{id:'team-composition',title:'Transformation team',icon:'group',x:0,y:0,w:1500,h:770}],edges:[]};
     if(id===50)return {kind:'finale',tiles:[tile('director',0,0,1500,70),tile('os',170,118,1160,220),...['sales','support','marketing','finance','operations'].map((id,i)=>tile(id,i*307,388,272,170)),tile('providers',0,608,1500,70),tile('outcomes',0,728,1500,70)],edges:[['director','os'],...['sales','support','marketing','finance','operations'].map(d=>['os',d] as Edge),...['sales','support','marketing','finance','operations'].map(d=>[d,'providers'] as Edge),['providers','outcomes']]};
-    if(id===20||id===43)return {kind:'architecture',tiles:[tile('company',0,0,1500,100),tile('os',170,150,1160,230),...['sales','support','marketing','finance','operations'].map((id,i)=>tile(id,i*307,430,272,180)),tile('providers',0,660,1500,78)],edges:[['company','os'],...['sales','support','marketing','finance','operations'].map(d=>['os',d] as Edge),...['sales','support','marketing','finance','operations'].map(d=>[d,'providers'] as Edge)]};
+    if(id===20||id===43){const tools:Record<string,string[]>={sales:['salesforce','activepieces'],support:['zendesk','activepieces'],marketing:['claude-code','remotion'],finance:['python','activepieces'],operations:['n8n','python']};return {kind:'architecture',tiles:[tile('company',0,0,1500,100),tile('os',170,150,1160,230),...['sales','support','marketing','finance','operations'].map((id,i)=>({...tile(id,i*307,440,272,268),logos:tools[id]}))],edges:[['company','os'],...['sales','support','marketing','finance','operations'].map(d=>['os',d] as Edge)]};}
     if(id===51)return {kind:'repository',tiles:[tile('repo',40,0,1420,580)],edges:[]};
     if(id===27)return {kind:'harness',tiles:[{id:'harness-composition',title:'Harness execution workspace',icon:'brain',x:0,y:0,w:1500,h:610}],edges:[]};
     if(id===33)return {kind:'memory',tiles:[{id:'memory-composition',title:'Memory and context workspace',icon:'data',x:0,y:0,w:1500,h:690}],edges:[]};

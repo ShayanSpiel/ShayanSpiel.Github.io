@@ -30,3 +30,25 @@ Set `DECK_AUDIT_PATH=/fa/ai-transformation/` for RTL. The browser audit checks
 every slide at five viewport sizes, tile overlap, overflow, keyboard navigation,
 history and reduced motion. Final English and Persian audits each passed 295 captures. The background has one viewport-wide dot layer;
 wide and tall fullscreen layouts were also visually checked.
+
+Current-edition examples consistently follow a workflow build: Codex brief,
+Activepieces MCP, acceptance tests, repair and a review-ready draft. The Support
+workflow is the artifact being built; the build trace is not a customer ticket
+run. `build-example-copy.ts` scopes this copy to the current edition, preserving
+the classic text. Sample telemetry and retest results remain illustrative.
+
+The dedicated social preview is `/assets/og/ai-transformation.png` (1200×630),
+shared by the current English and Persian routes.
+
+### Final refinement pass — 2026-10-09
+
+Preserves 59 slides, eight chapters and the management loop. Refines the first
+chapters with opportunity selection, concrete department expansion, anticipation
+cues and explicitly illustrative pilot targets. The build example consistently
+uses a workflow brief, Activepieces MCP, tests, review and retained build lessons.
+The supplied Codex composer reference is recreated with a reduced-motion-aware
+phrase reveal. Architecture diagrams place only relevant tool logos inside each
+department. Small wheel deltas accumulate for trackpads; safe-area/visual-viewport
+fitting and unsupported-fullscreen guidance address mobile presentation controls.
+The page has a dedicated 1200×630 OG image. English and Persian PDF handoffs are
+exported from the final rendered pages; classic remains separately preserved.
