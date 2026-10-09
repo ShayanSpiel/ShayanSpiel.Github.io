@@ -39,7 +39,7 @@ function ChapterLead({ chapter }: {
         'M2 21V3M2 21h20M5 16l4-6 4 3 7-9M5 19v-3M9 19v-6M13 19v-3M17 19v-7M21 19V8',
         'M4 19l6-6 4 2 7-12M15 3h6v6M3 21h18',
     ];
-    return <svg className={`deck-chapter-mark deck-chapter-diagram deck-chapter-mark--${chapter}`} viewBox="0 0 24 24" aria-hidden="true"><path d={shapes[chapter]}/></svg>;
+    return <svg className={`deck-chapter-mark deck-chapter-diagram deck-chapter-mark--${chapter}`} viewBox="0 0 24 24" aria-hidden="true"><path d={shapes[[0,6,1,2,3,4,5,8][chapter]]}/></svg>;
 }
 function FinaleClosure() {
     const video = useRef<HTMLVideoElement>(null);

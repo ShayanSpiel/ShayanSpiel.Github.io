@@ -1,3 +1,4 @@
+import ThesisAssembly from './ThesisAssembly';
 import PracticalSurface from './PracticalSurface';
 import {compactDetails} from './compact-story';
 import { LocalizedContent } from './Localization';
@@ -168,6 +169,7 @@ export default function ComponentSurface({ node, kind }: {
     node: Tile;
     kind?: string;
 }) {
+    if(node.id==='thesis-overview')return <article className="deck-composition" data-node={node.id} style={{left:node.x,top:node.y,width:node.w,height:node.h}}><ThesisAssembly/></article>;
     if(node.id.startsWith('example-'))return <article className="deck-composition deck-example" data-node={node.id} style={{left:node.x,top:node.y,width:node.w,height:node.h}}><div className={node.id==='example-123'?'deck-example-full':'deck-example-scale'}><PracticalSurface focused={node.id!=='example-123'} mode={compactDetails[Number(node.id.replace('example-',''))].mode}/></div></article>;
     if (node.id.endsWith('-composition'))
         return <article className="deck-composition" data-node={node.id} style={{ left: node.x, top: node.y, width: node.w, height: node.h }}><LocalizedContent value={kind === 'team' ? <TeamAssembly /> : kind === 'harness' ? <HarnessAssembly /> : <MemoryAssembly />}/></article>;

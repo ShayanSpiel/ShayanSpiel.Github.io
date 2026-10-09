@@ -1,5 +1,31 @@
 // Complete presentation copy. Product names, code identifiers and filenames remain unchanged.
 export const persian: Record<string,string> = Object.fromEntries(`
+The management loop sets direction. Specialists turn each decision into working systems.	چرخهٔ مدیریت مسیر را تعیین می‌کند؛ متخصصان هر تصمیم را به سیستم‌های عملی تبدیل می‌کنند.
+The business thesis	منطق کسب‌وکار
+The transformation process	فرایند تحول
+Management & team	مدیریت و تیم
+The company OS	سیستم‌عامل شرکت
+The harness in practice	هارنس در عمل
+Evidence & scale	شواهد و گسترش
+Start with business outcomes. Connect the work. Build systems that can improve.	از نتیجهٔ کسب‌وکار شروع کنید؛ کارها را به هم متصل کنید و سیستم‌های بهبودپذیر بسازید.
+Redesign the work. Then automate it.	کار را بازطراحی کنید؛ سپس خودکارش کنید.
+Then automate it.	سپس خودکارش کنید.
+The destination is clear. Now turn one valuable workflow into a repeatable result.	مقصد روشن است؛ حالا یک گردش‌کار ارزشمند را به نتیجه‌ای تکرارپذیر تبدیل کنید.
+Give the transformation a management system.	برای تحول، یک سیستم مدیریت بسازید.
+management system.	سیستم مدیریت بسازید.
+A repeatable process needs a decision loop, clear ownership and a team to deliver it.	فرایند تکرارپذیر به چرخهٔ تصمیم‌گیری، مسئولیت روشن و تیم اجرا نیاز دارد.
+Build the shared company OS.	سیستم‌عامل مشترک شرکت را بسازید.
+The team needs one foundation for context, execution, memory and evidence.	تیم به زیرساخت مشترکی برای زمینه، اجرا، حافظه و شواهد نیاز دارد.
+See how work runs, then use the same harness to build a workflow through MCP.	شیوهٔ اجرای کار را ببینید؛ سپس با همان هارنس و از طریق MCP گردش‌کار بسازید.
+Make the next run better informed.	اجرای بعدی را آگاهانه‌تر کنید.
+better informed.	آگاهانه‌تر کنید.
+Execution produces evidence. Memory keeps the knowledge and methods worth reusing.	اجرا شواهد تولید می‌کند؛ حافظه، دانش و روش‌های قابل‌استفادهٔ مجدد را نگه می‌دارد.
+Prove the result. Earn the right to scale.	نتیجه را ثابت کنید؛ سپس گسترش دهید.
+Earn the right to scale.	سپس گسترش دهید.
+Trace what happened, evaluate quality and measure the business outcome before expanding.	پیش از گسترش، اجرا را ردیابی کنید، کیفیت را ارزیابی کنید و نتیجهٔ کسب‌وکار را بسنجید.
+From a business goal to a company capability.	از هدف کسب‌وکار تا قابلیت سازمانی.
+company capability.	قابلیت سازمانی.
+Connect the tasks into a workflow. Make the workflow dependable as a system. Reuse proven systems across departments.	وظیفه‌ها را به گردش‌کار متصل کنید؛ گردش‌کار را به سیستمی قابل‌اتکا تبدیل کنید و سیستم‌های اثبات‌شده را در واحدها به کار بگیرید.
 How to architect an AI-first company	چگونه یک شرکت هوش‌مصنوعی‌محور معماری کنیم
 AI-first company	شرکت هوش‌مصنوعی‌محور
 Start with business outcomes. Design the management, team and systems that deliver them.	از نتایج کسب‌وکار شروع کنید؛ مدیریت، تیم و سیستم‌های لازم برای تحقق آن‌ها را طراحی کنید.

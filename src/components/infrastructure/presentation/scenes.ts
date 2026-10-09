@@ -24,7 +24,7 @@ export type Scene = {
     edges: Edge[];
     kind?: string;
 };
-export const chapters = ['The thesis', 'Management', 'Transformation team', 'Company architecture', 'Inside the harness', 'Memory & learning', 'Process to workflow', 'Scale to departments', 'Observability & evals', 'The AI-first organization'];
+export {chapters} from './compact-story';
 export const definitions: Record<string, Omit<Tile, 'id' | 'x' | 'y' | 'w' | 'h'>> = {
     value: { title: 'Business value', icon: 'target-lock', tone: 'primary', note: 'Start with the outcome the company needs.' },
     layers: { title: 'How work gets done', icon: 'layers', tone: 'accent', note: 'Tasks → workflows → systems.' },
@@ -102,6 +102,7 @@ function circleScene(ids: string[], cx: number, cy: number, radius: number, w: n
     return {tiles,edges};
 }
 export function sceneFor(id: number): Scene {
+ if(id===140)return {tiles:[{id:"thesis-overview",title:"",icon:"",x:0,y:0,w:1440,h:580}],edges:[],kind:"thesis-assembly"};
  if(id===123)return {tiles:[{id:`example-${id}`,title:"",icon:"",x:0,y:0,w:1440,h:650}],edges:[],kind:"activepieces"};
  if(compactDetails[id])return {tiles:[{id:`example-${id}`,title:"",icon:"",x:230,y:0,w:660,h:460}],edges:[]};
     if (id === 9) {

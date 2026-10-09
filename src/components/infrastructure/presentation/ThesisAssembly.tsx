@@ -1,0 +1,13 @@
+import {usePresentationLocale} from './Localization';
+import {SurfaceIcon} from './ComponentSurface';
+export default function ThesisAssembly(){
+ const fa=usePresentationLocale()==='fa';const t=(en:string,faText:string)=>fa?faText:en;
+ const stages=[
+ {icon:'target-lock',title:t('Business goal','هدف کسب‌وکار'),label:t('DEFINE THE OUTCOME','تعریف نتیجه'),main:t('Resolve faster.','حل سریع‌تر.'),rows:[t('Time to resolution','زمان حل درخواست'),t('Cost per resolution','هزینهٔ هر درخواست'),t('Quality floor','حداقل کیفیت')]},
+ {icon:'check-circle',title:t('Tasks','وظیفه‌ها'),label:t('UNDERSTAND THE WORK','شناخت کار'),main:t('Make the work visible.','کار را قابل‌دیدن کنید.'),rows:[t('Read the request','خواندن درخواست'),t('Find order + policy','یافتن سفارش و سیاست'),t('Prepare a reply','آماده‌سازی پاسخ')]},
+ {icon:'network-chart',title:t('Workflow','گردش‌کار'),label:t('CONNECT THE STEPS','اتصال مرحله‌ها'),main:t('One end-to-end result.','یک نتیجهٔ سرتاسری.'),rows:[t('Ticket → context','تیکت ← زمینه'),t('Draft → review gate','پیش‌نویس ← کنترل بازبینی'),t('Reply or escalate','پاسخ یا ارجاع')]},
+ {icon:'layers',title:t('System','سیستم'),label:t('MAKE IT DEPENDABLE','قابل‌اتکا کردن'),main:t('Run it with control.','اجرای کنترل‌شده.'),rows:[t('Context + tools','زمینه و ابزارها'),t('Owner + guardrails','مسئول و کنترل‌ها'),t('Traces + evals','ردیابی و ارزیابی')]},
+ {icon:'group',title:t('Department','واحد سازمانی'),label:t('REUSE WHAT WORKS','استفاده از الگوی موفق'),main:t('A repeatable capability.','قابلیتی تکرارپذیر.'),rows:[t('Delivery exceptions','استثناهای تحویل'),t('Returns + refunds','مرجوعی و بازپرداخت'),t('More proven workflows','گردش‌کارهای اثبات‌شدهٔ بیشتر')]},
+ ];
+ return <div className="thesis-assembly" dir={fa?'rtl':'ltr'}><div className="thesis-stages">{stages.map((s,i)=><section className="thesis-stage" key={s.icon}><div className="thesis-stage-index">0{i+1}<span>{s.label}</span></div><header><span className="deck-icon"><SurfaceIcon name={s.icon}/></span><strong>{s.title}</strong></header><h3>{s.main}</h3><div className={`thesis-stage-detail thesis-stage-detail--${i}`}>{s.rows.map((r,j)=><div key={r}><span>{i===0?<SurfaceIcon name={['history','data','shield'][j]}/>:i===2?'↓':String(j+1).padStart(2,'0')}</span><b>{r}</b></div>)}</div></section>)}</div><div className="thesis-feedback"><div><SurfaceIcon name="target-lock"/><strong>{t('Measure the result. Improve the system. Expand what works.','نتیجه را بسنجید؛ سیستم را بهبود دهید؛ الگوی موفق را گسترش دهید.')}</strong></div><p>{t('The unit of progress is a better business outcome—not another AI tool.','واحد پیشرفت، نتیجهٔ بهتر کسب‌وکار است؛ نه یک ابزار هوش مصنوعی دیگر.')}</p></div></div>;
+}
