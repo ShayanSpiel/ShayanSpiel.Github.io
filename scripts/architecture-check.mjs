@@ -19,8 +19,8 @@ expect(config.includes('BOOKING_LINK = "shayanspiel/15min"'), "booking CTAs are 
 expect(!config.includes("BOOKING_PAGE_PATH"), "the /book/ navigation route must be gone from config");
 expect(config.includes('AGENT_BRIEFING_PATH = "/services/agent-brief/"'), "Agent Brief page stays an informational route");
 expect(agents.includes("buyer and lead-conversion website"), "AGENTS.md must describe the buyer/lead strategy");
-expect(agents.includes("The only active skill system is `.agents/skills/`"), "AGENTS.md must define one active skill system");
-expect(!existsSync(join(root, "Skills")), "legacy Skills submodule must not remain beside .agents/skills");
+expect(agents.includes("reusable Skills, Departments, workflows"), "AGENTS.md must keep reusable workflows in the separate harness");
+expect(existsSync(join(root, "src/data/design-gallery.json")), "the public Design gallery must use an approved site-owned metadata snapshot");
 expect(!existsSync(join(root, "src/components/ContactModal.astro")), "ContactModal must be removed; CTAs open the Cal embed on the page");
 expect(!existsSync(join(root, "src/components/AgentBriefForm.astro")), "AgentBriefForm must be removed; the Agent Brief page is informational");
 expect(!baseLayout.includes("data-open-contact-modal"), "BaseLayout must not wire the retired contact modal");

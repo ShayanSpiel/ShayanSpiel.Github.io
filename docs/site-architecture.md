@@ -34,8 +34,8 @@ active funnel.
 
 ## One Idea Hierarchy
 
-The website follows the company-wide hierarchy in
-`.agents/company/strategy/voice.md`:
+The website follows company positioning and voice maintained in the separate
+SpielOS harness:
 
 1. The company promise anchors the funnel: pursue 2× output at half the
    operating cost, one workflow at a time.
@@ -94,7 +94,7 @@ twins) are not indexable. The 301 redirect stubs listed above carry no
 canonical content and are excluded from `sitemap.xml` in `astro.config.mjs`.
 Archived product pages (`/spielos-v1/`) are `noindex, follow`.
 
-## Design department page and the build-driven gallery
+## Design department page and the released gallery
 
 The AI Design department lives on two routes:
 
@@ -103,7 +103,7 @@ The AI Design department lives on two routes:
   registry panel. Indexable, with EN/FA canonical and hreflang pairs and
   breadcrumb JSON-LD. The old `/use-cases/design/` URL 301-redirects here.
 - `/solutions/ai-departments/design/gallery/` - a categorized template
-  gallery that is rebuilt from the live registry at every deploy, showing
+  gallery built from an approved public metadata snapshot, showing
   every registered Design archetype: motion (kind `shorts`) and stills
   (kind `social`), plus the legacy core set and badges for New (v3.4
   additions via `content_relevance`) and Preview (unconfirmed,
@@ -116,16 +116,15 @@ same components.
 
 Build data flow for the gallery:
 
-1. Archive list is read from
-   `.agents/company/departments/design/templates/registry.json` at build time
-   (`readFileSync` in `gallery.astro`) - it is never hardcoded on the page,
-   and the registry itself is read-only for the site.
-2. Committed renders under `public/design-gallery/` are matched by archetype
-   `id`: MP4 + JPEG poster for motion, PNG for stills. Entries without a
-   render fall back to a polished icon card.
-3. Rebuilding the site after a registry change updates the public gallery
-   automatically. Badges and composition-source lines come from the registry
-   entry plus `useCases.design.gallery.*` translations.
+1. Approved public fields from the Design Department are released into
+   src/data/design-gallery.json. The website build reads only this snapshot;
+   it never reads private workflow or template files.
+2. Committed renders under public/design-gallery/ are matched by archetype id:
+   MP4 + JPEG poster for motion, PNG for stills. Entries without a render fall
+   back to a polished icon card.
+3. The metadata snapshot and released media are updated together through the
+   harness approval and release process. Badges and source notes use only
+   fields approved for the public gallery.
 
 Navigation: the default nav renders the Solutions dropdown as one flat
 four-category mega menu (AI Departments column: Design, Content, Marketing,
@@ -145,8 +144,8 @@ The active website journey surfaces are isolated. The homepage hero uses
 `src/components/HomepageHeroJourney.astro` with its own anchor-timed draw;
 `src/components/HomepageJourneyRail.astro` owns the fixed viewport rail on
 `/services/`. Background journey bars were retired from the rest of the site.
-The Design video gallery remains independent and uses its own rendered journey
-assets under `.agents/company/departments/design/templates/`.
+The Design video gallery remains independent and consumes approved release
+assets under `public/design-gallery/`.
 
 ## Shared sources of truth
 
@@ -158,8 +157,7 @@ assets under `.agents/company/departments/design/templates/`.
   `src/layouts/BaseLayout.astro`
 - Standard page shell: `src/layouts/Page.astro`
 - Feature shell and breadcrumbs: `src/layouts/FeaturesLayout.astro`
-- Canonical ICP: `.agents/company/strategy/icp.md`
-- Active skills: `.agents/skills/`
+- Company strategy and reusable Skills: maintained in the separate SpielOS harness.
 
 ## Conversion analytics
 

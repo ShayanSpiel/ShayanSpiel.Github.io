@@ -1,6 +1,6 @@
 // Local dev server for the chat edge function (no Docker/Deno required).
 // Runs the REAL handler from supabase/functions/chat/core.ts via Node's
-// native TS stripping, with MISTRAL_API_KEY from the harness .spielos/.env.
+// native TS stripping, with provider keys supplied in the process environment.
 // CRM capture is suppressed locally by design (SUPABASE_URL not provided);
 // the CRM write goes live only on the approved production deploy.
 // Usage: node supabase/functions/chat/dev-serve.mjs   (serves :8787)
@@ -10,22 +10,10 @@ import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const here = dirname(fileURLToPath(import.meta.url));
-const envPath = "/Users/shayan/Projects/SpielOS-Website/.spielos/.env";
 const MISTRAL_KEYS = ["MISTRAL_API_KEY", "MISTRAL_API_KEY_2", "MISTRAL_API_KEY_3", "MISTRAL_API_KEY_4"];
 const GEMINI_KEYS = ["GEMINI_API_KEY", "GEMINI_API_KEY_2", "GEMINI_API_KEY_3", "GEMINI_API_KEY_4", "GEMINI_API_KEY_5", "GEMINI_API_KEY_6"];
-let foundM = 0;
-let foundG = 0;
-try {
-  for (const line of readFileSync(envPath, "utf8").split("\n")) {
-    const m = line.match(/^(MISTRAL_API_KEY(?:_\d)?)=(.+)$/);
-    if (m && MISTRAL_KEYS.includes(m[1])) { process.env[m[1]] = m[2].trim(); foundM++; }
-    const g = line.match(/^(GEMINI_API_KEY(?:_\d)?)=(.+)$/);
-    if (g && GEMINI_KEYS.includes(g[1])) { process.env[g[1]] = g[2].trim(); foundG++; }
-  }
-} catch {
-  console.error("[dev-serve] harness .env not readable");
-  process.exit(1);
-}
+const foundM = MISTRAL_KEYS.filter((key) => process.env[key]).length;
+const foundG = GEMINI_KEYS.filter((key) => process.env[key]).length;
 if (foundM === 0 && foundG === 0) {
   console.error("[dev-serve] no mistral keys and no gemini keys found");
   process.exit(1);

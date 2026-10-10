@@ -1,6 +1,4 @@
 ---
-import { readFileSync } from "node:fs";
-import path from "node:path";
 import FeatureHero from "../../../../components/features/FeatureHero.astro";
 import FeatureCTA from "../../../../components/features/FeatureCTA.astro";
 import SectionHeader from "../../../../components/sections/SectionHeader.astro";
@@ -8,6 +6,7 @@ import Page from "../../../../layouts/Page.astro";
 import { SITE } from "../../../../config";
 import { localizePath } from "../../../../i18n";
 import { type Locale, t } from "../../../../i18n/translations";
+import registry from "../../../../data/design-gallery.json";
 
 export interface Props {
   locale?: Locale;
@@ -15,27 +14,11 @@ export interface Props {
 
 const { locale = "en" } = Astro.props;
 
-/* The gallery is BUILD-DRIVEN: the archetype list is read from the Design
-   department registry at build time, never hardcoded here. The path anchors
-   to the repo root via process.cwd() because `astro build` runs from the
-   project root; a relative new URL(..., import.meta.url) would resolve
-   against the bundled dist/chunks module and miss the file. Rebuilding the
-   site after a registry change updates the public gallery automatically. */
-const registryPath = path.join(process.cwd(), ".agents/company/departments/design/templates/registry.json");
-const registry = JSON.parse(readFileSync(registryPath, "utf8")) as {
-  archetypes: {
-    id: string;
-    kind: "shorts" | "social";
-    file: string;
-    legacy?: boolean;
-    confirmed?: boolean;
-    content_relevance?: string;
-    description?: string;
-    research_map?: string;
-  }[];
-};
+/* This public metadata snapshot is released from the company Design
+   Department. The website build consumes only approved public fields and
+   never reads private workflow or template files. */
 
-type Entry = (typeof registry.archetypes)[number];
+type Entry = (typeof registry.archetypes)[number] & { confirmed?: boolean };
 
 /* Committed live renders under public/design-gallery/. Entries without a
    render fall back to an icon + description card automatically. */

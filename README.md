@@ -1,6 +1,6 @@
 # SpielOS Website
 
-The bilingual buyer and lead-conversion website for [SpielOS](https://spielos.xyz), built with Astro and deployed as static HTML on GitHub Pages.
+The bilingual buyer and lead-conversion website for [SpielOS](https://spielos.xyz), built with Astro and deployed as static HTML on GitHub Pages. Company workflows, Skills, and runtime source live in the separate local company home.
 
 ## Stack
 
@@ -13,7 +13,7 @@ The bilingual buyer and lead-conversion website for [SpielOS](https://spielos.xy
 
 ## Conversion architecture
 
-The primary journey is Homepage → Services/Solutions/Pricing → Apply. The current route inventory and ownership rules live in [docs/site-architecture.md](docs/site-architecture.md). Repository constraints, i18n rules, tokens, and protected scope live in [agents.md](agents.md).
+The primary journey is Homepage → Services/Solutions/Pricing → Apply. The current route inventory and ownership rules live in [docs/site-architecture.md](docs/site-architecture.md). Repository constraints, i18n rules, tokens, and protected scope live in [AGENTS.md](AGENTS.md).
 
 Main route families:
 
@@ -50,11 +50,14 @@ src/
   layouts/          Shared document, SEO, analytics, navigation, and footer shell
   pages/            English routes plus Persian thin wrappers
   styles/           Semantic tokens, base rules, utilities, and icon subset
-scripts/            Build, architecture, link, analytics, SEO, and asset checks
+scripts/            Website build, architecture, link, analytics, SEO, and asset checks
 test/               Built-site contract tests
 docs/               Current website architecture
-.agents/            Company and website operating skills
 ```
+
+Company workflows, Skills, and private data live in the separate local company
+home. See [repository boundaries](REPOSITORY-BOUNDARIES.md) for ownership and
+[website implementation guidance](docs/website-implementation.md) for site rules.
 
 ## Design and performance rules
 

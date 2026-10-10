@@ -15,54 +15,41 @@ Thumbs.db
 *.swp
 *~
 
-# Logs
+# Logs and local runtime artifacts
 *.log
-
-# Company runtime: credentials, private inputs, state, and generated work stay local
-.spielos/.env
-.spielos/data/
-.spielos/state/
-.spielos/artifacts/
-
-# Python bytecode + runtime artifacts
 **/__pycache__/
 *.pyc
 *.pid
 *.out
-
-# Company runtime DB + internal agent state — local only, never publish
-.spielos/*.sqlite
-.spielos/*.sqlite-*
-.agents/.spielos/
-
-# Company runtime SQLite DBs — local only
-.spielos/*.db
-.spielos/*.db-*
-
-# Stray harness DBs at .agents root — local only
-.agents/*.db
-.agents/*.sqlite
-.agents/*.sqlite-*
-.agents/*.db-*
-
-# Python test cache
 .pytest_cache/
-
-# Harness user-layer overrides (identity, brand, private config)
-.agents/company/config.user.json
-
-# Packaging build artifacts
-.agents/build/
-.agents/*.egg-info/
 dist-build/
 
-.spielos/.env.*
+# Company Harness is a separate checkout. Keep accidental runtime copies out.
+.agents/
+.codex/
+.opencode/
+.spielos/
+outbound/
+opencode.json
+skills-lock.json
 
-# Runtime databases at repo root — never commit (PII / company state)
+# Public media contains approved release files only.
+# Reject editable source trees and HTML templates under public/images.
+/public/images/**/*.html
+/public/images/**/source/
+/public/images/**/assets/
+
+# Runtime databases (local company state)
 company.db
 company.sqlite
 company.sqlite-*
 company.db-*
 
-# Local env (chat dev URL etc.) — never commit; CI must build without it
+# Local environment (chat dev URL etc.); CI must build without it
 .env
+
+# Personal company adapters/data must never enter website Git.
+.claude/
+/data/
+/bundles/
+/supabase/.temp/
