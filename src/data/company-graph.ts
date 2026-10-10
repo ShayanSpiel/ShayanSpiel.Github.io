@@ -18,14 +18,14 @@ export type GraphEdge = { id: string; type: string; from: string; to: string; me
 
 const node = (id: string, type: GraphKind, label: string, state: string, views: GraphView[], metadata: Record<string, string> = {}, summary?: string, diagnostic?: string): GraphNode => ({
   id, type, label, state, views, metadata, summary, diagnostic,
-  source_ref: type === "group" ? "visual projection" : ".spielos/state/company.sqlite",
+  source_ref: type === "group" ? "visual projection" : "private company record",
   updated_at: metadata.Updated ?? null,
 });
 
 export const COMPANY_GRAPH = {
   snapshot: { generated_at: "2026-08-31T16:38:16.540941+00:00", runtime_version: "6.2.6", totals: { goals: 274, active_goals: 38, achieved_goals: 181, runs: 316, approvals: 275, evidence: 14717, decisions: 969, hypotheses: 101, memory: 0 } },
   nodes: [
-    node("company:spielos", "company", "SpielOS", "running", ["company"], { Runtime: "6.2.6", Loop: "GOAL → OBSERVE → DECIDE → ACT → EVALUATE", Authority: ".spielos/state/company.sqlite" }, "One durable company loop. Every goal, run, approval, and evidence record is runtime-owned."),
+    node("company:spielos", "company", "SpielOS", "running", ["company"], { Runtime: "6.2.6", Loop: "GOAL → OBSERVE → DECIDE → ACT → EVALUATE", Authority: "Private company record" }, "One durable company loop. Every goal, run, approval, and evidence record is runtime-owned."),
     node("view:goals", "group", "Goals", "38 active", ["company"], {}, "274 total · 181 achieved · 49 abandoned"),
     node("view:departments", "group", "Departments", "7 installed", ["company"], {}, "Business capabilities plugged into the shared interpreter"),
     node("view:work", "group", "Work", "1 current run", ["company"], {}, "316 durable runs across execution, evaluation, and system improvement"),
@@ -60,7 +60,7 @@ export const COMPANY_GRAPH = {
     node("dec-d49f07d7a463", "decision", "Package evidence meets the goal", "recorded", ["intelligence"], { Type: "evaluate", Run: "run-9a48941fd4", Updated: "2026-08-30T11:02:24Z" }),
     node("memory:empty", "memory", "Durable memory", "empty", ["intelligence"], { Count: "0", Gate: "valid evidence + future applicability" }, "No reusable claim has passed the evidence and applicability gate.", "Evidence is accumulating, but no claim has hardened into memory."),
 
-    node("system:runtime", "system", "Company runtime", "running", ["system"], { Version: "6.2.6", Store: ".spielos/state/company.sqlite" }, "Single persisted company loop"),
+    node("system:runtime", "system", "Company runtime", "running", ["system"], { Version: "6.2.6", Store: "Private company record" }, "Single persisted company loop"),
     node("system:runner", "system", "Runner", "watching", ["system"], {}, "Bounded ticks, durable heartbeat, retry, and resume semantics"),
     node("system:watchdog", "system", "Watchdog", "monitoring", ["system"], {}, "Process, loop, dispatch, and send-activity liveness"),
     node("approval:summary", "approval", "275 approvals", "attention", ["system"], {}, "Live external actions always park for explicit approval"),

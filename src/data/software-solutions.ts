@@ -1,7 +1,6 @@
 // Software solutions — single source for the "By Software" nav category and
 // the /[software]-ai-automation/ pages. One ICP-true automatable workflow per
-// software. ICP: .agents/company/strategy/icp.md (owner-operator of an
-// established service business with a manual operational loop).
+// software. Buyer profile: maintained by the separate company harness.
 
 export interface SoftwareSolution {
   /** Stable key used by routes, translations, and analytics. */

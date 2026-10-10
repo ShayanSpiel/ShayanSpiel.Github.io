@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * SpielOS SEO check — validates the built site against the SEO invariants
- * defined in .agents/skills/seo/SKILL.md.
+ * maintained in the separate local company home.
  *
  * Usage: npm run seo:check   (runs against dist/)
  * Exit 0 = clean, exit 1 = issues found.

@@ -72,7 +72,7 @@ const MISTRAL_URL = "https://api.mistral.ai/v1/chat/completions";
 // when the workspace is upgraded, then redeploy (one-line change).
 const MISTRAL_MODEL = "open-mistral-nemo";
 // Provider keys & rotation (owner directive 2026-09-06: proper rotation so
-// quota never runs out; all keys documented in .spielos/.env + project secrets).
+// quota never runs out; keys are supplied through deployment secrets).
 // Gemini model uses the -latest alias so BOTH key generations work: the old
 // AIza key only serves pinned names, the new AQ keys only serve aliases
 // (gemini-2.5-flash returns "no longer available" for them).
