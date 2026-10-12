@@ -1,3 +1,5 @@
+import { SUPABASE } from "../config";
+
 const guide = document.querySelector<HTMLElement>("[data-brand-guide]");
 
 if (guide) {
@@ -153,18 +155,17 @@ if (guide) {
     submit.disabled = true;
     submit.setAttribute("aria-busy", "true");
     try {
-      const payload = Object.fromEntries(new FormData(form).entries());
       const response = await fetch(form.action, {
         method: "POST",
-        body: JSON.stringify(payload),
         headers: {
-          Accept: "application/json",
+          apikey: SUPABASE.anonKey,
+          Authorization: `Bearer ${SUPABASE.anonKey}`,
           "Content-Type": "application/json",
+          Prefer: "return=minimal",
         },
+        body: JSON.stringify({ email: email.value.trim(), locale: guide.dataset.locale || "en" }),
       });
-      if (!response.ok) throw new Error("Brand Guide signup failed");
-      const result = await response.json().catch(() => null) as { success?: boolean | string } | null;
-      if (result?.success !== true && result?.success !== "true") throw new Error("Brand Guide signup failed");
+      if (!response.ok && response.status !== 409) throw new Error("Brand Guide signup failed");
       unlock();
     } catch {
       showError(form.dataset.submitError, false);

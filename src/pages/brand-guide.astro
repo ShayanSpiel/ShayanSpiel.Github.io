@@ -9,7 +9,7 @@ import GuideCostModelScene from "../components/brand-guide/GuideCostModelScene.a
 import GuideSystemMapScene from "../components/brand-guide/GuideSystemMapScene.astro";
 import GuideReviewScene from "../components/brand-guide/GuideReviewScene.astro";
 import { t, type Locale } from "../i18n/translations";
-import { FORMS } from "../config";
+import { SUPABASE } from "../config";
 import { brandLogo } from "../data/brand-logos";
 import "../styles/brand-guide.css";
 import "../styles/brand-guide-layers.css";
@@ -159,7 +159,7 @@ const infraEdges: DiagramEdge[] = infraCoreAnchors.flatMap((ratio, index) => [
   alternateBaseUrl="https://brand.spielos.xyz"
   showChat={false}
 >
-  <main class="brand-guide" data-brand-guide>
+  <main class="brand-guide" data-brand-guide data-locale={locale}>
     <div class="brand-guide__deck" aria-live="polite">
       <section class="guide-slide guide-slide--gate is-active" data-guide-slide="0" aria-label={tr("brandGuide.access")}>
         <div class="guide-grid" aria-hidden="true"></div>
@@ -193,7 +193,7 @@ const infraEdges: DiagramEdge[] = infraCoreAnchors.flatMap((ratio, index) => [
             <div class="guide-avatar"><img src="/assets/avatars/avatar.jpg" alt="Shayan Spiel" width="96" height="96" /></div>
             {locale === "fa" ? <p>{tr("brandGuide.quote")}</p> : <p>For 10 years, I’ve led startup growth and campaigns that produced <strong>3M+ users in 3 days</strong> and contributed to <strong>80%+ YoY growth.</strong> A proper AI Brand Infrastructure can help you <span class="guide-output-claim"><strong>2× output</strong><span class="guide-at-least"><span class="guide-insertion-mark" aria-hidden="true"></span>at least</span></span>, lower production cost, and keep one brand across every channel.</p>}
           </div>
-          <form class="guide-email-form" action={FORMS.contact} method="POST" novalidate data-invalid-error={tr("brandGuide.unlockError")} data-submit-error={tr("brandGuide.submitError")}>
+          <form class="guide-email-form" action={`${SUPABASE.url}/rest/v1/waitlist_signups`} method="POST" novalidate data-invalid-error={tr("brandGuide.unlockError")} data-submit-error={tr("brandGuide.submitError")}>
             <input type="hidden" name="_subject" value="SpielOS Brand Guide Access" />
             <input type="hidden" name="source" value="brand-guide" />
             <label class="sr-only" for="brand-guide-email">{tr("brandGuide.emailLabel")}</label>
