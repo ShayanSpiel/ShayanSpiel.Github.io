@@ -1,0 +1,448 @@
+/* Final visual contract for the guide shell and gated opening sequence. Keep
+   this file last in the import order so the shared scene styles remain
+   reusable while the reference-locked shell has one authoritative override. */
+
+.brand-guide:has(.guide-slide--gate.is-active) .guide-status {
+  visibility:hidden;
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(-.5rem);
+}
+
+.guide-gate { transform:translateY(-1.15rem); }
+.guide-gate h1 { max-width:62rem; font-size:clamp(2.15rem,4.7vw,4.9rem); }
+.guide-founder-quote { width:min(100%,38rem); }
+.guide-founder-quote p { max-width:32rem; padding-block-end:0; line-height:1.55; }
+.guide-gate .guide-output-claim { display:inline; white-space:nowrap; }
+.guide-layer .guide-output-claim { display:grid; white-space:normal; }
+.guide-at-least { inset-block-start:1.35em; inset-block-end:auto; inset-inline-start:-.12em; }
+.guide-email-form { width:min(100%,41rem); display:flex; align-items:stretch; gap:0; padding:.28rem; border:1px solid var(--glass-border-strong); border-radius:var(--radius-md); background:color-mix(in oklab,var(--input) 88%,transparent); box-shadow:var(--shadow-panel); }
+.guide-email-field { flex:1 1 auto; min-height:3.05rem; border:0; border-radius:var(--radius-sm); background:transparent; }
+.guide-email-field:focus-within { background:color-mix(in oklab,var(--panel-raised) 72%,transparent); }
+.guide-email-form button { flex:0 0 15.5rem; min-height:3.05rem; border-radius:var(--radius-sm); }
+
+.guide-next--locked { inset-inline-end:17%; top:63%; width:4.9rem; }
+.guide-lock-note { position:absolute; z-index:5; inset-block-start:74%; inset-inline-end:7%; width:11rem; margin:0; padding:.55rem .7rem; border:1px solid color-mix(in oklab,var(--destructive) 70%,var(--border)); border-radius:var(--radius-sm); background:color-mix(in oklab,var(--destructive-soft) 82%,var(--panel)); color:var(--destructive); font-size:var(--font-size-3xs); line-height:1.35; text-align:start; }
+.guide-lock-note .bx { position:absolute; inset-inline-start:-2.1rem; inset-block-start:-1.2rem; transform:rotate(-15deg); }
+.is-unlocked .guide-lock-note { visibility:hidden; opacity:0; }
+
+.guide-orbit--five { inset:51% 4% auto auto; }
+.guide-orbit--six { --orbit-angle:-9deg; inset:47% auto auto 3%; }
+.guide-orbit--seven { --orbit-angle:8deg; inset:75% auto auto 7%; width:4.6rem; min-height:4.6rem; justify-content:center; }
+.guide-orbit--seven .bx { color:var(--muted-foreground); }
+
+.guide-route { position:absolute; z-index:0; inset-block-end:.65rem; inset-inline:18%; height:10.5rem; pointer-events:none; }
+.guide-route__node { position:absolute; inset-block-start:0; inset-inline-start:50%; width:1.65rem; height:1.65rem; border:1px solid var(--primary); border-radius:50%; background:var(--background); box-shadow:0 0 0 .3rem var(--primary-soft),0 0 1rem var(--primary-soft); transform:translateX(-50%); }
+.guide-route__node::after { content:""; position:absolute; inset:.43rem; border-radius:50%; background:var(--primary); }
+.guide-route__line { position:absolute; border:1px dashed color-mix(in oklab,var(--primary) 75%,transparent); border-top:0; border-radius:0 0 50% 50%; opacity:.78; }
+.guide-route__line--one { inset-block-start:1.1rem; inset-inline-start:50%; width:12rem; height:4.2rem; border-inline-end:0; transform:rotate(13deg); transform-origin:top left; }
+.guide-route__line--two { inset-block-start:5rem; inset-inline-start:22%; width:58%; height:4.7rem; border-inline-start:0; transform:rotate(-4deg); }
+.guide-route__arrow { position:absolute; inset-block-end:.1rem; inset-inline-start:50%; display:grid; width:1.8rem; height:1.8rem; place-items:center; border:1px solid var(--primary); border-radius:50%; color:var(--primary); transform:translateX(-50%); }
+.guide-path-note { inset-block-end:3.2rem; z-index:2; }
+
+.guide-progress { display:flex; align-items:center; }
+.guide-counter { display:inline-flex; align-items:center; }
+.guide-counter b { min-width:1.4rem; text-align:end; }
+
+@media (max-width:58rem) {
+  .guide-gate { transform:translateY(-.35rem); }
+  .guide-email-form { width:min(100%,34rem); }
+  .guide-email-form button { flex-basis:12.4rem; }
+  .guide-next--locked { inset-inline-end:8%; top:64%; }
+  .guide-lock-note { inset-inline-end:2%; }
+  .guide-route { inset-inline:10%; }
+}
+
+@media (max-width:40rem) {
+  .guide-gate h1 { font-size:clamp(2rem,9vw,3.35rem); }
+  .guide-founder-quote { width:min(100%,30rem); }
+  .guide-email-form { width:min(100%,30rem); flex-direction:column; gap:.3rem; }
+  .guide-email-form button { flex-basis:auto; }
+  .guide-next--locked { inset-inline-end:1rem; top:auto; inset-block-end:8rem; width:3.6rem; }
+  .guide-lock-note { inset-block-start:auto; inset-block-end:5.5rem; inset-inline-end:1rem; width:9rem; }
+  .guide-route { inset-inline:4%; height:7rem; }
+  .guide-path-note { inset-block-end:2.2rem; font-size:var(--font-size-3xs); }
+}
+
+/* One canonical presentation frame. Supplied references came from mixed
+   artboards, but the product deck must not inherit those dimensions. Every
+   scene is authored, fitted, and captured as the same 1680×940 frame. */
+.brand-guide {
+  --guide-frame-width:105rem;
+  --guide-frame-height:58.75rem;
+}
+
+.brand-guide .guide-slide:has(.guide-layer) .guide-layer {
+  width:var(--guide-frame-width);
+  height:var(--guide-frame-height);
+  aspect-ratio:1680 / 940;
+  box-sizing:border-box;
+}
+
+.brand-guide .guide-slide:has(.guide-layer) .guide-layer__diagram {
+  width:100%;
+  height:100%;
+  aspect-ratio:1680 / 940;
+}
+
+/* Canonical-frame fixes for the reference-sensitive scenes. */
+.brand-guide .guide-layer--system .guide-layer__heading span {
+  line-height:1.05;
+}
+.brand-guide .guide-layer--system .guide-system-top { top:28%; }
+.brand-guide .guide-layer--system .guide-layer__core--system { top:42%; }
+.brand-guide .guide-layer--system .guide-system-bottom { top:60%; }
+.brand-guide .guide-layer--system .guide-layer__bottom-claim { gap:8.5rem; }
+
+.brand-guide .guide-layer--outputs .guide-output-claim {
+  bottom:9%;
+  gap:.18rem;
+}
+
+.brand-guide .guide-layer--media .guide-media-column article:has(.guide-media-preview) .guide-media-preview > img {
+  opacity:0 !important;
+}
+.brand-guide .guide-layer--media .guide-media-column article:has(.guide-media-preview) .guide-media-preview--video > img {
+  opacity:.78 !important;
+}
+
+.brand-guide .guide-layer--system-map .guide-system-map__inputs { top:24.5%; }
+
+/* The deck keeps its visual frame and arrow controls mirrored in FA, while
+   counters/dot pagination stay LTR so slide numbers remain readable. */
+[dir="rtl"] .brand-guide .guide-status { direction:ltr; }
+[dir="rtl"] .brand-guide .guide-founder-quote { text-align:right; }
+[dir="rtl"] .brand-guide .guide-layer__heading,
+[dir="rtl"] .brand-guide .guide-reference__copy { direction:rtl; }
+
+/* RTL must change reading order, never the authored slide coordinate system.
+   The layer artboards and their connector anchors are still the same 1680×940
+   frame, so keep the scene frame LTR and apply RTL only to text surfaces. */
+[dir="rtl"] .brand-guide .guide-slide:has(.guide-layer) {
+  direction:ltr;
+}
+
+[dir="rtl"] .brand-guide .guide-slide:has(.guide-layer) .guide-layer,
+[dir="rtl"] .brand-guide .guide-slide:has(.guide-layer) .guide-layer__diagram {
+  direction:ltr;
+}
+
+[dir="rtl"] .brand-guide .guide-slide:has(.guide-layer) .guide-layer__heading {
+  direction:rtl;
+  text-align:center;
+}
+
+[dir="rtl"] .brand-guide .guide-slide:has(.guide-layer) .guide-layer__heading h2 {
+  font-size:clamp(2.35rem,4.15vw,4.65rem);
+  line-height:1.08;
+  letter-spacing:-.045em;
+  text-wrap:balance;
+}
+
+[dir="rtl"] .brand-guide .guide-slide:has(.guide-layer) .guide-layer__heading span {
+  direction:rtl;
+  max-width:52rem;
+  margin-inline:auto;
+  line-height:1.55;
+}
+
+/* Text-bearing children inherit Persian shaping while rows keep their stable
+   visual order for connector geometry and responsive fitting. */
+[dir="rtl"] .brand-guide .guide-slide:has(.guide-layer) :is(h3,p,strong,small,label,header) {
+  direction:rtl;
+}
+
+[dir="rtl"] .brand-guide .guide-slide:has(.guide-layer) .guide-layer__bottom-claim,
+[dir="rtl"] .brand-guide .guide-slide:has(.guide-layer) .guide-output-primitives,
+[dir="rtl"] .brand-guide .guide-slide:has(.guide-layer) .guide-system-flow,
+[dir="rtl"] .brand-guide .guide-slide:has(.guide-layer) .guide-media-tools,
+[dir="rtl"] .brand-guide .guide-slide:has(.guide-layer) .guide-execution-tools {
+  direction:ltr;
+}
+
+[dir="rtl"] .brand-guide .guide-slide:has(.guide-layer) .guide-layer__bottom-claim > *,
+[dir="rtl"] .brand-guide .guide-slide:has(.guide-layer) .guide-output-primitives > *,
+[dir="rtl"] .brand-guide .guide-slide:has(.guide-layer) .guide-system-flow > *,
+[dir="rtl"] .brand-guide .guide-slide:has(.guide-layer) .guide-media-tools > *,
+[dir="rtl"] .brand-guide .guide-slide:has(.guide-layer) .guide-execution-tools > * {
+  direction:rtl;
+}
+
+[dir="rtl"] .brand-guide .guide-system-code code {
+  direction:ltr;
+  text-align:left;
+}
+
+[dir="rtl"] .brand-guide .guide-output-claim {
+  max-width:82%;
+  font-size:clamp(1.15rem,1.55vw,1.8rem);
+  line-height:1.35;
+  text-align:center;
+}
+
+[dir="rtl"] .brand-guide .guide-layer--media .guide-layer__bottom-claim {
+  left:0;
+  right:0;
+  display:grid;
+  justify-items:center;
+  gap:.28rem;
+  text-align:center;
+}
+
+[dir="rtl"] .brand-guide .guide-layer--media .guide-layer__bottom-claim strong {
+  display:block;
+  max-width:100%;
+  font-size:clamp(1rem,1.45vw,1.55rem);
+  line-height:1.25;
+  white-space:nowrap;
+}
+
+/* The reference-locked slides use a real RTL grid; their copy stays on the
+   reading side while the diagram remains a measured visual column. */
+[dir="rtl"] .brand-guide .guide-reference {
+  direction:rtl;
+}
+
+[dir="rtl"] .brand-guide .guide-reference__copy {
+  direction:rtl;
+  text-align:right;
+}
+
+[dir="rtl"] .brand-guide .guide-reference h2 {
+  font-size:clamp(2.55rem,4.25vw,4.85rem);
+  line-height:1.08;
+  letter-spacing:-.045em;
+}
+
+[dir="rtl"] .brand-guide .guide-reference--ai h2,
+[dir="rtl"] .brand-guide .guide-reference--ai .guide-reference__ai-problem {
+  font-size:clamp(2.25rem,3.9vw,4.25rem);
+  line-height:1.08;
+}
+
+[dir="rtl"] .brand-guide .guide-reference__body,
+[dir="rtl"] .brand-guide .guide-reference__subline,
+[dir="rtl"] .brand-guide .guide-reference__claim {
+  line-height:1.75;
+  text-align:right;
+}
+
+[dir="rtl"] .brand-guide .guide-founder-quote {
+  direction:rtl;
+  align-items:flex-start;
+  text-align:right;
+}
+
+[dir="rtl"] .brand-guide .guide-founder-quote p {
+  flex:1 1 auto;
+  min-width:0;
+  direction:rtl;
+  text-align:right;
+  line-height:1.8;
+}
+
+[dir="rtl"] .brand-guide .guide-founder-quote .guide-avatar {
+  order:2;
+  flex:0 0 4.4rem;
+}
+
+[dir="rtl"] .brand-guide .guide-email-form {
+  direction:rtl;
+}
+
+[dir="rtl"] .brand-guide .guide-email-field input {
+  direction:ltr;
+  text-align:left;
+}
+
+[dir="rtl"] .brand-guide .guide-gate h1 {
+  max-width:66rem;
+  font-size:clamp(2.15rem,4.2vw,4.65rem);
+  line-height:1.13;
+  letter-spacing:-.035em;
+}
+
+[dir="rtl"] .brand-guide .guide-gate h1 em {
+  font-family:var(--font-sans);
+  font-weight:800;
+  letter-spacing:-.04em;
+}
+
+[dir="rtl"] .brand-guide .guide-gate .guide-insert {
+  direction:ltr;
+  unicode-bidi:isolate;
+}
+
+[dir="rtl"] .brand-guide .guide-slide__controls {
+  direction:rtl;
+}
+
+/* Final composition lock. The scene artboards are shared by desktop, tablet,
+   and landscape-phone captures, so every lane needs an explicit reserve. */
+.brand-guide .guide-layer--media .guide-media-column article:has(.guide-media-preview) {
+  min-height:11.5rem;
+}
+.brand-guide .guide-layer--media .guide-media-column--right article:has(.guide-media-preview) {
+  min-height:10.75rem;
+}
+.brand-guide .guide-layer--media .guide-media-preview {
+  min-height:8rem;
+}
+.brand-guide .guide-layer--media .guide-media-tools {
+  bottom:14%;
+}
+.brand-guide .guide-layer--media .guide-layer__bottom-claim {
+  bottom:1%;
+}
+
+.brand-guide .guide-layer--execution .guide-execution-side--after {
+  min-height:0;
+  height:auto;
+}
+.brand-guide .guide-layer--execution .guide-execution-core.guide-glass-core {
+  min-height:0;
+  padding:.7rem .8rem;
+}
+.brand-guide .guide-layer--execution .guide-execution-core.guide-glass-core .guide-execution-core__eyebrow {
+  margin-bottom:.35rem;
+}
+.brand-guide .guide-layer--execution .guide-execution-core.guide-glass-core h3 {
+  margin-bottom:.45rem;
+  font-size:1.45rem;
+}
+.brand-guide .guide-layer--execution .guide-execution-core.guide-glass-core .guide-execution-core__rows {
+  gap:.16rem;
+}
+.brand-guide .guide-layer--execution .guide-execution-core.guide-glass-core .guide-execution-core__rows > span {
+  padding:.28rem .4rem;
+}
+.brand-guide .guide-layer--execution .guide-execution-tools {
+  bottom:14%;
+}
+.brand-guide .guide-layer--execution .guide-execution-side--after .guide-execution-stack {
+  width:29%;
+}
+.brand-guide .guide-layer--execution .guide-layer__bottom-claim {
+  bottom:1%;
+}
+.brand-guide .guide-layer--execution .guide-execution-side--after > small {
+  width:9rem;
+  margin-inline-start:auto;
+  text-align:end;
+}
+
+.brand-guide .guide-layer--production .guide-production-outputs {
+  top:16%;
+}
+.brand-guide .guide-layer--production .guide-production-outputs article,
+.brand-guide .guide-layer--production .guide-production-outputs img {
+  min-height:5.5rem;
+  height:5.5rem;
+}
+.brand-guide .guide-layer--production .guide-production-process {
+  top:57%;
+}
+.brand-guide .guide-layer--production .guide-production-process article {
+  min-height:7rem;
+}
+.brand-guide .guide-layer--production .guide-production-before,
+.brand-guide .guide-layer--production .guide-production-after {
+  top:73.5%;
+}
+
+.brand-guide .guide-layer--cost-model .guide-cost-model-metrics {
+  top:18%;
+}
+.brand-guide .guide-layer--cost-model .guide-cost-model-panel {
+  top:33%;
+  height:41%;
+  min-height:0;
+}
+.brand-guide .guide-layer--cost-model .guide-cost-model-panel header strong {
+  font-size:var(--font-size-base);
+}
+.brand-guide .guide-layer--cost-model .guide-cost-model-panel header em {
+  font-size:var(--font-size-xs);
+}
+.brand-guide .guide-layer--cost-model .guide-cost-model-steps {
+  gap:.4rem;
+  margin-top:.8rem;
+}
+.brand-guide .guide-layer--cost-model .guide-cost-model-steps span {
+  min-height:3rem;
+  padding:.4rem .7rem;
+  font-size:var(--font-size-sm);
+}
+.brand-guide .guide-layer--cost-model .guide-cost-model-callout {
+  top:75%;
+}
+
+.brand-guide .guide-layer--system-map .guide-system-map__label--inputs {
+  top:21.6%;
+}
+.brand-guide .guide-layer--system-map .guide-layer__heading span {
+  margin-top:.3rem;
+}
+.brand-guide .guide-layer--system-map .guide-system-map__inputs {
+  top:23.8%;
+}
+.brand-guide .guide-layer--system-map .guide-system-map__core {
+  top:36%;
+  padding:.75rem 1rem .8rem;
+  gap:.55rem .8rem;
+}
+.brand-guide .guide-layer--system-map .guide-system-map__core-rows {
+  gap:.2rem;
+  margin-top:.25rem;
+}
+.brand-guide .guide-layer--system-map .guide-system-map__core-rows span {
+  min-height:1.8rem;
+  padding:.2rem .55rem;
+  font-size:var(--font-size-xs);
+}
+
+.brand-guide .guide-layer--review .guide-review-inputs {
+  top:33%;
+}
+.brand-guide .guide-layer--review .guide-review-cta {
+  top:70%;
+}
+.brand-guide .guide-layer--review .guide-review-note {
+  top:78%;
+}
+.brand-guide .guide-layer--review .guide-review-pdf {
+  top:84%;
+}
+
+@media (max-width:58rem) and (orientation:landscape) {
+  .brand-guide .guide-layer--system-map .guide-system-map__label--inputs {
+    top:21.1%;
+  }
+  .brand-guide .guide-layer--cost-model .guide-cost-model-panel {
+    height:42%;
+  }
+  .brand-guide .guide-layer--production .guide-production-process article {
+    min-height:6.5rem;
+  }
+  .brand-guide .guide-layer--cost-model .guide-cost-model-callout {
+    top:75.6%;
+  }
+}
+
+@media (min-width:60.0625rem) {
+  .brand-guide .guide-layer--system-map .guide-system-map__label--inputs {
+    top:22%;
+  }
+  .brand-guide .guide-layer--system-map .guide-system-map__inputs {
+    top:24.5%;
+  }
+  .brand-guide .guide-layer--system-map .guide-system-map__core {
+    top:36.5%;
+  }
+  .brand-guide .guide-layer--system-map .guide-system-map__label--tools {
+    top:64.5%;
+  }
+  .brand-guide .guide-layer--system-map .guide-system-map__tools {
+    top:66.7%;
+  }
+}

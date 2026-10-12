@@ -1,0 +1,100 @@
+---
+import GuideDiagramCanvas, { type DiagramEdge } from "./GuideDiagramCanvas.astro";
+import { t, type Locale } from "../../i18n/translations";
+import "../../styles/reference-locked-read-only-executable.css";
+
+export interface Props {
+  locale?: Locale;
+}
+
+const { locale = "en" } = Astro.props;
+const tr = (key: string) => t(locale, `brandGuide.referenceLocked.${key}`);
+
+const sourceFiles = [
+  ["source-pdf", "bx-file", "sourcePdf", "sourcePdfNote"],
+  ["source-figma", "bxl-figma", "sourceFigma", "sourceFigmaNote"],
+  ["source-folder", "bx-folder", "sourceFolder", "sourceFolderNote"],
+  ["source-brief", "bx-note", "sourceBrief", "sourceBriefNote"],
+] as const;
+
+const manualSteps = [
+  ["manual-step-1", "۱", "bx-book-open", "manualStep1"],
+  ["manual-step-2", "۲", "bx-error", "manualStep2"],
+  ["manual-step-3", "۳", "bx-grid-alt", "manualStep3"],
+  ["manual-step-4", "۴", "bx-wrench", "manualStep4"],
+  ["manual-step-5", "۵", "bx-refresh", "manualStep5"],
+] as const;
+
+const systemRows = [
+  ["core-tokens", "bx-data", "coreTokens", "coreTokensNote"],
+  ["core-components", "bx-grid-alt", "coreComponents", "coreComponentsNote"],
+  ["core-templates", "bx-file", "coreTemplates", "coreTemplatesNote"],
+  ["core-rules", "bx-task", "coreRules", "coreRulesNote"],
+  ["core-assets", "bx-folder", "coreAssets", "coreAssetsNote"],
+  ["core-examples", "bx-image", "coreExamples", "coreExamplesNote"],
+] as const;
+
+const outputs = [
+  ["output-prompt", "bxs-star", "outputPrompt", "outputPromptNote"],
+  ["output-social", "bxl-instagram", "outputSocial", "outputSocialNote"],
+  ["output-page", "bx-layout", "outputPage", "outputPageNote"],
+  ["output-video", "bx-play", "outputVideo", "outputVideoNote"],
+  ["output-deck", "bx-file", "outputDeck", "outputDeckNote"],
+] as const;
+
+const executableSteps = [
+  ["executable-step-1", "۱", "bx-layer", "executableStep1", "executableStep1Note"],
+  ["executable-step-2", "۲", "bx-network-chart", "executableStep2", "executableStep2Note"],
+  ["executable-step-3", "۳", "bx-play", "executableStep3", "executableStep3Note"],
+  ["executable-step-4", "۴", "bx-user", "executableStep4", "executableStep4Note"],
+  ["executable-step-5", "۵", "bx-rocket", "executableStep5", "executableStep5Note"],
+] as const;
+
+const edges: DiagramEdge[] = [
+  { id: "pdf-to-interpret", from: "source-pdf", to: "interpret-again", fromAnchor: { side: "right", ratio: .5 }, toAnchor: { side: "top", ratio: .94 }, arrow: true, routing: "orthogonal", waypoints: [{ x: .354, y: .317 }, { x: .354, y: .476 }] },
+  { id: "figma-to-interpret", from: "source-figma", to: "interpret-again", fromAnchor: { side: "right", ratio: .5 }, toAnchor: { side: "top", ratio: .94 }, arrow: true, routing: "orthogonal", waypoints: [{ x: .354, y: .3605 }, { x: .354, y: .476 }] },
+  { id: "folder-to-interpret", from: "source-folder", to: "interpret-again", fromAnchor: { side: "right", ratio: .5 }, toAnchor: { side: "top", ratio: .94 }, arrow: true, routing: "orthogonal", waypoints: [{ x: .354, y: .404 }, { x: .354, y: .476 }] },
+  { id: "brief-to-interpret", from: "source-brief", to: "interpret-again", fromAnchor: { side: "right", ratio: .5 }, toAnchor: { side: "top", ratio: .94 }, arrow: true, routing: "orthogonal", waypoints: [{ x: .354, y: .4475 }, { x: .354, y: .476 }] },
+  { id: "interpret-to-vs", from: "interpret-again", to: "vs-junction", fromAnchor: { side: "right", ratio: .5 }, toAnchor: { side: "left", ratio: .5 }, arrow: false, bend: -.08 },
+  { id: "interpret-to-manual-1", from: "interpret-again", to: "manual-step-1", fromAnchor: { side: "bottom", ratio: .5 }, toAnchor: { side: "top", ratio: .5 }, arrow: true },
+  { id: "manual-1-to-2", from: "manual-step-1", to: "manual-step-2", fromAnchor: { side: "bottom", ratio: .5 }, toAnchor: { side: "top", ratio: .5 }, arrow: true },
+  { id: "manual-2-to-3", from: "manual-step-2", to: "manual-step-3", fromAnchor: { side: "bottom", ratio: .5 }, toAnchor: { side: "top", ratio: .5 }, arrow: true },
+  { id: "manual-3-to-4", from: "manual-step-3", to: "manual-step-4", fromAnchor: { side: "bottom", ratio: .5 }, toAnchor: { side: "top", ratio: .5 }, arrow: true },
+  { id: "manual-4-to-5", from: "manual-step-4", to: "manual-step-5", fromAnchor: { side: "bottom", ratio: .5 }, toAnchor: { side: "top", ratio: .5 }, arrow: true },
+  { id: "vs-to-core", from: "vs-junction", to: "executable-core", fromAnchor: { side: "right", ratio: .5 }, toAnchor: { side: "left", ratio: .75 }, arrow: true, bend: .08 },
+  { id: "core-to-prompt", from: "executable-core", to: "output-prompt", fromAnchor: { side: "right", ratio: .22 }, toAnchor: { side: "left", ratio: .5 }, arrow: true, routing: "orthogonal", waypoints: [{ x: .770, y: .341 }, { x: .770, y: .296 }] },
+  { id: "core-to-social", from: "executable-core", to: "output-social", fromAnchor: { side: "right", ratio: .38 }, toAnchor: { side: "left", ratio: .5 }, arrow: true, routing: "orthogonal", waypoints: [{ x: .770, y: .381 }, { x: .770, y: .351 }] },
+  { id: "core-to-page", from: "executable-core", to: "output-page", fromAnchor: { side: "right", ratio: .53 }, toAnchor: { side: "left", ratio: .5 }, arrow: true, routing: "orthogonal", waypoints: [{ x: .770, y: .418 }, { x: .770, y: .405 }] },
+  { id: "core-to-video", from: "executable-core", to: "output-video", fromAnchor: { side: "right", ratio: .69 }, toAnchor: { side: "left", ratio: .5 }, arrow: true, routing: "orthogonal", waypoints: [{ x: .770, y: .459 }] },
+  { id: "core-to-deck", from: "executable-core", to: "output-deck", fromAnchor: { side: "right", ratio: .85 }, toAnchor: { side: "left", ratio: .5 }, arrow: true, routing: "orthogonal", waypoints: [{ x: .770, y: .500 }, { x: .770, y: .513 }] },
+  { id: "core-to-executable-1", from: "executable-core", to: "executable-step-1", fromAnchor: { side: "bottom", ratio: .5 }, toAnchor: { side: "top", ratio: .5 }, arrow: true },
+  { id: "executable-1-to-2", from: "executable-step-1", to: "executable-step-2", fromAnchor: { side: "bottom", ratio: .5 }, toAnchor: { side: "top", ratio: .5 }, arrow: true },
+  { id: "executable-2-to-3", from: "executable-step-2", to: "executable-step-3", fromAnchor: { side: "bottom", ratio: .5 }, toAnchor: { side: "top", ratio: .5 }, arrow: true },
+  { id: "executable-3-to-4", from: "executable-step-3", to: "executable-step-4", fromAnchor: { side: "bottom", ratio: .5 }, toAnchor: { side: "top", ratio: .5 }, arrow: true },
+  { id: "executable-4-to-5", from: "executable-step-4", to: "executable-step-5", fromAnchor: { side: "bottom", ratio: .5 }, toAnchor: { side: "top", ratio: .5 }, arrow: true },
+];
+edges.slice(0, 10).forEach(edge => { edge.tone = "destructive"; });
+const stepNumber = (value: string) => locale === "fa" ? value : String("۱۲۳۴۵".indexOf(value) + 1);
+---
+
+<GuideDiagramCanvas class={`reference-locked-slide${locale === "fa" ? " reference-locked-slide--rtl" : ""}`} designWidth={1122} designHeight={1402} referenceScene ariaLabel={tr("ariaLabel")} edges={edges} theme="blue-dark">
+  <div class="reference-locked-slide__grid" aria-hidden="true"></div>
+  <header class="reference-locked-slide__header" data-guide-node="header"><p>{tr("eyebrow")}</p><h1>{tr("title")}<br /><em>{tr("titleAccent")}</em></h1><div>{tr("subtitle")}<br />{tr("subtitleBeforeAccent")} <strong>{tr("subtitleAccent")}</strong></div></header>
+  <section class="reference-locked-panel reference-locked-panel--manual" data-guide-node="manual-panel"><header><span class="reference-locked-panel__status"><i class="bx bx-x icon-3xl" aria-hidden="true"></i></span><div><b>{tr("manualTitle")}</b><small>{tr("manualSubtitle")}</small></div><em>{tr("stillManualLine1")}<br />{tr("stillManualLine2")}</em></header><div class="reference-locked-files"><span class="reference-locked-files__label">{tr("sourceFiles")}</span>{sourceFiles.map(([node, icon, title, description]) => <article data-guide-node={node}><i class={`bx ${icon} icon-3xl`} aria-hidden="true"></i><div><strong>{tr(title)}</strong><small>{tr(description)}</small></div></article>)}</div></section>
+  <section class="reference-locked-interpret" data-guide-node="interpret-again"><i class="bx bx-user icon-3xl" aria-hidden="true"></i><div><strong>{tr("interpretAgain")}</strong><small>{tr("interpretNote")}</small></div></section>
+  <ol class="reference-locked-loop reference-locked-loop--manual">{manualSteps.map(([node, number, icon, label]) => <li data-guide-node={node}><b>{stepNumber(number)}</b><i class={`bx ${icon} icon-3xl`} aria-hidden="true"></i><span>{tr(label)}</span></li>)}</ol>
+  <div class="reference-locked-vs-spine" data-guide-node="vs-spine" aria-hidden="true"></div>
+  <div class="reference-locked-vs" data-guide-node="vs-junction">{tr("versus")}</div>
+  <section class="reference-locked-panel reference-locked-panel--executable" data-guide-node="executable-panel"><header><span class="reference-locked-panel__status"><i class="bx bx-check icon-3xl" aria-hidden="true"></i></span><div><b>{tr("executableTitle")}</b><small>{tr("executableSubtitle")}</small></div><span class="reference-locked-panel__aside">{tr("sameBrand")}<br />{tr("moreOutput")}</span></header></section>
+  <div class="reference-locked-core" data-guide-node="executable-core"><div class="reference-locked-core__frame" aria-hidden="true"></div><div class="reference-locked-core__heading"><span><i class="bx bx-layer icon-3xl" aria-hidden="true"></i></span><div><b>{tr("coreTitleLine1")}<br />{tr("coreTitleLine2")}</b><small>{tr("coreSubtitle")}</small></div></div><div class="reference-locked-core__rows">{systemRows.map(([node, icon, title, description]) => <article data-guide-node={node}><i class={`bx ${icon} icon-xl`} aria-hidden="true"></i><strong>{tr(title)}</strong><small>{tr(description)}</small></article>)}</div></div>
+  <div class="reference-locked-output-list" aria-label={tr("outputsAria")}>{outputs.map(([node, icon, title, description]) => <article data-guide-node={node}><i class={`bx ${icon} icon-3xl`} aria-hidden="true"></i><div><strong>{tr(title)}</strong><small>{tr(description)}</small></div></article>)}</div>
+  <ol class="reference-locked-loop reference-locked-loop--executable">{executableSteps.map(([node, number, icon, label, note]) => <li><div class="reference-locked-step-card" data-guide-node={node}><b>{stepNumber(number)}</b><i class={`bx ${icon} icon-3xl`} aria-hidden="true"></i><span>{tr(label)}</span></div><small>{tr(note)}</small></li>)}</ol>
+  <section class="reference-locked-slide__statement" data-guide-node="statement"><div><i class="bx bxs-bolt icon-3xl" aria-hidden="true"></i><i class="reference-locked-slide__divider" aria-hidden="true"></i><span>{tr("statement")}</span></div></section>
+  <p class="reference-locked-slide__conclusion" data-guide-node="conclusion">{tr("conclusion")} <em>{tr("conclusionAccent")}</em></p>
+  <div class="reference-locked-url" data-guide-node="url-rail"><i></i><span>brand.spielos.xyz/guide</span><i></i></div>
+  <div class="reference-locked-nav reference-locked-nav--prev" data-guide-node="nav-prev"><i class={`bx ${locale === "fa" ? "bx-right-arrow-alt" : "bx-left-arrow-alt"} icon-3xl`} aria-hidden="true"></i></div>
+  <div class="reference-locked-footer-brand" data-guide-node="footer-brand"><b>SPIELOS</b><span>{tr("footerBrandLine1")}<br />{tr("footerBrandLine2")}</span></div>
+  <div class="reference-locked-progress" data-guide-node="progress" aria-label={tr("progressAria")}><i class="is-active"></i><i></i><i></i><i></i><i></i></div>
+  <div class="reference-locked-footer-mode" data-guide-node="footer-mode">{tr("footerModeLine1")}<br />{tr("footerModeLine2")}<br />{tr("footerModeLine3")}<br />{tr("footerModeLine4")}</div>
+  <div class="reference-locked-nav reference-locked-nav--next" data-guide-node="nav-next"><i class={`bx ${locale === "fa" ? "bx-left-arrow-alt" : "bx-right-arrow-alt"} icon-3xl`} aria-hidden="true"></i></div>
+</GuideDiagramCanvas>

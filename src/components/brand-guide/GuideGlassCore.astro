@@ -1,0 +1,24 @@
+---
+interface Props {
+  node: string;
+  title?: string;
+  subtitle?: string;
+  icon?: string;
+  class?: string;
+}
+
+const {
+  node,
+  title,
+  subtitle,
+  icon = "bx-network-chart",
+  class: className = "",
+} = Astro.props;
+---
+
+<div class:list={["guide-layer__core", "guide-glass-core", className]} data-guide-node={node}>
+  <div class="guide-glass-layers" aria-hidden="true"><i></i><i></i></div>
+  {icon && <i class={`bx ${icon} icon-4xl`} aria-hidden="true"></i>}
+  {(title || subtitle) && <div class="guide-glass-core__heading"><strong>{title}</strong>{subtitle && <small>{subtitle}</small>}</div>}
+  <slot />
+</div>

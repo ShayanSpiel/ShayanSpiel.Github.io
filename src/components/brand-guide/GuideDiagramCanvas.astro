@@ -1,0 +1,74 @@
+---
+export type DiagramAnchor = {
+  side: "top" | "right" | "bottom" | "left" | "center";
+  ratio?: number;
+};
+
+export type DiagramPoint = { x: number; y: number };
+
+export type DiagramEdge = {
+  id: string;
+  from: string;
+  to: string;
+  fromAnchor?: DiagramAnchor;
+  toAnchor?: DiagramAnchor;
+  /** Normalized control points in the design canvas (0..1). */
+  controlPoints?: [DiagramPoint, DiagramPoint];
+  /** Ordered normalized vertices for reference-locked orthogonal routing. */
+  waypoints?: DiagramPoint[];
+  routing?: "curve" | "orthogonal";
+  tone?: "primary" | "destructive";
+  bend?: number;
+  dashed?: boolean;
+  arrow?: boolean;
+};
+
+export interface Props {
+  designWidth: number;
+  designHeight: number;
+  edges: DiagramEdge[];
+  class?: string;
+  ariaLabel?: string;
+  /** Opt in only for a reference-locked scene evaluated by reference-locked-html. */
+  referenceScene?: boolean;
+  /** Optional exact theme lock for a reference artboard. */
+  theme?: string;
+}
+
+const { designWidth, designHeight, edges, class: className = "", ariaLabel, referenceScene = false, theme } = Astro.props;
+const markerId = `guide-diagram-arrow-${className.replace(/[^a-z0-9-]/gi, "-") || "default"}`;
+---
+
+<div
+  class:list={["guide-diagram", className]}
+  style={`--guide-diagram-width:${designWidth};--guide-diagram-height:${designHeight}`}
+  data-guide-diagram
+  data-guide-design-width={designWidth}
+  data-guide-design-height={designHeight}
+  data-guide-marker-id={markerId}
+  data-guide-edges={JSON.stringify(edges)}
+  data-reference-scene={referenceScene ? "" : undefined}
+  data-reference-render-ready={referenceScene ? "true" : undefined}
+  data-theme={theme}
+  role={ariaLabel ? "img" : undefined}
+  aria-label={ariaLabel}
+>
+  <slot />
+  <div class="guide-diagram__edge-layer" aria-hidden="true">
+    <svg class="guide-diagram__edges" viewBox={`0 0 ${designWidth} ${designHeight}`} preserveAspectRatio="none" focusable="false">
+      <defs>
+        <marker id={`${markerId}-primary`} markerWidth="10" markerHeight="10" refX="8.5" refY="5" orient="auto" markerUnits="userSpaceOnUse">
+          <path d="M 0 0 L 10 5 L 0 10" fill="none" stroke="var(--connector-primary, var(--primary))" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+        </marker>
+        <marker id={`${markerId}-destructive`} markerWidth="10" markerHeight="10" refX="8.5" refY="5" orient="auto" markerUnits="userSpaceOnUse">
+          <path d="M 0 0 L 10 5 L 0 10" fill="none" stroke="var(--connector-destructive, var(--destructive))" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+        </marker>
+      </defs>
+      {edges.map(edge => <path data-guide-edge={edge.id} />)}
+    </svg>
+  </div>
+</div>
+
+<script>
+  import "../../scripts/guide-diagram-canvas";
+</script>

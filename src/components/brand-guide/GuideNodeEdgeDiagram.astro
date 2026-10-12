@@ -1,0 +1,30 @@
+---
+export interface Edge {
+  d: string;
+  dashed?: boolean;
+}
+
+export interface Props {
+  viewBox: string;
+  aspectRatio: string;
+  edges: Edge[];
+  class?: string;
+  ariaLabel?: string;
+}
+
+const { viewBox, aspectRatio, edges, class: className = "", ariaLabel } = Astro.props;
+---
+
+<div
+  class:list={["guide-node-edge", className]}
+  style={`--guide-diagram-ratio:${aspectRatio}`}
+  role={ariaLabel ? "img" : undefined}
+  aria-label={ariaLabel}
+>
+  <svg class="guide-node-edge__edges" viewBox={viewBox} preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    {edges.map(edge => <path class:list={[edge.dashed && "is-dashed"]} d={edge.d} />)}
+  </svg>
+  <div class="guide-node-edge__content">
+    <slot />
+  </div>
+</div>

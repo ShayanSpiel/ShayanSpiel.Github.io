@@ -1,0 +1,53 @@
+---
+import GuideDiagramCanvas, { type DiagramEdge } from "./GuideDiagramCanvas.astro";
+import GuideGlassCore from "./GuideGlassCore.astro";
+import { t, type Locale } from "../../i18n/translations";
+
+interface Props { locale?: Locale }
+const { locale = "en" } = Astro.props;
+const tr = (key: string) => t(locale, key);
+
+const inputs = [
+  ["review-input-1", "bx-globe", "brandGuide.review.website"],
+  ["review-input-2", "swatches", "brandGuide.review.brandSystem"],
+  ["review-input-3", "bx-message-square-detail", "brandGuide.review.social"],
+  ["review-input-4", "bx-cog", "brandGuide.review.production"],
+] as const;
+const leftItems = [["bx-globe", "brandGuide.review.yourWebsite"], ["bx-image", "brandGuide.review.yourContent"], ["bx-font-family", "brandGuide.review.yourBrand"]] as const;
+const rightItems = [["bx-bar-chart-alt-2", "brandGuide.review.recommendations"], ["bxs-bolt", "brandGuide.review.automation"], ["bx-layer", "brandGuide.review.scalable"]] as const;
+
+const edges: DiagramEdge[] = [
+  ...inputs.map(([node], index) => ({ id: `review-input-${index + 1}`, from: node, to: "review-core", fromAnchor: { side: "bottom" as const, ratio: .5 }, toAnchor: { side: "top" as const, ratio: [.12, .38, .62, .88][index] } })),
+  { id: "review-left-core", from: "review-left", to: "review-core", fromAnchor: { side: "right", ratio: .5 }, toAnchor: { side: "left", ratio: .36 }, arrow: true },
+  { id: "review-core-right", from: "review-core", to: "review-right", fromAnchor: { side: "right", ratio: .64 }, toAnchor: { side: "left", ratio: .5 }, arrow: true },
+];
+---
+
+<div class="guide-layer guide-layer--review">
+  <header class="guide-layer__heading">
+    <p>{tr("brandGuide.review.eyebrow")}</p>
+    <h2>{tr("brandGuide.review.titleBefore")}<br />{tr("brandGuide.review.titleMiddle")} <em>{tr("brandGuide.review.titleAfter")}</em></h2>
+    <span>{tr("brandGuide.review.subtitle")}</span>
+  </header>
+
+  <GuideDiagramCanvas class="guide-layer__diagram guide-review-diagram" designWidth={1680} designHeight={940} ariaLabel="Brand materials enter an infrastructure review and produce recommendations" edges={edges}>
+    <div class="guide-review-inputs">
+      {inputs.map(([node, icon, label]) => <article data-guide-node={node}>{icon === "swatches" ? <span class="guide-system-map__swatches"><i></i><i></i><i></i><i></i></span> : <i class={`bx ${icon} icon-3xl`} aria-hidden="true"></i>}<strong>{tr(label)}</strong></article>)}
+    </div>
+
+    <article class="guide-review-list guide-review-list--left" data-guide-node="review-left" aria-label="Review inputs">
+      {leftItems.map(([icon, label]) => <span><i class={`bx ${icon} icon-2xl`} aria-hidden="true"></i>{tr(label)}</span>)}
+    </article>
+
+    <GuideGlassCore class="guide-review-core" node="review-core" icon="bx-network-chart" title={tr("brandGuide.review.core")} subtitle={tr("brandGuide.review.coreNote")} />
+
+    <article class="guide-review-list guide-review-list--right" data-guide-node="review-right" aria-label="Review outcomes">
+      {rightItems.map(([icon, label]) => <span><i class={`bx ${icon} icon-2xl`} aria-hidden="true"></i>{tr(label)}</span>)}
+    </article>
+
+    <a class="guide-review-cta" href={locale === "fa" ? "/fa/apply/" : "/apply/"} data-cta-location="brand_guide_final_review">{tr("brandGuide.review.cta")} <i class="bx bx-right-arrow-alt icon-2xl" aria-hidden="true"></i></a>
+    <p class="guide-review-note">{tr("brandGuide.review.note1")}<br />{tr("brandGuide.review.note2")}</p>
+    <button class="guide-review-pdf" type="button" data-guide-pdf><i class="bx bx-download icon-xl" aria-hidden="true"></i>{tr("brandGuide.review.download")} <i class="bx bx-down-arrow-alt icon-lg" aria-hidden="true"></i></button>
+    <p class="guide-review-claim">{tr("brandGuide.review.claimBefore")} <em>{tr("brandGuide.review.claimAfter")}</em></p>
+  </GuideDiagramCanvas>
+</div>

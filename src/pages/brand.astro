@@ -1,0 +1,183 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SpielOSLogo from "../components/SpielOSLogo.astro";
+import SectionHeader from "../components/sections/SectionHeader.astro";
+import { FORMS, SOCIAL } from "../config";
+import { type Locale, t } from "../i18n/translations";
+import { brandLogo } from "../data/brand-logos";
+import "../styles/brand-experience.css";
+
+export interface Props { locale?: Locale; }
+const { locale = "en" } = Astro.props;
+const tr = (key: string) => t(locale, key);
+const number = (value: number) => new Intl.NumberFormat(locale, { minimumIntegerDigits: 2 }).format(value);
+const switchUrl = locale === "en" ? "/fa/brand/" : "/brand/";
+const bandages = `<span class="bandages" aria-hidden="true">${[1,2,3].map(() => '<img src="/assets/emojis/adhesive-bandage-warm.svg" alt="" width="36" height="36" />').join("")}</span>`;
+const fuck = `<span class="bandaged-word">${tr("brand.hero.line1")}${bandages}</span>`;
+const providers = [{key:"claudecode", name:"Claude Code"}, {key:"grok", name:"Grok"}, {key:"codex", name:"Codex"}, {key:"opencode", name:"OpenCode"}];
+const packages = ["content", "design", "infrastructure"].map(id => ({
+  id, price: tr(`brand.package.${id}.price`), name: tr(`brand.package.${id}.name`),
+  lead: tr(`brand.package.${id}.lead`), items: [1,2,3].map(n => tr(`brand.package.${id}.item${n}`)),
+  body: tr(`brand.package.${id}.${id === "content" ? "note3" : "body"}`),
+}));
+const defaultPackage = packages[1];
+---
+<BaseLayout title={tr("brand.pageTitle")} description={tr("brand.pageDesc")} canonical={`https://spielos.xyz/${locale === "fa" ? "fa/" : ""}brand/`} image="/assets/og/design-gallery.png" locale={locale} showChat={false}>
+  <header slot="nav" class="brand-nav" aria-label={tr("brand.nav.label")}>
+    <a href="#top" aria-label={tr("brand.nav.home")}><SpielOSLogo size="md" /></a>
+    <nav>
+      <a href="#outputs">{tr("brand.nav.outputs")}</a>
+      <a href="#packages">{tr("brand.nav.packages")}</a>
+      <a class="brand-nav__cta" href="#packages">{tr("brand.nav.review")}<i class="bx bx-right-arrow-alt icon-base" aria-hidden="true"></i></a>
+    </nav>
+  </header>
+  <div class="brand-page" id="top">
+    <section class="brand-hero brand-chapter" data-chapter="hero">
+      <div class="hero-assets" aria-hidden="true">
+        <div class="hero-pdf hero-discard"><i class="bx bxs-file-pdf icon-2xl"></i><span>{tr("brand.asset.pdf")}</span><small>{tr("brand.asset.pdfNote")}</small><i class="hero-pdf__x bx bx-x"></i></div>
+        <div class="hero-old-file hero-discard"><i class="bx bx-image icon-2xl"></i><span>{tr("brand.asset.file")}</span><i class="bx bx-x icon-3xl"></i></div>
+        <div class="hero-logo"><SpielOSLogo markOnly boxClass="h-12 w-12" /><span>{tr("brand.files.logo")}</span></div>
+        <div class="hero-font hero-font--outfit"><strong>Aa</strong><span>Outfit</span></div>
+        <div class="hero-font hero-font--serif"><strong>Aa</strong><span>DM Serif Display</span></div>
+        <div class="hero-colors"><div class="brand-swatches"><i></i><i></i><i></i><i></i></div><span>{tr("brand.asset.colors")}</span></div>
+      </div>
+      <div class="brand-hero__copy">
+        <p class="brand-eyebrow">{tr("brand.hero.kicker")}</p>
+        <h1><span set:html={fuck} /><span class="hero-title-rest">{tr("brand.hero.line2")} {tr("brand.hero.line3")}</span></h1>
+        <h2 set:html={tr("brand.hero.title")} />
+        <p>{tr("brand.hero.body")}</p>
+        <a class="brand-button brand-button--primary hero-review" href="#packages">{tr("brand.hero.cta")}<i class="bx bx-right-arrow-alt icon-xl" aria-hidden="true"></i></a>
+      </div>
+    </section>
+    <div class="brand-journey-break brand-journey-break--hero" data-journey data-from=".hero-review" data-to="#outputs .section-header" aria-hidden="true">
+      <div class="hero-trash"><i class="bx bx-trash icon-3xl"></i><span>{tr("brand.asset.trash")}</span></div>
+      <svg viewBox="0 0 1000 200" focusable="false"><path class="journey-route" d="M500 0 C100 40 900 160 500 200" /><path class="journey-fill" d="M500 0 C100 40 900 160 500 200" /><g class="journey-tip"><circle r="5" /><circle r="13" /></g></svg>
+    </div>
+
+    <section id="outputs" class="brand-section brand-outputs brand-chapter" data-chapter="outputs">
+      <div class="brand-shell">
+        <SectionHeader label={tr("brand.system.label")} title={tr("brand.system.title")} description={tr("brand.system.desc")} />
+        <div class="brand-inputs" data-system-diagram>
+          <svg class="brand-system-svg" aria-hidden="true" focusable="false"><g class="system-lines"></g></svg>
+          <div class="brand-inputs__files" data-aos="fade-up">
+            <article data-input="logo"><div class="input-art"><SpielOSLogo markOnly boxClass="h-10 w-10" /></div><strong>{tr("brand.files.logo")}</strong><small>{tr("brand.input.logoNote")}</small></article>
+            <article data-input="font"><div class="input-art input-art--font"><span>Aa</span><em>Aa</em></div><strong>{tr("brand.input.font")}</strong><small>{tr("brand.input.fontNote")}</small></article>
+            <article data-input="color"><div class="input-art brand-swatches"><i></i><i></i><i></i><i></i></div><strong>{tr("brand.input.color")}</strong><small>{tr("brand.input.colorNote")}</small></article>
+          </div>
+          <div class="brand-system-card" data-ai-core data-aos="fade-up">
+            <div class="glass-layers" aria-hidden="true"><i></i><i></i></div>
+            <p>{tr("brand.system.coreTitle")}</p><strong>{tr("brand.system.coreBody")}</strong>
+            <div class="provider-row">
+              {providers.map(provider => <div class="provider" data-brand-provider={provider.name}><span class="provider-mark" set:html={brandLogo(provider.key)} aria-hidden="true" /><span>{provider.name}</span></div>)}
+            </div>
+          </div>
+          <div class="brand-branch-space"><div class="brand-connector-chip"><span set:html={tr("brand.system.chip")} /></div></div>
+          <div class="brand-outputs-path" data-aos="fade-up">
+            <article data-output="images"><b><i class="bx bxl-instagram icon-xl" aria-hidden="true"></i>{tr("brand.output.images")}</b><div class="output-media"><img src="/design-gallery/social/department-map.png" alt={tr("brand.output.imageAlt")} width="1080" height="1350" loading="lazy" /></div></article>
+            <article data-output="videos"><b><i class="bx bxl-youtube icon-xl" aria-hidden="true"></i>{tr("brand.output.videos")}</b><div class="output-media"><video src="/design-gallery/video/contrast-text.mp4" poster="/design-gallery/video/posters/contrast-text.jpg" muted loop playsinline controls preload="metadata" aria-label={tr("brand.output.videoAlt")}></video></div></article>
+            <article data-output="workflows"><b><i class="bx bx-network-chart icon-xl" aria-hidden="true"></i>{tr("brand.output.workflows")}</b><div class="output-media workflow-preview"><SpielOSLogo size="sm" /><h3 set:html={tr("brand.output.workflowTitle")} /><div class="workflow-steps"><span><i class="bx bx-file icon-lg" aria-hidden="true"></i>{tr("brand.output.workflowInput")}</span><i class="bx bx-down-arrow-alt icon-xl" aria-hidden="true"></i><span><i class="bx bx-layer icon-lg" aria-hidden="true"></i>{tr("brand.output.workflowBrand")}</span><i class="bx bx-down-arrow-alt icon-xl" aria-hidden="true"></i><span><i class="bx bx-check-square icon-lg" aria-hidden="true"></i>{tr("brand.output.workflowPublish")}</span></div></div></article>
+            <article data-output="more"><b><span class="more-icons" aria-hidden="true"><span class="output-brand-mark" set:html={brandLogo("x")} /><i class="bx bxl-linkedin icon-base"></i><i class="bx bxl-tiktok icon-base"></i></span>{tr("brand.output.more")}</b><div class="output-media"><img src="/design-gallery/social/agent-brief.png" alt={tr("brand.output.moreAlt")} width="1080" height="1350" loading="lazy" /></div></article>
+          </div>
+        </div>
+        <div class="templates-cta" data-aos="fade-up"><a href="#packages" class="brand-button brand-button--secondary">{tr("brand.system.cta")}<i class="bx bx-right-arrow-alt icon-base" aria-hidden="true"></i></a></div>
+      </div>
+    </section>
+    <div class="brand-journey-break" data-journey data-variant="left" data-from=".brand-outputs-path" data-to=".brand-ai .section-header" aria-hidden="true"><svg viewBox="0 0 1000 200" focusable="false"><path class="journey-route" d="M500 0 C100 40 900 160 500 200" /><path class="journey-fill" d="M500 0 C100 40 900 160 500 200" /><g class="journey-tip"><circle r="5" /><circle r="13" /></g></svg></div>
+
+    <section class="brand-section brand-ai brand-chapter" data-chapter="ai">
+      <div class="brand-shell">
+        <SectionHeader label={tr("brand.ai.label")} title={tr("brand.ai.title").replace("{fuck}", fuck)} description={tr("brand.ai.desc")} />
+        <div class="ai-composer" data-prompt-hook data-aos="fade-up">
+          <div class="ai-composer__top"><span>{tr("brand.composer.label")}<i class="bx bx-chevron-down icon-base" aria-hidden="true"></i></span><small>{tr("brand.composer.example")}</small></div>
+          <div class="ai-composer__context"><i class="bx bx-folder icon-lg" aria-hidden="true"></i>{tr("brand.composer.context")}<i class="bx bx-check-square icon-base" aria-hidden="true"></i></div>
+          <div class="ai-composer__prompt"><p><span class="sr-only">{tr("brand.ai.prompt")}</span><span data-prompt-text aria-hidden="true">{tr("brand.ai.prompt")}</span><span class="typing-caret" aria-hidden="true"></span></p></div>
+          <div class="ai-composer__tools"><i class="bx bx-plus icon-xl" aria-hidden="true"></i><span><i class="bx bx-microphone icon-xl" aria-hidden="true"></i><a href="#packages" class="composer-send" aria-label={tr("brand.composer.pricing")}><i class="bx bx-up-arrow-alt icon-xl" aria-hidden="true"></i></a></span></div>
+        </div>
+        <div class="comparison" data-aos="fade-up">
+          <article data-before><span class="comparison-label"><i class="bx bx-x icon-lg" aria-hidden="true"></i>{tr("brand.ai.without")}</span><div class="before-component"><div class="before-top"><i class="bx bx-shape-square icon-xl" aria-hidden="true"></i><b>{tr("brand.compare.eyebrow")}</b></div><h3>{tr("brand.compare.title")}</h3><div class="before-decoration" aria-hidden="true"><i></i><i></i><i></i></div><p>{tr("brand.compare.body")}</p><span class="before-fake-button">{tr("brand.compare.action")}<i class="bx bx-right-arrow-alt icon-base" aria-hidden="true"></i></span></div></article>
+          <div class="comparison-arrow" aria-hidden="true"><i class="bx bx-right-arrow-alt icon-3xl"></i></div>
+          <article data-after><span class="comparison-label"><i class="bx bx-check-square icon-lg" aria-hidden="true"></i>{tr("brand.ai.with")}</span><img src="/design-gallery/social/single-fact.png" alt={tr("brand.output.afterAlt")} width="1080" height="1350" loading="lazy" /></article>
+        </div>
+        <p class="comparison-note">{tr("brand.compare.note")}</p>
+      </div>
+    </section>
+    <div class="brand-journey-break" data-journey data-from=".comparison-note" data-to="#packages .section-header" aria-hidden="true"><svg viewBox="0 0 1000 200" focusable="false"><path class="journey-route" d="M500 0 C100 40 900 160 500 200" /><path class="journey-fill" d="M500 0 C100 40 900 160 500 200" /><g class="journey-tip"><circle r="5" /><circle r="13" /></g></svg></div>
+
+    <section id="packages" class="brand-section brand-pricing brand-chapter" data-chapter="pricing">
+      <div class="brand-shell">
+        <SectionHeader label={tr("brand.pricing.label")} title={tr("brand.pricing.title")} description={tr("brand.pricing.desc")} />
+        <div class="package-grid" data-aos="fade-up">
+          {packages.map((pkg,index) => <article class:list={["package-card", pkg.id === "infrastructure" && "package-card--featured"]}>
+            <div class="package-card__top"><span>{number(index+1)}</span>{pkg.id === "infrastructure" && <b>{tr("brand.package.infrastructure.badge")}</b>}</div>
+            <h3>{pkg.name}</h3><p class="package-card__price"><bdi>{pkg.price}</bdi></p><p class="package-card__lead">{pkg.lead}</p>
+            <div class:list={["package-preview", `package-preview--${pkg.id}`]} aria-hidden="true">
+              {pkg.id === "content" && <><span class="preview-sheet">Aa</span><span class="preview-sheet"><i class="bx bx-image icon-2xl"></i></span><span class="preview-sheet"><i class="bx bx-play icon-2xl"></i></span></>}
+              {pkg.id === "design" && <><span class="preview-type">Aa<em>Aa</em></span><span class="brand-swatches"><i></i><i></i><i></i></span></>}
+              {pkg.id === "infrastructure" && <div class="preview-stack"><i class="bx bx-layer"></i><span></span><span></span></div>}
+            </div>
+            <ul>{pkg.items.map(item => <li><i class="bx bx-check-square icon-base" aria-hidden="true"></i>{item}</li>)}</ul><p class="package-card__body">{pkg.body}</p>
+            <button type="button" class="brand-button brand-button--primary js-brand-review" data-package={pkg.name} data-price={pkg.price}>{tr("brand.cta.review")}<i class="bx bx-right-arrow-alt icon-base" aria-hidden="true"></i></button>
+          </article>)}
+        </div>
+      </div>
+    </section>
+    <section class="brand-guarantee brand-chapter" data-chapter="guarantee">
+      <div class="brand-shell" data-aos="fade-up"><div class="guarantee-seal"><i class="bx bx-shield-quarter icon-4xl" aria-hidden="true"></i></div><p class="brand-eyebrow">{tr("brand.guarantee.label")}</p><h2 set:html={tr("brand.guarantee.title")} /><p class="guarantee-refund"><span>{tr("brand.guarantee.refundLead")}</span> <mark><em>{tr("brand.guarantee.refundEmphasis")}</em></mark></p></div>
+    </section>
+    <section class="brand-final brand-chapter" data-chapter="final">
+      <div class="brand-final__mark"><SpielOSLogo markOnly boxClass="h-12 w-12" /></div>
+      <div class="brand-final__copy" data-aos="fade-up"><p class="brand-eyebrow">{tr("brand.final.kicker")}</p><h2 set:html={tr("brand.final.title").replace("{fuck}",fuck)} /><div class="brand-final__statement"><p>{tr("brand.final.body1")}<br /><span class="brand-final__everywhere"><strong>{tr("brand.final.body2")}</strong></span></p></div><div class="brand-final__actions"><a href="#packages" class="brand-button brand-button--secondary">{tr("brand.cta.packagesUp")}<i class="bx bx-up-arrow-alt icon-base" aria-hidden="true"></i></a></div></div>
+      <div class="brand-final__fonts" aria-hidden="true"><span>Aa<small>Outfit</small></span><span>Aa<small>DM Serif Display</small></span></div>
+      <footer class="brand-footer" id="brand-footer"><SpielOSLogo size="sm" /><span>{tr("brand.footer.note")}</span><nav aria-label={tr("brand.footer.socialLabel")}><a href={SOCIAL.x} aria-label="X" target="_blank" rel="noreferrer"><i class="bx bxl-twitter icon-base" aria-hidden="true"></i></a><a href={SOCIAL.linkedin} aria-label="LinkedIn" target="_blank" rel="noreferrer"><i class="bx bxl-linkedin icon-base" aria-hidden="true"></i></a><a href={SOCIAL.github} aria-label="GitHub" target="_blank" rel="noreferrer"><i class="bx bxl-github icon-base" aria-hidden="true"></i></a></nav><div class="brand-footer__settings" aria-label={tr("brand.footer.settings")}>
+        <details class="brand-theme-picker">
+          <summary aria-label={tr("brand.theme.choose")} title={tr("brand.theme.choose")}><i class="bx bx-palette icon-xl" aria-hidden="true"></i></summary>
+          <div class="brand-theme-panel">
+            <p>{tr("brand.theme.palette")}</p>
+            <div class="brand-theme-palettes">{[{id:"gruvbox",label:"Gruvbox",icon:"bx-palette"},{id:"blue",label:"Blue",icon:"bx-droplet"},{id:"discord",label:"Discord",icon:"bx-message-square-dots"},{id:"black-gold",label:"Black Gold",icon:"bx-sun"}].map(theme => <button type="button" data-theme-palette={theme.id} aria-pressed="false"><i class:list={["bx",theme.icon,"icon-lg"]} aria-hidden="true"></i><bdi>{theme.label}</bdi></button>)}</div>
+            <div class="brand-theme-modes"><button type="button" data-theme-mode="light" aria-pressed="false"><i class="bx bx-sun icon-lg" aria-hidden="true"></i>{tr("brand.theme.light")}</button><button type="button" data-theme-mode="dark" aria-pressed="false"><i class="bx bx-moon icon-lg" aria-hidden="true"></i>{tr("brand.theme.dark")}</button></div>
+          </div>
+        </details>
+        <a class="brand-language-switch" href={switchUrl} hreflang={locale === "en" ? "fa" : "en"} aria-label={locale === "en" ? "تغییر زبان به فارسی" : "Switch to English"} title={locale === "en" ? "فارسی" : "English"}><i class="bx bx-world icon-xl" aria-hidden="true"></i><span lang={locale === "en" ? "fa" : "en"}>{locale === "en" ? "فا" : "EN"}</span></a>
+      </div></footer>
+    </section>
+  </div>
+
+  <dialog id="brand-review-dialog" class="brand-dialog" aria-labelledby="brand-dialog-title">
+    <div class="brand-dialog__shell">
+      <button type="button" class="brand-dialog__close" data-dialog-close aria-label={tr("brand.modal.close")}><i class="bx bx-x icon-2xl" aria-hidden="true"></i></button>
+      <aside class="brand-dialog__aside">
+        <SpielOSLogo size="sm" /><div><p class="brand-eyebrow">{tr("brand.review.eyebrow")}</p><h2>{tr("brand.review.asideTitle")}</h2><p>{tr("brand.review.asideBody")}</p></div>
+        <div class="brand-dialog__selection"><small>{tr("brand.review.selection")}</small><strong id="selected-package">{defaultPackage.name}</strong><span id="selected-price">{defaultPackage.price}</span></div>
+        <p class="brand-dialog__promise"><i class="bx bx-time-five icon-xl" aria-hidden="true"></i>{tr("brand.review.time")}</p>
+      </aside>
+      <div class="brand-dialog__main">
+        <header class="brand-dialog__header"><p class="brand-eyebrow">{tr("brand.review.free")}</p><h2 id="brand-dialog-title">{tr("brand.modal.title")}</h2></header>
+        <div class="brand-dialog__progress" aria-label={tr("brand.review.progress")}>{[1,2,3].map(step => <span data-progress-step={step}><b>{new Intl.NumberFormat(locale).format(step)}</b>{tr(`brand.modal.step${step}`)}</span>)}</div>
+        <form id="brand-review-form" action={FORMS.contact} method="POST" novalidate data-validation-message={tr("brand.review.validation")} data-sending-message={tr("brand.review.sending")}>
+          <input type="hidden" name="_subject" value="SpielOS Free Brand Review" /><input type="hidden" name="source" value="brand-experience" /><input id="package-field" type="hidden" name="package" value={`${defaultPackage.name} — ${defaultPackage.price}`} />
+          <div class="brand-dialog__fields">
+            <fieldset data-form-step="1"><legend tabindex="-1">{tr("brand.modal.brandTitle")}</legend>
+              <label>{tr("brand.modal.website")}<input dir="ltr" type="url" name="website" placeholder={tr("brand.review.urlHint")} autocomplete="url" required /></label>
+              <label>{tr("brand.modal.driveBrand")}<input dir="ltr" type="url" name="brand_drive_link" placeholder={tr("brand.review.folderHint")} aria-describedby="brand-drive-hint" required /></label>
+              <p id="brand-drive-hint" class="brand-dialog__hint">{tr("brand.modal.driveHint")}</p>
+              <label>{tr("brand.modal.keep")} <small>{tr("brand.modal.optional")}</small><textarea dir="auto" name="brand_nonnegotiables" rows="2"></textarea></label>
+            </fieldset>
+            <fieldset data-form-step="2" hidden><legend tabindex="-1">{tr("brand.modal.contentTitle")}</legend>
+              <label>{tr("brand.modal.driveContent")}<input dir="ltr" type="url" name="content_drive_link" placeholder={tr("brand.review.folderHint")} aria-describedby="brand-content-hint" required /></label><p id="brand-content-hint" class="brand-dialog__hint">{tr("brand.modal.contentHint")}</p>
+              <label>{tr("brand.modal.produce")}<textarea dir="auto" name="desired_outputs" rows="4" placeholder={tr("brand.review.produceHint")} required></textarea></label>
+            </fieldset>
+            <fieldset data-form-step="3" hidden><legend tabindex="-1">{tr("brand.modal.reviewTitle")}</legend>
+              <div class="brand-form-grid"><label>{tr("brand.modal.name")}<input type="text" name="name" autocomplete="name" required /></label><label>{tr("brand.modal.company")}<input type="text" name="company" autocomplete="organization" required /></label></div>
+              <label>{tr("brand.modal.email")}<input dir="ltr" type="email" name="email" autocomplete="email" required /></label><p class="brand-dialog__note">{tr("brand.modal.note")}</p>
+            </fieldset>
+            <p id="brand-validation-error" class="brand-dialog__error" role="alert" hidden></p>
+            <p id="brand-form-error" class="brand-dialog__error" role="alert" hidden>{tr("brand.modal.error")}</p>
+          </div>
+          <div class="brand-dialog__actions"><button type="button" class="brand-button brand-button--secondary" id="brand-form-back" disabled><i class="bx bx-chevron-left icon-base" aria-hidden="true"></i>{tr("brand.modal.back")}</button><span id="brand-form-status" class="sr-only" role="status"></span><button type="button" class="brand-button brand-button--primary" id="brand-form-next">{tr("brand.modal.next")}<i class="bx bx-right-arrow-alt icon-base" aria-hidden="true"></i></button><button type="submit" class="brand-button brand-button--primary" id="brand-form-submit" hidden><span data-submit-label>{tr("brand.modal.submit")}</span><i class="bx bx-right-arrow-alt icon-base" aria-hidden="true"></i></button></div>
+        </form>
+        <div class="brand-dialog__success" id="brand-form-success" hidden tabindex="-1"><i class="bx bx-check-square icon-4xl" aria-hidden="true"></i><h3>{tr("brand.modal.successTitle")}</h3><p>{tr("brand.modal.successBody")}</p><button type="button" class="brand-button brand-button--primary" data-dialog-close>{tr("brand.modal.done")}</button></div>
+      </div>
+    </div>
+  </dialog>
+  <script>import "../scripts/brand-experience";</script>
+</BaseLayout>

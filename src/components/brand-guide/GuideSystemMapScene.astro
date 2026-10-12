@@ -1,0 +1,69 @@
+---
+import GuideDiagramCanvas, { type DiagramEdge } from "./GuideDiagramCanvas.astro";
+import GuideGlassCore from "./GuideGlassCore.astro";
+import { t, type Locale } from "../../i18n/translations";
+
+interface Props { locale?: Locale }
+const { locale = "en" } = Astro.props;
+const tr = (key: string) => t(locale, key);
+
+const inputs = [
+  ["system-map-input-1", "bx-shuffle", "brandGuide.systemMap.logo"],
+  ["system-map-input-2", "swatches", "brandGuide.systemMap.colors"],
+  ["system-map-input-3", "type", "brandGuide.systemMap.type"],
+  ["system-map-input-4", "bx-shape-polygon", "brandGuide.systemMap.style"],
+  ["system-map-input-5", "bx-image", "brandGuide.systemMap.assets"],
+] as const;
+const tools = [
+  ["system-map-tool-1", "bx-user", "brandGuide.systemMap.creators"],
+  ["system-map-tool-2", "bxs-magic-wand", "brandGuide.systemMap.aiTools"],
+  ["system-map-tool-3", "bx-group", "brandGuide.systemMap.teams"],
+  ["system-map-tool-4", "bxs-bolt", "brandGuide.systemMap.automations"],
+  ["system-map-tool-5", "bx-slider", "brandGuide.systemMap.integrations"],
+] as const;
+const outputs = [
+  ["system-map-output-1", "bxl-instagram", "brandGuide.systemMap.social"],
+  ["system-map-output-2", "bx-image", "brandGuide.systemMap.images"],
+  ["system-map-output-3", "bx-play", "brandGuide.systemMap.video"],
+  ["system-map-output-4", "bx-globe", "brandGuide.systemMap.web"],
+  ["system-map-output-5", "bx-dots-horizontal-rounded", "brandGuide.systemMap.more"],
+] as const;
+
+const edges: DiagramEdge[] = [
+  ...inputs.map(([node], index) => ({ id: `system-map-input-${index + 1}`, from: node, to: "system-map-core", fromAnchor: { side: "bottom" as const, ratio: .5 }, toAnchor: { side: "top" as const, ratio: [.08, .28, .5, .72, .92][index] } })),
+  ...tools.map(([node], index) => ({ id: `system-map-tool-${index + 1}`, from: "system-map-core", to: node, fromAnchor: { side: "bottom" as const, ratio: [.08, .28, .5, .72, .92][index] }, toAnchor: { side: "top" as const, ratio: .5 } })),
+  ...outputs.map(([node], index) => ({ id: `system-map-output-${index + 1}`, from: `system-map-tool-${index + 1}`, to: node, fromAnchor: { side: "bottom" as const, ratio: .5 }, toAnchor: { side: "top" as const, ratio: .5 } })),
+];
+---
+
+<div class="guide-layer guide-layer--system-map">
+  <header class="guide-layer__heading">
+    <p>{tr("brandGuide.systemMap.eyebrow")}</p>
+    <h2>{tr("brandGuide.systemMap.titleBefore")}<br /><em>{tr("brandGuide.systemMap.titleAfter")}</em></h2>
+    <span>{tr("brandGuide.systemMap.subtitle")}</span>
+  </header>
+
+  <GuideDiagramCanvas class="guide-layer__diagram guide-system-map-diagram" designWidth={1680} designHeight={940} ariaLabel="Existing brand inputs become an executable infrastructure with consistent outputs" edges={edges}>
+    <p class="guide-system-map__label guide-system-map__label--inputs">{tr("brandGuide.systemMap.existing")}</p>
+    <div class="guide-system-map__inputs">
+      {inputs.map(([node, icon, label]) => <article data-guide-node={node}>{icon === "swatches" ? <span class="guide-system-map__swatches"><i></i><i></i><i></i><i></i></span> : icon === "type" ? <b>Aa</b> : <i class={`bx ${icon} icon-3xl`} aria-hidden="true"></i>}<strong>{tr(label)}</strong></article>)}
+    </div>
+
+    <GuideGlassCore class="guide-system-map__core" node="system-map-core" icon="bx-network-chart" title={tr("brandGuide.systemMap.core")} subtitle={tr("brandGuide.systemMap.coreNote")}>
+      <div class="guide-system-map__core-rows"><span><i class="bx bx-cog icon-xl" aria-hidden="true"></i>{tr("brandGuide.systemMap.designSystem")}</span><span><i class="bx bx-layer icon-xl" aria-hidden="true"></i>{tr("brandGuide.systemMap.components")}</span><span><i class="bx bx-grid-alt icon-xl" aria-hidden="true"></i>{tr("brandGuide.systemMap.templates")}</span><span><i class="bx bx-file icon-xl" aria-hidden="true"></i>{tr("brandGuide.systemMap.mediaRules")}</span><span><i class="bx bx-brain icon-xl" aria-hidden="true"></i>{tr("brandGuide.systemMap.aiRules")}</span></div>
+    </GuideGlassCore>
+
+    <p class="guide-system-map__label guide-system-map__label--tools">{tr("brandGuide.systemMap.tools")}</p>
+    <div class="guide-system-map__tools">
+      {tools.map(([node, icon, label]) => <article data-guide-node={node}><i class={`bx ${icon} icon-3xl`} aria-hidden="true"></i><strong>{tr(label)}</strong></article>)}
+    </div>
+
+    <p class="guide-system-map__label guide-system-map__label--outputs">{tr("brandGuide.systemMap.outputs")}</p>
+    <div class="guide-system-map__outputs">
+      {outputs.map(([node, icon, label]) => <article data-guide-node={node}><i class={`bx ${icon} icon-3xl`} aria-hidden="true"></i><strong>{tr(label)}</strong></article>)}
+    </div>
+
+    <p class="guide-system-map__scribble">{tr("brandGuide.systemMap.scribbleBefore")}<br />{tr("brandGuide.systemMap.scribbleAfter")}</p>
+    <p class="guide-system-map__claim"><strong>{tr("brandGuide.systemMap.claimBefore")}</strong> <em>{tr("brandGuide.systemMap.claimAfter")}</em></p>
+  </GuideDiagramCanvas>
+</div>

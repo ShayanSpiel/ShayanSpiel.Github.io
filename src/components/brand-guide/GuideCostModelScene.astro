@@ -1,0 +1,84 @@
+---
+import GuideDiagramCanvas, { type DiagramEdge } from "./GuideDiagramCanvas.astro";
+import { t, type Locale } from "../../i18n/translations";
+
+interface Props { locale?: Locale }
+const { locale = "en" } = Astro.props;
+const tr = (key: string) => t(locale, key);
+
+const edges: DiagramEdge[] = [
+  { id: "matters-metric-1-2", from: "matters-metric-1", to: "matters-metric-2", fromAnchor: { side: "right", ratio: .5 }, toAnchor: { side: "left", ratio: .5 }, arrow: true },
+  { id: "matters-metric-2-3", from: "matters-metric-2", to: "matters-metric-3", fromAnchor: { side: "right", ratio: .5 }, toAnchor: { side: "left", ratio: .5 }, arrow: true },
+  { id: "matters-metric-3-4", from: "matters-metric-3", to: "matters-metric-4", fromAnchor: { side: "right", ratio: .5 }, toAnchor: { side: "left", ratio: .5 }, arrow: true },
+  { id: "matters-old-1-2", from: "matters-old-1", to: "matters-old-2", fromAnchor: { side: "bottom", ratio: .5 }, toAnchor: { side: "top", ratio: .5 }, arrow: true },
+  { id: "matters-old-2-3", from: "matters-old-2", to: "matters-old-3", fromAnchor: { side: "bottom", ratio: .5 }, toAnchor: { side: "top", ratio: .5 }, arrow: true },
+  { id: "matters-old-3-4", from: "matters-old-3", to: "matters-old-4", fromAnchor: { side: "bottom", ratio: .5 }, toAnchor: { side: "top", ratio: .5 }, arrow: true },
+  { id: "matters-old-4-5", from: "matters-old-4", to: "matters-old-5", fromAnchor: { side: "bottom", ratio: .5 }, toAnchor: { side: "top", ratio: .5 }, arrow: true },
+  { id: "matters-new-1-2", from: "matters-new-1", to: "matters-new-2", fromAnchor: { side: "bottom", ratio: .5 }, toAnchor: { side: "top", ratio: .5 }, arrow: true },
+  { id: "matters-new-2-3", from: "matters-new-2", to: "matters-new-3", fromAnchor: { side: "bottom", ratio: .5 }, toAnchor: { side: "top", ratio: .5 }, arrow: true },
+  { id: "matters-new-3-4", from: "matters-new-3", to: "matters-new-4", fromAnchor: { side: "bottom", ratio: .5 }, toAnchor: { side: "top", ratio: .5 }, arrow: true },
+  { id: "matters-new-4-5", from: "matters-new-4", to: "matters-new-5", fromAnchor: { side: "bottom", ratio: .5 }, toAnchor: { side: "top", ratio: .5 }, arrow: true },
+];
+
+type CostMetric = { node: string; icon?: string; channels?: string[]; value?: string; label: string; emphasis?: string };
+const metrics: CostMetric[] = [
+  { node: "matters-metric-1", icon: "bx-file", value: "3", label: "brandGuide.costModel.posts" },
+  { node: "matters-metric-2", icon: "bx-calendar", value: "156", label: "brandGuide.costModel.releases" },
+  { node: "matters-metric-3", channels: ["bxl-instagram", "bx-image", "bx-play", "bx-globe"], label: "brandGuide.costModel.channels" },
+  { node: "matters-metric-4", icon: "bx-layer", label: "brandGuide.costModel.rebuilding", emphasis: "brandGuide.costModel.hundreds" },
+];
+
+const oldModel = [
+  ["matters-old-1", "bx-bar-chart-alt-2", "brandGuide.costModel.moreOutput"],
+  ["matters-old-2", "bx-time-five", "brandGuide.costModel.moreHours"],
+  ["matters-old-3", "bx-group", "brandGuide.costModel.morePeople"],
+  ["matters-old-4", "bx-data", "brandGuide.costModel.higherCost"],
+  ["matters-old-5", "bx-error", "brandGuide.costModel.moreInconsistency"],
+] as const;
+
+const infrastructureModel = [
+  ["matters-new-1", "bx-cog", "brandGuide.costModel.buildOnce"],
+  ["matters-new-2", "bx-layer", "brandGuide.costModel.reuse"],
+  ["matters-new-3", "bx-play", "brandGuide.costModel.formats"],
+  ["matters-new-4", "bx-user", "brandGuide.costModel.approve"],
+  ["matters-new-5", "bx-rocket", "brandGuide.costModel.publish"],
+] as const;
+---
+
+<div class="guide-layer guide-layer--cost-model">
+  <header class="guide-layer__heading">
+    <p>{tr("brandGuide.costModel.eyebrow")}</p>
+    <h2>{tr("brandGuide.costModel.titleBefore")} <em>{tr("brandGuide.costModel.titleNot")}</em> {tr("brandGuide.costModel.titleMiddle")}<br />{tr("brandGuide.costModel.titleMore")} <em>{tr("brandGuide.costModel.titleAfter")}</em></h2>
+  </header>
+
+  <GuideDiagramCanvas class="guide-layer__diagram guide-cost-model-diagram" designWidth={1680} designHeight={940} ariaLabel="Brand infrastructure separates output growth from production cost" edges={edges}>
+    <div class="guide-cost-model-metrics">
+      {metrics.map((metric) => (
+        <article class:list={[metric.channels && "guide-cost-model-metrics__channels"]} data-guide-node={metric.node}>
+          {metric.icon ? <span class="guide-cost-model-tile"><i class={`bx ${metric.icon} icon-3xl`} aria-hidden="true"></i></span> : <span class="guide-cost-model-channels" aria-hidden="true">{(metric.channels ?? []).map((channel) => <i class={`bx ${channel} icon-2xl`}></i>)}</span>}
+          {metric.value && <strong>{metric.value}</strong>}
+          <small>{tr(metric.label)}{metric.emphasis && <em> {tr(metric.emphasis)}</em>}</small>
+        </article>
+      ))}
+    </div>
+
+    <article class="guide-cost-model-panel guide-cost-model-panel--old" aria-label="Old production model">
+      <header><i class="bx bx-x icon-2xl" aria-hidden="true"></i><strong>{tr("brandGuide.costModel.oldModel")}</strong><em>{tr("brandGuide.costModel.oldNote1")}<br />{tr("brandGuide.costModel.oldNote2")}</em></header>
+      <div class="guide-cost-model-steps">
+        {oldModel.map(([node, icon, label]) => <span data-guide-node={node}><i class={`bx ${icon} icon-2xl`} aria-hidden="true"></i>{tr(label)}</span>)}
+      </div>
+    </article>
+
+    <span class="guide-cost-model-vs" aria-hidden="true">VS</span>
+
+    <article class="guide-cost-model-panel guide-cost-model-panel--new" aria-label="Infrastructure production model">
+      <header><i class="bx bx-check icon-2xl" aria-hidden="true"></i><strong>{tr("brandGuide.costModel.infrastructureModel")}</strong><em>{tr("brandGuide.costModel.newNote1")}<br />{tr("brandGuide.costModel.newNote2")}</em></header>
+      <div class="guide-cost-model-steps">
+        {infrastructureModel.map(([node, icon, label]) => <span data-guide-node={node}><i class={`bx ${icon} icon-2xl`} aria-hidden="true"></i>{tr(label)}</span>)}
+      </div>
+    </article>
+
+    <div class="guide-cost-model-callout"><i class="bx bxs-bolt-circle icon-3xl" aria-hidden="true"></i><strong><em>{tr("brandGuide.costModel.calloutAccent")}</em> {tr("brandGuide.costModel.calloutBody")}</strong></div>
+    <div class="guide-cost-model-claim"><strong>{tr("brandGuide.costModel.claimBefore")}</strong><em>{tr("brandGuide.costModel.claimAfter")}</em><small>{tr("brandGuide.costModel.claimNote")}</small></div>
+  </GuideDiagramCanvas>
+</div>

@@ -1,0 +1,429 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SpielOSLogo from "../components/SpielOSLogo.astro";
+import BrandProblemDiagram from "../components/BrandProblemDiagram.astro";
+import GuideDiagramCanvas, { type DiagramEdge } from "../components/brand-guide/GuideDiagramCanvas.astro";
+import GuideGlassCore from "../components/brand-guide/GuideGlassCore.astro";
+import GuideProductionScene from "../components/brand-guide/GuideProductionScene.astro";
+import GuideCostModelScene from "../components/brand-guide/GuideCostModelScene.astro";
+import GuideSystemMapScene from "../components/brand-guide/GuideSystemMapScene.astro";
+import GuideReviewScene from "../components/brand-guide/GuideReviewScene.astro";
+import { t, type Locale } from "../i18n/translations";
+import { FORMS } from "../config";
+import { brandLogo } from "../data/brand-logos";
+import "../styles/brand-guide.css";
+import "../styles/brand-guide-layers.css";
+import "../styles/brand-guide-reference-corrections.css";
+import "../styles/brand-guide-continuation.css";
+import "../styles/brand-guide-polish.css";
+
+export interface Props {
+  locale?: Locale;
+}
+
+const { locale = "en" } = Astro.props;
+const tr = (key: string, params?: Record<string, string | number>) => t(locale, key, params);
+type GuideSlide = {
+  number: number;
+  kind: "problem" | "cost" | "ai" | "infra" | "scatter" | "system" | "outputs" | "media" | "execution" | "production" | "cost-model" | "system-map" | "review" | "generic";
+  eyebrow: string;
+  title: string;
+  body: string;
+};
+const slides: GuideSlide[] = [
+  { number: 1, kind: "problem", eyebrow: tr("brandGuide.slide1.eyebrow"), title: tr("brandGuide.slide1.title"), body: tr("brandGuide.slide1.body") },
+  { number: 2, kind: "cost", eyebrow: tr("brandGuide.slide2.eyebrow"), title: "", body: "" },
+  { number: 3, kind: "ai", eyebrow: tr("brandGuide.slide3.eyebrow"), title: "", body: "" },
+  { number: 4, kind: "infra", eyebrow: tr("brandGuide.slide4.eyebrow"), title: "", body: "" },
+  { number: 5, kind: "scatter", eyebrow: tr("brandGuide.slide5.eyebrow"), title: "", body: "" },
+  { number: 6, kind: "system", eyebrow: tr("brandGuide.slide6.eyebrow"), title: "", body: "" },
+  { number: 7, kind: "outputs", eyebrow: tr("brandGuide.slide7.eyebrow"), title: "", body: "" },
+  { number: 8, kind: "media", eyebrow: tr("brandGuide.slide8.eyebrow"), title: "", body: "" },
+  { number: 9, kind: "execution", eyebrow: tr("brandGuide.slide9.eyebrow"), title: "", body: "" },
+  { number: 10, kind: "production", eyebrow: tr("brandGuide.slide10.eyebrow"), title: "", body: "" },
+  { number: 11, kind: "cost-model", eyebrow: tr("brandGuide.slide11.eyebrow"), title: "", body: "" },
+  { number: 12, kind: "system-map", eyebrow: tr("brandGuide.slide12.eyebrow"), title: "", body: "" },
+  { number: 13, kind: "review", eyebrow: tr("brandGuide.slide13.eyebrow"), title: "", body: "" },
+];
+
+const outputCards = [
+  ["output-social", "Social Post", "bx-image", "/design-gallery/social/ideas-in-motion.png"],
+  ["output-quote", "Quote", "bxs-quote-alt-left", ""],
+  ["output-stat", "Stat", "bx-bar-chart-alt-2", ""],
+  ["output-case", "Case Study", "bx-image", "/design-gallery/social/explore-new-horizons.png"],
+  ["output-announcement", "Announcement", "bx-message-square-detail", ""],
+  ["output-story", "Instagram Story", "bxl-instagram", "/design-gallery/social/explore-new-horizons.png"],
+  ["output-carousel", "Carousel", "bx-images", "/design-gallery/social/ideas-in-motion.png"],
+  ["output-video", "Video Scene", "bx-play-circle", "/design-gallery/video/posters/from-ideas-to-impact.jpg"],
+  ["output-demo", "Product Demo", "bx-window", ""],
+  ["output-landing", "Landing Page Section", "bx-layout", "/design-gallery/social/ideas-in-motion.png"],
+] as const;
+const beforePostAssets = [
+  "/design-gallery/social/explore-new-horizons.png",
+  "/design-gallery/social/ideas-in-motion.png",
+  "/design-gallery/social/youtube-bold.png",
+  "/design-gallery/social/list-checklist.png",
+] as const;
+
+const flowEdges = (prefix: string, sources: string[], target: string, side: "top" | "bottom" = "top"): DiagramEdge[] => sources.map((source, index) => ({
+  id: `${prefix}-${source}-${target}`,
+  from: source,
+  to: target,
+  fromAnchor: { side: side === "top" ? "bottom" : "top", ratio: .5 },
+  toAnchor: { side: side === "top" ? "top" : "bottom", ratio: sources.length === 1 ? .5 : index / (sources.length - 1) },
+}));
+const scatterEdges: DiagramEdge[] = [
+  ...["scatter-logo", "scatter-guidelines", "scatter-figma", "scatter-canva", "scatter-css", "scatter-drive", "scatter-video", "scatter-templates", "scatter-head"].map((source, index) => ({
+    id: `scatter-${source}-core`, from: source, to: "scatter-core",
+    fromAnchor: { side: "right" as const, ratio: .5 },
+    toAnchor: { side: "left" as const, ratio: .12 + index * .095 },
+    // Stagger the handles so the fan remains legible instead of collapsing
+    // into one dark bundle when the file cluster is scaled.
+    bend: [-.24, -.17, -.1, -.03, .04, .11, .18, .25, .13][index],
+  })),
+  { id: "scatter-core-folder", from: "scatter-core", to: "scatter-folder", fromAnchor: { side: "right", ratio: .5 }, toAnchor: { side: "left", ratio: .5 }, arrow: true },
+];
+const systemEdges: DiagramEdge[] = [
+  ...flowEdges("system-top", ["system-colors", "system-fonts", "system-spacing", "system-logo"], "system-core"),
+  ...flowEdges("system-bottom", ["system-layout", "system-image", "system-motion"], "system-core", "bottom"),
+  { id: "system-core-code", from: "system-core", to: "system-code", fromAnchor: { side: "right", ratio: .5 }, toAnchor: { side: "left", ratio: .5 }, arrow: true },
+];
+const outputEdges: DiagramEdge[] = [
+  { id: "output-core-social", from: "output-core", to: "output-social", fromAnchor: { side: "right", ratio: .3 }, toAnchor: { side: "left", ratio: .5 }, arrow: true },
+  { id: "output-core-story", from: "output-core", to: "output-story", fromAnchor: { side: "right", ratio: .7 }, toAnchor: { side: "left", ratio: .5 }, arrow: true },
+  ...[["output-social","output-quote"],["output-quote","output-stat"],["output-stat","output-case"],["output-case","output-announcement"],["output-story","output-carousel"],["output-carousel","output-video"],["output-video","output-demo"],["output-demo","output-landing"]].map(([from, to]) => ({ id: `${from}-${to}`, from, to, fromAnchor: { side: "right" as const, ratio: .5 }, toAnchor: { side: "left" as const, ratio: .5 }, arrow: true })),
+  { id: "output-core-primitive-1", from: "output-core", to: "output-primitive-1", fromAnchor: { side: "bottom", ratio: .5 }, toAnchor: { side: "top", ratio: .5 } },
+  ...[1,2,3,4,5].map(index => ({ id: `output-primitive-${index}-${index + 1}`, from: `output-primitive-${index}`, to: `output-primitive-${index + 1}`, fromAnchor: { side: "right" as const, ratio: .5 }, toAnchor: { side: "left" as const, ratio: .5 } })),
+];
+const mediaEdges: DiagramEdge[] = [
+  { id: "media-content-template", from: "media-content", to: "media-template", fromAnchor: { side: "bottom", ratio: .5 }, toAnchor: { side: "top", ratio: .5 }, arrow: true },
+  { id: "media-template-image", from: "media-template", to: "media-image", fromAnchor: { side: "bottom", ratio: .5 }, toAnchor: { side: "top", ratio: .5 }, arrow: true },
+  { id: "media-image-core", from: "media-image", to: "media-core", fromAnchor: { side: "right", ratio: .35 }, toAnchor: { side: "left", ratio: .7 } },
+  { id: "media-script-scenes", from: "media-script", to: "media-scenes", fromAnchor: { side: "bottom", ratio: .5 }, toAnchor: { side: "top", ratio: .5 }, arrow: true },
+  { id: "media-scenes-motion", from: "media-scenes", to: "media-motion", fromAnchor: { side: "bottom", ratio: .5 }, toAnchor: { side: "top", ratio: .5 }, arrow: true },
+  { id: "media-motion-video", from: "media-motion", to: "media-video", fromAnchor: { side: "bottom", ratio: .5 }, toAnchor: { side: "top", ratio: .5 }, arrow: true },
+  { id: "media-core-video", from: "media-core", to: "media-video", fromAnchor: { side: "right", ratio: .7 }, toAnchor: { side: "left", ratio: .35 } },
+];
+const executionEdges: DiagramEdge[] = [
+  { id: "execution-before-core", from: "execution-before-chat", to: "execution-core", fromAnchor: { side: "right", ratio: .5 }, toAnchor: { side: "left", ratio: .35 }, arrow: true },
+  { id: "execution-core-after", from: "execution-core", to: "execution-after-chat", fromAnchor: { side: "right", ratio: .35 }, toAnchor: { side: "left", ratio: .5 }, arrow: true },
+  { id: "execution-core-output", from: "execution-core", to: "execution-after-output", fromAnchor: { side: "right", ratio: .72 }, toAnchor: { side: "left", ratio: .5 }, dashed: true, arrow: true },
+];
+
+const aiEdges: DiagramEdge[] = [
+  { id: "input-tool-01", from: "ai-input", to: "tool-01", fromAnchor: { side: "bottom", ratio: 0.5 }, toAnchor: { side: "top", ratio: 0.5 }, controlPoints: [{ x: 0.46, y: 0.25 }, { x: 0.12, y: 0.2 }] },
+  { id: "input-tool-02", from: "ai-input", to: "tool-02", fromAnchor: { side: "bottom", ratio: 0.5 }, toAnchor: { side: "top", ratio: 0.5 }, controlPoints: [{ x: 0.48, y: 0.25 }, { x: 0.28, y: 0.2 }] },
+  { id: "input-tool-03", from: "ai-input", to: "tool-03", fromAnchor: { side: "bottom", ratio: 0.5 }, toAnchor: { side: "top", ratio: 0.5 }, controlPoints: [{ x: 0.5, y: 0.25 }, { x: 0.5, y: 0.2 }] },
+  { id: "input-tool-04", from: "ai-input", to: "tool-04", fromAnchor: { side: "bottom", ratio: 0.5 }, toAnchor: { side: "top", ratio: 0.5 }, controlPoints: [{ x: 0.52, y: 0.25 }, { x: 0.72, y: 0.2 }] },
+  { id: "input-tool-05", from: "ai-input", to: "tool-05", fromAnchor: { side: "bottom", ratio: 0.5 }, toAnchor: { side: "top", ratio: 0.5 }, controlPoints: [{ x: 0.54, y: 0.25 }, { x: 0.9, y: 0.2 }] },
+  { id: "tool-01-manual", from: "tool-01", to: "manual-fixes", fromAnchor: { side: "bottom", ratio: 0.5 }, toAnchor: { side: "top", ratio: 0.1 }, bend: 0.08 },
+  { id: "tool-02-manual", from: "tool-02", to: "manual-fixes", fromAnchor: { side: "bottom", ratio: 0.5 }, toAnchor: { side: "top", ratio: 0.3 }, bend: 0.05 },
+  { id: "tool-03-manual", from: "tool-03", to: "manual-fixes", fromAnchor: { side: "bottom", ratio: 0.5 }, toAnchor: { side: "top", ratio: 0.5 } },
+  { id: "tool-04-manual", from: "tool-04", to: "manual-fixes", fromAnchor: { side: "bottom", ratio: 0.5 }, toAnchor: { side: "top", ratio: 0.7 }, bend: -0.05 },
+  { id: "tool-05-manual", from: "tool-05", to: "manual-fixes", fromAnchor: { side: "bottom", ratio: 0.5 }, toAnchor: { side: "top", ratio: 0.9 }, bend: -0.08 },
+];
+
+const costEdges: DiagramEdge[] = [
+  { id: "cost-card-rail-1", from: "cost-card-1", to: "cost-rail-1", fromAnchor: { side: "left", ratio: 0.5 }, toAnchor: { side: "center" } },
+  { id: "cost-card-rail-2", from: "cost-card-2", to: "cost-rail-2", fromAnchor: { side: "left", ratio: 0.5 }, toAnchor: { side: "center" } },
+  { id: "cost-card-rail-3", from: "cost-card-3", to: "cost-rail-3", fromAnchor: { side: "left", ratio: 0.5 }, toAnchor: { side: "center" } },
+  { id: "cost-card-rail-4", from: "cost-card-4", to: "cost-rail-4", fromAnchor: { side: "left", ratio: 0.5 }, toAnchor: { side: "center" } },
+  { id: "cost-card-rail-5", from: "cost-card-5", to: "cost-rail-5", fromAnchor: { side: "left", ratio: 0.5 }, toAnchor: { side: "center" } },
+  { id: "cost-rail-1-2", from: "cost-rail-1", to: "cost-rail-2", fromAnchor: { side: "center" }, toAnchor: { side: "center" } },
+  { id: "cost-rail-2-3", from: "cost-rail-2", to: "cost-rail-3", fromAnchor: { side: "center" }, toAnchor: { side: "center" } },
+  { id: "cost-rail-3-4", from: "cost-rail-3", to: "cost-rail-4", fromAnchor: { side: "center" }, toAnchor: { side: "center" } },
+  { id: "cost-rail-4-5", from: "cost-rail-4", to: "cost-rail-5", fromAnchor: { side: "center" }, toAnchor: { side: "center" } },
+  { id: "cost-5-merge", from: "cost-card-5", to: "cost-output-merge", fromAnchor: { side: "bottom", ratio: 0.5 }, toAnchor: { side: "center" } },
+  { id: "cost-merge-time", from: "cost-output-merge", to: "cost-metric-time", fromAnchor: { side: "center" }, toAnchor: { side: "top", ratio: 0.5 } },
+  { id: "cost-merge-cost", from: "cost-output-merge", to: "cost-metric-cost", fromAnchor: { side: "center" }, toAnchor: { side: "top", ratio: 0.5 } },
+  { id: "cost-merge-people", from: "cost-output-merge", to: "cost-metric-people", fromAnchor: { side: "center" }, toAnchor: { side: "top", ratio: 0.5 } },
+  { id: "cost-merge-inconsistency", from: "cost-output-merge", to: "cost-metric-inconsistency", fromAnchor: { side: "center" }, toAnchor: { side: "top", ratio: 0.5 } },
+];
+
+// Ratios are local to the core card, not absolute canvas coordinates.  The
+// measured canvas resolves the actual card bounds at every viewport, so the
+// six branches stay attached when the row is widened or scaled on mobile.
+const infraCoreAnchors = [0.05, 0.23, 0.4, 0.6, 0.77, 0.95];
+const infraEdges: DiagramEdge[] = infraCoreAnchors.flatMap((ratio, index) => [
+  { id: `infra-input-${index + 1}`, from: `infra-input-${index + 1}`, to: "infra-core", fromAnchor: { side: "bottom", ratio: 0.5 }, toAnchor: { side: "top", ratio } },
+  { id: `infra-output-${index + 1}`, from: "infra-core", to: `infra-output-${index + 1}`, fromAnchor: { side: "bottom", ratio }, toAnchor: { side: "top", ratio: 0.5 } },
+]);
+---
+
+<BaseLayout
+  title={tr("brandGuide.pageTitle")}
+  description={tr("brandGuide.pageDesc")}
+  canonical={locale === "fa" ? "https://brand.spielos.xyz/fa/brand-guide/" : "https://brand.spielos.xyz/brand-guide/"}
+  image="/assets/og/founder.png"
+  locale={locale}
+  alternateBaseUrl="https://brand.spielos.xyz"
+  showChat={false}
+>
+  <main class="brand-guide" data-brand-guide>
+    <div class="brand-guide__deck" aria-live="polite">
+      <section class="guide-slide guide-slide--gate is-active" data-guide-slide="0" aria-label={tr("brandGuide.access")}>
+        <div class="guide-grid" aria-hidden="true"></div>
+        <div class="guide-orbit guide-orbit--one" aria-hidden="true"><i class="bx bxs-file-pdf icon-2xl"></i><strong>{tr("brandGuide.orbit.guidelines").split("\n").map((line, index) => <Fragment>{index > 0 && <br />}{line}</Fragment>)}</strong><small>{tr("brandGuide.orbit.guidelinesNote")}</small><b>×</b></div>
+        <div class="guide-orbit guide-orbit--two" aria-hidden="true"><i class="bx bx-image icon-2xl"></i><strong>Logo_Final_v4.png</strong><b>×</b></div>
+        <div class="guide-orbit guide-orbit--three" aria-hidden="true"><span class="guide-swatches"><i></i><i></i><i></i><i></i></span><strong>{tr("brandGuide.orbit.colors")}</strong><small>{tr("brandGuide.orbit.colorsNote")}</small></div>
+        <div class="guide-orbit guide-orbit--four" aria-hidden="true"><strong class="guide-type-sample">Aa</strong><span>Typography.fig</span><small>{tr("brandGuide.orbit.typographyNote")}</small></div>
+        <div class="guide-orbit guide-orbit--five" aria-hidden="true"><i class="bx bxs-file-archive icon-2xl"></i><strong>Campaign_assets.zip</strong><small>{tr("brandGuide.orbit.assetsNote")}</small><b>×</b></div>
+        <div class="guide-orbit guide-orbit--six" aria-hidden="true"><i class="bx bxs-file icon-2xl"></i><strong>Old template.pptx</strong><small>{tr("brandGuide.orbit.templateNote")}</small><b>×</b></div>
+        <div class="guide-orbit guide-orbit--seven" aria-hidden="true"><i class="bx bx-trash icon-2xl"></i></div>
+
+        <div class="guide-gate">
+          <p class="guide-kicker">{tr("brandGuide.kicker")}</p>
+          <h1 dir={locale === "fa" ? "rtl" : "ltr"}>
+            {locale === "fa" ? (
+              <>
+                {tr("brandGuide.titleBefore")} <span class="guide-doc-word" dir="ltr"><span class="guide-doc-logo" set:html={brandLogo("docs")} aria-label="Google Docs" />{tr("brandGuide.titleDoc")}</span><br />
+                {tr("brandGuide.titleInto")} <span class="guide-marker"><em>{tr("brandGuide.titleMarker")}</em></span><span class="guide-insert" dir="ltr" aria-label="AI"><span class="guide-insertion-mark" aria-hidden="true"></span><b>AI</b></span><br />
+                <span class="guide-serif-title">{tr("brandGuide.titleAfter")}</span>
+              </>
+            ) : (
+              <>
+                {tr("brandGuide.titleBefore")} <span class="guide-doc-word"><span class="guide-doc-logo" set:html={brandLogo("docs")} aria-label="Google Docs" />{tr("brandGuide.titleDoc")}</span> {tr("brandGuide.titleInto")}<br />
+                <span class="guide-marker"><em>{tr("brandGuide.titleMarker")}</em></span><span class="guide-insert" dir="ltr" aria-label="AI added to Executable"><span class="guide-insertion-mark" aria-hidden="true"></span><b>AI</b></span><br />
+                <span class="guide-serif-title">{tr("brandGuide.titleAfter")}</span>
+              </>
+            )}
+          </h1>
+          <p class="guide-subtitle">{tr("brandGuide.subtitle")}</p>
+          <div class="guide-founder-quote">
+            <div class="guide-avatar"><img src="/assets/avatars/avatar.jpg" alt="Shayan Spiel" width="96" height="96" /></div>
+            {locale === "fa" ? <p>{tr("brandGuide.quote")}</p> : <p>For 10 years, I’ve led startup growth and campaigns that produced <strong>3M+ users in 3 days</strong> and contributed to <strong>80%+ YoY growth.</strong> A proper AI Brand Infrastructure can help you <span class="guide-output-claim"><strong>2× output</strong><span class="guide-at-least"><span class="guide-insertion-mark" aria-hidden="true"></span>at least</span></span>, lower production cost, and keep one brand across every channel.</p>}
+          </div>
+          <form class="guide-email-form" action={FORMS.contact} method="POST" novalidate data-invalid-error={tr("brandGuide.unlockError")} data-submit-error={tr("brandGuide.submitError")}>
+            <input type="hidden" name="_subject" value="SpielOS Brand Guide Access" />
+            <input type="hidden" name="source" value="brand-guide" />
+            <label class="sr-only" for="brand-guide-email">{tr("brandGuide.emailLabel")}</label>
+            <div class="guide-email-field"><i class="bx bx-envelope icon-xl" aria-hidden="true"></i><input id="brand-guide-email" name="email" type="email" autocomplete="email" placeholder={tr("brandGuide.emailPlaceholder")} required /></div>
+            <button type="submit">{tr("brandGuide.access")}<i class="bx bx-right-arrow-alt icon-xl" aria-hidden="true"></i></button>
+          </form>
+          <p class="guide-unlock-error" role="alert" data-guide-error hidden><i class="bx bx-error icon-base" aria-hidden="true"></i><span data-guide-error-message>{tr("brandGuide.unlockError")}</span></p>
+          <div class="guide-countdown" aria-label={tr("brandGuide.free")}>
+            <p>{tr("brandGuide.free")}</p>
+            <div>
+              {["days", "hours", "minutes", "seconds"].map(unit => <span><b data-countdown={unit}>14</b><small>{tr(`brandGuide.${unit}`)}</small></span>)}
+            </div>
+          </div>
+        </div>
+        <button class="guide-next guide-next--locked" type="button" data-guide-next aria-label={tr("brandGuide.start")}><i class="bx bx-right-arrow-alt icon-4xl" aria-hidden="true"></i><span><i class="bx bx-lock-alt icon-base" aria-hidden="true"></i></span></button>
+        <p class="guide-lock-note" aria-hidden="true"><i class="bx bx-up-arrow-alt icon-xl"></i>{tr("brandGuide.lockNote")}</p>
+        <div class="guide-route" aria-hidden="true"><span class="guide-route__node"></span><span class="guide-route__line guide-route__line--one"></span><span class="guide-route__line guide-route__line--two"></span><span class="guide-route__arrow"><i class="bx bx-down-arrow-alt icon-xl"></i></span></div>
+        <p class="guide-path-note" aria-hidden="true">{tr("brandGuide.pathFrom")} <i class="bx bx-right-arrow-alt icon-base"></i> <strong>{tr("brandGuide.pathSame")}</strong> <i class="bx bx-right-arrow-alt icon-base"></i> {tr("brandGuide.pathTo")}</p>
+      </section>
+
+      {slides.map((slide, index) => (
+        <section class:list={["guide-slide", `guide-slide--${slide.number}`, slide.kind === "problem" && "guide-slide--problem"]} data-guide-slide={index + 1} data-guide-label={slide.eyebrow} data-guide-display-number={slide.number} aria-label={`Guide slide ${slide.number}`} aria-hidden="true">
+          <div class="guide-grid" aria-hidden="true"></div>
+          {slide.kind === "problem" ? (
+            <BrandProblemDiagram locale={locale} />
+          ) : slide.kind === "cost" ? (
+            <div class="guide-reference guide-reference--cost">
+              <div class="guide-reference__copy">
+                <p class="guide-reference__eyebrow">{tr("brandGuide.cost.eyebrow")}</p>
+                <h2>{tr("brandGuide.cost.title1")}<br />{tr("brandGuide.cost.title2")}<br />{tr("brandGuide.cost.title3")} <em>{tr("brandGuide.cost.titleAccent1")}<br />{tr("brandGuide.cost.titleAccent2")}</em> {tr("brandGuide.cost.title4")}</h2>
+                <p class="guide-reference__body">{tr("brandGuide.cost.body")}</p>
+                <p class="guide-reference__body guide-reference__body--short">{tr("brandGuide.cost.short")}</p>
+                <div class="guide-reference__rule"></div>
+                <p class="guide-reference__claim"><strong>{tr("brandGuide.cost.claim1")}</strong><em>{tr("brandGuide.cost.claim2")}</em></p>
+              </div>
+              <div class="guide-cost-scene">
+                <GuideDiagramCanvas class="guide-cost-diagram" designWidth={1680} designHeight={940} ariaLabel="Repeated brand work creates time, cost, people, and inconsistency" edges={costEdges}>
+                  <div class="guide-cost-stack">
+                    <article data-guide-node="cost-card-1"><i class="guide-cost-rail-node" data-guide-node="cost-rail-1" aria-hidden="true"></i><span class="guide-cost-stack__icon"><i class="bx bx-image icon-2xl"></i></span><div><strong>{tr("brandGuide.cost.card1")}</strong><small>{tr("brandGuide.cost.card1Note")}</small></div><b>!</b></article>
+                    <article data-guide-node="cost-card-2"><i class="guide-cost-rail-node" data-guide-node="cost-rail-2" aria-hidden="true"></i><span class="guide-cost-stack__icon guide-cost-stack__icon--type">Aa</span><div><strong>{tr("brandGuide.cost.card2")}</strong><small>{tr("brandGuide.cost.card2Note")}</small></div><b>!</b></article>
+                    <article data-guide-node="cost-card-3"><i class="guide-cost-rail-node" data-guide-node="cost-rail-3" aria-hidden="true"></i><span class="guide-cost-stack__icon"><i class="bx bx-play icon-2xl"></i></span><div><strong>{tr("brandGuide.cost.card3")}</strong><small>{tr("brandGuide.cost.card3Note")}</small></div><b>!</b></article>
+                    <article data-guide-node="cost-card-4"><i class="guide-cost-rail-node" data-guide-node="cost-rail-4" aria-hidden="true"></i><span class="guide-cost-stack__icon"><i class="bx bx-file icon-2xl"></i></span><div><strong>{tr("brandGuide.cost.card4")}</strong><small>{tr("brandGuide.cost.card4Note")}</small></div><b>!</b></article>
+                    <article data-guide-node="cost-card-5"><i class="guide-cost-rail-node" data-guide-node="cost-rail-5" aria-hidden="true"></i><span class="guide-cost-stack__icon"><i class="bx bx-refresh icon-2xl"></i></span><div><strong>{tr("brandGuide.cost.card5")}</strong><small>{tr("brandGuide.cost.card5Note")}</small></div><b>!</b></article>
+                  </div>
+                  <p class="guide-reference__scribble guide-reference__scribble--cost">{tr("brandGuide.cost.scribble").split("\n").map((line, index) => <Fragment>{index > 0 && <br />}{line}</Fragment>)}<span aria-hidden="true">↙</span></p>
+                  <span class="guide-cost-output-merge" data-guide-node="cost-output-merge" aria-hidden="true"></span>
+                  <div class="guide-cost-metrics"><span data-guide-node="cost-metric-time"><i class="bx bx-time-five icon-xl"></i>{tr("brandGuide.cost.time")}</span><span data-guide-node="cost-metric-cost"><i class="bx bx-data icon-xl"></i>{tr("brandGuide.cost.cost")}</span><span data-guide-node="cost-metric-people"><i class="bx bx-group icon-xl"></i>{tr("brandGuide.cost.people")}</span><span data-guide-node="cost-metric-inconsistency"><i class="bx bx-error icon-xl"></i>{tr("brandGuide.cost.inconsistency")}</span></div>
+                </GuideDiagramCanvas>
+              </div>
+            </div>
+          ) : slide.kind === "ai" ? (
+              <div class="guide-reference guide-reference--ai">
+              <div class="guide-reference__copy">
+                <h2>{tr("brandGuide.ai.title")}</h2>
+                <div class="guide-ai-types"><span><i class="bx bx-file icon-2xl"></i><strong>{tr("brandGuide.ai.copy")}</strong></span><span><i class="bx bx-image icon-2xl"></i><strong>{tr("brandGuide.ai.images")}</strong></span><span><i class="bx bx-play icon-2xl"></i><strong>{tr("brandGuide.ai.videos")}</strong></span><span><i class="bx bx-file icon-2xl"></i><strong>{tr("brandGuide.ai.pages")}</strong></span></div>
+                <h3>{tr("brandGuide.ai.instant")}</h3>
+                <p class="guide-reference__subline">{tr("brandGuide.ai.problem")}</p>
+                <h2 class="guide-reference__ai-problem">{tr("brandGuide.ai.look")}<br />{tr("brandGuide.ai.lookAccent")} <em>{tr("brandGuide.ai.lookAfter")}</em></h2>
+                <div class="guide-reference__rule"></div>
+                <p class="guide-reference__claim guide-reference__claim--small">{tr("brandGuide.ai.cheap")}<br />{tr("brandGuide.ai.notExecutable")}<br /><em>{tr("brandGuide.ai.still")} <strong>{tr("brandGuide.ai.stillAccent")}</strong> {tr("brandGuide.ai.stillAfter")}</em></p>
+              </div>
+              <div class="guide-ai-scene">
+                <GuideDiagramCanvas class="guide-ai-diagram" designWidth={1680} designHeight={940} ariaLabel="One idea becomes five different brands" edges={aiEdges}>
+                <div class="guide-ai-input" data-guide-node="ai-input"><span><i class="bx bx-file icon-3xl"></i></span><div><strong>{tr("brandGuide.ai.input")}</strong><small>{tr("brandGuide.ai.inputNote")}</small></div></div>
+                <div class="guide-tool-row">
+                  <article data-guide-node="tool-01"><header><span class="guide-tool-logo guide-tool-logo--chatgpt"><img src="/assets/brand/chatgpt.svg" alt="" /></span><strong>Tool 01<small>ChatGPT</small></strong></header><img src="/design-gallery/social/single-fact.png" alt="ChatGPT output" /></article>
+                  <article data-guide-node="tool-02"><header><span class="guide-tool-logo guide-tool-logo--midjourney"><img src="/assets/brand/midjourney.svg" alt="" /></span><strong>Tool 02<small>Midjourney</small></strong></header><img src="/design-gallery/social/department-map.png" alt="Midjourney output" /></article>
+                  <article data-guide-node="tool-03"><header><span class="guide-tool-logo guide-tool-logo--runway"><img src="/assets/brand/runway.svg" alt="" /></span><strong>Tool 03<small>Runway</small></strong></header><img src="/design-gallery/social/youtube-bold.png" alt="Runway output" /></article>
+                  <article data-guide-node="tool-04"><header><span class="guide-tool-logo guide-tool-logo--claude"><img src="/assets/brand/claude.svg" alt="" /></span><strong>Tool 04<small>Claude</small></strong></header><img src="/design-gallery/social/agent-brief.png" alt="Claude output" /></article>
+                  <article data-guide-node="tool-05"><header><span class="guide-tool-logo guide-tool-logo--gemini"><img src="/assets/brand/gemini.svg" alt="" /></span><strong>Tool 05<small>Gemini</small></strong></header><img src="/design-gallery/social/testimonial-pull-quote.png" alt="Gemini output" /></article>
+                </div>
+                <p class="guide-reference__scribble guide-reference__scribble--tools">{tr("brandGuide.ai.tools")}</p>
+                <div class="guide-manual-fixes" data-guide-node="manual-fixes"><header><strong><i class="bx bx-wrench icon-xl"></i> {tr("brandGuide.ai.manual")}</strong><small>{tr("brandGuide.ai.manualNote")}</small></header><div><span><i class="bx bx-droplet icon-2xl"></i>{tr("brandGuide.ai.fixColors")}</span><span><b>Aa</b>{tr("brandGuide.ai.fixType")}</span><span><i class="bx bx-image icon-2xl"></i>{tr("brandGuide.ai.fixLayout")}</span><span><i class="bx bx-image icon-2xl"></i>{tr("brandGuide.ai.fixImages")}</span><span><i class="bx bx-play icon-2xl"></i>{tr("brandGuide.ai.fixVideo")}</span></div></div>
+                </GuideDiagramCanvas>
+              </div>
+            </div>
+          ) : slide.kind === "infra" ? (
+            <div class="guide-reference guide-reference--infra">
+              <div class="guide-infra__heading"><h2>{tr("brandGuide.infra.titleBefore")} <em>{tr("brandGuide.infra.titleAccent")}</em></h2></div>
+              <div class="guide-infra__not-list" aria-label={tr("brandGuide.infra.notGuideline")}>
+                <span class="guide-infra__not-item"><span class="guide-infra__not-brand guide-infra__not-brand--docs" set:html={brandLogo("docs")} aria-hidden="true"></span><i class="bx bx-x guide-infra__not-x icon-lg" aria-hidden="true"></i><span class="guide-infra__not-copy">{tr("brandGuide.infra.notGuideline")}</span></span>
+                <span class="guide-infra__not-item"><span class="guide-infra__not-brand guide-infra__not-brand--canva"><img src="/assets/brand/canva.svg" alt="" width="80" height="30" /></span><i class="bx bx-x guide-infra__not-x icon-lg" aria-hidden="true"></i><span class="guide-infra__not-copy">{tr("brandGuide.infra.notCanva")}</span></span>
+                <span class="guide-infra__not-item"><span class="guide-infra__not-brand guide-infra__not-brand--figma"><img src="/assets/brand/figma.svg" alt="" width="24" height="36" /></span><i class="bx bx-x guide-infra__not-x icon-lg" aria-hidden="true"></i><span class="guide-infra__not-copy">{tr("brandGuide.infra.notFigma")}</span></span>
+              </div>
+              <div class="guide-infra__label guide-infra__label--top"><span></span>{tr("brandGuide.infra.brandIs")}<span></span></div>
+              <GuideDiagramCanvas class="guide-infra-diagram" designWidth={1680} designHeight={940} ariaLabel="Brand infrastructure connects brand inputs to reusable outputs" edges={infraEdges}>
+              <div class="guide-infra__inputs">
+                <article data-guide-node="infra-input-1"><SpielOSLogo markOnly boxClass="h-8 w-8" /><strong>{tr("brandGuide.infra.logo")}</strong><small>{tr("brandGuide.infra.logoNote")}</small></article>
+                <article data-guide-node="infra-input-2"><span class="guide-infra__swatches"><i></i><i></i><i></i><i></i></span><strong>{tr("brandGuide.infra.colors")}</strong><small>{tr("brandGuide.infra.colorsNote")}</small></article>
+                <article data-guide-node="infra-input-3"><b>Aa</b><strong>{tr("brandGuide.infra.typography")}</strong><small>{tr("brandGuide.infra.typographyNote")}</small></article>
+                <article data-guide-node="infra-input-4"><i class="bx bx-image icon-3xl"></i><strong>{tr("brandGuide.infra.assets")}</strong><small>{tr("brandGuide.infra.assetsNote")}</small></article>
+                <article data-guide-node="infra-input-5"><i class="bx bx-grid-alt icon-3xl"></i><strong>{tr("brandGuide.infra.templates")}</strong><small>{tr("brandGuide.infra.templatesNote")}</small></article>
+                <article data-guide-node="infra-input-6"><i class="bx bx-file icon-3xl"></i><strong>{tr("brandGuide.infra.guidelines")}</strong><small>{tr("brandGuide.infra.guidelinesNote")}</small></article>
+              </div>
+              <div class="guide-infra__core" data-guide-node="infra-core"><SpielOSLogo markOnly boxClass="h-12 w-12" /><div><strong>{tr("brandGuide.infra.core")}</strong><small>{tr("brandGuide.infra.coreNote")}</small></div></div>
+              <div class="guide-infra__steps" aria-label="Installation steps"><ol><li><b>1</b><span>{tr("brandGuide.infra.step1")} <em>{tr("brandGuide.infra.step1Accent")}</em></span></li><li><b>2</b><span>{tr("brandGuide.infra.step2")} <em>{tr("brandGuide.infra.step2Accent")}</em></span></li><li><b>3</b><span>{tr("brandGuide.infra.step3")} <em>{tr("brandGuide.infra.step3Accent")}</em></span></li></ol></div>
+              <div class="guide-infra__label guide-infra__label--bottom"><span></span>{tr("brandGuide.infra.companyIs")}<span></span></div>
+              <div class="guide-infra__outputs"><article data-guide-node="infra-output-1"><i class="bx bxl-instagram icon-3xl"></i><strong>{tr("brandGuide.infra.social")}</strong><small>{tr("brandGuide.infra.socialNote")}</small></article><article data-guide-node="infra-output-2"><i class="bx bx-image icon-3xl"></i><strong>{tr("brandGuide.infra.images")}</strong><small>{tr("brandGuide.infra.imagesNote")}</small></article><article data-guide-node="infra-output-3"><i class="bx bx-play icon-3xl"></i><strong>{tr("brandGuide.infra.videos")}</strong><small>{tr("brandGuide.infra.videosNote")}</small></article><article data-guide-node="infra-output-4"><i class="bx bx-globe icon-3xl"></i><strong>{tr("brandGuide.infra.website")}</strong><small>{tr("brandGuide.infra.websiteNote")}</small></article><article data-guide-node="infra-output-5"><i class="bx bx-file icon-3xl"></i><strong>{tr("brandGuide.infra.presentations")}</strong><small>{tr("brandGuide.infra.presentationsNote")}</small></article><article data-guide-node="infra-output-6"><i class="bx bx-network-chart icon-3xl"></i><strong>{tr("brandGuide.infra.workflows")}</strong><small>{tr("brandGuide.infra.workflowsNote")}</small></article></div>
+              </GuideDiagramCanvas>
+              <div class="guide-infra__footer"><strong>{tr("brandGuide.infra.footer1")}</strong><em>{tr("brandGuide.infra.footer2")}</em></div>
+            </div>
+          ) : slide.kind === "scatter" ? (
+            <div class="guide-layer guide-layer--scatter">
+              <header class="guide-layer__heading"><p>{tr("brandGuide.slide5.eyebrow")}</p><h2>{tr("brandGuide.scatter.title1")}<br /><em>{tr("brandGuide.scatter.title2")}</em></h2><span>{tr("brandGuide.scatter.subtitle")}</span></header>
+              <GuideDiagramCanvas class="guide-layer__diagram" designWidth={1680} designHeight={940} ariaLabel="Scattered brand files become one infrastructure" edges={scatterEdges}>
+                <p class="guide-layer__scribble guide-layer__scribble--everywhere">{tr("brandGuide.scatter.everywhere")}<br /><i class="bx bx-down-arrow-alt icon-xl"></i></p>
+                <div class="guide-scatter-files">
+                  {[["scatter-logo","bx-image","logo.svg"],["scatter-guidelines","bx-file","brand-guidelines.pdf"],["scatter-figma","bxl-figma","Figma"],["scatter-canva","bxl-canva","Canva"],["scatter-css","bx-code-alt","CSS"],["scatter-drive","bxl-google-drive","Google Drive"],["scatter-video","bxl-youtube","brandGuide.scatter.oldVideos"],["scatter-templates","bx-file","brandGuide.scatter.templates"],["scatter-head","bx-user","brandGuide.scatter.head"]].map(([node, icon, label], i) => <article data-guide-node={node} class={`guide-scatter-card guide-scatter-card--${i + 1}`}>
+                    {label === "Google Drive" ? <span class="guide-scatter-brand" set:html={brandLogo("drive")} aria-hidden="true" /> : label === "Canva" ? <img class="guide-scatter-brand" src="/assets/brand/canva.svg" alt="" width="28" height="28" /> : label === "Figma" ? <img class="guide-scatter-brand" src="/assets/brand/figma.svg" alt="" width="24" height="36" /> : <i class={`bx ${icon} icon-3xl`}></i>}
+                    <strong>{label.startsWith("brandGuide.") ? tr(label) : label}</strong>
+                  </article>)}
+                </div>
+                <GuideGlassCore class="guide-scatter-core" node="scatter-core" title={tr("brandGuide.scatter.core")} subtitle={tr("brandGuide.scatter.coreNote")} />
+                <div class="guide-scatter-folder" data-guide-node="scatter-folder"><header><i class="bx bx-folder icon-2xl"></i><b>/brand</b></header>{["tokens","fonts","logos","components","templates","images","video","motion","rules"].map(item => <span><i class="bx bx-folder icon-lg"></i>/{item}</span>)}</div>
+                <p class="guide-layer__scribble guide-layer__scribble--scattered">{tr("brandGuide.scatter.scattered")}<br /><i class="bx bx-up-arrow-alt icon-xl"></i></p>
+                <div class="guide-layer__pill-row"><span><i class="bx bx-cube icon-2xl"></i>{tr("brandGuide.scatter.onePlace")}</span><span><i class="bx bx-layer icon-2xl"></i>{tr("brandGuide.scatter.oneLanguage")}</span><span><i class="bx bx-target-lock icon-2xl"></i>{tr("brandGuide.scatter.oneBrand")}</span></div>
+              </GuideDiagramCanvas>
+            </div>
+          ) : slide.kind === "system" ? (
+            <div class="guide-layer guide-layer--system">
+              <header class="guide-layer__heading"><p>{tr("brandGuide.slide6.eyebrow")}</p><h2>{tr("brandGuide.system.title1")} <em>{tr("brandGuide.system.titleAccent")}</em></h2><span>{tr("brandGuide.system.subtitle1")}<br />{tr("brandGuide.system.subtitle2")} <b>{tr("brandGuide.system.subtitleAccent")}</b></span></header>
+              <GuideDiagramCanvas class="guide-layer__diagram" designWidth={1680} designHeight={940} ariaLabel="Design system turns style into software" edges={systemEdges}>
+                <div class="guide-system-top">
+                  <article data-guide-node="system-colors"><i class="bx bx-palette icon-3xl"></i><strong>{tr("brandGuide.system.colors")}</strong><small>{tr("brandGuide.system.tokens")}</small></article>
+                  <article data-guide-node="system-fonts"><i class="bx bx-font-family icon-3xl"></i><strong>{tr("brandGuide.system.fonts")}</strong><small>{tr("brandGuide.system.typography")}</small></article>
+                  <article data-guide-node="system-spacing"><i class="bx bx-expand icon-3xl"></i><strong>{tr("brandGuide.system.spacing")}</strong><small>{tr("brandGuide.system.tokens")}</small></article>
+                  <article data-guide-node="system-logo"><SpielOSLogo markOnly boxClass="h-8 w-8" /><strong>{tr("brandGuide.system.logo")}</strong><small>{tr("brandGuide.system.svg")}</small></article>
+                </div>
+                <GuideGlassCore class="guide-layer__core--system guide-system-core" node="system-core" title={tr("brandGuide.system.system")} subtitle={tr("brandGuide.system.coreNote")} />
+                <div class="guide-system-bottom">{[["system-layout","bx-layout","brandGuide.system.layouts","brandGuide.system.components"],["system-image","bx-image","brandGuide.system.image","brandGuide.system.imageRules"],["system-motion","bx-play-circle","brandGuide.system.motion","brandGuide.system.imageRules"]].map(([node, icon, title, sub]) => <article data-guide-node={node}><i class={`bx ${icon} icon-3xl`}></i><strong>{tr(title)}</strong><small>{tr(sub)}</small></article>)}</div>
+                <div class="guide-system-code" data-guide-node="system-code"><i class="bx bx-right-arrow-alt guide-system-code__incoming icon-2xl" aria-hidden="true"></i><header>{tr("brandGuide.system.fromManual")} <i class="bx bx-right-arrow-alt icon-2xl"></i> {tr("brandGuide.system.toCode")}</header>{[["bx-color","brandGuide.system.useBlue","--brand-blue: #6366F1;"],["bx-font-size","brandGuide.system.useFont","Display heading · Body · Caption"],["bx-card","brandGuide.system.cardExample","<BrandCard />"]].map(([icon, title, code]) => <div><span><strong>{tr(title)}</strong><i class={`bx ${icon} icon-3xl`}></i></span><i class="bx bx-right-arrow-alt icon-2xl"></i><code><i class="bx bx-copy icon-xl" aria-hidden="true"></i>{code}</code></div>)}</div>
+                <div class="guide-layer__pill-row guide-system-flow"><span><img class="guide-brand-mark guide-brand-mark--figma" src="/assets/brand/figma.svg" alt="" width="18" height="27" />Figma</span><i class="bx bx-right-arrow-alt icon-xl"></i><span><i class="bx bx-layer icon-2xl"></i>{tr("brandGuide.system.tokens")}</span><i class="bx bx-right-arrow-alt icon-xl"></i><span><i class="bx bx-code-alt icon-2xl"></i>CSS / React</span><i class="bx bx-right-arrow-alt icon-xl"></i><span><i class="bx bx-sun guide-provider-claude icon-2xl"></i>Claude Code / Codex</span></div>
+                <div class="guide-layer__bottom-claim"><strong>{tr("brandGuide.system.style")} → <em>{tr("brandGuide.system.system")}</em></strong><strong>{tr("brandGuide.system.system")} → <em>{tr("brandGuide.system.software")}</em></strong></div>
+              </GuideDiagramCanvas>
+            </div>
+          ) : slide.kind === "outputs" ? (
+            <div class="guide-layer guide-layer--outputs">
+              <header class="guide-layer__heading"><p>{tr("brandGuide.slide7.eyebrow")}</p><h2>{tr("brandGuide.outputs.title1")} <em>{tr("brandGuide.outputs.titleAccent")}</em></h2><span>{tr("brandGuide.outputs.subtitle")}</span></header>
+              <GuideDiagramCanvas class="guide-layer__diagram" designWidth={1680} designHeight={940} ariaLabel="Brand system creates reusable outputs" edges={outputEdges}>
+                <GuideGlassCore class="guide-layer__core--outputs" node="output-core" title={tr("brandGuide.system.system")} subtitle={tr("brandGuide.production.systemNote")} />
+                <div class="guide-output-grid">{outputCards.map(([node, title, icon, asset]) => <article data-guide-node={node}><strong>{tr(`brandGuide.outputs.${node.replace("output-", "")}`)}</strong><i class={`bx ${icon} icon-3xl`}></i>{asset && <img class="guide-output-preview" src={asset} alt={`${title} branded preview`} width="1080" height="1350" loading="lazy" />}<span></span><span></span><span></span></article>)}</div>
+                <p class="guide-layer__scribble guide-layer__scribble--same">{tr("brandGuide.outputs.sameBrand")}<br />{tr("brandGuide.outputs.differentFormats")}<br /><i class="bx bx-down-arrow-alt icon-xl"></i></p>
+                <div class="guide-layer__pill-row guide-output-primitives">{[["bx-palette","brandGuide.outputs.template1"],["bx-font-family","brandGuide.outputs.template2"],["bx-shuffle","brandGuide.outputs.template3"],["bx-expand","brandGuide.outputs.template4"],["bx-image","brandGuide.outputs.template5"],["bx-sun","brandGuide.outputs.template6"]].map(([icon, label], index) => <span data-guide-node={`output-primitive-${index + 1}`}>{label === "brandGuide.outputs.template3" ? <SpielOSLogo markOnly boxClass="h-6 w-6" /> : <i class={`bx ${icon} icon-2xl`}></i>}{tr(label)}</span>)}</div>
+                <div class="guide-layer__bottom-claim guide-output-claim"><strong>{tr("brandGuide.outputs.claim1")}</strong><strong>{tr("brandGuide.outputs.claim2")}</strong><small>{tr("brandGuide.outputs.change")}</small></div>
+              </GuideDiagramCanvas>
+            </div>
+          ) : slide.kind === "media" ? (
+            <div class="guide-layer guide-layer--media">
+              <header class="guide-layer__heading"><p>{tr("brandGuide.media.eyebrow")}</p><h2>{tr("brandGuide.media.title1")}<br /><em>{tr("brandGuide.media.title2")}</em></h2><span>{tr("brandGuide.media.subtitle")}</span></header>
+                <GuideDiagramCanvas class="guide-layer__diagram" designWidth={1680} designHeight={940} ariaLabel="Brand system produces executable media" edges={mediaEdges}>
+                <div class="guide-media-column guide-media-column--left">
+                  <article data-guide-node="media-content"><i class="bx bx-file icon-3xl"></i><strong>{tr("brandGuide.media.content")}</strong><span></span><span></span></article>
+                  <article data-guide-node="media-template"><i class="bx bx-layout icon-3xl"></i><strong>{tr("brandGuide.media.template")}</strong><span></span><span></span></article>
+                  <article data-guide-node="media-image"><i class="bx bx-image icon-3xl"></i><strong>{tr("brandGuide.media.image")}</strong>
+                    <div class="guide-media-preview" aria-label="Branded image output">
+                      <img src="/design-gallery/social/ideas-in-motion.png" alt="" width="1080" height="1350" />
+                      <div class="guide-media-preview__copy"><strong>{tr("brandGuide.media.imageTitle")}<br /><em>{tr("brandGuide.media.imageTitleAccent")}</em></strong><small>{tr("brandGuide.media.imageNote").split("\n").map((line, index) => <Fragment>{index > 0 && <br />}{line}</Fragment>)}</small></div>
+                    </div>
+                  </article>
+                </div>
+                <GuideGlassCore class="guide-layer__core--media" node="media-core" title={tr("brandGuide.production.system")} subtitle={tr("brandGuide.production.systemNote")} />
+                <div class="guide-media-column guide-media-column--right">
+                  <article data-guide-node="media-script"><i class="bx bx-file icon-3xl"></i><strong>{tr("brandGuide.media.script")}</strong><span></span><span></span></article>
+                  <article data-guide-node="media-scenes"><i class="bx bx-layer icon-3xl"></i><strong>{tr("brandGuide.media.scenes")}</strong><span></span><span></span></article>
+                  <article data-guide-node="media-motion"><i class="bx bx-play-circle icon-3xl"></i><strong>{tr("brandGuide.media.motion")}</strong><span></span><span></span></article>
+                  <article data-guide-node="media-video"><i class="bx bxs-video icon-3xl"></i><strong>{tr("brandGuide.media.video")}</strong>
+                    <div class="guide-media-preview guide-media-preview--video" aria-label="Branded video scene">
+                      <img src="/design-gallery/video/posters/from-ideas-to-impact.jpg" alt="" width="1080" height="1350" />
+                      <div class="guide-media-preview__copy"><strong>{tr("brandGuide.media.videoTitle1")}<br /><em>{tr("brandGuide.media.videoTitle2")}<br />{tr("brandGuide.media.videoTitle3")}</em></strong></div>
+                      <i class="bx bx-play icon-3xl" aria-hidden="true"></i>
+                      <small>0:00 / 0:24</small>
+                    </div>
+                  </article>
+                </div>
+                <p class="guide-layer__scribble guide-layer__scribble--media-left">{tr("brandGuide.media.reusable")}<i class="bx bx-down-arrow-alt icon-xl"></i></p><p class="guide-layer__scribble guide-layer__scribble--media-right">{tr("brandGuide.media.inMotion")}<i class="bx bx-down-arrow-alt icon-xl"></i></p>
+                <div class="guide-layer__pill-row guide-media-tools"><span><i class="bx bx-code-alt icon-2xl"></i>HTML / React</span><span><i class="bx bx-cube icon-2xl"></i>SVG</span><span><i class="bx bx-images icon-2xl"></i>{tr("brandGuide.media.real")}</span><span><i class="bx bx-play-circle icon-2xl"></i>Remotion</span><span><i class="bx bx-cog icon-2xl"></i>FFmpeg</span><span><img class="guide-brand-mark guide-brand-mark--figma" src="/assets/brand/figma.svg" alt="" width="18" height="27" /><img class="guide-brand-mark guide-brand-mark--canva" src="/assets/brand/canva.svg" alt="" width="32" height="12" />Figma / Canva</span></div>
+                <div class="guide-layer__bottom-claim">{locale === "fa" ? <><strong>{tr("brandGuide.media.bottom1")} <em>{tr("brandGuide.media.bottomAccent1")}</em></strong><strong>{tr("brandGuide.media.bottom3")} <em>{tr("brandGuide.media.bottomAccent2")}</em></strong></> : <><strong>{tr("brandGuide.media.bottom1")} <em>{tr("brandGuide.media.bottomAccent1")}</em> {tr("brandGuide.media.bottom2")}</strong><strong>{tr("brandGuide.media.bottom3")} <em>{tr("brandGuide.media.bottomAccent2")}</em> {tr("brandGuide.media.bottom4")}</strong></>}</div>
+              </GuideDiagramCanvas>
+            </div>
+          ) : slide.kind === "execution" ? (
+            <div class="guide-layer guide-layer--execution">
+              <header class="guide-layer__heading"><p>{tr("brandGuide.execution.eyebrow")}</p><h2>{tr("brandGuide.execution.title1")} <em>{tr("brandGuide.execution.titleAccent")}</em></h2></header>
+              <GuideDiagramCanvas class="guide-layer__diagram" designWidth={1680} designHeight={940} ariaLabel="AI executes a brand system" edges={executionEdges}>
+                <div class="guide-execution-side guide-execution-side--before"><label>{tr("brandGuide.execution.before")}</label><h3>{tr("brandGuide.execution.beforePrompt").split("\n").map((line, index) => <Fragment>{index > 0 && <br />}{line}</Fragment>)}</h3><p>{tr("brandGuide.execution.guesses")}</p><div class="guide-chat-card" data-guide-node="execution-before-chat"><strong><img class="guide-provider-mark guide-provider-mark--chatgpt" src="/assets/brand/chatgpt.svg" alt="" width="20" height="20" /> ChatGPT</strong><span>{tr("brandGuide.execution.beforePrompt").split("\n").map((line, index) => <Fragment>{index > 0 && <br />}{line}</Fragment>)}</span><small>⌘　↑</small></div><div class="guide-execution-posts">{beforePostAssets.map((asset) => <span><img src={asset} alt="Branded output variation" width="1080" height="1350" loading="lazy" /></span>)}</div><small>{tr("brandGuide.execution.beforeOutputNote").split("\n").map((line, index) => <Fragment>{index > 0 && <br />}{line}</Fragment>)}</small></div>
+                <GuideGlassCore class="guide-execution-core" node="execution-core" icon="">
+                  <p class="guide-execution-core__eyebrow">{tr("brandGuide.execution.withSystem")}</p>
+                  <h3>{tr("brandGuide.execution.hasSystem")}</h3>
+                  <div class="guide-execution-core__rows">{[["bx-grid-alt","brandGuide.execution.components","brandGuide.execution.componentsNote"],["bx-data","brandGuide.execution.tokens","brandGuide.execution.tokensNote"],["bx-file","brandGuide.execution.templates","brandGuide.execution.templatesNote"],["bx-file","brandGuide.execution.rules","brandGuide.execution.rulesNote"],["bx-image","brandGuide.execution.examples","brandGuide.execution.examplesNote"],["bx-folder","brandGuide.execution.assets","brandGuide.execution.assetsNote"],["bx-play-circle","brandGuide.execution.motion","brandGuide.execution.motionNote"]].map(([icon, title, sub]) => <span><i class={`bx ${icon} icon-xl`}></i><b>{tr(title)}</b><small>{tr(sub)}</small></span>)}</div>
+                </GuideGlassCore>
+                <div class="guide-execution-side guide-execution-side--after"><label>{tr("brandGuide.execution.after")}</label><h3>{tr("brandGuide.execution.afterPrompt").split("\n").map((line, index) => <Fragment>{index > 0 && <br />}{line}</Fragment>)}</h3><p>{tr("brandGuide.execution.executes")}</p><div class="guide-chat-card" data-guide-node="execution-after-chat"><strong><img class="guide-provider-mark guide-provider-mark--claude" src="/assets/brand/claude.svg" alt="" width="20" height="20" /> Claude</strong><span>{tr("brandGuide.execution.afterPrompt").split("\n").map((line, index) => <Fragment>{index > 0 && <br />}{line}</Fragment>)}</span><small>↗</small></div><div class="guide-execution-stack" data-guide-node="execution-after-output"><span><img src="/design-gallery/social/explore-new-horizons.png" alt="On-brand generated story" width="896" height="1120" loading="lazy" /></span><span><img src="/design-gallery/social/explore-new-horizons.png" alt="On-brand generated story variation" width="896" height="1120" loading="lazy" /></span><span><img src="/design-gallery/social/explore-new-horizons.png" alt="On-brand generated story variation" width="896" height="1120" loading="lazy" /></span></div><small>{tr("brandGuide.execution.onBrand")}<br />{tr("brandGuide.execution.anyFormat")}</small></div>
+                <div class="guide-execution-tools"><span><img class="guide-provider-mark guide-provider-mark--chatgpt" src="/assets/brand/chatgpt.svg" alt="" width="22" height="22" />ChatGPT</span><span><img class="guide-provider-mark guide-provider-mark--claude" src="/assets/brand/claude.svg" alt="" width="22" height="22" />Claude</span><span><img class="guide-provider-mark guide-provider-mark--gemini" src="/assets/brand/gemini.svg" alt="" width="22" height="22" />Gemini</span><span><img class="guide-provider-mark guide-provider-mark--copilot" src="/assets/brand/copilot.svg" alt="" width="22" height="22" />Copilot</span><small>{tr("brandGuide.execution.anyTool").split("\n").map((line, index) => <Fragment>{index > 0 && <br />}{line}</Fragment>)}</small></div>
+                <div class="guide-layer__bottom-claim"><strong>{tr("brandGuide.execution.claim1")}</strong><strong>{tr("brandGuide.execution.claim2")} <em>{tr("brandGuide.execution.claimAccent")}</em></strong></div>
+              </GuideDiagramCanvas>
+            </div>
+          ) : slide.kind === "production" ? (
+            <GuideProductionScene locale={locale} />
+          ) : slide.kind === "cost-model" ? (
+            <GuideCostModelScene locale={locale} />
+          ) : slide.kind === "system-map" ? (
+            <GuideSystemMapScene locale={locale} />
+          ) : slide.kind === "review" ? (
+            <GuideReviewScene locale={locale} />
+          ) : (
+            <div class="guide-slide__content">
+              <h2>{slide.title}</h2>
+              <p>{slide.body}</p>
+            </div>
+          )}
+          <div class="guide-slide__controls" aria-label="Slide controls">
+            <button type="button" data-guide-previous aria-label={tr("brandGuide.previous")}><i class="bx bx-left-arrow-alt icon-2xl" aria-hidden="true"></i></button>
+            <button type="button" data-guide-next aria-label={index === slides.length - 1 ? tr("brandGuide.apply") : tr("brandGuide.next")}><i class="bx bx-right-arrow-alt icon-2xl" aria-hidden="true"></i></button>
+          </div>
+        </section>
+      ))}
+    </div>
+
+    <button class="guide-fullscreen" type="button" data-guide-fullscreen data-enter-label={tr("brandGuide.fullscreen")} data-exit-label={tr("brandGuide.exitFullscreen")} aria-label={tr("brandGuide.fullscreen")} title={tr("brandGuide.fullscreen")}>
+      <i class="bx bx-fullscreen icon-xl" aria-hidden="true"></i>
+    </button>
+
+    <div class="guide-status">
+      <nav class="guide-progress" aria-label={tr("brandGuide.slideCount")}>
+        {Array.from({ length: slides.length }, (_, index) => <button type="button" data-guide-dot={index + 1} aria-label={tr("brandGuide.goTo", { number: index + 1 })} aria-current={index === 0 ? "step" : undefined}></button>)}
+      </nav>
+      <div class="guide-counter" aria-hidden="true"><b data-guide-current>Access</b><span>/</span><span>{slides.length}</span></div>
+    </div>
+    <aside class="guide-orientation" aria-live="polite">
+      <i class="bx bx-right-arrow-alt icon-3xl" aria-hidden="true"></i>
+      <p>{tr("brandGuide.rotate")}</p>
+    </aside>
+  </main>
+  <script>import "../scripts/brand-guide";</script>
+</BaseLayout>

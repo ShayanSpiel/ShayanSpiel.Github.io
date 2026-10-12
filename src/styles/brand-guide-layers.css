@@ -1,0 +1,47 @@
+/* Slides 05–09 use a fixed virtual canvas. These reference-locked bands keep
+   semantic nodes in non-overlapping rows before the canvas is uniformly fit. */
+.guide-layer--scatter .guide-scatter-files,
+.guide-layer--scatter .guide-scatter-folder { top:29%; }
+.guide-layer--scatter .guide-layer__core { top:47%; }
+
+.guide-layer--system .guide-system-top { top:31%; }
+.guide-layer--system .guide-layer__core--system { top:51%; }
+.guide-layer--system .guide-system-bottom { top:70%; }
+.guide-layer--system .guide-system-flow { bottom:1%; }
+.guide-layer--system .guide-layer__bottom-claim { bottom:-12%; }
+
+.guide-layer .guide-output-grid {
+  max-width:none;
+  margin-top:0;
+  align-items:stretch;
+}
+.guide-layer .guide-output-grid article > span {
+  display:block;
+  min-height:0;
+  padding:0;
+  border:0;
+}
+.guide-layer--outputs .guide-output-primitives { bottom:13%; }
+.guide-layer--outputs .guide-output-claim { bottom:-13%; }
+
+.guide-layer--media .guide-media-column { top:29%; }
+.guide-layer--media .guide-layer__core--media { top:38%; }
+.guide-layer--media .guide-layer__scribble--media-left,
+.guide-layer--media .guide-layer__scribble--media-right { top:56%; }
+.guide-layer--media .guide-media-tools { bottom:-7%; }
+.guide-layer--media .guide-layer__bottom-claim { bottom:-15%; }
+
+.guide-layer--execution .guide-execution-tools { bottom:-7%; }
+.guide-layer--execution .guide-execution-stack { width:38%; }
+.guide-layer--execution .guide-layer__bottom-claim { bottom:-12%; }
+
+@media (max-width:58rem) and (orientation:landscape) {
+  .guide-slide:has(.guide-layer) { padding:2rem 1rem 3.2rem; overflow-y:auto; }
+  .guide-layer {
+    position:absolute;
+    left:50%;
+    top:2rem;
+    transform:translateX(-50%) scale(var(--guide-layer-scale));
+    transform-origin:top center;
+  }
+}

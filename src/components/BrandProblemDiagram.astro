@@ -1,0 +1,78 @@
+---
+import GuideDiagramCanvas, { type DiagramEdge } from "./brand-guide/GuideDiagramCanvas.astro";
+import { t, type Locale } from "../i18n/translations";
+
+interface Props { locale?: Locale }
+const { locale = "en" } = Astro.props;
+const tr = (key: string) => t(locale, key);
+
+const edges: DiagramEdge[] = [
+  // Input edges leave the actual card perimeter. Center-to-center edges made
+  // the paths disappear behind the cards and left no visible hierarchy.
+  { id: "logo-merge", from: "logo-anchor", to: "merge", fromAnchor: { side: "right", ratio: .36 }, toAnchor: { side: "center" }, bend: -0.18 },
+  { id: "colors-merge", from: "colors-anchor", to: "merge", fromAnchor: { side: "right", ratio: .44 }, toAnchor: { side: "center" }, bend: -0.06 },
+  { id: "fonts-merge", from: "fonts-anchor", to: "merge", fromAnchor: { side: "right", ratio: .56 }, toAnchor: { side: "center" }, bend: 0.12 },
+  { id: "guidelines-merge", from: "guidelines-anchor", to: "merge", fromAnchor: { side: "right", ratio: .46 }, toAnchor: { side: "center" }, bend: 0.2 },
+  { id: "templates-merge", from: "templates-anchor", to: "merge", fromAnchor: { side: "right", ratio: .62 }, toAnchor: { side: "center" }, bend: 0.3 },
+  { id: "merge-statement", from: "merge", to: "statement", fromAnchor: { side: "right" }, toAnchor: { side: "left" }, dashed: true },
+  { id: "statement-outcome", from: "statement", to: "outcome", fromAnchor: { side: "bottom", ratio: 0.5 }, toAnchor: { side: "top", ratio: 0.5 }, dashed: true },
+  { id: "files-arrow", from: "files-note", to: "guidelines-anchor", fromAnchor: { side: "right", ratio: 0.85 }, toAnchor: { side: "left", ratio: .65 }, bend: -0.18, arrow: true },
+];
+---
+
+<div class="guide-problem" data-brand-problem-diagram>
+  <div class="guide-problem__title">
+    <h2 dir={locale === "fa" ? "rtl" : "ltr"}><span class="guide-problem__bandaged">{tr("brandGuide.problem.titleLead")}<span class="guide-problem__bandages" aria-hidden="true">{[1, 2, 3].map(() => <img src="/assets/emojis/adhesive-bandage-warm.svg" alt="" width="36" height="36" />)}</span></span> <em>{tr("brandGuide.problem.titleAccent")}</em> {tr("brandGuide.problem.titleTail")}</h2>
+  </div>
+
+  <GuideDiagramCanvas class="guide-problem__body" designWidth={1680} designHeight={940} edges={edges} ariaLabel="Brand inputs converge into an executable brand system">
+    <span class="guide-problem__network-node" data-guide-node="merge" aria-label="Brand inputs converge here"></span>
+
+    <div class="guide-problem__inputs">
+      <article class="guide-file-card guide-file-card--logo" data-guide-node="logo" aria-label="Logo SVG file">
+        <span class="guide-file-card__edge-anchor" data-guide-node="logo-anchor" aria-hidden="true"></span>
+        <span class="guide-file-card__type"><i class="bx bx-file icon-lg" aria-hidden="true"></i>SVG</span>
+        <div class="guide-file-card__logo"><i class="bx bx-shuffle icon-4xl" aria-hidden="true"></i></div>
+        <strong>{tr("brandGuide.problem.logo")}</strong><small>Logo.svg</small>
+      </article>
+      <article class="guide-file-card guide-file-card--colors" data-guide-node="colors" aria-label="Brand colors ASE file">
+        <span class="guide-file-card__edge-anchor" data-guide-node="colors-anchor" aria-hidden="true"></span>
+        <span class="guide-file-card__type"><i class="bx bx-file icon-lg" aria-hidden="true"></i>ASE</span>
+        <div class="guide-file-card__swatches"><i></i><i></i><i></i><i></i></div>
+        <strong>{tr("brandGuide.problem.colors")}</strong><small>Brand colors.ase</small>
+      </article>
+      <article class="guide-file-card guide-file-card--fonts" data-guide-node="fonts" aria-label="Typography TTF file">
+        <span class="guide-file-card__edge-anchor" data-guide-node="fonts-anchor" aria-hidden="true"></span>
+        <span class="guide-file-card__type"><i class="bx bx-file icon-lg" aria-hidden="true"></i>TTF</span>
+        <div class="guide-file-card__fonts"><b>A</b><em>a</em></div>
+        <strong>{tr("brandGuide.problem.fonts")}</strong><small>Outfit, DM Serif</small>
+      </article>
+      <article class="guide-file-card guide-file-card--guidelines" data-guide-node="guidelines" aria-label="Brand guidelines PDF file">
+        <span class="guide-file-card__edge-anchor" data-guide-node="guidelines-anchor" aria-hidden="true"></span>
+        <span class="guide-file-card__type"><i class="bx bx-file icon-lg" aria-hidden="true"></i>PDF</span>
+        <i class="bx bx-file-blank icon-3xl guide-file-card__document" aria-hidden="true"></i>
+        <strong>{tr("brandGuide.problem.guidelines")}</strong><small>Brand guidelines.pdf</small>
+      </article>
+      <article class="guide-file-card guide-file-card--templates" data-guide-node="templates" aria-label="Canva brand templates">
+        <span class="guide-file-card__edge-anchor" data-guide-node="templates-anchor" aria-hidden="true"></span>
+        <span class="guide-file-card__type"><i class="bx bx-file icon-lg" aria-hidden="true"></i>CANVA</span>
+        <div class="guide-file-card__templates"><b>Aa</b><i class="bx bx-image icon-base" aria-hidden="true"></i><i class="bx bx-play icon-base" aria-hidden="true"></i></div>
+        <strong>{tr("brandGuide.problem.templates")}</strong><small>{tr("brandGuide.problem.templatesNote")}</small>
+      </article>
+      <p class="guide-problem__files-note" data-guide-node="files-note">{tr("brandGuide.problem.justFiles")}<br />{tr("brandGuide.problem.noExecution")}</p>
+    </div>
+
+    <div class="guide-problem__statements">
+      <article class="guide-problem__statement" data-guide-node="statement">
+        <div class="guide-problem__icon"><i class="bx bx-file icon-2xl" aria-hidden="true"></i></div>
+        <h3>{tr("brandGuide.problem.describe")}<br /><em>{tr("brandGuide.problem.cannotProduce")}</em></h3>
+        <p>{tr("brandGuide.problem.manualWork")}</p>
+      </article>
+      <article class="guide-problem__statement guide-problem__statement--outcome" data-guide-node="outcome">
+        <div class="guide-problem__icon"><i class="bx bx-rocket icon-2xl" aria-hidden="true"></i></div>
+        <h3>{tr("brandGuide.problem.readOnly")}<br /><em>{tr("brandGuide.problem.executable")}</em></h3>
+      </article>
+    </div>
+
+  </GuideDiagramCanvas>
+</div>

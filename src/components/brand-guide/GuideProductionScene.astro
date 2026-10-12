@@ -1,0 +1,96 @@
+---
+import GuideDiagramCanvas, { type DiagramEdge } from "./GuideDiagramCanvas.astro";
+import GuideGlassCore from "./GuideGlassCore.astro";
+import { t, type Locale } from "../../i18n/translations";
+
+interface Props { locale?: Locale }
+const { locale = "en" } = Astro.props;
+const tr = (key: string) => t(locale, key);
+
+const edges: DiagramEdge[] = [
+  { id: "production-idea-content", from: "production-idea", to: "production-content", fromAnchor: { side: "right", ratio: .5 }, toAnchor: { side: "left", ratio: .5 }, arrow: true },
+  { id: "production-content-core", from: "production-content", to: "production-core", fromAnchor: { side: "right", ratio: .5 }, toAnchor: { side: "left", ratio: .5 }, arrow: true },
+  { id: "production-core-social", from: "production-core", to: "production-social", fromAnchor: { side: "right", ratio: .22 }, toAnchor: { side: "left", ratio: .5 }, arrow: true },
+  { id: "production-core-image", from: "production-core", to: "production-image", fromAnchor: { side: "right", ratio: .42 }, toAnchor: { side: "left", ratio: .5 }, arrow: true },
+  { id: "production-core-video", from: "production-core", to: "production-video", fromAnchor: { side: "right", ratio: .62 }, toAnchor: { side: "left", ratio: .5 }, arrow: true },
+  { id: "production-core-website", from: "production-core", to: "production-website", fromAnchor: { side: "right", ratio: .82 }, toAnchor: { side: "left", ratio: .5 }, arrow: true },
+  { id: "production-core-process", from: "production-core", to: "production-process-1", fromAnchor: { side: "bottom", ratio: .5 }, toAnchor: { side: "top", ratio: .5 } },
+  { id: "production-process-1-2", from: "production-process-1", to: "production-process-2", fromAnchor: { side: "right", ratio: .5 }, toAnchor: { side: "left", ratio: .5 }, arrow: true },
+  { id: "production-process-2-3", from: "production-process-2", to: "production-process-3", fromAnchor: { side: "right", ratio: .5 }, toAnchor: { side: "left", ratio: .5 }, arrow: true },
+  { id: "production-process-3-4", from: "production-process-3", to: "production-process-4", fromAnchor: { side: "right", ratio: .5 }, toAnchor: { side: "left", ratio: .5 }, arrow: true },
+  { id: "production-process-4-5", from: "production-process-4", to: "production-process-5", fromAnchor: { side: "right", ratio: .5 }, toAnchor: { side: "left", ratio: .5 }, arrow: true },
+  { id: "production-process-5-6", from: "production-process-5", to: "production-process-6", fromAnchor: { side: "right", ratio: .5 }, toAnchor: { side: "left", ratio: .5 }, arrow: true },
+  { id: "production-before-after", from: "production-before", to: "production-after", fromAnchor: { side: "right", ratio: .5 }, toAnchor: { side: "left", ratio: .5 }, arrow: true },
+];
+
+const outputs = [
+  ["production-social", "bxl-instagram", "brandGuide.production.social", "brandGuide.production.socialNote", "/design-gallery/social/ideas-in-motion.png", "Social post preview"],
+  ["production-image", "bx-image", "brandGuide.production.image", "brandGuide.production.imageNote", "/design-gallery/social/explore-new-horizons.png", "Branded image preview"],
+  ["production-video", "bx-play", "brandGuide.production.video", "brandGuide.production.videoNote", "/design-gallery/video/posters/from-ideas-to-impact.jpg", "Branded video preview"],
+  ["production-website", "bx-globe", "brandGuide.production.website", "brandGuide.production.websiteNote", "/design-gallery/social/agent-brief.png", "Branded website preview"],
+] as const;
+
+const process = [
+  ["01", "brandGuide.production.team", "brandGuide.production.teamNote", "bx-group"],
+  ["02", "brandGuide.production.ai", "brandGuide.production.aiNote", "bxs-magic-wand"],
+  ["03", "brandGuide.production.infrastructure", "brandGuide.production.infrastructureNote", "bx-network-chart"],
+  ["04", "brandGuide.production.workflow", "brandGuide.production.workflowNote", "bx-git-branch"],
+  ["05", "brandGuide.production.human", "brandGuide.production.humanNote", "bx-user"],
+  ["06", "brandGuide.production.publish", "", "bx-check-square"],
+] as const;
+---
+
+<div class="guide-layer guide-layer--production">
+  <header class="guide-layer__heading">
+    <p>{tr("brandGuide.production.eyebrow")}</p>
+    <h2>{tr("brandGuide.production.titleBefore")}<br /><em>{tr("brandGuide.production.titleAfter")}</em></h2>
+  </header>
+
+  <GuideDiagramCanvas class="guide-layer__diagram guide-production-diagram" designWidth={1680} designHeight={940} ariaLabel="One idea flows through brand infrastructure into multiple branded outputs" edges={edges}>
+    <article class="guide-production-idea" data-guide-node="production-idea">
+      <i class="bx bx-bulb icon-4xl" aria-hidden="true"></i>
+      <strong>{tr("brandGuide.production.idea")}</strong>
+      <small>{tr("brandGuide.production.ideaNote")}<br />{tr("brandGuide.production.ideaNote2")}</small>
+      <span>“{tr("brandGuide.production.ideaExample")}”</span>
+    </article>
+
+    <article class="guide-production-content" data-guide-node="production-content">
+      <i class="bx bx-file icon-3xl" aria-hidden="true"></i>
+      <strong>{tr("brandGuide.production.content")}</strong>
+      <small>{tr("brandGuide.production.contentNote")}<br />{tr("brandGuide.production.contentNote2")}</small>
+      <span><i class="bx bx-text icon-xl" aria-hidden="true"></i>{tr("brandGuide.production.text")}</span>
+      <span><i class="bx bx-image icon-xl" aria-hidden="true"></i>{tr("brandGuide.production.images")}</span>
+      <span><i class="bx bx-link icon-xl" aria-hidden="true"></i>{tr("brandGuide.production.references")}</span>
+    </article>
+
+    <GuideGlassCore class="guide-production-core" node="production-core" icon="bx-network-chart" title={tr("brandGuide.production.system")} subtitle={tr("brandGuide.production.systemNote")}>
+      <div class="guide-production-core__chips" aria-label={tr("brandGuide.production.systemInputs")}><span>{tr("brandGuide.production.templates")}</span><span>{tr("brandGuide.production.assets")}</span><span>{tr("brandGuide.production.rules")}</span><span>AI</span><span>{tr("brandGuide.production.brandLogic")}</span></div>
+    </GuideGlassCore>
+
+    <div class="guide-production-outputs" aria-label="Branded output formats">
+      {outputs.map(([node, icon, title, description, asset, alt]) => (
+        <article data-guide-node={node}>
+          <div class="guide-production-output__copy"><i class={`bx ${icon} icon-2xl`} aria-hidden="true"></i><strong>{tr(title)}</strong><small>{tr(description)}</small></div>
+          <img src={asset} alt={alt} width="1080" height="1350" loading="lazy" />
+        </article>
+      ))}
+    </div>
+
+    <div class="guide-production-process" aria-label="Production workflow">
+      {process.map(([number, title, sub, icon], index) => (
+        <article data-guide-node={`production-process-${index + 1}`}>
+          <small>{number}</small><i class={`bx ${icon} icon-2xl`} aria-hidden="true"></i><strong>{tr(title)}<br />{sub ? tr(sub) : ""}</strong>
+        </article>
+      ))}
+    </div>
+
+    <article class="guide-production-before" data-guide-node="production-before">
+      <small>{tr("brandGuide.production.before")}</small><i class="bx bx-file icon-3xl" aria-hidden="true"></i><strong>{tr("brandGuide.production.beforeClaim")}</strong>
+    </article>
+    <article class="guide-production-after" data-guide-node="production-after">
+      <small>{tr("brandGuide.production.after")}</small><i class="bx bx-layer icon-3xl" aria-hidden="true"></i><strong>{tr("brandGuide.production.afterClaimBefore")} <em>{tr("brandGuide.production.afterClaimAccent")}</em><br />{tr("brandGuide.production.afterClaimAfter")}</strong>
+    </article>
+
+    <p class="guide-production-claim">{tr("brandGuide.production.claimBefore")} <em>{tr("brandGuide.production.claimAfter")}</em></p>
+  </GuideDiagramCanvas>
+</div>

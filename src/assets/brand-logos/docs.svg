@@ -1,0 +1,5 @@
+<svg role="img" viewBox="0 0 32 40" xmlns="http://www.w3.org/2000/svg" aria-label="Google Docs">
+  <path fill="#4285F4" d="M6 0h13.3L32 12.7V36a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V4a4 4 0 0 1 4-4Z"/>
+  <path fill="#AECBFA" d="M19.3 0V8.7a4 4 0 0 0 4 4H32L19.3 0Z"/>
+  <path fill="#FFF" d="M9 19h14v2.7H9V19Zm0 5.7h14v2.7H9v-2.7Zm0 5.6h10v2.7H9v-2.7Z"/>
+</svg>

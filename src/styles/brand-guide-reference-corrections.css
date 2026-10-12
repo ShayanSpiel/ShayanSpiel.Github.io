@@ -1,0 +1,1272 @@
+/* Reference-frame geometry for the five full-screen presentation scenes.
+   The 1536×864 virtual canvas is uniformly fitted by brand-guide.ts. Keep
+   every composition item inside that canvas and preserve the measured nodes. */
+.guide-slide:has(.guide-layer) {
+  padding:1.35rem 0 3.8rem;
+  /* The fitter owns the virtual canvas position.  The parent grid must not
+     add a second centering offset when the viewport is wider than the
+     1536px scene; that was the source of the asymmetric left/right gutters. */
+  place-items:start;
+}
+.guide-slide:has(.guide-layer) .guide-layer { height:54rem; }
+.guide-slide:has(.guide-layer) .guide-layer__diagram { height:100%; aspect-ratio:auto; }
+.guide-layer__heading { inset-block-start:2rem; }
+.guide-layer__heading h2 { font-size:clamp(3rem,4.6vw,5.2rem); line-height:.95; }
+
+/* 05 — the unorganized source cluster fans into one system and folder. */
+.guide-layer--scatter .guide-scatter-files { left:-3%; top:30%; width:36%; height:50%; }
+.guide-layer--scatter .guide-scatter-card { width:8.8rem; height:6.4rem; }
+.guide-layer--scatter .guide-scatter-card--9 { left:55%; top:74%; }
+.guide-layer--scatter .guide-scatter-card--7,
+.guide-layer--scatter .guide-scatter-card--8 { height:5.3rem; }
+.guide-layer--scatter .guide-layer__core { left:32%; top:47%; width:29%; min-height:9.5rem; padding:1rem 3rem; }
+.guide-layer--scatter .guide-layer__core>.bx { font-size:2rem; }
+.guide-layer--scatter .guide-layer__core strong { font-size:1.5rem; white-space:nowrap; }
+.guide-layer--scatter .guide-scatter-folder { right:6.5%; top:30%; width:22%; height:53%; }
+.guide-layer--scatter .guide-layer__pill-row {
+  inset-inline-start:2.5%; inset-inline-end:auto;
+  width:85%; bottom:3%; justify-content:space-between;
+}
+.guide-layer--scatter .guide-layer__pill-row>span { width:29%; min-height:4.8rem; padding:.8rem 1.35rem; }
+.guide-layer--scatter .guide-layer__scribble--everywhere { left:-3%; top:28%; }
+.guide-layer--scatter .guide-layer__scribble--scattered { left:-3%; bottom:11%; }
+
+/* 06 — four rules into a reusable system; code panel occupies its own lane. */
+.guide-layer--system .guide-system-top { left:-4.5%; top:26%; width:58%; gap:1.15rem; }
+.guide-layer--system .guide-system-top article { min-height:7.2rem; }
+.guide-layer--system .guide-layer__core--system { left:10%; top:45%; width:30%; min-height:7.2rem; }
+.guide-layer--system .guide-system-code { right:3.5%; top:25%; width:38%; height:52%; }
+.guide-layer--system .guide-system-bottom { left:-2.5%; top:64%; width:54%; }
+.guide-layer--system .guide-system-flow { bottom:13%; }
+.guide-layer--system .guide-layer__bottom-claim { bottom:5%; }
+.guide-layer--system .guide-system-flow { left:-4.5%; right:4%; }
+.guide-layer--system .guide-layer__bottom-claim>strong {
+  display:flex; align-items:center; justify-content:center;
+  width:31.5rem; min-height:4.5rem; padding:.65rem 1rem;
+  border:1px solid var(--primary); border-radius:var(--radius-md);
+  background:var(--panel);
+}
+.guide-layer--system .guide-layer__bottom-claim { left:8%; right:8%; justify-content:flex-start; gap:7.5rem; }
+
+/* 07 — ten reusable formats above six inherited brand primitives. */
+.guide-layer--outputs .guide-output-grid { top:22%; right:6%; width:67%; height:46%; gap:1.15rem; }
+.guide-layer--outputs .guide-layer__core--outputs { left:-3.5%; top:37%; width:24%; min-height:7.5rem; }
+.guide-layer--outputs .guide-output-primitives {
+  inset-inline-start:-2.5%; inset-inline-end:2%;
+  bottom:23%; gap:.9rem;
+}
+.guide-layer--outputs .guide-output-primitives>span { min-height:4rem; width:14%; }
+.guide-layer--outputs .guide-output-claim { bottom:3.5%; }
+
+/* 08 — two independent visual/media flows share the middle system. */
+.guide-layer--media .guide-layer__heading { inset-block-start:1rem; }
+.guide-layer--media .guide-layer__heading h2 { font-size:clamp(2.8rem,4.1vw,4.7rem); }
+.guide-layer--media .guide-media-column { top:25%; width:20.5%; gap:.8rem; }
+.guide-layer--media .guide-media-column--left { left:3.5%; }
+.guide-layer--media .guide-media-column--right { right:14%; }
+.guide-layer--media .guide-media-column article { min-height:4.5rem; }
+.guide-layer--media .guide-media-column article:has(.guide-media-preview) { min-height:12rem; }
+.guide-layer--media .guide-layer__core--media { left:32%; top:33%; width:26%; min-height:7.5rem; }
+.guide-layer--media .guide-media-tools {
+  inset-inline-start:-5%; inset-inline-end:4.5%; bottom:14.5%;
+}
+.guide-layer--media .guide-layer__bottom-claim { bottom:5%; }
+.guide-layer--media .guide-layer__scribble--media-left { left:-7%; }
+
+/* 09 — before and after are peer columns, with AI-readable system between. */
+.guide-layer--execution .guide-execution-side { top:22%; width:28.5%; }
+.guide-layer--execution .guide-execution-side--before { left:-5.3%; }
+.guide-layer--execution .guide-execution-side--after { right:4%; }
+.guide-layer--execution .guide-execution-core { left:32%; top:26%; width:28%; }
+.guide-layer--execution .guide-execution-core { padding:1rem; }
+.guide-layer--execution .guide-execution-core h3 { margin-bottom:.5rem; }
+.guide-layer--execution .guide-execution-core>p { margin-bottom:.6rem; }
+.guide-layer--execution .guide-execution-core>span {
+  min-height:2.35rem; padding:.3rem .45rem;
+}
+.guide-layer--execution .guide-execution-tools {
+  inset-inline-start:28%; inset-inline-end:37%; bottom:15%;
+}
+.guide-layer--execution .guide-layer__bottom-claim { bottom:.2%; }
+
+/* Reference-detail pass: the preview surfaces are part of the scene, not
+   empty filler. Keep them inside their measured cards so the connector canvas
+   still owns geometry while each card carries its own visual hierarchy. */
+.guide-layer--outputs .guide-output-grid article {
+  position:relative;
+  overflow:hidden;
+  align-content:start;
+  min-height:0;
+  isolation:isolate;
+}
+.guide-layer--outputs .guide-output-grid article::before {
+  content:"";
+  position:absolute;
+  z-index:-1;
+  inset:auto .85rem .8rem;
+  height:4.15rem;
+  border:1px solid color-mix(in oklab,var(--primary) 28%,transparent);
+  border-radius:var(--radius-sm);
+  background:linear-gradient(145deg,color-mix(in oklab,var(--primary) 40%,var(--panel)),color-mix(in oklab,var(--background-deep) 70%,var(--panel)));
+  opacity:.9;
+}
+.guide-layer--outputs .guide-output-grid article:nth-child(2)::before {
+  content:"“";
+  display:flex;
+  align-items:flex-start;
+  justify-content:flex-start;
+  padding:.1rem .55rem;
+  border:0;
+  background:transparent;
+  color:var(--primary);
+  font-family:var(--font-display);
+  font-size:4.2rem;
+  line-height:.8;
+}
+.guide-layer--outputs .guide-output-grid article:nth-child(3)::before {
+  content:"12×";
+  display:flex;
+  align-items:center;
+  padding-left:.7rem;
+  border:0;
+  background:transparent;
+  color:color-mix(in oklab,var(--primary) 75%,var(--foreground-strong));
+  font-size:2.4rem;
+  font-weight:850;
+}
+.guide-layer--outputs .guide-output-grid article:nth-child(5)::before {
+  content:"New";
+  display:flex;
+  align-items:center;
+  width:3.9rem;
+  inset-inline-start:.85rem;
+  inset-inline-end:auto;
+  padding-left:.6rem;
+  border:0;
+  border-radius:var(--radius-sm);
+  background:var(--primary);
+  color:var(--primary-foreground);
+  font-size:1.1rem;
+  font-weight:800;
+}
+.guide-layer--outputs .guide-output-grid article:nth-child(6)::before {
+  inset-inline:1.8rem;
+  height:5.3rem;
+  background:linear-gradient(160deg,#1a3270,#10192f 52%,#202d56);
+}
+.guide-layer--outputs .guide-output-grid article:nth-child(7)::before {
+  inset-inline:1.1rem;
+  height:4.55rem;
+  box-shadow:.55rem .35rem 0 color-mix(in oklab,var(--primary) 24%,transparent),1.05rem .7rem 0 color-mix(in oklab,var(--primary) 12%,transparent);
+}
+.guide-layer--outputs .guide-output-grid article:nth-child(8)::before {
+  content:"▶";
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:0;
+  background:linear-gradient(145deg,#182f69,#0c1428);
+  color:var(--foreground-strong);
+  font-size:1.55rem;
+}
+.guide-layer--outputs .guide-output-grid article:nth-child(9)::before {
+  inset-inline:1.15rem;
+  height:5rem;
+  background:linear-gradient(180deg,#152c5f 0 22%,transparent 22%),linear-gradient(180deg,transparent 0 48%,color-mix(in oklab,var(--primary) 60%,transparent) 48% 53%,transparent 53% 68%,color-mix(in oklab,var(--primary) 25%,transparent) 68% 73%,transparent 73%);
+}
+.guide-layer--outputs .guide-output-grid article:nth-child(10)::before {
+  height:4.7rem;
+  background:linear-gradient(180deg,color-mix(in oklab,var(--primary) 45%,var(--panel)) 0 18%,transparent 18% 40%,color-mix(in oklab,var(--primary) 30%,transparent) 40% 48%,transparent 48% 66%,color-mix(in oklab,var(--primary) 20%,transparent) 66% 74%,transparent 74%);
+}
+.guide-layer--outputs .guide-output-grid article>span { position:relative; z-index:2; }
+
+/* The reference media scene is weighted left-of-centre; the tool strip and
+   two-line claim follow that same axis instead of being stretched edge-to-edge. */
+.guide-layer--media .guide-layer__heading { inset-block-start:2rem; }
+.guide-layer--media .guide-layer__heading h2 { font-size:clamp(2.8rem,4.1vw,4.7rem); }
+.guide-layer--media .guide-media-column--left { left:1.6%; }
+.guide-layer--media .guide-media-column--right { right:25%; }
+.guide-layer--media .guide-layer__core--media { left:26.2%; top:35%; width:26%; }
+.guide-layer--media .guide-media-column { top:28%; gap:.9rem; }
+.guide-layer--media .guide-media-column article { min-height:5.2rem; }
+.guide-layer--media .guide-media-column article:has(.guide-media-preview) { min-height:16rem; }
+.guide-layer--media .guide-media-column--right article:has(.guide-media-preview) { min-height:14rem; }
+.guide-layer--media .guide-media-tools { inset-inline-start:-5%; inset-inline-end:19%; bottom:14%; }
+.guide-layer--media .guide-layer__bottom-claim { bottom:1%; flex-direction:column; align-items:center; gap:.05rem; }
+
+/* The execution reference keeps the system panel between two equal peers. */
+.guide-layer--execution .guide-execution-side--after { right:11%; }
+.guide-layer--execution .guide-execution-side { width:26.5%; }
+.guide-layer--execution .guide-execution-core { left:28%; top:25%; width:26%; }
+.guide-layer--execution .guide-execution-tools { inset-inline-start:30%; inset-inline-end:36%; }
+.guide-layer--execution .guide-layer__bottom-claim { bottom:-2%; }
+.guide-layer--execution .guide-execution-posts span { position:relative; overflow:hidden; font-family:var(--font-display); font-size:var(--font-size-xs); line-height:.95; }
+.guide-layer--execution .guide-execution-posts span::before { content:""; position:absolute; inset:0 0 auto; height:42%; background:linear-gradient(145deg,color-mix(in oklab,var(--primary) 72%,#10214c),#0e1934); opacity:.9; }
+.guide-layer--execution .guide-execution-posts span:nth-child(2) { background:linear-gradient(145deg,#0a2949,#88b7dc); }
+.guide-layer--execution .guide-execution-posts span:nth-child(3) { background:linear-gradient(145deg,#3e2d89,#e06b8c); }
+.guide-layer--execution .guide-execution-posts span:nth-child(4) { background:linear-gradient(145deg,#e6e9d8,#263844); color:#101426; }
+.guide-layer--execution .guide-execution-stack { isolation:isolate; background:transparent; box-shadow:none; }
+.guide-layer--execution .guide-execution-stack span { position:absolute; inset:0; display:grid; place-items:center; padding:.6rem; border:1px solid color-mix(in oklab,var(--primary) 66%,transparent); background:linear-gradient(145deg,#102758,#080d19); box-shadow:-.8rem .8rem 0 color-mix(in oklab,var(--primary) 26%,transparent),-.4rem .4rem 0 color-mix(in oklab,var(--primary) 45%,transparent); }
+.guide-layer--execution .guide-execution-stack span:nth-child(1) { transform:translate(-1.2rem,.8rem); opacity:.7; }
+.guide-layer--execution .guide-execution-stack span:nth-child(2) { transform:translate(-.6rem,.4rem); opacity:.85; }
+.guide-layer--execution .guide-execution-stack span:nth-child(3) { transform:none; }
+
+/* Titles are centered by the shared scene heading.  Per-scene negative
+   translations created invisible left overhangs (and a different scroll
+   width on the execution scene), so keep the heading in the same grid lane
+   for every layer. */
+.guide-layer--system .guide-layer__heading,
+.guide-layer--media .guide-layer__heading,
+.guide-layer--execution .guide-layer__heading { transform:none; }
+
+/* Mobile landscape keeps the presentation canvas wide instead of shrinking
+   every label into unreadable microtype. The slide becomes the scroll frame;
+   the existing orientation affordance tells the user how to view it. */
+@media (max-width:60rem) {
+  .guide-slide:has(.guide-layer) {
+    display:block;
+    overflow:auto;
+    padding:1.35rem 0 4.5rem;
+  }
+  .guide-slide:has(.guide-layer) .guide-layer {
+    position:relative;
+    top:0;
+    margin:0;
+  }
+
+  /* Clamp intentional desktop overhangs at the mobile scene edge so the
+     first readable frame never hides a semantic card behind the viewport. */
+  .guide-layer--system .guide-system-top,
+  .guide-layer--system .guide-system-bottom,
+  .guide-layer--system .guide-system-flow { left:0; }
+  .guide-layer--outputs .guide-layer__core--outputs { left:0; }
+  .guide-layer--execution .guide-execution-side--before { left:0; }
+}
+
+/* Reference-frame contract: the supplied compositions are not all 16:9.
+   Each scene keeps the artboard ratio it was designed against so the fitter
+   scales the complete composition as one unit instead of squeezing its
+   vertical hierarchy into the 16:9 scenes. */
+.guide-layer--scatter,
+.guide-layer--outputs { height:54rem; } /* 1500 × 864 — 16:9 */
+.guide-layer--system,
+.guide-layer--media { height:72rem; } /* 1448 × 1086 — 4:3 */
+.guide-layer--execution { height:64rem; } /* 1536 × 1024 — 3:2 */
+/* The base scene selector intentionally has higher specificity; repeat the
+   artboard contract here so the per-scene ratios actually win the cascade. */
+.guide-slide:has(.guide-layer--scatter) .guide-layer,
+.guide-slide:has(.guide-layer--outputs) .guide-layer { height:54rem; }
+.guide-slide:has(.guide-layer--system) .guide-layer,
+.guide-slide:has(.guide-layer--media) .guide-layer { height:72rem; }
+.guide-slide:has(.guide-layer--execution) .guide-layer { height:64rem; }
+
+/* 06 — use the reference's positive gutters and narrower top/code bands. */
+.guide-layer--system .guide-system-top { left:4.8%; width:50%; }
+.guide-layer--system .guide-system-code { right:8%; width:34%; }
+.guide-layer--system .guide-layer__core--system { left:14%; width:26%; }
+.guide-layer--system .guide-system-bottom { left:0; width:50%; }
+.guide-layer--system .guide-system-flow { left:0; right:0; }
+.guide-layer--system .guide-layer__bottom-claim { left:12%; right:12%; gap:4.5rem; }
+.guide-layer--system .guide-layer__bottom-claim>strong { width:27.5rem; }
+
+/* 08 — the reference is weighted to the right; keep the subtitle clear of
+   the first row and reserve the full-width lower tool strip. */
+.guide-layer--media .guide-media-column--left { left:7.5%; }
+.guide-layer--media .guide-media-column--right { right:11.8%; }
+.guide-layer--media .guide-layer__core--media { left:36.5%; width:24%; }
+.guide-layer--media .guide-layer__heading h2 { font-size:clamp(3rem,4.6vw,5.2rem); }
+.guide-layer--media .guide-layer__heading span { margin-top:.4rem; }
+.guide-layer--media .guide-media-column { top:28%; }
+.guide-layer--media .guide-media-tools { inset-inline-start:4%; inset-inline-end:4%; }
+.guide-layer--media .guide-layer__scribble--media-left { left:3%; }
+
+/* 09 — before/after are inset peer columns around the centre system. */
+.guide-layer--execution .guide-execution-side--before { left:0; }
+.guide-layer--execution .guide-execution-side--after { right:0; }
+.guide-layer--execution .guide-execution-core { left:36.5%; width:26%; }
+.guide-layer--execution .guide-layer__bottom-claim { bottom:1%; }
+
+/* Final frame alignment against the 1672px reference captures. These are
+   scene coordinates, so the connector canvas follows the same DOM anchors
+   after the cards move; no line is painted as an unrelated background. */
+.guide-layer--system .guide-system-top { left:0; }
+.guide-layer--system .guide-layer__core--system { left:12.4%; }
+.guide-layer--system .guide-system-code { right:12.5%; }
+.guide-layer--system .guide-system-bottom { left:2%; width:46.4%; }
+
+.guide-layer--outputs .guide-layer__core--outputs { left:1.7%; }
+.guide-layer--outputs .guide-output-grid { right:1%; width:66.2%; }
+.guide-layer--outputs .guide-output-primitives {
+  inset-inline-start:2.1%;
+  inset-inline-end:1.3%;
+}
+
+.guide-layer--media .guide-media-column--left { left:6.5%; }
+.guide-layer--media .guide-media-column { width:19.4%; }
+.guide-layer--media .guide-media-column--right { right:21%; }
+.guide-layer--media .guide-layer__core--media { left:31.5%; width:23%; }
+.guide-layer--media .guide-media-column--left article:has(.guide-media-preview) { min-height:21rem; }
+.guide-layer--media .guide-media-column--right article:has(.guide-media-preview) { min-height:14.8rem; }
+.guide-layer--media .guide-media-tools {
+  inset-inline-start:-.7%;
+  inset-inline-end:13.8%;
+  bottom:16%;
+}
+.guide-layer--media .guide-media-tools > span { min-height:5.8rem; }
+.guide-layer--media .guide-layer__bottom-claim { bottom:4%; }
+
+.guide-layer--execution .guide-execution-side--before { left:-.6%; }
+.guide-layer--execution .guide-execution-side--after { right:7.8%; }
+.guide-layer--execution .guide-execution-core { left:32.7%; }
+.guide-layer--execution .guide-execution-tools {
+  inset-inline-start:30%;
+  inset-inline-end:38.5%;
+}
+
+/* Reference-specific heading and vertical rhythm corrections. */
+.guide-layer--scatter .guide-scatter-files { left:0; }
+.guide-layer--scatter .guide-layer__core { left:37%; }
+.guide-layer--scatter .guide-scatter-folder { right:1.5%; }
+.guide-layer--scatter .guide-layer__pill-row { inset-inline-start:7.3%; }
+.guide-layer--scatter .guide-layer__scribble--everywhere,
+.guide-layer--scatter .guide-layer__scribble--scattered { left:1.2%; }
+.guide-layer--scatter .guide-layer__heading { inset-block-start:.75rem; }
+.guide-layer--scatter .guide-layer__diagram { transform:translateY(-1.35rem); }
+.guide-layer--scatter .guide-scatter-core {
+  isolation:isolate;
+  border-color:color-mix(in oklab,var(--primary) 70%,var(--border));
+  background:linear-gradient(125deg,var(--panel),color-mix(in oklab,var(--primary) 13%,var(--panel)));
+  box-shadow:var(--glass-shadow),0 0 1.6rem var(--primary-soft);
+  backdrop-filter:blur(var(--glass-blur));
+}
+.guide-layer .guide-glass-core {
+  isolation:isolate;
+  border-color:color-mix(in oklab,var(--primary) 70%,var(--border));
+  background:linear-gradient(125deg,var(--panel),color-mix(in oklab,var(--primary) 13%,var(--panel)));
+  box-shadow:var(--glass-shadow),0 0 1.6rem var(--primary-soft);
+  backdrop-filter:blur(var(--glass-blur));
+}
+.guide-layer .guide-glass-core::before {
+  content:"";
+  position:absolute;
+  inset:.4rem;
+  border:1px solid color-mix(in oklab,var(--primary) 25%,transparent);
+  border-radius:var(--radius-sm);
+  pointer-events:none;
+}
+.guide-layer .guide-glass-core .guide-glass-layers { position:absolute; inset:0; z-index:-1; pointer-events:none; }
+.guide-layer .guide-glass-core .guide-glass-layers i {
+  position:absolute;
+  inset:0;
+  border:1px solid color-mix(in oklab,var(--primary) 55%,transparent);
+  border-radius:var(--radius-md);
+  background:color-mix(in oklab,var(--primary) 6%,transparent);
+  transform:translate(.5rem,.55rem);
+}
+.guide-layer .guide-glass-core .guide-glass-layers i+i { transform:translate(1rem,1.1rem); opacity:.55; }
+.guide-layer--scatter .guide-scatter-core::before {
+  content:"";
+  position:absolute;
+  inset:.4rem;
+  border:1px solid color-mix(in oklab,var(--primary) 25%,transparent);
+  border-radius:var(--radius-sm);
+  pointer-events:none;
+}
+.guide-layer--scatter .guide-glass-layers { position:absolute; inset:0; z-index:-1; pointer-events:none; }
+.guide-layer--scatter .guide-glass-layers i {
+  position:absolute;
+  inset:0;
+  border:1px solid color-mix(in oklab,var(--primary) 55%,transparent);
+  border-radius:var(--radius-md);
+  background:color-mix(in oklab,var(--primary) 6%,transparent);
+  transform:translate(.5rem,.55rem);
+}
+.guide-layer--scatter .guide-glass-layers i+i { transform:translate(1rem,1.1rem); opacity:.55; }
+.guide-layer--scatter .guide-scatter-brand { display:grid; place-items:center; width:2rem; height:2rem; color:var(--primary); }
+.guide-layer--scatter .guide-scatter-brand > svg { width:2rem; height:2rem; display:block; }
+.guide-layer--scatter .guide-scatter-brand[src] { object-fit:contain; }
+
+/* Brand marks are real local assets, while the surrounding UI remains
+   Boxicons-only. Keep them optically aligned with the shared pill/card rhythm
+   instead of letting an SVG's intrinsic viewBox change row height. */
+.guide-brand-mark {
+  display:inline-flex;
+  flex:0 0 auto;
+  width:1.45rem;
+  height:1.45rem;
+  align-items:center;
+  justify-content:center;
+  object-fit:contain;
+  color:var(--foreground-strong);
+}
+.guide-brand-mark--figma { width:1.2rem; height:1.8rem; }
+.guide-brand-mark--canva { width:2rem; height:.78rem; }
+.guide-brand-mark--claude { width:1.35rem; height:1.35rem; }
+.guide-brand-mark--claude > svg { width:100%; height:100%; display:block; }
+.guide-system-flow .guide-brand-mark--claude > svg { fill:var(--foreground-strong); }
+.guide-provider-claude { color:var(--provider-claude,#D97757)!important; }
+.guide-system-flow > span,
+.guide-media-tools > span,
+.guide-chat-card strong { gap:.55rem; }
+.guide-media-tools > span:last-child { gap:.35rem; }
+
+.guide-layer--system .guide-layer__heading { transform:translateX(-8%); }
+.guide-layer--media .guide-layer__heading { transform:translateX(-5%); }
+.guide-layer--execution .guide-layer__heading { transform:translateX(-8%); }
+.guide-layer--execution .guide-execution-core {
+  isolation:isolate;
+  left:36%;
+  top:23.5%;
+  width:28.1%;
+  min-height:30.5rem;
+}
+.guide-layer--execution .guide-execution-side { top:17.5%; width:30%; }
+.guide-layer--execution .guide-execution-side--before { left:.1%; }
+.guide-layer--execution .guide-execution-side--after { right:0; width:28.5%; }
+.guide-layer--execution .guide-execution-tools {
+  inset-inline-start:33%;
+  inset-inline-end:33%;
+  bottom:16%;
+  min-height:7rem;
+}
+.guide-layer--execution .guide-layer__bottom-claim { bottom:1%; }
+
+/* The 4:3 design-system reference uses wider left bands and a full-height
+   code lane than the earlier 16:9 approximation. Keep its rows on the same
+   vertical rhythm as the supplied artboard. */
+.guide-layer--system .guide-system-top { left:1%; top:23.5%; width:57%; }
+.guide-layer--system .guide-system-top article { min-height:8.8rem; }
+.guide-layer--system .guide-layer__core--system { left:15.5%; top:42%; width:30%; min-height:9rem; }
+.guide-layer--system .guide-system-code { right:0; top:22.5%; width:38%; }
+.guide-layer--system .guide-system-bottom { left:3%; top:61%; width:53%; }
+.guide-layer--system .guide-system-bottom article { min-height:8.8rem; }
+.guide-layer--system .guide-system-flow { bottom:18%; }
+.guide-layer--system .guide-layer__bottom-claim { bottom:7%; }
+
+/* Match the source artboard's glass surfaces and intentionally uneven lower
+   row. The lower cards are content-sized in the reference, not three equal
+   columns, which keeps the labels visually grouped under the core. */
+.guide-layer--system .guide-system-top article,
+.guide-layer--system .guide-system-bottom article {
+  background:linear-gradient(145deg,color-mix(in oklab,var(--panel-raised) 88%,transparent),color-mix(in oklab,var(--panel) 84%,transparent));
+  box-shadow:var(--glass-shadow);
+  backdrop-filter:blur(var(--glass-blur));
+}
+.guide-layer--system .guide-system-bottom {
+  grid-template-columns:26% 29% 25%;
+  justify-content:space-between;
+}
+.guide-layer--system .guide-system-core { padding:1rem 1.5rem; }
+.guide-layer--system .guide-system-code {
+  height:51%;
+  padding:1.1rem 1.3rem;
+  background:linear-gradient(145deg,color-mix(in oklab,var(--panel-raised) 88%,transparent),color-mix(in oklab,var(--panel) 82%,transparent));
+  box-shadow:var(--glass-shadow),0 0 1.25rem var(--primary-soft);
+  backdrop-filter:blur(var(--glass-blur));
+}
+.guide-layer--system .guide-system-code>div {
+  grid-template-columns:27% auto 58%;
+  min-height:6.1rem;
+  margin-top:1rem;
+}
+.guide-layer--system .guide-system-code>div:nth-of-type(2) { min-height:8.8rem; }
+.guide-layer--system .guide-system-code>div>span,
+.guide-layer--system .guide-system-code code {
+  position:relative;
+  overflow:hidden;
+  min-height:100%;
+  background:color-mix(in oklab,var(--panel) 90%,transparent);
+  box-shadow:inset 0 0 0 1px color-mix(in oklab,var(--primary) 8%,transparent);
+}
+.guide-layer--system .guide-system-code>div>span { isolation:isolate; }
+.guide-layer--system .guide-system-code>div>span::after {
+  content:"";
+  position:absolute;
+  z-index:0;
+  width:130%;
+  height:2px;
+  inset:50% auto auto -12%;
+  background:var(--destructive);
+  transform:rotate(-28deg);
+  box-shadow:0 0 .25rem var(--destructive-soft);
+}
+.guide-layer--system .guide-system-code>div:nth-of-type(1)>span::before {
+  content:"";
+  position:absolute;
+  z-index:0;
+  width:4.2rem;
+  height:2.15rem;
+  inset:auto auto .8rem .8rem;
+  border-radius:var(--radius-sm);
+  background:linear-gradient(145deg,var(--primary),color-mix(in oklab,var(--primary) 60%,var(--purple)));
+}
+.guide-layer--system .guide-system-code>div:nth-of-type(2)>span::before {
+  content:"Aa";
+  position:absolute;
+  z-index:0;
+  inset:auto auto .35rem .8rem;
+  color:var(--foreground-strong);
+  font-family:var(--font-display);
+  font-size:2.7rem;
+  line-height:1;
+}
+.guide-layer--system .guide-system-code>div:nth-of-type(3)>span::before {
+  content:"";
+  position:absolute;
+  z-index:0;
+  width:4.3rem;
+  height:2.35rem;
+  inset:auto auto .7rem .8rem;
+  border:1px solid var(--border-strong);
+  border-radius:var(--radius-sm);
+  background:linear-gradient(145deg,var(--panel-raised),var(--background-deep));
+}
+.guide-layer--system .guide-system-code>div>span::after { z-index:1; }
+.guide-layer--system .guide-system-code>div>span>* { position:relative; z-index:2; }
+.guide-layer--system .guide-system-code > header .bx-right-arrow-alt,
+.guide-layer--system .guide-system-code > div > .bx-right-arrow-alt {
+  color:var(--primary);
+  justify-self:center;
+  align-self:center;
+}
+.guide-layer--system .guide-system-code__incoming {
+  position:absolute;
+  inset-inline-start:-1.5rem;
+  inset-block-start:50%;
+  z-index:5;
+  color:var(--primary);
+  transform:translateY(-50%);
+  filter:drop-shadow(0 0 .35rem var(--primary-soft));
+}
+.guide-layer--system .guide-system-code code {
+  display:grid;
+  align-content:center;
+  gap:.45rem;
+  color:var(--primary);
+  font-size:var(--font-size-xs);
+  white-space:normal;
+}
+.guide-layer--system .guide-system-code code::before {
+  color:var(--muted-foreground);
+  font-size:var(--font-size-3xs);
+  content:"/* Token */";
+}
+.guide-layer--system .guide-system-code>div:nth-of-type(2) code::before { content:"/* Type scale */"; }
+.guide-layer--system .guide-system-code>div:nth-of-type(3) code::before { content:"/* Component */"; }
+.guide-layer--system .guide-system-code code>.bx { position:absolute; inset:.55rem .55rem auto auto; color:var(--foreground-muted); }
+
+/* Fill the code lane as a real three-row panel.  The old flow layout left a
+   large unowned void under the examples, which made the panel read as a
+   detached card instead of the full-height reference lane. */
+.guide-layer--system .guide-system-code {
+  display:grid;
+  grid-template-rows:auto repeat(3,minmax(0,1fr));
+  gap:1rem;
+}
+.guide-layer--system .guide-system-code>div {
+  min-height:0;
+  margin-top:0;
+}
+
+/* The media reference keeps the tall previews in the same column height as
+   the source image; the tool strip and closing claim sit beneath them. */
+.guide-layer--media .guide-layer__heading { inset-block-start:.75rem; }
+.guide-layer--media .guide-media-column { top:21%; width:22.1%; }
+.guide-layer--media .guide-media-column--left { left:8.8%; }
+.guide-layer--media .guide-media-column--right { right:8.5%; }
+.guide-layer--media .guide-media-column--left article:has(.guide-media-preview) { min-height:25.5rem; }
+.guide-layer--media .guide-media-column--right article:has(.guide-media-preview) { min-height:20rem; }
+.guide-layer--media .guide-layer__core--media { left:37.2%; top:27.5%; width:26.3%; min-height:8.6rem; }
+.guide-layer--media .guide-media-tools {
+  inset-inline-start:.5%;
+  inset-inline-end:.5%;
+  bottom:14.5%;
+}
+.guide-layer--media .guide-media-tools > span { min-height:7.1rem; }
+.guide-layer--media .guide-layer__bottom-claim { bottom:5.5%; }
+
+/* Compact desktop browser frames have the same scene width but less vertical
+   room. Keep the closing claim above the persistent navigation controls. */
+@media (max-height:48rem) and (min-width:60.01rem) {
+  .guide-layer--media .guide-layer__bottom-claim,
+  .guide-layer--execution .guide-layer__bottom-claim { bottom:4%; }
+  .guide-layer--media .guide-media-tools,
+  .guide-layer--execution .guide-execution-tools { bottom:14%; }
+}
+
+/* Keep every authored icon visible even when a brand-glyph is not present in
+   the reduced Boxicons subset shipped by the site. */
+.guide-layer--scatter .guide-scatter-card--3 .bx::before { content:"\eba9"; }
+.guide-layer--scatter .guide-scatter-card--4 .bx::before { content:"\ec00"; }
+.guide-layer--scatter .guide-scatter-card--6 .bx::before { content:"\eae1"; }
+.guide-layer--system .guide-system-top article:nth-child(2) .bx::before { content:"\eba1"; }
+.guide-layer--system .guide-system-top article:nth-child(3) .bx::before { content:"\eafb"; }
+.guide-layer--system .guide-system-top article:nth-child(4) .bx::before { content:"\ec00"; }
+.guide-layer--system .guide-system-bottom article:nth-child(3) .bx::before { content:"\ebbd"; }
+.guide-layer--system .guide-system-code > div:nth-of-type(1) .bx::before { content:"\eba9"; }
+.guide-layer--system .guide-system-code > div:nth-of-type(2) .bx::before { content:"\eba1"; }
+.guide-layer--system .guide-system-code > div:nth-of-type(3) .bx::before { content:"\ec25"; }
+.guide-layer--outputs .guide-output-grid article:nth-child(2) .bx::before { content:"\eb81"; }
+.guide-layer--outputs .guide-output-grid article:nth-child(7) .bx::before { content:"\eb1b"; }
+.guide-layer--outputs .guide-output-grid article:nth-child(8) .bx::before { content:"\ebe0"; }
+.guide-layer--outputs .guide-output-grid article:nth-child(9) .bx::before { content:"\eb31"; }
+.guide-layer--media .guide-media-column--right article:nth-child(3) .bx::before { content:"\ebe0"; }
+.guide-layer--media .guide-media-column--right article:nth-child(4) .bx::before { content:"\ec6e"; }
+.guide-layer--media .guide-media-tools > span:nth-child(3) .bx::before { content:"\eb1b"; }
+.guide-layer--media .guide-media-tools > span:nth-child(4) .bx::before { content:"\ebe0"; }
+.guide-layer--media .guide-media-tools > span:nth-child(6) .bx::before { content:"\eba9"; }
+.guide-layer--execution .guide-execution-core > span:last-child .bx::before { content:"\ebe0"; }
+.guide-layer--execution .guide-execution-tools > span:nth-child(3) .bx::before { content:"\ea0d"; }
+.guide-layer--execution .guide-execution-tools > span:nth-child(4) .bx::before { content:"\ebca"; }
+
+/* Slide names live in the persistent bottom status row. Keep the authored
+   artboards focused on their title and diagram instead of repeating the same
+   eyebrow above every title. */
+.brand-guide .guide-layer__heading > p,
+.brand-guide .guide-reference__eyebrow {
+  display:none;
+}
+
+/* Presentation chrome stays in the same shell as the progress rail. The
+   fullscreen control is a real button so the deck remains keyboard and screen
+   reader operable instead of relying on browser-only gestures. */
+.guide-fullscreen {
+  position:absolute;
+  z-index:9;
+  inset-block-start:1.25rem;
+  inset-inline-end:1.25rem;
+  display:grid;
+  width:2.75rem;
+  height:2.75rem;
+  place-items:center;
+  border:1px solid var(--border-strong);
+  border-radius:var(--radius-md);
+  background:color-mix(in oklab,var(--panel) 88%,transparent);
+  color:var(--foreground-strong);
+  cursor:pointer;
+  backdrop-filter:blur(var(--glass-blur));
+  transition:background var(--duration) var(--ease),border-color var(--duration) var(--ease),transform var(--duration) var(--ease);
+}
+.guide-fullscreen:hover { border-color:var(--primary); background:var(--primary-soft); transform:translateY(-.1rem); }
+.guide-fullscreen:focus-visible { outline:2px solid var(--ring); outline-offset:3px; }
+@media (max-width:58rem) and (orientation:landscape) {
+  .guide-fullscreen { inset-block-start:.65rem; inset-inline-end:.65rem; width:2.35rem; height:2.35rem; }
+}
+
+/* Portrait phones and tablets are an orientation state, not a second
+   composition.  Keep one consistent landscape artboard and ask for the
+   rotation before the dense diagram is rendered at unreadable scale. */
+@media (max-width:60rem) and (orientation:portrait) {
+  .brand-guide.is-unlocked .guide-slide.is-active { visibility:hidden; pointer-events:none; }
+  .brand-guide.is-unlocked .guide-orientation {
+    position:fixed;
+    z-index:20;
+    inset:0;
+    display:grid;
+    align-content:center;
+    justify-items:center;
+    gap:1rem;
+    padding:2rem;
+    background:var(--background);
+    color:var(--foreground-strong);
+    text-align:center;
+  }
+  .guide-orientation .bx { display:block; color:var(--primary); transform:rotate(90deg); }
+  .guide-orientation p { max-width:20rem; margin:0; font-size:var(--font-size-sm); font-weight:700; line-height:1.45; }
+}
+
+/* The outputs reference is composed on the same 16:9 artboard as scatter.
+   Lift the authored scene as one unit so its heading, grid, connectors, and
+   closing claim preserve the reference rhythm together. */
+.guide-layer--outputs .guide-layer__heading { inset-block-start:2.5rem; }
+.guide-layer--outputs .guide-layer__diagram { transform:none; }
+
+/* The folder is a miniature system map in the reference, not a plain card. */
+.guide-layer--scatter .guide-scatter-folder { overflow:hidden; padding-top:2.7rem; }
+.guide-layer--scatter .guide-scatter-folder::before {
+  content:""; position:absolute; inset:.9rem auto auto 1.1rem; width:3.1rem; height:.6rem;
+  background:radial-gradient(circle at .3rem .3rem,#ff6b6b 0 .3rem,transparent .32rem),
+    radial-gradient(circle at 1.35rem .3rem,#ffd166 0 .3rem,transparent .32rem),
+    radial-gradient(circle at 2.4rem .3rem,#49d17d 0 .3rem,transparent .32rem);
+}
+.guide-layer--scatter .guide-scatter-folder header { margin-bottom:.6rem; }
+.guide-layer--scatter .guide-scatter-folder span { position:relative; margin:.56rem 0; padding-left:1.25rem; }
+.guide-layer--scatter .guide-scatter-folder span::before {
+  content:""; position:absolute; left:.25rem; top:-.62rem; width:.65rem; height:1.28rem;
+  border-left:1px solid color-mix(in oklab,var(--muted-foreground) 70%,transparent);
+  border-bottom:1px solid color-mix(in oklab,var(--muted-foreground) 70%,transparent);
+}
+
+/* Final heading lock: keep every layer title inside the shared artboard. */
+.brand-guide .guide-layer--system .guide-layer__heading,
+.brand-guide .guide-layer--media .guide-layer__heading,
+.brand-guide .guide-layer--execution .guide-layer__heading { transform:none; }
+
+/* Real preview artwork lives inside the semantic media/output nodes.  The
+   image is clipped by its own card, so it cannot change connector geometry or
+   push the neighbouring nodes out of the scene. */
+.guide-media-preview { position:relative; overflow:hidden; isolation:isolate; }
+.guide-media-preview > img {
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  opacity:.68;
+  filter:saturate(.9) contrast(1.05);
+}
+.guide-media-preview__copy { position:relative; z-index:1; display:grid; gap:.55rem; min-height:7rem; padding:1rem; background:linear-gradient(180deg,transparent 0 26%,color-mix(in oklab,var(--background-deep) 82%,transparent)); }
+.guide-media-preview__copy strong { font-size:1.45rem!important; line-height:.9; }
+.guide-media-preview__copy em { color:var(--primary); font-family:var(--font-display); font-style:normal; }
+.guide-media-preview--video > .bx {
+  position:absolute;
+  z-index:2;
+  inset:50% auto auto 50%;
+  display:grid;
+  width:2.35rem;
+  height:2.35rem;
+  place-items:center;
+  border:1px solid color-mix(in oklab,var(--foreground-strong) 75%,transparent);
+  border-radius:50%;
+  background:color-mix(in oklab,var(--background-deep) 55%,transparent);
+  color:var(--foreground-strong);
+  transform:translate(-50%,-50%);
+}
+.guide-media-preview--video > small {
+  position:absolute;
+  z-index:2;
+  inset:auto .65rem .45rem auto;
+  color:var(--foreground-strong);
+  font-size:var(--font-size-3xs);
+  letter-spacing:.04em;
+}
+.guide-media-preview--video::after {
+  content:"";
+  position:absolute;
+  z-index:1;
+  inset:auto .7rem .75rem;
+  height:.2rem;
+  border-radius:var(--radius-sm);
+  background:linear-gradient(90deg,var(--foreground-strong) 0 24%,color-mix(in oklab,var(--foreground-strong) 38%,transparent) 24% 100%);
+}
+.guide-execution-posts span,
+.guide-execution-stack span { overflow:hidden; }
+.guide-execution-posts span img,
+.guide-execution-stack span img { display:block; width:100%; height:100%; object-fit:cover; opacity:.9; }
+.guide-execution-stack span { padding:0!important; }
+
+/* Shared card contract for the layer scenes.  Each semantic card gets the
+   same glass surface, border weight, clipping rule, and internal rhythm; the
+   scene-specific selectors only change its placement. */
+.guide-layer--outputs .guide-output-grid article,
+.guide-layer--media .guide-media-column article,
+.guide-layer--execution .guide-chat-card,
+.guide-layer--execution .guide-execution-tools {
+  border-color:var(--glass-border);
+  background:linear-gradient(145deg,color-mix(in oklab,var(--glass-bg-strong) 78%,transparent),color-mix(in oklab,var(--panel) 84%,transparent));
+  box-shadow:var(--glass-shadow);
+  backdrop-filter:blur(var(--glass-blur));
+}
+.guide-layer--outputs .guide-output-grid article { isolation:isolate; }
+.guide-layer--outputs .guide-output-preview {
+  position:absolute;
+  z-index:-1;
+  inset:auto .8rem .75rem;
+  width:calc(100% - 1.6rem);
+  height:4.4rem;
+  object-fit:cover;
+  border-radius:var(--radius-sm);
+  opacity:.24;
+  filter:saturate(.85) contrast(1.08);
+}
+.guide-layer--media .guide-media-column article { position:relative; }
+.guide-layer--media .guide-media-column article:has(.guide-media-preview) { overflow:hidden; }
+.guide-layer--media .guide-media-column article:has(.guide-media-preview) .guide-media-preview {
+  position:absolute;
+  inset:4.35rem .7rem .7rem;
+  min-height:0;
+  height:auto;
+  border:1px solid color-mix(in oklab,var(--primary) 30%,transparent);
+  background:var(--background-deep);
+}
+.guide-layer--media .guide-media-column article:has(.guide-media-preview) .guide-media-preview > img { opacity:.78; }
+.guide-layer--execution .guide-execution-core {
+  border-color:color-mix(in oklab,var(--primary) 70%,var(--border));
+  background:linear-gradient(145deg,color-mix(in oklab,var(--glass-bg-strong) 82%,transparent),color-mix(in oklab,var(--panel) 84%,transparent));
+  box-shadow:var(--glass-shadow),0 0 1.6rem var(--primary-soft);
+  backdrop-filter:blur(var(--glass-blur));
+}
+.guide-layer--execution .guide-execution-core::before,
+.guide-layer--execution .guide-execution-core::after {
+  content:"";
+  position:absolute;
+  z-index:-1;
+  inset:0;
+  border:1px solid color-mix(in oklab,var(--primary) 45%,transparent);
+  border-radius:var(--radius-md);
+  background:color-mix(in oklab,var(--primary) 5%,transparent);
+}
+.guide-layer--execution .guide-execution-core::before { transform:translate(-.45rem,.45rem); opacity:.7; }
+.guide-layer--execution .guide-execution-core::after { transform:translate(.45rem,.45rem); opacity:.45; }
+
+/* Final shared scene contract: headings, surfaces, and the execution core use
+   the same measured visual rhythm across every reference artboard. */
+.brand-guide {
+  --guide-scene-width:96rem;
+  --guide-scene-card-surface:linear-gradient(145deg,color-mix(in oklab,var(--glass-bg-strong) 68%,transparent),color-mix(in oklab,var(--background-deep) 76%,transparent));
+  --guide-scene-card-border:var(--glass-border);
+}
+.guide-layer { width:var(--guide-scene-width); }
+.guide-layer__heading h2 {
+  font-size:clamp(4rem,5.6vw,6.4rem);
+  line-height:.9;
+  text-wrap:balance;
+}
+.brand-guide .guide-layer--system .guide-layer__heading h2,
+.brand-guide .guide-layer--outputs .guide-layer__heading h2 {
+  font-size:clamp(4.2rem,6.05vw,6.8rem);
+}
+.brand-guide .guide-layer--media .guide-layer__heading h2 {
+  font-size:clamp(3.8rem,5.35vw,6rem);
+}
+.brand-guide .guide-layer--execution .guide-layer__heading h2 {
+  font-size:clamp(4.4rem,6.2vw,6.8rem);
+}
+.brand-guide .guide-layer--scatter .guide-layer__heading h2 {
+  font-size:clamp(3.15rem,4.45vw,5.1rem);
+}
+.brand-guide .guide-layer--outputs .guide-layer__heading h2 {
+  font-size:clamp(3.7rem,4.9vw,5.6rem);
+}
+.brand-guide .guide-layer--scatter .guide-layer__heading { inset-block-start:3.25rem; }
+.brand-guide .guide-layer--system .guide-layer__heading { inset-block-start:4.5rem; }
+.brand-guide .guide-layer--outputs .guide-layer__heading { inset-block-start:3rem; }
+.brand-guide .guide-layer--outputs .guide-layer__heading span { margin-top:.38rem; }
+.brand-guide .guide-layer--media .guide-layer__heading { inset-block-start:2.65rem; }
+.brand-guide .guide-layer--execution .guide-layer__heading { inset-block-start:4rem; }
+.brand-guide .guide-layer--system .guide-layer__heading h2 { font-size:clamp(4.3rem,6.3vw,7rem); }
+.brand-guide .guide-layer--scatter .guide-scatter-files { top:30.25%; }
+.guide-layer--system .guide-system-top article,
+.guide-layer--system .guide-system-bottom article,
+.guide-layer--outputs .guide-output-grid article,
+.guide-layer--media .guide-media-column article,
+.guide-layer--execution .guide-chat-card,
+.guide-layer--execution .guide-execution-tools {
+  border-color:var(--guide-scene-card-border);
+  background:var(--guide-scene-card-surface);
+  box-shadow:var(--glass-shadow);
+  backdrop-filter:blur(var(--glass-blur));
+}
+.guide-layer--execution .guide-execution-core.guide-glass-core {
+  display:block;
+  padding:1.2rem 1.25rem;
+  overflow:visible;
+}
+.guide-layer--execution .guide-execution-core__eyebrow {
+  margin:0 0 .85rem;
+  color:var(--primary);
+  font-size:var(--font-size-3xs);
+  letter-spacing:.2em;
+  text-align:center;
+}
+.guide-layer--execution .guide-execution-core h3 {
+  margin:0 0 .8rem;
+  color:var(--foreground-strong);
+  font-family:var(--font-display);
+  font-size:1.8rem;
+  line-height:1.05;
+}
+.guide-layer--execution .guide-execution-core__rows {
+  display:grid;
+  gap:.35rem;
+}
+.guide-layer--execution .guide-execution-core__rows > span {
+  display:grid;
+  grid-template-columns:1.5rem 1fr 1.35fr;
+  align-items:center;
+  gap:.65rem;
+  min-width:0;
+  padding:.55rem .6rem;
+  border:1px solid var(--border-strong);
+  border-radius:var(--radius-md);
+  background:color-mix(in oklab,var(--panel) 55%,transparent);
+}
+.guide-layer--execution .guide-execution-core__rows .bx { color:var(--primary); }
+.guide-layer--execution .guide-execution-core__rows b,
+.guide-layer--execution .guide-execution-core__rows small { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.guide-layer--execution .guide-execution-core__rows small { color:var(--muted-foreground); }
+.guide-layer--execution .guide-execution-stack span { background:var(--guide-scene-card-surface); }
+.guide-layer--outputs .guide-output-preview { opacity:.42; }
+.guide-layer--outputs .guide-output-claim,
+.guide-layer--media .guide-layer__bottom-claim,
+.guide-layer--execution .guide-layer__bottom-claim {
+  font-size:clamp(2rem,2.8vw,2.8rem);
+  line-height:.98;
+}
+
+/* The status rail is one readable line between the navigation controls. */
+.guide-status { display:flex; align-items:center; justify-content:center; }
+.guide-counter { display:flex; align-items:center; gap:.42rem; font-size:var(--font-size-sm); }
+.guide-counter span { color:var(--muted-foreground); }
+
+/* Brand-guide polish pass: keep semantic logos readable, keep the infra graph
+   on one centered composition, and avoid using editorial preview art as the
+   visual weight on the executable-media slide. */
+.guide-tool-logo { flex:0 0 2rem; }
+.guide-tool-logo img,
+.guide-provider-mark,
+.guide-system-top article .shrink-0,
+.guide-output-primitives .shrink-0 { display:block; width:1.45rem; height:1.45rem; object-fit:contain; }
+.guide-tool-logo--chatgpt img { color:#f2f4f7; }
+.guide-tool-logo--midjourney img { color:#f2f4f7; }
+.guide-tool-logo--runway img { color:var(--primary); }
+.guide-tool-logo--claude img { color:var(--provider-claude,#d97757); }
+.guide-tool-logo--gemini img { color:#78a9ff; }
+.guide-tool-logo--chatgpt img,
+.guide-tool-logo--midjourney img { filter:brightness(0) invert(1); }
+.guide-tool-logo--runway img,
+.guide-provider-mark--gemini { filter:brightness(0) saturate(100%) invert(55%) sepia(80%) saturate(1450%) hue-rotate(201deg) brightness(101%) contrast(101%); }
+.guide-tool-logo--claude img,
+.guide-provider-mark--claude { filter:brightness(0) saturate(100%) invert(57%) sepia(40%) saturate(1088%) hue-rotate(329deg) brightness(95%) contrast(88%); }
+.guide-provider-mark--chatgpt { filter:brightness(0) invert(1); }
+.guide-provider-mark--copilot { filter:brightness(0) saturate(100%) invert(61%) sepia(47%) saturate(1632%) hue-rotate(194deg) brightness(101%) contrast(101%); }
+.guide-provider-mark--chatgpt { color:#f2f4f7; }
+.guide-provider-mark--claude { color:var(--provider-claude,#d97757); }
+.guide-provider-mark--gemini { color:#78a9ff; }
+.guide-provider-mark--copilot { color:#7c9cff; }
+.guide-chat-card strong { min-width:0; display:flex; align-items:center; gap:.5rem; }
+.guide-execution-tools > span { display:grid; justify-items:center; gap:.28rem; }
+
+/* The reference has no photographic panel inside the media slide. Keep the
+   preview nodes for connector/layout semantics, but let the composed card
+   read as a quiet glass surface with controlled type instead of stock art. */
+.guide-layer--media .guide-media-preview { background:linear-gradient(145deg,color-mix(in oklab,var(--primary) 18%,var(--background-deep)),var(--background-deep)); }
+.guide-layer--media .guide-media-preview:not(.guide-media-preview--video)::before {
+  content:"Ideas\A in motion.";
+  position:absolute;
+  inset:20% 12% auto;
+  z-index:1;
+  white-space:pre;
+  color:var(--foreground-strong);
+  font-family:var(--font-display);
+  font-size:clamp(1.4rem,2.2vw,2.4rem);
+  line-height:.92;
+  text-align:left;
+}
+.guide-layer--media .guide-media-preview:not(.guide-media-preview--video)::after {
+  content:"One brand. Infinite outputs.";
+  position:absolute;
+  inset:auto 12% 14%;
+  z-index:1;
+  color:var(--muted-foreground);
+  font-size:var(--font-size-3xs);
+  letter-spacing:.04em;
+}
+
+/* Slide 4: the bottom label is the title of the output row, not a detached
+   caption. The installation steps remain in the graph's right lane while the
+   six input/output cards share the same measured width and gutter. */
+.guide-reference--infra > .guide-infra__not-list,
+.guide-reference--infra > .guide-infra__label--top { width:74%; margin-inline-start:6%; }
+.guide-infra-diagram .guide-infra__inputs,
+.guide-infra-diagram .guide-infra__outputs { inset-inline-start:6%; width:74%; gap:.78rem; }
+.guide-infra-diagram .guide-infra__steps { inset-block-start:32%; inset-inline-start:67%; width:25%; }
+.guide-infra-diagram .guide-infra__label--bottom { inset-block-start:72%; inset-inline-start:6%; width:74%; }
+.guide-infra-diagram .guide-infra__outputs { inset-block-start:76%; height:22.5%; }
+.guide-infra-diagram .guide-infra__outputs article { padding-inline:.45rem; }
+.guide-infra-diagram .guide-infra__outputs strong { font-size:clamp(.5rem,.9vw,.72rem); white-space:nowrap; }
+.guide-infra-diagram .guide-infra__outputs small { font-size:clamp(.42rem,.72vw,.58rem); line-height:1.05; white-space:normal; }
+
+/* The red rejection mark belongs to the source logo itself. */
+.guide-infra__not-list .guide-infra__not-brand { position:relative; overflow:visible; }
+.guide-infra__not-list .guide-infra__not-x {
+  inset:auto -.18rem -.18rem auto;
+  width:1rem;
+  height:1rem;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  color:var(--destructive);
+  opacity:.72;
+  font-size:1.35rem;
+  line-height:1;
+  transform:rotate(-16deg);
+}
+.guide-infra__not-list .guide-infra__not-brand svg,
+.guide-infra__not-list .guide-infra__not-brand img { position:relative; z-index:0; }
+.guide-infra__not-list .guide-infra__not-brand img { max-width:1.55rem; max-height:1.35rem; object-fit:contain; }
+.guide-infra__not-list .guide-infra__not-brand--figma img { width:1.05rem; height:1.35rem; }
+
+/* Slide 2: bring the repeated-work stack and metric row closer together so
+   the right-hand composition reads as one connected unit. */
+.guide-reference--cost .guide-cost-stack { gap:.6rem; }
+.guide-reference--cost .guide-cost-stack article:nth-child(4) { margin-inline-start:6.25rem; }
+.guide-reference--cost .guide-cost-stack article:nth-child(5) { margin-inline-start:6.75rem; }
+.guide-reference--cost .guide-cost-metrics { inset-block-end:1.5%; }
+
+@media (min-width:64.0625rem) {
+  .guide-reference--cost .guide-cost-stack { inset-block-start:10%; }
+  .guide-reference--cost .guide-cost-stack article { min-height:5.55rem; }
+  .guide-reference--cost .guide-cost-metrics { inset-block-end:3%; }
+}
+
+@media (max-width:64rem) {
+  .guide-infra-diagram .guide-infra__inputs,
+  .guide-infra-diagram .guide-infra__outputs { gap:.45rem; }
+  .guide-infra-diagram .guide-infra__steps { inset-inline-start:67%; width:25%; }
+  .guide-infra-diagram .guide-infra__label--bottom { inset-inline-start:6%; width:74%; }
+}
+@media (max-width:58rem) and (orientation:landscape) {
+  .guide-infra-diagram .guide-infra__inputs,
+  .guide-infra-diagram .guide-infra__outputs { inset-inline-start:2%; width:68%; }
+  .guide-infra-diagram .guide-infra__steps { inset-inline-start:65%; width:27%; }
+  .guide-infra-diagram .guide-infra__label--bottom { inset-block-start:72%; inset-inline-start:2%; width:68%; }
+  .guide-infra-diagram .guide-infra__outputs { inset-block-start:76%; height:22%; }
+}
+
+/* Keep the bottom rail readable at every frame size.  The active dot is
+   intentionally larger, while inactive dots retain the thin reference ring. */
+.guide-status { min-height:1.5rem; gap:1.15rem; }
+.guide-progress { display:flex; align-items:center; gap:.62rem; }
+.guide-progress button { flex:0 0 auto; }
+.guide-counter { line-height:1.15; }
+
+/* Canonical geometry lock for the reference scenes. These are scene-space
+   relationships, so the fitter scales the complete group together at every
+   viewport instead of letting one late rule move a child independently.
+   System claim cards use the reference's wide two-column rhythm. The output
+   scene reserves the same lower breathing room by increasing the primitive
+   row height and lifting the grid/core/claim as a unit. */
+.guide-layer--system .guide-layer__bottom-claim {
+  left:14%;
+  right:14%;
+  gap:6.6rem;
+}
+.guide-layer--system .guide-layer__bottom-claim > strong {
+  width:31.5rem;
+}
+
+.guide-layer--outputs .guide-output-grid {
+  top:19.3%;
+  height:44.5%;
+}
+.guide-layer--outputs .guide-layer__core--outputs {
+  top:34.1%;
+  min-height:8rem;
+}
+.guide-layer--outputs .guide-output-primitives > span {
+  min-height:5.4rem;
+}
+.guide-layer--outputs .guide-output-claim {
+  bottom:7%;
+}
+.guide-layer--outputs .guide-layer__heading > span {
+  margin-top:.08rem;
+}
+
+/* Shared short-desktop frame. At laptop-height desktop viewports the 4:3
+   system scene otherwise becomes height-constrained while the 16:9 scenes
+   remain width-constrained, making one slide visibly narrower than its peers.
+   Keep one fitted frame, tune each scene's visual lanes, and leave the native
+   reference-artboard contract untouched. */
+@media (min-width:60.0625rem) and (max-height:50rem) {
+  .guide-slide:has(.guide-layer--scatter),
+  .guide-slide:has(.guide-layer--system),
+  .guide-slide:has(.guide-layer--outputs) {
+    padding-inline:4%;
+    overflow:clip;
+  }
+  .guide-slide:has(.guide-layer--scatter) .guide-layer,
+  .guide-slide:has(.guide-layer--system) .guide-layer,
+  .guide-slide:has(.guide-layer--outputs) .guide-layer,
+  .guide-layer--system {
+    height:54rem;
+  }
+  .guide-layer--system .guide-layer__heading { inset-block-start:3.9rem; }
+  .guide-layer--system .guide-system-top { top:22.5%; }
+  .guide-layer--system .guide-layer__core--system { top:38.5%; }
+  .guide-layer--system .guide-system-code { top:21.5%; height:55%; }
+  .guide-layer--system .guide-system-bottom { top:55.2%; }
+  .guide-layer--system .guide-system-flow { bottom:13%; }
+  .guide-layer--system .guide-layer__bottom-claim { bottom:1%; }
+
+  /* Short desktop uses one shared 16:9 viewing frame. Keep the two 16:9
+     scenes visually compact inside that frame, while the system scene gets
+     the wider lanes its 4:3 source composition needs. */
+  .guide-layer--scatter .guide-scatter-files { left:3%; width:33%; }
+  .guide-layer--scatter .guide-scatter-folder { right:4%; width:21%; }
+  .guide-layer--scatter .guide-layer__pill-row { left:10%; right:10%; }
+  .guide-layer--outputs .guide-output-grid { right:4%; width:62%; }
+  .guide-layer--outputs .guide-output-primitives { left:4%; right:4%; }
+  .guide-layer--system .guide-system-top { left:0; width:57%; }
+  .guide-layer--system .guide-system-code { right:0; width:38%; }
+  .guide-layer--system .guide-system-bottom { left:2%; width:54%; }
+  .guide-layer--system .guide-layer__core--system { left:14%; width:28%; }
+}
+
+/* Reference-locked desktop primitives. The lower system rail is intentionally
+   content-weighted (the final provider card is widest), and the execution
+   result stack uses the same stepped offsets as the source artboard. Keep
+   these changes scoped to the desktop canvas; the landscape mobile fitter
+   continues to scale the full composition as one unit. */
+@media (min-width:60.0625rem) {
+  .guide-layer--system .guide-system-flow {
+    left:1.2%;
+    right:1.2%;
+    gap:.55rem;
+  }
+  .guide-layer--system .guide-system-flow > span {
+    min-height:5rem;
+    padding:.8rem 1rem;
+    font-size:1rem;
+  }
+  .guide-layer--system .guide-system-flow > span:nth-of-type(1) { width:19%; }
+  .guide-layer--system .guide-system-flow > span:nth-of-type(2),
+  .guide-layer--system .guide-system-flow > span:nth-of-type(3) { width:20.5%; }
+  .guide-layer--system .guide-system-flow > span:nth-of-type(4) { width:23.8%; }
+  .guide-layer--system .guide-system-flow .bx,
+  .guide-layer--system .guide-system-flow img { width:1.65rem; height:1.65rem; font-size:1.65rem; }
+
+  .guide-layer--system .guide-system-top .bx,
+  .guide-layer--system .guide-system-bottom .bx { font-size:2.4rem; }
+  .guide-layer--system .guide-system-top strong,
+  .guide-layer--system .guide-system-bottom strong { font-size:1.15rem; }
+  .guide-layer--system .guide-system-top small,
+  .guide-layer--system .guide-system-bottom small { font-size:.95rem; }
+
+  .guide-layer--execution .guide-execution-stack {
+    width:32%;
+    aspect-ratio:.6;
+    margin:1.8rem 0 0 43%;
+  }
+  .guide-layer--execution .guide-execution-side--after { min-height:44rem; }
+  .guide-layer--execution .guide-execution-stack span:nth-child(1) { transform:translate(-4.4rem,.8rem); }
+  .guide-layer--execution .guide-execution-stack span:nth-child(2) { transform:translate(-2.2rem,.4rem); }
+
+  /* The source artboard leaves a deliberate breathing band between the
+     before prompt and its four generated variations. Keep these visual
+     offsets transform-only so the parent scene contract and connector
+     anchors remain stable. */
+  .guide-layer--execution .guide-execution-side--before .guide-chat-card {
+    transform:translateY(.9rem) scaleY(1.09);
+    transform-origin:top center;
+  }
+  .guide-layer--execution .guide-execution-posts {
+    gap:.8rem;
+    transform:translateY(4.2rem);
+  }
+  .guide-layer--execution .guide-execution-posts span { aspect-ratio:.78; }
+  .guide-layer--execution .guide-execution-side--before > small { transform:translateY(4rem); }
+  .guide-layer--execution .guide-execution-side--after .guide-chat-card {
+    transform:translateY(.4rem) scaleY(1.08);
+    transform-origin:top center;
+  }
+  .guide-layer--execution .guide-execution-side--after > small { transform:translateY(1.4rem); }
+}
+
+/* Final geometry safeguards. These rules are deliberately scoped to the
+   owning scene so a spacing correction cannot move a sibling slide. */
+.guide-gate .guide-founder-quote p { padding-block-end:1.65rem; }
+.guide-gate .guide-output-claim { padding-block-end:1.05em; white-space:nowrap; }
+.guide-gate .guide-at-least {
+  inset-block-start:auto;
+  inset-block-end:-.3em;
+  inset-inline-start:-.25em;
+}
+.guide-gate .guide-at-least .guide-insertion-mark { width:2.4rem; height:.82rem; }
+
+/* Keep the annotation outside the repeated-work cards. It is an editorial
+   callout, not a child of the card stack. */
+.guide-reference--cost .guide-reference__scribble--cost {
+  inset-block-start:8%;
+  inset-inline-end:0;
+  width:12rem;
+  white-space:nowrap;
+  pointer-events:none;
+}
+.guide-reference--cost .guide-reference__scribble--cost span { margin-inline-start:6rem; }
+.guide-reference--cost .guide-reference__claim strong,
+.guide-reference--cost .guide-reference__claim em {
+  display:block;
+}
+
+@media (min-width:58.001rem) {
+  .guide-slide--problem .guide-problem__files-note { inset-block-end:5%; }
+}
+.guide-reference--cost .guide-reference__claim strong {
+  color:var(--foreground-strong);
+  font-family:var(--font-sans);
+  font-size:1em;
+  font-weight:800;
+  letter-spacing:-.035em;
+}
+.guide-reference--cost .guide-reference__claim em {
+  margin-top:.18rem;
+  color:var(--primary);
+  font-family:var(--font-display);
+  font-size:1.15em;
+  font-style:normal;
+  font-weight:400;
+  letter-spacing:-.045em;
+}
+
+/* The AI composition follows the reference's tall tool cards and generous
+   manual-fix panel. The desktop-only guard prevents phone layouts from being
+   forced taller than their landscape frame. */
+@media (min-width:64.0625rem) {
+  .guide-reference--ai .guide-tool-row article { min-height:17rem; }
+  .guide-reference--ai .guide-tool-row img { height:11.2rem; }
+  .guide-reference--ai .guide-manual-fixes { min-height:8rem; margin-top:1.6rem; }
+}
+
+/* Rejection marks sit on the source logos themselves. Give the nested icon a
+   stable containing block and enough overflow room so Docs, Canva, and Figma
+   all render the same red mark. */
+.guide-reference--infra .guide-infra__not-list .guide-infra__not-brand {
+  position:relative;
+  overflow:visible;
+}
+.guide-reference--infra .guide-infra__not-list .guide-infra__not-x {
+  inset-block-start:-.22rem;
+  inset-inline-start:1.02rem;
+  z-index:5;
+  display:grid;
+  width:.9rem;
+  height:.9rem;
+  place-items:center;
+  padding:0;
+  border:0;
+  border-radius:9999px;
+  background:var(--destructive);
+  color:var(--background);
+  opacity:.9;
+  font-size:.68rem;
+  line-height:1;
+  transform:rotate(-10deg);
+}
+
+/* Input/output cards share one centered typographic stack; no child can push
+   a row wider than its measured grid track. */
+.guide-reference--infra .guide-infra-diagram .guide-infra__inputs article,
+.guide-reference--infra .guide-infra-diagram .guide-infra__outputs article {
+  align-content:center;
+  justify-items:center;
+  row-gap:.28rem;
+  overflow:hidden;
+}
+.guide-reference--infra .guide-infra-diagram .guide-infra__inputs strong,
+.guide-reference--infra .guide-infra-diagram .guide-infra__outputs strong { margin-top:.25rem; white-space:normal; }
+.guide-reference--infra .guide-infra-diagram .guide-infra__inputs small,
+.guide-reference--infra .guide-infra-diagram .guide-infra__outputs small { margin-top:.08rem; white-space:normal; overflow-wrap:anywhere; }
+
+/* A fan-in is read as separate journeys. Slightly stronger strokes and
+   staggered handles keep every branch visible without changing its endpoint. */
+.guide-layer--scatter .guide-diagram__edges path { stroke-width:2.05; opacity:.96; }
+.guide-layer--scatter .guide-diagram__edges path.has-arrow { stroke-width:2.2; }
+.guide-layer--system .guide-diagram__edges path.has-arrow { stroke-width:2.15; }
+
+@media (min-width:60.0625rem) and (max-height:50rem) {
+  /* The folder gets the requested extra breathing room only in the compact
+     desktop frame; native reference artboard geometry remains locked. */
+  .guide-layer--scatter .guide-scatter-folder { right:3%; width:22%; height:56%; top:28%; }
+}

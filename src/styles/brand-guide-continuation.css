@@ -1,0 +1,286 @@
+/* Continuation scenes 10–13 keep the same measured 4:3 artboard as the
+   supplied continuation references. Every connected object lives inside one
+   GuideDiagramCanvas; this file only owns composition and surface treatment. */
+.guide-slide:has(.guide-layer--production) .guide-layer,
+.guide-slide:has(.guide-layer--cost-model) .guide-layer,
+.guide-slide:has(.guide-layer--system-map) .guide-layer,
+.guide-slide:has(.guide-layer--review) .guide-layer { height:72rem; }
+
+.guide-layer--production .guide-layer__heading,
+.guide-layer--cost-model .guide-layer__heading,
+.guide-layer--system-map .guide-layer__heading,
+.guide-layer--review .guide-layer__heading { inset-inline:3rem; inset-block-start:1.2rem; }
+
+.guide-layer--production .guide-layer__heading h2,
+.guide-layer--cost-model .guide-layer__heading h2,
+.guide-layer--system-map .guide-layer__heading h2,
+.guide-layer--review .guide-layer__heading h2 { font-size:clamp(3rem,4.6vw,5rem); line-height:.95; }
+
+.guide-layer--production .guide-layer__heading span,
+.guide-layer--cost-model .guide-layer__heading span,
+.guide-layer--system-map .guide-layer__heading span,
+.guide-layer--review .guide-layer__heading span { max-width:52rem; margin-inline:auto; }
+
+.guide-layer--production .guide-layer__heading em,
+.guide-layer--cost-model .guide-layer__heading em,
+.guide-layer--system-map .guide-layer__heading em,
+.guide-layer--review .guide-layer__heading em,
+.guide-production-claim em,
+.guide-cost-model-callout em,
+.guide-cost-model-claim em,
+.guide-system-map__claim em,
+.guide-review-claim em { color:var(--primary); font-family:var(--font-display); font-style:normal; font-weight:400; }
+
+.guide-layer--production .guide-layer__diagram,
+.guide-layer--cost-model .guide-layer__diagram,
+.guide-layer--system-map .guide-layer__diagram,
+.guide-layer--review .guide-layer__diagram { height:100%; aspect-ratio:auto; }
+
+.guide-production-diagram article,
+.guide-cost-model-diagram article,
+.guide-system-map-diagram article,
+.guide-review-diagram article { border:1px solid var(--border-strong); border-radius:var(--radius-md); background:linear-gradient(145deg,color-mix(in oklab,var(--panel-raised) 92%,transparent),color-mix(in oklab,var(--panel) 88%,transparent)); box-shadow:var(--glass-shadow); backdrop-filter:blur(var(--glass-blur)); }
+
+/* 10 — one idea through the production engine. */
+.guide-production-idea,
+.guide-production-content,
+.guide-production-core,
+.guide-production-outputs,
+.guide-production-process,
+.guide-production-before,
+.guide-production-after,
+.guide-production-claim { position:absolute; z-index:3; }
+.guide-production-idea { left:3.5%; top:25%; width:13%; min-height:21%; padding:1.3rem .9rem; text-align:center; }
+.guide-production-idea>.bx { display:block; margin-bottom:.7rem; color:var(--primary); }
+.guide-production-idea>strong,.guide-production-content>strong { display:block; color:var(--foreground-strong); font-size:var(--font-size-lg); }
+.guide-production-idea>small { display:block; margin-top:.4rem; color:var(--muted-foreground); font-size:var(--font-size-sm); line-height:1.35; }
+.guide-production-idea>span { display:block; margin-top:1rem; padding:.75rem .55rem; border:1px solid var(--border); border-radius:var(--radius-md); color:var(--foreground); font-size:var(--font-size-sm); line-height:1.35; text-align:start; }
+.guide-production-content { left:21%; top:25%; width:16%; min-height:24%; padding:1.1rem 1rem; }
+.guide-production-content>.bx { float:inline-start; margin-inline-end:.6rem; color:var(--primary); }
+.guide-production-content>small { display:block; min-height:2.3rem; margin-top:.45rem; color:var(--muted-foreground); font-size:var(--font-size-sm); line-height:1.3; }
+.guide-production-content>span { display:flex; align-items:center; gap:.5rem; margin-top:.45rem; padding:.48rem .55rem; border:1px solid var(--border); border-radius:var(--radius-md); color:var(--foreground); font-size:var(--font-size-xs); }
+.guide-production-content>span .bx { color:var(--primary); }
+.guide-production-core { left:40%; top:24%; width:22%; min-height:23%; flex-direction:column; align-items:stretch; justify-content:center; padding:1.35rem; }
+.guide-production-core>.bx { align-self:center; color:var(--foreground-strong); }
+.guide-production-core__heading { text-align:center; }
+.guide-production-core__heading strong { font-size:var(--font-size-2xl); }
+.guide-production-core__chips { display:flex; flex-wrap:wrap; justify-content:center; gap:.4rem; margin-top:.9rem; }
+.guide-production-core__chips span { padding:.32rem .55rem; border:1px solid color-mix(in oklab,var(--primary) 35%,var(--border)); border-radius:var(--radius-md); color:var(--primary); font-size:var(--font-size-2xs); }
+.guide-production-outputs { right:3.5%; top:17%; width:31%; display:grid; gap:.6rem; }
+.guide-production-outputs article { display:grid; grid-template-columns:minmax(0,1fr) 7.5rem; min-height:6.2rem; overflow:hidden; }
+.guide-production-output__copy { display:grid; align-content:center; gap:.25rem; padding:.6rem .85rem; }
+.guide-production-output__copy .bx { grid-row:span 2; align-self:center; color:var(--primary); }
+.guide-production-output__copy strong { font-size:var(--font-size-sm); }
+.guide-production-output__copy small { color:var(--muted-foreground); font-size:var(--font-size-xs); line-height:1.25; }
+.guide-production-outputs img { width:100%; height:6.2rem; object-fit:cover; object-position:center; border-inline-start:1px solid var(--border); }
+.guide-production-process { left:3.5%; right:3.5%; top:54.5%; display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:.7rem; }
+.guide-production-process article { position:relative; min-height:8.8rem; padding:.65rem .5rem; text-align:center; }
+.guide-production-process article>small { position:absolute; inset-block-start:.55rem; inset-inline-start:.65rem; color:var(--muted-foreground); font-size:var(--font-size-2xs); }
+.guide-production-process article>.bx { display:block; margin:1.05rem auto .5rem; color:var(--primary); }
+.guide-production-process article>strong { display:block; color:var(--foreground-strong); font-size:var(--font-size-xs); line-height:1.25; }
+.guide-production-before,.guide-production-after { top:73.5%; min-height:11.5%; padding:1rem 1.3rem; display:grid; grid-template-columns:3rem 1fr; align-items:center; column-gap:.9rem; }
+.guide-production-before { left:3.5%; width:42%; }
+.guide-production-after { right:3.5%; width:42%; border-color:var(--primary)!important; box-shadow:0 0 1.5rem var(--primary-soft),var(--glass-shadow)!important; }
+.guide-production-before small,.guide-production-after small { grid-column:2; color:var(--muted-foreground); font-size:var(--font-size-2xs); letter-spacing:.18em; }
+.guide-production-before>.bx,.guide-production-after>.bx { grid-row:1 / span 2; color:var(--primary); }
+.guide-production-before strong,.guide-production-after strong { color:var(--foreground-strong); font-size:clamp(1.05rem,1.8vw,1.6rem); line-height:1.05; }
+.guide-production-after strong em { color:var(--primary); font-family:var(--font-display); font-style:normal; font-weight:400; }
+.guide-production-claim { left:10%; right:10%; bottom:1.6%; margin:0; color:var(--foreground-strong); font-size:var(--font-size-xl); font-weight:800; text-align:center; }
+
+/* 11 — output volume compared with the old and infrastructure models. */
+.guide-cost-model-metrics,
+.guide-cost-model-panel,
+.guide-cost-model-vs,
+.guide-cost-model-callout,
+.guide-cost-model-claim { position:absolute; z-index:3; }
+.guide-cost-model-metrics { left:3.5%; right:3.5%; top:18.5%; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:1rem; }
+.guide-cost-model-metrics article { display:grid; grid-template-columns:3.4rem 1fr; align-items:center; min-height:7.2rem; padding:.8rem 1rem; }
+.guide-cost-model-metrics article>.bx { justify-self:center; grid-row:span 2; color:var(--primary); }
+.guide-cost-model-channels { display:flex; justify-content:center; gap:.55rem; grid-row:span 2; }
+.guide-cost-model-metrics__channels { grid-template-columns:1fr; justify-items:center; align-content:center; gap:.5rem; }
+.guide-cost-model-metrics__channels .guide-cost-model-channels { grid-row:auto; }
+.guide-cost-model-channels .bx { color:var(--purple); }
+.guide-cost-model-channels .bx:nth-child(2) { color:var(--primary); }
+.guide-cost-model-channels .bx:nth-child(3) { color:var(--accent); }
+.guide-cost-model-channels .bx:nth-child(4) { color:var(--info); }
+.guide-cost-model-metrics article strong { color:var(--foreground-strong); font-size:clamp(1.6rem,2.5vw,2.55rem); line-height:.95; }
+.guide-cost-model-metrics article small { color:var(--foreground); font-size:var(--font-size-sm); line-height:1.2; }
+.guide-cost-model-metrics article small em { color:var(--primary); font-family:var(--font-display); font-style:normal; }
+.guide-cost-model-panel { top:32%; width:39%; min-height:37%; padding:1.25rem 1.6rem; }
+.guide-cost-model-panel--old { left:10%; border-color:var(--destructive)!important; box-shadow:0 0 1.4rem var(--destructive-soft),var(--glass-shadow)!important; }
+.guide-cost-model-panel--new { right:10%; border-color:var(--primary)!important; box-shadow:0 0 1.4rem var(--primary-soft),var(--glass-shadow)!important; }
+.guide-cost-model-panel header { display:flex; align-items:center; gap:.8rem; color:var(--foreground-strong); }
+.guide-cost-model-panel header>.bx { color:var(--destructive); }
+.guide-cost-model-panel--new header>.bx { color:var(--primary); }
+.guide-cost-model-panel header strong { font-size:var(--font-size-lg); letter-spacing:.15em; }
+.guide-cost-model-panel header em { margin-inline-start:auto; color:var(--destructive); font-family:var(--font-display); font-size:var(--font-size-sm); font-style:italic; line-height:1.05; text-align:end; }
+.guide-cost-model-panel--new header em { color:var(--primary); }
+.guide-cost-model-steps { display:grid; gap:.55rem; margin-top:1.15rem; }
+.guide-cost-model-steps span { display:flex; min-height:3.25rem; align-items:center; gap:.75rem; padding:.55rem .85rem; border:1px solid var(--border); border-radius:var(--radius-md); background:color-mix(in oklab,var(--panel) 88%,transparent); color:var(--foreground-strong); font-size:var(--font-size-sm); }
+.guide-cost-model-steps .bx { color:var(--destructive); }
+.guide-cost-model-panel--new .guide-cost-model-steps .bx { color:var(--primary); }
+.guide-cost-model-vs { left:50%; top:50%; display:grid; width:3rem; height:3rem; place-items:center; border:1px solid var(--primary); border-radius:var(--radius-md); background:var(--panel); color:var(--primary); font-weight:800; transform:translate(-50%,-50%); }
+.guide-cost-model-callout { left:9%; right:9%; top:72%; display:flex; min-height:7%; align-items:center; gap:1.1rem; padding:.8rem 1.35rem; border:1px solid var(--primary); border-radius:var(--radius-md); background:color-mix(in oklab,var(--panel-strong) 90%,transparent); box-shadow:0 0 1.1rem var(--primary-soft); color:var(--foreground-strong); }
+.guide-cost-model-callout>.bx { color:var(--primary); }
+.guide-cost-model-callout strong { font-size:clamp(1.2rem,1.9vw,1.8rem); }
+.guide-cost-model-claim { left:8%; right:8%; bottom:1.2%; display:grid; gap:.1rem; color:var(--foreground-strong); text-align:center; }
+.guide-cost-model-claim strong { font-size:var(--font-size-2xl); }
+.guide-cost-model-claim em { font-size:clamp(1.6rem,2.7vw,2.7rem); }
+.guide-cost-model-claim small { margin-top:.3rem; color:var(--foreground); font-size:var(--font-size-sm); }
+
+/* 12 — the full input → infrastructure → tools → output map. */
+.guide-system-map__label,
+.guide-system-map__inputs,
+.guide-system-map__core,
+.guide-system-map__tools,
+.guide-system-map__outputs,
+.guide-system-map__scribble,
+.guide-system-map__claim { position:absolute; z-index:3; }
+.guide-system-map__label { left:12%; right:12%; display:flex; align-items:center; gap:1.2rem; color:var(--primary); font-size:var(--font-size-xs); font-weight:800; letter-spacing:.28em; text-align:center; }
+.guide-system-map__label::before,.guide-system-map__label::after { content:""; height:1px; flex:1; background:color-mix(in oklab,var(--primary) 45%,var(--border)); }
+.guide-system-map__label--inputs { top:20.5%; }
+.guide-system-map__inputs { left:8%; right:8%; top:22.5%; display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:1rem; }
+.guide-system-map__inputs article { display:grid; min-height:7.2rem; place-items:center; align-content:center; gap:.45rem; }
+.guide-system-map__inputs article>.bx { color:var(--primary); }
+.guide-system-map__inputs article>b { color:var(--foreground-strong); font-family:var(--font-display); font-size:2.5rem; font-weight:400; }
+.guide-system-map__inputs article>strong { color:var(--foreground-strong); font-size:var(--font-size-sm); }
+.guide-system-map__swatches { display:flex; gap:.25rem; }
+.guide-system-map__swatches i { display:block; width:1.05rem; height:1.05rem; border-radius:var(--radius-sm); background:var(--primary); }
+.guide-system-map__swatches i:nth-child(2) { background:var(--purple); }.guide-system-map__swatches i:nth-child(3) { background:var(--warning); }.guide-system-map__swatches i:nth-child(4) { background:var(--foreground-strong); }
+.guide-system-map__core { left:25%; top:36%; width:50%; min-height:26%; flex-direction:column; align-items:stretch; padding:1rem 1.4rem; }
+.guide-system-map__core>.bx { align-self:center; color:var(--foreground-strong); }
+.guide-system-map__core .guide-glass-core__heading { text-align:center; }
+.guide-system-map__core .guide-glass-core__heading strong { font-size:var(--font-size-2xl); }
+.guide-system-map__core-rows { display:grid; gap:.3rem; margin-top:.7rem; }
+.guide-system-map__core-rows span { display:flex; min-height:2.1rem; align-items:center; gap:.75rem; padding:.28rem .7rem; border:1px solid color-mix(in oklab,var(--primary) 25%,var(--border)); border-radius:var(--radius-md); background:color-mix(in oklab,var(--panel) 72%,transparent); color:var(--foreground-strong); font-size:var(--font-size-sm); }
+.guide-system-map__core-rows .bx { color:var(--primary); }
+.guide-system-map__label--tools { top:67.5%; }
+.guide-system-map__tools { left:8%; right:8%; top:69.5%; display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:1rem; }
+.guide-system-map__tools article,.guide-system-map__outputs article { display:grid; min-height:5.7rem; place-items:center; align-content:center; gap:.5rem; }
+.guide-system-map__tools .bx,.guide-system-map__outputs .bx { color:var(--primary); }
+.guide-system-map__tools strong,.guide-system-map__outputs strong { color:var(--foreground-strong); font-size:var(--font-size-sm); }
+.guide-system-map__label--outputs { top:78.6%; }
+.guide-system-map__outputs { left:8%; right:8%; top:80.6%; display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:1rem; }
+.guide-system-map__outputs article { min-height:5.7rem; }
+.guide-system-map__outputs article:first-child .bx { color:var(--purple); }.guide-system-map__outputs article:nth-child(2) .bx { color:var(--accent); }.guide-system-map__outputs article:nth-child(3) .bx { color:var(--primary); }.guide-system-map__outputs article:nth-child(4) .bx { color:var(--info); }
+.guide-system-map__scribble { right:4%; top:30%; color:var(--primary); font-family:var(--font-display); font-size:var(--font-size-lg); font-style:italic; line-height:1.05; transform:rotate(-7deg); }
+.guide-system-map__claim { left:8%; right:8%; bottom:1.5%; margin:0; color:var(--foreground-strong); font-size:clamp(1.8rem,2.7vw,2.8rem); font-weight:800; text-align:center; }
+
+/* 13 — review close. */
+.guide-review-inputs,
+.guide-review-list,
+.guide-review-core,
+.guide-review-cta,
+.guide-review-note,
+.guide-review-claim { position:absolute; z-index:3; }
+.guide-review-inputs { left:12%; right:12%; top:29%; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:1rem; }
+.guide-review-inputs article { display:grid; min-height:7.4rem; place-items:center; align-content:center; gap:.55rem; padding:.8rem; text-align:center; }
+.guide-review-inputs .bx { color:var(--primary); }
+.guide-review-inputs strong { max-width:10rem; color:var(--foreground-strong); font-size:var(--font-size-sm); line-height:1.15; }
+.guide-review-inputs .guide-system-map__swatches { margin-bottom:.15rem; }
+.guide-review-list { top:47%; width:21%; display:grid; gap:.55rem; padding:1.1rem; }
+.guide-review-list--left { left:6%; }.guide-review-list--right { right:6%; }
+.guide-review-list span { display:flex; min-height:3rem; align-items:center; gap:.7rem; padding:.6rem .75rem; border:1px solid var(--border); border-radius:var(--radius-md); background:color-mix(in oklab,var(--panel) 86%,transparent); color:var(--foreground-strong); font-size:var(--font-size-sm); }
+.guide-review-list .bx { color:var(--primary); }
+.guide-review-core { left:36%; top:47%; width:28%; min-height:13%; flex-direction:column; justify-content:center; padding:1.2rem; text-align:center; }
+.guide-review-core>.bx { color:var(--foreground-strong); }
+.guide-review-core .guide-glass-core__heading strong { font-size:var(--font-size-2xl); }
+.guide-review-core .guide-glass-core__heading small { color:var(--primary); font-size:var(--font-size-xs); font-weight:800; letter-spacing:.19em; }
+.guide-review-cta { left:22%; right:22%; top:66%; display:flex; min-height:6.5%; align-items:center; justify-content:center; gap:.8rem; padding:.75rem 1rem; border:1px solid var(--foreground-strong); border-radius:var(--radius-md); background:var(--primary); box-shadow:0 0 1.6rem var(--primary-soft); color:var(--primary-foreground); font-size:clamp(1.05rem,1.8vw,1.6rem); font-weight:800; text-align:center; text-decoration:none; transition:filter var(--duration) var(--ease),transform var(--duration) var(--ease); }
+.guide-review-cta:hover { filter:brightness(1.1); transform:translateY(-.12rem); }
+.guide-review-cta:focus-visible { outline:2px solid var(--ring); outline-offset:3px; }
+.guide-review-note { left:25%; right:25%; top:74%; margin:0; color:var(--muted-foreground); font-size:var(--font-size-lg); line-height:1.3; text-align:center; }
+.guide-review-pdf { position:absolute; z-index:3; left:30%; right:30%; top:81.5%; display:flex; min-height:5.4%; align-items:center; justify-content:center; gap:.7rem; padding:.6rem 1rem; border:1px solid var(--border-strong); border-radius:var(--radius-md); background:color-mix(in oklab,var(--panel) 88%,transparent); color:var(--foreground-strong); font-size:clamp(.95rem,1.35vw,1.25rem); font-weight:700; cursor:pointer; transition:border-color var(--duration) var(--ease),background var(--duration) var(--ease); }
+.guide-review-pdf:hover { border-color:var(--primary); background:var(--primary-soft); }
+.guide-review-pdf .bx { color:var(--primary); }
+.guide-review-claim { left:8%; right:8%; bottom:1.6%; margin:0; color:var(--foreground-strong); font-family:var(--font-display); font-size:clamp(1.3rem,2vw,2rem); text-align:center; }
+
+/* The reference uses an intentional portrait rotation state. In landscape
+   phone frames, retain readable labels by fitting the complete artboard. */
+@media (max-width:60rem) {
+  .guide-layer--production .guide-production-idea { left:1.5%; }.guide-layer--production .guide-production-content { left:19%; }.guide-layer--production .guide-production-outputs { right:1.5%; }
+  .guide-layer--cost-model .guide-cost-model-panel--old { left:4%; }.guide-layer--cost-model .guide-cost-model-panel--new { right:4%; }
+  .guide-layer--system-map .guide-system-map__inputs,.guide-layer--system-map .guide-system-map__tools,.guide-layer--system-map .guide-system-map__outputs { left:3%; right:3%; }
+  .guide-layer--review .guide-review-inputs { left:4%; right:4%; }.guide-layer--review .guide-review-list--left { left:2%; }.guide-layer--review .guide-review-list--right { right:2%; }
+}
+
+@media (max-width:58rem) and (orientation:landscape) {
+  .guide-layer--production .guide-layer__heading h2,
+  .guide-layer--cost-model .guide-layer__heading h2,
+  .guide-layer--system-map .guide-layer__heading h2,
+  .guide-layer--review .guide-layer__heading h2 { font-size:3.4rem; }
+}
+
+/* Owner 2026-09-18: 6/8 overflow, 8 cards, 11 too small, 12 icon overflow. */
+.brand-guide .guide-slide:has(.guide-layer--system) .guide-layer,
+.brand-guide .guide-slide:has(.guide-layer--media) .guide-layer,
+.brand-guide .guide-slide:has(.guide-layer--cost-model) .guide-layer,
+.brand-guide .guide-slide:has(.guide-layer--system-map) .guide-layer {
+  width:90.5rem;
+  overflow:hidden;
+}
+.brand-guide .guide-slide:has(.guide-layer--system),
+.brand-guide .guide-slide:has(.guide-layer--media) { overflow:clip; }
+
+/* 06 — pull the code lane in and keep the claim pair inside the artboard. */
+.brand-guide .guide-layer--system .guide-system-code { right:2.4%; width:36%; }
+.brand-guide .guide-layer--system .guide-system-top { left:2%; width:54%; }
+.brand-guide .guide-layer--system .guide-layer__core--system { left:14%; width:28%; }
+.brand-guide .guide-layer--system .guide-system-bottom { left:3%; width:50%; }
+.brand-guide .guide-layer--system .guide-system-flow { left:2%; right:2%; }
+.brand-guide .guide-layer--system .guide-layer__bottom-claim { left:10%; right:10%; gap:3.5rem; }
+.brand-guide .guide-layer--system .guide-layer__bottom-claim>strong { width:auto; flex:1; min-width:0; }
+
+/* 08 — inset columns, real previews, no tool-strip overflow. */
+.brand-guide .guide-layer--media .guide-media-column { width:20%; top:22%; }
+.brand-guide .guide-layer--media .guide-media-column--left { left:8%; }
+.brand-guide .guide-layer--media .guide-media-column--right { right:9%; }
+.brand-guide .guide-layer--media .guide-layer__core--media { left:37%; width:26%; }
+.brand-guide .guide-layer--media .guide-media-tools { inset-inline:2.5%; bottom:13%; }
+.brand-guide .guide-layer--media .guide-media-tools>span { min-width:0; overflow:hidden; }
+.brand-guide .guide-layer--media .guide-media-column article { overflow:hidden; min-width:0; }
+.brand-guide .guide-layer--media .guide-media-column article:has(.guide-media-preview) { min-height:17.5rem; padding:.65rem .7rem .7rem; }
+.brand-guide .guide-layer--media .guide-media-preview { min-height:11.2rem; margin-top:.4rem; border-radius:var(--radius-sm); }
+.brand-guide .guide-layer--media .guide-media-preview>img { opacity:1; }
+.brand-guide .guide-layer--media .guide-media-preview__copy { display:none; }
+.brand-guide .guide-layer--media .guide-media-preview--video>.bx { display:none; }
+.brand-guide .guide-layer--media .guide-media-tools { inset-inline:2.5%; bottom:14.5%; }
+.brand-guide .guide-layer--media .guide-layer__scribble--media-left { left:1.2%; top:50%; }
+.brand-guide .guide-layer--media .guide-layer__scribble--media-right { right:.4%; top:46%; max-width:8.8rem; line-height:1.15; }
+
+/* 11 — wider metric tiles and panels, circular header marks. */
+.brand-guide .guide-cost-model-metrics { left:5%; right:5%; top:17%; gap:1.15rem; }
+.brand-guide .guide-cost-model-metrics article { grid-template-columns:4.4rem 1fr; min-height:8.6rem; padding:1rem 1.15rem; }
+.brand-guide .guide-cost-model-tile { grid-row:span 2; display:grid; width:4.2rem; height:4.2rem; place-items:center; border:1px solid var(--border-strong); border-radius:var(--radius-md); background:color-mix(in oklab,var(--panel-raised) 88%,transparent); color:var(--primary); }
+.brand-guide .guide-cost-model-metrics article strong { font-size:clamp(2.2rem,3.4vw,3.2rem); }
+.brand-guide .guide-cost-model-metrics article small { font-size:var(--font-size-base); }
+.brand-guide .guide-cost-model-metrics article.guide-cost-model-metrics__channels { grid-template-columns:1fr; justify-items:center; align-content:center; gap:.55rem; padding:1.1rem .8rem; }
+.brand-guide .guide-cost-model-channels { display:flex; gap:.9rem; grid-row:auto; }
+.brand-guide .guide-cost-model-channels .bx { font-size:1.75rem; }
+.brand-guide .guide-cost-model-metrics article.guide-cost-model-metrics__channels small { text-align:center; }
+.brand-guide .guide-cost-model-panel { top:31%; width:42%; min-height:39%; padding:1.35rem 1.7rem; }
+.brand-guide .guide-cost-model-panel--old { left:6%; }
+.brand-guide .guide-cost-model-panel--new { right:6%; }
+.brand-guide .guide-cost-model-panel header>.bx { display:grid; width:2.35rem; height:2.35rem; place-items:center; border:1px solid currentColor; border-radius:9999px; }
+.brand-guide .guide-cost-model-vs { width:3.4rem; height:3.4rem; border-radius:9999px; }
+.brand-guide .guide-cost-model-callout { left:6%; right:6%; }
+.brand-guide .guide-cost-model-steps span { min-height:3.5rem; font-size:var(--font-size-base); }
+
+/* 12 — compact title-bar core, separated tool/output bands, clipped icons. */
+.brand-guide .guide-system-map__core { left:22%; top:33%; width:56%; min-height:0; display:grid; grid-template-columns:auto 1fr; align-items:center; gap:.85rem 1rem; padding:1rem 1.4rem 1.15rem; overflow:visible; }
+.brand-guide .guide-system-map__core>.bx { grid-column:1; grid-row:1; align-self:center; }
+.brand-guide .guide-system-map__core .guide-glass-core__heading { grid-column:2; grid-row:1; text-align:start; }
+.brand-guide .guide-system-map__core-rows { grid-column:1 / -1; grid-row:2; margin-top:.35rem; }
+.brand-guide .guide-system-map__label--inputs { top:18%; }
+.brand-guide .guide-system-map__inputs { left:10%; right:10%; top:20.5%; }
+.brand-guide .guide-system-map__inputs article,
+.brand-guide .guide-system-map__tools article,
+.brand-guide .guide-system-map__outputs article { min-height:5.4rem; min-width:0; overflow:hidden; padding:.55rem .4rem; }
+.brand-guide .guide-system-map__inputs article>.bx,
+.brand-guide .guide-system-map__tools .bx,
+.brand-guide .guide-system-map__outputs .bx { font-size:1.55rem; }
+.brand-guide .guide-system-map__label--tools { top:64%; }
+.brand-guide .guide-system-map__tools { left:10%; right:10%; top:66.2%; }
+.brand-guide .guide-system-map__label--outputs { top:78.8%; }
+.brand-guide .guide-system-map__outputs { left:10%; right:10%; top:81%; }
+.brand-guide .guide-system-map__scribble { right:6%; top:34%; }
