@@ -153,14 +153,18 @@ if (guide) {
     submit.disabled = true;
     submit.setAttribute("aria-busy", "true");
     try {
+      const payload = Object.fromEntries(new FormData(form).entries());
       const response = await fetch(form.action, {
         method: "POST",
-        body: new FormData(form),
-        headers: { Accept: "application/json" },
+        body: JSON.stringify(payload),
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
       });
       if (!response.ok) throw new Error("Brand Guide signup failed");
       const result = await response.json().catch(() => null) as { success?: boolean | string } | null;
-      if (result?.success === false || result?.success === "false") throw new Error("Brand Guide signup failed");
+      if (result?.success !== true && result?.success !== "true") throw new Error("Brand Guide signup failed");
       unlock();
     } catch {
       showError(form.dataset.submitError, false);

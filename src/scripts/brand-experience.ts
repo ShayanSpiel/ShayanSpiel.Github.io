@@ -227,13 +227,17 @@ if (root) {
     if (pending) return;
     if (current < 3) { next.click(); return; }
     if (!valid()) return;
-    const payload = new FormData(form), submittedPackage = selected.textContent;
+    const payload = Object.fromEntries(new FormData(form).entries()), submittedPackage = selected.textContent;
     pending = true; error.hidden = true; render();
     try {
-      const response = await fetch(form.action, { method: "POST", body: payload, headers: { Accept: "application/json" } });
+      const response = await fetch(form.action, {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers: { Accept: "application/json", "Content-Type": "application/json" },
+      });
       if (!response.ok) throw new Error("Review submission failed");
       const result = await response.json().catch(() => null) as { success?: boolean | string } | null;
-      if (result?.success === false || result?.success === "false") throw new Error("Review submission failed");
+      if (result?.success !== true && result?.success !== "true") throw new Error("Review submission failed");
       completed = true; form.reset(); form.hidden = true; progress.hidden = true; success.hidden = false;
       if (dialog.open) success.focus();
       track("brand_review_success", { package: submittedPackage });
