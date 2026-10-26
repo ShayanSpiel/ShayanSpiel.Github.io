@@ -1132,5 +1132,6 @@
       "image": "assets/og/solutions-workflows-recruitment-automation-en.png",
       "sha256": "a10eaa487dafec1a67b8af6a201804eb822c11a4d4e08fa6bee159aa036a3e22"
     }
-  ]
+  ],
+  "versioned_social_urls": true
 }
