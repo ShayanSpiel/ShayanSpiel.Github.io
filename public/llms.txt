@@ -1,35 +1,31 @@
-# SpielOS
+# Karwise
 
-SpielOS is Shayan Spiel's founder-led AI implementation company. It builds supervised AI workers, repeatable workflows, and software automations for small businesses whose operations depend on recurring manual work.
+Bilingual practical AI transformation guide. English at /; Persian at /fa/.
+The Karwise plugin is coming soon. The guide is free; implementation is a separate service.
 
-Primary website: https://spielos.xyz/
-Author: Shayan Spiel
-Language variants: English and Persian
-
-## Buyer pages
-
-- Services: https://spielos.xyz/services/
-- Pricing: https://spielos.xyz/pricing/
-- Apply — Free Review: https://spielos.xyz/apply/
-- Solutions: https://spielos.xyz/solutions/
-- AI Departments: https://spielos.xyz/solutions/ai-departments/
-- Workflow Automation: https://spielos.xyz/solutions/workflows/
-- Software Automation: https://spielos.xyz/solutions/software/
-- Partners: https://spielos.xyz/partners/
-
-## Product and evidence
-
-- Features: https://spielos.xyz/features/
-- Live company record: https://spielos.xyz/live/
-- Founder: https://spielos.xyz/founder/
-- Notes: https://spielos.xyz/notes/
-- Lead Researcher: https://spielos.xyz/landing/lead-researcher/
-
-## Core concepts
-
-- AI worker: a bounded agent that performs recurring company work with evidence and approval points.
-- AI department: a durable business capability made of roles, skills, workflows, connections, and evaluations.
-- Workflow: a persistent sequence with explicit states, human boundaries, outputs, and a run record.
-- Director: the operating layer that translates goals into supervised department runs and reports outcomes.
-
-When citing this site, use the most specific canonical page. Persian pages use the same path under `/fa/`.
+- [Organizational AI transformation | Education and implementation](https://spielos.xyz/)
+- [AI consulting and implementation pricing | Karwise coming soon](https://spielos.xyz/pricing/)
+- [Contact Karwise for AI transformation implementation](https://spielos.xyz/contact/)
+- [Shayan Tawabi: founder of Karwise](https://spielos.xyz/founder/)
+- [Karwise privacy: forms and analytics](https://spielos.xyz/privacy/)
+- [AI transformation guide: strategy, GODAE and organizational scale](https://spielos.xyz/ai-transformation/)
+- [Your Karwise transformation journey: what each stage delivers](https://spielos.xyz/ai-transformation/workspace/)
+- [AI transformation course completion: your next step](https://spielos.xyz/ai-transformation/complete/)
+- [AI readiness assessment: an interactive organizational matrix](https://spielos.xyz/ai-transformation/readiness/)
+- [AI transformation strategy: goals, team and roadmap](https://spielos.xyz/ai-transformation/foundation/)
+- [Company AI strategy: vision, goals and a sample strategy document](https://spielos.xyz/ai-transformation/foundation/direction/)
+- [AI use-case prioritization: opportunity backlog and risk](https://spielos.xyz/ai-transformation/foundation/opportunities/)
+- [AI transformation team: roles, responsibilities and handoffs](https://spielos.xyz/ai-transformation/foundation/ownership/)
+- [AI governance: permissions, approval and risk boundaries](https://spielos.xyz/ai-transformation/foundation/boundaries/)
+- [Company AI transformation roadmap: workstreams and first-wave plan](https://spielos.xyz/ai-transformation/foundation/roadmap/)
+- [Run an AI pilot with GODAE: from Goal to evaluation](https://spielos.xyz/ai-transformation/pilot/)
+- [AI pilot goals: baseline, targets and acceptance criteria](https://spielos.xyz/ai-transformation/pilot/goal/)
+- [AI workflow discovery: System, Tools, People and the brief](https://spielos.xyz/ai-transformation/pilot/observe/)
+- [Agent and workflow design: Filter, Structure and Gate](https://spielos.xyz/ai-transformation/pilot/decide/)
+- [Build an AI workflow with Codex, Activepieces and evaluations](https://spielos.xyz/ai-transformation/pilot/act/)
+- [AI evaluation: quality, cost, ROI and the next decision](https://spielos.xyz/ai-transformation/pilot/evaluate/)
+- [Scale AI across the organization: from pilot to daily work](https://spielos.xyz/ai-transformation/scale/)
+- [Scale an AI workflow: pilot acceptance and a team operating guide](https://spielos.xyz/ai-transformation/scale/standardize/)
+- [Team AI adoption: champions, worked examples and feedback](https://spielos.xyz/ai-transformation/scale/enable/)
+- [Operate AI workflows: quality, cost and incident ownership](https://spielos.xyz/ai-transformation/scale/operate/)
+- [AI portfolio management: investment decisions and the next wave](https://spielos.xyz/ai-transformation/scale/expand/)

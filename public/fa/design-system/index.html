@@ -1,0 +1,399 @@
+<!DOCTYPE html><html lang="fa" dir="rtl" data-theme="blue-dark"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content"><meta name="theme-color" content="#0b0f1a"><meta name="color-scheme" content="dark"><meta name="robots" content="noindex,follow"><link rel="author" href="/humans.txt"><title>کاروایز · Brand system</title><meta name="description" content="کاروایز component, typography and journey signature specimens."><link rel="canonical" href="https://spielos.xyz/fa/design-system/"><meta property="og:site_name" content="کاروایز"><meta property="og:title" content="کاروایز · Brand system"><meta property="og:description" content="کاروایز component, typography and journey signature specimens."><meta property="og:url" content="https://spielos.xyz/fa/design-system/"><meta property="og:type" content="website"><meta property="og:image" content="https://spielos.xyz/assets/og/home.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:locale" content="fa_IR"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content="@ShayanSpiel"><meta name="twitter:creator" content="@ShayanSpiel"><meta name="twitter:title" content="کاروایز · Brand system"><meta name="twitter:description" content="کاروایز component, typography and journey signature specimens."><meta property="og:image:alt" content="کاروایز · Brand system"><meta name="twitter:image" content="https://spielos.xyz/assets/og/home.png"><meta name="twitter:image:alt" content="کاروایز · Brand system"><link rel="icon" type="image/svg+xml" href="/assets/favicons/favicon-v2.svg"><link rel="icon" type="image/png" sizes="32x32" href="/assets/favicons/favicon-32-v2.png"><link rel="icon" type="image/png" sizes="16x16" href="/assets/favicons/favicon-16-v2.png"><link rel="apple-touch-icon" sizes="180x180" href="/assets/favicons/apple-touch-icon-v2.png"><link rel="manifest" href="/site.webmanifest"><link rel="alternate" type="application/rss+xml" title="کاروایز RSS" href="/feed.xml"><!-- Preload typefaces (FOUT fix 2026-09-16): Outfit latin + latin-ext,
+         DM Serif normal + italic (both TTF), boxicons, and IranSansX VF
+         on fa pages only. Doran display weights load on demand, never
+         preloaded across pages that may not use display emphasis. --><link rel="preload" as="font" type="font/woff2" href="/assets/fonts/outfit-latin.woff2" crossorigin><link rel="preload" as="font" type="font/woff2" href="/assets/fonts/outfit-latin-ext.woff2" crossorigin><link rel="preload" as="font" type="font/ttf" href="/assets/fonts/dm-serif-display-latin.ttf" crossorigin><link rel="preload" as="font" type="font/ttf" href="/assets/fonts/dm-serif-display-latin-italic.ttf" crossorigin><link rel="preload" as="font" type="font/woff2" href="/assets/fonts/boxicons.woff2" crossorigin><link rel="preload" as="font" type="font/woff2" href="/assets/fonts/IRANSansXVF.woff2" crossorigin><!-- Cal.com native embed (owner directive 2026-08-23, flow.digital
+         pattern): the small icon-only call CTAs on Contact and Apply are
+         data-cal-link triggers that open Cal's booking embed right on the
+         page. Cal's OFFICIAL loader defines window.Cal as a queue immediately
+         and only then loads embed.js, so analytics can register
+         bookingSuccessful before Cal finishes loading and the popup opens as
+         fast as possible. There is NO custom modal wrapper. Apply remains the
+         primary conversion action; booking is an optional alternative. --><!-- hreflang alternates for i18n SEO (indexable pages only —
+         noindex pages should not publish alternate clusters).
+         EN-only pages (noAlternate) still declare their language: a valid
+         en + x-default self-cluster with no fa target, which is the correct
+         pattern when no FA twin exists. --><!-- Google Search Console verification --><meta name="google-site-verification" content="LvKy8YQ0XGZPYu4bQ9JIhaFmdX3W9Ag7eSPYGTE-ORU"><!-- Critical inline styles — prevents FOUC before bundled CSS loads --><style>:root,[data-theme="blue-dark"] {
+  --blue-dark-bg0_h: #0b0f1a;
+  --blue-dark-bg0: #111827;
+  --blue-dark-bg0_s: #1a2332;
+  --blue-dark-bg1: #1e293b;
+  --blue-dark-bg2: #334155;
+  --blue-dark-bg3: #475569;
+  --blue-dark-bg4: #64748b;
+
+  --blue-dark-fg0: #f1f5f9;
+  --blue-dark-fg1: #e2e8f0;
+  --blue-dark-fg2: #cbd5e1;
+  --blue-dark-fg3: #94a3b8;
+  --blue-dark-fg4: #64748b;
+
+  --blue-dark-gray: #475569;
+
+  --blue-dark-red: #ef4444;
+  --blue-dark-green: #22c55e;
+  --blue-dark-yellow: #eab308;
+  --blue-dark-blue: #3b82f6;
+  --blue-dark-purple: #a855f7;
+  --blue-dark-aqua: #06b6d4;
+  --blue-dark-orange: #f97316;
+}
+
+:root,[data-theme="blue-dark"] {
+  --background: var(--blue-dark-bg0_h);
+  --background-deep: var(--blue-dark-bg0_h);
+  --panel: var(--blue-dark-bg0);
+  --panel-raised: var(--blue-dark-bg0_s);
+  --panel-strong: var(--blue-dark-bg1);
+  --panel-deep: var(--blue-dark-bg0_h);
+  --input: color-mix(in oklab, var(--blue-dark-bg1) 62%, var(--blue-dark-bg0));
+  --hover: color-mix(in oklab, var(--blue-dark-fg1) 7%, var(--blue-dark-bg0));
+  --selected: color-mix(in oklab, var(--blue-dark-blue) 17%, var(--blue-dark-bg0_s));
+  --border: color-mix(in oklab, var(--blue-dark-bg2) 62%, var(--blue-dark-bg0));
+  --border-strong: var(--blue-dark-bg2);
+  --ring: var(--blue-dark-blue);
+
+  --foreground: var(--blue-dark-fg1);
+  --foreground-strong: var(--blue-dark-fg0);
+  --foreground-muted: var(--blue-dark-fg3);
+  --muted-foreground: var(--blue-dark-fg4);
+
+  --primary: var(--blue-dark-blue);
+  --primary-foreground: var(--blue-dark-bg0);
+  --primary-soft: color-mix(in oklab, var(--blue-dark-blue) 20%, transparent);
+
+  --success: var(--blue-dark-green);
+  --success-soft: color-mix(in oklab, var(--blue-dark-green) 20%, transparent);
+  --warning: var(--blue-dark-yellow);
+  --warning-soft: color-mix(in oklab, var(--blue-dark-yellow) 20%, transparent);
+  --destructive: var(--blue-dark-red);
+  --destructive-soft: color-mix(in oklab, var(--blue-dark-red) 20%, transparent);
+  --info: var(--blue-dark-blue);
+  --info-soft: color-mix(in oklab, var(--blue-dark-blue) 20%, transparent);
+  --accent: var(--blue-dark-purple);
+  --accent-soft: color-mix(in oklab, var(--blue-dark-purple) 20%, transparent);
+  --purple: var(--blue-dark-purple);
+  --purple-soft: color-mix(in oklab, var(--blue-dark-purple) 20%, transparent);
+
+  --code-block: var(--blue-dark-bg0_h);
+
+  --shadow-panel: 0 1px 0 var(--blue-dark-bg1);
+  --shadow-popover: 0 8px 24px color-mix(in oklab, var(--blue-dark-bg0_h) 60%, transparent);
+}
+</style><style>
+      html[dir="rtl"]{--font-sans:"IRANSansX","Outfit",ui-sans-serif,system-ui,sans-serif;--font-display:"Doran","DM Serif Display",Georgia,serif;--font-mono:var(--font-sans)}
+      html{background:var(--background);color:var(--foreground)}
+      body{margin:0;font-family:var(--font-sans)}
+      html[dir="rtl"] body{font-variation-settings:"DOTS" 7}
+      html[dir="rtl"] body .bx{font-variation-settings:normal}
+    </style><script>(function(){const validThemes = ["blue-dark","blue-light","gruvbox-dark","gruvbox-light","monochrome-dark","monochrome-light","discord-dark","discord-light","black-gold-dark","black-gold-light"];
+const defaultTheme = "blue-dark";
+
+      (function(){
+        document.documentElement.dataset.theme=defaultTheme;
+        try{
+          var t=localStorage.getItem('spielos.theme');
+          if(t && validThemes.includes(t)){document.documentElement.dataset.theme=t;}
+        }catch(e){}
+      })();
+    })();</script><!-- GA4 command queue: defined before the deferred loader so queued commands run once gtag.js loads. --><script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+    </script><!-- Stable site entities shared by every page. Page schemas may safely
+         reference these IDs without creating dangling structured-data nodes. --><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://spielos.xyz/#organization","name":"کاروایز","url":"https://spielos.xyz","logo":{"@type":"ImageObject","url":"https://spielos.xyz/assets/logos/primary-transparent.svg","width":512,"height":512},"founder":{"@id":"https://spielos.xyz/#person"},"sameAs":["https://x.com/ShayanSpiel","https://linkedin.com/in/shayantawabi","https://github.com/ShayanSpiel"],"description":"کاروایز runs real company work through supervised AI departments. Apply for a free review — we make the result clear before the build starts."},{"@type":"Person","@id":"https://spielos.xyz/#person","name":"Shayan Tawabi","url":"https://spielos.xyz/founder/","image":"https://spielos.xyz/assets/avatars/avatar.jpg","jobTitle":"Founder of کاروایز · Agent Harness Architect","sameAs":["https://x.com/ShayanSpiel","https://linkedin.com/in/shayantawabi","https://github.com/ShayanSpiel"],"worksFor":{"@id":"https://spielos.xyz/#organization"}},{"@type":"WebSite","@id":"https://spielos.xyz/#website","name":"کاروایز","url":"https://spielos.xyz","description":"کاروایز کارهای واقعی شرکت رو با دپارتمان‌های AI و زیر نظر آدم‌ها اجرا می‌کنه. از یک ورک‌فلوی تکراری و یک Agent Brief روشن شروع کن.","inLanguage":"fa","publisher":{"@id":"https://spielos.xyz/#organization"}}]}</script><link rel="stylesheet" href="/assets/compiled/ai-transformation-classic.F4I1cVTc.css">
+<link rel="stylesheet" href="/assets/compiled/agents.BWh4W-Rj.css">
+<style>.specimen-heading[data-astro-cid-ddzzjigo]{max-width:52rem}.specimen-heading[data-astro-cid-ddzzjigo]>.brand-title[data-astro-cid-ddzzjigo]{margin-top:2.5rem}.specimen-grid[data-astro-cid-ddzzjigo]{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1rem}.stage-id[data-astro-cid-ddzzjigo]{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}.stage-id[data-astro-cid-ddzzjigo] h2[data-astro-cid-ddzzjigo]{font-size:var(--font-size-base);font-weight:700;color:var(--foreground-strong)}.stage-number[data-astro-cid-ddzzjigo]{color:var(--brand-tone);font-weight:800}.specimen-pair[data-astro-cid-ddzzjigo]{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}.specimen-metric[data-astro-cid-ddzzjigo]{display:grid;gap:.5rem;margin:2rem 0;direction:ltr;text-align:start}.specimen-metric[data-astro-cid-ddzzjigo] strong[data-astro-cid-ddzzjigo]{font-size:4rem;font-weight:800;line-height:1;color:var(--primary)}.specimen-metric[data-astro-cid-ddzzjigo] span[data-astro-cid-ddzzjigo]{font-size:var(--font-size-xs);color:var(--muted-foreground)}@media(max-width:900px){.specimen-grid[data-astro-cid-ddzzjigo]{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:540px){.specimen-grid[data-astro-cid-ddzzjigo],.specimen-pair[data-astro-cid-ddzzjigo]{grid-template-columns:1fr}.brand-specimen[data-astro-cid-ddzzjigo]{padding-top:6rem}.stage-id[data-astro-cid-ddzzjigo]{flex-wrap:nowrap}}
+</style></head> <body class="bg-background text-foreground antialiased"> <a href="#main-content" class="sr-only skip-link">رفتن به محتوا</a>  <main id="main-content">  <main class="brand-specimen mx-auto max-w-6xl px-6 py-24" data-astro-cid-ddzzjigo> <header class="specimen-heading" data-astro-cid-ddzzjigo><div dir="ltr" class="spielos-lockup shrink-0 text-foreground-strong h-8 w-32"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 24" class="block h-full w-full" data-brand-lockup="spielos-bold-v1" direction="ltr" style="direction:ltr;unicode-bidi:isolate" role="img" aria-label="کاروایز" fill="none"><g color="currentColor"><svg x="0" y="2" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M17 12l.5-5.5L12 7l1.75 1.75c-.47.4-1.01.5-1.69.63-1.05.19-2.35.44-3.4 1.93s-.83 2.8-.65 3.85c.15.9.26 1.55-.32 2.38-.58.82-1.23.94-2.12 1.11-1.05.19-2.35.43-3.4 1.93l1.64 1.15c.58-.82 1.22-.94 2.12-1.11 1.05-.19 2.35-.43 3.4-1.93 1.05-1.49.83-2.8.65-3.85-.15-.9-.26-1.55.32-2.38.58-.82 1.23-.94 2.12-1.11.84-.15 1.84-.35 2.74-1.18L16.99 12Z M3.71 8.71l1.79-1.8 1.79 1.8 1.42-1.42-1.8-1.79 1.8-1.79-1.42-1.42-1.79 1.8-1.79-1.8-1.42 1.42 1.8 1.79-1.8 1.79z M20.29 14.29L18 16.59l-2.29-2.3-1.42 1.42 2.3 2.29-2.3 2.29 1.42 1.42 2.29-2.3 2.29 2.3 1.42-1.42-2.3-2.29 2.3-2.29z M20 2a2 2 0 1 0 0 4 2 2 0 1 0 0-4Z" fill="currentColor" stroke="currentColor" stroke-width="0.65" stroke-linejoin="miter" stroke-miterlimit="3" paint-order="stroke fill"></path></svg></g><text direction="ltr" unicode-bidi="isolate" text-anchor="start" x="26" y="18.15" fill="currentColor" font-family="Outfit, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Arial, sans-serif" font-size="18" font-weight="700" letter-spacing="-0.45" style="font-feature-settings:'ss01' 1,'cv11' 1">
+کاروایز
+</text></svg></div><p class="text-sm text-muted-foreground" data-astro-cid-ddzzjigo>کاروایز · 2026.10.17</p><h1 class="brand-title text-4xl sm:text-6xl">از ایده تا <em data-astro-cid-ddzzjigo>اثر واقعی</em></h1><p class="mt-5 text-muted-foreground" data-astro-cid-ddzzjigo>یک هویت، یک مسیر پیوسته، در همهٔ خروجی‌ها.</p></header> <section class="mt-12" aria-label="امضای برند" data-astro-cid-ddzzjigo><svg class="brand-journey" data-brand-signature="2026.10.17" viewBox="0 0 1000 330" aria-hidden="true" direction="ltr"> <defs><filter id="journey-6b3c71fd-27f4-4e07-9da8-0893a7fb8550" x="-30%" y="-70%" width="160%" height="240%"><feDropShadow dx="0" dy="5" stdDeviation="4" flood-color="var(--journey-shadow)" flood-opacity=".6"></feDropShadow></filter></defs> <g transform="translate(1000 0) scale(-1 1)"> <path class="journey-future" d="M -60 250 H 690 C 795 250 775 190 795 140 Q 815 90 860 90"></path> <path class="journey-wake" d="M -60 250 H 690 C 795 250 775 190 795 140 Q 815 90 860 90"></path> <path class="journey-active" d="M -60 250 H 690 C 795 250 775 190 795 140 Q 815 90 860 90" style="filter:url(#journey-6b3c71fd-27f4-4e07-9da8-0893a7fb8550)"></path> <polygon class="journey-head" points="860,90 826,108 820,81" style="filter:url(#journey-6b3c71fd-27f4-4e07-9da8-0893a7fb8550)"></polygon> <g class="journey-goal" transform="translate(860 90)"><circle r="64.6"></circle><circle r="43.7"></circle><circle r="17.1"></circle></g> </g> </svg> <script type="module" src="/assets/compiled/BrandJourney.astro_astro_type_script_index_0_lang.DZBFru6_.js"></script></section> <section class="specimen-grid mt-12" data-astro-cid-ddzzjigo><article data-tone="primary" style="--brand-tone:var(--stage-goal)" class="brand-surface p-6"><div class="stage-id" style="--brand-tone:var(--stage-goal)" data-astro-cid-ddzzjigo><span class="brand-icon-plaque" style="--plaque-size:44px;--glyph-size:28px" aria-hidden="true"><i class="bx bx-bullseye"></i></span><span class="stage-number" data-astro-cid-ddzzjigo>1</span><h2 data-astro-cid-ddzzjigo>هدف</h2></div><p class="mt-5 text-sm text-muted-foreground" data-astro-cid-ddzzjigo>مرحله‌ای روشن در مسیر تحول</p></article><article data-tone="primary" style="--brand-tone:var(--stage-observe)" class="brand-surface p-6"><div class="stage-id" style="--brand-tone:var(--stage-observe)" data-astro-cid-ddzzjigo><span class="brand-icon-plaque" style="--plaque-size:44px;--glyph-size:28px" aria-hidden="true"><i class="bx bx-show"></i></span><span class="stage-number" data-astro-cid-ddzzjigo>2</span><h2 data-astro-cid-ddzzjigo>مشاهده</h2></div><p class="mt-5 text-sm text-muted-foreground" data-astro-cid-ddzzjigo>مرحله‌ای روشن در مسیر تحول</p></article><article data-tone="accent" style="--brand-tone:var(--stage-decide)" class="brand-surface p-6"><div class="stage-id" style="--brand-tone:var(--stage-decide)" data-astro-cid-ddzzjigo><span class="brand-icon-plaque" style="--plaque-size:44px;--glyph-size:28px" aria-hidden="true"><i class="bx bx-git-branch"></i></span><span class="stage-number" data-astro-cid-ddzzjigo>3</span><h2 data-astro-cid-ddzzjigo>تصمیم</h2></div><p class="mt-5 text-sm text-muted-foreground" data-astro-cid-ddzzjigo>مرحله‌ای روشن در مسیر تحول</p></article><article data-tone="warning" style="--brand-tone:var(--stage-act)" class="brand-surface p-6"><div class="stage-id" style="--brand-tone:var(--stage-act)" data-astro-cid-ddzzjigo><span class="brand-icon-plaque" style="--plaque-size:44px;--glyph-size:28px" aria-hidden="true"><i class="bx bx-play"></i></span><span class="stage-number" data-astro-cid-ddzzjigo>4</span><h2 data-astro-cid-ddzzjigo>اجرا</h2></div><p class="mt-5 text-sm text-muted-foreground" data-astro-cid-ddzzjigo>مرحله‌ای روشن در مسیر تحول</p></article><article data-tone="success" style="--brand-tone:var(--stage-evaluate)" class="brand-surface p-6"><div class="stage-id" style="--brand-tone:var(--stage-evaluate)" data-astro-cid-ddzzjigo><span class="brand-icon-plaque" style="--plaque-size:44px;--glyph-size:28px" aria-hidden="true"><i class="bx bx-check-square"></i></span><span class="stage-number" data-astro-cid-ddzzjigo>5</span><h2 data-astro-cid-ddzzjigo>ارزیابی</h2></div><p class="mt-5 text-sm text-muted-foreground" data-astro-cid-ddzzjigo>مرحله‌ای روشن در مسیر تحول</p></article></section> <section class="specimen-pair mt-10" data-astro-cid-ddzzjigo><article data-tone="primary" class="brand-surface p-8"><h2 class="brand-title text-3xl">کیفیتی که <em data-astro-cid-ddzzjigo>می‌توان سنجید</em></h2><div class="specimen-metric" data-astro-cid-ddzzjigo><strong data-astro-cid-ddzzjigo>2×</strong><span data-astro-cid-ddzzjigo>هدف نمونه · خروجی</span></div><p class="text-sm text-muted-foreground" data-astro-cid-ddzzjigo>نمونهٔ نمایشی، نه نتیجهٔ اندازه‌گیری‌شده.</p></article><article data-tone="success" class="brand-surface p-8"><h2 class="brand-title text-3xl">هر بار، <em data-astro-cid-ddzzjigo>با اطمینان</em></h2><div class="flex flex-wrap gap-3 mt-6" data-astro-cid-ddzzjigo><a href="/fa/contact/" class="inline-flex h-11 items-center justify-center gap-2 rounded-md px-6 text-sm font-semibold transition-all duration-[var(--duration)] ease-[var(--ease)] motion-reduce:transition-none border border-transparent bg-primary text-primary-foreground shadow-lg shadow-primary/20 hover:-translate-y-px hover:brightness-110 active:brightness-95 motion-reduce:transform-none">شروع کنیم</a><a href="/fa/brand/" class="inline-flex h-11 items-center justify-center gap-2 rounded-md px-6 text-sm font-semibold transition-all duration-[var(--duration)] ease-[var(--ease)] motion-reduce:transition-none border border-border bg-panel text-foreground font-medium hover:border-border-strong hover:bg-panel-raised">برند</a></div></article></section> </main>  </main>   <script type="module" src="/assets/compiled/BaseLayout.astro_astro_type_script_index_0_lang.DmI5XZYA.js"></script> <!-- Deferred: load gtag.js + initialize PostHog unconditionally (full capture, owner directive 2026-08-18) --> <script>(function(){const gaId = "G-P43CBK4EEX";
+const phKey = "phc_1osIFVXYDFr7Z00RN5gRaF4kRfZ1safm9c7NswRfKpm";
+const phHost = "https://t.spielos.xyz";
+const analyticsHost = "spielos.xyz";
+const attributionParameters = ["utm_source","utm_medium","utm_campaign","utm_content"];
+
+      (function(){
+        var started = false;
+        function loadAnalytics(){
+          if(started || window.location.hostname !== analyticsHost) return;
+          started = true;
+          gtag('js', new Date());
+          gtag('config', gaId, { send_page_view: true, cookie_flags: 'SameSite=None;Secure', debug_mode: false });
+          var s=document.createElement('script');
+          s.async=1;
+          s.src='https://www.googletagmanager.com/gtag/js?id='+gaId;
+          document.head.appendChild(s);
+          /* PostHog: full capture for all visitors — session replay stays ON,
+             anonymous person profiles for funnel analysis on unauthenticated
+             traffic, raw form inputs masked (funnel events still count
+             starts/submits/successes). */
+          !function(t,e){var o,n,p;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",t.getElementsByTagName("head")[0].appendChild(p);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+          /* Compute attribution for the initial $pageview so source/medium are never undefined. */
+          var sp = new URLSearchParams(window.location.search);
+          var _attribution = { landing_path: window.location.pathname };
+          (attributionParameters || []).forEach(function(key){
+            var _v = (sp.get(key) || '').trim().toLowerCase();
+            if(_v && /^[a-z0-9._-]{1,120}$/.test(_v)) _attribution[key] = _v;
+          });
+          var _hasCampaign = Object.keys(_attribution).length > 1;
+          if(!_hasCampaign){
+            try {
+              var _stored = JSON.parse(sessionStorage.getItem('spielos.content-attribution') || '{}');
+              if(Object.keys(_stored).length > 0) _attribution = _stored;
+            } catch(err) {}
+          }
+          var _source = _attribution.utm_source || 'direct';
+          var _medium = _attribution.utm_medium || 'none';
+          var _campaign = _attribution.utm_campaign || 'none';
+          var _content_id = _attribution.utm_content || 'none';
+          /* PostHog: full capture for all visitors — session replay stays ON,
+             anonymous person profiles for funnel analysis on unauthenticated
+             traffic, raw form inputs masked (funnel events still count
+             starts/submits/successes). Manually emit one pageview so we can send
+             explicit source/medium and avoid
+             the "direct undefined" reporting gap. */
+          var _env = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.indexOf('localhost') !== -1) ? 'development' : 'production';
+          posthog.init(phKey,{ api_host: phHost, person_profiles: 'always', mask_all_inputs: true, capture_pageview: false, persistence: 'localStorage+cookie' });
+          try {
+            if(_campaign !== 'none' || _source !== 'direct'){
+              posthog.register({ utm_source: _source, utm_medium: _medium, utm_campaign: _campaign, utm_content: _content_id });
+            }
+            if(_env) posthog.register({ env: _env });
+          } catch(e) {}
+          /* Fire the initial $pageview with explicit attribution so every
+           channel reports a valid source + medium pair (no "direct undefined"). */
+          var _pageviewProps = { $source: _source, $medium: _medium, $campaign: _campaign, $content_id: _content_id, landing_path: _attribution.landing_path || window.location.pathname, $initial_path: window.location.pathname, $current_url: window.location.origin + window.location.pathname, env: _env, utm_source: _source, utm_medium: _medium, utm_campaign: _campaign, utm_content: _content_id };
+          posthog.capture('$pageview', _pageviewProps);
+        }
+        'requestIdleCallback' in window
+          ? requestIdleCallback(loadAnalytics, {timeout: 2000})
+          : setTimeout(loadAnalytics, 2000);
+      })();
+    })();</script> <!-- Event tracking: CTA clicks, outbound links, scroll depth, form submits --> <script>(function(){const contentSources = ["threads","youtube"];
+const attributionParameters = ["utm_source","utm_medium","utm_campaign","utm_content"];
+
+      (function(){
+        'use strict';
+
+        function track(eventName, params){
+          params = params || {};
+          var context = attribution();
+          Object.keys(context).forEach(function(key){
+            if(params[key] === undefined) params[key] = context[key];
+          });
+          if(params.page_path === undefined) params.page_path = window.location.pathname;
+          if(typeof gtag === 'function'){ gtag('event', eventName, params); }
+          if(typeof posthog !== 'undefined' && posthog && typeof posthog.capture === 'function'){
+            posthog.capture(eventName, params);
+          }
+        }
+        window.spielosTrack = track;
+
+        /* ---- Successful booking (owner directive 2026-08-23): Cal reports
+             bookingSuccessful on the embed. The Cal.com -> Attio sync still
+             captures the booked call separately; this is the page-side funnel
+             event for PostHog/GA. ---- */
+        /* Only register the booking hook on pages that actually contain a
+           data-cal-link trigger (Contact/Apply). Calling Cal(...) anywhere
+           else would append app.cal.com/embed.js and download the embed on
+           pages with zero booking buttons. */
+        if(document.querySelector('[data-cal-link]') && typeof window.Cal === 'function'){
+          window.Cal('on', { action: 'bookingSuccessful', callback: function () {
+            track('booked_call', { page: getPage(), device: getDevice(), locale: getLocale() });
+          } });
+        }
+
+        /* ---- Apply funnel (owner directive 2026-08-22): every conversion CTA
+             links to /apply/. Clicks are recorded as apply_cta_clicked with
+             their data-cta-location so the funnel stays measurable. ---- */
+        function isApplyCta(link){
+          if(!link) return false;
+          return !!(link.getAttribute && link.getAttribute('data-cta-location'));
+        }
+
+        function getPage(){
+          return window.location.pathname + window.location.search;
+        }
+
+        function getDevice(){
+          var w = window.innerWidth;
+          if(w < 768) return 'mobile';
+          if(w < 1024) return 'tablet';
+          return 'desktop';
+        }
+
+        function getLocale(){
+          return document.documentElement.lang || 'en';
+        }
+
+        function attribution(){
+          var params = new URLSearchParams(window.location.search);
+          var current = { landing_path: window.location.pathname };
+          attributionParameters.forEach(function(key){
+            var value = (params.get(key) || '').trim().toLowerCase();
+            if(value && /^[a-z0-9._-]{1,120}$/.test(value)) current[key] = value;
+          });
+          var hasCampaign = Object.keys(current).length > 1;
+          var stored = {};
+          try {
+            stored = JSON.parse(sessionStorage.getItem('spielos.content-attribution') || '{}');
+          } catch(err) {}
+          var context = hasCampaign ? current : stored;
+          delete context.he;
+          delete context.email;
+          if(hasCampaign){
+            try { sessionStorage.setItem('spielos.content-attribution', JSON.stringify(current)); } catch(err) {}
+          }
+          return {
+            landing_path: context.landing_path || window.location.pathname,
+            source: context.utm_source || 'direct',
+            medium: context.utm_medium || 'none',
+            campaign: context.utm_campaign || 'none',
+            content_id: context.utm_content || 'none',
+            utm_source: context.utm_source || 'direct',
+            utm_medium: context.utm_medium || 'none',
+            utm_campaign: context.utm_campaign || 'none',
+            utm_content: context.utm_content || 'none',
+            env: (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') ? 'development' : 'production'
+          };
+        }
+
+        /* ---- CTA clicked (booking CTAs, /services/ links, primary buttons) ---- */
+        document.addEventListener('click', function(e){
+          var el = e.target;
+          if(!el || !el.tagName) return;
+
+          var link = el.tagName === 'A' ? el : el.closest('a');
+          if(link){
+            var href = link.getAttribute('href') || '';
+
+            /* Apply funnel CTAs: any element tagged data-cta-location that
+               points at the apply flow. Records the dedicated PostHog/GA event
+               without blocking navigation. */
+            if(isApplyCta(link) && href.indexOf('/apply/') !== -1){
+              track('apply_cta_clicked', {
+                page: getPage(),
+                device: getDevice(),
+                locale: getLocale(),
+                location: link.getAttribute('data-cta-location') || 'generic',
+                link_text: (link.textContent || '').trim().substring(0, 100)
+              });
+              return;
+            }
+
+            if(href.indexOf('/services/') !== -1){
+              track('cta_clicked', {
+                page: getPage(),
+                device: getDevice(),
+                locale: getLocale(),
+                cta_type: 'services',
+                link_text: (link.textContent || '').trim().substring(0, 100)
+              });
+            }
+
+            /* Social icon clicks */
+            if(href.indexOf('x.com') !== -1 || href.indexOf('twitter.com') !== -1 ||
+               href.indexOf('linkedin.com') !== -1 || href.indexOf('github.com') !== -1){
+              track('social_clicked', {
+                page: getPage(),
+                device: getDevice(),
+                locale: getLocale(),
+                platform: href.indexOf('github') !== -1 ? 'github' :
+                          href.indexOf('linkedin') !== -1 ? 'linkedin' :
+                          href.indexOf('x.com') !== -1 ? 'x' : 'twitter',
+                url: href
+              });
+            }
+
+            /* Outbound link clicks */
+            try{
+              var u = new URL(href, window.location.href);
+              if(u.origin !== window.location.origin){
+                track('outbound_link', {
+                  page: getPage(),
+                  device: getDevice(),
+                  locale: getLocale(),
+                  url: href,
+                  link_text: (link.textContent || '').trim().substring(0, 100)
+                });
+              }
+            }catch(err){}
+          }
+
+          /* Primary action buttons */
+          var btn = el.tagName === 'BUTTON' ? el : el.closest('button');
+          if(btn){
+            var classes = btn.className || '';
+            if(btn.hasAttribute('data-cal-cta')){
+              track('booking_cta_clicked', {
+                page: getPage(),
+                device: getDevice(),
+                locale: getLocale(),
+                cta_type: 'book_call',
+                location: btn.getAttribute('data-cta-location') || 'generic',
+                link_text: (btn.textContent || '').trim().substring(0, 100)
+              });
+            } else if(classes.indexOf('bg-primary') !== -1){
+              track('cta_clicked', {
+                page: getPage(),
+                device: getDevice(),
+                locale: getLocale(),
+                cta_type: 'primary',
+                link_text: (btn.textContent || '').trim().substring(0, 100)
+              });
+            }
+          }
+        });
+
+        /* ---- Scroll depth tracking ---- */
+        (function(){
+          var thresholds = [25, 50, 75, 100];
+          var fired = {};
+          function checkScroll(){
+            var docHeight = Math.max(
+              document.body.scrollHeight || 0,
+              document.documentElement.scrollHeight || 0
+            );
+            var winHeight = window.innerHeight || document.documentElement.clientHeight;
+            if(docHeight <= winHeight) return;
+            var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            var percent = Math.round((scrollTop / (docHeight - winHeight)) * 100);
+            thresholds.forEach(function(t){
+              if(!fired[t] && percent >= t){
+                fired[t] = true;
+                track('scroll_depth', {
+                  page: getPage(),
+                  device: getDevice(),
+                  locale: getLocale(),
+                  depth_percent: t
+                });
+              }
+            });
+          }
+          window.addEventListener('scroll', checkScroll, { passive: true });
+          setTimeout(checkScroll, 1000);
+        })();
+
+        /* ---- Theme toggle tracking ---- */
+        document.addEventListener('click', function(e){
+          var btn = e.target.closest ? e.target.closest('#footer-theme-toggle') : null;
+          if(btn){
+            track('theme_toggled', {
+              page: getPage(), device: getDevice(), locale: getLocale()
+            });
+          }
+        });
+
+        function recordContentLanding(){
+          var context = attribution();
+          if(contentSources.indexOf(context.source) !== -1){
+            track('content_landing', { page: getPage(), device: getDevice(), locale: getLocale() });
+          }
+        }
+
+        /* ---- Initialize observers after DOM ready ---- */
+        if(document.readyState === 'loading'){
+          document.addEventListener('DOMContentLoaded', recordContentLanding);
+        }else{
+          recordContentLanding();
+        }
+      })();
+    })();</script> </body> </html> 

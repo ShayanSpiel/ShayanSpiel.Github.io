@@ -1,0 +1,8 @@
+.brand-creature{display:inline-flex!important;width:60px!important;height:60px!important;align-items:center;justify-content:center;color:var(--primary);perspective:300px;flex:none;isolation:isolate}
+.brand-creature>svg{width:60px!important;height:60px!important;overflow:visible;filter:drop-shadow(0 3px 0 color-mix(in srgb,var(--primary) 12%,transparent));transform-origin:center}
+.site-nav>a:has(.brand-creature){min-width:60px;display:flex;align-items:center}
+.brand-creature strong{display:none!important}
+@media(max-width:600px){.brand-creature,.brand-creature>svg{width:52px!important;height:52px!important}}
+@media(prefers-reduced-motion:reduce){.brand-creature>svg{animation:none!important;transform:none!important}}
+/* The same semantic face colors apply outside the tutor as well. */
+.brand-creature{--mouth:var(--primary);--eye-dot:var(--success);--eye-x:var(--destructive)}

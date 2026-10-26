@@ -1,0 +1,1 @@
+const n={headWidth:15.12,headLength:18.72,arrivalMs:800,departureMs:450};function h($,r,a=840){return`M -60 ${a} H ${$-170} C ${$-65} ${a} ${$-85} ${r+100} ${$-65} ${r+50} Q ${$-45} ${r} ${$} ${r}`}export{n as J,h as j};
