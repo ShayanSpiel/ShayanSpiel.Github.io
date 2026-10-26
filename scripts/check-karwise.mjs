@@ -1,2 +1,4 @@
 import {readFileSync,existsSync} from 'node:fs';
 let n=0;for(const locale of ['', 'fa/'])for(const route of ['', 'ai-transformation/', 'ai-transformation/workspace/', 'ai-transformation/foundation/', 'ai-transformation/pilot/', 'ai-transformation/scale/', 'ai-transformation/complete/', 'contact/', 'pricing/', 'founder/']){const f='dist/'+locale+route+'index.html';if(!existsSync(f))throw Error('Missing '+f);const h=readFileSync(f,'utf8');if(route==='contact/'&&(!h.includes('action="https://formsubmit.co/66shayan@gmail.com"')||!h.includes('site-services.js')))throw Error('Contact disconnected '+f);if(h.includes('content="noindex,follow"'))throw Error('Noindex '+f);n++;}console.log('Verified '+n+' main pages and contact forms');
+
+if(!readFileSync('dist/index.html','utf8').includes('lang="fa" dir="rtl"'))throw Error('Root must be Persian');
