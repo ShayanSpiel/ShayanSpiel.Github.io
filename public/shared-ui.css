@@ -45,3 +45,17 @@ html[data-theme] img[src$="/openai-chatgpt.svg"],html[data-theme] img[src$="/ope
 html[data-theme] .logo-plaque:has(>img[src$="/openai-chatgpt.svg"]),html[data-theme] .logo-plaque:has(>img[src$="/opencode.svg"]),html[data-theme] .logo-plaque:has(>img[src$="/langfuse.svg"]),html[data-theme] .logo-plaque:has(>img[src$="/langsmith-langchain.svg"]),html[data-theme] .logo-plaque:has(>img[src$="/zendesk.svg"]){background:#fff;border-color:#d6dbe3}
 html[data-theme] img[src$="/codex.svg"]{filter:none!important;background:#111827;border-radius:3px;box-sizing:border-box;padding:2px}
 html[data-theme] .logo-plaque:has(>img[src$="/codex.svg"]){background:#111827;border-color:#334155}
+
+/* Shared field geometry: one logical icon slot; native popup content stays OS-owned. */
+:root{--control-chevron:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%2394a3b8' d='m12 15.414-5.707-5.707 1.414-1.414L12 12.586l4.293-4.293 1.414 1.414z'/%3E%3C/svg%3E")}
+:root[data-theme=paper-light]{--control-chevron:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23475569' d='m12 15.414-5.707-5.707 1.414-1.414L12 12.586l4.293-4.293 1.414 1.414z'/%3E%3C/svg%3E")}
+html select:not([multiple]):not([size]){appearance:none;-webkit-appearance:none;padding-inline-end:44px!important;background-image:var(--control-chevron)!important;background-repeat:no-repeat!important;background-size:18px 18px!important;background-position:right 13px center!important;min-height:44px;line-height:1.6;cursor:pointer}
+html select:not([multiple]):not([size]):dir(rtl){background-position:left 13px center!important}
+html :is(input[type=checkbox],input[type=radio]){box-sizing:border-box;width:17px!important;height:17px!important;min-width:17px!important;min-height:17px!important;max-width:17px;padding:0!important;margin-block:3px!important;flex:0 0 17px;accent-color:var(--primary);vertical-align:middle;cursor:pointer}
+html :is(input,textarea,select):disabled{cursor:not-allowed;opacity:.55}
+html :is(input,textarea,select)[aria-invalid=true]{border-color:var(--destructive)}
+/* Use this wrapper for a field-leading icon; direction follows the field. */
+.control-with-icon{display:block;position:relative;min-width:0}
+.control-with-icon>:is(.ui-icon,.ev-icon){position:absolute;inset-inline-start:13px;top:50%;transform:translateY(-50%);width:18px;height:18px;pointer-events:none;color:var(--foreground-muted)}
+.control-with-icon>input{padding-inline-start:42px!important}
+.control-with-icon:has(>input[dir=ltr]){direction:ltr}

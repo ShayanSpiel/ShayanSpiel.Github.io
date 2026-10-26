@@ -1,0 +1,42 @@
+[
+  {
+    "logo": "anthropic",
+    "source": "https://cdn.simpleicons.org/anthropic",
+    "bytes": 296
+  },
+  {
+    "logo": "mistral",
+    "source": "https://cdn.simpleicons.org/mistralai",
+    "bytes": 305
+  },
+  {
+    "logo": "postgresql",
+    "source": "https://cdn.simpleicons.org/postgresql",
+    "bytes": 5220
+  },
+  {
+    "logo": "langflow",
+    "source": "https://raw.githubusercontent.com/langflow-ai/langflow/main/docs/static/img/langflow-icon-black-transparent.svg",
+    "bytes": 1857
+  },
+  {
+    "logo": "slack",
+    "source": "https://cdn.jsdelivr.net/npm/simple-icons@11/icons/slack.svg",
+    "bytes": 1123
+  },
+  {
+    "logo": "figma",
+    "source": "https://cdn.jsdelivr.net/npm/simple-icons@11/icons/figma.svg",
+    "bytes": 1093
+  },
+  {
+    "logo": "shopify",
+    "source": "https://cdn.jsdelivr.net/npm/simple-icons@11/icons/shopify.svg",
+    "bytes": 1234
+  },
+  {
+    "logo": "google-drive",
+    "source": "https://cdn.jsdelivr.net/npm/simple-icons@11/icons/googledrive.svg",
+    "bytes": 599
+  }
+]

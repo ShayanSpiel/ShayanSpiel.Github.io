@@ -1,0 +1,1136 @@
+{
+  "version": "cover-journey-v3",
+  "fonts": {
+    "fa": [
+      "IRANSansX wght800 DOTS7",
+      "Doran ExtraBold"
+    ],
+    "en": [
+      "Outfit wght800",
+      "DM Serif Display"
+    ]
+  },
+  "renderer": "HarfBuzz + Unicode bidi + actual production glyph outlines; Sharp rasterization; no system fallback",
+  "dimensions": [
+    1200,
+    630
+  ],
+  "source": "Owner LinkedIn cover reference, 2026-10-26",
+  "pages": [
+    {
+      "url": "https://spielos.xyz/ai-transformation/complete/",
+      "image": "assets/og/ai-transformation-complete-en.png",
+      "sha256": "6fe10e135d995393cc7981ccd914b6268960e275de92e599e10d2972b8fac5c9"
+    },
+    {
+      "url": "https://spielos.xyz/ai-transformation/foundation/boundaries/",
+      "image": "assets/og/ai-transformation-foundation-boundaries-en.png",
+      "sha256": "2ebf5dc62340901765d2375dfd85b582385636616b1f9d43397696efa51c6f89"
+    },
+    {
+      "url": "https://spielos.xyz/ai-transformation/foundation/direction/",
+      "image": "assets/og/ai-transformation-foundation-direction-en.png",
+      "sha256": "1d7393959b8e8a4203ebab72dfeaf42b133130f7d47749a5ab08fbae119d788d"
+    },
+    {
+      "url": "https://spielos.xyz/ai-transformation/foundation/",
+      "image": "assets/og/ai-transformation-foundation-en.png",
+      "sha256": "657889b290972b9ed8ca47714d088a14a32606017bc6ef6ef94c36126a03b348"
+    },
+    {
+      "url": "https://spielos.xyz/ai-transformation/foundation/opportunities/",
+      "image": "assets/og/ai-transformation-foundation-opportunities-en.png",
+      "sha256": "99ece7c910b8923916563e3cb11f930eee02585a12e5005d94235fa1ec2f0d41"
+    },
+    {
+      "url": "https://spielos.xyz/ai-transformation/foundation/ownership/",
+      "image": "assets/og/ai-transformation-foundation-ownership-en.png",
+      "sha256": "e2a72afc8ff153013d209fd9472cf177663646bc52d7509fbd9aa9537d3b836d"
+    },
+    {
+      "url": "https://spielos.xyz/ai-transformation/foundation/roadmap/",
+      "image": "assets/og/ai-transformation-foundation-roadmap-en.png",
+      "sha256": "07d6d6b66aaaa0c92a3083384b3c079287206a5e8cfdd2b2c12ab0a60af53e77"
+    },
+    {
+      "url": "https://spielos.xyz/ai-transformation/",
+      "image": "assets/og/ai-transformation-en.png",
+      "sha256": "97d12284afbee5dd7a1288f78e960674604758ef08dba57def072d826899ad5e"
+    },
+    {
+      "url": "https://spielos.xyz/ai-transformation/pilot/act/",
+      "image": "assets/og/ai-transformation-pilot-act-en.png",
+      "sha256": "b90c233d1dc47f873f69471f055dbe22112a884dd3ee6b824994ea36d9406c54"
+    },
+    {
+      "url": "https://spielos.xyz/ai-transformation/pilot/decide/",
+      "image": "assets/og/ai-transformation-pilot-decide-en.png",
+      "sha256": "77aad91e2e1e8805a3c61ededef3c84ab8862adad547e9cd11f7bab72294814d"
+    },
+    {
+      "url": "https://spielos.xyz/ai-transformation/pilot/evaluate/",
+      "image": "assets/og/ai-transformation-pilot-evaluate-en.png",
+      "sha256": "0b84e8a88bdbfec2456c63eeff7a6fe4c15383a473a9afde445ff09a953b6864"
+    },
+    {
+      "url": "https://spielos.xyz/ai-transformation/pilot/goal/",
+      "image": "assets/og/ai-transformation-pilot-goal-en.png",
+      "sha256": "79c86c2ac8850abeaa3977d0517fe90d70b20b01b90c48b1f629ab3d7348434b"
+    },
+    {
+      "url": "https://spielos.xyz/ai-transformation/pilot/",
+      "image": "assets/og/ai-transformation-pilot-en.png",
+      "sha256": "0f80b090cfd6b4ed99270ff010f8d690be7d188b5b7cb17909314db3e7e207e6"
+    },
+    {
+      "url": "https://spielos.xyz/ai-transformation/pilot/observe/",
+      "image": "assets/og/ai-transformation-pilot-observe-en.png",
+      "sha256": "2f7504de04c0667f8d899d5139e063157464aeb3c3f3cf0867d6abaf9006b52e"
+    },
+    {
+      "url": "https://spielos.xyz/ai-transformation/readiness/",
+      "image": "assets/og/ai-transformation-readiness-en.png",
+      "sha256": "05704cc130e1a8e4a3d1507d6d1efb9e732283c33188349eac8f98f75f7e8d78"
+    },
+    {
+      "url": "https://spielos.xyz/ai-transformation/scale/enable/",
+      "image": "assets/og/ai-transformation-scale-enable-en.png",
+      "sha256": "4d95971949dbcb91d8127c7440636f7e325c9e3dd495f2d0226b01818624ce91"
+    },
+    {
+      "url": "https://spielos.xyz/ai-transformation/scale/expand/",
+      "image": "assets/og/ai-transformation-scale-expand-en.png",
+      "sha256": "a70195d1e71ecae68b5c98af01d3e395eddf8e1d338e41ff213b3f96564d46b8"
+    },
+    {
+      "url": "https://spielos.xyz/ai-transformation/scale/",
+      "image": "assets/og/ai-transformation-scale-en.png",
+      "sha256": "5cb65986bb15d5040f5bc33a9b66761561f6e73a01cebf5c00c464382f81252e"
+    },
+    {
+      "url": "https://spielos.xyz/ai-transformation/scale/operate/",
+      "image": "assets/og/ai-transformation-scale-operate-en.png",
+      "sha256": "12639ee82edb24433bf1852ae9cb2f267f381d705d843a58ab67a7567d39eca6"
+    },
+    {
+      "url": "https://spielos.xyz/ai-transformation/scale/standardize/",
+      "image": "assets/og/ai-transformation-scale-standardize-en.png",
+      "sha256": "ea33845195fe9f9c82a26b369d9a30221031f0933f0d4de6fcd6d1fe71e0ac18"
+    },
+    {
+      "url": "https://spielos.xyz/ai-transformation/workspace/",
+      "image": "assets/og/ai-transformation-workspace-en.png",
+      "sha256": "e22cbb4b0118012eaa63b72d33d65d4316c4dad4d7ac9daf63601da2015a8fda"
+    },
+    {
+      "url": "https://spielos.xyz/ai-transformation-classic/",
+      "image": "assets/og/ai-transformation-classic-en.png",
+      "sha256": "ff3d088f0e6de24b3c3fca1ea22e1afc824a0bc2350e38638a30bf273f6a94e1"
+    },
+    {
+      "url": "https://spielos.xyz/apply/",
+      "image": "assets/og/apply-en.png",
+      "sha256": "e8326bb1adcd332af0eb2dc197ec2e361f0138ca49a60d08c8530f201fe3dfca"
+    },
+    {
+      "url": "https://spielos.xyz/automation-roi-calculator/",
+      "image": "assets/og/automation-roi-calculator-en.png",
+      "sha256": "9b85b1d4f1e7e72d8a7c49a12eb30c339b7546ea66c8c10a7203ddca35cae75a"
+    },
+    {
+      "url": "https://spielos.xyz/brand/",
+      "image": "assets/og/brand-en.png",
+      "sha256": "604fa2380589be1f148a1b0c02262dece5481150af54e98d80d42ab94033119b"
+    },
+    {
+      "url": "https://spielos.xyz/contact/",
+      "image": "assets/og/contact-en.png",
+      "sha256": "4f2abef868ddb052d4c3242548372c54b58a52dd13e4ec7bef5936ef7deb43f2"
+    },
+    {
+      "url": "https://spielos.xyz/en/evals/",
+      "image": "assets/og/evals-en.png",
+      "sha256": "f43afe02686ab237d6232dd295e09cf297e9a0b3a2d29e7eae0e7302618839d0"
+    },
+    {
+      "url": "https://spielos.xyz/en/guides/",
+      "image": "assets/og/guides-en.png",
+      "sha256": "e83f5745c1498514711ade3fa99c9431a98229c5ab8c316a7829f868ad1fe75c"
+    },
+    {
+      "url": "https://spielos.xyz/en/",
+      "image": "assets/og/home-en.png",
+      "sha256": "ad4cd632c952fc89a1eb23b7b550aa7ad976c77636ea6d50f725fbb570bfcae9"
+    },
+    {
+      "url": "https://spielos.xyz/en/presentations/ai-transformation/",
+      "image": "assets/og/presentations-ai-transformation-en.png",
+      "sha256": "a03173fc010c454c985da66970a99fa1321c7afd4b28a7637f3153dd66eee221"
+    },
+    {
+      "url": "https://spielos.xyz/en/presentations/godae/",
+      "image": "assets/og/presentations-godae-en.png",
+      "sha256": "ccf6960062a92ab10e828558af7918dc9cf3efb0aea380adb654b6ee8b3c6a2c"
+    },
+    {
+      "url": "https://spielos.xyz/fa/ai-transformation/complete/",
+      "image": "assets/og/ai-transformation-complete-fa.png",
+      "sha256": "a2674674450d5a2162f5fe4fd865b0e5fde7e5f89ad69519c3d0c686eb881376"
+    },
+    {
+      "url": "https://spielos.xyz/fa/ai-transformation/foundation/boundaries/",
+      "image": "assets/og/ai-transformation-foundation-boundaries-fa.png",
+      "sha256": "ecbad688d098878f24ae089ca045595d0226c77fc870fbddc3d928cff3e400e4"
+    },
+    {
+      "url": "https://spielos.xyz/fa/ai-transformation/foundation/direction/",
+      "image": "assets/og/ai-transformation-foundation-direction-fa.png",
+      "sha256": "18334874b6b25dfa61a053a03df6cf8e3abd9dd7472863828ab3e9eb9f7bb4e2"
+    },
+    {
+      "url": "https://spielos.xyz/fa/ai-transformation/foundation/",
+      "image": "assets/og/ai-transformation-foundation-fa.png",
+      "sha256": "a261868a65bb34aa4925fc2f62c6b87fa02eef8116c40be232be32027d3a2a58"
+    },
+    {
+      "url": "https://spielos.xyz/fa/ai-transformation/foundation/opportunities/",
+      "image": "assets/og/ai-transformation-foundation-opportunities-fa.png",
+      "sha256": "a12bb8aabc3ed5e4b9df4ccedb5d27a4dabc7ad23d44a6d485a7d031640d6993"
+    },
+    {
+      "url": "https://spielos.xyz/fa/ai-transformation/foundation/ownership/",
+      "image": "assets/og/ai-transformation-foundation-ownership-fa.png",
+      "sha256": "829532b037706a4182055b95af3cb982700dfacf52c5c8b7e988e3e1bda9751b"
+    },
+    {
+      "url": "https://spielos.xyz/fa/ai-transformation/foundation/roadmap/",
+      "image": "assets/og/ai-transformation-foundation-roadmap-fa.png",
+      "sha256": "d72b4395a60b1b24f30e57d474346d8a2270b6d928e2857a086a3dd19d2380a3"
+    },
+    {
+      "url": "https://spielos.xyz/fa/ai-transformation/",
+      "image": "assets/og/ai-transformation-fa.png",
+      "sha256": "f1ea6bd9fe88f70a1ce6c94ff97c3d8e201a5e150835764696d17888cb0ca769"
+    },
+    {
+      "url": "https://spielos.xyz/fa/ai-transformation/pilot/act/",
+      "image": "assets/og/ai-transformation-pilot-act-fa.png",
+      "sha256": "59c7da83e048b375e974b84637b978ba5cff34c02185d2d4274b61b3a467c3f0"
+    },
+    {
+      "url": "https://spielos.xyz/fa/ai-transformation/pilot/decide/",
+      "image": "assets/og/ai-transformation-pilot-decide-fa.png",
+      "sha256": "bc7d2e571233377af65276a633e776cf01f878e75dbfdbe4aa7f356120dcdbdf"
+    },
+    {
+      "url": "https://spielos.xyz/fa/ai-transformation/pilot/evaluate/",
+      "image": "assets/og/ai-transformation-pilot-evaluate-fa.png",
+      "sha256": "0181ff131061c9e930d5841456040ba473cbb3a88103c704fe65d28424bd6c13"
+    },
+    {
+      "url": "https://spielos.xyz/fa/ai-transformation/pilot/goal/",
+      "image": "assets/og/ai-transformation-pilot-goal-fa.png",
+      "sha256": "2687d406f71485f8b1ddb8dedb8988f6304c52e6dafb7e0aa496eb7d0be964da"
+    },
+    {
+      "url": "https://spielos.xyz/fa/ai-transformation/pilot/",
+      "image": "assets/og/ai-transformation-pilot-fa.png",
+      "sha256": "7aee86ea73c3ea3427822e678e611c06abbbf9dd33dcf2d7835307b693178252"
+    },
+    {
+      "url": "https://spielos.xyz/fa/ai-transformation/pilot/observe/",
+      "image": "assets/og/ai-transformation-pilot-observe-fa.png",
+      "sha256": "736e901f14be841284272a0754070399751deab19b9862a941d092e0ffbb48e8"
+    },
+    {
+      "url": "https://spielos.xyz/fa/ai-transformation/readiness/",
+      "image": "assets/og/ai-transformation-readiness-fa.png",
+      "sha256": "6ceedf9bc0d8c37d390c8f7604039fd4d8d4b97cc9ad09640f4cc94172988200"
+    },
+    {
+      "url": "https://spielos.xyz/fa/ai-transformation/scale/enable/",
+      "image": "assets/og/ai-transformation-scale-enable-fa.png",
+      "sha256": "b2ac3cec21414351c32921d18ec11a1d0ea6649bde0de4bbe7750df5add4049c"
+    },
+    {
+      "url": "https://spielos.xyz/fa/ai-transformation/scale/expand/",
+      "image": "assets/og/ai-transformation-scale-expand-fa.png",
+      "sha256": "30a431baacefa62090af7b347922c19dbb16e580a5922bb84570aed88881d91a"
+    },
+    {
+      "url": "https://spielos.xyz/fa/ai-transformation/scale/",
+      "image": "assets/og/ai-transformation-scale-fa.png",
+      "sha256": "61803c4fe208b1c9bd7896aaedeea56dbf12f757c34e6db0a352fd531ee7bb65"
+    },
+    {
+      "url": "https://spielos.xyz/fa/ai-transformation/scale/operate/",
+      "image": "assets/og/ai-transformation-scale-operate-fa.png",
+      "sha256": "38c08cf002cbaefc827f013487b77050506f408432bccfc61470499fa7365f82"
+    },
+    {
+      "url": "https://spielos.xyz/fa/ai-transformation/scale/standardize/",
+      "image": "assets/og/ai-transformation-scale-standardize-fa.png",
+      "sha256": "28912b7d3852e64fed9b19667ba20a71e94f87d02578e966eb8bdc59c7072867"
+    },
+    {
+      "url": "https://spielos.xyz/fa/ai-transformation/workspace/",
+      "image": "assets/og/ai-transformation-workspace-fa.png",
+      "sha256": "074ed7529c658359e993766421cfbcfa58305016c001a38a2dc771329641940b"
+    },
+    {
+      "url": "https://spielos.xyz/fa/ai-transformation-classic/",
+      "image": "assets/og/ai-transformation-classic-fa.png",
+      "sha256": "30ff8312878b74ac9f7412515693a3f67c36473d97e1611e2c767e9adba9b38e"
+    },
+    {
+      "url": "https://spielos.xyz/fa/apply/",
+      "image": "assets/og/apply-fa.png",
+      "sha256": "0e97ae82cdc2a064d077df8c9fbba12af8b69bbe21db22b54adb943562c944ad"
+    },
+    {
+      "url": "https://spielos.xyz/fa/brand/",
+      "image": "assets/og/brand-fa.png",
+      "sha256": "5effbd55de8a00fae3ff5507df97ece67ff579994d2570aaa389c904fd06f682"
+    },
+    {
+      "url": "https://spielos.xyz/fa/contact/",
+      "image": "assets/og/contact-fa.png",
+      "sha256": "cff67941ab20f7ec1ffa8239570240bc12f6e746a109b3902e9a635f2c5f0543"
+    },
+    {
+      "url": "https://spielos.xyz/fa/evals/",
+      "image": "assets/og/evals-fa.png",
+      "sha256": "90a78d27ce8eeef125ef85c8385e7bd6b41b4cc87962f7d8ddb5edac47474a43"
+    },
+    {
+      "url": "https://spielos.xyz/fa/features/agents/",
+      "image": "assets/og/features-agents-fa.png",
+      "sha256": "eb346dc0905f13ce1aa3744abbb80a633ba56075ca104381f41aa25c086d9cd0"
+    },
+    {
+      "url": "https://spielos.xyz/fa/features/artifacts/",
+      "image": "assets/og/features-artifacts-fa.png",
+      "sha256": "cea635d68c895736a696ae3303a2eed55e9228ec1ecd9efe8fe736faeafcc1c7"
+    },
+    {
+      "url": "https://spielos.xyz/fa/features/connections/",
+      "image": "assets/og/features-connections-fa.png",
+      "sha256": "0b9a1b9a4b4892954e82d69451397462e0abd60218ce182821f42ee2d7beb0fa"
+    },
+    {
+      "url": "https://spielos.xyz/fa/features/departments/",
+      "image": "assets/og/features-departments-fa.png",
+      "sha256": "e3cfaf1a6d1c2f311b6af6be9d3e5ee94eafa0241c1cf9bd7bc2e9d8dbfe0792"
+    },
+    {
+      "url": "https://spielos.xyz/fa/features/director/",
+      "image": "assets/og/features-director-fa.png",
+      "sha256": "5ba071536c5d4a64421ff7abec32760ba151f07b552c27fe3519a431aba63a1f"
+    },
+    {
+      "url": "https://spielos.xyz/fa/features/evals/",
+      "image": "assets/og/features-evals-fa.png",
+      "sha256": "cb097b417e15d4295a35f856b4d490705a6b19eb5fa206b2bf1d223b83cf3521"
+    },
+    {
+      "url": "https://spielos.xyz/fa/features/",
+      "image": "assets/og/features-fa.png",
+      "sha256": "c07afe312108f1d872219272415e4cf0891abb490a5afd210255d08b5ce26185"
+    },
+    {
+      "url": "https://spielos.xyz/fa/features/skills/",
+      "image": "assets/og/features-skills-fa.png",
+      "sha256": "6248467a61ac6d30320b561016ab46bb7cb5658435278f441cf3f456ae60cec4"
+    },
+    {
+      "url": "https://spielos.xyz/fa/features/workflows/",
+      "image": "assets/og/features-workflows-fa.png",
+      "sha256": "b143100893ceae8c00c0295d380a51b5f6aa5106bae9a4b14ad5467dce1c410e"
+    },
+    {
+      "url": "https://spielos.xyz/fa/founder/",
+      "image": "assets/og/founder-fa.png",
+      "sha256": "b9334c4ecf73e159a963179c22df051991ed50e5b5e81504fa5cb39c81603ec4"
+    },
+    {
+      "url": "https://spielos.xyz/fa/guides/",
+      "image": "assets/og/guides-fa.png",
+      "sha256": "fb6e36bf684bbfce344d37e7299c7f9a1334de6c725c883e48a31dc329883946"
+    },
+    {
+      "url": "https://spielos.xyz/fa/landing/ai-keyword-research-agent/",
+      "image": "assets/og/landing-ai-keyword-research-agent-fa.png",
+      "sha256": "2d35b7f17efa0f16f1f06fe28a656b58cd4ac0f244865ed928dcbea3efa394b3"
+    },
+    {
+      "url": "https://spielos.xyz/fa/landing/lead-researcher/",
+      "image": "assets/og/landing-lead-researcher-fa.png",
+      "sha256": "a77360c8c078ba93bae788fa51b13085dc62ffd3edf7268527b13adc72ae31bd"
+    },
+    {
+      "url": "https://spielos.xyz/fa/landing/social-lead-researcher/",
+      "image": "assets/og/landing-social-lead-researcher-fa.png",
+      "sha256": "54f9d98595f9260a6d562bcacda543c8cf8774270367cb19ef37b15c79bffefe"
+    },
+    {
+      "url": "https://spielos.xyz/fa/live/",
+      "image": "assets/og/live-fa.png",
+      "sha256": "6767a141717e433f875a704577c707e60c0f52758c9683ce1276af6b35d1d6c0"
+    },
+    {
+      "url": "https://spielos.xyz/fa/notes/72-hour-sprint/",
+      "image": "assets/og/notes-72-hour-sprint-fa.png",
+      "sha256": "2196291f345b45b57fe504787bf08bedc54a2244ad67eeca8e0653d4b2fcdddd"
+    },
+    {
+      "url": "https://spielos.xyz/fa/notes/GLM5.2-Cost-Breakdown/",
+      "image": "assets/og/notes-GLM5.2-Cost-Breakdown-fa.png",
+      "sha256": "a3b5492712183af25f992ddb709eff78b68e0667e1e3af5935bfe335f5211752"
+    },
+    {
+      "url": "https://spielos.xyz/fa/notes/agentic-loops/",
+      "image": "assets/og/notes-agentic-loops-fa.png",
+      "sha256": "04f61924711b23df74177477e5fee34641bf5f357a83b8e9a2cec49b81330b4a"
+    },
+    {
+      "url": "https://spielos.xyz/fa/notes/ai-lead-research-worker/",
+      "image": "assets/og/notes-ai-lead-research-worker-fa.png",
+      "sha256": "e2ae2009c658fa7773ddd82ce544236f8ebc53b94e8070a6eaa52e30c0a8ecd7"
+    },
+    {
+      "url": "https://spielos.xyz/fa/notes/ai-war-price-intelligence/",
+      "image": "assets/og/notes-ai-war-price-intelligence-fa.png",
+      "sha256": "8d1f37f831e39d2431ea04900d23e255c8b1083fa4efcbcc8df25d315225a8bb"
+    },
+    {
+      "url": "https://spielos.xyz/fa/notes/automate-recruitment-ai/",
+      "image": "assets/og/notes-automate-recruitment-ai-fa.png",
+      "sha256": "c6faa84648a25a734d049a91644a08e31eccecbc12d32fd38d399bd2da916fd6"
+    },
+    {
+      "url": "https://spielos.xyz/fa/notes/blog-rebuild-4h/",
+      "image": "assets/og/notes-blog-rebuild-4h-fa.png",
+      "sha256": "a86916aa13daa8ddc1c6ac377067bb07283ee8964ccc1fcabf8c28a4b3efed30"
+    },
+    {
+      "url": "https://spielos.xyz/fa/notes/content-pipeline/",
+      "image": "assets/og/notes-content-pipeline-fa.png",
+      "sha256": "734671702abea591ae02141e39922c94cfc46d922fd7752da54ef7a587f357d5"
+    },
+    {
+      "url": "https://spielos.xyz/fa/notes/decisions-are-content/",
+      "image": "assets/og/notes-decisions-are-content-fa.png",
+      "sha256": "3bb9a82bebc56e884aef8a1b107efeb283b8b4b074c4c3aa53d9c065668382f9"
+    },
+    {
+      "url": "https://spielos.xyz/fa/notes/deepseek-v4-official-launch/",
+      "image": "assets/og/notes-deepseek-v4-official-launch-fa.png",
+      "sha256": "7ea60b00b7ceb02b059f0b347891c9888844bcfa5f17c723d94e1fb2ef718e9a"
+    },
+    {
+      "url": "https://spielos.xyz/fa/notes/deepseek-v4-price-war/",
+      "image": "assets/og/notes-deepseek-v4-price-war-fa.png",
+      "sha256": "4346e6a14b4d2cf14e59c8b1b8d377acb191abe8caa8c35cb6b3165731336f90"
+    },
+    {
+      "url": "https://spielos.xyz/fa/notes/gates-not-models/",
+      "image": "assets/og/notes-gates-not-models-fa.png",
+      "sha256": "fe4abbdd2cbf886ad3613a28d209a9015d940ee93889affd0bace1de778490c8"
+    },
+    {
+      "url": "https://spielos.xyz/fa/notes/",
+      "image": "assets/og/notes-fa.png",
+      "sha256": "5e5f2ad6607728e87258c5599fbb26342f25f18aea514cb11d91b90f4eb7d2fd"
+    },
+    {
+      "url": "https://spielos.xyz/fa/notes/migration-audits/",
+      "image": "assets/og/notes-migration-audits-fa.png",
+      "sha256": "560743315c2f16626e0369bc5c348a504bb50aedf195f298532ba8618081904b"
+    },
+    {
+      "url": "https://spielos.xyz/fa/notes/pipeline-not-strategy/",
+      "image": "assets/og/notes-pipeline-not-strategy-fa.png",
+      "sha256": "a803bc7dbeb71dd5c7aea55d0a912539319092c804b1fc79b202a074efb55222"
+    },
+    {
+      "url": "https://spielos.xyz/fa/notes/positioning-state/",
+      "image": "assets/og/notes-positioning-state-fa.png",
+      "sha256": "6f05e2bf420b8cdfb1d01cccf8b7b5c4301ab4b0a76ca26677645a406d0f65a8"
+    },
+    {
+      "url": "https://spielos.xyz/fa/notes/rtl-design-system/",
+      "image": "assets/og/notes-rtl-design-system-fa.png",
+      "sha256": "f3171b4c6fa799b11bcc40fd5853ae79e0e6898f3cdbc93fe4868832b98190e2"
+    },
+    {
+      "url": "https://spielos.xyz/fa/notes/second-brain/",
+      "image": "assets/og/notes-second-brain-fa.png",
+      "sha256": "fde6b381b8a299024c0a96224e0bb77aef5127fe7a9b6b4cac3d8cccb595371e"
+    },
+    {
+      "url": "https://spielos.xyz/fa/notes/seo-from-architecture/",
+      "image": "assets/og/notes-seo-from-architecture-fa.png",
+      "sha256": "108b594891ab64de505009d0721b80e0204aad6f468ccac164a7d4ea7c1aa708"
+    },
+    {
+      "url": "https://spielos.xyz/fa/notes/session-as-content/",
+      "image": "assets/og/notes-session-as-content-fa.png",
+      "sha256": "8e07880403f08da09f620bf3dc6a24605f9defffd5cd577ce61c97e93a432e52"
+    },
+    {
+      "url": "https://spielos.xyz/fa/notes/sessions-to-posts/",
+      "image": "assets/og/notes-sessions-to-posts-fa.png",
+      "sha256": "c0b8e140a600f17649e95dd6c596d84ee3a68733f143ddf519de39a5632fa592"
+    },
+    {
+      "url": "https://spielos.xyz/fa/notes/skills-repo/",
+      "image": "assets/og/notes-skills-repo-fa.png",
+      "sha256": "f6f4972e22cfde309bb4f53baa3a9c78a616cd812e65bdb02e77be08390be8d6"
+    },
+    {
+      "url": "https://spielos.xyz/fa/notes/spielos-open-source/",
+      "image": "assets/og/notes-spielos-open-source-fa.png",
+      "sha256": "09b10638692cbd1ef300cdaab0f41d7b912ab565e50b42c7226cc74d35894e91"
+    },
+    {
+      "url": "https://spielos.xyz/fa/notes/spielos-update/",
+      "image": "assets/og/notes-spielos-update-fa.png",
+      "sha256": "d4db726ef2d9988947b9903153aadf5144ea4dea4c4ea52581dff37b0c189b4e"
+    },
+    {
+      "url": "https://spielos.xyz/fa/notes/tokens-per-sheep/",
+      "image": "assets/og/notes-tokens-per-sheep-fa.png",
+      "sha256": "63cf20e8788968f84de0dd0e466cda7870654c6bcee2ce1b9d825428cd3b37f4"
+    },
+    {
+      "url": "https://spielos.xyz/fa/notes/translation-glossary/",
+      "image": "assets/og/notes-translation-glossary-fa.png",
+      "sha256": "f3670dc1b44bc1210fb7764cb16b2167c97f5a7b9ec1383e4c4d35bd11e0b1dc"
+    },
+    {
+      "url": "https://spielos.xyz/fa/notes/waitlist-supabase/",
+      "image": "assets/og/notes-waitlist-supabase-fa.png",
+      "sha256": "ef8eac4c5bbae4eef4cfbab061a223335a25ff85e6c235780f2fe961ea47b878"
+    },
+    {
+      "url": "https://spielos.xyz/fa/partners/",
+      "image": "assets/og/partners-fa.png",
+      "sha256": "4625f99eb5f62d48272f45fbf3fdcd9385c4364a49c5b229f11da859b012aa5e"
+    },
+    {
+      "url": "https://spielos.xyz/fa/presentations/ai-transformation/",
+      "image": "assets/og/presentations-ai-transformation-fa.png",
+      "sha256": "f7de7063e576f1957b20142e684b2e450a18b022ea0cd1b6c4ee0d35dc6733a7"
+    },
+    {
+      "url": "https://spielos.xyz/fa/presentations/godae/",
+      "image": "assets/og/presentations-godae-fa.png",
+      "sha256": "f8c1264bbf09a4971916bdb1671c4b0e7510df7d64cb7aa81bd455ebcd14fe72"
+    },
+    {
+      "url": "https://spielos.xyz/fa/pricing/",
+      "image": "assets/og/pricing-fa.png",
+      "sha256": "ba4daf84f277af24399351560baa7a18a8388ece0f7febd9ab4510592340d8cf"
+    },
+    {
+      "url": "https://spielos.xyz/fa/privacy/",
+      "image": "assets/og/privacy-fa.png",
+      "sha256": "b4cb0a7bd330e3da01627af3d5e9d9f384d781d71dd1b4fe0d68191ff4db7ef4"
+    },
+    {
+      "url": "https://spielos.xyz/fa/services/agent-brief/",
+      "image": "assets/og/services-agent-brief-fa.png",
+      "sha256": "db003b8066ba7d6ccfccc87da78e17041c0e89e236d8765c4bef828d0e6faf7f"
+    },
+    {
+      "url": "https://spielos.xyz/fa/services/",
+      "image": "assets/og/services-fa.png",
+      "sha256": "9943f42443117ea3df44e389b4a887f9c3c3761fe2c2167727270cc347f376a7"
+    },
+    {
+      "url": "https://spielos.xyz/fa/solutions/ai-departments/analytics/",
+      "image": "assets/og/solutions-ai-departments-analytics-fa.png",
+      "sha256": "f4942d855d7f7e457fb9856a126cc5fdea2f708cc8a06c9d03fdeec356e67872"
+    },
+    {
+      "url": "https://spielos.xyz/fa/solutions/ai-departments/content/",
+      "image": "assets/og/solutions-ai-departments-content-fa.png",
+      "sha256": "338cbdfe207815876e739e598b1f04c57f157b68ebdb2f03022348a355944e0a"
+    },
+    {
+      "url": "https://spielos.xyz/fa/solutions/ai-departments/design/gallery/",
+      "image": "assets/og/solutions-ai-departments-design-gallery-fa.png",
+      "sha256": "47dca3ba60441637557474bcd691041ee402ef6c11b311114de0249e50736faf"
+    },
+    {
+      "url": "https://spielos.xyz/fa/solutions/ai-departments/design/",
+      "image": "assets/og/solutions-ai-departments-design-fa.png",
+      "sha256": "7913880faa13f649a75de2b12bd9214a8be5a7564ca1baaa25603c4262bd00fb"
+    },
+    {
+      "url": "https://spielos.xyz/fa/solutions/ai-departments/",
+      "image": "assets/og/solutions-ai-departments-fa.png",
+      "sha256": "ca5d2ff5098175c5fc833a27607f522c785178f6166244d4448ed0ed701ddfa4"
+    },
+    {
+      "url": "https://spielos.xyz/fa/solutions/ai-departments/marketing/",
+      "image": "assets/og/solutions-ai-departments-marketing-fa.png",
+      "sha256": "00b43bdaca301ace5625984e4bd5a521bda6ad276e44b8a14f746a99b4113e79"
+    },
+    {
+      "url": "https://spielos.xyz/fa/solutions/ai-departments/seo/",
+      "image": "assets/og/solutions-ai-departments-seo-fa.png",
+      "sha256": "729f7ebd2416a2541182e7a4eea442c54b24f052b47839b1286d79ea9a8851c6"
+    },
+    {
+      "url": "https://spielos.xyz/fa/solutions/",
+      "image": "assets/og/solutions-fa.png",
+      "sha256": "bcc6f7c03c02a8c14c32d00cfb62c4470546d192792b111ae31246915840a8dc"
+    },
+    {
+      "url": "https://spielos.xyz/fa/solutions/software/attio-automation/",
+      "image": "assets/og/solutions-software-attio-automation-fa.png",
+      "sha256": "ddc115b1d4d6dd52aa0319c5f9a31e7b2a133dda359d2289a8038f32dd149001"
+    },
+    {
+      "url": "https://spielos.xyz/fa/solutions/software/claude-code-automation/",
+      "image": "assets/og/solutions-software-claude-code-automation-fa.png",
+      "sha256": "f441e96bc0d8ad5a5adea528bcef0d0f6d6463ffc483d0da107823e3aeb197d6"
+    },
+    {
+      "url": "https://spielos.xyz/fa/solutions/software/codex-automation/",
+      "image": "assets/og/solutions-software-codex-automation-fa.png",
+      "sha256": "3218c082d82db58ea14abdfba5a02f72c6aaffa175fcda5670185d78dc2ccc81"
+    },
+    {
+      "url": "https://spielos.xyz/fa/solutions/software/gmail-automation/",
+      "image": "assets/og/solutions-software-gmail-automation-fa.png",
+      "sha256": "eb040247f0bbe8497cdf1dbca8572686124b814c5e3b88670acd099d8e3cbbad"
+    },
+    {
+      "url": "https://spielos.xyz/fa/solutions/software/google-calendar-automation/",
+      "image": "assets/og/solutions-software-google-calendar-automation-fa.png",
+      "sha256": "330842169a36beac596b2004aa12510da839188ede95167351fc55ce3349308e"
+    },
+    {
+      "url": "https://spielos.xyz/fa/solutions/software/google-drive-automation/",
+      "image": "assets/og/solutions-software-google-drive-automation-fa.png",
+      "sha256": "0852b15f4b9dd24a0b9909a93b198902fdbc7149009a0fa5036e715e74e90443"
+    },
+    {
+      "url": "https://spielos.xyz/fa/solutions/software/hubspot-automation/",
+      "image": "assets/og/solutions-software-hubspot-automation-fa.png",
+      "sha256": "e71b74c1b10b8debe1963fad099593117c57c5c9a9b5858e4c08b4355d231de6"
+    },
+    {
+      "url": "https://spielos.xyz/fa/solutions/software/",
+      "image": "assets/og/solutions-software-fa.png",
+      "sha256": "621f705b4ab79e7f96197baa493092de1e4d9c221c2e07e57d54c45a6c8abb03"
+    },
+    {
+      "url": "https://spielos.xyz/fa/solutions/software/jira-automation/",
+      "image": "assets/og/solutions-software-jira-automation-fa.png",
+      "sha256": "dcd360dcd62613e5ccc5630df577d0d591e0296c09863ad21ae0e47179d6788c"
+    },
+    {
+      "url": "https://spielos.xyz/fa/solutions/software/notion-automation/",
+      "image": "assets/og/solutions-software-notion-automation-fa.png",
+      "sha256": "43bde0679af7ccb619c0135315224026547e951b3ac60d07e9108e01c3a0f637"
+    },
+    {
+      "url": "https://spielos.xyz/fa/solutions/software/opencode-automation/",
+      "image": "assets/og/solutions-software-opencode-automation-fa.png",
+      "sha256": "2ff9baac9141ecee3f04b2667c22def08a339c9285ba9247e12acacbccdfde92"
+    },
+    {
+      "url": "https://spielos.xyz/fa/solutions/software/slack-automation/",
+      "image": "assets/og/solutions-software-slack-automation-fa.png",
+      "sha256": "e28b69d8f8396c8b22d147e02b1af45b1c29a88d76fd55185ed298852e28ac3f"
+    },
+    {
+      "url": "https://spielos.xyz/fa/solutions/software/telegram-automation/",
+      "image": "assets/og/solutions-software-telegram-automation-fa.png",
+      "sha256": "13629d8e444583c928c169dcdd014f1f9f7b9629e2f0e947c510bdd1305284a3"
+    },
+    {
+      "url": "https://spielos.xyz/fa/solutions/software/whatsapp-automation/",
+      "image": "assets/og/solutions-software-whatsapp-automation-fa.png",
+      "sha256": "c3beb092005ceccbc4c0669e0ded1618cfe0d3fe931583a4ff2a99d7b5508512"
+    },
+    {
+      "url": "https://spielos.xyz/fa/solutions/software/zapier-automation/",
+      "image": "assets/og/solutions-software-zapier-automation-fa.png",
+      "sha256": "cf8c3d10983ad0b08dbf523ddf133976f1e828ba6633d1f9a597778b9885e5bb"
+    },
+    {
+      "url": "https://spielos.xyz/fa/solutions/workflows/candidate-screening-automation/",
+      "image": "assets/og/solutions-workflows-candidate-screening-automation-fa.png",
+      "sha256": "659b70eb408d841b14b2e9a6b6465fa64c7b91f90c51ba5dde8785853e55d93b"
+    },
+    {
+      "url": "https://spielos.xyz/fa/solutions/workflows/client-intake-automation/",
+      "image": "assets/og/solutions-workflows-client-intake-automation-fa.png",
+      "sha256": "6c1b8d5b43e19a6040f09e9c5ef880e52b9ef9580f1df283f63b9bfaac03a8fe"
+    },
+    {
+      "url": "https://spielos.xyz/fa/solutions/workflows/client-onboarding-automation/",
+      "image": "assets/og/solutions-workflows-client-onboarding-automation-fa.png",
+      "sha256": "a42ad705ac90fe7a360b37d7ce099a8239e3e5e82c76c11f988880acf3ca239c"
+    },
+    {
+      "url": "https://spielos.xyz/fa/solutions/workflows/data-entry-automation/",
+      "image": "assets/og/solutions-workflows-data-entry-automation-fa.png",
+      "sha256": "cf1ab8954c774522e94e05dac19fe758fd0618381e57a75f0580744425fc3e8c"
+    },
+    {
+      "url": "https://spielos.xyz/fa/solutions/workflows/document-collection-automation/",
+      "image": "assets/og/solutions-workflows-document-collection-automation-fa.png",
+      "sha256": "57e8c22f40106db3c5fd5a6a8853184e39a1772469d0d3cff76530907c6fe1b5"
+    },
+    {
+      "url": "https://spielos.xyz/fa/solutions/workflows/follow-up-automation/",
+      "image": "assets/og/solutions-workflows-follow-up-automation-fa.png",
+      "sha256": "8bc2bb0e561ec65b8537532471a9be4c82c8da88af6cc0d691e2408924ef1c26"
+    },
+    {
+      "url": "https://spielos.xyz/fa/solutions/workflows/",
+      "image": "assets/og/solutions-workflows-fa.png",
+      "sha256": "383a9e14d19147373a2a79584db1a2280ae67bcc6235cd6d0c6b5c8a484146cc"
+    },
+    {
+      "url": "https://spielos.xyz/fa/solutions/workflows/invoice-processing-automation/",
+      "image": "assets/og/solutions-workflows-invoice-processing-automation-fa.png",
+      "sha256": "d5d039cac2bcf0279fab86e76f43aaf536bf455058e30fc45e6ff434b278c642"
+    },
+    {
+      "url": "https://spielos.xyz/fa/solutions/workflows/lead-qualification-automation/",
+      "image": "assets/og/solutions-workflows-lead-qualification-automation-fa.png",
+      "sha256": "234545e65d8f906d293f940b681a5798e99342aa68389dbdff4eb3e30ef0d367"
+    },
+    {
+      "url": "https://spielos.xyz/features/agents/",
+      "image": "assets/og/features-agents-en.png",
+      "sha256": "0a42d433560e6169f303c28329fae02a89af271c5030c9b1788169897e4a560a"
+    },
+    {
+      "url": "https://spielos.xyz/features/artifacts/",
+      "image": "assets/og/features-artifacts-en.png",
+      "sha256": "ec2e94655c3aff5bd6e17a0de780d4c7d480d875b7875d03eb8cb7f79eaf6567"
+    },
+    {
+      "url": "https://spielos.xyz/features/connections/",
+      "image": "assets/og/features-connections-en.png",
+      "sha256": "388b3b95959a0383923ef4303471368b43cb5899f6da4942115fb5c676722334"
+    },
+    {
+      "url": "https://spielos.xyz/features/departments/",
+      "image": "assets/og/features-departments-en.png",
+      "sha256": "bb591300610a68b7d50d4884f5b9e9d2894aea243e5b06d004102bd5cf201a53"
+    },
+    {
+      "url": "https://spielos.xyz/features/director/",
+      "image": "assets/og/features-director-en.png",
+      "sha256": "a623cae66f4fad5ec3e003a4a9d958ab98cd735ed6237a0723ef1a127bcf9eed"
+    },
+    {
+      "url": "https://spielos.xyz/features/evals/",
+      "image": "assets/og/features-evals-en.png",
+      "sha256": "a2d0cf95a1b0fe9183e69a58b3c274166c70ef9adcccd1be032e8d9846cc1a62"
+    },
+    {
+      "url": "https://spielos.xyz/features/",
+      "image": "assets/og/features-en.png",
+      "sha256": "ef6faec1ac723c63322579425a72014dca021f6f1ae50a6b65bc5d4c8fa540f1"
+    },
+    {
+      "url": "https://spielos.xyz/features/skills/",
+      "image": "assets/og/features-skills-en.png",
+      "sha256": "8a7e4343650f1d0d640d703e98064c5d6ea69e5f6d18e56ece5d2223a66ba7f8"
+    },
+    {
+      "url": "https://spielos.xyz/features/workflows/",
+      "image": "assets/og/features-workflows-en.png",
+      "sha256": "f578a7e90a752e3fd2de5001f141fb237b596f87b0929712fe3b7645471dc48a"
+    },
+    {
+      "url": "https://spielos.xyz/founder/",
+      "image": "assets/og/founder-en.png",
+      "sha256": "5f26dbf3a5fcde0deeb415e4ba37133e5102592cc1ffcf5630c44b1177a9f316"
+    },
+    {
+      "url": "https://spielos.xyz/",
+      "image": "assets/og/home-fa.png",
+      "sha256": "6e77c12243b6aae0bb23d37b322d46b152b3f42e47fa9d0d70c80618944a7470"
+    },
+    {
+      "url": "https://spielos.xyz/landing/ai-keyword-research-agent/",
+      "image": "assets/og/landing-ai-keyword-research-agent-en.png",
+      "sha256": "5b8d606b3c2bf7386bdfe3b690ff14e36e082e34e0418250a7331ea1d2640762"
+    },
+    {
+      "url": "https://spielos.xyz/landing/lead-researcher/",
+      "image": "assets/og/landing-lead-researcher-en.png",
+      "sha256": "6dd47cbd20c8e2d6521da389332681a3cdc9954504ab6da5b81b922bd4bb2c5e"
+    },
+    {
+      "url": "https://spielos.xyz/landing/social-lead-researcher/",
+      "image": "assets/og/landing-social-lead-researcher-en.png",
+      "sha256": "2facafb2ce9f7c89336c85d7caa219730ba30e450bba8e46db5046682fa34633"
+    },
+    {
+      "url": "https://spielos.xyz/learn/",
+      "image": "assets/og/learn-en.png",
+      "sha256": "94df31bdb6880edef69edb83a7dcf25927c43d4b1929b193d2aef797a22e53ae"
+    },
+    {
+      "url": "https://spielos.xyz/live/",
+      "image": "assets/og/live-en.png",
+      "sha256": "6773b0acedf5fc238e25b1811a37583adfb2d72288c783b7353d78e53f352942"
+    },
+    {
+      "url": "https://spielos.xyz/notes/72-hour-sprint/",
+      "image": "assets/og/notes-72-hour-sprint-en.png",
+      "sha256": "7eea7e463f2a8c2495c568445bab2ea2d3445527c368b3062722e12c354526a2"
+    },
+    {
+      "url": "https://spielos.xyz/notes/GLM5.2-Cost-Breakdown/",
+      "image": "assets/og/notes-GLM5.2-Cost-Breakdown-en.png",
+      "sha256": "0cb0470b6ed2c57b54758301c6617523ce50048443000d31338dd514cd73721d"
+    },
+    {
+      "url": "https://spielos.xyz/notes/agentic-loops/",
+      "image": "assets/og/notes-agentic-loops-en.png",
+      "sha256": "1e98233ef4722f85977f88a972dfb16f686cc2aef79676f2600cff2ac2474fdf"
+    },
+    {
+      "url": "https://spielos.xyz/notes/ai-lead-research-worker/",
+      "image": "assets/og/notes-ai-lead-research-worker-en.png",
+      "sha256": "10194acc41cfe1778195e3e11bc202add165f37471a18f753de86ce8dc558166"
+    },
+    {
+      "url": "https://spielos.xyz/notes/ai-war-price-intelligence/",
+      "image": "assets/og/notes-ai-war-price-intelligence-en.png",
+      "sha256": "fcea278eaaf0f832f73a21ebd3293ad5f3e156574379637a0d6f2b8917dd8a58"
+    },
+    {
+      "url": "https://spielos.xyz/notes/automate-accounting-ai/",
+      "image": "assets/og/notes-automate-accounting-ai-en.png",
+      "sha256": "4efc24053d925d7526f9b238d791f6259e73da70cfbc16626cf607120f9f5ef6"
+    },
+    {
+      "url": "https://spielos.xyz/notes/automate-recruitment-ai/",
+      "image": "assets/og/notes-automate-recruitment-ai-en.png",
+      "sha256": "73865067936dd52b00c7854584a7fb0f01513559bbd99a97893096c69d5d2870"
+    },
+    {
+      "url": "https://spielos.xyz/notes/blog-rebuild-4h/",
+      "image": "assets/og/notes-blog-rebuild-4h-en.png",
+      "sha256": "aea271efa0c975d2ec2b51c201c87a214274b18fc1118e9b52b830cf196a9753"
+    },
+    {
+      "url": "https://spielos.xyz/notes/content-pipeline/",
+      "image": "assets/og/notes-content-pipeline-en.png",
+      "sha256": "8ebb98014f03b8eed9d0c8dfb54e4f9189cb1384e04144819b3934310c0b642b"
+    },
+    {
+      "url": "https://spielos.xyz/notes/decisions-are-content/",
+      "image": "assets/og/notes-decisions-are-content-en.png",
+      "sha256": "db6b378f5d15f03620a32f0f0a9fb355d7e5102d9277594f03a89418b594c8b7"
+    },
+    {
+      "url": "https://spielos.xyz/notes/deepseek-v4-official-launch/",
+      "image": "assets/og/notes-deepseek-v4-official-launch-en.png",
+      "sha256": "0b77c8d056a1f7d6980a99c713570895a4ffc5cf11c3ae72c0d1f0ba3b55da58"
+    },
+    {
+      "url": "https://spielos.xyz/notes/deepseek-v4-price-war/",
+      "image": "assets/og/notes-deepseek-v4-price-war-en.png",
+      "sha256": "4f86e4b8dfe9a6086e22fcef1ffe88ba6587497923c7229f6421569df3e3df84"
+    },
+    {
+      "url": "https://spielos.xyz/notes/gates-not-models/",
+      "image": "assets/og/notes-gates-not-models-en.png",
+      "sha256": "8f699dc1b5860a9d35c2659506c5fdfdaa8527b124bede82f5d7eb951e9a1070"
+    },
+    {
+      "url": "https://spielos.xyz/notes/",
+      "image": "assets/og/notes-en.png",
+      "sha256": "876549454397e165d56edd99062d32e4966a1241ee2fa3f6c11d331bc4dc54f9"
+    },
+    {
+      "url": "https://spielos.xyz/notes/migration-audits/",
+      "image": "assets/og/notes-migration-audits-en.png",
+      "sha256": "a42e09cf418432c7ab563d25ae5f1560e4a2ba58788e74c9ae8742839a71e654"
+    },
+    {
+      "url": "https://spielos.xyz/notes/pipeline-not-strategy/",
+      "image": "assets/og/notes-pipeline-not-strategy-en.png",
+      "sha256": "4d9b3664ed3cd78a838b711a90e4bd82cd76bf25d3448014bc1bf53b6fba36a8"
+    },
+    {
+      "url": "https://spielos.xyz/notes/positioning-state/",
+      "image": "assets/og/notes-positioning-state-en.png",
+      "sha256": "f1b72e37a6323e60928573af564d57ce2764968d55f452e67fa391d16f4d6e1a"
+    },
+    {
+      "url": "https://spielos.xyz/notes/rtl-design-system/",
+      "image": "assets/og/notes-rtl-design-system-en.png",
+      "sha256": "c46ef202e647fbd4e831a80640cb9bca799fd611e795276f4e7c6e1e3dceabce"
+    },
+    {
+      "url": "https://spielos.xyz/notes/second-brain/",
+      "image": "assets/og/notes-second-brain-en.png",
+      "sha256": "f18d16292d246669cbd6c4b19efe34e9e441dfe220ac941b22f6ba79d6afbf5b"
+    },
+    {
+      "url": "https://spielos.xyz/notes/seo-from-architecture/",
+      "image": "assets/og/notes-seo-from-architecture-en.png",
+      "sha256": "5a3a238c452d8b812f6583c98ffb0c977061beff2d5fc97d9fc16be9ae506406"
+    },
+    {
+      "url": "https://spielos.xyz/notes/session-as-content/",
+      "image": "assets/og/notes-session-as-content-en.png",
+      "sha256": "5f4085b82bdd8798044335fc7f04eacb268c91123431e30e2930a10bbb442f9d"
+    },
+    {
+      "url": "https://spielos.xyz/notes/sessions-to-posts/",
+      "image": "assets/og/notes-sessions-to-posts-en.png",
+      "sha256": "03d6e2f4cd6b72ef358280baebb0563b72c34c60bc3fadbf64711b48b31a4c8c"
+    },
+    {
+      "url": "https://spielos.xyz/notes/skills-repo/",
+      "image": "assets/og/notes-skills-repo-en.png",
+      "sha256": "0ba2417ec1c7b88342e53fb3ee3aa6bd0d2d0322e3994c5a2a7c19a6f3cced6d"
+    },
+    {
+      "url": "https://spielos.xyz/notes/spielos-open-source/",
+      "image": "assets/og/notes-spielos-open-source-en.png",
+      "sha256": "a5cc3d3d1423a05421928015b6ab37d9a85de60ceddd28d5a3eec37889588aa2"
+    },
+    {
+      "url": "https://spielos.xyz/notes/spielos-update/",
+      "image": "assets/og/notes-spielos-update-en.png",
+      "sha256": "a3cd00beff3d7aaf2af0c9f3e924ed4e8ebdc32877ac22b1daac1c7d223d87a7"
+    },
+    {
+      "url": "https://spielos.xyz/notes/tokens-per-sheep/",
+      "image": "assets/og/notes-tokens-per-sheep-en.png",
+      "sha256": "e08f164613eb6a3f66cc3dd2579a15dec496881475c0e63d5e37c0908d6b677b"
+    },
+    {
+      "url": "https://spielos.xyz/notes/translation-glossary/",
+      "image": "assets/og/notes-translation-glossary-en.png",
+      "sha256": "7d70ace23111403777beed8afd62d75ac672c8388a86ede2660db6edcf3ac79b"
+    },
+    {
+      "url": "https://spielos.xyz/notes/waitlist-supabase/",
+      "image": "assets/og/notes-waitlist-supabase-en.png",
+      "sha256": "cd2338d2b4988b65d9dfd333e82a403906e1722ebfdbc893973c1b3c28bd2bf9"
+    },
+    {
+      "url": "https://spielos.xyz/partners/",
+      "image": "assets/og/partners-en.png",
+      "sha256": "00ae8daaf23b916390f60234252ce0e976f1187a19f7f4e90819cc22227d8e71"
+    },
+    {
+      "url": "https://spielos.xyz/pricing/",
+      "image": "assets/og/pricing-en.png",
+      "sha256": "dbc91e8d5da1205d698fdb4ff9996801a2e9b2f2fde7ce073594a6465e15d7d1"
+    },
+    {
+      "url": "https://spielos.xyz/privacy/",
+      "image": "assets/og/privacy-en.png",
+      "sha256": "39832157bacb97f8a7693ed9ac22309d109ae1ad9b49285d443b2e5cce9a0f19"
+    },
+    {
+      "url": "https://spielos.xyz/services/agent-brief/",
+      "image": "assets/og/services-agent-brief-en.png",
+      "sha256": "749a78ae4a334fdd192554a7f738b150ae4e27197af6dcc5eafe988045e1761c"
+    },
+    {
+      "url": "https://spielos.xyz/services/",
+      "image": "assets/og/services-en.png",
+      "sha256": "b284455244fede303d64b322fb34cec40d3c4064d77109195979eea6f3a7b4ef"
+    },
+    {
+      "url": "https://spielos.xyz/solutions/ai-departments/analytics/",
+      "image": "assets/og/solutions-ai-departments-analytics-en.png",
+      "sha256": "c0fbd181115debf5e3b687f352a9d4e73467ea2d6a1564db9532e39c3b4acebe"
+    },
+    {
+      "url": "https://spielos.xyz/solutions/ai-departments/content/",
+      "image": "assets/og/solutions-ai-departments-content-en.png",
+      "sha256": "570ac49415ca12b2ac141166084ef1a36871024e6f6664bc48df880b527c2d4b"
+    },
+    {
+      "url": "https://spielos.xyz/solutions/ai-departments/design/gallery/",
+      "image": "assets/og/solutions-ai-departments-design-gallery-en.png",
+      "sha256": "723e9fe8bfb76174f47ada0b65597add16eefd8dbbf7500881be84a3e33c2ff3"
+    },
+    {
+      "url": "https://spielos.xyz/solutions/ai-departments/design/",
+      "image": "assets/og/solutions-ai-departments-design-en.png",
+      "sha256": "0e51feafa4266ffeef698e29bee289765eaded2605dd25616dcabcea552778ff"
+    },
+    {
+      "url": "https://spielos.xyz/solutions/ai-departments/",
+      "image": "assets/og/solutions-ai-departments-en.png",
+      "sha256": "5f8d66d9b50884ff4708ea42ff439f6103ee7a7ec9616d749017d44925eaed35"
+    },
+    {
+      "url": "https://spielos.xyz/solutions/ai-departments/marketing/",
+      "image": "assets/og/solutions-ai-departments-marketing-en.png",
+      "sha256": "ab15505115f87773aaf055f1b741840719e69aaaa83a432e019f6a128b81fc3c"
+    },
+    {
+      "url": "https://spielos.xyz/solutions/ai-departments/seo/",
+      "image": "assets/og/solutions-ai-departments-seo-en.png",
+      "sha256": "3f95db04147a1fc5f9e8947c5da8d3a0dc0f201bb4b40539dcdaefcc0ae728c0"
+    },
+    {
+      "url": "https://spielos.xyz/solutions/",
+      "image": "assets/og/solutions-en.png",
+      "sha256": "ea273ebd45a0572e4934e3ffb3233140c98e4a0fa7e12948bb065ce8818474f9"
+    },
+    {
+      "url": "https://spielos.xyz/solutions/software/attio-automation/",
+      "image": "assets/og/solutions-software-attio-automation-en.png",
+      "sha256": "d96c8a1d71c4e9f27a090becad0287f8e278241b9ce537ab6cf5c446a08fdc83"
+    },
+    {
+      "url": "https://spielos.xyz/solutions/software/claude-code-automation/",
+      "image": "assets/og/solutions-software-claude-code-automation-en.png",
+      "sha256": "38004dc95833ad50955ef0e9eb5d7ce6272df70ac468b35206858c1648f86d90"
+    },
+    {
+      "url": "https://spielos.xyz/solutions/software/codex-automation/",
+      "image": "assets/og/solutions-software-codex-automation-en.png",
+      "sha256": "4541f58410f3d2a5e214b3f55400b2d33a55e1450c2291f806ad496fb548129d"
+    },
+    {
+      "url": "https://spielos.xyz/solutions/software/gmail-automation/",
+      "image": "assets/og/solutions-software-gmail-automation-en.png",
+      "sha256": "2385529c8b5e1eae6c85e34c1a9f7da16dc32518dbbe6bff6e6770ecbacacf46"
+    },
+    {
+      "url": "https://spielos.xyz/solutions/software/google-calendar-automation/",
+      "image": "assets/og/solutions-software-google-calendar-automation-en.png",
+      "sha256": "74a7432860e0cc0c813a9149d5310b56b83f0c819a79b84938589c6e223594f8"
+    },
+    {
+      "url": "https://spielos.xyz/solutions/software/google-drive-automation/",
+      "image": "assets/og/solutions-software-google-drive-automation-en.png",
+      "sha256": "bfcf3a421befa77f396104ef797120a7ce47933b260b84962a548814432a66ba"
+    },
+    {
+      "url": "https://spielos.xyz/solutions/software/hubspot-automation/",
+      "image": "assets/og/solutions-software-hubspot-automation-en.png",
+      "sha256": "ffe17c1512c4ece7a32d771c08e7a9df77ffb94f457b51be78e45fff2d282a6f"
+    },
+    {
+      "url": "https://spielos.xyz/solutions/software/",
+      "image": "assets/og/solutions-software-en.png",
+      "sha256": "badfe79e6343473b172276c5b7a2ace0c0c0746b6bf145d90c87fa16a849d463"
+    },
+    {
+      "url": "https://spielos.xyz/solutions/software/jira-automation/",
+      "image": "assets/og/solutions-software-jira-automation-en.png",
+      "sha256": "a2c69c0c4ac196cbe7eead1f851366ff3ad2c209bd04b467ee8ff27966cdca17"
+    },
+    {
+      "url": "https://spielos.xyz/solutions/software/notion-automation/",
+      "image": "assets/og/solutions-software-notion-automation-en.png",
+      "sha256": "d81c6c111620599d24342cd7b401636e2910b366ab07b85157a0047df338cdeb"
+    },
+    {
+      "url": "https://spielos.xyz/solutions/software/opencode-automation/",
+      "image": "assets/og/solutions-software-opencode-automation-en.png",
+      "sha256": "04ae4d3d10109b7bb6d95d0ba12cddbba64073e277bcd3d2dcaa15bee8075d38"
+    },
+    {
+      "url": "https://spielos.xyz/solutions/software/slack-automation/",
+      "image": "assets/og/solutions-software-slack-automation-en.png",
+      "sha256": "eb2c5789d2d76912c5d07325d1400fbb4de32d82bb56ce3c420f26cb05cb238a"
+    },
+    {
+      "url": "https://spielos.xyz/solutions/software/telegram-automation/",
+      "image": "assets/og/solutions-software-telegram-automation-en.png",
+      "sha256": "39024cef9d30b771697f321f1a54de69a272f05c598acb0e5a377c0f32f935c4"
+    },
+    {
+      "url": "https://spielos.xyz/solutions/software/whatsapp-automation/",
+      "image": "assets/og/solutions-software-whatsapp-automation-en.png",
+      "sha256": "4be28dd8529f45849b702689ba5f6b32c963435c140c452ee2d57479ffb4ff33"
+    },
+    {
+      "url": "https://spielos.xyz/solutions/software/zapier-automation/",
+      "image": "assets/og/solutions-software-zapier-automation-en.png",
+      "sha256": "4a48584def6e944c29f7f13f9e2694827d07a980e4c5fd06982af52a2e89eddf"
+    },
+    {
+      "url": "https://spielos.xyz/solutions/workflows/candidate-screening-automation/",
+      "image": "assets/og/solutions-workflows-candidate-screening-automation-en.png",
+      "sha256": "7adcc696a5281420d164b42228ff9fe2f6896376421054530cbc21222f9bdb5d"
+    },
+    {
+      "url": "https://spielos.xyz/solutions/workflows/client-intake-automation/",
+      "image": "assets/og/solutions-workflows-client-intake-automation-en.png",
+      "sha256": "6666335374ad600387c31a4bff0aebcec193ebe9d20a0f136e532437ef806600"
+    },
+    {
+      "url": "https://spielos.xyz/solutions/workflows/client-onboarding-automation/",
+      "image": "assets/og/solutions-workflows-client-onboarding-automation-en.png",
+      "sha256": "2cefd8051d4d8e1666236772d6db56713df12a13ee8bf569ef4fa874c88fd139"
+    },
+    {
+      "url": "https://spielos.xyz/solutions/workflows/data-entry-automation/",
+      "image": "assets/og/solutions-workflows-data-entry-automation-en.png",
+      "sha256": "838a767416397fa4d89482eccfd81858c56e4ed9a21efc1fd9d082c538eefa20"
+    },
+    {
+      "url": "https://spielos.xyz/solutions/workflows/document-collection-automation/",
+      "image": "assets/og/solutions-workflows-document-collection-automation-en.png",
+      "sha256": "81eec61a680dc50d8c18936ff670ad0509c9c31476d5e3705831e7b4858aa5ed"
+    },
+    {
+      "url": "https://spielos.xyz/solutions/workflows/follow-up-automation/",
+      "image": "assets/og/solutions-workflows-follow-up-automation-en.png",
+      "sha256": "ec21c5dc9d020548410ff4188649cf3a723a4250b48e1c83bd71c0069f7645c0"
+    },
+    {
+      "url": "https://spielos.xyz/solutions/workflows/freight-workflow-automation/",
+      "image": "assets/og/solutions-workflows-freight-workflow-automation-en.png",
+      "sha256": "47948c0a62bfe087b9fc6025f72157dd9901a2c0628b2e0b990f6a3783776dd9"
+    },
+    {
+      "url": "https://spielos.xyz/solutions/workflows/",
+      "image": "assets/og/solutions-workflows-en.png",
+      "sha256": "6cab3580454b33faeb136ff36672ad075c5c3cb8ae38e27508ab9dc19377d58b"
+    },
+    {
+      "url": "https://spielos.xyz/solutions/workflows/invoice-processing-automation/",
+      "image": "assets/og/solutions-workflows-invoice-processing-automation-en.png",
+      "sha256": "ca8912738993e343d72bdfb2a23d2d12332d03a6b5088d9f643fb0ba1428a97b"
+    },
+    {
+      "url": "https://spielos.xyz/solutions/workflows/lead-qualification-automation/",
+      "image": "assets/og/solutions-workflows-lead-qualification-automation-en.png",
+      "sha256": "1d70f15b9454bbd7d3edc4736aca59834d4bdbdbb09c3a35382f6a46918f7b8f"
+    },
+    {
+      "url": "https://spielos.xyz/solutions/workflows/purchase-order-workflow-automation/",
+      "image": "assets/og/solutions-workflows-purchase-order-workflow-automation-en.png",
+      "sha256": "b4ef088283df6620646095211150ef32b72135da4f9f5b8c6d3ae471327a2a2a"
+    },
+    {
+      "url": "https://spielos.xyz/solutions/workflows/receipt-to-ledger-automation/",
+      "image": "assets/og/solutions-workflows-receipt-to-ledger-automation-en.png",
+      "sha256": "86048dcdc3ac011cb6da1876d2568849002a5265a0ad17513d35bc43f3dc8261"
+    },
+    {
+      "url": "https://spielos.xyz/solutions/workflows/recruitment-automation/",
+      "image": "assets/og/solutions-workflows-recruitment-automation-en.png",
+      "sha256": "b72d755392e338d3a06567deb46cc85de55b910a91c2348578697834ede51b65"
+    }
+  ]
+}

@@ -1,1 +1,1 @@
-{"brand": "karwise", "release": "2026-10-26", "default_locale": "fa"}
+{"brand": "karwise", "release": "guides-evals-20261027", "default_locale": "fa", "judge": "ministral-3b-2512", "api": "https://karwise-evals-api.vercel.app/api/evals", "source": "reviewed public snapshot with company-produced additions", "judge_fa": "ministral-14b-2512"}
