@@ -123,11 +123,6 @@
       "sha256": "e22cbb4b0118012eaa63b72d33d65d4316c4dad4d7ac9daf63601da2015a8fda"
     },
     {
-      "url": "https://spielos.xyz/ai-transformation-classic/",
-      "image": "assets/og/ai-transformation-classic-en.png",
-      "sha256": "bdec9737dae7ed443f7a43db991ee43d6badee33e2427aeaa5b51bbe2ddb6089"
-    },
-    {
       "url": "https://spielos.xyz/apply/",
       "image": "assets/og/apply-en.png",
       "sha256": "d06ca3359f7d73fcaeec97c35c424ee23f3703b965cb317d7700c0df561f65e5"
@@ -165,12 +160,12 @@
     {
       "url": "https://spielos.xyz/en/presentations/ai-transformation/",
       "image": "assets/og/presentations-ai-transformation-en.png",
-      "sha256": "87564d794ad2882eaf0ccc5c5c6c0c433be9d8e5a5efb6f5ab5d0b7c8f660227"
+      "sha256": "4640639b2f4351db2229c751af09c7a2828440d5b794a070c21d7518c7e291c7"
     },
     {
       "url": "https://spielos.xyz/en/presentations/godae/",
       "image": "assets/og/presentations-godae-en.png",
-      "sha256": "783a9fb61bd7404f6df7d517255567f1e15160cc74865d483742641390953b7f"
+      "sha256": "ca3d177218329027a2021432cdb88b4911d0919fa5e8b1596f9e84094eedd8c9"
     },
     {
       "url": "https://spielos.xyz/fa/ai-transformation/complete/",
@@ -276,11 +271,6 @@
       "url": "https://spielos.xyz/fa/ai-transformation/workspace/",
       "image": "assets/og/ai-transformation-workspace-fa.png",
       "sha256": "7be97d0e654ca65cdd1178377057fe41ca5a8150d78f37148fbcc4bd3c5c0305"
-    },
-    {
-      "url": "https://spielos.xyz/fa/ai-transformation-classic/",
-      "image": "assets/og/ai-transformation-classic-fa.png",
-      "sha256": "aeb6587ed9dbaaf5f7a50f09788afb655902e9ed6debd91e55b40e0d25e9c3d6"
     },
     {
       "url": "https://spielos.xyz/fa/apply/",
@@ -520,12 +510,12 @@
     {
       "url": "https://spielos.xyz/fa/presentations/ai-transformation/",
       "image": "assets/og/presentations-ai-transformation-fa.png",
-      "sha256": "0a7fc813db101c3b214df5396043c64ca91a29c1dc981f86169f88d84b8cfeb3"
+      "sha256": "1d7b367706656984d6951b402407503a7a2d7fce209cfa4cc453b4c26f8ad36e"
     },
     {
       "url": "https://spielos.xyz/fa/presentations/godae/",
       "image": "assets/og/presentations-godae-fa.png",
-      "sha256": "5c7a415b88d3dddb2917f795faa140fe7a0611e6aa08702c2f10a47a562b0338"
+      "sha256": "c4215a919e023d535ca513b296db90469be692278674288dac54c65709acaca8"
     },
     {
       "url": "https://spielos.xyz/fa/pricing/",
@@ -776,11 +766,6 @@
       "url": "https://spielos.xyz/landing/social-lead-researcher/",
       "image": "assets/og/landing-social-lead-researcher-en.png",
       "sha256": "6d514be64409684d701e47f9fb0569778b3dfac7072d043b7baf42fdff61664f"
-    },
-    {
-      "url": "https://spielos.xyz/learn/",
-      "image": "assets/og/learn-en.png",
-      "sha256": "c5af73b56987639c7edf9590d90a54caaac195df8e00069dbc02d1cc9b840d05"
     },
     {
       "url": "https://spielos.xyz/live/",

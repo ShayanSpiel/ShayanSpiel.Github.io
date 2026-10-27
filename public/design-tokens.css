@@ -1,0 +1,924 @@
+/*
+ * SpielOS design tokens.
+ *
+ * This file is the entrypoint. It imports raw palettes and the semantic
+ * mappings that translate them to app-level tokens.
+ *
+ * The active theme is selected via `data-theme="<id>"` on <html>.
+ * Add new themes by:
+ *   1. Creating `tokens/<name>.css` with raw `--<name>-bg*`, `--<name>-fg*`, accents.
+ *   2. Creating `tokens/semantic-<name>.css` that maps semantic tokens to them.
+ *   3. Importing both below and adding the theme id to the THEME_REGISTRY.
+ */
+[data-theme="gruvbox-dark"] {
+  --gruvbox-dark-bg0_h: #1d2021;
+  --gruvbox-dark-bg0: #282828;
+  --gruvbox-dark-bg0_s: #32302f;
+  --gruvbox-dark-bg1: #3c3836;
+  --gruvbox-dark-bg2: #504945;
+  --gruvbox-dark-bg3: #665c54;
+  --gruvbox-dark-bg4: #7c6f64;
+
+  --gruvbox-dark-fg0: #fbf1c7;
+  --gruvbox-dark-fg1: #ebdbb2;
+  --gruvbox-dark-fg2: #d5c4a1;
+  --gruvbox-dark-fg3: #bdae93;
+  --gruvbox-dark-fg4: #a89984;
+
+  --gruvbox-dark-gray: #928374;
+
+  --gruvbox-dark-red: #cc241d;
+  --gruvbox-dark-green: #98971a;
+  --gruvbox-dark-yellow: #d79921;
+  --gruvbox-dark-blue: #458588;
+  --gruvbox-dark-purple: #b16286;
+  --gruvbox-dark-aqua: #689d6a;
+  --gruvbox-dark-orange: #d65d0e;
+}
+[data-theme="gruvbox-light"] {
+  --gruvbox-light-bg0_h: #f9f5d7;
+  --gruvbox-light-bg0: #fbf1c7;
+  --gruvbox-light-bg0_s: #f2e5bc;
+  --gruvbox-light-bg1: #ebdbb2;
+  --gruvbox-light-bg2: #d5c4a1;
+  --gruvbox-light-bg3: #bdae93;
+  --gruvbox-light-bg4: #a89984;
+
+  --gruvbox-light-fg0: #282828;
+  --gruvbox-light-fg1: #3c3836;
+  --gruvbox-light-fg2: #504945;
+  --gruvbox-light-fg3: #665c54;
+  --gruvbox-light-fg4: #7c6f64;
+
+  --gruvbox-light-gray: #928374;
+
+  --gruvbox-light-red: #cc241d;
+  --gruvbox-light-green: #98971a;
+  --gruvbox-light-yellow: #d79921;
+  --gruvbox-light-blue: #458588;
+  --gruvbox-light-purple: #b16286;
+  --gruvbox-light-aqua: #689d6a;
+  --gruvbox-light-orange: #d65d0e;
+}
+
+[data-theme="monochrome-dark"] {
+  --mono-dark-bg0_h: #000000;
+  --mono-dark-bg0: #050505;
+  --mono-dark-bg0_s: #0a0a0a;
+  --mono-dark-bg1: #111111;
+  --mono-dark-bg2: #1a1a1a;
+  --mono-dark-bg3: #2a2a2a;
+  --mono-dark-bg4: #3a3a3a;
+
+  --mono-dark-fg0: #ffffff;
+  --mono-dark-fg1: #f5f5f5;
+  --mono-dark-fg2: #d4d4d4;
+  --mono-dark-fg3: #a3a3a3;
+  --mono-dark-fg4: #737373;
+
+  --mono-dark-gray: #525252;
+
+  --mono-dark-red: #f87171;
+  --mono-dark-green: #4ade80;
+  --mono-dark-yellow: #fbbf24;
+  --mono-dark-blue: #60a5fa;
+  --mono-dark-purple: #c084fc;
+  --mono-dark-aqua: #2dd4bf;
+  --mono-dark-orange: #fb923c;
+}
+
+[data-theme="monochrome-light"] {
+  --mono-light-bg0_h: #ffffff;
+  --mono-light-bg0: #fafafa;
+  --mono-light-bg0_s: #f5f5f5;
+  --mono-light-bg1: #ededed;
+  --mono-light-bg2: #e5e5e5;
+  --mono-light-bg3: #d4d4d4;
+  --mono-light-bg4: #a3a3a3;
+
+  --mono-light-fg0: #000000;
+  --mono-light-fg1: #0a0a0a;
+  --mono-light-fg2: #404040;
+  --mono-light-fg3: #525252;
+  --mono-light-fg4: #737373;
+
+  --mono-light-gray: #737373;
+
+  --mono-light-red: #dc2626;
+  --mono-light-green: #15803d;
+  --mono-light-yellow: #a16207;
+  --mono-light-blue: #2563eb;
+  --mono-light-purple: #7e22ce;
+  --mono-light-aqua: #0f766e;
+  --mono-light-orange: #c2410c;
+}
+
+[data-theme="blue-dark"] {
+  --blue-dark-bg0_h: #0b0f1a;
+  --blue-dark-bg0: #111827;
+  --blue-dark-bg0_s: #1a2332;
+  --blue-dark-bg1: #1e293b;
+  --blue-dark-bg2: #334155;
+  --blue-dark-bg3: #475569;
+  --blue-dark-bg4: #64748b;
+
+  --blue-dark-fg0: #f1f5f9;
+  --blue-dark-fg1: #e2e8f0;
+  --blue-dark-fg2: #cbd5e1;
+  --blue-dark-fg3: #94a3b8;
+  --blue-dark-fg4: #64748b;
+
+  --blue-dark-gray: #475569;
+
+  --blue-dark-red: #ef4444;
+  --blue-dark-green: #22c55e;
+  --blue-dark-yellow: #eab308;
+  --blue-dark-blue: #3b82f6;
+  --blue-dark-purple: #a855f7;
+  --blue-dark-aqua: #06b6d4;
+  --blue-dark-orange: #f97316;
+}
+
+[data-theme="blue-light"] {
+  --blue-light-bg0_h: #ffffff;
+  --blue-light-bg0: #f8fafc;
+  --blue-light-bg0_s: #f1f5f9;
+  --blue-light-bg1: #e2e8f0;
+  --blue-light-bg2: #cbd5e1;
+  --blue-light-bg3: #94a3b8;
+  --blue-light-bg4: #64748b;
+
+  --blue-light-fg0: #0f172a;
+  --blue-light-fg1: #1e293b;
+  --blue-light-fg2: #334155;
+  --blue-light-fg3: #475569;
+  --blue-light-fg4: #64748b;
+
+  --blue-light-gray: #64748b;
+
+  --blue-light-red: #dc2626;
+  --blue-light-green: #16a34a;
+  --blue-light-yellow: #ca8a04;
+  --blue-light-blue: #2563eb;
+  --blue-light-purple: #9333ea;
+  --blue-light-aqua: #0891b2;
+  --blue-light-orange: #ea580c;
+}
+
+[data-theme="discord-dark"] {
+  --discord-dark-bg0_h: #111214;
+  --discord-dark-bg0: #1a1b1e;
+  --discord-dark-bg0_s: #232428;
+  --discord-dark-bg1: #2c2e33;
+  --discord-dark-bg2: #3a3c43;
+  --discord-dark-bg3: #4e5058;
+  --discord-dark-bg4: #6d6f78;
+
+  --discord-dark-fg0: #f2f3f5;
+  --discord-dark-fg1: #dbdee1;
+  --discord-dark-fg2: #b5bac1;
+  --discord-dark-fg3: #949ba4;
+  --discord-dark-fg4: #6d6f78;
+
+  --discord-dark-gray: #4e5058;
+
+  --discord-dark-red: #f23f43;
+  --discord-dark-green: #23a55a;
+  --discord-dark-yellow: #f0b232;
+  --discord-dark-blue: #5865f2;
+  --discord-dark-purple: #a855f7;
+  --discord-dark-aqua: #00b0b4;
+  --discord-dark-orange: #f47b67;
+}
+
+[data-theme="discord-light"] {
+  --discord-light-bg0_h: #ffffff;
+  --discord-light-bg0: #f2f3f5;
+  --discord-light-bg0_s: #e3e5e8;
+  --discord-light-bg1: #d4d7dc;
+  --discord-light-bg2: #c4c9ce;
+  --discord-light-bg3: #a8adb3;
+  --discord-light-bg4: #80848e;
+
+  --discord-light-fg0: #060607;
+  --discord-light-fg1: #1e1f22;
+  --discord-light-fg2: #313338;
+  --discord-light-fg3: #4e5058;
+  --discord-light-fg4: #80848e;
+
+  --discord-light-gray: #80848e;
+
+  --discord-light-red: #d83c3e;
+  --discord-light-green: #23a559;
+  --discord-light-yellow: #f0b232;
+  --discord-light-blue: #5865f2;
+  --discord-light-purple: #9333ea;
+  --discord-light-aqua: #00b0b4;
+  --discord-light-orange: #e67e22;
+}
+
+/*
+ * Semantic token mapping for Monochrome Dark.
+ * App code must only reference the `--background`, `--panel`, `--primary` style names.
+ */
+[data-theme="monochrome-dark"] {
+  --background: var(--mono-dark-bg0);
+  --background-deep: var(--mono-dark-bg0_h);
+  --panel: var(--mono-dark-bg1);
+  --panel-raised: var(--mono-dark-bg2);
+  --panel-strong: var(--mono-dark-bg3);
+  --panel-deep: var(--mono-dark-bg0_h);
+  --input: color-mix(in oklab, var(--mono-dark-bg2) 68%, var(--mono-dark-bg1));
+  --hover: color-mix(in oklab, var(--mono-dark-fg0) 7%, var(--mono-dark-bg1));
+  --selected: color-mix(in oklab, var(--mono-dark-fg0) 12%, var(--mono-dark-bg2));
+  --border: color-mix(in oklab, var(--mono-dark-bg3) 58%, var(--mono-dark-bg1));
+  --border-strong: var(--mono-dark-bg3);
+  --ring: var(--mono-dark-fg0);
+
+  --foreground: var(--mono-dark-fg0);
+  --foreground-strong: var(--mono-dark-fg0);
+  --foreground-muted: var(--mono-dark-fg2);
+  --muted-foreground: var(--mono-dark-fg4);
+
+  --primary: var(--mono-dark-fg0);
+  --primary-foreground: var(--mono-dark-bg0_h);
+  --primary-soft: color-mix(in oklab, var(--mono-dark-fg0) 20%, transparent);
+
+  --success: var(--mono-dark-green);
+  --success-soft: color-mix(in oklab, var(--mono-dark-green) 20%, transparent);
+  --warning: var(--mono-dark-yellow);
+  --warning-soft: color-mix(in oklab, var(--mono-dark-yellow) 20%, transparent);
+  --destructive: var(--mono-dark-red);
+  --destructive-soft: color-mix(in oklab, var(--mono-dark-red) 20%, transparent);
+  --info: var(--mono-dark-blue);
+  --info-soft: color-mix(in oklab, var(--mono-dark-blue) 20%, transparent);
+  --accent: var(--mono-dark-aqua);
+  --accent-soft: color-mix(in oklab, var(--mono-dark-aqua) 20%, transparent);
+  --purple: var(--mono-dark-purple);
+  --purple-soft: color-mix(in oklab, var(--mono-dark-purple) 20%, transparent);
+
+  --code-block: var(--mono-dark-bg0_h);
+
+  --shadow-panel: 0 1px 0 var(--mono-dark-bg1);
+  --shadow-popover: 0 8px 24px color-mix(in oklab, var(--mono-dark-bg0_h) 60%, transparent);
+}
+
+/*
+ * Semantic token mapping for Monochrome Light.
+ */
+[data-theme="monochrome-light"] {
+  --background: var(--mono-light-bg1);
+  --background-deep: var(--mono-light-bg2);
+  --panel: var(--mono-light-bg0_h);
+  --panel-raised: var(--mono-light-bg0_s);
+  --panel-strong: var(--mono-light-bg1);
+  --panel-deep: var(--mono-light-bg2);
+  --input: var(--mono-light-bg0_h);
+  --hover: color-mix(in oklab, var(--mono-light-fg1) 5%, var(--mono-light-bg0_h));
+  --selected: color-mix(in oklab, var(--mono-light-fg0) 9%, var(--mono-light-bg0));
+  --border: color-mix(in oklab, var(--mono-light-bg3) 56%, var(--mono-light-bg0_h));
+  --border-strong: var(--mono-light-bg3);
+  --ring: var(--mono-light-fg0);
+
+  --foreground: var(--mono-light-fg1);
+  --foreground-strong: var(--mono-light-fg0);
+  --foreground-muted: var(--mono-light-fg3);
+  --muted-foreground: var(--mono-light-fg4);
+
+  --primary: var(--mono-light-fg0);
+  --primary-foreground: var(--mono-light-bg0);
+  --primary-soft: color-mix(in oklab, var(--mono-light-fg0) 15%, transparent);
+
+  --success: var(--mono-light-green);
+  --success-soft: color-mix(in oklab, var(--mono-light-green) 15%, transparent);
+  --warning: var(--mono-light-yellow);
+  --warning-soft: color-mix(in oklab, var(--mono-light-yellow) 15%, transparent);
+  --destructive: var(--mono-light-red);
+  --destructive-soft: color-mix(in oklab, var(--mono-light-red) 15%, transparent);
+  --info: var(--mono-light-blue);
+  --info-soft: color-mix(in oklab, var(--mono-light-blue) 15%, transparent);
+  --accent: var(--mono-light-aqua);
+  --accent-soft: color-mix(in oklab, var(--mono-light-aqua) 15%, transparent);
+  --purple: var(--mono-light-purple);
+  --purple-soft: color-mix(in oklab, var(--mono-light-purple) 15%, transparent);
+
+  --code-block: var(--mono-light-bg1);
+
+  --shadow-panel: 0 1px 0 color-mix(in oklab, var(--mono-light-fg0) 8%, transparent);
+  --shadow-popover: 0 8px 24px color-mix(in oklab, var(--mono-light-bg3) 20%, transparent);
+}
+
+[data-theme="gruvbox-dark"] {
+  --background: var(--gruvbox-dark-bg0_h);
+  --background-deep: var(--gruvbox-dark-bg0_h);
+  --panel: var(--gruvbox-dark-bg0);
+  --panel-raised: var(--gruvbox-dark-bg0_s);
+  --panel-strong: var(--gruvbox-dark-bg1);
+  --panel-deep: var(--gruvbox-dark-bg0_h);
+  --input: color-mix(in oklab, var(--gruvbox-dark-bg1) 62%, var(--gruvbox-dark-bg0));
+  --hover: color-mix(in oklab, var(--gruvbox-dark-fg1) 7%, var(--gruvbox-dark-bg0));
+  --selected: color-mix(in oklab, var(--gruvbox-dark-blue) 17%, var(--gruvbox-dark-bg0_s));
+  --border: color-mix(in oklab, var(--gruvbox-dark-bg2) 62%, var(--gruvbox-dark-bg0));
+  --border-strong: var(--gruvbox-dark-bg2);
+  --ring: var(--gruvbox-dark-blue);
+
+  --foreground: var(--gruvbox-dark-fg1);
+  --foreground-strong: var(--gruvbox-dark-fg0);
+  --foreground-muted: var(--gruvbox-dark-fg3);
+  --muted-foreground: var(--gruvbox-dark-fg4);
+
+  --primary: var(--gruvbox-dark-blue);
+  --primary-foreground: var(--gruvbox-dark-bg0);
+  --primary-soft: color-mix(in oklab, var(--gruvbox-dark-blue) 20%, transparent);
+
+  --success: var(--gruvbox-dark-green);
+  --success-soft: color-mix(in oklab, var(--gruvbox-dark-green) 20%, transparent);
+  --warning: var(--gruvbox-dark-yellow);
+  --warning-soft: color-mix(in oklab, var(--gruvbox-dark-yellow) 20%, transparent);
+  --destructive: var(--gruvbox-dark-red);
+  --destructive-soft: color-mix(in oklab, var(--gruvbox-dark-red) 20%, transparent);
+  --info: var(--gruvbox-dark-blue);
+  --info-soft: color-mix(in oklab, var(--gruvbox-dark-blue) 20%, transparent);
+  --accent: var(--gruvbox-dark-aqua);
+  --accent-soft: color-mix(in oklab, var(--gruvbox-dark-aqua) 20%, transparent);
+  --purple: var(--gruvbox-dark-purple);
+  --purple-soft: color-mix(in oklab, var(--gruvbox-dark-purple) 20%, transparent);
+
+  --code-block: var(--gruvbox-dark-bg0_h);
+
+  --shadow-panel: 0 1px 0 var(--gruvbox-dark-bg1);
+  --shadow-popover: 0 8px 24px color-mix(in oklab, var(--gruvbox-dark-bg0_h) 60%, transparent);
+}
+
+[data-theme="gruvbox-light"] {
+  --background: var(--gruvbox-light-bg0);
+  --background-deep: var(--gruvbox-light-bg0_s);
+  --panel: var(--gruvbox-light-bg0_h);
+  --panel-raised: var(--gruvbox-light-bg0_s);
+  --panel-strong: var(--gruvbox-light-bg1);
+  --panel-deep: var(--gruvbox-light-bg0);
+  --input: var(--gruvbox-light-bg0_h);
+  --hover: color-mix(in oklab, var(--gruvbox-light-fg1) 5%, var(--gruvbox-light-bg0_h));
+  --selected: color-mix(in oklab, var(--gruvbox-light-blue) 10%, var(--gruvbox-light-bg0_s));
+  --border: color-mix(in oklab, var(--gruvbox-light-bg2) 68%, var(--gruvbox-light-bg0_h));
+  --border-strong: var(--gruvbox-light-bg2);
+  --ring: var(--gruvbox-light-blue);
+
+  --foreground: var(--gruvbox-light-fg1);
+  --foreground-strong: var(--gruvbox-light-fg0);
+  --foreground-muted: var(--gruvbox-light-fg3);
+  --muted-foreground: var(--gruvbox-light-fg4);
+
+  --primary: var(--gruvbox-light-blue);
+  --primary-foreground: var(--gruvbox-light-bg0);
+  --primary-soft: color-mix(in oklab, var(--gruvbox-light-blue) 15%, transparent);
+
+  --success: var(--gruvbox-light-green);
+  --success-soft: color-mix(in oklab, var(--gruvbox-light-green) 15%, transparent);
+  --warning: var(--gruvbox-light-yellow);
+  --warning-soft: color-mix(in oklab, var(--gruvbox-light-yellow) 15%, transparent);
+  --destructive: var(--gruvbox-light-red);
+  --destructive-soft: color-mix(in oklab, var(--gruvbox-light-red) 15%, transparent);
+  --info: var(--gruvbox-light-blue);
+  --info-soft: color-mix(in oklab, var(--gruvbox-light-blue) 15%, transparent);
+  --accent: var(--gruvbox-light-aqua);
+  --accent-soft: color-mix(in oklab, var(--gruvbox-light-aqua) 15%, transparent);
+  --purple: var(--gruvbox-light-purple);
+  --purple-soft: color-mix(in oklab, var(--gruvbox-light-purple) 15%, transparent);
+
+  --code-block: var(--gruvbox-light-bg1);
+
+  --shadow-panel: 0 1px 0 color-mix(in oklab, var(--gruvbox-light-fg0) 8%, transparent);
+  --shadow-popover: 0 8px 24px color-mix(in oklab, var(--gruvbox-light-bg3) 20%, transparent);
+}
+
+[data-theme="blue-dark"] {
+  --background: var(--blue-dark-bg0_h);
+  --background-deep: var(--blue-dark-bg0_h);
+  --panel: var(--blue-dark-bg0);
+  --panel-raised: var(--blue-dark-bg0_s);
+  --panel-strong: var(--blue-dark-bg1);
+  --panel-deep: var(--blue-dark-bg0_h);
+  --input: color-mix(in oklab, var(--blue-dark-bg1) 62%, var(--blue-dark-bg0));
+  --hover: color-mix(in oklab, var(--blue-dark-fg1) 7%, var(--blue-dark-bg0));
+  --selected: color-mix(in oklab, var(--blue-dark-blue) 17%, var(--blue-dark-bg0_s));
+  --border: color-mix(in oklab, var(--blue-dark-bg2) 62%, var(--blue-dark-bg0));
+  --border-strong: var(--blue-dark-bg2);
+  --ring: var(--blue-dark-blue);
+
+  --foreground: var(--blue-dark-fg1);
+  --foreground-strong: var(--blue-dark-fg0);
+  --foreground-muted: var(--blue-dark-fg3);
+  --muted-foreground: var(--blue-dark-fg4);
+
+  --primary: var(--blue-dark-blue);
+  --primary-foreground: var(--blue-dark-bg0);
+  --primary-soft: color-mix(in oklab, var(--blue-dark-blue) 20%, transparent);
+
+  --success: var(--blue-dark-green);
+  --success-soft: color-mix(in oklab, var(--blue-dark-green) 20%, transparent);
+  --warning: var(--blue-dark-yellow);
+  --warning-soft: color-mix(in oklab, var(--blue-dark-yellow) 20%, transparent);
+  --destructive: var(--blue-dark-red);
+  --destructive-soft: color-mix(in oklab, var(--blue-dark-red) 20%, transparent);
+  --info: var(--blue-dark-blue);
+  --info-soft: color-mix(in oklab, var(--blue-dark-blue) 20%, transparent);
+  --accent: var(--blue-dark-purple);
+  --accent-soft: color-mix(in oklab, var(--blue-dark-purple) 20%, transparent);
+  --purple: var(--blue-dark-purple);
+  --purple-soft: color-mix(in oklab, var(--blue-dark-purple) 20%, transparent);
+
+  --code-block: var(--blue-dark-bg0_h);
+
+  --shadow-panel: 0 1px 0 var(--blue-dark-bg1);
+  --shadow-popover: 0 8px 24px color-mix(in oklab, var(--blue-dark-bg0_h) 60%, transparent);
+}
+
+[data-theme="blue-light"] {
+  --background: var(--blue-light-bg0);
+  --background-deep: var(--blue-light-bg0_s);
+  --panel: var(--blue-light-bg0_h);
+  --panel-raised: var(--blue-light-bg0_s);
+  --panel-strong: var(--blue-light-bg1);
+  --panel-deep: var(--blue-light-bg0_s);
+  --input: var(--blue-light-bg0_h);
+  --hover: color-mix(in oklab, var(--blue-light-fg1) 5%, var(--blue-light-bg0_h));
+  --selected: color-mix(in oklab, var(--blue-light-blue) 10%, var(--blue-light-bg0_s));
+  --border: color-mix(in oklab, var(--blue-light-bg2) 68%, var(--blue-light-bg0_h));
+  --border-strong: var(--blue-light-bg2);
+  --ring: var(--blue-light-blue);
+
+  --foreground: var(--blue-light-fg1);
+  --foreground-strong: var(--blue-light-fg0);
+  --foreground-muted: var(--blue-light-fg3);
+  --muted-foreground: var(--blue-light-fg4);
+
+  --primary: var(--blue-light-blue);
+  --primary-foreground: var(--blue-light-bg0);
+  --primary-soft: color-mix(in oklab, var(--blue-light-blue) 15%, transparent);
+
+  --success: var(--blue-light-green);
+  --success-soft: color-mix(in oklab, var(--blue-light-green) 15%, transparent);
+  --warning: var(--blue-light-yellow);
+  --warning-soft: color-mix(in oklab, var(--blue-light-yellow) 15%, transparent);
+  --destructive: var(--blue-light-red);
+  --destructive-soft: color-mix(in oklab, var(--blue-light-red) 15%, transparent);
+  --info: var(--blue-light-blue);
+  --info-soft: color-mix(in oklab, var(--blue-light-blue) 15%, transparent);
+  --accent: var(--blue-light-purple);
+  --accent-soft: color-mix(in oklab, var(--blue-light-purple) 15%, transparent);
+  --purple: var(--blue-light-purple);
+  --purple-soft: color-mix(in oklab, var(--blue-light-purple) 15%, transparent);
+
+  --code-block: var(--blue-light-bg1);
+
+  --shadow-panel: 0 1px 0 color-mix(in oklab, var(--blue-light-fg0) 8%, transparent);
+  --shadow-popover: 0 8px 24px color-mix(in oklab, var(--blue-light-bg3) 20%, transparent);
+}
+
+[data-theme="discord-dark"] {
+  --background: var(--discord-dark-bg0_h);
+  --background-deep: var(--discord-dark-bg0_h);
+  --panel: var(--discord-dark-bg0);
+  --panel-raised: var(--discord-dark-bg0_s);
+  --panel-strong: var(--discord-dark-bg1);
+  --panel-deep: var(--discord-dark-bg0_h);
+  --input: color-mix(in oklab, var(--discord-dark-bg1) 62%, var(--discord-dark-bg0));
+  --hover: color-mix(in oklab, var(--discord-dark-fg1) 7%, var(--discord-dark-bg0));
+  --selected: color-mix(in oklab, var(--discord-dark-blue) 17%, var(--discord-dark-bg0_s));
+  --border: color-mix(in oklab, var(--discord-dark-bg2) 62%, var(--discord-dark-bg0));
+  --border-strong: var(--discord-dark-bg2);
+  --ring: var(--discord-dark-blue);
+
+  --foreground: var(--discord-dark-fg1);
+  --foreground-strong: var(--discord-dark-fg0);
+  --foreground-muted: var(--discord-dark-fg3);
+  --muted-foreground: var(--discord-dark-fg4);
+
+  --primary: var(--discord-dark-blue);
+  --primary-foreground: var(--discord-dark-bg0_h);
+  --primary-soft: color-mix(in oklab, var(--discord-dark-blue) 20%, transparent);
+
+  --success: var(--discord-dark-green);
+  --success-soft: color-mix(in oklab, var(--discord-dark-green) 20%, transparent);
+  --warning: var(--discord-dark-yellow);
+  --warning-soft: color-mix(in oklab, var(--discord-dark-yellow) 20%, transparent);
+  --destructive: var(--discord-dark-red);
+  --destructive-soft: color-mix(in oklab, var(--discord-dark-red) 20%, transparent);
+  --info: var(--discord-dark-blue);
+  --info-soft: color-mix(in oklab, var(--discord-dark-blue) 20%, transparent);
+  --accent: var(--discord-dark-purple);
+  --accent-soft: color-mix(in oklab, var(--discord-dark-purple) 20%, transparent);
+  --purple: var(--discord-dark-purple);
+  --purple-soft: color-mix(in oklab, var(--discord-dark-purple) 20%, transparent);
+
+  --code-block: var(--discord-dark-bg0_h);
+
+  --shadow-panel: 0 1px 0 var(--discord-dark-bg1);
+  --shadow-popover: 0 8px 24px color-mix(in oklab, var(--discord-dark-bg0_h) 60%, transparent);
+}
+
+[data-theme="discord-light"] {
+  --background: var(--discord-light-bg0);
+  --background-deep: var(--discord-light-bg0_s);
+  --panel: var(--discord-light-bg0_h);
+  --panel-raised: var(--discord-light-bg0_s);
+  --panel-strong: var(--discord-light-bg1);
+  --panel-deep: var(--discord-light-bg0);
+  --input: var(--discord-light-bg0_h);
+  --hover: color-mix(in oklab, var(--discord-light-fg1) 5%, var(--discord-light-bg0_h));
+  --selected: color-mix(in oklab, var(--discord-light-blue) 10%, var(--discord-light-bg0_s));
+  --border: color-mix(in oklab, var(--discord-light-bg2) 68%, var(--discord-light-bg0_h));
+  --border-strong: var(--discord-light-bg2);
+  --ring: var(--discord-light-blue);
+
+  --foreground: var(--discord-light-fg1);
+  --foreground-strong: var(--discord-light-fg0);
+  --foreground-muted: var(--discord-light-fg3);
+  --muted-foreground: var(--discord-light-fg4);
+
+  --primary: var(--discord-light-blue);
+  --primary-foreground: var(--discord-light-bg0_h);
+  --primary-soft: color-mix(in oklab, var(--discord-light-blue) 15%, transparent);
+
+  --success: var(--discord-light-green);
+  --success-soft: color-mix(in oklab, var(--discord-light-green) 15%, transparent);
+  --warning: var(--discord-light-yellow);
+  --warning-soft: color-mix(in oklab, var(--discord-light-yellow) 15%, transparent);
+  --destructive: var(--discord-light-red);
+  --destructive-soft: color-mix(in oklab, var(--discord-light-red) 15%, transparent);
+  --info: var(--discord-light-blue);
+  --info-soft: color-mix(in oklab, var(--discord-light-blue) 15%, transparent);
+  --accent: var(--discord-light-purple);
+  --accent-soft: color-mix(in oklab, var(--discord-light-purple) 15%, transparent);
+  --purple: var(--discord-light-purple);
+  --purple-soft: color-mix(in oklab, var(--discord-light-purple) 15%, transparent);
+
+  --code-block: var(--discord-light-bg1);
+
+  --shadow-panel: 0 1px 0 color-mix(in oklab, var(--discord-light-fg0) 8%, transparent);
+  --shadow-popover: 0 8px 24px color-mix(in oklab, var(--discord-light-bg3) 20%, transparent);
+}
+
+[data-theme="black-gold-dark"] {
+  --gold-dark-bg0_h: #000000;
+  --gold-dark-bg0: #0d0d0d;
+  --gold-dark-bg0_s: #1a1a1a;
+  --gold-dark-bg1: #262626;
+  --gold-dark-bg2: #333333;
+  --gold-dark-bg3: #404040;
+  --gold-dark-bg4: #595959;
+
+  --gold-dark-fg0: #faf6e8;
+  --gold-dark-fg1: #e8e0cc;
+  --gold-dark-fg2: #d4c9a8;
+  --gold-dark-fg3: #a69c7a;
+  --gold-dark-fg4: #8c8260;
+
+  --gold-dark-gray: #595959;
+
+  --gold-dark-gold: #d4a017;
+  --gold-dark-gold-muted: #c9a84c;
+  --gold-dark-gold-bright: #e8c84a;
+
+  --gold-dark-red: #ef4444;
+  --gold-dark-green: #22c55e;
+  --gold-dark-yellow: #eab308;
+  --gold-dark-blue: #60a5fa;
+  --gold-dark-purple: #c084fc;
+  --gold-dark-aqua: #2dd4bf;
+  --gold-dark-orange: #f97316;
+}
+
+[data-theme="black-gold-light"] {
+  --gold-light-bg0_h: #ffffff;
+  --gold-light-bg0: #fefcf5;
+  --gold-light-bg0_s: #faf5e8;
+  --gold-light-bg1: #f0e8d4;
+  --gold-light-bg2: #e0d4b8;
+  --gold-light-bg3: #c9b88a;
+  --gold-light-bg4: #a6966a;
+
+  --gold-light-fg0: #1a1508;
+  --gold-light-fg1: #2d2510;
+  --gold-light-fg2: #4a3f20;
+  --gold-light-fg3: #6b5f40;
+  --gold-light-fg4: #8c8260;
+
+  --gold-light-gray: #8c8260;
+
+  --gold-light-gold: #b8860b;
+  --gold-light-gold-muted: #b8860b;
+  --gold-light-gold-bright: #d4a017;
+
+  --gold-light-red: #dc2626;
+  --gold-light-green: #16a34a;
+  --gold-light-yellow: #ca8a04;
+  --gold-light-blue: #2563eb;
+  --gold-light-purple: #9333ea;
+  --gold-light-aqua: #0891b2;
+  --gold-light-orange: #ea580c;
+}
+
+[data-theme="black-gold-dark"] {
+  --background: var(--gold-dark-bg0_h);
+  --background-deep: var(--gold-dark-bg0_h);
+  --panel: var(--gold-dark-bg0);
+  --panel-raised: var(--gold-dark-bg0_s);
+  --panel-strong: var(--gold-dark-bg1);
+  --panel-deep: var(--gold-dark-bg0_h);
+  --input: color-mix(in oklab, var(--gold-dark-bg1) 62%, var(--gold-dark-bg0));
+  --hover: color-mix(in oklab, var(--gold-dark-fg1) 7%, var(--gold-dark-bg0));
+  --selected: color-mix(in oklab, var(--gold-dark-gold) 17%, var(--gold-dark-bg0_s));
+  --border: color-mix(in oklab, var(--gold-dark-bg2) 62%, var(--gold-dark-bg0));
+  --border-strong: var(--gold-dark-bg2);
+  --ring: var(--gold-dark-gold);
+
+  --foreground: var(--gold-dark-fg1);
+  --foreground-strong: var(--gold-dark-fg0);
+  --foreground-muted: var(--gold-dark-fg3);
+  --muted-foreground: var(--gold-dark-fg4);
+
+  --primary: var(--gold-dark-gold);
+  --primary-foreground: var(--gold-dark-bg0_h);
+  --primary-soft: color-mix(in oklab, var(--gold-dark-gold) 20%, transparent);
+
+  --success: var(--gold-dark-green);
+  --success-soft: color-mix(in oklab, var(--gold-dark-green) 20%, transparent);
+  --warning: var(--gold-dark-yellow);
+  --warning-soft: color-mix(in oklab, var(--gold-dark-yellow) 20%, transparent);
+  --destructive: var(--gold-dark-red);
+  --destructive-soft: color-mix(in oklab, var(--gold-dark-red) 20%, transparent);
+  --info: var(--gold-dark-gold-muted);
+  --info-soft: color-mix(in oklab, var(--gold-dark-gold-muted) 20%, transparent);
+  --accent: var(--gold-dark-gold-bright);
+  --accent-soft: color-mix(in oklab, var(--gold-dark-gold-bright) 20%, transparent);
+  --purple: var(--gold-dark-purple);
+  --purple-soft: color-mix(in oklab, var(--gold-dark-purple) 20%, transparent);
+
+  --code-block: var(--gold-dark-bg0_h);
+
+  --shadow-panel: 0 1px 0 var(--gold-dark-bg2);
+  --shadow-popover: 0 8px 24px color-mix(in oklab, var(--gold-dark-bg0_h) 60%, transparent);
+}
+
+[data-theme="black-gold-light"] {
+  --background: var(--gold-light-bg0);
+  --background-deep: var(--gold-light-bg0_s);
+  --panel: var(--gold-light-bg0_h);
+  --panel-raised: var(--gold-light-bg0_s);
+  --panel-strong: var(--gold-light-bg1);
+  --panel-deep: var(--gold-light-bg0);
+  --input: var(--gold-light-bg0_h);
+  --hover: color-mix(in oklab, var(--gold-light-fg1) 5%, var(--gold-light-bg0_h));
+  --selected: color-mix(in oklab, var(--gold-light-gold) 10%, var(--gold-light-bg0_s));
+  --border: color-mix(in oklab, var(--gold-light-bg2) 68%, var(--gold-light-bg0_h));
+  --border-strong: var(--gold-light-bg2);
+  --ring: var(--gold-light-gold);
+
+  --foreground: var(--gold-light-fg1);
+  --foreground-strong: var(--gold-light-fg0);
+  --foreground-muted: var(--gold-light-fg3);
+  --muted-foreground: var(--gold-light-fg4);
+
+  --primary: var(--gold-light-gold);
+  --primary-foreground: var(--gold-light-bg0);
+  --primary-soft: color-mix(in oklab, var(--gold-light-gold) 15%, transparent);
+
+  --success: var(--gold-light-green);
+  --success-soft: color-mix(in oklab, var(--gold-light-green) 15%, transparent);
+  --warning: var(--gold-light-yellow);
+  --warning-soft: color-mix(in oklab, var(--gold-light-yellow) 15%, transparent);
+  --destructive: var(--gold-light-red);
+  --destructive-soft: color-mix(in oklab, var(--gold-light-red) 15%, transparent);
+  --info: var(--gold-light-gold-muted);
+  --info-soft: color-mix(in oklab, var(--gold-light-gold-muted) 15%, transparent);
+  --accent: var(--gold-light-gold-bright);
+  --accent-soft: color-mix(in oklab, var(--gold-light-gold-bright) 15%, transparent);
+  --purple: var(--gold-light-purple);
+  --purple-soft: color-mix(in oklab, var(--gold-light-purple) 15%, transparent);
+
+  --code-block: var(--gold-light-bg1);
+
+  --shadow-panel: 0 1px 0 color-mix(in oklab, var(--gold-light-fg0) 8%, transparent);
+  --shadow-popover: 0 8px 24px color-mix(in oklab, var(--gold-light-bg3) 20%, transparent);
+}
+
+/* SpielOS brand contract 2026.10.17 — semantic craft, shared across web and production. */
+:root {
+ --brand-contract-version: "2026.10.17";
+ --brand-canvas-ink: color-mix(in oklab,var(--background-deep) 78%,black);
+ --brand-surface: color-mix(in oklab,var(--panel) 44%,var(--brand-canvas-ink));
+ --brand-tone: var(--primary);
+ --brand-surface-fill: radial-gradient(ellipse at 18% 0%,color-mix(in oklab,var(--brand-tone) 11%,transparent),transparent 64%),linear-gradient(153deg,color-mix(in oklab,var(--brand-surface) 89%,var(--foreground-strong)),var(--brand-surface) 32%,var(--brand-canvas-ink));
+ --brand-edge: color-mix(in oklab,var(--brand-tone) 42%,var(--border-strong));
+ --brand-depth: inset 0 1px 0 color-mix(in oklab,var(--brand-tone) 20%,transparent),inset 0 -1px 0 color-mix(in oklab,var(--brand-canvas-ink) 80%,transparent),0 5px 10px color-mix(in oklab,var(--brand-canvas-ink) 60%,transparent),0 20px 38px color-mix(in oklab,var(--brand-canvas-ink) 44%,transparent);
+ --brand-icon-fill: radial-gradient(ellipse at 20% 2%,color-mix(in oklab,var(--foreground-strong) 35%,transparent),transparent 61%),linear-gradient(145deg,color-mix(in oklab,var(--brand-tone) 78%,var(--foreground-strong)),color-mix(in oklab,var(--brand-tone) 58%,var(--brand-canvas-ink)));
+ --journey-core: var(--primary);
+ --journey-future: var(--foreground-muted);
+ --journey-shadow: var(--background-deep);
+ --journey-core-width: 12.6;
+ --journey-future-width: 9.85;
+ --journey-wake-width: 25;
+ --journey-dash: 36.1 26.6;
+ --journey-arrival-duration: 800ms;
+ --journey-departure-duration: 450ms;
+ --brand-art-deep: color-mix(in oklab,var(--primary) 12%,var(--background-deep));
+ --brand-art-mid: color-mix(in oklab,var(--primary) 28%,var(--panel));
+ --brand-art-lit: color-mix(in oklab,var(--primary) 50%,var(--panel-raised));
+}
+[data-theme$="-light"] { --brand-canvas-ink:var(--background-deep); --brand-surface:var(--panel); }
+:root {
+ --finish-light-ffffff03: #ffffff03;
+ --finish-light-ffffff09: #ffffff09;
+ --finish-light-ffffff0c: #ffffff0c;
+ --finish-light-ffffff10: #ffffff10;
+ --finish-light-ffffff12: #ffffff12;
+ --finish-light-ffffff13: #ffffff13;
+ --finish-light-ffffff14: #ffffff14;
+ --finish-light-ffffff15: #ffffff15;
+ --finish-light-ffffff16: #ffffff16;
+ --finish-light-ffffff17: #ffffff17;
+ --finish-light-ffffff18: #ffffff18;
+ --finish-light-ffffff1a: #ffffff1a;
+ --finish-light-ffffff20: #ffffff20;
+ --finish-light-ffffff26: #ffffff26;
+ --finish-light-ffffff38: #ffffff38;
+ --finish-light-ffffff42: #ffffff42;
+ --finish-light-ffffff50: #ffffff50;
+ --finish-light-ffffff59: #ffffff59;
+ --finish-shade-000: #000;
+ --finish-shade-0002: #0002;
+ --finish-shade-0003: #0003;
+ --finish-shade-0004: #0004;
+ --finish-shade-0005: #0005;
+ --finish-shade-0006: #0006;
+ --finish-shade-0008: #0008;
+ --finish-shade-0009: #0009;
+ --finish-shade-000a: #000a;
+}
+
+:root { --stage-goal:var(--primary); --stage-observe:var(--info); --stage-decide:var(--accent); --stage-act:var(--warning); --stage-evaluate:var(--success); }
+[data-theme="blue-dark"] { --stage-observe:var(--blue-dark-aqua); }
+[data-theme="blue-light"] { --stage-observe:var(--blue-light-aqua); }
+
+
+/*
+ * Base scale. These are theme-agnostic structural tokens.
+ * Values intentionally small — Gruvbox aesthetic = tight spacing, sharp type.
+ */
+:root {
+  --radius-sm: 4px;
+  --radius-md: 6px;
+
+  /* Approved IRANSansX Persian dot geometry. */
+  --font-iransans-dots: 7;
+
+  --duration-fast: 120ms;
+  --duration: 160ms;
+  --duration-slow: 240ms;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --motion-distance-sm: 4px;
+  --motion-scale-in: 0.985;
+
+  /*
+   * Directional motion sign. +1 in LTR, -1 in RTL. Multiplies inline
+   * slide offsets so drawer and sheen animations mirror with the
+   * document direction instead of staying physically pinned.
+   */
+  --bidi-sign: 1;
+
+  --sidebar-list-responsive-max: 38vw;
+  --editor-field-min: 10rem;
+  --editor-field-min-compact: 9.375rem;
+
+  /*
+   * Interaction emphasis is derived from each theme's semantic ring and
+   * border colors. Components consume these tokens instead of choosing
+   * their own focus color or opacity.
+   */
+  --focus-border: color-mix(in oklab, var(--ring) 42%, var(--border-strong));
+  --focus-ring: color-mix(in oklab, var(--ring) 18%, transparent);
+  --disabled-surface: color-mix(in oklab, var(--input) 58%, var(--panel) 42%);
+  --disabled-border: color-mix(in oklab, var(--border) 68%, transparent);
+  --disabled-foreground: color-mix(in oklab, var(--muted-foreground) 72%, transparent);
+
+  --font-size-3xs: 10px;
+  --font-size-2xs: 11px;
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 30px;
+  --font-size-4xl: 36px;
+  --font-size-5xl: 48px;
+  --font-size-6xl: 60px;
+  --font-size-editor: 15px;
+
+  --leading-tightest: 1.1;
+  --leading-tight: 1.25;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+
+  --font-sans: var(--font-outfit), ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-display: var(--font-dm-serif), Georgia, serif;
+  --font-mono: var(--font-outfit), ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+
+  --skeleton-bg: color-mix(in oklab, var(--panel-raised) 60%, var(--panel) 40%);
+  --overlay-bg: color-mix(in oklab, var(--background) 70%, transparent);
+
+  /* Glassmorphism tokens — theme-aware, no hardcoded values. */
+  --glass-bg: color-mix(in oklab, var(--panel) 55%, transparent);
+  --glass-bg-strong: color-mix(in oklab, var(--panel-raised) 65%, transparent);
+  --glass-border: color-mix(in oklab, var(--border) 50%, transparent);
+  --glass-border-strong: color-mix(in oklab, var(--border-strong) 40%, transparent);
+  --glass-blur: 16px;
+  --glass-blur-strong: 24px;
+  --glass-shadow: 0 8px 32px color-mix(in oklab, var(--background-deep) 40%, transparent);
+  --glass-shadow-hover: 0 12px 40px color-mix(in oklab, var(--background-deep) 50%, transparent);
+
+  /* Provider brand colors — theme-independent identity colors. */
+  --provider-openai: #74AA9C;
+  --provider-anthropic: #D97757;
+  --provider-mistral: #EB5829;
+  --provider-google: #4285F4;
+  --provider-google-green: #34A853;
+  --provider-google-yellow: #FBBC05;
+  --provider-google-red: #EA4335;
+  --provider-google-blue-light: #A1C2FA;
+  --provider-google-sheets-green: #0F9D58;
+  --provider-google-sheets-green-light: #7BCB9A;
+  --provider-google-sheets-yellow: #FCB404;
+  --provider-google-sheets-orange: #FC8304;
+  --provider-google-sheets-orange-dark: #FC4C04;
+  --provider-mistral-yellow: #FCB404;
+  --provider-gemini-purple: #9B72CB;
+  --provider-gemini-pink: #D96570;
+  --provider-logo-text: #fff;
+  /* Apply-page tool marks (ToolLogos) — real brand colors, owner directive 2026-08-26. */
+  --provider-excel: #107C41;
+  --provider-dynamics365: #002050;
+  --provider-salesforce: #00A1E0;
+  --provider-hubspot: #FF7A59;
+  --provider-outlook: #0078D4;
+  --provider-claude: #D97757;
+  --provider-github: #181717;
+  --provider-replit: #F26207;
+  --provider-google-docs-blue-light: #A1C2FA;
+  --provider-google-red-light: #F28B82;
+}
+
+/*
+ * Directional overrides. When the document direction is RTL, Persian type
+ * uses IRANSansX for body/UI and Doran for display emphasis, with Latin
+ * falling back to Outfit and DM Serif Display. Latin pages keep the standing
+ * two-family system (Outfit + DM Serif Display) untouched.
+ */
+[dir="rtl"] {
+  --bidi-sign: -1;
+  --font-iransans-dots: 7;
+  --font-sans: "IRANSansX", var(--font-outfit), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Tahoma, "Helvetica Neue", Arial, sans-serif;
+  --font-display: var(--font-doran), var(--font-dm-serif), Georgia, serif;
+  --font-mono: var(--font-sans);
+}
+
+/* IRANSansX exposes its Persian dot treatment as the registered DOTS axis. */
+[dir="rtl"] body {
+  font-variation-settings: "DOTS" var(--font-iransans-dots);
+}
+
+[dir="rtl"] body .bx {
+  font-variation-settings: normal;
+}
+
+/* Local consumer of canonical Design 2026.10.17. Shared design system is read-only. */
+:root[data-theme=blue-dark]{--background:#0b0f1a;--background-deep:#0b0f1a;--panel:#111827;--panel-raised:#1a2332;--panel-strong:#1e293b;--panel-deep:#0b0f1a;--input:color-mix(in oklab, #1e293b 62%, #111827);--hover:color-mix(in oklab, #e2e8f0 7%, #111827);--selected:color-mix(in oklab, #3b82f6 17%, #1a2332);--border:color-mix(in oklab, #334155 62%, #111827);--border-strong:#334155;--ring:#3b82f6;--foreground:#e2e8f0;--foreground-strong:#f1f5f9;--foreground-muted:#94a3b8;--muted-foreground:#64748b;--primary:#3b82f6;--primary-soft:color-mix(in oklab, #3b82f6 20%, transparent);--primary-foreground:#111827;--success:#22c55e;--success-soft:color-mix(in oklab, #22c55e 20%, transparent);--warning:#eab308;--warning-soft:color-mix(in oklab, #eab308 20%, transparent);--destructive:#ef4444;--destructive-soft:color-mix(in oklab, #ef4444 20%, transparent);--accent:#a855f7;--accent-soft:color-mix(in oklab, #a855f7 20%, transparent);--purple:#a855f7;--purple-soft:color-mix(in oklab, #a855f7 20%, transparent);--info:#3b82f6;--info-soft:color-mix(in oklab, #3b82f6 20%, transparent);--code-block:#0b0f1a;--primary-bright:var(--primary);--blue-ink:var(--primary);}
+:root[data-theme=paper-light]{--ring:#2563eb;--foreground:#1e293b;--foreground-strong:#0f172a;--foreground-muted:#475569;--muted-foreground:#64748b;--primary:#2563eb;--primary-soft:color-mix(in oklab, #2563eb 15%, transparent);--primary-foreground:#f8fafc;--success:#16a34a;--success-soft:color-mix(in oklab, #16a34a 15%, transparent);--warning:#ca8a04;--warning-soft:color-mix(in oklab, #ca8a04 15%, transparent);--destructive:#dc2626;--destructive-soft:color-mix(in oklab, #dc2626 15%, transparent);--accent:#9333ea;--accent-soft:color-mix(in oklab, #9333ea 15%, transparent);--purple:#9333ea;--purple-soft:color-mix(in oklab, #9333ea 15%, transparent);--info:#2563eb;--info-soft:color-mix(in oklab, #2563eb 15%, transparent);--primary-bright:var(--primary);--blue-ink:var(--primary);}
+
+.section-copy em,.eyebrow{color:var(--primary)}
+.button.primary{background:linear-gradient(145deg,color-mix(in oklab,var(--primary) 93%,var(--foreground-strong)),var(--primary));color:var(--primary-foreground);border-color:color-mix(in oklab,var(--primary) 78%,var(--foreground-strong))}
+.os-sheet .spielos-mark{color:var(--foreground-strong)}
+[data-theme=paper-light] .os-sheet,[data-theme=paper-light] .icon-plaque,[data-theme=paper-light] .human-plaque{background:linear-gradient(145deg,color-mix(in oklab,var(--primary) 90%,white),color-mix(in oklab,var(--primary) 80%,#0f172a));border-color:color-mix(in oklab,var(--primary) 65%,white);color:var(--primary-foreground);box-shadow:inset 0 1px #ffffff55,0 5px 10px color-mix(in oklab,var(--primary) 22%,transparent)}
+[data-theme=paper-light] .os-sheet--front{background:linear-gradient(145deg,var(--primary),color-mix(in oklab,var(--primary) 86%,#0f172a))}
+[data-theme=paper-light] .os-sheet .spielos-mark{color:var(--primary-foreground)}
+[data-theme=paper-light] .window-bar{background:linear-gradient(135deg,var(--primary),color-mix(in oklab,var(--primary) 78%,#0f172a));border-color:var(--primary);color:var(--primary-foreground)}
+[data-theme=paper-light] .window-title strong,[data-theme=paper-light] .window-title .spielos-mark{color:var(--primary-foreground)}
+[data-theme=paper-light] .window-title>span,[data-theme=paper-light] .window-bar .sample-tag{color:color-mix(in oklab,var(--primary-foreground) 90%,var(--primary));border-color:#ffffff55}
+[data-theme=paper-light] .order-half{background:radial-gradient(ellipse at 50% 60%,color-mix(in oklab,var(--primary) 12%,transparent),transparent 70%),linear-gradient(155deg,#fffaf0,#efe6d7);border-color:color-mix(in oklab,var(--primary) 40%,var(--border))}
+[data-theme=paper-light] .story-bridge .bridge-core{stroke:var(--primary)}
+
+[data-theme=paper-light] .role-human,[data-theme=paper-light] .gate-reviewer,[data-theme=paper-light] .business-owner,[data-theme=paper-light] .transformation-owner,[data-theme=paper-light] .department-node>footer,[data-theme=paper-light] .approve-workflow{color:color-mix(in oklab,var(--warning) 48%,var(--foreground-strong))}
+
+/* Website component roles. Primitive values exist only in this released registry. */
+:root{--font-outfit:"Outfit";--font-dm-serif:"DM Serif Display";--radius-lg:var(--radius-md);--shadow-panel:var(--brand-depth);--text-muted:var(--foreground-muted);--kw-header-height:76px;--kw-deck-toolbar-height:52px;--kw-deck-chrome-height:128px;--kw-content-width:1328px;--kw-logo-size:34px;--kw-nav-icon-plaque:30px;--kw-icon-size:19px;--kw-control-size:44px;--kw-border-width:1px;--kw-focus-width:2px;--kw-icon-lift:-2px;--kw-icon-angle:-8deg;--kw-nav-layer:1200;--kw-context-layer:90;--kw-deck-header-layer:2200;--kw-footer-copy-width:25rem;--kw-title-min:2rem;--kw-title-fluid:4vw;--kw-title-max:4rem;--kw-title-tracking:-.02em;--kw-error-width:850px;--kw-error-min-height:65svh;--kw-error-title:2rem;--kw-error-numeral:8rem;--kw-error-stroke:4;--kw-error-line-opacity:.4;--kw-library-journey-height:clamp(140px,16vw,220px);--kw-library-title-size:clamp(36px,4.5vw,60px);--kw-journey-core-width:6.624;--kw-journey-future-width:5.18;--kw-journey-dash:19 14;--kw-neutral-surface:linear-gradient(145deg,var(--panel-raised),var(--panel));--kw-icon-shadow:inset 0 1px 0 var(--finish-light-ffffff14),0 3px 8px var(--finish-shade-0003);--space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:20px;--space-6:24px;--space-8:32px;--space-12:48px}
+html[lang=fa]{--font-sans:IRANSansX,Outfit,sans-serif;--font-display:Doran,IRANSansX,sans-serif;font-variation-settings:'DOTS' var(--font-iransans-dots)}
+:root[data-theme=paper-light]{--stage-observe:var(--blue-light-aqua)}
+
+:root{}
+/* Released primitive/style variants. Generated once; components only reference these values. */
+:root{--color-0002249bf7:#0a0a0a;--color-010b07db7d:#ffffff04;--color-018fa96a44:white;--color-01a160733e:#fff9ed;--color-0212afa337:#0001;--color-021cf0bdce:#dedbd4;--color-040f377bb6:#141c30;--color-0411db9ecf:#15558d;--color-043cd0e5b3:#d7c7ad;--color-04eacd98a0:#fff6e64d;--color-05558eaa61:#fff8;--color-065b597ba5:#a69c7a;--color-06a565d137:#dfedf5;--color-079ef06692:#2175b4;--color-07c2311366:#d2e2edb0;--color-0882d3bcd0:#414141;--color-0944d9dc0e:#001e36;--color-099a548fb3:#ffffff15;--color-0ae2710c26:#ffffff12;--color-0b527bdc38:#a2b2c8;--color-0bce257fe1:#162b4c;--color-0c102a0681:#000a;--color-0d97f5f759:#f47b67;--color-0e684e5160:#0f172a;--color-0f0262202d:#292929;--color-0fd62b9f98:#152b4b;--color-1057ab051d:#9B72CB;--color-119cf328de:#A1C2FA;--color-120baa5989:#70502b13;--color-12b3de9d73:#1a1b1e;--color-12d47ea5c8:#3e3c38;--color-13d0c9cb18:#ffffff08;--color-13e7038699:#edf7f5;--color-13f921152e:#0f0;--color-143a066dd3:#23a55a;--color-1709313203:#262626;--color-177804c225:#9ca3af;--color-17d32c2b22:#b5bac1;--color-18315ad7ce:#ea580c;--color-18a625464c:#e1e4e8;--color-18d599ffea:#111214;--color-19a744f096:#363636;--color-19a7ad4cca:#5899ff;--color-1a3a7d31f3:#e9f1ec;--color-1a43704efb:#f0b232;--color-1a75dc9e39:#f87171;--color-1af21c77f8:#ca8a04;--color-1b2e47baac:#F28B82;--color-1b948d0274:#174d7b;--color-1bea3aa719:#504945;--color-1bedfa6897:#b8860b;--color-1c3b3a83d6:#fefcf5;--color-1ca1ef6caa:#f2e5bc;--color-1d954cf46c:#dc537e;--color-1e4f21b1d6:#fffaf0;--color-1e89bdb397:#e9ddca;--color-1ee1eedc6f:#fcf7ec;--color-1ef3e4c626:#cc241d;--color-1f3ed3bc33:#616b77;--color-1f7f24b45b:#fdf8ee;--color-1fe11b614f:#a3a3a3;--color-213254a078:#ffffff3d;--color-214182d54c:#1967d2;--color-219e8d4c9c:#0d1320;--color-22505dcfc5:#002050;--color-2370285389:#dbe9e5;--color-23a90e7aa9:#454545;--color-23b338cf65:#1d2021;--color-2485107a27:#c9a84c;--color-25ee2d6c99:#aaa99f;--color-261361d0a3:#0007;--color-26fc05440c:#4a3f20;--color-26ff4926b3:#24292e;--color-271426c0f0:#0b1220;--color-27321aebe1:#101929;--color-276d444205:#eee3d1;--color-282af3a46f:#373632;--color-28e4573e56:#464b48;--color-29cabe01d5:#dce9f3;--color-2be57a828c:#2eb67d;--color-2beef28142:#875a1e;--color-2bef8c3a74:#74582f21;--color-2bff342f38:#4285F4;--color-2cf4ce7525:#737373;--color-2f462ca384:#38b0e3;--color-2fac4337eb:#735399;--color-300dedfd5e:#ffffff0e;--color-305be80617:#155492;--color-3134c08fd5:#d79921;--color-330705e43d:#32302f;--color-33368ea015:#a6966a;--color-33fd1906cb:#0002;--color-357df87e8e:#d4d7dc;--color-35ba9e2c79:#484740;--color-35d13734fc:#f4ead9;--color-3634f1810f:#3f4a59;--color-367909d8ce:#f97316;--color-36fa6b4020:#929292;--color-3731942fd8:#363a39;--color-37cdb42eff:#14558d;--color-37e4b8a919:#c4dcff;--color-38286d5de4:#171716;--color-3871da3420:#dc2626;--color-392a4ec4c4:#dce5ef;--color-3a35e291c8:#efba4c;--color-3a4f9b072b:#00b0b4;--color-3ae33c6683:#f0f0f0;--color-3b313dfb66:#e2e8f0;--color-3b7ee1ea46:#98a29e;--color-3c5c1ab6c5:#16a34a;--color-3cb5e28ffc:#e01e5a;--color-3ce7387a90:#ffffffe0;--color-3d94f83a34:#277554;--color-3debe46d31:#98971a;--color-3e6e0018d8:#51cf90;--color-3e9c4ae684:#458588;--color-3eeaf7db51:#3c3a34;--color-3f62d21cc7:#e3e5e8;--color-40d8cf5ce9:#0009;--color-40eb076fe6:#4b4840;--color-42b5136063:#fffaf1;--color-430cdeb268:#1686dc;--color-434fd9378b:#a7b7d2;--color-43e430caea:#efe2c3;--color-4542dca0df:#a855f7;--color-4566085eb0:#0003;--color-4596fb8bf1:#FCB404;--color-46461f86fd:#f8fafc;--color-46967cecf3:#c084fc;--color-46dce6fc82:#f8f1e6;--color-4702b16c05:#f1f5f9;--color-47bb7a6694:#74AA9C;--color-48374f4116:#b5bdcc;--color-485dfbaa9a:#0000;--color-4863095d81:#fffdf7;--color-4866bb46e3:#0004;--color-487aacde6f:#f37d72;--color-48cc2e7f8d:#7BCB9A;--color-49d44a9ee4:#68b5fc;--color-4a720451a5:#e5e5e5;--color-4b1279eff2:#ebe1f1;--color-4bd71b2bc4:#6bbc68;--color-4c7607bfea:#665c54;--color-4ccff651aa:#fcf6ebe8;--color-4cd8263341:#b7b7b7;--color-4cddb9d4a3:#fbf1c7;--color-4cde334c3e:#f5ecdc;--color-4d6a01b7dc:#0ff;--color-5038e15718:#ffffff03;--color-50b681a127:#20201e;--color-515d15b4fa:#76582c28;--color-51d088b4a8:#bcac92;--color-51d7cf97bd:#070b13;--color-53961d26bb:#fffaf2;--color-548c3a79ac:#161616;--color-54bc5e76c0:#d4d4d4;--color-55375325d7:#575142;--color-5664338aff:#d4a017;--color-5742b423f0:#e0d4b8;--color-580546adf4:#666;--color-5807075108:#aaa;--color-580fcaa408:#fffbf1;--color-584d41c4b1:#8c8260;--color-585f5f553f:#e4eef5;--color-586f92dade:#7c6f64;--color-587ee5b584:#d6d6d6;--color-5933821839:#030813b3;--color-5affac3c76:#34a853;--color-5b1cc59f12:#73b7f4;--color-5c7c6f6122:#171c23;--color-5d4c9f4a98:#030813b8;--color-5dc02463b1:#9333ea;--color-5e94b43d6d:#090e19;--color-5eb7119769:#ffffff30;--color-5ecbc04905:#9bbbd1;--color-5f1cd42735:#4ade80;--color-601f1584fa:#e9ddc9;--color-6042a3cdfc:#e8e0cc;--color-604bf84478:#d5c4a1;--color-605c1167a5:#d6dbe3;--color-61f7af7a87:#31a8ff;--color-6468cace9b:#f0f;--color-648660170c:#107C41;--color-64ba2f9257:#1e3348;--color-64f12c90d5:#fafafa;--color-6501abfeab:#ededed;--color-65195bf744:#FF7A59;--color-6539cf5abf:#25334a;--color-65b14a1e67:#4e5058;--color-65d93be89d:#36c5f0;--color-66a479b271:#D96570;--color-677d860eef:#a49a7b;--color-67a4961bc2:#1c689f;--color-692dd869c8:#282828;--color-69bc1ef208:#b7ce9d;--color-69da293a12:#fcf6eb;--color-6b3d6d843d:#64748b;--color-6b8beb48dd:#656565;--color-6bf3ad81cc:#1a1508;--color-6c02944701:#d4c9a8;--color-6c1452dd7c:#c2410c;--color-6c2e9d0455:#faf6e8;--color-6d838fd09c:#6c4e2822;--color-6db808b183:#ffffff14;--color-6e4615cbd0:#3a3934;--color-6e84400ab8:#f2e8d8;--color-6fec928a15:#ffffff26;--color-7114e9e812:#928374;--color-72ad984a9b:#2683c6;--color-72afd36a4f:#b2b2b2;--color-733bdd5156:#ffffff38;--color-738c6a5a31:#ffffff0b;--color-73e4b90043:#aab3c7;--color-73e6a64ee5:#0F9D58;--color-74fc8e6058:#9daff5;--color-753dc8ad09:#1c1c1c;--color-759712191d:#d8c8b0;--color-76d2013984:#535353;--color-77572cb140:#6b5f40;--color-77962f15f4:#f2f3f5;--color-781f69cd4e:#7d9190;--color-783207b5e3:#343434;--color-79bef13ba2:#383838;--color-7b2817bf9b:#000000;--color-7b624e8334:#16352b;--color-7ba9a91203:#2b2441;--color-7d4ff8ff7b:#15803d;--color-7f995ce44f:#EA4335;--color-806fe99f11:#313338;--color-808bf199ad:#185da4;--color-81e7d37958:#0891b2;--color-81ef715e34:#000;--color-833631aa32:#475569;--color-83a8ec07d0:#ffffff55;--color-83f5e663c9:#F26207;--color-8436c1eee2:#f9f5d7;--color-8589f679ab:#c0cddd;--color-8656384222:#ffffff17;--color-87227833ff:#fff8eb70;--color-87a2c6a981:rgb(0 0 0 / .1);--color-88ec42d470:rgb(0 0 0 / .06);--color-88ed4b0dea:#faf5e8;--color-8940f2c623:#60a5fa;--color-89c2c0f399:#c7aa78;--color-89fd212a33:#00A1E0;--color-8af40e2cf2:#32312f;--color-8b72ce60c0:#06b6d4;--color-8b8f7c3d45:#22c55e;--color-8c513d16a6:#eee;--color-8d0437eb37:#9ba7a2;--color-8d0b94c824:#f3f8fd;--color-8d5c7d805e:#2c2e33;--color-8dee865257:#689d6a;--color-8f6fccf012:#1c639a;--color-8fa525d475:#a16207;--color-90319fb17f:#ffffff13;--color-9107475e69:#f0e7d7;--color-92340259f5:#fbbc04;--color-92e708f2c4:#525252;--color-934eb8fbf2:#e0ecdf;--color-9368bdcf4f:#fff9ef;--color-93908647ee:#333333;--color-9418414a40:#33332f;--color-95248eafb6:#c9c9c9;--color-9548c629fa:#ffffff10;--color-95ebd04887:#ebdbb2;--color-95f8c9f61b:#a9c6d8;--color-9613ca72fe:#090e18;--color-964cab689c:#d83c3e;--color-972913141c:#e8c84a;--color-9761d7a795:#444039;--color-9831ba09ae:#fff3;--color-98ce65419e:#3f3f3f;--color-98ebd35de8:#dbdbdb;--color-9932f72ac8:#2ac45c;--color-99fbfd88e3:#504c41;--color-9a4a7919e1:#e5d8c3;--color-9b7b1c6bb8:#bababa;--color-9bc4f65939:#333;--color-9be04e401c:#1473e6;--color-9c8ea15873:#0078D4;--color-9d102eb95c:#fff5;--color-9e1bbffc7b:#ffffff18;--color-9f034e1f1a:#334155;--color-9f4fd6b8d7:#d9e9f8;--color-9fbf18971a:#ebf1f3;--color-a1858811d0:#343938;--color-a1c0fe2d1b:#2a2a2a;--color-a26e56380d:#404040;--color-a3fcc313db:#414039;--color-a5999db064:#99a3a0;--color-a5c680c348:#101827;--color-a7a749493b:#d77757;--color-a877e5f689:#494949;--color-a9c73eda94:#232428;--color-aa0d6cda3e:#ffffff09;--color-ab6279f2fc:#33322e;--color-abaeef2cd0:#ecb22e;--color-ac2ec863ee:#172d44;--color-acaf8d63b9:#3d3d3d;--color-acbc916963:#188038;--color-acf13c1b5f:#3d4b60;--color-ad42712ea3:#f23f43;--color-ae17f9563a:#4285f4;--color-afcbc34d9d:#76582c38;--color-b1590a1ce7:#293549;--color-b326329c72:#1a1a1a;--color-b51de63d0e:#3b82f6;--color-b55cb53bc7:#a89984;--color-b5e2bc59ff:#94a3b8;--color-b5f50f938d:#49463e;--color-b72965740a:#91b58b;--color-b7531517f2:#0095f6;--color-b75afe22b3:#ff0;--color-b7d157b162:#c8daea;--color-b7d9f01149:#c29bfa;--color-b8264aae47:#2d2510;--color-bad635dda4:#49463f;--color-baff0a406f:#6d6f78;--color-bb7b174b4b:#101827d9;--color-bce7d4d8c2:#1a73e8;--color-bd58c12a1c:#236da4;--color-bdb40351f2:#0006;--color-be5cc131d7:#111111;--color-be65b19d4d:#e6d5a3;--color-bfbf1861f0:#1a2332;--color-bfc4cd8eb6:#fb923c;--color-bfd4f8ffca:#e5e7eb;--color-c006c7e3ab:black;--color-c083905926:#efe6d7;--color-c0954be8a2:#1e1f22;--color-c09a83ab21:#D97757;--color-c0b271fa17:#23a559;--color-c206d78b7e:#0f766e;--color-c2081841e0:#050505;--color-c2406255c4:#5865f2;--color-c33e80ec84:#e7bc4e;--color-c348f91859:#f4ebdd;--color-c36d4cdccd:#ef4444;--color-c3b2aad820:#34A853;--color-c5b71388b4:#f3e1d9;--color-c652aa5461:#565656;--color-c684acd69a:#44413a;--color-c709a4bf49:#0d0d0d;--color-c8f7859e7b:#362022;--color-c918a99ec8:#65706c;--color-c99008e37c:#3a3a3a;--color-cb61b008ae:rgb(59 130 246 / .5);--color-cc31581058:#777;--color-ce5fef0ab6:#586375;--color-ced92663cd:#e8e5dd;--color-cf79765e10:#112d4b;--color-cfae87f35c:#76582c25;--color-d02d879144:#2258a31a;--color-d09cc53ae1:#8a9bb3;--color-d2c866b15b:#92918a;--color-d3040d70fa:#e1edf3;--color-d383190586:#2a7cb9;--color-d3d9977901:#80848e;--color-d492efc568:#f0e8d4;--color-d4a68fe03c:#ece2d2;--color-d74f08d1db:#949ba4;--color-d7c1fcd5e8:#66a1cd;--color-d9316b1e07:#dedede;--color-d972e4a5b3:#eab308;--color-da1353566e:#0b0f1a;--color-da62cb6438:#ad926b20;--color-da69ab0079:#ea4335;--color-dab4fec8c1:#1768b5;--color-dbd729b0a3:#1e293b;--color-dbe8437516:#303030;--color-dc3710787b:#ffffff1a;--color-dcb1214218:#1d93d2;--color-dd15e6f7d4:#111827;--color-dd1770245a:#d4e5f5;--color-dd1cc20af3:#c9c6bc;--color-dd61cc680e:#382e18;--color-de538d6622:#d65d0e;--color-df17098cee:#fffbf3;--color-e08de71387:#fff;--color-e217685467:#397eb0;--color-e2442d83b3:#cbd5e1;--color-e25fe6d70b:#68717c;--color-e272e9335d:#444;--color-e55e2d227e:#ff803d;--color-e584ad712f:#ffffff16;--color-e5ccfb4307:#9bb9ff;--color-e668bc6833:#FBBC05;--color-e71a5e90b5:#d0d0d0;--color-e7b00c296b:#2563eb;--color-e7b09a94d1:#0d4e88;--color-e92947036f:#996723;--color-e98c54bb9d:#eeece5;--color-e991595f47:#3e3c36;--color-e9b320574a:#dbdee1;--color-e9e30154b2:#c4c9ce;--color-ea733e0649:#3a3c43;--color-eabde6ccc8:#b5443c;--color-eb7fbb66ca:#EB5829;--color-eba4fce890:#f0f7fc;--color-ebae7b9928:#ffffff50;--color-ebd0951b6a:#f8efdf;--color-ec18d65818:#7e22ce;--color-eeb78a41df:#111;--color-ef30e9f96a:#ffffff0c;--color-ef681cc06a:#ffffff59;--color-ef830356c2:#3c3836;--color-efde5c4db1:#1e70b2;--color-f00815ca75:#FC8304;--color-f148f44e02:#646464;--color-f19aa977f3:#f6ecdd;--color-f2074b6cef:#ffffff;--color-f29bebbb06:#e67e22;--color-f2d52c36f8:#060607;--color-f3e153ade4:#595959;--color-f3e92e4565:#FC4C04;--color-f53d0047fc:#eee4d4;--color-f5bcfbd2e3:#d7d7d7;--color-f60c6703f9:#ffffff20;--color-f60e5d247c:#020715b0;--color-f62328dee8:#f5f5f5;--color-f746cfbc94:#181717;--color-f7a33577ce:#0005;--color-f80ab45ca7:#0008;--color-f85f345b64:#00f;--color-f8e175950d:#fbbf24;--color-f9ec218f31:#ffffff42;--color-f9ffb1fbdc:#2dd4bf;--color-fa8f55779f:#bdae93;--color-fa91e147c7:#a8adb3;--color-fb560ba035:#eef7ff;--color-fbf19afd18:#bbb;--color-fccd44c4bb:#c9b88a;--color-fe15a21551:#e66b61;--color-fe95101806:#74582f1c;--color-feef756bd4:#73a9ff;--color-fef85bb332:#242424;--color-ffb90a72bb:#fcf5e8;--color-ffd5a254dd:#b16286;--style-border-radius-0652b99798:9px 9px 0 0;--style-border-radius-088f2449c3:999px;--style-border-radius-09f97395c8:14px;--style-border-radius-12a8299a98:9px;--style-border-radius-1424f29c05:1.5cqi;--style-border-radius-145f2f5348:13px;--style-border-radius-16778282e1:.25rem;--style-border-radius-2793cbc214:24px;--style-border-radius-28fdae8dea:50%;--style-border-radius-32e48995f9:100%;--style-border-radius-356601538d:4px;--style-border-radius-3772b3a113:5px;--style-border-radius-38cb6b4a22:10px;--style-border-radius-47389a16f0:12px 0 0 0;--style-border-radius-51188afc0a:9999px;--style-border-radius-620f5178e3:15px 15px 8px 8px;--style-border-radius-67931646dc:16px;--style-border-radius-6d3b65a0dc:11px;--style-border-radius-747614001f:2px;--style-border-radius-74e74f6b66:13px 13px 0 0;--style-border-radius-765704518f:0 0 50% 50%;--style-border-radius-7769e81702:12px;--style-border-radius-7adef6a048:6px;--style-border-radius-7f10880103:15px;--style-border-radius-8d6c1de3bb:0 0 9px 9px;--style-border-radius-920b286064:0 0 20px 20px;--style-border-radius-93e20626bf:1px;--style-border-radius-95a8d358f5:30px;--style-border-radius-9b1fb4f3d0:12px 12px 7px 7px;--style-border-radius-9bb5d32de4:17px;--style-border-radius-9bf0c8e6e7:20px;--style-border-radius-a0a3565c71:36px;--style-border-radius-a15202ec59:7px;--style-border-radius-ab84d0e26e:0 0 16px 16px;--style-border-radius-ab98c04774:18px;--style-border-radius-ac33ff9105:3px;--style-border-radius-aff65fdc36:28% 28% 19% 19%;--style-border-radius-b402c3df96:15px 0 0 0;--style-border-radius-c4e4ec6f8f:23px;--style-border-radius-c80bfee312:28px;--style-border-radius-e458cf56e3:14px 14px 0 0;--style-border-radius-eb4ebe481c:8px;--style-border-radius-f529fb75a4:0 0 13px 13px;--style-border-radius-ff2f8ccd8c:7px 7px 0 0;--style-box-shadow-093995a54b:0 0 0 .45rem #2ac45c00;--style-box-shadow-0939c4fb86:inset 0 1px #ffffff14,0 10px 25px #0003;--style-box-shadow-0eb9fa8e23:inset 0 1px #ffffff12,0 12px 30px #0004;--style-box-shadow-196208c994:0 18px 45px #0005,inset 0 1px #ffffff10;--style-box-shadow-1b4e2d915c:inset 0 1px #fff,0 2px 4px #76582c15,0 10px 25px #76582c25;--style-box-shadow-1bd34d68f8:inset 0 1px #ffffff20,0 20px 35px #0004;--style-box-shadow-21644cd07f:inset 0 1px 0 #ffffff24,0 5px 12px #0002;--style-box-shadow-26bc6af7ab:inset 0 1px #ffffff10,0 9px 25px #0003;--style-box-shadow-292e167885:inset 0 1px #ffffff0c,0 5px 10px #0001;--style-box-shadow-2ed91ed674:inset 0 1px #ffffff1c,0 5px 10px #0002,0 20px 38px #0001;--style-box-shadow-2f92f8a32c:inset 0 1px #ffffff36,0 8px 15px #0003;--style-box-shadow-3153066ea2:inset 0 1px #ffffff17,0 3px 8px #0002;--style-box-shadow-316e7daf51:0 2px 5px #0002,inset 0 1px #fff8;--style-box-shadow-330749c9e7:inset 0 1px #ffffff14,inset 0 -1px #0003,0 5px 10px #0002,0 20px 38px #0001;--style-box-shadow-34abef1db8:inset 1px 2px 3px #ffffff2b,inset -3px -8px 14px #0009,0 2px 3px #0007,0 7px 12px #0004;--style-box-shadow-44f7935f79:inset 0 1px #fff1,0 4px 8px #0003,0 20px 45px #0005;--style-box-shadow-463ca2d296:inset 0 1px white,0 9px 20px #72563320;--style-box-shadow-4b7abf4b97:inset 0 1px #ffffff16,0 22px 48px #0004;--style-box-shadow-52eba6d83f:0 0 0 0 transparent;--style-box-shadow-5c2045743d:inset 0 1px #ffffff0c,0 3px 7px #0002;--style-box-shadow-5ce1ca5bcb:inset 0 1px #ffffff14,0 5px 15px #0003;--style-box-shadow-6071a4d944:0 30px 100px #0008;--style-box-shadow-6387a410c0:inset 0 1px #ffffff08;--style-box-shadow-687699cba2:inset 0 1px 0 #ffffff5c,inset 0 -2px 0 #0002,0 3px 7px #0003;--style-box-shadow-73d0bf2d79:0 8px 15px #0003;--style-box-shadow-776c249f3e:0 2px 6px #0006;--style-box-shadow-79e75ce2e7:0 10px 30px #0004,inset 0 1px #ffffff12;--style-box-shadow-7acdc129d4:0 16px 35px #0004,inset 0 1px #ffffff17;--style-box-shadow-7d6e0d6d2e:inset 0 1px #fff,0 5px 10px #76582c14,0 20px 38px #76582c18;--style-box-shadow-7dd6297a18:inset 0 1px #ffffff1a,0 15px 40px #0003;--style-box-shadow-7e5be2a485:0 15px 45px #0006;--style-box-shadow-818766659d:0 0 16px #6387ff;--style-box-shadow-8566f4f006:inset 0 1px #fff3,0 2px 4px #0003;--style-box-shadow-85861605ba:inset 0 2px 9px #0003;--style-box-shadow-8d17af9702:inset 0 1px #fff,0 5px 12px #76582c14;--style-box-shadow-8eb80d55ac:inset 0 1px #fff;--style-box-shadow-93b1b641a0:inset 1px 2px 3px #ffffff2b,inset -3px -8px 14px #0009,0 2px 3px #0007,0 8px 14px #0005;--style-box-shadow-956c836cbd:0 0 #2ac45c80;--style-box-shadow-96d85970ab:0 28px 65px #0005,inset 0 1px #ffffff16;--style-box-shadow-984d843c31:0 4px 12px #0003;--style-box-shadow-99e27eb5b7:inset 0 1px #8fc5ea80,0 3px 5px #163e6225;--style-box-shadow-9bc348546f:inset 0 1px 0 #ffffff0c,0 12px 25px #0001;--style-box-shadow-9bcfe5ee89:inset 0 1px #ffffff14;--style-box-shadow-a0674e1488:0 3px 20px #0003;--style-box-shadow-a288452356:inset 0 1px white,0 5px 9px #72563318;--style-box-shadow-a33502d17e:0 3px 10px #0003;--style-box-shadow-a493fa170a:inset 1px 2px 3px #ffffff38,inset -3px -8px 14px #0008,0 2px 3px #0007,0 7px 12px #0004;--style-box-shadow-a4e2960eb1:0 3px 9px #0003;--style-box-shadow-a8f2f39ae8:0 4px 10px #0002;--style-box-shadow-a908fa96b4:inset 0 1px #ffffff0b,0 2px 4px #0002;--style-box-shadow-aac9b4259f:0 0 0 1px #222;--style-box-shadow-ae15fd6ade:inset 0 1px #ffffff15,0 8px 18px #0003;--style-box-shadow-ae8cece6ab:inset 0 1px #ffffff10,0 3px 8px #0002;--style-box-shadow-b62dfe3d63:0 0 #2ac45c00;--style-box-shadow-bcf1dbc6df:inset 0 1px #aebeff66,0 0 28px #456eff25,0 12px 30px #0004;--style-box-shadow-bd461b9e06:inset 0 1px #fff1,0 2px 3px #0002;--style-box-shadow-bd945c1cfd:0 5px 14px #0002;--style-box-shadow-c0440b3e99:inset 0 1px #ffffff14,0 4px 8px #0002;--style-box-shadow-c3a9f76d7b:inset 0 1px #ffffff12;--style-box-shadow-c7c34c036d:inset 0 1px #fff8,0 8px 15px #72563320;--style-box-shadow-cd6b2e6d24:inset 0 1px #ffffff66,inset 0 -2px #0002,0 3px 7px #0003;--style-box-shadow-cead0fa9d2:0 20px 50px #0002;--style-box-shadow-cf48dcc56b:inset 0 1px #ffffff15;--style-box-shadow-d0ab582441:0 2px 3px #70502b20,0 12px 26px #74582f26,inset 0 1px white;--style-box-shadow-d4e574848f:inset 0 1px #b0d4ee80,0 6px 10px #1640693a;--style-box-shadow-d71614189c:inset 0 1px #ffffff18,0 3px 7px #0002;--style-box-shadow-d7eae5e530:0 12px 40px #0008;--style-box-shadow-de6d019335:inset 0 1px #ffffff26,inset 0 -1px #0006,0 5px 16px #0003;--style-box-shadow-e1b3bf7b68:inset 0 1px #ffffff0f;--style-box-shadow-e22fd67e22:0 0 12px #5276ff88;--style-box-shadow-e2791beb20:inset 0 1px #ffffff1a,0 10px 25px #0004;--style-box-shadow-e4799b76f7:inset 0 1px #ffffff0c;--style-box-shadow-e7316d97a3:inset 0 1px #ffffff18,0 7px 12px #0004;--style-box-shadow-ea7acbf244:inset 0 1px #ffffff0c,0 3px 7px #0003,0 14px 26px #0002;--style-box-shadow-eba67b816d:inset 0 1px #ffffff1a,0 6px 16px #0003;--style-box-shadow-ec17a6d27c:inset 0 1px #ffffff17,0 8px 16px #0002;--style-box-shadow-ecbeb0535e:inset 0 1px #ffffff0c,0 4px 9px #0002,0 17px 32px #0001;--style-box-shadow-ee9dbe435d:inset 0 1px #fff1,0 3px 8px #0002;--style-box-shadow-ef9a7e549e:inset 0 1px #fff,0 2px 4px #0002;--style-box-shadow-f169341ec0:inset 0 1px #ffffff03,0 8px 24px #00000015;--style-box-shadow-f34f31ac15:inset 0 1px #fff,0 2px 5px #70502b12;--style-box-shadow-f673b4230b:inset 0 1px #fff,0 3px 7px #76582c12,0 14px 26px #76582c12;--style-box-shadow-f803392acf:inset 0 1px #ffffff10,0 2px 4px #0004,0 10px 25px #0005;--style-box-shadow-f8bc0f3833:0 3px 8px #0002;--style-box-shadow-f8c4077204:inset 0 1px #ffffff13,0 12px 25px #0003;--style-box-shadow-fabcc2a3f8:0 2px 8px #0009;--style-box-shadow-fc372168fe:0 12px 30px #0002;--style-box-shadow-fc4750a82d:0 30px 70px #0005,inset 0 1px #ffffff18;--style-box-shadow-fd34b5dfb1:inset 0 1px #fff,0 2px 3px #70502b20,0 13px 25px #74582f1c;--style-box-shadow-fda45e4aca:0 24px 60px #0005,0 6px 18px #0003,inset 0 1px #ffffff15,inset 0 -1px #0006;--style-box-shadow-fe02a53c11:0 6px 14px #0003;--style-box-shadow-ff8523e9e9:0 35px 120px #0007;--style-font-family-072b0e1f92:ui-monospace,SFMono-Regular,IRANSansX,monospace;--style-font-family-13fe05e328:Doran,serif;--style-font-family-17d03be024:Doran,IRANSansX,serif;--style-font-family-1fc9a88ea0:IRANSansX,Outfit,sans-serif;--style-font-family-21cf8ee914:IRANSansX,Arial,sans-serif;--style-font-family-29a7502d2b:IRANSansX;--style-font-family-2af683de11:Arial,sans-serif;--style-font-family-2fa46a9387:Outfit;--style-font-family-4c999f96fa:Outfit,sans-serif;--style-font-family-5a12111869:"DM Serif Display",serif;--style-font-family-69808cd0d4:Doran,IRANSansX,sans-serif;--style-font-family-79374a4195:Arial,IRANSansX,sans-serif;--style-font-family-7d67dc125a:monospace;--style-font-family-93fd9e48a8:IRANSansX,Outfit,ui-sans-serif,system-ui,-apple-system,Segoe UI,Tahoma,Arial,sans-serif;--style-font-family-98abc052ee:IRANSansX,sans-serif;--style-font-family-b181840285:Outfit,IRANSansX,sans-serif;--style-font-family-c78447941f:Doran,IRANSansX;--style-font-family-c96a3c38b3:Georgia,serif;--style-font-family-e66798dae0:Doran;--style-font-family-f44080a754:Arial,Helvetica,sans-serif;--style-font-family-f58c6d44f5:boxicons;--style-font-size-0141dc6057:clamp(42px,5.5vw,74px);--style-font-size-01d25f8a91:3cqi;--style-font-size-09f97395c8:14px;--style-font-size-0ec608e96c:clamp(25px,3vw,34px);--style-font-size-0f27d86a95:clamp(1.85rem,8vw,2.5rem);--style-font-size-10963ac2db:75%;--style-font-size-12a8299a98:9px;--style-font-size-1347c62b5f:62px;--style-font-size-145f2f5348:13px;--style-font-size-161db11dcf:clamp(32px,4vw,50px);--style-font-size-1968afbfa0:46px;--style-font-size-1db64320c4:40px;--style-font-size-228973d940:108px;--style-font-size-229a5dcb44:60px;--style-font-size-24452bb6e5:clamp(2.1rem,4.25vw,3.65rem);--style-font-size-2569574d7e:1.4rem;--style-font-size-2793cbc214:24px;--style-font-size-284478b856:1em;--style-font-size-285b89510c:clamp(1.05rem,4.6vw,3rem);--style-font-size-2b50e0c9ae:clamp(36px,6vw,64px);--style-font-size-2e72ebc42d:.85rem;--style-font-size-313f218fc1:49px;--style-font-size-32e48995f9:100%;--style-font-size-33bfd64c32:4.2cqi;--style-font-size-38cb6b4a22:10px;--style-font-size-3afe5b45b1:clamp(1rem,1.8vw,1.5rem);--style-font-size-41267c2dfc:4cqi;--style-font-size-41dca9e28d:4.5rem;--style-font-size-43b2253d8c:78px;--style-font-size-451f293c6b:clamp(1.65rem,3vw,2.6rem);--style-font-size-45c49e2ee3:68px;--style-font-size-47128122f3:48px;--style-font-size-48984c3d28:26px;--style-font-size-4945b11748:clamp(38px,5.6vw,68px);--style-font-size-4c24ef4a6c:.9375rem;--style-font-size-4c6e57ddbf:39px;--style-font-size-4cf1798239:.75rem;--style-font-size-4e84f0b57d:clamp(38px,3.7vw,63px);--style-font-size-4f7d9bbaee:33px;--style-font-size-50e0543569:5cqi;--style-font-size-52a0414931:clamp(2.2rem,4.5vw,4rem);--style-font-size-54c98f744c:clamp(36px,4.5vw,64px);--style-font-size-5c0a57cbe0:37px;--style-font-size-5c953e764f:25px;--style-font-size-5c982ade86:clamp(32px,3.5vw,48px);--style-font-size-5d6c43977e:22px;--style-font-size-6018510ff4:38px;--style-font-size-601f180001:55px;--style-font-size-61a5450686:11cqi;--style-font-size-61b956cc69:94px;--style-font-size-62547e89ea:1.06em;--style-font-size-63437229e2:86px;--style-font-size-65094d9175:clamp(4rem,8vw,6rem);--style-font-size-671c9ba451:clamp(52px,4.9vw,72px);--style-font-size-67931646dc:16px;--style-font-size-6aded4294f:29px;--style-font-size-6c2f838540:88px;--style-font-size-6c3b09101c:6.5rem;--style-font-size-6d3b65a0dc:11px;--style-font-size-6dd8d606f5:clamp(1.5rem,4vw,2.25rem);--style-font-size-6ddf472761:19px;--style-font-size-717594bbc6:44px;--style-font-size-72272e857f:clamp(34px,3.4vw,51px);--style-font-size-7769e81702:12px;--style-font-size-7adef6a048:6px;--style-font-size-7d2476403f:56px;--style-font-size-7f10880103:15px;--style-font-size-81308c273a:clamp(36px,4.8vw,61px);--style-font-size-83299d6539:clamp(30px,3vw,44px);--style-font-size-894c01c105:6rem;--style-font-size-89c2c37519:.875rem;--style-font-size-8a04bd4f25:clamp(34px,4.4vw,56px);--style-font-size-8c4647e552:clamp(23px,2.2vw,31px);--style-font-size-91a27376b1:clamp(32px,3.3vw,50px);--style-font-size-929994f590:34px;--style-font-size-9411a1032f:27px;--style-font-size-95a8d358f5:30px;--style-font-size-994ddf4862:47px;--style-font-size-9af01c5a91:14cqi;--style-font-size-9bb5d32de4:17px;--style-font-size-9bf0c8e6e7:20px;--style-font-size-9c1cdd3ea2:.63em;--style-font-size-9d9bfb3528:32px;--style-font-size-a0a3565c71:36px;--style-font-size-a15202ec59:7px;--style-font-size-a19dc76326:54px;--style-font-size-a1a51f852f:clamp(35px,4.5vw,57px);--style-font-size-a35bb7a704:max(1rem,1em);--style-font-size-a48d5aef87:clamp(30px,3.1vw,46px);--style-font-size-a517504299:4rem;--style-font-size-a7d674f814:64px;--style-font-size-a9b6ae3183:.86em;--style-font-size-aa97bd0423:1.9cqi;--style-font-size-ab98c04774:18px;--style-font-size-acae1b8c83:.96em;--style-font-size-acf45e21c3:clamp(18px,2.4vw,32px);--style-font-size-ad73affe2f:clamp(38px,5vw,64px);--style-font-size-adb8a8607f:.95rem;--style-font-size-aed3b1d2d2:2cqi;--style-font-size-b4389ab679:clamp(1.15rem,2vw,1.7rem);--style-font-size-b70c018822:9rem;--style-font-size-b7be2c6937:.875em;--style-font-size-b7f46a85f9:43px;--style-font-size-b8c27ec90f:clamp(46px,6.2vw,78px);--style-font-size-b8d672bb48:clamp(32px,3.3vw,49px);--style-font-size-bb89f0b505:clamp(43px,5.5vw,72px);--style-font-size-bd98547564:clamp(27px,3vw,42px);--style-font-size-bdeafd058e:45px;--style-font-size-c08aa2f8b2:10cqi;--style-font-size-c13fd958b5:31px;--style-font-size-c4e4ec6f8f:23px;--style-font-size-c6c1f971d5:clamp(34px,4vw,58px);--style-font-size-c7a4f6eaac:35px;--style-font-size-c80bfee312:28px;--style-font-size-c8e0be8ae4:136px;--style-font-size-c98b24d7ca:42px;--style-font-size-cb7db708cc:57px;--style-font-size-cf0ec1e0a6:3.5cqi;--style-font-size-cf5744f873:clamp(29px,3.4vw,46px);--style-font-size-cf6a213bab:clamp(3rem,13.5vw,5rem);--style-font-size-cf9560da73:clamp(50px,4.8vw,70px);--style-font-size-d0790ddf6a:1.18em;--style-font-size-d35b0e87ef:clamp(4rem,7.5vw,7rem);--style-font-size-d90eaf801b:17cqi;--style-font-size-da5e345cda:52px;--style-font-size-dbea953957:50px;--style-font-size-dd80c4f8bb:clamp(34px,3.9vw,56px);--style-font-size-de58ced7d2:9.3cqi;--style-font-size-dfe998b402:21px;--style-font-size-e6dfc0924a:clamp(32px,3.7vw,52px);--style-font-size-e867d89b42:clamp(38px,4.9vw,64px);--style-font-size-e9bb164e0d:clamp(31px,3vw,45px);--style-font-size-eb4ebe481c:8px;--style-font-size-ec242aca61:8cqi;--style-font-size-ed875a6a82:clamp(33px,3.3vw,52px);--style-font-size-ee91e725ab:clamp(1.875rem,8vw,3rem);--style-font-size-f128e1c082:clamp(37px,4.5vw,60px);--style-font-size-f17c3daf2f:clamp(28px,2.8vw,41px);--style-font-size-f39dda0998:80%;--style-font-size-f4c7d87568:76px;--style-font-size-f9ea6eb85d:70px;--style-font-size-fbdd9a37f3:.9em;--style-font-size-fe3d65e526:1.1em;--style-font-size-fe6e5aa8ca:clamp(54px,5.6vw,83px);--style-font-weight-0604cd3138:500;--style-font-weight-1a1cf797fa:800;--style-font-weight-2099a9b5f7:650;--style-font-weight-26d228663f:400;--style-font-weight-284b7e6d78:600;--style-font-weight-34c5accab2:bolder;--style-font-weight-64d095f2fe:750;--style-font-weight-7ffc2066e2:850;--style-font-weight-83151157c1:450;--style-font-weight-983bd614bb:300;--style-font-weight-99ee502212:700;--style-font-weight-bdc5d8a48c:900;--style-font-weight-f89f8d0e73:550;--style-letter-spacing-0018d62599:.08em;--style-letter-spacing-0b92113716:-.04em;--style-letter-spacing-0ee319979a:-1.5px;--style-letter-spacing-151d69c7cc:-.052em;--style-letter-spacing-2470fc8122:.085em;--style-letter-spacing-247833fc7d:-.07em;--style-letter-spacing-294c93fc9b:.17em;--style-letter-spacing-3381b6ef25:-.06em;--style-letter-spacing-379847bd6d:.03em;--style-letter-spacing-3e419861f7:.02em;--style-letter-spacing-427e5d817d:.34em;--style-letter-spacing-47772f2157:.24em;--style-letter-spacing-5260f268f6:.5em;--style-letter-spacing-5b1a6739d1:.25em;--style-letter-spacing-5c4d1235fc:.04em;--style-letter-spacing-637e0d6669:.15em;--style-letter-spacing-672d0be0c7:.16em;--style-letter-spacing-693810274a:.27em;--style-letter-spacing-6d1ba80951:-.015em;--style-letter-spacing-74367b0a03:.07em;--style-letter-spacing-7a49b51d2f:.13em;--style-letter-spacing-7ee6350b4c:-.025em;--style-letter-spacing-7fa2b88746:.1em;--style-letter-spacing-836865a482:.065em;--style-letter-spacing-883f94ee46:.015em;--style-letter-spacing-8ac7a958c6:-.03em;--style-letter-spacing-93e20626bf:1px;--style-letter-spacing-9679667b32:.06em;--style-letter-spacing-992504fd2a:-.055em;--style-letter-spacing-a1bf9ed2eb:-.02em;--style-letter-spacing-a3043cabc0:-.01em;--style-letter-spacing-a5b15af93e:-.065em;--style-letter-spacing-a98947c397:.12em;--style-letter-spacing-ad723e3b5a:.09em;--style-letter-spacing-b4712640a9:.14em;--style-letter-spacing-b6d3e01030:1.4px;--style-letter-spacing-bbf4c126cc:.18em;--style-letter-spacing-c4d0ea067d:.33em;--style-letter-spacing-cabc6b1c16:-.8px;--style-letter-spacing-d1531a8689:-.045em;--style-letter-spacing-d675ada9e6:-.09em;--style-letter-spacing-e297ac1d9b:-1px;--style-letter-spacing-e41687e69c:-.035em;--style-letter-spacing-e668d556c2:.22em;--style-letter-spacing-ea82b2326b:.05em;--style-letter-spacing-ea898e2a71:-.05em;--style-letter-spacing-edc533500e:.025em;--style-line-height-004a9e0878:1.25;--style-line-height-00fef940a6:1.05;--style-line-height-0818204c05:.96;--style-line-height-0c892cde19:.92;--style-line-height-16ffcff2eb:1.16;--style-line-height-1a948f1b43:1.4;--style-line-height-1d367bc64b:.88;--style-line-height-1fedb9c592:1.07;--style-line-height-2af765db02:1.08;--style-line-height-312115dbd1:1.95;--style-line-height-3d7a51acc5:1.17;--style-line-height-5429ab0302:.8;--style-line-height-5dfb3cc00d:1.625;--style-line-height-640f6107ab:1.13;--style-line-height-672ca1c737:1.75rem;--style-line-height-67931646dc:16px;--style-line-height-6918de1a26:1.45;--style-line-height-69828231cb:1.14;--style-line-height-6b86b273ff:1;--style-line-height-77ac319bfe:1.2;--style-line-height-797897e9ae:2.05;--style-line-height-7f10880103:15px;--style-line-height-89e0e9d0a6:1.06;--style-line-height-8d9f7a82ae:1.85;--style-line-height-8f65223004:1.7;--style-line-height-914204c25f:2.2;--style-line-height-98737cf896:1.35;--style-line-height-9c193c604a:1.3;--style-line-height-9e0b4cf467:1.55;--style-line-height-9f0e787f95:1.15;--style-line-height-9f29a13043:1.5;--style-line-height-a97b042d7b:1.8;--style-line-height-ab98c04774:18px;--style-line-height-aee078c32d:.95;--style-line-height-b05e244762:1.1;--style-line-height-b7e2620d0b:1.65;--style-line-height-c851818da2:1.18;--style-line-height-cb5d201197:1.01;--style-line-height-d4735e3a26:2;--style-line-height-d72c6e9cf2:1.12;--style-line-height-da22917605:1.375;--style-line-height-dd024733e8:1.04;--style-line-height-ec6c168f44:1.6;--style-line-height-eca06fdd26:1.9;--style-line-height-f42b383a2b:1.02;--style-line-height-f4881c772c:1.75;--style-text-shadow-989ac46987:0 2px 3px #0003;}
+
+:root{--style-font-size-b0f2208bd0:clamp(1.75rem,4vw,2.5rem);--style-font-size-878e44e978:clamp(1.25rem,3vw,1.75rem);--style-font-size-c80c2090b3:clamp(1.1rem,2vw,1.35rem);}
