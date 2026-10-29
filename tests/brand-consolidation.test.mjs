@@ -51,3 +51,14 @@ test('presentation controls are available in both brand-guide shells', () => {
     assert.match(html, /presentation-polish\.css/);
   }
 });
+
+test('brand guide is accessible without collecting an email', () => {
+  const deck = readFileSync('public/assets/compiled/BrandStoryDeck.C9meqHVP.js', 'utf8');
+  assert.doesNotMatch(deck, /brand-story-email|spielos\.brand-guide-access|formAction/);
+  assert.match(deck, /className:"brand-story-start",onClick:\(\)=>A\(1\)/);
+  for (const file of ['public/brand-guide/index.html', 'public/fa/brand-guide/index.html']) {
+    const html = readFileSync(file, 'utf8');
+    assert.doesNotMatch(html, /brand-story-email|formsubmit\.co\/ajax|"formAction"/);
+    assert.match(html, /class="brand-story-start"/);
+  }
+});
