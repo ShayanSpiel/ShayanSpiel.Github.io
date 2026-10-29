@@ -2,8 +2,8 @@
 
 This repository owns website pages, components, public design tokens, released
 public media, website integrations, and local website build checks.
-It is the buyer and lead-conversion website. The Apply funnel is its primary
-conversion path. Keep reusable Skills, Departments, workflows, and private
+It is the buyer and lead-conversion website. Contact is its primary
+conversion path; retired Apply URLs redirect to the matching Contact page. Keep reusable Skills, Departments, workflows, and private
 company operations in the separate local harness.
 
 The local company lives in `/Users/shayan/Projects/SpielOS-Website`.

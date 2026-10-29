@@ -1,8 +1,16 @@
 # SpielOS website architecture
 
-This document is the current operating model for the public website. `AGENTS.md`
-contains implementation rules; this file describes the business and ownership
-model those rules support.
+> **Current routing (updated 2026-10-29):** Contact is the primary conversion
+> path: `/contact/` and `/fa/contact/`. The old Apply pages and confirmation
+> pages redirect to Contact. The four global navigation destinations are Guides
+> and tools, About Shayan, Work with us, and Brand Infrastructure. The precise
+> list of retired paths and destinations is `scripts/retired-routes.json`; the
+> build produces immediate client-side and meta-refresh redirects, not HTTP
+> 301s. The remaining sections of this document describe the former site and
+> are retained as historical context, not current routing instructions.
+
+The following sections preserve the earlier operating model for reference.
+`AGENTS.md` and the current routing notice above govern the public website.
 
 ## Commercial objective
 
