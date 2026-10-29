@@ -156,5 +156,9 @@
   "/solutions/workflows/lead-qualification-automation/": "/contact/",
   "/solutions/workflows/purchase-order-workflow-automation/": "/contact/",
   "/solutions/workflows/receipt-to-ledger-automation/": "/contact/",
-  "/solutions/workflows/recruitment-automation/": "/contact/"
+  "/solutions/workflows/recruitment-automation/": "/contact/",
+  "/apply/": "/contact/",
+  "/apply/thank-you/": "/contact/",
+  "/fa/apply/": "/fa/contact/",
+  "/fa/apply/thank-you/": "/fa/contact/"
 }

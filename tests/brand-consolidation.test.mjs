@@ -33,11 +33,12 @@ test('localized presentation PDFs exist and presentation pages link to them', ()
   assert.match(readFileSync('public/brand-guide-controls.js', 'utf8'), /brand-\$\{fa \? 'fa' : 'en'\}\.pdf/);
 });
 
-test('contact preserves the free-review path in each locale', () => {
-  for (const [file, target] of [['public/contact/index.html', '/apply/'], ['public/fa/contact/index.html', '/fa/apply/']]) {
-    const html = readFileSync(file, 'utf8');
-    assert.ok(html.includes(`href="${target}"`), `${file} should link to ${target}`);
+test('contact and chat use the current contact route', () => {
+  for (const file of ['public/contact/index.html', 'public/fa/contact/index.html']) {
+    assert.doesNotMatch(readFileSync(file, 'utf8'), /href="\/(?:fa\/)?apply\//);
   }
+  const chat = readFileSync('public/assets/compiled/ChatAssistant.astro_astro_type_script_index_0_lang.D2PvvfJ9.js', 'utf8');
+  assert.match(chat, /i\.href=u==="fa"\?"\/fa\/contact\/":"\/contact\/"/);
 });
 
 test('presentation controls are available in both brand-guide shells', () => {
