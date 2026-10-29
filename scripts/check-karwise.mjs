@@ -1,6 +1,6 @@
 import {readFileSync,existsSync,readdirSync,statSync} from 'node:fs';
 import {join,posix} from 'node:path';
-const root='dist',origin='https://spielos.xyz',errors=[],pages=new Map(),fail=x=>errors.push(x);
+const root=process.env.KARWISE_CHECK_ROOT||'dist',origin='https://spielos.xyz',errors=[],pages=new Map(),fail=x=>errors.push(x);
 const walk=dir=>readdirSync(dir).flatMap(n=>{let p=join(dir,n);return statSync(p).isDirectory()?walk(p):[p]});
 const decode=s=>s.replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/&#39;|&apos;/g,"'").replace(/&lt;/g,'<').replace(/&gt;/g,'>');
 const attrs=tag=>Object.fromEntries([...tag.matchAll(/([\w:-]+)\s*=\s*(["'])(.*?)\2/gs)].map(m=>[m[1].toLowerCase(),decode(m[3])]));
@@ -18,7 +18,7 @@ for(const file of walk(root).filter(p=>p.endsWith('.html'))){
  if(!indexable)continue;
  if(doc.dir!==(doc.lang==='fa'?'rtl':'ltr'))fail('Language direction: '+route);
  if(!html.match(/<title>[^<]+<\/title>/))fail('Missing title: '+route);
- if([...html.matchAll(/<h1\b/gi)].length!==1)fail('H1 count: '+route);
+ if([...html.replace(/<noscript\b[^>]*>[\s\S]*?<\/noscript>/gi,'').matchAll(/<h1\b/gi)].length!==1)fail('H1 count: '+route);
  for(const key of required)if(!meta[key])fail('Missing '+key+': '+route);
  for(const key of ['og:image','twitter:image']){let path=local(meta[key]);if(!path||!exists(meta[key]))fail('Invalid social image: '+route);else{let data=readFileSync(join(root,path));if(data.length<24||data.readUInt32BE(16)!==1200||data.readUInt32BE(20)!==630)fail('Social dimensions: '+route);}}
  if(/(?:https?:\/\/(?:localhost|127\.0\.0\.1)|\/Users\/)/.test(html))fail('Private/staging reference: '+route);

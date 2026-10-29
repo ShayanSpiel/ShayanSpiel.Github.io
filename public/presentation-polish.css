@@ -1,0 +1,40 @@
+/* The presentation canvas and navigation use the same paper palette as the site. */
+.presentation-page .transformation-deck[data-theme="paper-light"],
+.kw-site .brand-story[data-theme="paper-light"] {
+  --reference-ink: var(--background);
+  --reference-surface: var(--panel);
+  --reference-muted: var(--foreground-muted);
+  --deck-muted: var(--foreground-muted);
+}
+.presentation-page[dir="rtl"] .work-tools button { transform: scaleX(-1); }
+html[dir="rtl"] .presentation-page .work-tools button { transform: scaleX(-1); }
+.presentation-page .work-tools button { border-radius: var(--radius-md); }
+.presentation-page .presentation-toolbar > a,
+.presentation-page .presentation-toolbar > button { border-radius: var(--radius-md); }
+.presentation-page .presentation-toolbar > .presentation-step { min-width: 40px; }
+/* Keep the design-system component inside its own frame in both languages. */
+.kw-site .brand-story .infra-object:has(> .infra-design) { height: auto !important; min-height: 470px; }
+.kw-site .brand-story[data-theme="paper-light"] {
+  --story-ink: var(--background);
+  --story-surface: var(--panel);
+  --story-muted: var(--foreground-muted);
+}
+.kw-site .brand-story[dir="rtl"] :is(.infra-design-title,.infra-design-panel,.infra-design-button,.infra-composer > p) { overflow-wrap: anywhere; }
+/* The deck shares the global header rather than rendering underneath it. */
+.kw-site .brand-story { top: var(--kw-header-height) !important; height: calc(100dvh - var(--kw-header-height)) !important; }
+.kw-site .brand-story:fullscreen { top: 0 !important; height: 100dvh !important; }
+.kw-site .brand-story :is(.deck-restart,.deck-fullscreen,.kw-deck-controls button) { display: grid; place-items: center; width: var(--space-8); height: var(--space-8); padding: var(--space-2); color: var(--foreground-strong); background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius-md); opacity: 1; cursor: pointer; }
+.kw-site .brand-story :is(.deck-restart,.deck-fullscreen,.kw-deck-controls button):hover { color: var(--primary); }
+.kw-site .brand-story :is(.deck-restart,.deck-fullscreen,.kw-deck-controls button) svg { width: 100%; height: 100%; }
+.kw-site .brand-story .kw-deck-controls { position: absolute; z-index: 20; bottom: var(--space-4); inset-inline-end: var(--space-6); display: flex; gap: var(--space-2); }
+/* The RTL idea heading occupies the ribbon's original arrival point. */
+.kw-site .brand-story[dir="rtl"][data-scene="idea"] .deck-signature-ribbon { transform: translateY(-20%) scaleX(-1); }
+/* The retired signature film carries the former wordmark; use the current identity. */
+.presentation-page .deck-signature-film :is(video,.deck-signature-still,.deck-signature-backdrop) { visibility: hidden; }
+.presentation-page .deck-signature-film { display: grid; place-items: center; }
+.presentation-page .deck-signature-film::before { content: 'karwise'; display: block; padding-inline-start: var(--space-12); background: url('/assets/spielos.svg') left center / var(--space-8) no-repeat; color: var(--foreground-strong); font-family: var(--font-sans); font-size: var(--style-font-size-8a04bd4f25); font-weight: var(--style-font-weight-1a1cf797fa); }
+html[lang="fa"] .presentation-page .deck-signature-film::before { content: 'کاروایز'; }
+.presentation-page .deck-signature-film p { color: var(--foreground-strong); opacity: 1; transform: none; }
+.kw-site .brand-story .kw-deck-download { display: inline-flex; align-items: center; padding-inline: var(--space-3); color: var(--foreground-strong); background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius-md); text-decoration: none; }
+.kw-site .brand-story .kw-deck-download:hover { color: var(--primary); }
+.kw-site .brand-story[dir="rtl"]:is([data-scene="assets"],[data-scene="design"],[data-scene="voice"]) .deck-signature-ribbon { transform: translateY(-20%) scaleX(-1); }

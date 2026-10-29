@@ -1,0 +1,77 @@
+/* The brand offer uses the same type scale, space and journey as the site. */
+.brand-page .brand-hero__copy h1 {
+  font-size: var(--style-font-size-b8c27ec90f);
+  line-height: var(--style-line-height-d72c6e9cf2);
+  letter-spacing: var(--style-letter-spacing-d1531a8689);
+  font-weight: var(--style-font-weight-1a1cf797fa);
+}
+.brand-page .brand-section .section-header h2,
+.brand-page .brand-guarantee h2,
+.brand-page .brand-final h2 {
+  font-size: var(--style-font-size-ad73affe2f);
+  line-height: var(--style-line-height-d72c6e9cf2);
+  letter-spacing: var(--style-letter-spacing-d1531a8689);
+}
+.brand-page .brand-hero__copy > p:not(.brand-eyebrow),
+.brand-page .brand-section .section-header > p,
+.brand-page .brand-final__statement > p {
+  color: var(--foreground-muted);
+  font-size: var(--style-font-size-67931646dc);
+  line-height: var(--style-line-height-eca06fdd26);
+}
+.brand-page .brand-section,
+.brand-page .brand-guarantee,
+.brand-page .brand-final {
+  padding-block: calc(var(--space-12) + var(--space-6));
+  scroll-margin-top: var(--space-12);
+}
+.brand-page .brand-section + .brand-section,
+.brand-page .brand-guarantee,
+.brand-page .brand-final {
+  border-block-start: 1px solid var(--border);
+}
+.brand-page .brand-guarantee { background: var(--panel); }
+.brand-page .brand-guarantee > .brand-shell { padding-block: 0; }
+.brand-page .brand-journey-break .journey-route {
+  vector-effect: non-scaling-stroke;
+  stroke: var(--journey-future);
+  stroke-width: var(--kw-journey-future-width);
+  stroke-dasharray: var(--kw-journey-dash);
+}
+.brand-page .brand-journey-break .journey-fill {
+  vector-effect: non-scaling-stroke;
+  stroke: var(--journey-core);
+  stroke-width: var(--kw-journey-core-width);
+}
+.brand-page .brand-journey-break .journey-tip { fill: var(--journey-core); }
+html[lang="fa"] .brand-page .brand-hero__copy h1 { font-size: var(--style-font-size-e867d89b42); line-height: var(--style-line-height-ec6c168f44); letter-spacing: var(--style-letter-spacing-0b92113716); }
+html[lang="fa"] .brand-page .brand-section .section-header h2,
+html[lang="fa"] .brand-page .brand-guarantee h2,
+html[lang="fa"] .brand-page .brand-final h2 { font-size: var(--style-font-size-8a04bd4f25); line-height: var(--style-line-height-ec6c168f44); letter-spacing: var(--style-letter-spacing-0b92113716); }
+@media (max-width:700px) {
+  .brand-page .brand-hero__copy h1 { font-size: var(--style-font-size-bdeafd058e); }
+  .brand-page .brand-section .section-header h2,
+  .brand-page .brand-guarantee h2,
+  .brand-page .brand-final h2 { font-size: var(--style-font-size-6018510ff4); line-height: var(--style-line-height-77ac319bfe); }
+  html[lang="fa"] .brand-page .brand-hero__copy h1 { font-size: var(--style-font-size-929994f590); }
+  html[lang="fa"] .brand-page .brand-section .section-header h2,
+  html[lang="fa"] .brand-page .brand-guarantee h2,
+  html[lang="fa"] .brand-page .brand-final h2 { font-size: var(--style-font-size-c13fd958b5); line-height: var(--style-line-height-b7e2620d0b); }
+  .brand-page .brand-section,
+  .brand-page .brand-guarantee,
+  .brand-page .brand-final { padding-block: var(--space-12); }
+}
+/* Keep a single shared footer and restore the offer's strong two-font titles. */
+.brand-page .brand-footer[hidden] { display: none; }
+.brand-page .brand-hero__copy h1 { font-weight: var(--style-font-weight-bdc5d8a48c); }
+.brand-page .brand-hero__copy h1 .hero-title-rest { font-family: var(--font-display); font-weight: var(--style-font-weight-1a1cf797fa); }
+.brand-page .section-header h2 em,.brand-page .brand-final h2 em { font-weight: var(--style-font-weight-1a1cf797fa); }
+html[lang="fa"] .brand-page .brand-hero__copy h1 .hero-title-rest { font-family: var(--font-display); letter-spacing: 0; }
+/* Keep tool names and logos together in either text direction. */
+.brand-page .brand-tool-lockup { display: inline-flex; align-items: center; gap: var(--space-2); white-space: nowrap; vertical-align: baseline; direction: ltr; unicode-bidi: isolate; }
+.brand-page .brand-tool-lockup .canva-wordmark { display: inline-block; width: 2.4em; height: auto; vertical-align: middle; }
+.brand-page .brand-figma-logo { display: inline-block; width: .55em; height: .85em; object-fit: contain; }
+.brand-page .brand-chatgpt-logo { width: 1.25em; height: 1.25em; object-fit: contain; vertical-align: middle; margin-inline-end: var(--space-2); }
+/* Overlapping translucent, irregular strokes mimic marker on paper. */
+.brand-page mark { position: relative; isolation: isolate; background: none; color: inherit; }
+.brand-page mark::before { content: ''; position: absolute; z-index: -1; inset: 24% -2% 5%; background: linear-gradient(178deg, transparent 4%, color-mix(in srgb, var(--brand-marker) 66%, transparent) 6% 50%, color-mix(in srgb, var(--brand-marker) 48%, transparent) 52% 94%, transparent 96%); clip-path: polygon(1% 14%, 8% 9%, 19% 12%, 30% 6%, 48% 10%, 63% 5%, 77% 9%, 96% 4%, 99% 18%, 98% 42%, 100% 60%, 98% 84%, 90% 91%, 73% 86%, 58% 94%, 41% 88%, 25% 96%, 12% 88%, 2% 93%, 0 70%, 2% 49%, 0 30%); }

@@ -6,6 +6,7 @@
     "build": "node scripts/website-boundary-check.mjs && node scripts/build-karwise.mjs && node scripts/check-karwise.mjs",
     "preview": "python3 -m http.server 4321 --directory dist",
     "lint": "node --check scripts/build-karwise.mjs && node --check scripts/check-karwise.mjs && node scripts/website-boundary-check.mjs",
-    "seo:check": "node scripts/check-karwise.mjs"
+    "seo:check": "node scripts/check-karwise.mjs",
+    "test": "node --test tests/*.test.mjs"
   }
 }
