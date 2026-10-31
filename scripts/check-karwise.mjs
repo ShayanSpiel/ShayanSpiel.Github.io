@@ -1,3 +1,4 @@
+import {createHash} from 'node:crypto';
 import {readFileSync,existsSync,readdirSync,statSync} from 'node:fs';
 import {join,posix} from 'node:path';
 const root=process.env.KARWISE_CHECK_ROOT||'dist',origin='https://spielos.xyz',errors=[],pages=new Map(),fail=x=>errors.push(x);
@@ -25,6 +26,21 @@ for(const file of walk(root).filter(p=>p.endsWith('.html'))){
  if(route.endsWith('/contact/')&&(!html.includes('action="https://formsubmit.co/66shayan@gmail.com"')||!html.includes('site-services.js')))fail('Contact form disconnected: '+route);
 }
 const indexed=[...pages.values()].filter(p=>p.indexable);
+const coverManifestPath=join(root,'assets/og/karwise-cover-manifest.json');let coverManifest;
+try{coverManifest=JSON.parse(readFileSync(coverManifestPath,'utf8'))}catch{fail('Missing or invalid current OG manifest: run npm run og:generate');coverManifest={pages:[]};}
+if(coverManifest.version!=='karwise-og-v5')fail('Unsupported current OG manifest version');
+const covers=new Map((coverManifest.pages||[]).map(entry=>[entry.canonical,entry])),coverImages=new Set();
+if(covers.size!==indexed.length)fail('Current OG manifest must contain exactly one entry for every canonical page');
+for(const p of indexed){const cover=covers.get(p.canonical);if(!cover){fail('Missing current OG manifest entry: '+p.route+' — run npm run og:generate');continue;}
+ if(cover.route!==p.route||cover.og_title!==p.meta['og:title']||cover.description!==p.meta['og:description'])fail('OG artwork copy is out of sync with page metadata: '+p.route);
+ if(!cover.image?.startsWith('assets/og/v5/')||!cover.sha256)fail('Invalid versioned OG manifest asset: '+p.route);
+ if(coverImages.has(cover.image))fail('Canonical pages must have distinct OG images: '+p.route);coverImages.add(cover.image);
+ let imageUrl;try{imageUrl=new URL(p.meta['og:image'])}catch{fail('Invalid OG image URL: '+p.route);continue;}
+ if(imageUrl.pathname!=='/'+cover.image||imageUrl.searchParams.get('v')!==cover.sha256.slice(0,12)||p.meta['twitter:image']!==p.meta['og:image'])fail('OG and Twitter image do not match the generated cover: '+p.route);
+ const imageFile=join(root,cover.image);if(!existsSync(imageFile)){fail('Missing generated OG image: '+p.route);continue;}
+ if(createHash('sha256').update(readFileSync(imageFile)).digest('hex')!==cover.sha256)fail('OG manifest hash mismatch: '+p.route);
+}
+for(const canonical of covers.keys())if(!indexed.some(p=>p.canonical===canonical))fail('Stale OG manifest route: '+canonical);
 for(const field of ['title','description']){let seen=new Map();for(const p of indexed){let value=field==='title'?p.html.match(/<title>(.*?)<\/title>/s)?.[1]:p.meta.description;if(seen.has(value))fail('Duplicate '+field+': '+p.route+' / '+seen.get(value));seen.set(value,p.route);}}
 for(const p of indexed){const cluster=JSON.stringify(p.alternates.map(a=>[a.hreflang,a.href]).sort());for(const a of p.alternates){const other=pages.get(local(a.href));if(!other?.indexable)fail('Noncanonical language target: '+p.route+' -> '+a.href);else if(cluster!==JSON.stringify(other.alternates.map(a=>[a.hreflang,a.href]).sort()))fail('Asymmetric languages: '+p.route);}
  for(const a of p.anchors){if(pages.get(local(a.href))?.redirect)fail('Internal link to redirect: '+p.route+' -> '+a.href);}}

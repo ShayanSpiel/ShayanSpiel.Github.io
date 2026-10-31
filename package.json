@@ -5,8 +5,12 @@
   "scripts": {
     "build": "node scripts/website-boundary-check.mjs && node scripts/build-karwise.mjs && node scripts/check-karwise.mjs",
     "preview": "python3 -m http.server 4321 --directory dist",
-    "lint": "node --check scripts/build-karwise.mjs && node --check scripts/check-karwise.mjs && node scripts/website-boundary-check.mjs",
+    "lint": "node --check scripts/build-karwise.mjs && node --check scripts/check-karwise.mjs && node --check scripts/generate-karwise-og.mjs && node scripts/website-boundary-check.mjs",
+    "og:generate": "node scripts/build-karwise.mjs && node scripts/generate-karwise-og.mjs",
     "seo:check": "node scripts/check-karwise.mjs",
     "test": "node --test tests/*.test.mjs"
+  },
+  "devDependencies": {
+    "puppeteer": "^25.16.0"
   }
 }

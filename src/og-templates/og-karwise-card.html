@@ -1,0 +1,287 @@
+<!doctype html>
+<!-- Active-site OG share card. Visual language follows the original OG design
+     reference; copy and brand assets come from the active website. -->
+<html lang="en" dir="ltr" data-theme="blue-dark">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Website share card</title>
+  <link rel="stylesheet" href="/public/design-tokens.css">
+  <style>
+    @font-face{font-family:Outfit;src:url('/assets/fonts/outfit-latin.woff2') format('woff2');font-weight:100 900;font-display:swap;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+    @font-face{font-family:Outfit;src:url('/assets/fonts/outfit-latin-ext.woff2') format('woff2');font-weight:100 900;font-display:swap;unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+    @font-face{font-family:'DM Serif Display';src:url('/assets/fonts/dm-serif-display-latin.ttf') format('truetype');font-weight:400;font-display:swap}
+    @font-face{font-family:IRANSansX;src:url('/assets/fonts/IRANSansXVF.woff2') format('woff2');font-weight:100 1000;font-display:swap;font-variation-settings:'DOTS' 7}
+    @font-face{font-family:Doran;src:url('/assets/fonts/Doran-ExtraBold.woff2') format('woff2');font-weight:800;font-display:swap}
+    :root{--font-sans:'Outfit','IRANSansX',ui-sans-serif,system-ui,sans-serif;--font-display:'DM Serif Display',Georgia,serif}
+    *{box-sizing:border-box}
+    html,body{width:1200px;height:630px;margin:0}
+    body{overflow:hidden;background:var(--background);font-family:var(--font-sans)}
+    .canvas{position:relative;width:1200px;height:630px;overflow:hidden;color:var(--foreground);background:radial-gradient(ellipse at 78% 25%,color-mix(in oklab,var(--primary) 12%,transparent),transparent 42%),var(--background);isolation:isolate}
+    .canvas:before{content:"";position:absolute;inset:0;z-index:-2;background:radial-gradient(circle,color-mix(in oklab,var(--primary) 76%,transparent) .65px,transparent .95px) 2px 2px/30px 30px;opacity:.43;mask-image:radial-gradient(ellipse at 48% 42%,transparent 23%,#0009 54%,#000 81%);-webkit-mask-image:radial-gradient(ellipse at 48% 42%,transparent 23%,#0009 54%,#000 81%)}
+    .canvas:after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle at 12.3% 14.4%,var(--primary) 0 1px,color-mix(in oklab,var(--primary) 16%,transparent) 2px,transparent 9px),radial-gradient(circle at 5.5% 78%,var(--primary) 0 1px,color-mix(in oklab,var(--primary) 15%,transparent) 2px,transparent 9px),radial-gradient(circle at 53.5% 13.8%,color-mix(in oklab,var(--primary) 80%,white) 0 .7px,color-mix(in oklab,var(--primary) 12%,transparent) 2px,transparent 7px),radial-gradient(circle at 93.1% 12.8%,var(--primary) 0 1px,color-mix(in oklab,var(--primary) 15%,transparent) 2px,transparent 9px),radial-gradient(circle at 96.4% 61%,var(--accent) 0 .8px,color-mix(in oklab,var(--accent) 12%,transparent) 2px,transparent 8px),radial-gradient(circle at 90.4% 87.2%,var(--primary) 0 1px,color-mix(in oklab,var(--primary) 12%,transparent) 2px,transparent 9px),linear-gradient(90deg,color-mix(in oklab,var(--background) 95%,transparent),transparent 76%),linear-gradient(0deg,var(--background) 0%,transparent 20%);opacity:.72}
+    .eyebrow{position:absolute;z-index:3;left:76px;top:67px;display:flex;align-items:center;gap:12px;color:var(--foreground-muted);font-size:15px;line-height:1;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+    .eyebrow:before{content:"";width:8px;height:8px;flex:none;border-radius:50%;background:var(--primary);box-shadow:0 0 14px color-mix(in oklab,var(--primary) 70%,transparent)}
+    .copy{position:absolute;z-index:2;left:72px;top:169px;width:590px}
+    h1{margin:0;color:var(--foreground-strong);font-size:76px;line-height:.99;font-weight:800;letter-spacing:-.055em;text-wrap:balance}
+    h1>span{display:block;width:max-content;max-width:100%;white-space:normal}
+    h1 .accent{color:var(--primary);font-family:var(--font-display);font-size:1.03em;line-height:.93;font-weight:400;letter-spacing:-.032em}
+    .support{max-width:520px;margin:38px 0 0 6px;color:var(--foreground-muted);font-size:20px;line-height:1.45;font-weight:500}
+    .diagram{position:absolute;z-index:3;right:68px;top:124px;width:428px;padding:24px 23px 20px;border:1px solid color-mix(in oklab,var(--primary) 36%,var(--border-strong));border-radius:6px;background:radial-gradient(ellipse at 15% 0%,color-mix(in oklab,var(--primary) 11%,transparent),transparent 65%),linear-gradient(150deg,color-mix(in oklab,var(--panel-raised) 85%,var(--foreground-strong)),var(--panel) 44%,var(--background-deep));box-shadow:inset 0 1px 0 color-mix(in oklab,var(--foreground-strong) 9%,transparent),inset 0 -1px 0 #0006,0 10px 26px #0005,0 24px 40px #0004}
+    .diagram-heading{margin:0;color:var(--primary);font-size:12px;line-height:1;font-weight:750;letter-spacing:.14em;text-transform:uppercase}
+    .diagram-note{margin:8px 0 0;color:var(--foreground-muted);font-size:14px;line-height:1.3}
+
+    /* The simple, continuous rail from the original component treatment. */
+    .flow-list{position:relative;display:grid;gap:10px;margin-top:21px}
+    .flow-list:before{content:"";position:absolute;z-index:0;left:17px;top:33px;bottom:33px;width:2px;background:linear-gradient(to bottom,var(--primary),var(--accent) 51%,var(--success));opacity:.82}
+    .flow-step{position:relative;z-index:1;display:flex;align-items:center;gap:14px;min-height:66px;padding:10px 12px 10px 7px;border:1px solid var(--border);border-radius:6px;background:color-mix(in oklab,var(--panel) 92%,transparent)}
+    .flow-step:last-child{border-color:color-mix(in oklab,var(--success) 40%,var(--border-strong));background:color-mix(in oklab,var(--success) 7%,var(--panel))}
+    .flow-node{position:relative;z-index:2;display:grid;place-items:center;flex:none;width:22px;height:22px;border:2px solid var(--node-tone,var(--primary));border-radius:50%;background:var(--panel);box-shadow:0 0 0 4px color-mix(in oklab,var(--panel) 92%,transparent),0 0 10px color-mix(in oklab,var(--node-tone,var(--primary)) 21%,transparent)}
+    .flow-node:after{content:"";width:6px;height:6px;border-radius:50%;background:var(--node-tone,var(--primary))}
+    .flow-node[data-tone="accent"]{--node-tone:var(--accent)}
+    .flow-node[data-tone="success"]{--node-tone:var(--success)}
+    .flow-node[data-tone="warning"]{--node-tone:var(--warning)}
+    .flow-node[data-tone="info"]{--node-tone:var(--info)}
+    .flow-node[data-tone="purple"]{--node-tone:var(--purple)}
+    .flow-copy{flex:1;min-width:0}
+    .flow-copy strong{display:block;color:var(--foreground-strong);font-size:17px;line-height:1.15;font-weight:700;letter-spacing:-.015em}
+    .flow-copy small{display:block;margin-top:4px;color:var(--foreground-muted);font-size:13px;line-height:1.2;font-weight:500}
+    .step-no{color:color-mix(in oklab,var(--foreground-muted) 72%,transparent);font-size:11px;font-weight:700;letter-spacing:.08em}
+
+    /* A clear input → criteria → report path with the verdict as its endpoint. */
+    .eval-diagram{top:147px;padding-bottom:22px}
+    .eval-lane{display:grid;grid-template-columns:1fr 34px 1fr;align-items:center;gap:10px;margin-top:28px}
+    .eval-box{min-height:86px;display:flex;flex-direction:column;justify-content:center;padding:13px 14px;border:1px solid color-mix(in oklab,var(--box-tone,var(--primary)) 32%,var(--border-strong));border-radius:6px;background:linear-gradient(150deg,color-mix(in oklab,var(--box-tone,var(--primary)) 6%,var(--panel-raised)),color-mix(in oklab,var(--panel) 90%,transparent))}
+    .eval-box[data-tone="purple"]{--box-tone:var(--purple)}
+    .eval-box[data-tone="info"]{--box-tone:var(--info)}
+    .eval-box small{color:var(--foreground-muted);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+    .eval-box strong{margin-top:6px;color:var(--foreground-strong);font-size:17px;line-height:1.15;font-weight:700}
+    .eval-arrow{position:relative;height:2px;background:var(--primary);box-shadow:0 0 7px color-mix(in oklab,var(--primary) 36%,transparent)}
+    .eval-arrow:after{content:"";position:absolute;right:-1px;top:-4px;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:7px solid var(--primary)}
+    .report{margin-top:13px;padding:14px 15px 13px;border:1px solid color-mix(in oklab,var(--success) 40%,var(--border-strong));border-radius:6px;background:linear-gradient(145deg,color-mix(in oklab,var(--success) 9%,var(--panel-raised)),color-mix(in oklab,var(--panel) 88%,transparent))}
+    .report-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .report-top strong{color:var(--foreground-strong);font-size:17px;line-height:1.1;font-weight:700}
+    .report-top span{padding:5px 8px;border:1px solid color-mix(in oklab,var(--success) 48%,var(--border-strong));border-radius:4px;color:var(--success);font-size:10px;font-weight:750;letter-spacing:.1em;text-transform:uppercase}
+    .report-detail{margin-top:6px;color:var(--foreground-muted);font-size:11px;line-height:1.2}
+    .report-lines{display:grid;gap:6px;margin-top:10px}
+    .report-line{height:5px;border-radius:99px;background:color-mix(in oklab,var(--foreground-muted) 26%,var(--panel))}
+    .report-line:nth-child(1){width:88%}.report-line:nth-child(2){width:71%}.report-line:nth-child(3){width:56%}
+
+    /* Shared content panel for every page family without a dedicated flow. */
+    .overview-card{position:relative;overflow:hidden;margin-top:21px;padding:19px 18px 15px;min-height:190px;border:1px solid color-mix(in oklab,var(--primary) 30%,var(--border-strong));border-radius:6px;background:radial-gradient(ellipse at 90% 0%,color-mix(in oklab,var(--primary) 10%,transparent),transparent 65%),linear-gradient(150deg,color-mix(in oklab,var(--panel-raised) 78%,var(--foreground-strong)),var(--panel) 52%,var(--background-deep));box-shadow:inset 0 1px 0 color-mix(in oklab,var(--foreground-strong) 8%,transparent),0 7px 18px #0003}
+    .overview-card:after{content:"";position:absolute;right:0;top:0;width:1px;height:100%;background:linear-gradient(transparent,color-mix(in oklab,var(--primary) 46%,transparent),transparent)}
+    .overview-kicker{display:flex;align-items:center;gap:9px;color:var(--foreground-muted);font-size:11px;line-height:1.2;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+    .overview-kicker i{display:grid;place-items:center;width:25px;height:25px;border:1px solid color-mix(in oklab,var(--primary) 45%,var(--border-strong));border-radius:6px;background:color-mix(in oklab,var(--primary) 10%,var(--panel));color:var(--primary);font-size:14px;font-style:normal;box-shadow:0 0 12px color-mix(in oklab,var(--primary) 12%,transparent)}
+    .overview-copy{margin:17px 0 0;color:var(--foreground-strong);font-size:19px;line-height:1.42;font-weight:650;letter-spacing:-.01em}
+    .overview-copy[data-quote="true"]{font-family:var(--font-display);font-size:22px;line-height:1.3;font-weight:400;letter-spacing:-.02em}
+    .overview-detail{margin:9px 0 0;color:var(--foreground-muted);font-size:12px;line-height:1.42}
+    .overview-route{display:flex;align-items:center;gap:8px;margin-top:18px;color:var(--foreground-muted);font-size:10px;line-height:1;font-weight:650;letter-spacing:.04em}
+    .overview-route .route-line{position:relative;display:block;flex:1;height:2px;background:linear-gradient(90deg,var(--info),var(--accent) 58%,var(--success))}
+    .overview-route .route-line:before,.overview-route .route-line:after{content:"";position:absolute;top:50%;width:6px;height:6px;border:1px solid var(--primary);border-radius:50%;background:var(--panel);transform:translateY(-50%)}
+    .overview-route .route-line:before{left:0;border-color:var(--info)}.overview-route .route-line:after{left:52%;border-color:var(--accent);background:var(--accent)}
+    .overview-route .route-goal{display:block;width:14px;height:14px;border:1px solid var(--success);border-radius:50%;background:radial-gradient(circle,var(--success) 0 2px,transparent 2.6px);box-shadow:0 0 8px color-mix(in oklab,var(--success) 20%,transparent)}
+
+    /* The loop keeps arrows inside the gaps between its four stages. */
+    .loop-diagram{top:142px;height:320px;padding:24px}
+    .loop-grid{position:relative;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:14px;width:calc(100% - 28px);height:182px;margin:19px 0 0 28px}
+    .loop-connectors{position:absolute;inset:0;z-index:2;width:100%;height:100%;overflow:visible;pointer-events:none}
+    .loop-connectors path{fill:none;stroke:var(--primary);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+    .loop-connectors .observe-link{stroke:var(--info)}
+    .loop-connectors .evaluate-link{stroke:var(--success)}
+    .loop-connectors .return-link{stroke:var(--accent);stroke-width:2;stroke-dasharray:6 7;opacity:.66}
+    .loop-connectors .arrow{stroke:none;fill:var(--primary)}
+    .loop-connectors .arrow-info{fill:var(--info)}.loop-connectors .arrow-success{fill:var(--success)}.loop-connectors .arrow-accent{fill:var(--accent)}
+    .loop-step{position:relative;z-index:3;min-width:0;min-height:84px;padding:12px 13px;border:1px solid color-mix(in oklab,var(--loop-tone,var(--primary)) 30%,var(--border));border-radius:6px;background:linear-gradient(150deg,color-mix(in oklab,var(--loop-tone,var(--primary)) 7%,var(--panel-raised)),var(--panel))}
+    .loop-step[data-tone="warning"]{--loop-tone:var(--warning)}.loop-step[data-tone="accent"]{--loop-tone:var(--accent)}.loop-step[data-tone="purple"]{--loop-tone:var(--purple)}.loop-step[data-tone="success"]{--loop-tone:var(--success)}
+    .loop-step small{display:block;color:var(--loop-tone,var(--primary));font-size:11px;line-height:1;font-weight:750;letter-spacing:.1em;text-transform:uppercase}
+    .loop-step strong{display:block;margin-top:8px;color:var(--foreground-strong);font-size:18px;line-height:1;font-weight:750}
+    .loop-step p{margin:6px 0 0;color:var(--foreground-muted);font-size:10px;line-height:1.2}
+    .loop-step.observe{grid-column:2;grid-row:1}.loop-step.evaluate{grid-column:2;grid-row:2}.loop-step.update{grid-column:1;grid-row:2}
+    .loop-note{position:absolute;right:25px;bottom:15px;max-width:calc(100% - 50px);color:var(--foreground-muted);font-size:12px;line-height:1.25;font-weight:600;letter-spacing:.02em}
+
+    /* Broad presentation ribbon: one active segment, a clear progress head,
+       connected stage dots and a deliberate destination. */
+    .journey{position:absolute;inset:0;z-index:0;width:100%;height:100%;pointer-events:none;opacity:.96}
+    .journey-future{fill:none;stroke:var(--journey-future);stroke-width:2.5;stroke-dasharray:9 12;opacity:.28;stroke-linecap:round}
+    .journey-wake{fill:none;stroke:var(--journey-core);stroke-width:20;opacity:.09;filter:blur(5px);stroke-linecap:round}
+    .journey-active{fill:none;stroke:var(--journey-core);stroke-width:7;stroke-linecap:round;filter:drop-shadow(0 2px 2px color-mix(in oklab,var(--journey-shadow) 55%,transparent)) drop-shadow(0 0 5px color-mix(in oklab,var(--journey-core) 28%,transparent))}
+    .journey-head{fill:var(--journey-core);filter:drop-shadow(0 1px 3px color-mix(in oklab,var(--journey-shadow) 75%,transparent))}
+    .journey-node .node-ring{fill:var(--background);stroke:var(--journey-core);stroke-width:2.5}
+    .journey-node .node-dot{fill:var(--journey-core)}
+    .journey-node[data-tone="info"] .node-dot{fill:var(--info)}.journey-node[data-tone="warning"] .node-dot{fill:var(--warning)}.journey-node[data-tone="accent"] .node-dot{fill:var(--accent)}.journey-node[data-tone="success"] .node-dot{fill:var(--success)}
+    .journey-goal circle{fill:none;stroke:var(--success);stroke-width:2.5;opacity:.9}
+    .journey-goal circle:last-child{fill:var(--success);stroke:0;opacity:1}
+    footer{position:absolute;z-index:4;inset:auto 76px 38px;display:flex;justify-content:space-between;align-items:center;color:var(--foreground-muted);font-size:13px;line-height:1;font-weight:600}
+    .brand-lockup{display:flex;align-items:center;gap:9px;color:var(--foreground-strong);direction:ltr;unicode-bidi:isolate}
+    .brand-lockup svg{width:22px;height:22px;flex:none}
+    .page-url{max-width:62%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;direction:ltr;unicode-bidi:isolate;color:var(--foreground-muted)}
+
+    [data-locale="fa"] .eyebrow{left:auto;right:76px;direction:rtl;letter-spacing:0;font-family:"IRANSansX",sans-serif;font-variation-settings:"DOTS" 7,"wght" 700}
+    [data-locale="fa"] .copy{left:auto;right:72px;top:157px;width:570px;text-align:right;direction:rtl}
+    [data-locale="fa"] h1{font-family:"IRANSansX",sans-serif;font-size:55px;line-height:1.34;font-weight:900;letter-spacing:0;font-variation-settings:"DOTS" 7,"wght" 900}
+    [data-locale="fa"] h1 .accent{font-family:"Doran",sans-serif;font-size:1.02em;font-weight:800;line-height:1.2;letter-spacing:0;font-variation-settings:normal}
+    [data-locale="fa"] .support{max-width:540px;margin:24px 0 0 auto;font-family:"IRANSansX",sans-serif;font-size:17px;line-height:1.8;letter-spacing:0;font-variation-settings:"DOTS" 7,"wght" 500}
+    [data-locale="fa"] .diagram{right:auto;left:68px;direction:rtl}
+    [data-locale="fa"] .diagram-heading,[data-locale="fa"] .diagram-note,[data-locale="fa"] .flow-copy{text-align:right;letter-spacing:0;font-family:"IRANSansX",sans-serif;font-variation-settings:"DOTS" 7}
+    [data-locale="fa"] .diagram-heading{font-size:12px}
+    [data-locale="fa"] .flow-step{padding:10px 7px 10px 12px}
+    [data-locale="fa"] .flow-list:before{left:auto;right:17px}
+    [data-locale="fa"] .flow-copy strong{font-size:13px;line-height:1.4}
+    [data-locale="fa"] .flow-copy small{font-size:10px;line-height:1.5}
+    [data-locale="fa"] .eval-lane{direction:rtl}
+    [data-locale="fa"] .eval-arrow:after{right:auto;left:-1px;border-left:0;border-right:7px solid var(--primary)}
+    [data-locale="fa"] .loop-grid{direction:rtl;margin-left:0;margin-right:28px}
+    [data-locale="fa"] .loop-connectors{transform:scaleX(-1)}
+    [data-locale="fa"] .loop-note{right:25px;left:auto;text-align:right;font-family:"IRANSansX",sans-serif;font-variation-settings:"DOTS" 7}
+    [data-locale="fa"] .overview-copy,[data-locale="fa"] .overview-detail,[data-locale="fa"] .overview-kicker{font-family:"IRANSansX",sans-serif;letter-spacing:0;font-variation-settings:"DOTS" 7}
+    [data-locale="fa"] footer{font-family:"IRANSansX",sans-serif;font-variation-settings:"DOTS" 7}
+    [data-locale="fa"] .journey-geometry{transform:translate(1200px,0) scale(-1,1)}
+    [data-kind="loop"][data-locale="fa"] .copy{top:169px}
+    [data-kind="loop"][data-locale="fa"] h1{font-size:48px}
+    [data-kind="evaluation"][data-locale="fa"] h1{font-size:55px}
+  </style>
+</head>
+<body>
+  <div class="canvas" id="canvas">
+    <div class="eyebrow" id="eyebrow"></div>
+    <main class="copy">
+      <h1 id="title"></h1>
+      <p class="support" id="support"></p>
+    </main>
+    <section class="diagram" id="diagram-panel" aria-hidden="true">
+      <div id="workflow-diagram">
+        <h2 class="diagram-heading" id="diagram-heading"></h2>
+        <p class="diagram-note" id="diagram-note"></p>
+        <div class="flow-list" id="flow-list"></div>
+      </div>
+      <div id="eval-diagram" hidden>
+        <h2 class="diagram-heading" id="eval-heading"></h2>
+        <p class="diagram-note" id="eval-note"></p>
+        <div class="eval-lane" id="eval-lane"></div>
+        <div class="report" id="eval-report"></div>
+      </div>
+      <div id="loop-diagram" hidden>
+        <h2 class="diagram-heading" id="loop-heading"></h2>
+        <div class="loop-grid" id="loop-grid">
+          <svg class="loop-connectors" viewBox="0 0 352 182" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M169 42 H184"/><path class="observe-link" d="M267 84 V98"/><path class="evaluate-link" d="M183 140 H168"/><path class="return-link" d="M0 140 H-13 Q-20 140 -20 133 V50 Q-20 42 -12 42 H0"/>
+            <path class="arrow" d="M184 42 L176 38 V46 Z"/><path class="arrow-info" d="M267 98 L263 90 H271 Z"/><path class="arrow-success" d="M168 140 L176 136 V144 Z"/><path class="arrow-accent" d="M0 42 L-8 38 V46 Z"/>
+          </svg>
+        </div>
+        <div class="loop-note" id="loop-note"></div>
+      </div>
+      <div id="overview-diagram" hidden>
+        <h2 class="diagram-heading" id="overview-heading"></h2>
+        <p class="diagram-note" id="overview-note"></p>
+        <div class="overview-card">
+          <div class="overview-kicker"><i aria-hidden="true">✦</i><span id="overview-kicker"></span></div>
+          <p class="overview-copy" id="overview-copy"></p>
+          <p class="overview-detail" id="overview-detail"></p>
+          <div class="overview-route"><span class="route-line"></span><span id="overview-route-label"></span><span class="route-goal"></span></div>
+        </div>
+      </div>
+    </section>
+    <svg class="journey" viewBox="0 0 1200 630" preserveAspectRatio="none" aria-hidden="true">
+      <g class="journey-geometry">
+        <path class="journey-future" d="M76 524 C220 492 292 558 442 530 S690 498 840 526 S1024 552 1120 516"/>
+        <path class="journey-wake" d="M76 524 C220 492 292 558 442 530 S690 498 840 526 S1024 552 1120 516"/>
+        <path class="journey-active" d="M76 524 C220 492 292 558 442 530 S690 498 840 526 S1024 552 1120 516"/>
+        <polygon class="journey-head" points="0,0 0,0 0,0"/>
+        <g class="journey-nodes"></g>
+        <g class="journey-goal" transform="translate(1120 516)"><circle r="20"/><circle r="11"/><circle r="4"/></g>
+      </g>
+    </svg>
+    <footer>
+      <span class="brand-lockup">
+        <img src="/assets/spielos.svg" alt="" width="22" height="22">
+        <span id="brand-name"></span>
+      </span>
+      <span class="page-url" id="page-url"></span>
+    </footer>
+  </div>
+  <script>
+    (function(){
+      const safe=(value)=>String(value??"").replace(/[&<>"']/g,(char)=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
+      const faDigits=(value)=>String(value).replace(/\d/g,(digit)=>"۰۱۲۳۴۵۶۷۸۹"[digit]);
+      const toneNames=new Set(["primary","accent","purple","warning","success","info"]);
+      window.__applyOg=async function(data){
+        const locale=data.locale||"en", kind=data.diagram_kind||"workflow";
+        document.documentElement.lang=locale;
+        document.documentElement.dir=locale==="fa"?"rtl":"ltr";
+        const canvas=document.getElementById("canvas");
+        canvas.dataset.locale=locale;
+        canvas.dataset.kind=kind;
+        document.getElementById("eyebrow").textContent=data.eyebrow||"";
+        document.getElementById("title").innerHTML=(data.title_lines||[]).map((line,index)=>`<span class="${index===data.accent_line?"accent":""}">${safe(line)}</span>`).join("");
+        const support=document.getElementById("support");
+        support.textContent=data.supporting_text||"";
+        support.hidden=kind==="overview"||kind==="quote";
+        const canonical=new URL(data.canonical||data.url||"/",location.origin);
+        document.getElementById("page-url").textContent=`${canonical.host}${canonical.pathname}`;
+        document.getElementById("overview-route-label").textContent=canonical.pathname;
+        document.getElementById("brand-name").textContent=data.brand_name||"Karwise";
+        const steps=data.diagram_steps||[];
+        const panel=document.getElementById("diagram-panel");
+        panel.className=`diagram ${kind==="loop"?"loop-diagram":kind==="evaluation"?"eval-diagram":""}`;
+        document.getElementById("workflow-diagram").hidden=kind!=="workflow";
+        document.getElementById("eval-diagram").hidden=kind!=="evaluation";
+        document.getElementById("loop-diagram").hidden=kind!=="loop";
+        document.getElementById("overview-diagram").hidden=kind!=="overview"&&kind!=="quote";
+        if(kind==="workflow"){
+          document.getElementById("diagram-heading").textContent=data.diagram_heading||"";
+          document.getElementById("diagram-note").textContent=data.diagram_note||"";
+          document.getElementById("flow-list").innerHTML=steps.map((step,index)=>`<article class="flow-step"><span class="flow-node" data-tone="${toneNames.has(step.tone)?step.tone:"primary"}"></span><span class="flow-copy"><strong>${safe(step.title)}</strong><small>${safe(step.detail)}</small></span><span class="step-no">${locale==="fa"?faDigits(String(index+1).padStart(2,"0")):String(index+1).padStart(2,"0")}</span></article>`).join("");
+        }else if(kind==="evaluation"){
+          document.getElementById("eval-heading").textContent=data.diagram_heading||"";
+          document.getElementById("eval-note").textContent=data.diagram_note||"";
+          const first=steps[0]||{},second=steps[1]||{},third=steps[2]||{};
+          const labels=locale==="fa"?["۰۱ / ورودی","۰۲ / معیار"]:["01 / INPUT","02 / CRITERIA"];
+          document.getElementById("eval-lane").innerHTML=`<div class="eval-box" data-tone="${toneNames.has(first.tone)?first.tone:"info"}"><small>${labels[0]}</small><strong>${safe(first.title||"")}</strong></div><span class="eval-arrow"></span><div class="eval-box" data-tone="${toneNames.has(second.tone)?second.tone:"purple"}"><small>${labels[1]}</small><strong>${safe(second.title||"")}</strong></div>`;
+          document.getElementById("eval-report").innerHTML=`<div class="report-top"><strong>${safe(third.title||"")}</strong><span>${locale==="fa"?"شواهد":"Evidence"}</span></div><div class="report-detail">${safe(third.detail||"")}</div><div class="report-lines"><i class="report-line"></i><i class="report-line"></i><i class="report-line"></i></div>`;
+        }else if(kind==="loop"){
+          document.getElementById("loop-heading").textContent=data.diagram_heading||"";
+          document.getElementById("loop-note").textContent=data.diagram_note||"";
+          const loopGrid=document.getElementById("loop-grid");
+          loopGrid.querySelectorAll(".loop-step").forEach((node)=>node.remove());
+          const stepClasses=["act","observe","evaluate","update"];
+          const labels=locale==="fa"?["۰۱ · اقدام","۰۲ · مشاهده","۰۳ · سنجش","۰۴ · اصلاح"]:["01 · DO","02 · NOTICE","03 · CHECK","04 · ADJUST"];
+          loopGrid.insertAdjacentHTML("beforeend",steps.map((step,index)=>`<article class="loop-step ${stepClasses[index]||""}" data-tone="${toneNames.has(step.tone)?step.tone:"primary"}"><small>${labels[index]||String(index+1).padStart(2,"0")}</small><strong>${safe(step.title)}</strong><p>${safe(step.detail)}</p></article>`).join(""));
+        }else{
+          document.getElementById("overview-heading").textContent=data.diagram_heading||"PAGE OVERVIEW";
+          const overviewNote=document.getElementById("overview-note");
+          overviewNote.textContent=data.diagram_note||"";
+          overviewNote.hidden=!data.diagram_note;
+          document.getElementById("overview-kicker").textContent=data.summary_label||"Overview";
+          const quote=kind==="quote";
+          const overviewCopy=document.getElementById("overview-copy");
+          overviewCopy.textContent=quote?(data.title_lines||[]).join(" "):data.supporting_text||"";
+          overviewCopy.dataset.quote=String(quote);
+          document.getElementById("overview-detail").textContent=quote?data.supporting_text||"":"";
+        }
+        const journey=document.querySelector(".journey-future"),active=document.querySelector(".journey-active"),wake=document.querySelector(".journey-wake"),nodes=document.querySelector(".journey-nodes");
+        const length=journey.getTotalLength(),progress=.42,tipLength=length*progress,arrowLength=22,tip=journey.getPointAtLength(tipLength),base=journey.getPointAtLength(Math.max(0,tipLength-arrowLength)),ahead=journey.getPointAtLength(Math.min(length,tipLength+1)),before=journey.getPointAtLength(Math.max(0,tipLength-arrowLength-14));
+        const dx=ahead.x-before.x,dy=ahead.y-before.y,norm=Math.hypot(dx,dy)||1,nx=-dy/norm*7,ny=dx/norm*7;
+        active.style.strokeDasharray=`${Math.max(0,tipLength-arrowLength+1)} ${length}`;
+        wake.style.strokeDasharray=`${tipLength} ${length}`;
+        document.querySelector(".journey-head").setAttribute("points",`${tip.x},${tip.y} ${base.x+nx},${base.y+ny} ${base.x-nx},${base.y-ny}`);
+        nodes.innerHTML=[[.24,"info"],[.46,"warning"],[.68,"accent"],[.86,"success"]].map(([position,tone])=>{const point=journey.getPointAtLength(length*position);return `<g class="journey-node" data-tone="${tone}" transform="translate(${point.x} ${point.y})"><circle class="node-ring" r="10"/><circle class="node-dot" r="3.5"/></g>`}).join("");
+        document.querySelector(".journey-geometry").setAttribute("transform",locale==="fa"?"translate(1200 0) scale(-1 1)":"");
+        if(locale==="fa"){
+          await Promise.all([document.fonts.load('900 55px "IRANSansX"','هوش مصنوعی'),document.fonts.load('800 56px "Doran"','حلقه‌ی بازخورد نیاز دارند'),document.fonts.load('400 17px "IRANSansX"','ورک‌فلو و بازبینی')]);
+        }
+        const title=document.getElementById("title"),copy=document.querySelector(".copy");
+        const minimum=locale==="fa"?40:52;
+        let size=locale==="fa"?55:76;
+        title.style.fontSize=`${size}px`;
+        for(;size>minimum&&copy.scrollHeight>308;size-=2){title.style.fontSize=`${size-2}px`}
+        const supportSize=locale==="fa"?17:20;
+        support.style.fontSize=`${supportSize}px`;
+        if(!support.hidden){
+          let fitted=supportSize;
+          while(fitted>(locale==="fa"?14:15)&&copy.scrollHeight>308){fitted-=1;support.style.fontSize=`${fitted}px`}
+        }
+        document.documentElement.dataset.templateReady="true";
+      };
+    })();
+  </script>
+</body>
+</html>
