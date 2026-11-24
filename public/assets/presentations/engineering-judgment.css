@@ -696,19 +696,46 @@
 .ej-rail {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--space-6);
   min-height: 0;
-  padding-top: 6px;
+  padding-top: var(--space-8);
 }
 
 .ej-flow {
   --tone: var(--primary);
-  padding: 15px 16px 14px;
-  border: 1px solid color-mix(in oklab, var(--tone) 22%, var(--ej-hair));
+  position: relative;
+  padding: 20px 16px 18px;
+  border: 1px solid color-mix(in oklab, var(--tone) 36%, var(--ej-hair));
   border-radius: var(--radius-md);
   background:
     radial-gradient(ellipse at 100% 0, color-mix(in oklab, var(--tone) 9%, transparent), transparent 60%),
     color-mix(in oklab, var(--deck-raised) 92%, transparent);
+  box-shadow: var(--kw-icon-shadow);
+}
+
+.ej-flow + .ej-flow { margin-top: var(--space-5); }
+
+.ej-flow + .ej-flow::before,
+.ej-flow + .ej-flow::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  background: var(--primary);
+}
+
+.ej-flow + .ej-flow::before {
+  top: -44px;
+  width: 4px;
+  height: 34px;
+}
+
+.ej-flow + .ej-flow::after {
+  top: -12px;
+  width: 15px;
+  height: 11px;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
 }
 
 .ej-flow header {
@@ -716,7 +743,7 @@
   align-items: center;
   gap: 8px;
   margin-bottom: 11px;
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-base);
   font-weight: 600;
   letter-spacing: -0.012em;
   color: var(--foreground-strong);
