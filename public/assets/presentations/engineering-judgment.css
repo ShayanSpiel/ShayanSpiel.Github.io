@@ -624,6 +624,30 @@
 }
 
 .ej-question,
+.ej-s3-closing {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  gap: var(--space-8);
+  align-items: start;
+  padding-top: var(--space-4);
+  border-top: var(--kw-border-width) solid color-mix(in oklab, var(--foreground) 14%, transparent);
+}
+
+.ej-question .ej-kicker,
+.ej-s3-closing .ej-kicker { padding-top: var(--space-2); }
+
+.ej-question blockquote,
+.ej-s3-closing p {
+  margin: 0;
+  max-width: 1140px;
+  font: 400 var(--font-size-2xl)/1.35 var(--ej-serif);
+  color: var(--foreground-strong);
+}
+
+.ej-question blockquote em,
+.ej-s3-closing p em {
+  color: color-mix(in oklab, var(--warning) 70%, var(--foreground-strong));
+}
 
 /* ================================================================ SLIDE 2 */
 
