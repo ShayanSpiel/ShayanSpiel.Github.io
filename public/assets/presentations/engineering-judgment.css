@@ -670,6 +670,11 @@
   color: color-mix(in oklab, var(--foreground) 42%, var(--muted-foreground));
 }
 
+.ej-s2-badge strong {
+  font-size: var(--font-size-sm);
+  color: var(--foreground-strong);
+}
+
 .ej-s2-badge::before {
   content: "";
   width: 5px;
@@ -1131,6 +1136,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  transform: scale(1.13);
 }
 
 .ej-org-exec {
