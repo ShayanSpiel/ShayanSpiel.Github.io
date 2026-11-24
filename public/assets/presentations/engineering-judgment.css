@@ -806,6 +806,8 @@
   transform: scale(1.18);
 }
 
+.ej-arch-svg .ej-rib-solid { stroke-width: 6.5; }
+
 .ej-arch-svg {
   position: absolute;
   inset: 0;
@@ -815,6 +817,7 @@
 }
 
 .ej-orbit {
+  pointer-events: none;
   fill: none;
   stroke: color-mix(in oklab, var(--primary) 30%, transparent);
   stroke-width: 1;
@@ -829,26 +832,40 @@
 .ej-orbit-hit {
   fill: none;
   stroke: transparent;
-  stroke-width: 18;
+  stroke-width: 64;
   pointer-events: stroke;
+  transition: stroke 0.25s ease;
 }
 
-.ej-arch:has(.ej-orbit-hit[data-ring="0"]:hover) .ej-orbit[data-ring="0"] {
+.ej-orbit-hit[data-ring="2"] { stroke-width: 58; }
+.ej-orbit-hit[data-ring="3"] { stroke-width: 32; }
+
+.ej-arch:has(:is(.ej-orbit-hit[data-ring="0"], .ej-arch-label[data-ring="0"], .ej-arch-node[data-layer="0"]):hover) .ej-orbit-hit[data-ring="0"],
+.ej-arch:has(:is(.ej-orbit-hit[data-ring="1"], .ej-arch-label[data-ring="1"], .ej-arch-node[data-layer="1"]):hover) .ej-orbit-hit[data-ring="1"],
+.ej-arch:has(:is(.ej-orbit-hit[data-ring="2"], .ej-arch-label[data-ring="2"], .ej-arch-node[data-layer="2"]):hover) .ej-orbit-hit[data-ring="2"] {
+  stroke: color-mix(in oklab, var(--primary) 13%, transparent);
+}
+
+.ej-arch:has(:is(.ej-orbit-hit[data-ring="3"], .ej-arch-label[data-ring="3"], .ej-arch-node[data-layer="3"]):hover) .ej-orbit-hit[data-ring="3"] {
+  stroke: color-mix(in oklab, var(--warning) 17%, transparent);
+}
+
+.ej-arch:has(:is(.ej-orbit-hit[data-ring="0"], .ej-arch-label[data-ring="0"], .ej-arch-node[data-layer="0"]):hover) .ej-orbit[data-ring="0"] {
   stroke: color-mix(in oklab, var(--primary) 78%, transparent);
   stroke-width: 1.6;
 }
 
-.ej-arch:has(.ej-orbit-hit[data-ring="1"]:hover) .ej-orbit[data-ring="1"] {
+.ej-arch:has(:is(.ej-orbit-hit[data-ring="1"], .ej-arch-label[data-ring="1"], .ej-arch-node[data-layer="1"]):hover) .ej-orbit[data-ring="1"] {
   stroke: color-mix(in oklab, var(--primary) 78%, transparent);
   stroke-width: 1.6;
 }
 
-.ej-arch:has(.ej-orbit-hit[data-ring="2"]:hover) .ej-orbit[data-ring="2"] {
+.ej-arch:has(:is(.ej-orbit-hit[data-ring="2"], .ej-arch-label[data-ring="2"], .ej-arch-node[data-layer="2"]):hover) .ej-orbit[data-ring="2"] {
   stroke: color-mix(in oklab, var(--primary) 78%, transparent);
   stroke-width: 1.6;
 }
 
-.ej-arch:has(.ej-orbit-hit[data-ring="3"]:hover) .ej-orbit[data-ring="3"] {
+.ej-arch:has(:is(.ej-orbit-hit[data-ring="3"], .ej-arch-label[data-ring="3"], .ej-arch-node[data-layer="3"]):hover) .ej-orbit[data-ring="3"] {
   stroke: color-mix(in oklab, var(--warning) 62%, transparent);
   stroke-width: 1.6;
 }
@@ -857,14 +874,14 @@
   transition: color 0.25s ease, text-shadow 0.25s ease;
 }
 
-.ej-arch:has(.ej-orbit-hit[data-ring="0"]:hover) .ej-arch-label[data-ring="0"],
-.ej-arch:has(.ej-orbit-hit[data-ring="1"]:hover) .ej-arch-label[data-ring="1"],
-.ej-arch:has(.ej-orbit-hit[data-ring="2"]:hover) .ej-arch-label[data-ring="2"] {
+.ej-arch:has(:is(.ej-orbit-hit[data-ring="0"], .ej-arch-label[data-ring="0"], .ej-arch-node[data-layer="0"]):hover) .ej-arch-label[data-ring="0"],
+.ej-arch:has(:is(.ej-orbit-hit[data-ring="1"], .ej-arch-label[data-ring="1"], .ej-arch-node[data-layer="1"]):hover) .ej-arch-label[data-ring="1"],
+.ej-arch:has(:is(.ej-orbit-hit[data-ring="2"], .ej-arch-label[data-ring="2"], .ej-arch-node[data-layer="2"]):hover) .ej-arch-label[data-ring="2"] {
   color: color-mix(in oklab, var(--primary) 72%, var(--foreground-strong));
   text-shadow: 0 0 16px color-mix(in oklab, var(--primary) 65%, transparent);
 }
 
-.ej-arch:has(.ej-orbit-hit[data-ring="3"]:hover) .ej-arch-label[data-ring="3"] {
+.ej-arch:has(:is(.ej-orbit-hit[data-ring="3"], .ej-arch-label[data-ring="3"], .ej-arch-node[data-layer="3"]):hover) .ej-arch-label[data-ring="3"] {
   color: color-mix(in oklab, var(--warning) 74%, var(--foreground-strong));
   text-shadow: 0 0 16px color-mix(in oklab, var(--warning) 60%, transparent);
 }
@@ -875,9 +892,10 @@
 }
 
 .ej-edge {
+  pointer-events: none;
   fill: none;
   stroke: color-mix(in oklab, var(--primary) 60%, transparent);
-  stroke-width: 1.15;
+  stroke-width: 2.1;
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
 }
@@ -889,9 +907,10 @@
 }
 
 .ej-fb {
+  pointer-events: none;
   fill: none;
   stroke: color-mix(in oklab, var(--warning) 46%, transparent);
-  stroke-width: 1.1;
+  stroke-width: 1.8;
   stroke-dasharray: 3 7;
   animation: ej-fb-flow 1.6s linear infinite;
 }
@@ -986,7 +1005,6 @@
   align-items: center;
   gap: 7px;
   white-space: nowrap;
-  pointer-events: none;
 }
 
 .ej-arch-label-rule {
