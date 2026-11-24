@@ -795,6 +795,9 @@
   margin-top: -31px;
   width: 987px;
   height: 660px;
+  /* Scale around the point where the connector leaves the left card. */
+  transform-origin: -92px 240px;
+  transform: scale(1.18);
 }
 
 .ej-arch-svg {
